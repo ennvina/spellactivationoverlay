@@ -1,0 +1,17 @@
+## Interface: 90200
+## Title: SpellActivationOverlay |cffa2f3ff0.0.1|r
+## Notes: Mimic Spell Activation Overlays from Retail
+## Author: Vinny
+## Version: 0.0.1
+## SavedVariables: SpellActivationOverlayDB
+
+# SpellActivationOverlay.lua, SpellActivationOverlay.lua and all textures
+# were created by Blizzard Entertainment, Inc.
+
+textures\texname.lua
+
+classes\common.lua
+classes\deathknight.lua
+
+SpellActivationOverlay.lua
+SpellActivationOverlay.xml
