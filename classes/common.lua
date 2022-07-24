@@ -52,6 +52,29 @@ function SAO.FindPlayerAuraByID(id)
     end
 end
 
+--[[
+    Utility function to know how many talent points the player has spent on a specific talent
+
+    If the talent is found, returns:
+    - the number of points spent for this talent
+    - the total number of points possible for this talent
+    - the tabulation in which the talent was found
+    - the index in which the talent was found
+    Tabulation and index can be re-used in GetTalentInfo to avoid re-parsing all talents
+
+    Returns nil if no talent is found with this name e.g., in the wrong expansion
+]]
+function SAO.GetTalentByName(talentName)
+    for tab = 1, GetNumTalentTabs() do
+        for index = 1, GetNumTalents(tab) do
+            local name, iconTexture, tier, column, rank, maxRank, isExceptional, available = GetTalentInfo(tab, index);
+            if (name == talentName) then
+                return rank, maxRank, tab, index;
+            end
+        end
+    end
+end
+
 -- Add or refresh an overlay
 function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r, g, b)
     self.ActiveOverlays[spellID] = stacks;
