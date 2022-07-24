@@ -71,18 +71,18 @@ function SAO.UNIT_AURA(self, ...)
     ]]
 end
 
-function SAO.COMBAT_LOG_EVENT_UNFILTERED(self, ...)
+function SAO.SPELL_AURA(self, ...)
     local timestamp, event, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo();
-    if (event ~= "SPELL_AURA_APPLIED" and event ~= "SPELL_AURA_REMOVED") then return end
-    if (destGUID ~= UnitGUID("player")) then return end
-
     local spellID, spellName, spellSchool, auraType, amount = select(12, CombatLogGetCurrentEventInfo());
+    local auraApplied = event:sub(0,18) == "SPELL_AURA_APPLIED";
+    local auraRemoved = event:sub(0,18) == "SPELL_AURA_REMOVED";
+
     local auras = self.RegisteredAurasBySpellID[spellID];
-    if auras then
-        local currentlyActiveOverlay = SAO.ActiveOverlays[spellID];
+    if auras and (auraApplied or auraRemoved) then
+        local currentlyActiveOverlay = self.ActiveOverlays[spellID];
         if (
             -- Aura is there
-            event == "SPELL_AURA_APPLIED"
+            auraApplied
         and
             -- Aura just appeared or the number of stacks just changed
             (not currentlyActiveOverlay or currentlyActiveOverlay  ~= amount)
@@ -90,14 +90,22 @@ function SAO.COMBAT_LOG_EVENT_UNFILTERED(self, ...)
             -- The number of stacks is supported
             (auras[amount or 0])
         ) then
-            SAO.ActiveOverlays[spellID] = amount or 0;
+            self.ActiveOverlays[spellID] = amount or 0;
             self.ShowAllOverlays(self.Frame, select(3,unpack(auras[amount or 0])));
         elseif (currentlyActiveOverlay) then
             -- Aura just disappeared or is not supported for this number of stacks
-            SAO.ActiveOverlays[spellID] = nil;
+            self.ActiveOverlays[spellID] = nil;
             self.HideOverlays(self.Frame, spellID);
         end
         -- print(timestamp, event, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName, spellSchool, auraType, amount);
+    end
+end
+
+function SAO.COMBAT_LOG_EVENT_UNFILTERED(self, ...)
+    local _, event, _, _, _, _, _, destGUID = CombatLogGetCurrentEventInfo();
+
+    if ( (event:sub(0,11) == "SPELL_AURA_") and (destGUID == UnitGUID("player")) ) then
+        self:SPELL_AURA(...);
     end
 end
 
