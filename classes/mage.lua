@@ -87,13 +87,11 @@ local function customCLEU(self, ...)
     if (event == "SPELL_AURA_APPLIED") then
         if (spellID == hotStreakSpellID) then
             deactivateHotStreak(self);
-print("AURA_APPLIED", timestamp, "oldstate=", HotStreakHandler.state);
             HotStreakHandler.state = 'hot_streak';
         end
         return;
     elseif (event == "SPELL_AURA_REMOVED") then
         if (spellID == hotStreakSpellID) then
-print("AURA_REMOVED", timestamp, "oldstate=", HotStreakHandler.state);
             if (HotStreakHandler.state == 'hot_streak_heating_up') then
                 activateHotStreak(self);
                 HotStreakHandler.state = 'heating_up';
@@ -111,7 +109,6 @@ print("AURA_REMOVED", timestamp, "oldstate=", HotStreakHandler.state);
 
     local amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand = select(15, CombatLogGetCurrentEventInfo()); -- For SPELL_DAMAGE*
 
-print("SPELL_DMG", timestamp, "spell=", spellName, "old=", HotStreakHandler.state, "crit=", critical);
     if (HotStreakHandler.state == 'cold') then
         if (critical) then
             -- A crit while cold => Heating Up!
@@ -145,7 +142,6 @@ print("SPELL_DMG", timestamp, "spell=", spellName, "old=", HotStreakHandler.stat
     else
         print("Unknown HotStreakHandler state");
     end
-print("SPELL_DMG", "newstate=", HotStreakHandler.state);
 end
 
 SAO.Class["MAGE"] = {
