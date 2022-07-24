@@ -28,6 +28,11 @@ HotStreakHandler.init = function(self, spellName)
     addSpellPack(living_bomb);
     addSpellPack(scorch);
 
+    local _, _, tab, index = SAO.GetTalentByName(spellName);
+    if (tab and index) then
+        self.talent = { tab, index }
+    end
+
     -- There are 4 states possible: cold, heating_up, hot_streak and hot_streak_heating_up
     -- The state always starts as cold
     self.state = 'cold';
@@ -103,6 +108,15 @@ local function customCLEU(self, ...)
     end
 
     -- The rest of the code is dedicated to try to catch the Heating Up buff, or if the buff is lost.
+
+    -- Talent information could not be retrieved for Hot Streak
+    if (not HotStreakHandler.talent) then return end
+
+    -- Talent information must include at least one point in Hot Streak
+    -- This may not be accurate, but it's almost impossible to do better
+    -- Not to mention, almost no one will play with only 1 or 2 points
+    local rank = select(5, GetTalentInfo(HotStreakHandler.talent[1], HotStreakHandler.talent[2]));
+    if (not (rank > 0)) then return end
 
     -- Spell must be match a known spell ID that can proc Hot Streak
     if (not HotStreakHandler:isSpellTracked(spellID)) then return end
