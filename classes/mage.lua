@@ -28,7 +28,7 @@ HotStreakHandler.init = function(self, spellName)
     addSpellPack(living_bomb);
     addSpellPack(scorch);
 
-    local _, _, tab, index = SAO.GetTalentByName(spellName);
+    local _, _, tab, index = SAO:GetTalentByName(spellName);
     if (tab and index) then
         self.talent = { tab, index }
     end

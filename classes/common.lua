@@ -34,7 +34,7 @@ function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale
 end
 
 -- Utility aura function, one of the many that Blizzard could've done better years ago...
-function SAO.FindPlayerAuraByID(id)
+function SAO.FindPlayerAuraByID(self, id)
     local i = 1
     local name, icon, count, dispelType, duration, expirationTime,
         source, isStealable, nameplateShowPersonal, spellId,
@@ -64,7 +64,7 @@ end
 
     Returns nil if no talent is found with this name e.g., in the wrong expansion
 ]]
-function SAO.GetTalentByName(talentName)
+function SAO.GetTalentByName(self, talentName)
     for tab = 1, GetNumTalentTabs() do
         for index = 1, GetNumTalents(tab) do
             local name, iconTexture, tier, column, rank, maxRank, isExceptional, available = GetTalentInfo(tab, index);
