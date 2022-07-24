@@ -8,6 +8,7 @@ function SpellActivationOverlay_OnLoad(self)
 	local class = SAO.Class[select(2, UnitClass("player"))];
 	if class then
 		class.Register(SAO);
+		SAO.CurrentClass = class;
 	else
 		print("Class unknown or not converted yet: "..select(1, UnitClass("player")));
 	end

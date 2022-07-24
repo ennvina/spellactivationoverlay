@@ -127,6 +127,9 @@ end
 -- Event receiver
 function SAO.OnEvent(self, event, ...)
     if self[event] then
-        self[event](self, ...)
+        self[event](self, ...);
+    end
+    if (self.CurrentClass and self.CurrentClass[event]) then
+        self.CurrentClass[event](self, ...);
     end
 end
