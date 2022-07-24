@@ -52,6 +52,21 @@ function SAO.FindPlayerAuraByID(id)
     end
 end
 
+-- Add or refresh an overlay
+function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r, g, b)
+    self.ActiveOverlays[spellID] = stacks;
+    self.ShowAllOverlays(self.Frame, spellID, texture, positions, scale, r, g, b);
+end
+
+-- Remove an overlay
+function SAO.DeactivateOverlay(self, spellID)
+    self.ActiveOverlays[spellID] = nil;
+    self.HideOverlays(self.Frame, spellID);
+end
+
+-- Event UNIT_AURA
+-- Former code, removed for performance reasons
+-- Source code kept, in case there exists a buff overlay that can't be tracked by CLEU
 function SAO.UNIT_AURA(self, ...)
     -- Not used anymore
     --[[
@@ -60,17 +75,17 @@ function SAO.UNIT_AURA(self, ...)
         local auraFound = SAO.FindPlayerAuraByID(spellID);
         if (not SAO.ActiveOverlays[spellID] and auraFound) then
             -- Aura just appeared
-            SAO.ActiveOverlays[spellID] = true;
-            self.ShowAllOverlays(self.Frame, select(3,unpack(aura)));
+            self:ActivateOverlay(0, select(3,unpack(aura)));
         elseif (SAO.ActiveOverlays[spellID] and not auraFound) then
             -- Aura just disappeared
-            SAO.ActiveOverlays[spellID] = nil;
-            self.HideOverlays(self.Frame, spellID);
+            self:DeactivateOverlay(spellID);
         end
     end
     ]]
 end
 
+-- Events starting with SPELL_AURA e.g., SPELL_AURA_APPLIED
+-- This should be invoked only if the buff is done on the player i.e., UnitGUID("player") == destGUID
 function SAO.SPELL_AURA(self, ...)
     local timestamp, event, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo();
     local spellID, spellName, spellSchool, auraType, amount = select(12, CombatLogGetCurrentEventInfo());
@@ -80,6 +95,7 @@ function SAO.SPELL_AURA(self, ...)
     local auras = self.RegisteredAurasBySpellID[spellID];
     if auras and (auraApplied or auraRemoved) then
         local currentlyActiveOverlay = self.ActiveOverlays[spellID];
+        local nbStacks = amount or 0;
         if (
             -- Aura is there
             auraApplied
@@ -88,19 +104,18 @@ function SAO.SPELL_AURA(self, ...)
             (not currentlyActiveOverlay or currentlyActiveOverlay  ~= amount)
         and
             -- The number of stacks is supported
-            (auras[amount or 0])
+            (auras[nbStacks])
         ) then
-            self.ActiveOverlays[spellID] = amount or 0;
-            self.ShowAllOverlays(self.Frame, select(3,unpack(auras[amount or 0])));
+            self:ActivateOverlay(nbStacks, select(3,unpack(auras[nbStacks])));
         elseif (currentlyActiveOverlay) then
             -- Aura just disappeared or is not supported for this number of stacks
-            self.ActiveOverlays[spellID] = nil;
-            self.HideOverlays(self.Frame, spellID);
+            self:DeactivateOverlay(spellID);
         end
         -- print(timestamp, event, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName, spellSchool, auraType, amount);
     end
 end
 
+-- The (in)famous CLEU event
 function SAO.COMBAT_LOG_EVENT_UNFILTERED(self, ...)
     local _, event, _, _, _, _, _, destGUID = CombatLogGetCurrentEventInfo();
 
