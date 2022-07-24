@@ -1,5 +1,16 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.2.0-alpha (2022-07-24)
+
+- Major changes to how custom code can be implemented, on a per-class basis
+- Mage's Heating Up is now fully functional
+- Mage's Heating Up now triggers only for mages who picked Hot Streak talent
+
+#### v0.1.2-alpha (2022-07-24)
+
+- New SAO: Mage's Heating Up, barely functional because Wrath has no such buff
+- Factorized code in common.lua
+
 #### v0.1.1-alpha (2022-07-24)
 
 - New class: Mage

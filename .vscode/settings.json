@@ -109,7 +109,10 @@
         "WOW_PROJECT_MAINLINE",
         "strmatch",
         "UnitBuff",
-        "tDeleteItem"
+        "tDeleteItem",
+        "GetNumTalentTabs",
+        "GetNumTalents",
+        "GetTalentInfo"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",
