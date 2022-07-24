@@ -28,7 +28,7 @@ HotStreakHandler.init = function(self, spellName)
     addSpellPack(living_bomb);
     addSpellPack(scorch);
 
-    -- There are 3 states possible: cold, heating_up and hot_streak
+    -- There are 4 states possible: cold, heating_up, hot_streak and hot_streak_heating_up
     -- The state always starts as cold
     self.state = 'cold';
     -- There is a known issue when the player disconnects with the virtual "Heating Up" buff, then reconnects
@@ -55,13 +55,21 @@ local function registerAuras(self)
     end
 end
 
+local function activateHotStreak(self)
+    self:ActivateOverlay(0, heatingUpSpellID, self.TexName[449490], "Left + Right (Flipped)", 0.5, 255, 255, 255);
+end
+
+local function deactivateHotStreak(self)
+    self:DeactivateOverlay(heatingUpSpellID);
+end
+
 local function customCLEU(self, ...)
     local timestamp, event, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo() -- For all events
 
     -- Special case: if player dies, we assume the "Heating Up" virtual buff is lost
     if (event == "UNIT_DIED" and destGUID == UnitGUID("player")) then
         if (HotStreakHandler.state == 'heating_up') then
-            self:DeactivateOverlay(heatingUpSpellID);
+            deactivateHotStreak(self);
         end
         HotStreakHandler.state = 'cold';
 
@@ -78,13 +86,20 @@ local function customCLEU(self, ...)
     -- We assume there is no third charge i.e., if a crit occurs under Hot Streak buff, there is no hidden Heating Up
     if (event == "SPELL_AURA_APPLIED") then
         if (spellID == hotStreakSpellID) then
-            self:DeactivateOverlay(heatingUpSpellID);
+            deactivateHotStreak(self);
+print("AURA_APPLIED", timestamp, "oldstate=", HotStreakHandler.state);
             HotStreakHandler.state = 'hot_streak';
         end
         return;
     elseif (event == "SPELL_AURA_REMOVED") then
         if (spellID == hotStreakSpellID) then
-            HotStreakHandler.state = 'cold';
+print("AURA_REMOVED", timestamp, "oldstate=", HotStreakHandler.state);
+            if (HotStreakHandler.state == 'hot_streak_heating_up') then
+                activateHotStreak(self);
+                HotStreakHandler.state = 'heating_up';
+            else
+                HotStreakHandler.state = 'cold';
+            end
         end
         return;
     end
@@ -96,26 +111,41 @@ local function customCLEU(self, ...)
 
     local amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand = select(15, CombatLogGetCurrentEventInfo()); -- For SPELL_DAMAGE*
 
+print("SPELL_DMG", timestamp, "spell=", spellName, "old=", HotStreakHandler.state, "crit=", critical);
     if (HotStreakHandler.state == 'cold') then
         if (critical) then
             -- A crit while cold => Heating Up!
             HotStreakHandler.state = 'heating_up';
-            self:ActivateOverlay(0, heatingUpSpellID, self.TexName[449490], "Left + Right (Flipped)", 0.5, 255, 255, 255);
+            activateHotStreak(self);
         end
     elseif (HotStreakHandler.state == 'heating_up') then
         if (not critical) then
             -- No crit while Heating Up => cooling down
             HotStreakHandler.state = 'cold';
-            self:DeactivateOverlay(heatingUpSpellID);
+            deactivateHotStreak(self);
         -- else
             -- We could put the state to 'hot_streak' here, but the truth is, we don't know for sure if it's accurate
             -- Either way, if the Hot Streak buff is deserved, we'll know soon enough with a "SPELL_AURA_APPLIED"
         end
     elseif (HotStreakHandler.state == 'hot_streak') then
-        -- No matter if we crit or not, when we are in a Hot Streak, we stay that way until "SPELL_AURA_REMOVED" comes
+        if (critical) then
+            -- If crit during a Hot Streak, store this 'charge' to eventually restore it when Pyroblast is cast
+            -- This is called "hot streaking heating up", which means Hot Streak has a pending Heating Up effect
+            HotStreakHandler.state = 'hot_streak_heating_up';
+            -- Please note this works only because we are fairly certain that SPELL_AURA_APPLIED of a Hot Streak
+            -- always occur *after* the critical effect of the spell which triggered it.
+            -- Should it be the other way around (SPELL_AURA_APPLIED before SPELL_DAMAGE, or worse, random order)
+            -- we would be in big trouble to know whether the crit is piling up before or after a Hot Streak.
+        end
+    elseif (HotStreakHandler.state == 'hot_streak_heating_up') then
+        if (not critical) then
+            -- If Hot Streak had a pending Heating Up effect but a spell did not crit afterwards, the pending Heating Up is lost
+            HotStreakHandler.state = 'hot_streak';
+        end
     else
         print("Unknown HotStreakHandler state");
     end
+print("SPELL_DMG", "newstate=", HotStreakHandler.state);
 end
 
 SAO.Class["MAGE"] = {
