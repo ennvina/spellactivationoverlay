@@ -11,6 +11,7 @@ local HotStreakHandler = {}
 HotStreakHandler.init = function(self, spellName)
     local fire_blast = { 2136, 2137, 2138, 8412, 8413, 10197, 10199, 27078, 27079, 42872, 42873 }
     local fireball = { 133, 143, 145, 3140, 8400, 8401, 8402, 10148, 10149, 10150, 10151, 25306, 27070, 38692, 42832, 42833 }
+    local frostfire_bolt = { 44614, 47610 };
     -- local living_bomb = { 44457, 55359, 55360 } this is the DOT effect, which we do NOT want
     local living_bomb = { 44461, 55361, 55362 }
     local scorch = { 2948, 8444, 8445, 8446, 10205, 10206, 10207, 27073, 27074, 42858, 42859 }
@@ -23,6 +24,7 @@ HotStreakHandler.init = function(self, spellName)
     end
     addSpellPack(fire_blast);
     addSpellPack(fireball);
+    addSpellPack(frostfire_bolt);
     addSpellPack(living_bomb);
     addSpellPack(scorch);
 
@@ -112,7 +114,7 @@ local function customCLEU(self, ...)
     elseif (HotStreakHandler.state == 'hot_streak') then
         -- No matter if we crit or not, when we are in a Hot Streak, we stay that way until "SPELL_AURA_REMOVED" comes
     else
-        print("Unkown HotStreakHandler state");
+        print("Unknown HotStreakHandler state");
     end
 end
 
