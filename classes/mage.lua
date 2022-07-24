@@ -159,6 +159,10 @@ local function registerAuras(self)
     -- Heating Up (spellID == 48107) doesn't exist in Wrath Classic, so we can't use the above aura
     -- Instead, we track Fire Blast, Fireball, Living Bomb and Scorch non-periodic critical strikes
     -- Please look at HotStreakHandler and customCLEU for more information
+
+    -- Frost Procs
+    self:RegisterAura("fingers_of_frost_1", 1, 74396, 449489, "Left", 1, 255, 255, 255);
+    self:RegisterAura("fingers_of_frost_2", 2, 74396, 449489, "Left + Right (Flipped)", 1, 255, 255, 255);
 end
 
 SAO.Class["MAGE"] = {
@@ -167,4 +171,4 @@ SAO.Class["MAGE"] = {
     ["PLAYER_LOGIN"] = customLogin,
 }
 
-SAO_HSA = HotStreakHandler; -- For debugging purposes
+SAO_HSH = HotStreakHandler; -- For debugging purposes
