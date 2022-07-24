@@ -45,21 +45,6 @@ HotStreakHandler.isSpellTracked = function(self, spellID)
     return self.spells[spellID];
 end
 
-local function registerAuras(self)
-    local hotStreamSpellName = GetSpellInfo(hotStreakSpellID);
-    if (hotStreamSpellName) then
-        -- Check for Hot Streak Spell to know if we are in Warth Classic
-        -- Currently, there is no such constant as WOW_PROJECT_WOTLK_CLASSIC or WOW_PROJECT_WRATH_CLASSIC, etc.
-
-        self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, 449490, "Left + Right (Flipped)", 1, 255, 255, 255);
-
-        --self:RegisterAura("hot_streak_half", 0, heatingUpSpellID, 449490, "Left + Right (Flipped)", 0.5, 255, 255, 255);
-        -- Heating Up (spellID == 48107) doesn't exist in Wrath Classic, so we can't use the above aura
-        -- Instead, we track Fire Blast, Fireball, Living Bomb and Scorch non-periodic critical strikes
-        HotStreakHandler:init(hotStreamSpellName);
-    end
-end
-
 local function activateHotStreak(self)
     self:ActivateOverlay(0, heatingUpSpellID, self.TexName[449490], "Left + Right (Flipped)", 0.5, 255, 255, 255);
 end
@@ -158,7 +143,28 @@ local function customCLEU(self, ...)
     end
 end
 
+local function customLogin(self, ...)
+    -- Must initialize class on PLAYER_LOGIN instead of registerAuras
+    -- Because we need the talent tree, which is not always available right off the bat
+    local hotStreamSpellName = GetSpellInfo(hotStreakSpellID);
+    if (hotStreamSpellName) then
+        HotStreakHandler:init(hotStreamSpellName);
+    end
+end
+
+local function registerAuras(self)
+    -- Fire Procs
+    self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, 449490, "Left + Right (Flipped)", 1, 255, 255, 255);
+    --self:RegisterAura("hot_streak_half", 0, heatingUpSpellID, 449490, "Left + Right (Flipped)", 0.5, 255, 255, 255);
+    -- Heating Up (spellID == 48107) doesn't exist in Wrath Classic, so we can't use the above aura
+    -- Instead, we track Fire Blast, Fireball, Living Bomb and Scorch non-periodic critical strikes
+    -- Please look at HotStreakHandler and customCLEU for more information
+end
+
 SAO.Class["MAGE"] = {
     ["Register"] = registerAuras,
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
+    ["PLAYER_LOGIN"] = customLogin,
 }
+
+SAO_HSA = HotStreakHandler; -- For debugging purposes

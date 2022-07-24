@@ -24,6 +24,7 @@ function SpellActivationOverlay_OnLoad(self)
 --	self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_SHOW");
 --	self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_HIDE");
 --	self:RegisterUnitEvent("UNIT_AURA", "player");
+	self:RegisterEvent("PLAYER_LOGIN");
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 	
 	self:SetSize(longSide, longSide)
