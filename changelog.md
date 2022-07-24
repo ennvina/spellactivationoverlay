@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.1.1-alpha (2022-07-24)
+
+- New class: Mage
+- New SAO: Mage's Hot Streak
+
 #### v0.1.0-alpha (2020-07-24)
 
 - SpellActivationOverlay is now public!
