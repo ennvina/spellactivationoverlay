@@ -87,26 +87,6 @@ function SAO.DeactivateOverlay(self, spellID)
     self.HideOverlays(self.Frame, spellID);
 end
 
--- Event UNIT_AURA
--- Former code, removed for performance reasons
--- Source code kept, in case there exists a buff overlay that can't be tracked by CLEU
-function SAO.UNIT_AURA(self, ...)
-    -- Not used anymore
-    --[[
-    for name, aura in pairs(self.RegisteredAurasByName) do
-        local spellID = aura[3];
-        local auraFound = SAO.FindPlayerAuraByID(spellID);
-        if (not SAO.ActiveOverlays[spellID] and auraFound) then
-            -- Aura just appeared
-            self:ActivateOverlay(0, select(3,unpack(aura)));
-        elseif (SAO.ActiveOverlays[spellID] and not auraFound) then
-            -- Aura just disappeared
-            self:DeactivateOverlay(spellID);
-        end
-    end
-    ]]
-end
-
 -- Events starting with SPELL_AURA e.g., SPELL_AURA_APPLIED
 -- This should be invoked only if the buff is done on the player i.e., UnitGUID("player") == destGUID
 function SAO.SPELL_AURA(self, ...)
