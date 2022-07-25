@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.3.1-alpha (2022-07-xx)
+#### v0.3.1-alpha (2022-07-26)
 
 - New SAO: Mage's Missile Barrage
 - New SAO: Mage's Brain Freeze
