@@ -2,6 +2,7 @@
 
 #### v0.3.1-alpha (2022-07-xx)
 
+- New SAO: Mage's Missile Barrage
 - New SAO: Mage's Brain Freeze
 
 #### v0.3.0-alpha (2022-07-25)
