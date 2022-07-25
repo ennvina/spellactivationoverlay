@@ -1,8 +1,8 @@
 ## Interface: 90200
-## Title: SpellActivationOverlay |cffa2f3ff0.3.0|r
+## Title: SpellActivationOverlay |cffa2f3ff0.3.1|r
 ## Notes: Mimic Spell Activation Overlays from Retail
 ## Author: Vinny
-## Version: 0.3.0
+## Version: 0.3.1
 
 # SpellActivationOverlay.lua, SpellActivationOverlay.xml and all textures
 # were created by Blizzard Entertainment, Inc.

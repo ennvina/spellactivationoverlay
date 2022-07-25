@@ -1,5 +1,9 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.3.1-alpha (2022-07-xx)
+
+- New SAO: Mage's Brain Freeze
+
 #### v0.3.0-alpha (2022-07-25)
 
 - New SAO: Mage's Fingers of Frost
