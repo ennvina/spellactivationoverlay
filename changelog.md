@@ -1,5 +1,13 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.3.0-alpha (2022-07-25)
+
+- New SAO: Mage's Fingers of Frost
+- Major changes to how stackable auras, such as Fingers of Frost, are handled
+- Due to a game limitation, stackable auras rely a bit less on combat logs
+- Talent checks could fail during login
+- This addon no longer stores data to the game client local storage
+
 #### v0.2.0-alpha (2022-07-24)
 
 - Major changes to how custom code can be implemented, on a per-class basis

@@ -34,7 +34,7 @@ function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale
 end
 
 -- Utility aura function, one of the many that Blizzard could've done better years ago...
-function SAO.FindPlayerAuraByID(id)
+function SAO.FindPlayerAuraByID(self, id)
     local i = 1
     local name, icon, count, dispelType, duration, expirationTime,
         source, isStealable, nameplateShowPersonal, spellId,
@@ -64,7 +64,7 @@ end
 
     Returns nil if no talent is found with this name e.g., in the wrong expansion
 ]]
-function SAO.GetTalentByName(talentName)
+function SAO.GetTalentByName(self, talentName)
     for tab = 1, GetNumTalentTabs() do
         for index = 1, GetNumTalents(tab) do
             local name, iconTexture, tier, column, rank, maxRank, isExceptional, available = GetTalentInfo(tab, index);
@@ -73,6 +73,11 @@ function SAO.GetTalentByName(talentName)
             end
         end
     end
+end
+
+-- Check if overlay is active
+function SAO.GetActiveOverlay(self, spellID)
+    return self.ActiveOverlays[spellID] ~= nil;
 end
 
 -- Add or refresh an overlay
@@ -87,26 +92,6 @@ function SAO.DeactivateOverlay(self, spellID)
     self.HideOverlays(self.Frame, spellID);
 end
 
--- Event UNIT_AURA
--- Former code, removed for performance reasons
--- Source code kept, in case there exists a buff overlay that can't be tracked by CLEU
-function SAO.UNIT_AURA(self, ...)
-    -- Not used anymore
-    --[[
-    for name, aura in pairs(self.RegisteredAurasByName) do
-        local spellID = aura[3];
-        local auraFound = SAO.FindPlayerAuraByID(spellID);
-        if (not SAO.ActiveOverlays[spellID] and auraFound) then
-            -- Aura just appeared
-            self:ActivateOverlay(0, select(3,unpack(aura)));
-        elseif (SAO.ActiveOverlays[spellID] and not auraFound) then
-            -- Aura just disappeared
-            self:DeactivateOverlay(spellID);
-        end
-    end
-    ]]
-end
-
 -- Events starting with SPELL_AURA e.g., SPELL_AURA_APPLIED
 -- This should be invoked only if the buff is done on the player i.e., UnitGUID("player") == destGUID
 function SAO.SPELL_AURA(self, ...)
@@ -117,24 +102,49 @@ function SAO.SPELL_AURA(self, ...)
 
     local auras = self.RegisteredAurasBySpellID[spellID];
     if auras and (auraApplied or auraRemoved) then
-        local currentlyActiveOverlay = self.ActiveOverlays[spellID];
-        local nbStacks = amount or 0;
+        local count = 0;
+        if (not auras[0]) then
+            -- If there is no aura with stacks == 0, this must mean that this aura is stackable
+            -- To handle stackable auras, we must find the aura (ugh!) to get its number of stacks
+            -- In an ideal world, we'd use the 'amount' which, unfortunately, is unreliable
+            count = select(3, self:FindPlayerAuraByID(spellID));
+        end
+
+        local currentlyActiveOverlay = self:GetActiveOverlay(spellID);
         if (
-            -- Aura is there
-            auraApplied
+            -- Aura not visible yet
+            (not currentlyActiveOverlay)
         and
-            -- Aura just appeared or the number of stacks just changed
-            (not currentlyActiveOverlay or currentlyActiveOverlay  ~= amount)
+            -- Aura is there, either because it was added or upgraded or downgraded but still visible
+            (auraApplied or (auraRemoved and count and count > 0))
         and
             -- The number of stacks is supported
-            (auras[nbStacks])
+            (auras[count])
         ) then
-            self:ActivateOverlay(nbStacks, select(3,unpack(auras[nbStacks])));
-        elseif (currentlyActiveOverlay) then
+            -- Activate aura
+            self:ActivateOverlay(count, select(3,unpack(auras[count])));
+        elseif (
+            -- Aura is already visible but its number of stack changed
+            (currentlyActiveOverlay and currentlyActiveOverlay ~= count)
+        and
+            -- The new stack count allows it to be visible
+            (count and count > 0)
+        and
+            -- The number of stacks is supported
+            (auras[count])
+        ) then
+            -- Deactivate old aura and activate the new one
+            self:DeactivateOverlay(spellID);
+            self:ActivateOverlay(count, select(3,unpack(auras[count])));
+        elseif (
+            -- Aura is already visible and its number of stacks changed
+            (currentlyActiveOverlay and currentlyActiveOverlay ~= count)
+            -- If condition end up here, it means the previous 'if' was false
+            -- Which means either there is no stacks, or the number of stacks is not supported
+        ) then
             -- Aura just disappeared or is not supported for this number of stacks
             self:DeactivateOverlay(spellID);
         end
-        -- print(timestamp, event, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName, spellSchool, auraType, amount);
     end
 end
 
