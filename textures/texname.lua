@@ -3,6 +3,7 @@ local AddonName, Private = ...
 -- Credits to WeakAuras for listing these textures https://github.com/WeakAuras
 local mapping =
 {
+    ["449486"]	= "Arcane Missiles",
     ["1027131"]	= "Arcane Missiles 1",
     ["1027132"]	= "Arcane Missiles 2",
     ["1027133"]	= "Arcane Missiles 3",

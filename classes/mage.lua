@@ -164,6 +164,9 @@ local function registerAuras(self)
     self:RegisterAura("fingers_of_frost_1", 1, 74396, 449489, "Left", 1, 255, 255, 255);
     self:RegisterAura("fingers_of_frost_2", 2, 74396, 449489, "Left + Right (Flipped)", 1, 255, 255, 255);
     self:RegisterAura("brain_freeze", 0, 57761, 449488, "Top", 1, 255, 255, 255);
+
+    -- Arcane Procs
+    self:RegisterAura("missile_barrage", 0, 44401, 449486, "Left + Right (Flipped)", 1, 255, 255, 255);
 end
 
 SAO.Class["MAGE"] = {
