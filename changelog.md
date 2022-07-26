@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.3.2-alpha (2022-07-xx)
+#### v0.3.2-alpha (2022-07-27)
 
 - New SAO: Priest's Surge of Light
 - New SAO: Paladin's Art of War
