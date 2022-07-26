@@ -12,6 +12,7 @@ textures\texname.lua
 classes\common.lua
 classes\deathknight.lua
 classes\mage.lua
+classes\paladin.lua
 classes\priest.lua
 
 SpellActivationOverlay.lua
