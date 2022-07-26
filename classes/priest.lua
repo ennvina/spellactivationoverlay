@@ -14,9 +14,9 @@ local function registerAuras(self)
     self:RegisterAura("serendipity_medium_3", 3, 63735, 469752, "Top", 1, 255, 255, 255);
 
     -- Serendipity with 3 talent points out of 3
---    self:RegisterAura("serendipity_low_1", 1, 63734, 469752, "Top", 0.25, 255, 255, 255);
---    self:RegisterAura("serendipity_low_2", 2, 63734, 469752, "Top", 0.5, 255, 255, 255);
-    self:RegisterAura("serendipity_low_3", 3, 63734, 469752, "Top", 1, 255, 255, 255);
+--    self:RegisterAura("serendipity_high_1", 1, 63734, 469752, "Top", 0.25, 255, 255, 255);
+--    self:RegisterAura("serendipity_high_2", 2, 63734, 469752, "Top", 0.5, 255, 255, 255);
+    self:RegisterAura("serendipity_high_3", 3, 63734, 469752, "Top", 1, 255, 255, 255);
 end
 
 SAO.Class["PRIEST"] = {
