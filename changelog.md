@@ -1,5 +1,9 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.3.3-alpha (2022-07-xx)
+
+- New SAO: Priest's Serendipity
+
 #### v0.3.2-alpha (2022-07-27)
 
 - New SAO: Priest's Surge of Light
