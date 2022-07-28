@@ -14,6 +14,7 @@ classes\deathknight.lua
 classes\mage.lua
 classes\paladin.lua
 classes\priest.lua
+classes\shaman.lua
 
 SpellActivationOverlay.lua
 SpellActivationOverlay.xml
