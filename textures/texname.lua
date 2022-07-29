@@ -89,4 +89,6 @@ for retailTexture, classicTexture in pairs(mapping) do
   local fullTextureName = "Interface\\Addons\\SpellActivationOverlay\\textures\\"..classicTexture:gsub(" ", "_");
   Private.TexName[retailTexture] = fullTextureName;
   Private.TexName[tonumber(retailTexture,10)] = fullTextureName;
+  Private.TexName[strlower(classicTexture)] = fullTextureName;
+  Private.TexName[strlower(classicTexture):gsub(" ", "_")] = fullTextureName;
 end
