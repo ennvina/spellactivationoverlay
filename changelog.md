@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.3.3-alpha (2022-07-xx)
+#### v0.3.3-alpha (2022-07-29)
 
 - New classes: Shaman, Warrior
 - New SAO: Priest's Serendipity
