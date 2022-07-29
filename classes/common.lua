@@ -27,9 +27,13 @@ function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale
     local aura = { name, stacks, spellID, self.TexName[texture], positions, scale, r, g, b }
     self.RegisteredAurasByName[name] = aura;
     if self.RegisteredAurasBySpellID[spellID] then
-        self.RegisteredAurasBySpellID[spellID][stacks] = aura;
+        if self.RegisteredAurasBySpellID[spellID][stacks] then
+            table.insert(self.RegisteredAurasBySpellID[spellID][stacks], aura)
+        else
+            self.RegisteredAurasBySpellID[spellID][stacks] = { aura };
+        end
     else
-        self.RegisteredAurasBySpellID[spellID] = { [stacks] = aura }
+        self.RegisteredAurasBySpellID[spellID] = { [stacks] = { aura } }
     end
 end
 
@@ -122,7 +126,9 @@ function SAO.SPELL_AURA(self, ...)
             (auras[count])
         ) then
             -- Activate aura
-            self:ActivateOverlay(count, select(3,unpack(auras[count])));
+            for _, aura in ipairs(auras[count]) do
+                self:ActivateOverlay(count, select(3,unpack(aura)));
+            end
         elseif (
             -- Aura is already visible but its number of stack changed
             (currentlyActiveOverlay and currentlyActiveOverlay ~= count)
@@ -135,7 +141,9 @@ function SAO.SPELL_AURA(self, ...)
         ) then
             -- Deactivate old aura and activate the new one
             self:DeactivateOverlay(spellID);
-            self:ActivateOverlay(count, select(3,unpack(auras[count])));
+            for _, aura in ipairs(auras[count]) do
+                self:ActivateOverlay(count, select(3,unpack(aura)));
+            end
         elseif (
             -- Aura is already visible and its number of stacks changed
             (currentlyActiveOverlay and currentlyActiveOverlay ~= count)
