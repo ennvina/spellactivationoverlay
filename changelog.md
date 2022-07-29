@@ -2,13 +2,16 @@
 
 #### v0.3.3-alpha (2022-07-xx)
 
+- New classes: Shaman, Warrior
 - New SAO: Priest's Serendipity
 - New SAO: Shaman's Maelstrom Weapon
 - New SAO: Warrior's Bloodsurge
+- New SAO: Warrior's Sudden Death
 - New SAO: Warrior's Sword and Board
 
 #### v0.3.2-alpha (2022-07-27)
 
+- New classes: Priest, Paladin
 - New SAO: Priest's Surge of Light
 - New SAO: Paladin's Art of War
 
@@ -62,7 +65,7 @@
 
 - Custom code for initializing new frame members
 - Extra caution to ensure Blizzard original code changes as little as possible
-- Utility functions to work around auras; defined in a separated source file
+- Utility functions to work around auras; defined in a separate source file
 
 #### v0.0.2-alpha (2022-07-23)
 
