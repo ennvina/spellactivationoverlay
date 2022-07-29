@@ -3,6 +3,7 @@
 #### v0.3.3-alpha (2022-07-xx)
 
 - New SAO: Priest's Serendipity
+- New SAO: Shaman's Maelstrom Weapon
 
 #### v0.3.2-alpha (2022-07-27)
 
