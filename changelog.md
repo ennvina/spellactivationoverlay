@@ -4,6 +4,7 @@
 
 - New SAO: Priest's Serendipity
 - New SAO: Shaman's Maelstrom Weapon
+- New SAO: Warrior's Bloodsurge
 
 #### v0.3.2-alpha (2022-07-27)
 
