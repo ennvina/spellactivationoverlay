@@ -15,6 +15,7 @@ classes\mage.lua
 classes\paladin.lua
 classes\priest.lua
 classes\shaman.lua
+classes\warlock.lua
 classes\warrior.lua
 
 SpellActivationOverlay.lua
