@@ -9,14 +9,13 @@ local function registerMolenCore(self, baseName, spellID)
 end
 
 local function registerAuras(self)
-    -- 1/3 talent point
-    registerMolenCore(self, "molten_core_low", 47383);
+    -- Molten Core
+    registerMolenCore(self, "molten_core_low", 47383); -- 1/3 talent point
+    registerMolenCore(self, "molten_core_medium", 71162); -- 2/3 talent points
+    registerMolenCore(self, "molten_core_high", 71165); -- 3/3 talent points
 
-    -- 2/3 talent points
-    registerMolenCore(self, "molten_core_medium", 71162);
-
-    -- 3/3 talent points
-    registerMolenCore(self, "molten_core_high", 71165);
+    -- Nightfall / Shadow Trance
+    self:RegisterAura("nightfall", 0, 17941, "nightfall", "Left + Right (Flipped)", 1, 255, 255, 255);
 end
 
 SAO.Class["WARLOCK"] = {
