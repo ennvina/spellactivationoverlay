@@ -12,6 +12,9 @@ local function registerAuras(self)
     -- Backlash
     self:RegisterAura("backlash", 0, 34936, "backlash", "Top", 1, 255, 255, 255);
 
+    -- Empowered Imp
+    self:RegisterAura("empowered_imp", 0, 47283, "imp_empowerment", "Left + Right (Flipped)", 1, 255, 255, 255);
+
     -- Molten Core
     registerMolenCore(self, "molten_core_low", 47383); -- 1/3 talent point
     registerMolenCore(self, "molten_core_medium", 71162); -- 2/3 talent points
