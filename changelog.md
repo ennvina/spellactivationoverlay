@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.3.4-alpha (2022-07-xx)
+#### v0.3.4-alpha (2022-07-31)
 
 - New class: Warlock
 - New SAO: Warlock's Backlash
