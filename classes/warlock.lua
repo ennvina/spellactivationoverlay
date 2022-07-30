@@ -14,7 +14,7 @@ local function registerAuras(self)
     registerMolenCore(self, "molten_core_medium", 71162); -- 2/3 talent points
     registerMolenCore(self, "molten_core_high", 71165); -- 3/3 talent points
 
-    -- Nightfall
+    -- Nightfall / Shadow Trance
     self:RegisterAura("nightfall", 0, 17941, "nightfall", "Left + Right (Flipped)", 1, 255, 255, 255);
 end
 
