@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.3.4-alpha (2022-07-xx)
+
+- New class: Warlock
+- New SAO: Warlock's Molten Core
+
 #### v0.3.3-alpha (2022-07-29)
 
 - New classes: Shaman, Warrior

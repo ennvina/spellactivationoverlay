@@ -9,7 +9,7 @@ local mapping =
     ["1027133"]	= "Arcane Missiles 3",
     ["450913"] 	= "Art of War",
     ["801266"] 	= "Backlash_Green",
-    ["460830"] 	= "Backslash",
+    ["460830"] 	= "Backlash",
     ["1030393"]	= "Bandits Guile",
     ["510822"] 	= "Berserk",
     ["511104"] 	= "Blood Boil",
@@ -89,4 +89,6 @@ for retailTexture, classicTexture in pairs(mapping) do
   local fullTextureName = "Interface\\Addons\\SpellActivationOverlay\\textures\\"..classicTexture:gsub(" ", "_");
   Private.TexName[retailTexture] = fullTextureName;
   Private.TexName[tonumber(retailTexture,10)] = fullTextureName;
+  Private.TexName[strlower(classicTexture)] = fullTextureName;
+  Private.TexName[strlower(classicTexture):gsub(" ", "_")] = fullTextureName;
 end
