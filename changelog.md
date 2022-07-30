@@ -3,6 +3,7 @@
 #### v0.3.4-alpha (2022-07-xx)
 
 - New class: Warlock
+- New SAO: Warlock's Backlash
 - New SAO: Warlock's Molten Core
 - New SAO: Warlock's Nightfall, a.k.a. Shadow Trance
 
