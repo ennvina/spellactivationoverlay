@@ -4,6 +4,7 @@
 
 - New class: Warlock
 - New SAO: Warlock's Backlash
+- New SAO: Warlock's Empowered Imp
 - New SAO: Warlock's Molten Core
 - New SAO: Warlock's Nightfall, a.k.a. Shadow Trance
 
