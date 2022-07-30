@@ -4,7 +4,7 @@
 
 - New class: Warlock
 - New SAO: Warlock's Molten Core
-- New SAO: Warlock's Nightfall
+- New SAO: Warlock's Nightfall, a.k.a. Shadow Trance
 
 #### v0.3.3-alpha (2022-07-29)
 
