@@ -9,6 +9,9 @@ local function registerMolenCore(self, baseName, spellID)
 end
 
 local function registerAuras(self)
+    -- Backlash
+    self:RegisterAura("backlash", 0, 34936, "backlash", "Top", 1, 255, 255, 255);
+
     -- Molten Core
     registerMolenCore(self, "molten_core_low", 47383); -- 1/3 talent point
     registerMolenCore(self, "molten_core_medium", 71162); -- 2/3 talent points
