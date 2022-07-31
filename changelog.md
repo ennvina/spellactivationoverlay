@@ -9,6 +9,7 @@
 - New SAO: Hunter's Improved Steady Shot
 - New SAO: Hunter's Lock and Load
 - New SAO: Mage's Impact
+- New SAO: Shaman's Elemental Focus
 
 #### v0.3.4-alpha (2022-07-31)
 
