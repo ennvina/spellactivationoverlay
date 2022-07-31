@@ -11,7 +11,7 @@ local function isFeral(self)
 end
 
 local function hasClarity(self)
-    return self:FindPlayerAuraByID(self, omenSpellID) ~= nil;
+    return self:FindPlayerAuraByID(omenSpellID) ~= nil;
 end
 
 local function activateOmen(self)
@@ -23,7 +23,7 @@ local function deactivateOmen(self)
     self:DeactivateOverlay(omenSpellID);
 end
 
-local function customLogin(self)
+local function customLoad(self)
     feralCache = isFeral(self);
     clarityCache = hasClarity(self);
     if (clarityCache) then
@@ -74,5 +74,5 @@ SAO.Class["DRUID"] = {
     ["Register"] = registerAuras,
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
     ["UPDATE_SHAPESHIFT_FORM"] = updateShapeshift,
-    ["PLAYER_LOGIN"] = customLogin,
+    ["PLAYER_ENTERING_WORLD"] = customLoad,
 }
