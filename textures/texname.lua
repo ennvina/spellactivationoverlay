@@ -8,7 +8,7 @@ local mapping =
     ["1027132"]	= "Arcane Missiles 2",
     ["1027133"]	= "Arcane Missiles 3",
     ["450913"] 	= "Art of War",
-    ["801266"] 	= "Backlash_Green",
+    ["801266"] 	= "Backlash Green",
     ["460830"] 	= "Backlash",
     ["1030393"]	= "Bandits Guile",
     ["510822"] 	= "Berserk",
@@ -60,7 +60,7 @@ local mapping =
     ["450929"] 	= "Nature's Grace",
     ["511105"] 	= "Necropolis",
     ["449492"] 	= "Nightfall",
-    ["510823"] 	= "Omen of Clarity (Feral)",
+    ["510823"] 	= "Feral OmenOfClarity",
     ["898423"] 	= "Predatory Swiftness",
     ["962497"] 	= "Raging Blow",
     ["450930"] 	= "Rime",
@@ -86,9 +86,9 @@ local mapping =
 Private.TexName = {}
 for retailTexture, classicTexture in pairs(mapping) do
   -- For now, all textures are copied locally in the addon's texture folder
-  local fullTextureName = "Interface\\Addons\\SpellActivationOverlay\\textures\\"..classicTexture:gsub(" ", "_");
+  local fullTextureName = "Interface\\Addons\\SpellActivationOverlay\\textures\\"..classicTexture:gsub(" ", "_"):gsub("'", "");
   Private.TexName[retailTexture] = fullTextureName;
   Private.TexName[tonumber(retailTexture,10)] = fullTextureName;
   Private.TexName[strlower(classicTexture)] = fullTextureName;
-  Private.TexName[strlower(classicTexture):gsub(" ", "_")] = fullTextureName;
+  Private.TexName[strlower(classicTexture):gsub(" ", "_"):gsub("'", "")] = fullTextureName;
 end
