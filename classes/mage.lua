@@ -45,11 +45,12 @@ HotStreakHandler.isSpellTracked = function(self, spellID)
     return self.spells[spellID];
 end
 
-local function activateHotStreak(self)
-    self:ActivateOverlay(0, heatingUpSpellID, self.TexName[449490], "Left + Right (Flipped)", 0.5, 255, 255, 255);
+local function activateHeatingUp(self)
+    -- Heating Up uses the Hot Streak texture, but scaled at 50%
+    self:ActivateOverlay(0, heatingUpSpellID, self.TexName["hot_streak"], "Left + Right (Flipped)", 0.5, 255, 255, 255);
 end
 
-local function deactivateHotStreak(self)
+local function deactivateHeatingUp(self)
     self:DeactivateOverlay(heatingUpSpellID);
 end
 
@@ -59,7 +60,7 @@ local function customCLEU(self, ...)
     -- Special case: if player dies, we assume the "Heating Up" virtual buff is lost
     if (event == "UNIT_DIED" and destGUID == UnitGUID("player")) then
         if (HotStreakHandler.state == 'heating_up') then
-            deactivateHotStreak(self);
+            deactivateHeatingUp(self);
         end
         HotStreakHandler.state = 'cold';
 
@@ -76,14 +77,14 @@ local function customCLEU(self, ...)
     -- We assume there is no third charge i.e., if a crit occurs under Hot Streak buff, there is no hidden Heating Up
     if (event == "SPELL_AURA_APPLIED") then
         if (spellID == hotStreakSpellID) then
-            deactivateHotStreak(self);
+            deactivateHeatingUp(self);
             HotStreakHandler.state = 'hot_streak';
         end
         return;
     elseif (event == "SPELL_AURA_REMOVED") then
         if (spellID == hotStreakSpellID) then
             if (HotStreakHandler.state == 'hot_streak_heating_up') then
-                activateHotStreak(self);
+                activateHeatingUp(self);
                 HotStreakHandler.state = 'heating_up';
             else
                 HotStreakHandler.state = 'cold';
@@ -112,13 +113,13 @@ local function customCLEU(self, ...)
         if (critical) then
             -- A crit while cold => Heating Up!
             HotStreakHandler.state = 'heating_up';
-            activateHotStreak(self);
+            activateHeatingUp(self);
         end
     elseif (HotStreakHandler.state == 'heating_up') then
         if (not critical) then
             -- No crit while Heating Up => cooling down
             HotStreakHandler.state = 'cold';
-            deactivateHotStreak(self);
+            deactivateHeatingUp(self);
         -- else
             -- We could put the state to 'hot_streak' here, but the truth is, we don't know for sure if it's accurate
             -- Either way, if the Hot Streak buff is deserved, we'll know soon enough with a "SPELL_AURA_APPLIED"
@@ -155,6 +156,8 @@ end
 local function registerAuras(self)
     -- Fire Procs
     self:RegisterAura("impact", 0, 64343, "impact", "Top", 1, 255, 255, 255);
+    self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255);
+    --self:RegisterAura("hot_streak_half", 0, heatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255);
     -- Heating Up (spellID == 48107) doesn't exist in Wrath Classic, so we can't use the above aura
     -- Instead, we track Fire Blast, Fireball, Living Bomb and Scorch non-periodic critical strikes
     -- Please look at HotStreakHandler and customCLEU for more information
