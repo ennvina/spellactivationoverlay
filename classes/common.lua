@@ -148,7 +148,7 @@ function SAO.SPELL_AURA(self, ...)
             -- Aura is already visible and its number of stacks changed
             (currentlyActiveOverlay and currentlyActiveOverlay ~= count)
         and
-            (count > 0 or auraRemoved)
+            ((count and count > 0) or auraRemoved)
             -- If condition end up here, it means the previous 'if' was false
             -- Which means either there is no stacks, or the number of stacks is not supported
         ) then
