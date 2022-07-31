@@ -112,7 +112,8 @@
         "tDeleteItem",
         "GetNumTalentTabs",
         "GetNumTalents",
-        "GetTalentInfo"
+        "GetTalentInfo",
+        "GetShapeshiftForm"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",
