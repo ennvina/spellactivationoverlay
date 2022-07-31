@@ -154,8 +154,7 @@ end
 
 local function registerAuras(self)
     -- Fire Procs
-    self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, 449490, "Left + Right (Flipped)", 1, 255, 255, 255);
-    --self:RegisterAura("hot_streak_half", 0, heatingUpSpellID, 449490, "Left + Right (Flipped)", 0.5, 255, 255, 255);
+    self:RegisterAura("impact", 0, 64343, "impact", "Top", 1, 255, 255, 255);
     -- Heating Up (spellID == 48107) doesn't exist in Wrath Classic, so we can't use the above aura
     -- Instead, we track Fire Blast, Fireball, Living Bomb and Scorch non-periodic critical strikes
     -- Please look at HotStreakHandler and customCLEU for more information
