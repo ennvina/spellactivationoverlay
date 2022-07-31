@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.3.5-alpha (2022-08-xx)
+
+- New class: Hunter
+- New SAO: Hunter's Improved Steady Shot
+
 #### v0.3.4-alpha (2022-07-31)
 
 - New class: Warlock
