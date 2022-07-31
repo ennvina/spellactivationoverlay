@@ -2,7 +2,8 @@
 
 #### v0.3.5-alpha (2022-08-xx)
 
-- New class: Hunter
+- New classes: Druid, Hunter
+- New SAO: Druid's Omen of Clarity
 - New SAO: Hunter's Improved Steady Shot
 - New SAO: Hunter's Lock and Load
 - New SAO: Mage's Impact
