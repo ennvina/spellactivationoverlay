@@ -66,6 +66,10 @@ local function customCLEU(self, ...)
 end
 
 local function registerAuras(self)
+    -- Eclipses
+    self:RegisterAura("eclipse_lunar", 0, 48518, "eclipse_moon", "Left", 1, 255, 255, 255);
+    self:RegisterAura("eclipse_solar", 0, 48517, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255);
+
     -- Track Omen of Clarity with a custom CLEU function, to be able to switch between feral and non-feral texture
     -- self:RegisterAura("omen_of_clarity", 0, 16870, "natures_grace", "Left + Right (Flipped)", 1, 255, 255, 255);
 end
