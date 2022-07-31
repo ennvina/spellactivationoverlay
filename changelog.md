@@ -1,8 +1,9 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.3.5-alpha (2022-08-xx)
+#### v0.4.0-beta (2022-07-31)
 
-- New classes: Druid, Hunter
+- Because all classes are supported, the addon now enters its Beta phase!
+- New classes: Druid, Hunter, Rogue
 - New SAO: Druid's Lunar Eclipse
 - New SAO: Druid's Solar Eclipse
 - New SAO: Druid's Omen of Clarity
@@ -10,6 +11,7 @@
 - New SAO: Hunter's Lock and Load
 - New SAO: Mage's Impact
 - New SAO: Shaman's Elemental Focus
+- The Rogue class, although supported, currently doesn't have any SAO
 
 #### v0.3.4-alpha (2022-07-31)
 
