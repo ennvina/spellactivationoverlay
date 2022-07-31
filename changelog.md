@@ -4,6 +4,7 @@
 
 - New class: Hunter
 - New SAO: Hunter's Improved Steady Shot
+- New SAO: Hunter's Lock and Load
 
 #### v0.3.4-alpha (2022-07-31)
 
