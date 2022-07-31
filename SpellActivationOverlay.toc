@@ -11,6 +11,7 @@ textures\texname.lua
 
 classes\common.lua
 classes\deathknight.lua
+classes\druid.lua
 classes\hunter.lua
 classes\mage.lua
 classes\paladin.lua

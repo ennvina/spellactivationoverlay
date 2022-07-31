@@ -86,9 +86,9 @@ local mapping =
 Private.TexName = {}
 for retailTexture, classicTexture in pairs(mapping) do
   -- For now, all textures are copied locally in the addon's texture folder
-  local fullTextureName = "Interface\\Addons\\SpellActivationOverlay\\textures\\"..classicTexture:gsub(" ", "_");
+  local fullTextureName = "Interface\\Addons\\SpellActivationOverlay\\textures\\"..classicTexture:gsub(" ", "_"):gsub("'", "");
   Private.TexName[retailTexture] = fullTextureName;
   Private.TexName[tonumber(retailTexture,10)] = fullTextureName;
   Private.TexName[strlower(classicTexture)] = fullTextureName;
-  Private.TexName[strlower(classicTexture):gsub(" ", "_")] = fullTextureName;
+  Private.TexName[strlower(classicTexture):gsub(" ", "_"):gsub("'", "")] = fullTextureName;
 end
