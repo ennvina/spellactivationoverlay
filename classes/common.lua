@@ -23,8 +23,8 @@ SAO.ActiveOverlays = {}
 
 -- Utility function to register a new aura
 -- Arguments simply need to copy Retail's SPELL_ACTIVATION_OVERLAY_SHOW event arguments
-function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale, r, g, b)
-    local aura = { name, stacks, spellID, self.TexName[texture], positions, scale, r, g, b }
+function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale, r, g, b, autoPulse)
+    local aura = { name, stacks, spellID, self.TexName[texture], positions, scale, r, g, b, autoPulse }
     self.RegisteredAurasByName[name] = aura;
     if self.RegisteredAurasBySpellID[spellID] then
         if self.RegisteredAurasBySpellID[spellID][stacks] then
@@ -85,9 +85,9 @@ function SAO.GetActiveOverlay(self, spellID)
 end
 
 -- Add or refresh an overlay
-function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r, g, b, forcePulsePlay)
+function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay)
     self.ActiveOverlays[spellID] = stacks;
-    self.ShowAllOverlays(self.Frame, spellID, texture, positions, scale, r, g, b, forcePulsePlay);
+    self.ShowAllOverlays(self.Frame, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay);
 end
 
 -- Remove an overlay
@@ -142,9 +142,9 @@ function SAO.SPELL_AURA(self, ...)
             -- Deactivate old aura and activate the new one
             self:DeactivateOverlay(spellID);
             for _, aura in ipairs(auras[count]) do
-                local texture, positions, scale, r, g, b = select(4,unpack(aura));
-                local forcePulsePlay = true;
-                self:ActivateOverlay(count, spellID, texture, positions, scale, r, g, b, forcePulsePlay);
+                local texture, positions, scale, r, g, b, autoPulse = select(4,unpack(aura));
+                local forcePulsePlay = autoPulse;
+                self:ActivateOverlay(count, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay);
             end
         elseif (
             -- Aura is already visible and its number of stacks changed
