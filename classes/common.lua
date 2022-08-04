@@ -85,9 +85,9 @@ function SAO.GetActiveOverlay(self, spellID)
 end
 
 -- Add or refresh an overlay
-function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r, g, b)
+function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r, g, b, forcePulsePlay)
     self.ActiveOverlays[spellID] = stacks;
-    self.ShowAllOverlays(self.Frame, spellID, texture, positions, scale, r, g, b);
+    self.ShowAllOverlays(self.Frame, spellID, texture, positions, scale, r, g, b, forcePulsePlay);
 end
 
 -- Remove an overlay
@@ -142,7 +142,9 @@ function SAO.SPELL_AURA(self, ...)
             -- Deactivate old aura and activate the new one
             self:DeactivateOverlay(spellID);
             for _, aura in ipairs(auras[count]) do
-                self:ActivateOverlay(count, select(3,unpack(aura)));
+                local texture, positions, scale, r, g, b = select(4,unpack(aura));
+                local forcePulsePlay = true;
+                self:ActivateOverlay(count, spellID, texture, positions, scale, r, g, b, forcePulsePlay);
             end
         elseif (
             -- Aura is already visible and its number of stacks changed
