@@ -1,5 +1,9 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.4.1-beta (2022-07-31)
+
+- New SAO: Paladin's Infusion of Light
+
 #### v0.4.0-beta (2022-07-31)
 
 - Because all classes are supported, the addon now enters its Beta phase!
