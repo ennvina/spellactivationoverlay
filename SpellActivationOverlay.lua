@@ -72,18 +72,18 @@ local complexLocationTable = {
 	},
 }
 
-function SpellActivationOverlay_ShowAllOverlays(self, spellID, texturePath, positions, scale, r, g, b)
+function SpellActivationOverlay_ShowAllOverlays(self, spellID, texturePath, positions, scale, r, g, b, forcePulsePlay)
 	positions = strupper(positions);
 	if ( complexLocationTable[positions] ) then
 		for location, info in pairs(complexLocationTable[positions]) do
-			SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, location, scale, r, g, b, info.vFlip, info.hFlip);
+			SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, location, scale, r, g, b, info.vFlip, info.hFlip, forcePulsePlay);
 		end
 	else
-		SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, positions, scale, r, g, b, false, false);
+		SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, positions, scale, r, g, b, false, false, forcePulsePlay);
 	end
 end
 
-function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, vFlip, hFlip)
+function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, vFlip, hFlip, forcePulsePlay)
 	local overlay = SpellActivationOverlay_GetOverlay(self, spellID, position);
 	overlay.spellID = spellID;
 	overlay.position = position;
@@ -140,6 +140,9 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	overlay.animOut:Stop();	--In case we're in the process of animating this out.
 	PlaySound(SOUNDKIT.UI_POWER_AURA_GENERIC);
 	overlay:Show();
+	if ( forcePulsePlay ) then
+		overlay.pulse:Play();
+	end
 end
 
 function SpellActivationOverlay_GetOverlay(self, spellID, position)
