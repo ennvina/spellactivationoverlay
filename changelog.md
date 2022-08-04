@@ -1,8 +1,9 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.4.1-beta (2022-07-31)
+#### v0.4.1-beta (2022-08-xx)
 
 - New SAO: Paladin's Infusion of Light
+- Textures should keep pulsing after gaining/losing stacks
 
 #### v0.4.0-beta (2022-07-31)
 
