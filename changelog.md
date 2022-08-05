@@ -1,5 +1,9 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.4.2-beta (2022-08-xx)
+
+- Alpha is reduced by 50% when out of combat
+
 #### v0.4.1-beta (2022-08-05)
 
 - New SAO: Paladin's Infusion of Light
