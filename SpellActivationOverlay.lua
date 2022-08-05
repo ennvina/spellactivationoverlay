@@ -54,8 +54,10 @@ function SpellActivationOverlay_OnEvent(self, event, ...)
 		end
 	end]]
 	if ( event == "PLAYER_REGEN_DISABLED" ) then
+		self.combatAnimOut:Stop();	--In case we're in the process of animating this out.
 		self.combatAnimIn:Play();
 	elseif ( event == "PLAYER_REGEN_ENABLED" ) then
+		self.combatAnimIn:Stop();	--In case we're in the process of animating this out.
 		self.combatAnimOut:Play();
 	end
 	if ( event ) then
