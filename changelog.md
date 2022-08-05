@@ -1,11 +1,11 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.4.2-beta (2022-08-xx)
+#### v0.4.2-beta (2022-08-05)
 
+- Mage's Heating Up is no longer lost on death
 - Alpha is reduced by 50% when out of combat
 - SAOs are shown uplon login if player already has the corresponding buffs
 - Currently, this includes all SAOs but Heating Up, which is not a buff
-- Mage's Heating Up is no longer lost on death
 
 #### v0.4.1-beta (2022-08-05)
 
