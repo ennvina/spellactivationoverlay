@@ -47,7 +47,7 @@ end
 
 local function activateHeatingUp(self)
     -- Heating Up uses the Hot Streak texture, but scaled at 50%
-    self:ActivateOverlay(0, heatingUpSpellID, self.TexName["hot_streak"], "Left + Right (Flipped)", 0.5, 255, 255, 255);
+    self:ActivateOverlay(0, heatingUpSpellID, self.TexName["hot_streak"], "Left + Right (Flipped)", 0.5, 255, 255, 255, false);
 end
 
 local function deactivateHeatingUp(self)
@@ -156,19 +156,19 @@ end
 local function registerAuras(self)
     -- Fire Procs
     self:RegisterAura("impact", 0, 64343, "impact", "Top", 1, 255, 255, 255);
-    self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255);
-    --self:RegisterAura("hot_streak_half", 0, heatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255);
+    self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true);
+    --self:RegisterAura("hot_streak_half", 0, heatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255, false);
     -- Heating Up (spellID == 48107) doesn't exist in Wrath Classic, so we can't use the above aura
     -- Instead, we track Fire Blast, Fireball, Living Bomb and Scorch non-periodic critical strikes
     -- Please look at HotStreakHandler and customCLEU for more information
 
     -- Frost Procs
-    self:RegisterAura("fingers_of_frost_1", 1, 74396, 449489, "Left", 1, 255, 255, 255);
-    self:RegisterAura("fingers_of_frost_2", 2, 74396, 449489, "Left + Right (Flipped)", 1, 255, 255, 255);
-    self:RegisterAura("brain_freeze", 0, 57761, 449488, "Top", 1, 255, 255, 255);
+    self:RegisterAura("fingers_of_frost_1", 1, 74396, 449489, "Left", 1, 255, 255, 255, true);
+    self:RegisterAura("fingers_of_frost_2", 2, 74396, 449489, "Left + Right (Flipped)", 1, 255, 255, 255, true);
+    self:RegisterAura("brain_freeze", 0, 57761, 449488, "Top", 1, 255, 255, 255, true);
 
     -- Arcane Procs
-    self:RegisterAura("missile_barrage", 0, 44401, 449486, "Left + Right (Flipped)", 1, 255, 255, 255);
+    self:RegisterAura("missile_barrage", 0, 44401, 449486, "Left + Right (Flipped)", 1, 255, 255, 255, true);
 end
 
 SAO.Class["MAGE"] = {

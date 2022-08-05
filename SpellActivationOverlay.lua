@@ -41,7 +41,7 @@ function SpellActivationOverlay_OnEvent(self, event, ...)
 	if ( event == "SPELL_ACTIVATION_OVERLAY_SHOW" ) then
 		local spellID, texture, positions, scale, r, g, b = ...;
 		if ( GetCVarBool("displaySpellActivationOverlays") ) then 
-			SpellActivationOverlay_ShowAllOverlays(self, spellID, texture, positions, scale, r, g, b)
+			SpellActivationOverlay_ShowAllOverlays(self, spellID, texture, positions, scale, r, g, b, true)
 		end
 	elseif ( event == "SPELL_ACTIVATION_OVERLAY_HIDE" ) then
 		local spellID = ...;
@@ -72,18 +72,18 @@ local complexLocationTable = {
 	},
 }
 
-function SpellActivationOverlay_ShowAllOverlays(self, spellID, texturePath, positions, scale, r, g, b, forcePulsePlay)
+function SpellActivationOverlay_ShowAllOverlays(self, spellID, texturePath, positions, scale, r, g, b, autoPulse, forcePulsePlay)
 	positions = strupper(positions);
 	if ( complexLocationTable[positions] ) then
 		for location, info in pairs(complexLocationTable[positions]) do
-			SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, location, scale, r, g, b, info.vFlip, info.hFlip, forcePulsePlay);
+			SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, location, scale, r, g, b, info.vFlip, info.hFlip, autoPulse, forcePulsePlay);
 		end
 	else
-		SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, positions, scale, r, g, b, false, false, forcePulsePlay);
+		SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, positions, scale, r, g, b, false, false, autoPulse, forcePulsePlay);
 	end
 end
 
-function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, vFlip, hFlip, forcePulsePlay)
+function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, vFlip, hFlip, autoPulse, forcePulsePlay)
 	local overlay = SpellActivationOverlay_GetOverlay(self, spellID, position);
 	overlay.spellID = spellID;
 	overlay.position = position;
@@ -143,6 +143,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	if ( forcePulsePlay ) then
 		overlay.pulse:Play();
 	end
+	overlay.pulse.autoPlay = autoPulse;
 end
 
 function SpellActivationOverlay_GetOverlay(self, spellID, position)
@@ -208,7 +209,9 @@ end
 function SpellActivationOverlayTexture_OnFadeInFinished(animGroup)
 	local overlay = animGroup:GetParent();
 	overlay:SetAlpha(1);
-	overlay.pulse:Play();
+	if ( overlay.pulse.autoPlay ) then
+		overlay.pulse:Play();
+	end
 end
 
 function SpellActivationOverlayTexture_OnFadeOutFinished(anim)

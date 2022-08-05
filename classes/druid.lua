@@ -40,7 +40,7 @@ local function updateOneSAO(self, position, spellID, texture)
     if (texture == "") then
         self:DeactivateOverlay(spellID);
     else
-        self:ActivateOverlay(0, spellID, self.TexName[texture], position, 1, 255, 255, 255);
+        self:ActivateOverlay(0, spellID, self.TexName[texture], position, 1, 255, 255, 255, true);
     end
 end
 
@@ -137,11 +137,11 @@ end
 
 local function registerAuras(self)
     -- Track Eclipses with a custom CLEU function, so that eclipses can coexist with Omen of Clarity
-    -- self:RegisterAura("eclipse_lunar", 0, lunarSpellID, "eclipse_moon", "Left", 1, 255, 255, 255);
-    -- self:RegisterAura("eclipse_solar", 0, solarSpellID, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255);
+    -- self:RegisterAura("eclipse_lunar", 0, lunarSpellID, "eclipse_moon", "Left", 1, 255, 255, 255, true);
+    -- self:RegisterAura("eclipse_solar", 0, solarSpellID, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true);
 
     -- Track Omen of Clarity with a custom CLEU function, to be able to switch between feral and non-feral texture
-    -- self:RegisterAura("omen_of_clarity", 0, 16870, "natures_grace", "Left + Right (Flipped)", 1, 255, 255, 255);
+    -- self:RegisterAura("omen_of_clarity", 0, 16870, "natures_grace", "Left + Right (Flipped)", 1, 255, 255, 255, true);
 end
 
 SAO.Class["DRUID"] = {
