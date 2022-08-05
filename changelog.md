@@ -1,9 +1,11 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.4.1-beta (2022-08-xx)
+#### v0.4.1-beta (2022-08-05)
 
 - New SAO: Paladin's Infusion of Light
 - Textures should keep pulsing after gaining/losing stacks
+- Mage's Heating Up does not pulse anymore
+- Shamans's Maelstrom Weapon does not pulse at stacks 1-4
 
 #### v0.4.0-beta (2022-07-31)
 
