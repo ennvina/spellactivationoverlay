@@ -28,6 +28,8 @@ function SpellActivationOverlay_OnLoad(self)
 	self:RegisterEvent("PLAYER_ENTERING_WORLD");
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 	self:RegisterEvent("UPDATE_SHAPESHIFT_FORM");
+	self:RegisterEvent("PLAYER_REGEN_ENABLED");
+	self:RegisterEvent("PLAYER_REGEN_DISABLED");
 	
 	self:SetSize(longSide, longSide)
 end
@@ -50,7 +52,13 @@ function SpellActivationOverlay_OnEvent(self, event, ...)
 		else
 			SpellActivationOverlay_HideAllOverlays(self);
 		end
-	else]]if ( event ) then
+	end]]
+	if ( event == "PLAYER_REGEN_DISABLED" ) then
+		self.combatAnimIn:Play();
+	elseif ( event == "PLAYER_REGEN_ENABLED" ) then
+		self.combatAnimOut:Play();
+	end
+	if ( event ) then
 		SAO:OnEvent(event, ...);
 	end
 end
@@ -221,4 +229,14 @@ function SpellActivationOverlayTexture_OnFadeOutFinished(anim)
 	overlay:Hide();
 	tDeleteItem(overlayParent.overlaysInUse[overlay.spellID], overlay)
 	tinsert(overlayParent.unusedOverlays, overlay);
+end
+
+function SpellActivationOverlayFrame_OnFadeInFinished(anim)
+	local frame = anim:GetParent();
+	frame:SetAlpha(1);
+end
+
+function SpellActivationOverlayFrame_OnFadeOutFinished(anim)
+	local frame = anim:GetParent();
+	frame:SetAlpha(0.5);
 end
