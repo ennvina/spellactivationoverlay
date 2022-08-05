@@ -57,15 +57,17 @@ end
 local function customCLEU(self, ...)
     local timestamp, event, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo() -- For all events
 
-    -- Special case: if player dies, we assume the "Heating Up" virtual buff is lost
-    if (event == "UNIT_DIED" and destGUID == UnitGUID("player")) then
-        if (HotStreakHandler.state == 'heating_up') then
-            deactivateHeatingUp(self);
-        end
-        HotStreakHandler.state = 'cold';
-
-        return;
-    end
+    -- Special case: if player dies, we assumed the "Heating Up" virtual buff was lost
+    -- However, data suggest that Heating Up is *not* lost on death, invalidating the code below
+    -- The code is kept commented instead of removed, because Blizzard may change this behaviour
+    --if (event == "UNIT_DIED" and destGUID == UnitGUID("player")) then
+    --    if (HotStreakHandler.state == 'heating_up') then
+    --        deactivateHeatingUp(self);
+    --    end
+    --    HotStreakHandler.state = 'cold';
+    --
+    --    return;
+    --end
 
     -- Accept only certain events, and only when done by the player
     if (event ~= "SPELL_DAMAGE" and event ~= "SPELL_AURA_APPLIED" and event ~= "SPELL_AURA_REMOVED") then return end
