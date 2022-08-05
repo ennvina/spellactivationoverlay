@@ -3,6 +3,8 @@
 #### v0.4.2-beta (2022-08-xx)
 
 - Alpha is reduced by 50% when out of combat
+- SAOs are shown uplon login if player already has the corresponding buffs
+- Currently, this includes all SAOs but Heating Up, which is not a buff
 
 #### v0.4.1-beta (2022-08-05)
 
