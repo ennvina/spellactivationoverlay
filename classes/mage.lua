@@ -147,15 +147,15 @@ local function customCLEU(self, ...)
 end
 
 local function customLogin(self, ...)
-    -- Must initialize class on PLAYER_LOGIN instead of registerAuras
+    -- Must initialize class on PLAYER_LOGIN instead of registerClass
     -- Because we need the talent tree, which is not always available right off the bat
-    local hotStreamSpellName = GetSpellInfo(hotStreakSpellID);
-    if (hotStreamSpellName) then
-        HotStreakHandler:init(hotStreamSpellName);
+    local hotStreakSpellName = GetSpellInfo(hotStreakSpellID);
+    if (hotStreakSpellName) then
+        HotStreakHandler:init(hotStreakSpellName);
     end
 end
 
-local function registerAuras(self)
+local function registerClass(self)
     -- Fire Procs
     self:RegisterAura("impact", 0, 64343, "impact", "Top", 1, 255, 255, 255);
     self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true);
@@ -174,7 +174,7 @@ local function registerAuras(self)
 end
 
 SAO.Class["MAGE"] = {
-    ["Register"] = registerAuras,
+    ["Register"] = registerClass,
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
     ["PLAYER_LOGIN"] = customLogin,
 }

@@ -8,7 +8,7 @@ local function registerMolenCore(self, baseName, spellID)
 --    self:RegisterAura(baseName.."_3_top", 3, spellID, "impact", "Top", 1, 255, 255, 255, true);
 end
 
-local function registerAuras(self)
+local function registerClass(self)
     -- Backlash
     self:RegisterAura("backlash", 0, 34936, "backlash", "Top", 1, 255, 255, 255, true);
 
@@ -25,5 +25,5 @@ local function registerAuras(self)
 end
 
 SAO.Class["WARLOCK"] = {
-    ["Register"] = registerAuras,
+    ["Register"] = registerClass,
 }

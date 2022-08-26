@@ -17,6 +17,13 @@ function SpellActivationOverlay_OnLoad(self)
 	if class then
 		class.Register(SAO);
 		SAO.CurrentClass = class;
+
+		-- Keys of the class other than "Register" are expected to be event names
+		for key, _ in pairs(class) do
+			if (key ~= "Register") then
+				self:RegisterEvent(key);
+			end
+		end
 	else
 		print("Class unknown or not converted yet: "..select(1, UnitClass("player")));
 	end
@@ -25,13 +32,9 @@ function SpellActivationOverlay_OnLoad(self)
 --	self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_SHOW");
 --	self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_HIDE");
 --	self:RegisterUnitEvent("UNIT_AURA", "player");
-	self:RegisterEvent("PLAYER_LOGIN");
-	self:RegisterEvent("PLAYER_ENTERING_WORLD");
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
-	self:RegisterEvent("UPDATE_SHAPESHIFT_FORM");
 	self:RegisterEvent("PLAYER_REGEN_ENABLED");
 	self:RegisterEvent("PLAYER_REGEN_DISABLED");
-	self:RegisterEvent("SPELL_UPDATE_USABLE");
 	
 	self:SetSize(longSide, longSide)
 end

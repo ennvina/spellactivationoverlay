@@ -18,12 +18,12 @@ local function customSpellUpdate(self, ...)
     end
 end
 
-local function registerAuras(self)
+local function registerClass(self)
     -- Register Riposte's spell ID
     SAO.RegisteredGlowIDs[riposteSpellID] = true;
 end
 
 SAO.Class["ROGUE"] = {
-    ["Register"] = registerAuras,
+    ["Register"] = registerClass,
     ["SPELL_UPDATE_USABLE"] = customSpellUpdate,
 }

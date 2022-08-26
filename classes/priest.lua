@@ -1,6 +1,6 @@
 local AddonName, SAO = ...
 
-local function registerAuras(self)
+local function registerClass(self)
     self:RegisterAura("surge_of_light", 0, 33151, "surge_of_light", "Left + Right (Flipped)", 1, 255, 255, 255, true);
 
     -- Serendipity with 1 talent point out of 3
@@ -20,5 +20,5 @@ local function registerAuras(self)
 end
 
 SAO.Class["PRIEST"] = {
-    ["Register"] = registerAuras,
+    ["Register"] = registerClass,
 }
