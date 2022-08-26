@@ -3,6 +3,7 @@ local AddonName, SAO = ...
 -- List of known ActionButton instances that currently match one of the spell IDs to track
 -- This does not mean that buttons are glowing right now, but they could glow at any time
 -- key = glowID (= spellID of action), value = list of ActionButton objects for this spell
+-- (side note: the sublist of buttons is a map of key = action slot and value = button)
 -- The list will change each time an action button changes, which may happen very often
 -- For example, any macro with [mod:shift] updates the list every time Shift is pressed
 SAO.ActionButtons = {}
@@ -17,6 +18,11 @@ SAO.GlowingSpells = {}
 
 -- Grab all action button activity that allows us to know which button has which spell
 function HookActionButton_Update(self)
+    if (self:GetParent() == OverrideActionBar) then
+        -- Act on all buttons but the ones from OverrideActionBar, whatever that is
+        return
+    end
+
     local oldGlowID = SAO.GlowIDByActionSlot[self.action];
     local newGlowID = nil;
     if HasAction(self.action) then
@@ -24,6 +30,11 @@ function HookActionButton_Update(self)
     end
     if (oldGlowID == newGlowID) then
         -- Skip any processing if the glow ID hasn't changed
+
+        -- Former code for potential button overwrites, but it should not happen again now that we exclude children of OverrideActionBar
+        -- if (SAO.RegisteredGlowIDs[newGlowID] and type(SAO.ActionButtons[newGlowID]) == 'table' and SAO.ActionButtons[oldGlowID][self.action] ~= self) then
+        --     SAO.ActionButtons[oldGlowID][self.action] = self;
+        -- end
         return
     end
     if (not SAO.RegisteredGlowIDs[oldGlowID] and not SAO.RegisteredGlowIDs[newGlowID]) then
@@ -34,31 +45,19 @@ function HookActionButton_Update(self)
     -- Untrack previous action button and track the new one
     if (oldGlowID and SAO.RegisteredGlowIDs[oldGlowID] and type(SAO.ActionButtons[oldGlowID]) == 'table') then
         -- Detach action button from the former glow ID
-        local foundIndex = nil;
-        for i, frame in ipairs(SAO.ActionButtons[oldGlowID]) do
-            if (frame == self) then
-                foundIndex = i;
-            end
-        end
-        if (foundIndex) then -- Should always pass, in theory
-            table.remove(SAO.ActionButtons[oldGlowID], foundIndex);
+        if (SAO.ActionButtons[oldGlowID][self.action] == self) then
+            SAO.ActionButtons[oldGlowID][self.action] = nil;
         end
     end
     if (newGlowID and SAO.RegisteredGlowIDs[newGlowID]) then
         if (type(SAO.ActionButtons[newGlowID]) == 'table') then
             -- Attach action button to the current glow ID
-            local foundIndex = nil;
-            for i, frame in ipairs(SAO.ActionButtons[newGlowID]) do
-                if (frame == self) then
-                    foundIndex = i;
-                end
-            end
-            if (not foundIndex) then -- Should always pass, in theory
-                table.insert(SAO.ActionButtons[newGlowID], self);
+            if (SAO.ActionButtons[newGlowID][self.action] ~= self) then
+                SAO.ActionButtons[newGlowID][self.action] = self;
             end
         else
             -- This glow ID has no Action Buttons yet: be the first
-            SAO.ActionButtons[newGlowID] = { self };
+            SAO.ActionButtons[newGlowID] = { [self.action] = self };
         end
     end
     SAO.GlowIDByActionSlot[self.action] = newGlowID;
@@ -75,6 +74,15 @@ function HookActionButton_Update(self)
 end
 hooksecurefunc("ActionButton_Update", HookActionButton_Update);
 
+-- Also look for specific events for bar swaps when e.g. entering/leaving stealth
+-- Not sure if it is really necessary, but in theory it will do nothing at worst
+function HookActionButton_OnEvent(self, event)
+    if (event == "ACTIONBAR_PAGE_CHANGED" or event == "UPDATE_BONUS_ACTIONBAR") then
+        HookActionButton_Update(self);
+    end
+end
+hooksecurefunc("ActionButton_OnEvent", HookActionButton_OnEvent);
+
 -- Add a glow effect for action buttons matching one of the given spell IDs
 function SAO.AddGlow(self, spellID, glowIDs)
     if (glowIDs == nil) then
@@ -83,7 +91,7 @@ function SAO.AddGlow(self, spellID, glowIDs)
 
     for _, glowID in ipairs(glowIDs) do
         local actionButtons = self.ActionButtons[glowID];
-        for _, frame in ipairs(actionButtons or {}) do
+        for _, frame in pairs(actionButtons or {}) do
             ActionButton_ShowOverlayGlow(frame);
         end
         self.GlowingSpells[glowID] = spellID;
@@ -96,7 +104,7 @@ function SAO.RemoveGlow(self, spellID)
     for glowID, auraID in pairs(self.GlowingSpells) do
         if (auraID == spellID) then
             local actionButtons = self.ActionButtons[glowID];
-            for _, frame in ipairs(actionButtons or {}) do
+            for _, frame in pairs(actionButtons or {}) do
                 ActionButton_HideOverlayGlow(frame);
             end
             table.insert(usedGlowIDs, glowID);
