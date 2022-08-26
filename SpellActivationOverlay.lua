@@ -85,20 +85,44 @@ local complexLocationTable = {
 		TOP = {},
 		BOTTOM = { vFlip = true },
 	},
+	["LEFT (CW)"] = {
+		LEFT = { cw = 1 },
+	},
+	["LEFT (CCW)"] = {
+		LEFT = { cw = -1 },
+	},
+	["RIGHT (CW)"] = {
+		RIGHT = { cw = 1 },
+	},
+	["RIGHT (CCW)"] = {
+		RIGHT = { cw = -1 },
+	},
+	["TOP (CW)"] = {
+		TOP = { cw = 1 },
+	},
+	["TOP (CCW)"] = {
+		TOP = { cw = -1 },
+	},
+	["BOTTOM (CW)"] = {
+		BOTTOM = { cw = 1 },
+	},
+	["BOTTOM (CCW)"] = {
+		BOTTOM = { cw = -1 },
+	},
 }
 
 function SpellActivationOverlay_ShowAllOverlays(self, spellID, texturePath, positions, scale, r, g, b, autoPulse, forcePulsePlay)
 	positions = strupper(positions);
 	if ( complexLocationTable[positions] ) then
 		for location, info in pairs(complexLocationTable[positions]) do
-			SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, location, scale, r, g, b, info.vFlip, info.hFlip, autoPulse, forcePulsePlay);
+			SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, location, scale, r, g, b, info.vFlip, info.hFlip, info.cw, autoPulse, forcePulsePlay);
 		end
 	else
-		SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, positions, scale, r, g, b, false, false, autoPulse, forcePulsePlay);
+		SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, positions, scale, r, g, b, false, false, 0, autoPulse, forcePulsePlay);
 	end
 end
 
-function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, vFlip, hFlip, autoPulse, forcePulsePlay)
+function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, vFlip, hFlip, cw, autoPulse, forcePulsePlay)
 	local overlay = SpellActivationOverlay_GetOverlay(self, spellID, position);
 	overlay.spellID = spellID;
 	overlay.position = position;
@@ -112,7 +136,14 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	if ( hFlip ) then
 		texLeft, texRight = 1, 0;
 	end
-	overlay.texture:SetTexCoord(texLeft, texRight, texTop, texBottom);
+	if ( not cw or cw == 0 ) then
+		overlay.texture:SetTexCoord(texLeft, texRight, texTop, texBottom);
+--		overlay.texture:SetTexCoord(texLeft,texTop, texLeft,texBottom, texRight,texTop, texRight,texBottom); -- Written for reference
+	elseif ( cw > 0 ) then
+		overlay.texture:SetTexCoord(texLeft,texBottom, texRight,texBottom, texLeft,texTop, texRight,texTop);
+	else
+		overlay.texture:SetTexCoord(texRight,texTop, texLeft,texTop, texRight,texBottom, texLeft,texBottom);
+	end
 	
 	local width, height;
 	if ( position == "CENTER" ) then
