@@ -31,6 +31,7 @@ function SpellActivationOverlay_OnLoad(self)
 	self:RegisterEvent("UPDATE_SHAPESHIFT_FORM");
 	self:RegisterEvent("PLAYER_REGEN_ENABLED");
 	self:RegisterEvent("PLAYER_REGEN_DISABLED");
+	self:RegisterEvent("SPELL_UPDATE_USABLE");
 	
 	self:SetSize(longSide, longSide)
 end
