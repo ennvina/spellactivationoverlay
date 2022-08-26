@@ -38,7 +38,7 @@ local function customSpellUpdate(self, ...)
             end
 
             local remainingTime = endTime-GetTime();
-            local delta = 0.1; -- Add a small delay to account for lags and whatnot
+            local delta = 0.05; -- Add a small delay to account for lags and whatnot
             local retryFunc = function(...) customSpellUpdate(self, ...); end;
             retryTimer = C_Timer.NewTimer(remainingTime+delta, retryFunc);
             retryTimer.endTime = endTime;
