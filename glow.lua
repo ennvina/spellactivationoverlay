@@ -68,11 +68,9 @@ function HookActionButton_Update(self)
     local mustGlow = newGlowID and (SAO.GlowingSpells[newGlowID] ~= nil)
 
     if (not wasGlowing and mustGlow) then
-        ActionButton_OnEvent(self, "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW", newGlowID);
+        ActionButton_ShowOverlayGlow(self);
     elseif (wasGlowing and not mustGlow) then
-        ActionButton_OnEvent(self, "SPELL_ACTIVATION_OVERLAY_GLOW_HIDE", --[[oldGlowID]] newGlowID);
-        -- Must use newGlowID because the ActionButton_OnEvent only triggers is ID matched *current* ID
-        -- Known bug: if moving an action button while glowing, glitches may occur
+        ActionButton_HideOverlayGlow(self);
     end
 end
 hooksecurefunc("ActionButton_Update", HookActionButton_Update);
@@ -86,7 +84,7 @@ function SAO.AddGlow(self, spellID, glowIDs)
     for _, glowID in ipairs(glowIDs) do
         local actionButtons = self.ActionButtons[glowID];
         for _, frame in ipairs(actionButtons or {}) do
-            ActionButton_OnEvent(frame, "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW", glowID);
+            ActionButton_ShowOverlayGlow(frame);
         end
         self.GlowingSpells[glowID] = spellID;
     end
@@ -99,7 +97,7 @@ function SAO.RemoveGlow(self, spellID)
         if (auraID == spellID) then
             local actionButtons = self.ActionButtons[glowID];
             for _, frame in ipairs(actionButtons or {}) do
-                ActionButton_OnEvent(frame, "SPELL_ACTIVATION_OVERLAY_GLOW_HIDE", glowID);
+                ActionButton_HideOverlayGlow(frame);
             end
             table.insert(usedGlowIDs, glowID);
         end
