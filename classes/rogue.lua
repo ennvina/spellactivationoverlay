@@ -2,19 +2,47 @@ local AddonName, SAO = ...
 
 local riposteSpellID = 14251;
 
-local isRiposteActive = false;
+local isRiposteActivated = false;
+
+local retryTimer = nil;
 
 local function customSpellUpdate(self, ...)
-    local isRiposteUsable = IsUsableSpell(riposteSpellID);
+    local start, duration, enabled, modRate = GetSpellCooldown(riposteSpellID);
+    if (type(start) ~= "number") then
+        -- Spell not available
+        return
+    end
 
-    if (not isRiposteActive and isRiposteUsable) then
-        isRiposteActive = true;
+    local isRiposteUsable = IsUsableSpell(riposteSpellID);
+    local riposteMustBeActivated = isRiposteUsable and start == 0;
+
+    if (not isRiposteActivated and riposteMustBeActivated) then
+        -- Riposte triggered but not shown yet: just do it!
+        isRiposteActivated = true;
         self:ActivateOverlay(0, riposteSpellID, self.TexName["rime"], "Top", 1, 255, 255, 255, true);
         self:AddGlow(riposteSpellID, {riposteSpellID}); -- Same spell ID, because there is no 'aura'
-    elseif (isRiposteActive and not isRiposteUsable) then
-        isRiposteActive = false;
+    elseif (isRiposteActivated and not riposteMustBeActivated) then
+        -- Riposte not triggered but still shown: hide it
+        isRiposteActivated = false;
         self:DeactivateOverlay(riposteSpellID);
         self:RemoveGlow(riposteSpellID);
+    end
+    
+    if (isRiposteUsable and start > 0) then
+        -- Riposte could be usable, but CD prevents us to: try again in a few seconds
+        local endTime = start+duration;
+
+        if (not retryTimer or retryTimer.endTime ~= endTime) then
+            if (retryTimer) then
+                retryTimer:Cancel();
+            end
+
+            local remainingTime = endTime-GetTime();
+            local delta = 0.1; -- Add a small delay to account for lags and whatnot
+            local retryFunc = function(...) print("RETRY"); customSpellUpdate(self, ...); end;
+            retryTimer = C_Timer.NewTimer(remainingTime+delta, retryFunc);
+            retryTimer.endTime = endTime;
+        end
     end
 end
 
