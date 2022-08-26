@@ -7,6 +7,10 @@
 # SpellActivationOverlay.lua, SpellActivationOverlay.xml and all textures
 # were created by Blizzard Entertainment, Inc.
 
+aura.lua
+glow.lua
+util.lua
+
 textures\texname.lua
 
 classes\common.lua

@@ -18,13 +18,14 @@ SAO.RegisteredAurasByName = {}
 SAO.RegisteredAurasBySpellID = {}
 
 -- List of currently active overlays
+-- key = spellID, value = aura config
 -- This list will change each time an overlay is triggered or un-triggered
 SAO.ActiveOverlays = {}
 
 -- Utility function to register a new aura
 -- Arguments simply need to copy Retail's SPELL_ACTIVATION_OVERLAY_SHOW event arguments
-function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale, r, g, b, autoPulse)
-    local aura = { name, stacks, spellID, self.TexName[texture], positions, scale, r, g, b, autoPulse }
+function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale, r, g, b, autoPulse, glowIDs)
+    local aura = { name, stacks, spellID, self.TexName[texture], positions, scale, r, g, b, autoPulse, glowIDs }
 
     -- Register aura in the spell list, sorted by spell ID and by stack count
     self.RegisteredAurasByName[name] = aura;
@@ -136,6 +137,7 @@ function SAO.SPELL_AURA(self, ...)
             -- Activate aura
             for _, aura in ipairs(auras[count]) do
                 self:ActivateOverlay(count, select(3,unpack(aura)));
+                self:AddGlow(spellID, select(11,unpack(aura)));
             end
         elseif (
             -- Aura is already visible but its number of stack changed
@@ -149,10 +151,12 @@ function SAO.SPELL_AURA(self, ...)
         ) then
             -- Deactivate old aura and activate the new one
             self:DeactivateOverlay(spellID);
+            self:RemoveGlow(spellID);
             for _, aura in ipairs(auras[count]) do
                 local texture, positions, scale, r, g, b, autoPulse = select(4,unpack(aura));
                 local forcePulsePlay = autoPulse;
                 self:ActivateOverlay(count, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay);
+                self:AddGlow(spellID, select(11,unpack(aura)));
             end
         elseif (
             -- Aura is already visible and its number of stacks changed
@@ -164,6 +168,7 @@ function SAO.SPELL_AURA(self, ...)
         ) then
             -- Aura just disappeared or is not supported for this number of stacks
             self:DeactivateOverlay(spellID);
+            self:RemoveGlow(spellID);
         end
     end
 end
