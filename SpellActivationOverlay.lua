@@ -5,13 +5,6 @@ local longSide = 256 * sizeScale;
 local shortSide = 128 * sizeScale;
 
 function SpellActivationOverlay_OnLoad(self)
-	local class = SAO.Class[select(2, UnitClass("player"))];
-	if class then
-		class.Register(SAO);
-		SAO.CurrentClass = class;
-	else
-		print("Class unknown or not converted yet: "..select(1, UnitClass("player")));
-	end
 	SAO.Frame = self;
 	SAO.ShowAllOverlays = SpellActivationOverlay_ShowAllOverlays;
 	SAO.HideOverlays = SpellActivationOverlay_HideOverlays;
@@ -19,6 +12,14 @@ function SpellActivationOverlay_OnLoad(self)
 
 	self.overlaysInUse = {};
 	self.unusedOverlays = {};
+
+	local class = SAO.Class[select(2, UnitClass("player"))];
+	if class then
+		class.Register(SAO);
+		SAO.CurrentClass = class;
+	else
+		print("Class unknown or not converted yet: "..select(1, UnitClass("player")));
+	end
 	
 	-- These events do not exist in Classic Era, BC Classic, nor Wrath Classic
 --	self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_SHOW");

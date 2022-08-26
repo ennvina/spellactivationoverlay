@@ -86,7 +86,7 @@ function SAO.AddGlow(self, spellID, glowIDs)
 
     for _, glowID in ipairs(glowIDs) do
         local actionButtons = self.ActionButtons[glowID];
-        for _, frame in ipairs(actionButtons) do
+        for _, frame in ipairs(actionButtons or {}) do
             ActionButton_OnEvent(frame, "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW", glowID);
         end
         self.GlowingSpells[glowID] = spellID;
@@ -99,7 +99,7 @@ function SAO.RemoveGlow(self, spellID)
     for glowID, auraID in pairs(self.GlowingSpells) do
         if (auraID == spellID) then
             local actionButtons = self.ActionButtons[glowID];
-            for _, frame in ipairs(actionButtons) do
+            for _, frame in ipairs(actionButtons or {}) do
                 ActionButton_OnEvent(frame, "SPELL_ACTIVATION_OVERLAY_GLOW_HIDE", glowID);
             end
             table.insert(usedGlowIDs, glowID);
