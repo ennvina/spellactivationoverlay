@@ -1,10 +1,5 @@
 local AddonName, SAO = ...
 
--- List of spell IDs that should be tracked to glow action buttons
--- The spell ID may differ from the spell ID for the corresponding aura
--- The lists should be setup at start, based on the player class
-SAO.RegisteredActionsBySpellID = {}
-
 -- List of known ActionButton instances that currently match one of the spell IDs to track
 -- This does not mean that buttons are glowing right now, but they could glow at any time
 -- key = glowID (= spellID of action), value = list of ActionButton objects for this spell
@@ -31,9 +26,13 @@ function HookActionButton_Update(self)
         -- Skip any processing if the glow ID hasn't changed
         return
     end
+    if (not SAO.RegisteredGlowIDs[oldGlowID] and not SAO.RegisteredGlowIDs[newGlowID]) then
+        -- Ignore action if it does not (nor did not) correspond to a tracked glowID
+        return
+    end
 
     -- Untrack previous action button and track the new one
-    if (oldGlowID and type(SAO.ActionButtons[oldGlowID]) == 'table') then
+    if (oldGlowID and SAO.RegisteredGlowIDs[oldGlowID] and type(SAO.ActionButtons[oldGlowID]) == 'table') then
         -- Detach action button from the former glow ID
         local foundIndex = nil;
         for i, frame in ipairs(SAO.ActionButtons[oldGlowID]) do
@@ -45,7 +44,7 @@ function HookActionButton_Update(self)
             table.remove(SAO.ActionButtons[oldGlowID], foundIndex);
         end
     end
-    if (newGlowID) then
+    if (newGlowID and SAO.RegisteredGlowIDs[newGlowID]) then
         if (type(SAO.ActionButtons[newGlowID]) == 'table') then
             -- Attach action button to the current glow ID
             local foundIndex = nil;
