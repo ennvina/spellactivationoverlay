@@ -19,7 +19,7 @@ local function customSpellUpdate(self, ...)
     if (not isRiposteActivated and riposteMustBeActivated) then
         -- Riposte triggered but not shown yet: just do it!
         isRiposteActivated = true;
-        self:ActivateOverlay(0, riposteSpellID, self.TexName["rime"], "Top", 1, 255, 255, 255, true);
+        self:ActivateOverlay(0, riposteSpellID, self.TexName["bandits_guile"], "Top (CW)", 1, 255, 255, 255, true);
         self:AddGlow(riposteSpellID, {riposteSpellID}); -- Same spell ID, because there is no 'aura'
     elseif (isRiposteActivated and not riposteMustBeActivated) then
         -- Riposte not triggered but still shown: hide it
