@@ -123,7 +123,9 @@
         "tremove",
         "ActionButton_ShowOverlayGlow",
         "ActionButton_HideOverlayGlow",
-        "IsUsableSpell"
+        "IsUsableSpell",
+        "GetSpellCooldown",
+        "OverrideActionBar"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",
