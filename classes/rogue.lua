@@ -39,7 +39,7 @@ local function customSpellUpdate(self, ...)
 
             local remainingTime = endTime-GetTime();
             local delta = 0.1; -- Add a small delay to account for lags and whatnot
-            local retryFunc = function(...) print("RETRY"); customSpellUpdate(self, ...); end;
+            local retryFunc = function(...) customSpellUpdate(self, ...); end;
             retryTimer = C_Timer.NewTimer(remainingTime+delta, retryFunc);
             retryTimer.endTime = endTime;
         end
