@@ -5,13 +5,6 @@ local longSide = 256 * sizeScale;
 local shortSide = 128 * sizeScale;
 
 function SpellActivationOverlay_OnLoad(self)
-	local class = SAO.Class[select(2, UnitClass("player"))];
-	if class then
-		class.Register(SAO);
-		SAO.CurrentClass = class;
-	else
-		print("Class unknown or not converted yet: "..select(1, UnitClass("player")));
-	end
 	SAO.Frame = self;
 	SAO.ShowAllOverlays = SpellActivationOverlay_ShowAllOverlays;
 	SAO.HideOverlays = SpellActivationOverlay_HideOverlays;
@@ -19,15 +12,27 @@ function SpellActivationOverlay_OnLoad(self)
 
 	self.overlaysInUse = {};
 	self.unusedOverlays = {};
+
+	local class = SAO.Class[select(2, UnitClass("player"))];
+	if class then
+		class.Register(SAO);
+		SAO.CurrentClass = class;
+
+		-- Keys of the class other than "Register" are expected to be event names
+		for key, _ in pairs(class) do
+			if (key ~= "Register") then
+				self:RegisterEvent(key);
+			end
+		end
+	else
+		print("Class unknown or not converted yet: "..select(1, UnitClass("player")));
+	end
 	
 	-- These events do not exist in Classic Era, BC Classic, nor Wrath Classic
 --	self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_SHOW");
 --	self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_HIDE");
 --	self:RegisterUnitEvent("UNIT_AURA", "player");
-	self:RegisterEvent("PLAYER_LOGIN");
-	self:RegisterEvent("PLAYER_ENTERING_WORLD");
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
-	self:RegisterEvent("UPDATE_SHAPESHIFT_FORM");
 	self:RegisterEvent("PLAYER_REGEN_ENABLED");
 	self:RegisterEvent("PLAYER_REGEN_DISABLED");
 	
@@ -80,20 +85,44 @@ local complexLocationTable = {
 		TOP = {},
 		BOTTOM = { vFlip = true },
 	},
+	["LEFT (CW)"] = {
+		LEFT = { cw = 1 },
+	},
+	["LEFT (CCW)"] = {
+		LEFT = { cw = -1 },
+	},
+	["RIGHT (CW)"] = {
+		RIGHT = { cw = 1 },
+	},
+	["RIGHT (CCW)"] = {
+		RIGHT = { cw = -1 },
+	},
+	["TOP (CW)"] = {
+		TOP = { cw = 1 },
+	},
+	["TOP (CCW)"] = {
+		TOP = { cw = -1 },
+	},
+	["BOTTOM (CW)"] = {
+		BOTTOM = { cw = 1 },
+	},
+	["BOTTOM (CCW)"] = {
+		BOTTOM = { cw = -1 },
+	},
 }
 
 function SpellActivationOverlay_ShowAllOverlays(self, spellID, texturePath, positions, scale, r, g, b, autoPulse, forcePulsePlay)
 	positions = strupper(positions);
 	if ( complexLocationTable[positions] ) then
 		for location, info in pairs(complexLocationTable[positions]) do
-			SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, location, scale, r, g, b, info.vFlip, info.hFlip, autoPulse, forcePulsePlay);
+			SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, location, scale, r, g, b, info.vFlip, info.hFlip, info.cw, autoPulse, forcePulsePlay);
 		end
 	else
-		SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, positions, scale, r, g, b, false, false, autoPulse, forcePulsePlay);
+		SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, positions, scale, r, g, b, false, false, 0, autoPulse, forcePulsePlay);
 	end
 end
 
-function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, vFlip, hFlip, autoPulse, forcePulsePlay)
+function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, vFlip, hFlip, cw, autoPulse, forcePulsePlay)
 	local overlay = SpellActivationOverlay_GetOverlay(self, spellID, position);
 	overlay.spellID = spellID;
 	overlay.position = position;
@@ -107,7 +136,14 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	if ( hFlip ) then
 		texLeft, texRight = 1, 0;
 	end
-	overlay.texture:SetTexCoord(texLeft, texRight, texTop, texBottom);
+	if ( not cw or cw == 0 ) then
+		overlay.texture:SetTexCoord(texLeft, texRight, texTop, texBottom);
+--		overlay.texture:SetTexCoord(texLeft,texTop, texLeft,texBottom, texRight,texTop, texRight,texBottom); -- Written for reference
+	elseif ( cw > 0 ) then
+		overlay.texture:SetTexCoord(texLeft,texBottom, texRight,texBottom, texLeft,texTop, texRight,texTop);
+	else
+		overlay.texture:SetTexCoord(texRight,texTop, texLeft,texTop, texRight,texBottom, texLeft,texBottom);
+	end
 	
 	local width, height;
 	if ( position == "CENTER" ) then

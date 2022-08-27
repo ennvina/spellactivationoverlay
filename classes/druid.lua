@@ -135,7 +135,7 @@ local function customCLEU(self, ...)
     end
 end
 
-local function registerAuras(self)
+local function registerClass(self)
     -- Track Eclipses with a custom CLEU function, so that eclipses can coexist with Omen of Clarity
     -- self:RegisterAura("eclipse_lunar", 0, lunarSpellID, "eclipse_moon", "Left", 1, 255, 255, 255, true);
     -- self:RegisterAura("eclipse_solar", 0, solarSpellID, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true);
@@ -145,7 +145,7 @@ local function registerAuras(self)
 end
 
 SAO.Class["DRUID"] = {
-    ["Register"] = registerAuras,
+    ["Register"] = registerClass,
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
     ["UPDATE_SHAPESHIFT_FORM"] = updateShapeshift,
     ["PLAYER_ENTERING_WORLD"] = customLoad,

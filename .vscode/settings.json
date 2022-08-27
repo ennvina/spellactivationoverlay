@@ -113,7 +113,19 @@
         "GetNumTalentTabs",
         "GetNumTalents",
         "GetTalentInfo",
-        "GetShapeshiftForm"
+        "GetShapeshiftForm",
+        "ActionButton_OnEvent",
+        "strlower",
+        "HasAction",
+        "strupper",
+        "SOUNDKIT",
+        "tinsert",
+        "tremove",
+        "ActionButton_ShowOverlayGlow",
+        "ActionButton_HideOverlayGlow",
+        "IsUsableSpell",
+        "GetSpellCooldown",
+        "OverrideActionBar"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",

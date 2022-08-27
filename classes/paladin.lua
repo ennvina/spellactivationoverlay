@@ -1,6 +1,6 @@
 local AddonName, SAO = ...
 
-local function registerAuras(self)
+local function registerClass(self)
     -- Art of War
     self:RegisterAura("art_of_war", 0, 59578, "art_of_war", "Left + Right (Flipped)", 1, 255, 255, 255, true);
 
@@ -12,5 +12,5 @@ local function registerAuras(self)
 end
 
 SAO.Class["PALADIN"] = {
-    ["Register"] = registerAuras,
+    ["Register"] = registerClass,
 }

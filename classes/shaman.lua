@@ -1,6 +1,6 @@
 local AddonName, SAO = ...
 
-local function registerAuras(self)
+local function registerClass(self)
     -- Elemental Focus
     self:RegisterAura("elemental_focus_1", 1, 16246, "echo_of_the_elements", "Left", 1, 255, 255, 255, true);
     self:RegisterAura("elemental_focus_2", 2, 16246, "echo_of_the_elements", "Left + Right (Flipped)", 1, 255, 255, 255, true);
@@ -14,5 +14,5 @@ local function registerAuras(self)
 end
 
 SAO.Class["SHAMAN"] = {
-    ["Register"] = registerAuras,
+    ["Register"] = registerClass,
 }

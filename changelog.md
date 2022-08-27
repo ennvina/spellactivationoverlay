@@ -1,5 +1,11 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.5.0-beta (2022-08-xx)
+
+- New SAO: Rogue's Riposte
+- SAOs should now always show up on ReloadUI
+- Support for Glowing Action Buttons (GABs), currently for Riposte only
+
 #### v0.4.2-beta (2022-08-05)
 
 - Mage's Heating Up is no longer lost on death

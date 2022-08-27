@@ -1,6 +1,6 @@
 local AddonName, SAO = ...
 
-local function registerAuras(self)
+local function registerClass(self)
     -- Improved Steady Shot, formerly Master Marksman
     self:RegisterAura("improved_steady_shot", 0, 53220, "master_marksman", "Top", 1, 255, 255, 255, true);
 
@@ -19,5 +19,5 @@ local function registerAuras(self)
 end
 
 SAO.Class["HUNTER"] = {
-    ["Register"] = registerAuras,
+    ["Register"] = registerClass,
 }
