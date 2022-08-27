@@ -23,20 +23,28 @@ function HookActionButton_Update(self)
         return
     end
 
-    local oldGlowID = SAO.GlowIDByActionSlot[self.action];
+    local oldAction = self.lastAction; -- Set by us, a few lines below
+    local oldGlowID = nil;
+    if (oldAction) then
+        oldGlowID = SAO.GlowIDByActionSlot[oldAction];
+    end
+    local newAction = self.action; -- Set by the game, inside Blizzard's ActionButton.lua
     local newGlowID = nil;
     if HasAction(self.action) then
         newGlowID = SAO:GetSpellIDByActionSlot(self.action);
     end
+    self.lastAction = self.action; -- Write self.lastAction here, but use oldAction/newAction for the rest of the function
+
     if (oldGlowID == newGlowID) then
         -- Skip any processing if the glow ID hasn't changed
 
         -- Former code for potential button overwrites, but it should not happen again now that we exclude children of OverrideActionBar
-        -- if (SAO.RegisteredGlowIDs[newGlowID] and type(SAO.ActionButtons[newGlowID]) == 'table' and SAO.ActionButtons[oldGlowID][self.action] ~= self) then
-        --     SAO.ActionButtons[oldGlowID][self.action] = self;
+        -- if (SAO.RegisteredGlowIDs[newGlowID] and type(SAO.ActionButtons[newGlowID]) == 'table' and SAO.ActionButtons[oldGlowID][oldAction] ~= self) then
+        --     SAO.ActionButtons[oldGlowID][oldAction] = self;
         -- end
         return
     end
+
     if (not SAO.RegisteredGlowIDs[oldGlowID] and not SAO.RegisteredGlowIDs[newGlowID]) then
         -- Ignore action if it does not (nor did not) correspond to a tracked glowID
         return
@@ -45,22 +53,22 @@ function HookActionButton_Update(self)
     -- Untrack previous action button and track the new one
     if (oldGlowID and SAO.RegisteredGlowIDs[oldGlowID] and type(SAO.ActionButtons[oldGlowID]) == 'table') then
         -- Detach action button from the former glow ID
-        if (SAO.ActionButtons[oldGlowID][self.action] == self) then
-            SAO.ActionButtons[oldGlowID][self.action] = nil;
+        if (SAO.ActionButtons[oldGlowID][oldAction] == self) then
+            SAO.ActionButtons[oldGlowID][oldAction] = nil;
         end
     end
     if (newGlowID and SAO.RegisteredGlowIDs[newGlowID]) then
         if (type(SAO.ActionButtons[newGlowID]) == 'table') then
             -- Attach action button to the current glow ID
-            if (SAO.ActionButtons[newGlowID][self.action] ~= self) then
-                SAO.ActionButtons[newGlowID][self.action] = self;
+            if (SAO.ActionButtons[newGlowID][newAction] ~= self) then
+                SAO.ActionButtons[newGlowID][newAction] = self;
             end
         else
             -- This glow ID has no Action Buttons yet: be the first
-            SAO.ActionButtons[newGlowID] = { [self.action] = self };
+            SAO.ActionButtons[newGlowID] = { [newAction] = self };
         end
     end
-    SAO.GlowIDByActionSlot[self.action] = newGlowID;
+    SAO.GlowIDByActionSlot[newAction] = newGlowID;
 
     -- Glow or un-glow, if needed
     local wasGlowing = oldGlowID and (SAO.GlowingSpells[oldGlowID] ~= nil)
