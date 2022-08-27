@@ -35,6 +35,7 @@ function SpellActivationOverlay_OnLoad(self)
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 	self:RegisterEvent("PLAYER_REGEN_ENABLED");
 	self:RegisterEvent("PLAYER_REGEN_DISABLED");
+	self:RegisterEvent("LEARNED_SPELL_IN_TAB");
 	
 	self:SetSize(longSide, longSide)
 end

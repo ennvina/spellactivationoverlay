@@ -15,9 +15,13 @@ SAO.RegisteredAurasBySpellID = {}
 
 -- List of spell IDs that should be tracked to glow action buttons
 -- The spell ID may differ from the spell ID for the corresponding aura
--- key = glowID (= spell ID of the glowing spell), value = true
+-- key = glowID (= spell ID/name of the glowing spell), value = true
 -- The lists should be setup at start, based on the player class
-SAO.RegisteredGlowIDs = {}
+SAO.RegisteredGlowSpellIDs = {}
+
+-- List of spell names that should be tracked to glow action buttons
+-- This helps to fill RegisteredGlowSpellIDs e.g., when a spell is learned
+SAO.RegisteredGlowSpellNames = {}
 
 -- Register a new aura
 -- All arguments before autoPulse simply need to copy Retail's SPELL_ACTIVATION_OVERLAY_SHOW event arguments
@@ -39,7 +43,17 @@ function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale
     -- Register the glow IDs
     -- The same glow ID may be registered by different auras, but it's okay
     for _, glowID in ipairs(glowIDs or {}) do
-        self.RegisteredGlowIDs[glowID] = true;
+        if (type(glowID) == "number") then
+            self.RegisteredGlowSpellIDs[glowID] = true;
+        elseif (type(glowID) == "string") then
+            if (not SAO.RegisteredGlowSpellNames[glowID]) then
+                SAO.RegisteredGlowSpellNames[glowID] = true;
+                local glowSpellIDs = self:GetSpellIDsByName(glowID);
+                for _, glowSpellID in ipairs(glowSpellIDs) do
+                    self.RegisteredGlowSpellIDs[glowSpellID] = true;
+                end
+            end
+        end
     end
 
     -- Apply aura immediately, if found

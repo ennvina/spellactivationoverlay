@@ -39,25 +39,25 @@ function HookActionButton_Update(self)
         -- Skip any processing if the glow ID hasn't changed
 
         -- Former code for potential button overwrites, but it should not happen again now that we exclude children of OverrideActionBar
-        -- if (SAO.RegisteredGlowIDs[newGlowID] and type(SAO.ActionButtons[newGlowID]) == 'table' and SAO.ActionButtons[oldGlowID][oldAction] ~= self) then
+        -- if (SAO.RegisteredGlowSpellIDs[newGlowID] and type(SAO.ActionButtons[newGlowID]) == 'table' and SAO.ActionButtons[oldGlowID][oldAction] ~= self) then
         --     SAO.ActionButtons[oldGlowID][oldAction] = self;
         -- end
         return
     end
 
-    if (not SAO.RegisteredGlowIDs[oldGlowID] and not SAO.RegisteredGlowIDs[newGlowID]) then
+    if (not SAO.RegisteredGlowSpellIDs[oldGlowID] and not SAO.RegisteredGlowSpellIDs[newGlowID]) then
         -- Ignore action if it does not (nor did not) correspond to a tracked glowID
         return
     end
 
     -- Untrack previous action button and track the new one
-    if (oldGlowID and SAO.RegisteredGlowIDs[oldGlowID] and type(SAO.ActionButtons[oldGlowID]) == 'table') then
+    if (oldGlowID and SAO.RegisteredGlowSpellIDs[oldGlowID] and type(SAO.ActionButtons[oldGlowID]) == 'table') then
         -- Detach action button from the former glow ID
         if (SAO.ActionButtons[oldGlowID][oldAction] == self) then
             SAO.ActionButtons[oldGlowID][oldAction] = nil;
         end
     end
-    if (newGlowID and SAO.RegisteredGlowIDs[newGlowID]) then
+    if (newGlowID and SAO.RegisteredGlowSpellIDs[newGlowID]) then
         if (type(SAO.ActionButtons[newGlowID]) == 'table') then
             -- Attach action button to the current glow ID
             if (SAO.ActionButtons[newGlowID][newAction] ~= self) then
@@ -98,27 +98,38 @@ function SAO.AddGlow(self, spellID, glowIDs)
     end
 
     for _, glowID in ipairs(glowIDs) do
-        local actionButtons = self.ActionButtons[glowID];
-        for _, frame in pairs(actionButtons or {}) do
-            ActionButton_ShowOverlayGlow(frame);
+        if (type(glowID) == "number") then
+            local actionButtons = self.ActionButtons[glowID];
+            for _, frame in pairs(actionButtons or {}) do
+                ActionButton_ShowOverlayGlow(frame);
+            end
+            self.GlowingSpells[glowID] = spellID;
+        elseif (type(glowID) == "string") then
+            local glowSpellIDs = self:GetSpellIDsByName(glowID);
+            for _, glowSpellID in ipairs(glowSpellIDs) do
+                local actionButtons = self.ActionButtons[glowSpellID];
+                for _, frame in pairs(actionButtons or {}) do
+                    ActionButton_ShowOverlayGlow(frame);
+                end
+                self.GlowingSpells[glowSpellID] = spellID;
+            end
         end
-        self.GlowingSpells[glowID] = spellID;
     end
 end
 
 -- Remove the glow effect for action buttons matching any of the given spell IDs
 function SAO.RemoveGlow(self, spellID)
-    local usedGlowIDs = {}
-    for glowID, auraID in pairs(self.GlowingSpells) do
+    local usedIDs = {}
+    for glowSpellID, auraID in pairs(self.GlowingSpells) do
         if (auraID == spellID) then
-            local actionButtons = self.ActionButtons[glowID];
+            local actionButtons = self.ActionButtons[glowSpellID];
             for _, frame in pairs(actionButtons or {}) do
                 ActionButton_HideOverlayGlow(frame);
             end
-            table.insert(usedGlowIDs, glowID);
+            table.insert(usedIDs, glowSpellID);
         end
     end
-    for _, glowID in ipairs(usedGlowIDs) do
-        self.GlowingSpells[glowID] = nil;
+    for _, glowSpellID in ipairs(usedIDs) do
+        self.GlowingSpells[glowSpellID] = nil;
     end
 end

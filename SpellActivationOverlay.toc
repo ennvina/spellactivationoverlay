@@ -11,6 +11,7 @@ aura.lua
 events.lua
 glow.lua
 overlay.lua
+spell.lua
 util.lua
 
 textures\texname.lua

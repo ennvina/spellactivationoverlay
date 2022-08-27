@@ -77,6 +77,12 @@ function SAO.COMBAT_LOG_EVENT_UNFILTERED(self, ...)
     end
 end
 
+-- Specific spell learned
+function SAO.LEARNED_SPELL_IN_TAB(self, ...)
+    local spellID, skillInfoIndex, isGuildPerkSpell = ...;
+    self:LearnNewSpell(spellID);
+end
+
 -- Event receiver
 function SAO.OnEvent(self, event, ...)
     if self[event] then

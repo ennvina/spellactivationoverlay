@@ -51,3 +51,33 @@ function SAO.GetSpellIDByActionSlot(self, actionSlot)
         return GetMacroSpell(id);
     end
 end
+
+-- Utility function to return the list spellIDs for spells in the spellbook matching the same of a given spell
+-- Spells are searched into the *current* spellbook, not through all available spells ever
+-- This means the returned list will be obsolete if e.g. new spells are learned afterwards or if the player re-specs
+-- @param spell Either the spell name (as string) or the spell ID (as number)
+function SAO.GetHomonymSpellIDs(spell)
+    local spellName;
+    if (type(spell) == "string") then
+        spellName = spell;
+    elseif (type(spell) == "number") then
+        spellName = GetSpellInfo(spell);
+    end
+    if (not spellName) then
+        return {};
+    end
+
+    local homonyms = {};
+
+    for tab = 1, GetNumSpellTabs() do
+        local offset, numSlots = select(3, GetSpellTabInfo(tab));
+        for index = offset+1, offset+numSlots do
+            local name, _, id = GetSpellBookItemName(index, BOOKTYPE_SPELL);
+            if (name == spellName) then
+                table.insert(homonyms, id);
+            end
+        end
+    end
+
+    return homonyms;
+end
