@@ -15,6 +15,7 @@ Support for Glowing Action Buttons (GABs), making relevant actions glow
 - Priest's Smite and Flash Heal buttons glow during Surge of Light
 - Priest's Greater Heal and Prayer of Healing glow at 3 stacks of Serendipity
 - Rogue's Riposte button glows after parrying an attack
+- Warlock's Shadow Bolt button glows during Nightfall, a.k.a. Shadow Trance
 - Warlock's Shadow Bolt and Incinerate buttons glow during Backlash
 
 - New SAO: Rogue's Riposte
