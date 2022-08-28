@@ -170,7 +170,7 @@ local function registerClass(self)
     self:RegisterAura("brain_freeze", 0, 57761, "brain_freeze", "Top", 1, 255, 255, 255, true, { GetSpellInfo(133), GetSpellInfo(44614) });
 
     -- Arcane Procs
-    self:RegisterAura("missile_barrage", 0, 44401, "arcane_missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true);
+    self:RegisterAura("missile_barrage", 0, 44401, "arcane_missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, { GetSpellInfo(5143) });
 end
 
 SAO.Class["MAGE"] = {
