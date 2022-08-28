@@ -18,6 +18,7 @@ Support for Glowing Action Buttons (GABs), making some actions glow, namely:
 - Warlock's Shadow Bolt button glows during Nightfall, a.k.a. Shadow Trance
 - Warlock's Shadow Bolt and Incinerate buttons glow during Backlash
 - Warlock's Incinerate and Soul Fire buttons glow during Molten Core
+- Warrior's Shield Slam button glows during Sword and Board
 
 - New SAO: Rogue's Riposte
 - SAOs should now always show up on ReloadUI
