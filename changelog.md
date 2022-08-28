@@ -11,6 +11,7 @@ Support for Glowing Action Buttons (GABs), making relevant actions glow
 - Mage's Fire Blast button glows during Impact
 - Mage's Fireball and Frostfire Bolt buttons glow during Brain Freeze
 - Paladin's Flash of Light and Holy Light buttons glow during Infusion of Light
+- Paladin's Flash of Light and Exorcism buttons glow during The Art of War
 - Rogue's Riposte button glows after parrying an attack
 
 - New SAO: Rogue's Riposte
