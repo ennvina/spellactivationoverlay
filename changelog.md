@@ -8,6 +8,7 @@ Make sure to check it out at https://discord.gg/VrDkvDV4
 Support for Glowing Action Buttons (GABs), making relevant actions glow
 - Mage's Arcane Missiles button glows during Missile Barrage
 - Mage's Pyroblast button glows during Hot Streak
+- Mage's Fire Blast button glows during Impact
 - Mage's Fireball and Frostfire Bolt buttons glow during Brain Freeze
 - Rogue's Riposte button glows after parrying an attack
 
