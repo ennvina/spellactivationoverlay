@@ -1,11 +1,13 @@
 local AddonName, SAO = ...
 
 local function registerMolenCore(self, baseName, spellID)
-    self:RegisterAura(baseName.."_1", 1, spellID, "molten_core", "Left", 1, 255, 255, 255, true);
-    self:RegisterAura(baseName.."_2", 2, spellID, "molten_core", "Left + Right (Flipped)", 1, 255, 255, 255, true);
-    self:RegisterAura(baseName.."_3", 3, spellID, "molten_core", "Left + Right (Flipped)", 1, 255, 255, 255, true);
-    self:RegisterAura(baseName.."_3_top", 3, spellID, "lock_and_load", "Top", 1, 255, 255, 255, true);
---    self:RegisterAura(baseName.."_3_top", 3, spellID, "impact", "Top", 1, 255, 255, 255, true);
+    local incinerateAndSoulFire = { GetSpellInfo(29722), GetSpellInfo(6353) };
+
+    self:RegisterAura(baseName.."_1", 1, spellID, "molten_core", "Left", 1, 255, 255, 255, true, incinerateAndSoulFire);
+    self:RegisterAura(baseName.."_2", 2, spellID, "molten_core", "Left + Right (Flipped)", 1, 255, 255, 255, true, incinerateAndSoulFire);
+    self:RegisterAura(baseName.."_3", 3, spellID, "molten_core", "Left + Right (Flipped)", 1, 255, 255, 255, true, incinerateAndSoulFire);
+    self:RegisterAura(baseName.."_3_top", 3, spellID, "lock_and_load", "Top", 1, 255, 255, 255, true --[[, incinerateAndSoulFire]]);
+--    self:RegisterAura(baseName.."_3_top", 3, spellID, "impact", "Top", 1, 255, 255, 255, true --[[, incinerateAndSoulFire]]);
 end
 
 local function registerClass(self)

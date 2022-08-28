@@ -5,7 +5,7 @@
 SpellActivationOverlay now has a Discord server!
 Make sure to check it out at https://discord.gg/VrDkvDV4
 
-Support for Glowing Action Buttons (GABs), making relevant actions glow
+Support for Glowing Action Buttons (GABs), making some actions glow, namely:
 - Mage's Arcane Missiles button glows during Missile Barrage
 - Mage's Pyroblast button glows during Hot Streak
 - Mage's Fire Blast button glows during Impact
@@ -14,9 +14,10 @@ Support for Glowing Action Buttons (GABs), making relevant actions glow
 - Paladin's Flash of Light and Exorcism buttons glow during The Art of War
 - Priest's Smite and Flash Heal buttons glow during Surge of Light
 - Priest's Greater Heal and Prayer of Healing glow at 3 stacks of Serendipity
-- Rogue's Riposte button glows after parrying an attack
+- Rogue's Riposte button glows after parrying an attack, unless on cooldown
 - Warlock's Shadow Bolt button glows during Nightfall, a.k.a. Shadow Trance
 - Warlock's Shadow Bolt and Incinerate buttons glow during Backlash
+- Warlock's Incinerate and Soul Fire buttons glow during Molten Core
 
 - New SAO: Rogue's Riposte
 - SAOs should now always show up on ReloadUI
