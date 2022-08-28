@@ -10,7 +10,7 @@ end
 
 local function registerClass(self)
     -- Backlash
-    self:RegisterAura("backlash", 0, 34936, "backlash", "Top", 1, 255, 255, 255, true);
+    self:RegisterAura("backlash", 0, 34936, "backlash", "Top", 1, 255, 255, 255, true, { GetSpellInfo(686), GetSpellInfo(29722) });
 
     -- Empowered Imp
     self:RegisterAura("empowered_imp", 0, 47283, "imp_empowerment", "Left + Right (Flipped)", 1, 255, 255, 255, true);
