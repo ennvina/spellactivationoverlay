@@ -2,9 +2,17 @@
 
 #### v0.5.0-beta (2022-08-xx)
 
+SpellActivationOverlay now has a Discord server!
+Make sure to check it out at https://discord.gg/VrDkvDV4
+
+Support for Glowing Action Buttons (GABs), making relevant actions glow
+- Mage's Arcane Missiles button glows during Missile Barrage
+- Mage's Pyroblast button glows during Hot Streak
+- Mage's Fireball and Frostfire Bolt buttons glow during Brain Freeze
+- Rogue's Riposte button glows after parrying an attack
+
 - New SAO: Rogue's Riposte
 - SAOs should now always show up on ReloadUI
-- Support for Glowing Action Buttons (GABs), currently for Riposte only
 
 #### v0.4.2-beta (2022-08-05)
 
