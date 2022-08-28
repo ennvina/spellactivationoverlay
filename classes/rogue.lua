@@ -48,7 +48,7 @@ end
 
 local function registerClass(self)
     -- Register Riposte's spell ID
-    SAO.RegisteredGlowIDs[riposteSpellID] = true;
+    SAO.RegisteredGlowSpellIDs[riposteSpellID] = true;
 end
 
 SAO.Class["ROGUE"] = {
