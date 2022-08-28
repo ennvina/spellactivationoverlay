@@ -77,6 +77,13 @@ function SAO.COMBAT_LOG_EVENT_UNFILTERED(self, ...)
     end
 end
 
+-- Specific spellbook update
+function SAO.SPELLS_CHANGED(self, ...)
+    for glowID, _ in pairs(self.RegisteredGlowSpellNames) do
+        self:RefreshSpellIDsByName(glowID, true);
+    end
+end
+
 -- Specific spell learned
 function SAO.LEARNED_SPELL_IN_TAB(self, ...)
     local spellID, skillInfoIndex, isGuildPerkSpell = ...;

@@ -14,9 +14,26 @@ function SAO.GetSpellIDsByName(self, name)
         return cached;
     end
 
+    self:RefreshSpellIDsByName(name);
+    return self.SpellIDsByName[name];
+end
+
+-- Force refresh the list of spell IDs for a given name by looking at the spellbook
+-- The cache is updated in the process
+-- If awaken is true, spellIDs are also added to RegisteredGlowSpellIDs
+function SAO.RefreshSpellIDsByName(self, name, awaken)
     local homonyms = self.GetHomonymSpellIDs(name);
     self.SpellIDsByName[name] = homonyms;
-    return homonyms;
+
+    -- Awake dormant buttons associated to these spellIDs
+    if (awaken) then
+        for _, spellID in ipairs(homonyms) do
+            if (not self.RegisteredGlowSpellIDs[spellID]) then
+                self.RegisteredGlowSpellIDs[spellID] = true;
+                self:AwakeButtonsBySpellID(spellID);
+            end
+        end
+    end
 end
 
 -- Update the spell cache when a new spell is learned
@@ -45,5 +62,8 @@ function SAO.LearnNewSpell(self, spellID)
     -- Also update RegisteredGlowSpellIDs if the name the tracked
     if (self.RegisteredGlowSpellNames[name]) then
         self.RegisteredGlowSpellIDs[spellID] = true;
+
+        -- Awaken dormant buttons associated to this spellID
+        self:AwakeButtonsBySpellID(spellID);
     end
 end
