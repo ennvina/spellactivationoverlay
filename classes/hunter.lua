@@ -1,8 +1,14 @@
 local AddonName, SAO = ...
 
 local function registerClass(self)
+    local aimedShot = 19434;
+    local arcaneShot = 3044;
+    local chimeraShot = 53209;
+
+    local issGlowNames = { GetSpellInfo(aimedShot), GetSpellInfo(arcaneShot), GetSpellInfo(chimeraShot) };
+
     -- Improved Steady Shot, formerly Master Marksman
-    self:RegisterAura("improved_steady_shot", 0, 53220, "master_marksman", "Top", 1, 255, 255, 255, true);
+    self:RegisterAura("improved_steady_shot", 0, 53220, "master_marksman", "Top", 1, 255, 255, 255, true, issGlowNames);
 
     -- Lock and Load, option 1: display something on top if there is at least one charge
     -- Advantage: easier to see
