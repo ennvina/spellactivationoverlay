@@ -5,6 +5,7 @@ local function registerClass(self)
     local arcaneShot = 3044;
     local chimeraShot = 53209;
     local explosiveShot = 53301;
+    local counterattack = 19306;
 
     local issGlowNames = { GetSpellInfo(aimedShot), GetSpellInfo(arcaneShot), GetSpellInfo(chimeraShot) };
     local lalGlowNames = { GetSpellInfo(arcaneShot), GetSpellInfo(explosiveShot) };
@@ -24,6 +25,10 @@ local function registerClass(self)
     -- self:RegisterAura("lock_and_load", 1, 56453, "lock_and_load", "TopLeft", 1, 255, 255, 255, true, lalGlowNames);
     -- self:RegisterAura("lock_and_load_2left", 2, 56453, "lock_and_load", "TopLeft", 1, 255, 255, 255, true, lalGlowNames);
     -- self:RegisterAura("lock_and_load_2right", 2, 56453, "lock_and_load", "TopRight", 1, 255, 255, 255, true, lalGlowNames);
+
+    -- Counterattack, registered as both aura and counter, but only used as counter
+    self:RegisterAura("counterattack", 0, counterattack, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(counterattack)) });
+    self:RegisterCounter("counterattack"); -- Must match name from above call
 end
 
 SAO.Class["HUNTER"] = {

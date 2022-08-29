@@ -6,6 +6,7 @@ SpellActivationOverlay now has a Discord server!
 Make sure to check it out at https://discord.gg/VrDkvDV4
 
 Support for Glowing Action Buttons (GABs), making some actions glow, namely:
+- Hunter's Counterattack button glows after parrying an attack, unless on CD
 - Hunter's Aimed/Arcane/Chimera Shot buttons glow during Improved Steady Shot
 - Hunter's Arcane/Explosive Shot buttons glow during Lock and Load
 - Mage's Arcane Missiles button glows during Missile Barrage

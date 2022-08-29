@@ -18,8 +18,21 @@ SAO.CounterRetryTimers = {};
 -- @param auraID name of the aura registered to SAO.RegisterAura
 function SAO.RegisterCounter(self, auraID)
     local aura = self.RegisteredAurasByName[auraID];
-    local spellID = select(3,unpack(aura));
-    self.ActivableCounters[spellID] = auraID;
+    if (not aura) then
+        return;
+    end
+
+    local glowIDs = select(11,unpack(aura));
+    for _, glowID in ipairs(glowIDs or {}) do
+        if (type(glowID) == "number") then
+            self.ActivableCounters[glowID] = auraID;
+        elseif (type(glowID) == "string") then
+            local glowSpellIDs = self:GetSpellIDsByName(glowID);
+            for _, glowSpellID in ipairs(glowSpellIDs) do
+                self.ActivableCounters[glowSpellID] = auraID;
+            end
+        end
+    end
 end
 
 -- Check if an action counter became either activated or deactivated

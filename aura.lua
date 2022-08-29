@@ -24,9 +24,11 @@ SAO.RegisteredGlowSpellIDs = {}
 SAO.RegisteredGlowSpellNames = {}
 
 -- Register a new aura
--- All arguments before autoPulse simply need to copy Retail's SPELL_ACTIVATION_OVERLAY_SHOW event arguments
+-- If texture is nil, no Spell Activation Overlay (SAO) is triggered; subsequent params are ignored until glowIDs
+-- If glowIDs is nil or empty, no Glowing Action Button (GAB) is triggered
+-- All SAO arguments (between spellID and b, included) mimic Retail's SPELL_ACTIVATION_OVERLAY_SHOW event arguments
 function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale, r, g, b, autoPulse, glowIDs)
-    local aura = { name, stacks, spellID, self.TexName[texture], positions, scale, r, g, b, autoPulse, glowIDs }
+    local aura = { name, stacks, spellID, texture and self.TexName[texture], positions, scale, r, g, b, autoPulse, glowIDs }
 
     -- Register aura in the spell list, sorted by spell ID and by stack count
     self.RegisteredAurasByName[name] = aura;
