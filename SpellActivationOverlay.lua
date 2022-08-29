@@ -33,6 +33,7 @@ function SpellActivationOverlay_OnLoad(self)
 --	self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_HIDE");
 --	self:RegisterUnitEvent("UNIT_AURA", "player");
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+	self:RegisterEvent("SPELL_UPDATE_USABLE");
 	self:RegisterEvent("PLAYER_REGEN_ENABLED");
 	self:RegisterEvent("PLAYER_REGEN_DISABLED");
 	self:RegisterEvent("SPELLS_CHANGED");
