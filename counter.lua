@@ -1,8 +1,9 @@
 local AddonName, SAO = ...
 
--- List of spell IDs of actions that can trigger as 'counter'
--- key = spellID, value = auraID
-SAO.ActivableCounters = {};
+-- List of spell names or IDs of actions that can trigger as 'counter'
+-- key = spellName / spellID, value = auraID
+SAO.ActivableCountersByName = {};
+SAO.ActivableCountersBySpellID = {};
 
 -- List of spell IDs currently
 -- key = spellID, value = true
@@ -25,11 +26,12 @@ function SAO.RegisterCounter(self, auraID)
     local glowIDs = select(11,unpack(aura));
     for _, glowID in ipairs(glowIDs or {}) do
         if (type(glowID) == "number") then
-            self.ActivableCounters[glowID] = auraID;
+            self.ActivableCountersBySpellID[glowID] = auraID;
         elseif (type(glowID) == "string") then
+            self.ActivableCountersByName[glowID] = auraID;
             local glowSpellIDs = self:GetSpellIDsByName(glowID);
             for _, glowSpellID in ipairs(glowSpellIDs) do
-                self.ActivableCounters[glowSpellID] = auraID;
+                self.ActivableCountersBySpellID[glowSpellID] = auraID;
             end
         end
     end
@@ -83,7 +85,7 @@ function SAO.CheckCounterAction(self, spellID, auraID)
 end
 
 function SAO.CheckAllCounterActions(self)
-    for spellID, auraID in pairs(self.ActivableCounters) do
+    for spellID, auraID in pairs(self.ActivableCountersBySpellID) do
         self:CheckCounterAction(spellID, auraID);
     end
 end

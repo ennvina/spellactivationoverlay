@@ -27,10 +27,19 @@ function SAO.RefreshSpellIDsByName(self, name, awaken)
 
     -- Awake dormant buttons associated to these spellIDs
     if (awaken) then
+        local auraID = self.ActivableCountersByName[name];
+
         for _, spellID in ipairs(homonyms) do
+            -- Glowing Action Buttons (GABs)
             if (not self.RegisteredGlowSpellIDs[spellID]) then
                 self.RegisteredGlowSpellIDs[spellID] = true;
                 self:AwakeButtonsBySpellID(spellID);
+            end
+
+            -- Counters
+            if (auraID and not self.ActivableCountersBySpellID[spellID]) then
+                self.ActivableCountersBySpellID[spellID] = auraID;
+                self:CheckCounterAction(spellID, auraID);
             end
         end
     end
@@ -65,5 +74,14 @@ function SAO.LearnNewSpell(self, spellID)
 
         -- Awaken dormant buttons associated to this spellID
         self:AwakeButtonsBySpellID(spellID);
+    end
+
+    -- Also update ActivableCountersBySpellID if the name the tracked
+    local auraID = self.ActivableCountersByName[name];
+    if (auraID and not self.ActivableCountersBySpellID[spellID]) then
+        self.ActivableCountersBySpellID[spellID] = auraID;
+
+        -- Try to see if action is usable now
+        self:CheckCounterAction(spellID, auraID);
     end
 end
