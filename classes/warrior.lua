@@ -6,11 +6,11 @@ local function registerClass(self)
     self:RegisterAura("sword_and_board", 0, 50227, "sword_and_board", "Left + Right (Flipped)", 1, 255, 255, 255, true, { GetSpellInfo(23922) });
 
     local overpower = 7384;
-    self:RegisterAura("overpower", 0, overpower, nil, "", 0, 0, 0, 0, false, { GetSpellInfo(overpower) });
+    self:RegisterAura("overpower", 0, overpower, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(overpower)) });
     self:RegisterCounter("overpower"); -- Must match name from above call
 
     local revenge = 6572;
-    self:RegisterAura("revenge", 0, revenge, nil, "", 0, 0, 0, 0, false, { GetSpellInfo(revenge) });
+    self:RegisterAura("revenge", 0, revenge, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(revenge)) });
     self:RegisterCounter("revenge"); -- Must match name from above call
 end
 
