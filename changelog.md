@@ -6,6 +6,8 @@ SpellActivationOverlay now has a Discord server!
 Make sure to check it out at https://discord.gg/VrDkvDV4
 
 Support for Glowing Action Buttons (GABs), making some actions glow, namely:
+- Druid's Wrath button glows during Solar Eclipse
+- Druid's Starfire button glows during Lunar Eclipse
 - Hunter's Counterattack button glows after parrying an attack, unless on CD
 - Hunter's Aimed/Arcane/Chimera Shot buttons glow during Improved Steady Shot
 - Hunter's Arcane/Explosive Shot buttons glow during Lock and Load
