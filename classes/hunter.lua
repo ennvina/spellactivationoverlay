@@ -7,8 +7,8 @@ local function registerClass(self)
     local explosiveShot = 53301;
     local counterattack = 19306;
 
-    local issGlowNames = { GetSpellInfo(aimedShot), GetSpellInfo(arcaneShot), GetSpellInfo(chimeraShot) };
-    local lalGlowNames = { GetSpellInfo(arcaneShot), GetSpellInfo(explosiveShot) };
+    local issGlowNames = { (GetSpellInfo(aimedShot)), (GetSpellInfo(arcaneShot)), (GetSpellInfo(chimeraShot)) };
+    local lalGlowNames = { (GetSpellInfo(arcaneShot)), (GetSpellInfo(explosiveShot)) };
 
     -- Improved Steady Shot, formerly Master Marksman
     self:RegisterAura("improved_steady_shot", 0, 53220, "master_marksman", "Top", 1, 255, 255, 255, true, issGlowNames);

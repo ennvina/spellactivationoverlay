@@ -1,9 +1,11 @@
 local AddonName, SAO = ...
 
 local function registerClass(self)
-    self:RegisterAura("surge_of_light", 0, 33151, "surge_of_light", "Left + Right (Flipped)", 1, 255, 255, 255, true, { GetSpellInfo(585), GetSpellInfo(2061) });
+    local smite = GetSpellInfo(585);
+    local flashHeal = GetSpellInfo(2061);
+    self:RegisterAura("surge_of_light", 0, 33151, "surge_of_light", "Left + Right (Flipped)", 1, 255, 255, 255, true, { smite, flashHeal });
 
-    local ghAndPoh = { GetSpellInfo(2060), GetSpellInfo(596) }
+    local ghAndPoh = { (GetSpellInfo(2060)), (GetSpellInfo(596)) }
 
     -- Serendipity with 1 talent point out of 3
 --    self:RegisterAura("serendipity_low_1", 1, 63731, "serendipity", "Top", 0.25, 255, 255, 255, true, ghAndPoh);
