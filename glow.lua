@@ -131,19 +131,29 @@ function SAO.AddGlow(self, spellID, glowIDs)
 
     for _, glowID in ipairs(glowIDs) do
         if (type(glowID) == "number") then
+            -- glowID is a direct spell identifier
             local actionButtons = self.ActionButtons[glowID];
-            for _, frame in pairs(actionButtons or {}) do
-                ActionButton_ShowOverlayGlow(frame);
-            end
-            self.GlowingSpells[glowID] = spellID;
-        elseif (type(glowID) == "string") then
-            local glowSpellIDs = self:GetSpellIDsByName(glowID);
-            for _, glowSpellID in ipairs(glowSpellIDs) do
-                local actionButtons = self.ActionButtons[glowSpellID];
+            if (self.GlowingSpells[glowID]) then
+                self.GlowingSpells[glowID][spellID] = true;
+            else
+                self.GlowingSpells[glowID] = { [spellID] = true };
                 for _, frame in pairs(actionButtons or {}) do
                     ActionButton_ShowOverlayGlow(frame);
                 end
-                self.GlowingSpells[glowSpellID] = spellID;
+            end
+        elseif (type(glowID) == "string") then
+            -- glowID is a spell name: find spell identifiers first, then parse them
+            local glowSpellIDs = self:GetSpellIDsByName(glowID);
+            for _, glowSpellID in ipairs(glowSpellIDs) do
+                local actionButtons = self.ActionButtons[glowSpellID];
+                if (self.GlowingSpells[glowSpellID]) then
+                    self.GlowingSpells[glowSpellID][spellID] = true;
+                else
+                    self.GlowingSpells[glowSpellID] = { [spellID] = true };
+                    for _, frame in pairs(actionButtons or {}) do
+                        ActionButton_ShowOverlayGlow(frame);
+                    end
+                end
             end
         end
     end
@@ -151,17 +161,34 @@ end
 
 -- Remove the glow effect for action buttons matching any of the given spell IDs
 function SAO.RemoveGlow(self, spellID)
-    local usedIDs = {};
-    for glowSpellID, auraID in pairs(self.GlowingSpells) do
-        if (auraID == spellID) then
+    local consumedGlowSpellIDs = {};
+
+    -- First, gather each glowSpellID attached to spellID
+    for glowSpellID, triggerSpellIDs in pairs(self.GlowingSpells) do
+        if (triggerSpellIDs[spellID]) then
+            -- spellID is attached to this glowSpellID
+            -- Gather how many triggers are attached to the same glowSpellID (spellID included)
+            local count = 0;
+            for _, _  in pairs(triggerSpellIDs) do
+                count = count+1;
+            end
+            consumedGlowSpellIDs[glowSpellID] = count;
+        end
+    end
+
+    -- Then detach the spellID <-> glowSpellID link
+    -- And remove the glow if and only if the trigger was the last one asking to glow
+    for glowSpellID, count in pairs(consumedGlowSpellIDs) do
+        if (count > 1) then
+            -- Only detach
+            self.GlowingSpells[glowSpellID][spellID] = nil;
+        else
+            -- Detach and un-glow
+            self.GlowingSpells[glowSpellID] = nil;
             local actionButtons = self.ActionButtons[glowSpellID];
             for _, frame in pairs(actionButtons or {}) do
                 ActionButton_HideOverlayGlow(frame);
             end
-            table.insert(usedIDs, glowSpellID);
         end
-    end
-    for _, glowSpellID in ipairs(usedIDs) do
-        self.GlowingSpells[glowSpellID] = nil;
     end
 end
