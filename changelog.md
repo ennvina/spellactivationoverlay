@@ -8,6 +8,7 @@ Make sure to check it out at https://discord.gg/VrDkvDV4
 Support for Glowing Action Buttons (GABs), making some actions glow, namely:
 - Death Knight's Rune Strike button glows after parrying or dodging an attack
 - Death Knight's Howling Blast button glows during Rime
+- DK's Icy Touch/Frost Strike/Howling Blast buttons glow during Killing Machine
 - Druid's Wrath button glows during Solar Eclipse
 - Druid's Starfire button glows during Lunar Eclipse
 - Hunter's Counterattack button glows after parrying an attack, unless on CD
