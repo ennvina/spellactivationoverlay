@@ -8,6 +8,10 @@ local function registerClass(self)
     local overpower = 7384;
     self:RegisterAura("overpower", 0, overpower, nil, "", 0, 0, 0, 0, false, { GetSpellInfo(overpower) });
     self:RegisterCounter("overpower"); -- Must match name from above call
+
+    local revenge = 6572;
+    self:RegisterAura("revenge", 0, revenge, nil, "", 0, 0, 0, 0, false, { GetSpellInfo(revenge) });
+    self:RegisterCounter("revenge"); -- Must match name from above call
 end
 
 SAO.Class["WARRIOR"] = {

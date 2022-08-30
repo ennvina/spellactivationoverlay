@@ -22,6 +22,7 @@ Support for Glowing Action Buttons (GABs), making some actions glow, namely:
 - Warlock's Shadow Bolt and Incinerate buttons glow during Backlash
 - Warlock's Incinerate and Soul Fire buttons glow during Molten Core
 - Warrior's Overpower button glows after the enemy dodges, if in Battle Stance
+- Warrior's Revenge button glows after parry/dodge/block in Defensive Stance
 - Warrior's Execute button glows during Sudden Death
 - Warrior's Slam button glows during Bloodsurge
 - Warrior's Shield Slam button glows during Sword and Board
