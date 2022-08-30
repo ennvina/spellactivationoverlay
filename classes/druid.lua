@@ -178,15 +178,7 @@ local function registerClass(self)
     -- Register glow IDs for glowing buttons, namely Starfire and Wrath
     local starfire = GetSpellInfo(2912);
     local wrath = GetSpellInfo(5176);
-    for _, glowID in ipairs({ starfire, wrath }) do
-        if (not SAO.RegisteredGlowSpellNames[glowID]) then
-            SAO.RegisteredGlowSpellNames[glowID] = true;
-            local glowSpellIDs = self:GetSpellIDsByName(glowID);
-            for _, glowSpellID in ipairs(glowSpellIDs) do
-                self.RegisteredGlowSpellIDs[glowSpellID] = true;
-            end
-        end
-    end
+    self:RegisterGlowIDs({ starfire, wrath });
 end
 
 SAO.Class["DRUID"] = {

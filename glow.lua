@@ -17,6 +17,34 @@ SAO.DormantActionButtons = {}
 -- The list will change each time an overlay is triggered with a glowing effect
 SAO.GlowingSpells = {}
 
+-- List of spell IDs that should be tracked to glow action buttons
+-- The spell ID may differ from the spell ID for the corresponding aura
+-- key = glowID (= spell ID/name of the glowing spell), value = true
+-- The lists should be setup at start, based on the player class
+SAO.RegisteredGlowSpellIDs = {}
+
+-- List of spell names that should be tracked to glow action buttons
+-- This helps to fill RegisteredGlowSpellIDs e.g., when a spell is learned
+SAO.RegisteredGlowSpellNames = {}
+
+-- Register a list of glow ID
+-- Each ID is either a numeric value (spellID) or a string (spellName)
+function SAO.RegisterGlowIDs(self, glowIDs)
+    for _, glowID in ipairs(glowIDs or {}) do
+        if (type(glowID) == "number") then
+            self.RegisteredGlowSpellIDs[glowID] = true;
+        elseif (type(glowID) == "string") then
+            if (not SAO.RegisteredGlowSpellNames[glowID]) then
+                SAO.RegisteredGlowSpellNames[glowID] = true;
+                local glowSpellIDs = self:GetSpellIDsByName(glowID);
+                for _, glowSpellID in ipairs(glowSpellIDs) do
+                    self.RegisteredGlowSpellIDs[glowSpellID] = true;
+                end
+            end
+        end
+    end
+end
+
 -- An action button has been updated
 -- Check its old/new action and old/new spell ID, and put it in appropriate lists
 -- If forceRefresh is true, refresh even if old spell ID and new spell ID are identical
