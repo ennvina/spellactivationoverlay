@@ -2,9 +2,38 @@
 
 #### v0.5.0-beta (2022-08-xx)
 
+SpellActivationOverlay now has a Discord server!
+Make sure to check it out at https://discord.gg/VrDkvDV4
+
+Support for Glowing Action Buttons (GABs), making some actions glow, namely:
+- Death Knight's Rune Strike button glows after parrying or dodging an attack
+- Death Knight's Howling Blast button glows during Rime
+- DK's Icy Touch/Frost Strike/Howling Blast buttons glow during Killing Machine
+- Druid's Wrath button glows during Solar Eclipse
+- Druid's Starfire button glows during Lunar Eclipse
+- Hunter's Counterattack button glows after parrying an attack, unless on CD
+- Hunter's Aimed/Arcane/Chimera Shot buttons glow during Improved Steady Shot
+- Hunter's Arcane/Explosive Shot buttons glow during Lock and Load
+- Mage's Arcane Missiles button glows during Missile Barrage
+- Mage's Pyroblast button glows during Hot Streak
+- Mage's Fire Blast button glows during Impact
+- Mage's Fireball and Frostfire Bolt buttons glow during Brain Freeze
+- Paladin's Flash of Light and Holy Light buttons glow during Infusion of Light
+- Paladin's Flash of Light and Exorcism buttons glow during The Art of War
+- Priest's Smite and Flash Heal buttons glow during Surge of Light
+- Priest's Greater Heal and Prayer of Healing glow at 3 stacks of Serendipity
+- Rogue's Riposte button glows after parrying an attack, unless on cooldown
+- Warlock's Shadow Bolt button glows during Nightfall, a.k.a. Shadow Trance
+- Warlock's Shadow Bolt and Incinerate buttons glow during Backlash
+- Warlock's Incinerate and Soul Fire buttons glow during Molten Core
+- Warrior's Overpower button glows after the enemy dodges, if in Battle Stance
+- Warrior's Revenge button glows after parry/dodge/block in Defensive Stance
+- Warrior's Execute button glows during Sudden Death
+- Warrior's Slam button glows during Bloodsurge
+- Warrior's Shield Slam button glows during Sword and Board
+
 - New SAO: Rogue's Riposte
 - SAOs should now always show up on ReloadUI
-- Support for Glowing Action Buttons (GABs), currently for Riposte only
 
 #### v0.4.2-beta (2022-08-05)
 

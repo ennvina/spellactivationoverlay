@@ -125,7 +125,11 @@
         "ActionButton_HideOverlayGlow",
         "IsUsableSpell",
         "GetSpellCooldown",
-        "OverrideActionBar"
+        "OverrideActionBar",
+        "GetNumSpellTabs",
+        "GetSpellTabInfo",
+        "GetSpellBookItemName",
+        "BOOKTYPE_SPELL"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",
@@ -144,7 +148,8 @@
         "titleBar.activeBackground": "#2951cf",
         "titleBar.activeForeground": "#e7e7e7",
         "titleBar.inactiveBackground": "#2951cf99",
-        "titleBar.inactiveForeground": "#e7e7e799"
+        "titleBar.inactiveForeground": "#e7e7e799",
+        "commandCenter.border": "#e7e7e799"
     },
     "peacock.color": "#2951cf"
 }

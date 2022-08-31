@@ -77,6 +77,23 @@ function SAO.COMBAT_LOG_EVENT_UNFILTERED(self, ...)
     end
 end
 
+function SAO.SPELL_UPDATE_USABLE(self, ...)
+    self:CheckAllCounterActions();
+end
+
+-- Specific spellbook update
+function SAO.SPELLS_CHANGED(self, ...)
+    for glowID, _ in pairs(self.RegisteredGlowSpellNames) do
+        self:RefreshSpellIDsByName(glowID, true);
+    end
+end
+
+-- Specific spell learned
+function SAO.LEARNED_SPELL_IN_TAB(self, ...)
+    local spellID, skillInfoIndex, isGuildPerkSpell = ...;
+    self:LearnNewSpell(spellID);
+end
+
 -- Event receiver
 function SAO.OnEvent(self, event, ...)
     if self[event] then

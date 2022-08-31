@@ -12,6 +12,9 @@ local solarCache = false;
 local leftTexture = '';
 local rightTexture = '';
 
+local glowingWrath = false;
+local glowingStarfire = false;
+
 -- Assign fake spell IDs for left and right textures, and make sure they are different
 -- If we used the 'real' spell IDs instead of fake IDs, we would see weird transitions
 -- If spell IDs were identical, hiding the left or right SAO could also hide the other
@@ -83,12 +86,37 @@ local function updateSAOs(self)
     end
 end
 
+local function updateGABs(self)
+    if (lunarCache ~= glowingStarfire) then
+        local starfireSpellID = 2912;
+        if (lunarCache) then
+            self:AddGlow(starfireSpellID, { (GetSpellInfo(starfireSpellID)) });
+            glowingStarfire = true;
+        else
+            self:RemoveGlow(starfireSpellID);
+            glowingStarfire = false;
+        end
+    end
+
+    if (solarCache ~= glowingWrath) then
+        local wrathSpellID = 5176;
+        if (solarCache) then
+            self:AddGlow(wrathSpellID, { (GetSpellInfo(wrathSpellID)) });
+            glowingWrath = true;
+        else
+            self:RemoveGlow(wrathSpellID);
+            glowingWrath = false;
+        end
+    end
+end
+
 local function customLoad(self)
     feralCache = isFeral(self);
     clarityCache = hasClarity(self);
     lunarCache = hasLunar(self);
     solarCache = hasSolar(self);
     updateSAOs(self);
+    updateGABs(self);
 end
 
 local function updateShapeshift(self)
@@ -115,9 +143,11 @@ local function customCLEU(self, ...)
         elseif (spellID == lunarSpellID) then
             lunarCache = true;
             updateSAOs(self);
+            updateGABs(self);
         elseif (spellID == solarSpellID) then
             solarCache = true;
             updateSAOs(self);
+            updateGABs(self);
         end
         return;
     elseif (event == "SPELL_AURA_REMOVED") then
@@ -127,9 +157,11 @@ local function customCLEU(self, ...)
         elseif (spellID == lunarSpellID) then
             lunarCache = false;
             updateSAOs(self);
+            updateGABs(self);
         elseif (spellID == solarSpellID) then
             solarCache = false;
             updateSAOs(self);
+            updateGABs(self);
         end
         return;
     end
@@ -142,6 +174,11 @@ local function registerClass(self)
 
     -- Track Omen of Clarity with a custom CLEU function, to be able to switch between feral and non-feral texture
     -- self:RegisterAura("omen_of_clarity", 0, 16870, "natures_grace", "Left + Right (Flipped)", 1, 255, 255, 255, true);
+
+    -- Register glow IDs for glowing buttons, namely Starfire and Wrath
+    local starfire = GetSpellInfo(2912);
+    local wrath = GetSpellInfo(5176);
+    self:RegisterGlowIDs({ starfire, wrath });
 end
 
 SAO.Class["DRUID"] = {

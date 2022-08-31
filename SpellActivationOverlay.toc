@@ -8,9 +8,11 @@
 # were created by Blizzard Entertainment, Inc.
 
 aura.lua
+counter.lua
 events.lua
 glow.lua
 overlay.lua
+spell.lua
 util.lua
 
 textures\texname.lua
