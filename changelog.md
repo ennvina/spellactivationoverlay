@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.5.0-beta (2022-08-xx)
+#### v0.5.0-beta (2022-08-31)
 
 SpellActivationOverlay now has a Discord server!
 Make sure to check it out at https://discord.gg/VrDkvDV4
