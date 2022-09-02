@@ -129,7 +129,9 @@
         "GetNumSpellTabs",
         "GetSpellTabInfo",
         "GetSpellBookItemName",
-        "BOOKTYPE_SPELL"
+        "BOOKTYPE_SPELL",
+        "GetActionInfo",
+        "GetMacroSpell"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",

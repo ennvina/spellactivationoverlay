@@ -151,7 +151,22 @@ function SAO.AwakeButtonsBySpellID(self, spellID)
     end
 end
 
--- Add a glow effect for action buttons matching one of the given spell IDs
+-- Add a glow effect for action buttons matching the given glow ID
+-- @param glowID spell identifier of the glow; must be a number
+function SAO.AddGlowNumber(self, spellID, glowID)
+    local actionButtons = self.ActionButtons[glowID];
+    if (self.GlowingSpells[glowID]) then
+        self.GlowingSpells[glowID][spellID] = true;
+    else
+        self.GlowingSpells[glowID] = { [spellID] = true };
+        for _, frame in pairs(actionButtons or {}) do
+            ActionButton_ShowOverlayGlow(frame);
+        end
+    end
+end
+
+-- Add a glow effect for action buttons matching one of the given glow IDs
+-- Each glow ID may be a spell identifier (number) or spell name (string)
 function SAO.AddGlow(self, spellID, glowIDs)
     if (glowIDs == nil) then
         return;
@@ -160,28 +175,12 @@ function SAO.AddGlow(self, spellID, glowIDs)
     for _, glowID in ipairs(glowIDs) do
         if (type(glowID) == "number") then
             -- glowID is a direct spell identifier
-            local actionButtons = self.ActionButtons[glowID];
-            if (self.GlowingSpells[glowID]) then
-                self.GlowingSpells[glowID][spellID] = true;
-            else
-                self.GlowingSpells[glowID] = { [spellID] = true };
-                for _, frame in pairs(actionButtons or {}) do
-                    ActionButton_ShowOverlayGlow(frame);
-                end
-            end
+            self:AddGlowNumber(spellID, glowID);
         elseif (type(glowID) == "string") then
             -- glowID is a spell name: find spell identifiers first, then parse them
             local glowSpellIDs = self:GetSpellIDsByName(glowID);
             for _, glowSpellID in ipairs(glowSpellIDs) do
-                local actionButtons = self.ActionButtons[glowSpellID];
-                if (self.GlowingSpells[glowSpellID]) then
-                    self.GlowingSpells[glowSpellID][spellID] = true;
-                else
-                    self.GlowingSpells[glowSpellID] = { [spellID] = true };
-                    for _, frame in pairs(actionButtons or {}) do
-                        ActionButton_ShowOverlayGlow(frame);
-                    end
-                end
+                self:AddGlowNumber(spellID, glowSpellID);
             end
         end
     end

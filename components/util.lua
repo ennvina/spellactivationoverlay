@@ -1,5 +1,7 @@
 local AddonName, SAO = ...
 
+-- This script file is not a 'component' per se, but its functions are used across components
+
 -- Utility aura function, one of the many that Blizzard could've done better years ago...
 function SAO.FindPlayerAuraByID(self, id)
     local i = 1
@@ -56,7 +58,7 @@ end
 -- Spells are searched into the *current* spellbook, not through all available spells ever
 -- This means the returned list will be obsolete if e.g. new spells are learned afterwards or if the player re-specs
 -- @param spell Either the spell name (as string) or the spell ID (as number)
-function SAO.GetHomonymSpellIDs(spell)
+function SAO.GetHomonymSpellIDs(self, spell)
     local spellName;
     if (type(spell) == "string") then
         spellName = spell;
