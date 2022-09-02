@@ -1,5 +1,7 @@
 local AddonName, SAO = ...
 
+-- This script file is not a 'component' per se, but its functions are used across components
+
 -- Utility aura function, one of the many that Blizzard could've done better years ago...
 function SAO.FindPlayerAuraByID(self, id)
     local i = 1
