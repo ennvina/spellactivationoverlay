@@ -178,5 +178,3 @@ SAO.Class["MAGE"] = {
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
     ["PLAYER_LOGIN"] = customLogin,
 }
-
-SAO_HSH = HotStreakHandler; -- For debugging purposes
