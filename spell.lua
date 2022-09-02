@@ -22,7 +22,7 @@ end
 -- The cache is updated in the process
 -- If awaken is true, spellIDs are also added to RegisteredGlowSpellIDs
 function SAO.RefreshSpellIDsByName(self, name, awaken)
-    local homonyms = self.GetHomonymSpellIDs(name);
+    local homonyms = self:GetHomonymSpellIDs(name);
     self.SpellIDsByName[name] = homonyms;
 
     -- Awake dormant buttons associated to these spellIDs
