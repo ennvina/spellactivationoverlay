@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.6.0 (2022-09-xx)
+#### v0.6.0 (2022-09-04)
 
 - After extensive testing, SpellActivationOverlay now leaves its Beta phase!
 - Options Panel, available from Interface > AddOns > SpellActivationOverlay
