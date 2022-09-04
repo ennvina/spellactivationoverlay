@@ -8,7 +8,7 @@ function SAO.LoadDB(self)
     if not db.alert then
         db.alert = {};
         db.alert.enabled = true;
-        db.alert.opacity = 0.65;
+        db.alert.opacity = 1;
     end
 
     if not db.glow then
