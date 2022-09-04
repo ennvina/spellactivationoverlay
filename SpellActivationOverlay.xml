@@ -31,28 +31,36 @@
 			<OnShow function="SpellActivationOverlayTexture_OnShow"/>
 		</Scripts>
 	</Frame>
-	<Frame name="SpellActivationOverlayFrame" parent="UIParent" alpha="0.5">
+	<Frame name="SpellActivationOverlayContainerFrame" parent="UIParent">
 		<Size x="256" y="256"/>
 		<Anchors>
 			<Anchor point="CENTER"/>
 		</Anchors>
-		<Animations>
-			<AnimationGroup name="$enteringCombatAnim" parentKey="combatAnimIn">
-				<Alpha fromAlpha="0.5" toAlpha="1" duration="0.1"/>
+		<Frames>
+			<Frame name="SpellActivationOverlayFrame" alpha="0.5">
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+					<Anchor point="BOTTOMRIGHT"/>
+				</Anchors>
+				<Animations>
+					<AnimationGroup name="$enteringCombatAnim" parentKey="combatAnimIn">
+						<Alpha fromAlpha="0.5" toAlpha="1" duration="0.1"/>
+						<Scripts>
+							<OnFinished function="SpellActivationOverlayFrame_OnFadeInFinished"/>
+						</Scripts>
+					</AnimationGroup>
+					<AnimationGroup name="$leavingCombatAnim" parentKey="combatAnimOut">
+						<Alpha fromAlpha="1" toAlpha="0.5" duration="0.2"/>
+						<Scripts>
+							<OnFinished function="SpellActivationOverlayFrame_OnFadeOutFinished"/>
+						</Scripts>
+					</AnimationGroup>
+				</Animations>
 				<Scripts>
-					<OnFinished function="SpellActivationOverlayFrame_OnFadeInFinished"/>
+					<OnLoad function="SpellActivationOverlay_OnLoad"/>
+					<OnEvent function="SpellActivationOverlay_OnEvent"/>
 				</Scripts>
-			</AnimationGroup>
-			<AnimationGroup name="$leavingCombatAnim" parentKey="combatAnimOut">
-				<Alpha fromAlpha="1" toAlpha="0.5" duration="0.2"/>
-				<Scripts>
-					<OnFinished function="SpellActivationOverlayFrame_OnFadeOutFinished"/>
-				</Scripts>
-			</AnimationGroup>
-		</Animations>
-		<Scripts>
-			<OnLoad function="SpellActivationOverlay_OnLoad"/>
-			<OnEvent function="SpellActivationOverlay_OnEvent"/>
-		</Scripts>
+			</Frame>
+		</Frames>
 	</Frame>
 </Ui>

@@ -114,7 +114,9 @@ function SAO.UpdateActionButton(self, button, forceRefresh)
     local mustGlow = newGlowID and (self.GlowingSpells[newGlowID] ~= nil);
 
     if (not wasGlowing and mustGlow) then
-        ActionButton_ShowOverlayGlow(button);
+        if (not SpellActivationOverlayDB.glow or SpellActivationOverlayDB.glow.enabled) then
+            ActionButton_ShowOverlayGlow(button);
+        end
     elseif (wasGlowing and not mustGlow) then
         ActionButton_HideOverlayGlow(button);
     end
@@ -160,7 +162,9 @@ function SAO.AddGlowNumber(self, spellID, glowID)
     else
         self.GlowingSpells[glowID] = { [spellID] = true };
         for _, frame in pairs(actionButtons or {}) do
-            ActionButton_ShowOverlayGlow(frame);
+            if (not SpellActivationOverlayDB.glow or SpellActivationOverlayDB.glow.enabled) then
+                ActionButton_ShowOverlayGlow(frame);
+            end
         end
     end
 end

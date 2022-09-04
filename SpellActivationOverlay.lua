@@ -13,6 +13,10 @@ function SpellActivationOverlay_OnLoad(self)
 	self.overlaysInUse = {};
 	self.unusedOverlays = {};
 
+	self.offset = 0;
+	self.scale = 1;
+	SpellActivationOverlay_OnChangeGeometry(self);
+
 	local class = SAO.Class[select(2, UnitClass("player"))];
 	if class then
 		class.Register(SAO);
@@ -38,8 +42,23 @@ function SpellActivationOverlay_OnLoad(self)
 	self:RegisterEvent("PLAYER_REGEN_DISABLED");
 	self:RegisterEvent("SPELLS_CHANGED");
 	self:RegisterEvent("LEARNED_SPELL_IN_TAB");
-	
-	self:SetSize(longSide, longSide)
+end
+
+function SpellActivationOverlay_OnChangeGeometry(self)
+	-- Ignores self.scale because it should be used to scale alerts, not core
+	local newSize = 256 * sizeScale + self.offset;
+	-- Resize the parent instead of self because the parent is the one bearing the Size element
+	self:GetParent():SetSize(newSize, newSize);
+
+	-- Resize existing overlays and prepare variables for future overlays
+	longSide = 256 * sizeScale * self.scale;
+	shortSide = 128 * sizeScale * self.scale;
+	for _, overlayList in pairs(self.overlaysInUse) do
+		for i=1, #overlayList do
+			local overlay = overlayList[i];
+			overlay:SetGeometry(longSide, shortSide);
+		end
+	end
 end
 
 function SpellActivationOverlay_OnEvent(self, event, ...)
@@ -61,12 +80,14 @@ function SpellActivationOverlay_OnEvent(self, event, ...)
 			SpellActivationOverlay_HideAllOverlays(self);
 		end
 	end]]
-	if ( event == "PLAYER_REGEN_DISABLED" ) then
-		self.combatAnimOut:Stop();	--In case we're in the process of animating this out.
-		self.combatAnimIn:Play();
-	elseif ( event == "PLAYER_REGEN_ENABLED" ) then
-		self.combatAnimIn:Stop();	--In case we're in the process of animating this out.
-		self.combatAnimOut:Play();
+	if ( not self.disableDimOutOfCombat ) then
+		if ( event == "PLAYER_REGEN_DISABLED" ) then
+			self.combatAnimOut:Stop();	--In case we're in the process of animating this out.
+			self.combatAnimIn:Play();
+		elseif ( event == "PLAYER_REGEN_ENABLED" ) then
+			self.combatAnimIn:Stop();	--In case we're in the process of animating this out.
+			self.combatAnimOut:Play();
+		end
 	end
 	if ( event ) then
 		SAO:OnEvent(event, ...);
@@ -126,11 +147,13 @@ function SpellActivationOverlay_ShowAllOverlays(self, spellID, texturePath, posi
 end
 
 function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, vFlip, hFlip, cw, autoPulse, forcePulsePlay)
+	if (not SpellActivationOverlayDB.alert.enabled) then
+		return
+	end
+
 	local overlay = SpellActivationOverlay_GetOverlay(self, spellID, position);
 	overlay.spellID = spellID;
 	overlay.position = position;
-	
-	overlay:ClearAllPoints();
 	
 	local texLeft, texRight, texTop, texBottom = 0, 1, 0, 1;
 	if ( vFlip ) then
@@ -147,41 +170,48 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	else
 		overlay.texture:SetTexCoord(texRight,texTop, texLeft,texTop, texRight,texBottom, texLeft,texBottom);
 	end
-	
-	local width, height;
-	if ( position == "CENTER" ) then
-		width, height = longSide, longSide;
-		overlay:SetPoint("CENTER", self, "CENTER", 0, 0);
-	elseif ( position == "LEFT" ) then
-		width, height = shortSide, longSide;
-		overlay:SetPoint("RIGHT", self, "LEFT", 0, 0);
-	elseif ( position == "RIGHT" ) then
-		width, height = shortSide, longSide;
-		overlay:SetPoint("LEFT", self, "RIGHT", 0, 0);
-	elseif ( position == "TOP" ) then
-		width, height = longSide, shortSide;
-		overlay:SetPoint("BOTTOM", self, "TOP");
-	elseif ( position == "BOTTOM" ) then
-		width, height = longSide, shortSide;
-		overlay:SetPoint("TOP", self, "BOTTOM");
-	elseif ( position == "TOPRIGHT" ) then
-		width, height = shortSide, shortSide;
-		overlay:SetPoint("BOTTOMLEFT", self, "TOPRIGHT", 0, 0);
-	elseif ( position == "TOPLEFT" ) then
-		width, height = shortSide, shortSide;
-		overlay:SetPoint("BOTTOMRIGHT", self, "TOPLEFT", 0, 0);
-	elseif ( position == "BOTTOMRIGHT" ) then
-		width, height = shortSide, shortSide;
-		overlay:SetPoint("TOPLEFT", self, "BOTTOMRIGHT", 0, 0);
-	elseif ( position == "BOTTOMLEFT" ) then
-		width, height = shortSide, shortSide;
-		overlay:SetPoint("TOPRIGHT", self, "BOTTOMLEFT", 0, 0);
-	else
-		--GMError("Unknown SpellActivationOverlay position: "..tostring(position));
-		return;
+
+	overlay.SetGeometry = function(self, longSide, shortSide)
+		local parent = self:GetParent();
+
+		self:ClearAllPoints();
+
+		local width, height;
+		if ( position == "CENTER" ) then
+			width, height = longSide, longSide;
+			self:SetPoint("CENTER", parent, "CENTER", 0, 0);
+		elseif ( position == "LEFT" ) then
+			width, height = shortSide, longSide;
+			self:SetPoint("RIGHT", parent, "LEFT", 0, 0);
+		elseif ( position == "RIGHT" ) then
+			width, height = shortSide, longSide;
+			self:SetPoint("LEFT", parent, "RIGHT", 0, 0);
+		elseif ( position == "TOP" ) then
+			width, height = longSide, shortSide;
+			self:SetPoint("BOTTOM", parent, "TOP");
+		elseif ( position == "BOTTOM" ) then
+			width, height = longSide, shortSide;
+			self:SetPoint("TOP", parent, "BOTTOM");
+		elseif ( position == "TOPRIGHT" ) then
+			width, height = shortSide, shortSide;
+			self:SetPoint("BOTTOMLEFT", parent, "TOPRIGHT", 0, 0);
+		elseif ( position == "TOPLEFT" ) then
+			width, height = shortSide, shortSide;
+			self:SetPoint("BOTTOMRIGHT", parent, "TOPLEFT", 0, 0);
+		elseif ( position == "BOTTOMRIGHT" ) then
+			width, height = shortSide, shortSide;
+			self:SetPoint("TOPLEFT", parent, "BOTTOMRIGHT", 0, 0);
+		elseif ( position == "BOTTOMLEFT" ) then
+			width, height = shortSide, shortSide;
+			self:SetPoint("TOPRIGHT", parent, "BOTTOMLEFT", 0, 0);
+		else
+			--GMError("Unknown SpellActivationOverlay position: "..tostring(position));
+			return;
+		end
+
+		self:SetSize(width * scale, height * scale);
 	end
-	
-	overlay:SetSize(width * scale, height * scale);
+	overlay:SetGeometry(longSide, shortSide);
 	
 	overlay.texture:SetTexture(texturePath);
 	overlay.texture:SetVertexColor(r / 255, g / 255, b / 255);
