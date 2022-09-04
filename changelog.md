@@ -4,7 +4,9 @@
 
 - After extensive testing, SpellActivationOverlay now leaves its Beta phase!
 - Options Panel, available from Interface > AddOns > SpellActivationOverlay
-- Current options are: Spell Alert opacity, and Glowing Buttons on/off
+- Options for Spell Alerts: opacity, scale factor, offset
+- Options for Glowing Buttons: on/off
+- A "Toggle Test" button displays fake Spell Alerts for testing interactively
 
 #### v0.5.0-beta (2022-08-31)
 
