@@ -50,9 +50,11 @@ end
 -- If forceRefresh is true, refresh even if old spell ID and new spell ID are identical
 -- Set forceRefresh if the spell ID of the button may switch from untracked to tracked (or vice versa) in light of recent events
 function SAO.UpdateActionButton(self, button, forceRefresh)
-    local oldAction = button.lastAction; -- Set by us, a few lines below
+--    local oldAction = button.lastAction; -- Set by us, a few lines below
+    local oldAction = button; -- Set by us, a few lines below
     local oldGlowID = button.lastGlowID; -- Set by us, a few lines below
-    local newAction = button.action; -- Set by the game, inside Blizzard's ActionButton.lua
+--    local newAction = button.action;
+    local newAction = button; -- In light of more research, it's better if newAction and oldAction are identical
     local newGlowID = nil;
     if HasAction(button.action) then
         newGlowID = self:GetSpellIDByActionSlot(button.action);
