@@ -51,10 +51,7 @@ end
 -- Set forceRefresh if the spell ID of the button may switch from untracked to tracked (or vice versa) in light of recent events
 function SAO.UpdateActionButton(self, button, forceRefresh)
     local oldGlowID = button.lastGlowID; -- Set by us, a few lines below
-    local newGlowID = nil;
-    if HasAction(button.action) then
-        newGlowID = self:GetSpellIDByActionSlot(button.action);
-    end
+    local newGlowID = button:GetGlowID();
     button.lastGlowID = newGlowID; -- Write button.lastGlowID here, but use oldGlowID/newGlowID for the rest of the function
 
     if (oldGlowID == newGlowID and not forceRefresh) then
@@ -126,6 +123,13 @@ function HookActionButton_Update(self)
         return;
     end
 
+    if (not self.GetGlowID) then
+        self.GetGlowID = function(self)
+            if (self.action and HasAction(self.action)) then
+                return SAO:GetSpellIDByActionSlot(self.action);
+            end
+        end
+    end
     SAO:UpdateActionButton(self);
 end
 hooksecurefunc("ActionButton_Update", HookActionButton_Update);
