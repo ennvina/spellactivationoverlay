@@ -26,32 +26,13 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <!-- <OnLoad>
+          <OnLoad>
             self:OnBackdropLoaded();
-            self.Text:SetText("Spell Alert opacity");
-          </OnLoad> -->
-          <!-- <OnLoad>
-            self.type = CONTROLTYPE_SLIDER;
-            self.cvar = "spellActivationOverlayOpacity";
             self.SetDisplayValue = self.SetValue;
-            _G[self:GetName().."Low"]:SetText(OFF);
             self.SetValue = function (self, value)
-print("Slider SetValue", self, value);
               value = math.floor(value * 100 + 0.5) / 100;
               self:SetDisplayValue(value);
-              if (value == 0) then
-                SpellActivationOverlayDB.alert.enabled = false;
-              else
-                SpellActivationOverlayDB.alert.enabled = true;
-              end
-              SpellActivationOverlayFrame:SetAlpha(value);
             end
-            self.GetValue = function(self)
-print("Checkbox GetValue", self, SpellActivationOverlayDB.alert.opacity);
-              return SpellActivationOverlayDB.alert.opacity;
-            end
-            BlizzardOptionsPanel_RegisterControl(self, self:GetParent());
-            self:RegisterEvent("VARIABLES_LOADED");
           </OnLoad>
           <OnValueChanged>
             value = math.floor(value * 100 + 0.5) / 100;
@@ -60,13 +41,7 @@ print("Checkbox GetValue", self, SpellActivationOverlayDB.alert.opacity);
             end
             self.value = value;
             self:SetValue(value);
-            SpellActivationOverlayDB.alert.opacity = value;
           </OnValueChanged>
-          <OnEvent>
-            local value = tonumber(SpellActivationOverlayDB.alert.opacity);
-            value = math.floor(value * 100 + 0.5) / 100;
-            self:SetValue(value);
-          </OnEvent> -->
         </Scripts>
       </Slider>
       <CheckButton name="$parentGlowingButtons" inherits="InterfaceOptionsCheckButtonTemplate">
@@ -78,9 +53,6 @@ print("Checkbox GetValue", self, SpellActivationOverlayDB.alert.opacity);
           </Anchor>
         </Anchors>
         <Scripts>
-          <!-- <OnLoad>
-            self.Text:SetText("Glowing Buttons");
-          </OnLoad> -->
         </Scripts>
       </CheckButton>
     </Frames>
