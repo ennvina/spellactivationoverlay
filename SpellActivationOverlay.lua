@@ -13,6 +13,9 @@ function SpellActivationOverlay_OnLoad(self)
 	self.overlaysInUse = {};
 	self.unusedOverlays = {};
 
+	self.sizeScale = sizeScale;
+	SpellActivationOverlay_OnChangeScale(self);
+
 	local class = SAO.Class[select(2, UnitClass("player"))];
 	if class then
 		class.Register(SAO);
@@ -38,8 +41,20 @@ function SpellActivationOverlay_OnLoad(self)
 	self:RegisterEvent("PLAYER_REGEN_DISABLED");
 	self:RegisterEvent("SPELLS_CHANGED");
 	self:RegisterEvent("LEARNED_SPELL_IN_TAB");
+end
 	
-	self:SetSize(longSide, longSide)
+function SpellActivationOverlay_OnChangeScale(self)
+	longSide = 256 * self.sizeScale;
+	shortSide = 128 * self.sizeScale;
+	self:SetSize(longSide, longSide);
+
+	-- Also resize existing overlays
+	for _, overlayList in pairs(self.overlaysInUse) do
+		for i=1, #overlayList do
+			local overlay = overlayList[i];
+			overlay:SetGeometry(longSide, shortSide);
+		end
+	end
 end
 
 function SpellActivationOverlay_OnEvent(self, event, ...)
@@ -130,8 +145,6 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	overlay.spellID = spellID;
 	overlay.position = position;
 	
-	overlay:ClearAllPoints();
-	
 	local texLeft, texRight, texTop, texBottom = 0, 1, 0, 1;
 	if ( vFlip ) then
 		texTop, texBottom = 1, 0;
@@ -148,40 +161,47 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 		overlay.texture:SetTexCoord(texRight,texTop, texLeft,texTop, texRight,texBottom, texLeft,texBottom);
 	end
 	
+	overlay.SetGeometry = function(self, longSide, shortSide)
+		local parent = self:GetParent();
+
+		self:ClearAllPoints();
+
 	local width, height;
 	if ( position == "CENTER" ) then
 		width, height = longSide, longSide;
-		overlay:SetPoint("CENTER", self, "CENTER", 0, 0);
+			self:SetPoint("CENTER", parent, "CENTER", 0, 0);
 	elseif ( position == "LEFT" ) then
 		width, height = shortSide, longSide;
-		overlay:SetPoint("RIGHT", self, "LEFT", 0, 0);
+			self:SetPoint("RIGHT", parent, "LEFT", 0, 0);
 	elseif ( position == "RIGHT" ) then
 		width, height = shortSide, longSide;
-		overlay:SetPoint("LEFT", self, "RIGHT", 0, 0);
+			self:SetPoint("LEFT", parent, "RIGHT", 0, 0);
 	elseif ( position == "TOP" ) then
 		width, height = longSide, shortSide;
-		overlay:SetPoint("BOTTOM", self, "TOP");
+			self:SetPoint("BOTTOM", parent, "TOP");
 	elseif ( position == "BOTTOM" ) then
 		width, height = longSide, shortSide;
-		overlay:SetPoint("TOP", self, "BOTTOM");
+			self:SetPoint("TOP", parent, "BOTTOM");
 	elseif ( position == "TOPRIGHT" ) then
 		width, height = shortSide, shortSide;
-		overlay:SetPoint("BOTTOMLEFT", self, "TOPRIGHT", 0, 0);
+			self:SetPoint("BOTTOMLEFT", parent, "TOPRIGHT", 0, 0);
 	elseif ( position == "TOPLEFT" ) then
 		width, height = shortSide, shortSide;
-		overlay:SetPoint("BOTTOMRIGHT", self, "TOPLEFT", 0, 0);
+			self:SetPoint("BOTTOMRIGHT", parent, "TOPLEFT", 0, 0);
 	elseif ( position == "BOTTOMRIGHT" ) then
 		width, height = shortSide, shortSide;
-		overlay:SetPoint("TOPLEFT", self, "BOTTOMRIGHT", 0, 0);
+			self:SetPoint("TOPLEFT", parent, "BOTTOMRIGHT", 0, 0);
 	elseif ( position == "BOTTOMLEFT" ) then
 		width, height = shortSide, shortSide;
-		overlay:SetPoint("TOPRIGHT", self, "BOTTOMLEFT", 0, 0);
+			self:SetPoint("TOPRIGHT", parent, "BOTTOMLEFT", 0, 0);
 	else
 		--GMError("Unknown SpellActivationOverlay position: "..tostring(position));
 		return;
 	end
 	
-	overlay:SetSize(width * scale, height * scale);
+		self:SetSize(width * scale, height * scale);
+	end
+	overlay:SetGeometry(longSide, shortSide);
 	
 	overlay.texture:SetTexture(texturePath);
 	overlay.texture:SetVertexColor(r / 255, g / 255, b / 255);
