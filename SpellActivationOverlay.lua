@@ -147,7 +147,7 @@ function SpellActivationOverlay_ShowAllOverlays(self, spellID, texturePath, posi
 end
 
 function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, vFlip, hFlip, cw, autoPulse, forcePulsePlay)
-	if (not SpellActivationOverlayDB.alert.enabled) then
+	if (SpellActivationOverlayDB and SpellActivationOverlayDB.alert and not SpellActivationOverlayDB.alert.enabled) then
 		return
 	end
 
