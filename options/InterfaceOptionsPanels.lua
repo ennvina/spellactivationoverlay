@@ -18,7 +18,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     scaleSlider.Text:SetText("Spell Alert scale");
     _G[scaleSlider:GetName().."Low"]:SetText(SMALL);
     _G[scaleSlider:GetName().."High"]:SetText(LARGE);
-    scaleSlider:SetMinMaxValues(0.5, 2);
+    scaleSlider:SetMinMaxValues(0.25, 2.5);
     scaleSlider:SetValueStep(0.05);
     scaleSlider.initialValue = SpellActivationOverlayDB.alert.scale;
     scaleSlider:SetValue(scaleSlider.initialValue);
