@@ -26,14 +26,6 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnLoad>
-            self:OnBackdropLoaded();
-            self.SetDisplayValue = self.SetValue;
-            self.SetValue = function (self, value)
-              value = math.floor(value * 100 + 0.5) / 100;
-              self:SetDisplayValue(value);
-            end
-          </OnLoad>
           <OnValueChanged>
             value = math.floor(value * 100 + 0.5) / 100;
             if (value ~= 0) then
