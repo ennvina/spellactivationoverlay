@@ -9,7 +9,8 @@ end
 
 -- Apply spell alert opacity
 function SAO.ApplySpellAlertOpacity(self)
-    -- Change the main frame's opacity and adjust in-combat and out-of-combat animation transparency
+    -- Change the main frame's visibility and opacity
+    SpellActivationOverlayContainerFrame:SetShown(SpellActivationOverlayDB.alert.enabled);
     SpellActivationOverlayContainerFrame:SetAlpha(SpellActivationOverlayDB.alert.opacity);
 end
 
