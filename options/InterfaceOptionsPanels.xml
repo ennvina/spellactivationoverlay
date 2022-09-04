@@ -54,6 +54,27 @@
           </Anchor>
         </Anchors>
       </Slider>
+      <Button name="$parentSpellAlertTestButton" inherits="OptionsButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertOpacitySlider" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="32" y="2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            if (not self.isTesting) then
+              self:StartTest();
+            else
+              self:StopTest();
+            end
+          </OnClick>
+          <OnHide>
+            self:StopTest();
+          </OnHide>
+        </Scripts>
+      </Button>
       <CheckButton name="$parentGlowingButtons" inherits="InterfaceOptionsCheckButtonTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertOffsetSlider" relativePoint="BOTTOMLEFT">

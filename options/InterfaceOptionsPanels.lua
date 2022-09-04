@@ -21,6 +21,24 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     offsetSlider:SetMinMaxValues(-200, 400);
     offsetSlider:SetValueStep(20);
 
+    local testButton = SpellActivationOverlayOptionsPanelSpellAlertTestButton;
+    testButton:SetText("Toggle Test");
+    testButton.fakeSpellID = 42;
+    testButton.isTesting = false;
+    testButton.StartTest = function(self)
+        if (not self.isTesting) then
+            self.isTesting = true;
+            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName["imp_empowerment"], "Left + Right (Flipped)", 1, 255, 255, 255, false);
+            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName["brain_freeze"], "Top", 1, 255, 255, 255, false);
+        end
+    end
+    testButton.StopTest = function(self)
+        if (self.isTesting) then
+            self.isTesting = false;
+            SAO:DeactivateOverlay(self.fakeSpellID);
+        end
+    end
+
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     glowingButtonCheckbox.Text:SetText("Glowing Buttons");
 
