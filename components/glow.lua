@@ -50,16 +50,11 @@ end
 -- If forceRefresh is true, refresh even if old spell ID and new spell ID are identical
 -- Set forceRefresh if the spell ID of the button may switch from untracked to tracked (or vice versa) in light of recent events
 function SAO.UpdateActionButton(self, button, forceRefresh)
---    local oldAction = button.lastAction; -- Set by us, a few lines below
-    local oldAction = button; -- Set by us, a few lines below
     local oldGlowID = button.lastGlowID; -- Set by us, a few lines below
---    local newAction = button.action;
-    local newAction = button; -- In light of more research, it's better if newAction and oldAction are identical
     local newGlowID = nil;
     if HasAction(button.action) then
         newGlowID = self:GetSpellIDByActionSlot(button.action);
     end
-    button.lastAction = newAction; -- Write button.lastAction here, but use oldAction/newAction for the rest of the function
     button.lastGlowID = newGlowID; -- Write button.lastGlowID here, but use oldGlowID/newGlowID for the rest of the function
 
     if (oldGlowID == newGlowID and not forceRefresh) then
@@ -69,17 +64,17 @@ function SAO.UpdateActionButton(self, button, forceRefresh)
 
     -- Register/unregister button as 'dormant' i.e., not tracked but could be tracked in the future
     if (oldGlowID and not self.RegisteredGlowSpellIDs[oldGlowID] and type(self.DormantActionButtons[oldGlowID]) == 'table') then
-        if (self.DormantActionButtons[oldGlowID][oldAction] == button) then
-            self.DormantActionButtons[oldGlowID][oldAction] = nil;
+        if (self.DormantActionButtons[oldGlowID][button] == button) then
+            self.DormantActionButtons[oldGlowID][button] = nil;
         end
     end
     if (newGlowID and not self.RegisteredGlowSpellIDs[newGlowID]) then
         if (type(self.DormantActionButtons[newGlowID]) == 'table') then
-            if (self.DormantActionButtons[newGlowID][newAction] ~= button) then
-                self.DormantActionButtons[newGlowID][newAction] = button;
+            if (self.DormantActionButtons[newGlowID][button] ~= button) then
+                self.DormantActionButtons[newGlowID][button] = button;
             end
         else
-            self.DormantActionButtons[newGlowID] = { [newAction] = button };
+            self.DormantActionButtons[newGlowID] = { [button] = button };
         end
     end
 
@@ -91,23 +86,23 @@ function SAO.UpdateActionButton(self, button, forceRefresh)
     -- Untrack previous action button and track the new one
     if (oldGlowID and self.RegisteredGlowSpellIDs[oldGlowID] and type(self.ActionButtons[oldGlowID]) == 'table') then
         -- Detach action button from the former glow ID
-        if (self.ActionButtons[oldGlowID][oldAction] == button) then
-            self.ActionButtons[oldGlowID][oldAction] = nil;
+        if (self.ActionButtons[oldGlowID][button] == button) then
+            self.ActionButtons[oldGlowID][button] = nil;
         end
     end
     if (newGlowID and self.RegisteredGlowSpellIDs[newGlowID]) then
         if (type(self.ActionButtons[newGlowID]) == 'table') then
             -- Attach action button to the current glow ID
-            if (self.ActionButtons[newGlowID][newAction] ~= button) then
-                self.ActionButtons[newGlowID][newAction] = button;
+            if (self.ActionButtons[newGlowID][button] ~= button) then
+                self.ActionButtons[newGlowID][button] = button;
             end
         else
             -- This glow ID has no Action Buttons yet: be the first
-            self.ActionButtons[newGlowID] = { [newAction] = button };
+            self.ActionButtons[newGlowID] = { [button] = button };
         end
         -- Remove from the 'dormant' table, if it was dormant
-        if (type(self.DormantActionButtons[newGlowID]) == 'table' and self.DormantActionButtons[newGlowID][newAction] == button) then
-            self.DormantActionButtons[newGlowID][newAction] = nil;
+        if (type(self.DormantActionButtons[newGlowID]) == 'table' and self.DormantActionButtons[newGlowID][button] == button) then
+            self.DormantActionButtons[newGlowID][button] = nil;
         end
     end
 
