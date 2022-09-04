@@ -3,6 +3,7 @@
 #### v0.6.1 (2022-09-xx)
 
 - Buttons should glow correctly when using Dominos
+- Riposte should display its SAO as intended
 - Reload UI should no longer cause a Lua error because of options
 - Glowing Buttons checkbox should now apply the option correctly
 
