@@ -1,8 +1,9 @@
 ## Interface: 30400
-## Title: SpellActivationOverlay |cffa2f3ff0.5.0|r
+## Title: SpellActivationOverlay |cffa2f3ff0.6.0|r
 ## Notes: Mimic Spell Activation Overlays from Retail
 ## Author: Vinny
-## Version: 0.5.0
+## Version: 0.6.0
+## SavedVariables: SpellActivationOverlayDB
 
 # SpellActivationOverlay.lua, SpellActivationOverlay.xml and all textures
 # were created by Blizzard Entertainment, Inc.
@@ -28,6 +29,10 @@ classes\rogue.lua
 classes\shaman.lua
 classes\warlock.lua
 classes\warrior.lua
+
+options\db.lua
+options\InterfaceOptionsPanels.lua
+options\InterfaceOptionsPanels.xml
 
 SpellActivationOverlay.lua
 SpellActivationOverlay.xml
