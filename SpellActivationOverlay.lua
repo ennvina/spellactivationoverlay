@@ -13,8 +13,9 @@ function SpellActivationOverlay_OnLoad(self)
 	self.overlaysInUse = {};
 	self.unusedOverlays = {};
 
-	self.sizeScale = sizeScale;
-	SpellActivationOverlay_OnChangeScale(self);
+	self.offset = 0;
+	self.scale = 1;
+	SpellActivationOverlay_OnChangeGeometry(self);
 
 	local class = SAO.Class[select(2, UnitClass("player"))];
 	if class then
@@ -43,12 +44,15 @@ function SpellActivationOverlay_OnLoad(self)
 	self:RegisterEvent("LEARNED_SPELL_IN_TAB");
 end
 	
-function SpellActivationOverlay_OnChangeScale(self)
-	longSide = 256 * self.sizeScale;
-	shortSide = 128 * self.sizeScale;
-	self:SetSize(longSide, longSide);
+function SpellActivationOverlay_OnChangeGeometry(self)
+	-- Ignores self.scale because it should be used to scale alerts, not core
+	local newSize = 256 * sizeScale + self.offset;
+	-- Resize the parent instead of self because the parent is the one bearing the Size element
+	self:GetParent():SetSize(newSize, newSize);
 
-	-- Also resize existing overlays
+	-- Resize existing overlays and prepare variables for future overlays
+	longSide = 256 * sizeScale * self.scale;
+	shortSide = 128 * sizeScale * self.scale;
 	for _, overlayList in pairs(self.overlaysInUse) do
 		for i=1, #overlayList do
 			local overlay = overlayList[i];
