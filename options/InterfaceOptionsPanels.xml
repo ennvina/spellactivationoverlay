@@ -36,7 +36,7 @@
           </OnValueChanged>
         </Scripts>
       </Slider>
-      <CheckButton name="$parentGlowingButtons" inherits="InterfaceOptionsCheckButtonTemplate">
+      <Slider name="$parentSpellAlertScaleSlider" inherits="OptionsSliderTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertOpacitySlider" relativePoint="BOTTOMLEFT">
             <Offset>
@@ -44,8 +44,24 @@
             </Offset>
           </Anchor>
         </Anchors>
-        <Scripts>
-        </Scripts>
+      </Slider>
+      <Slider name="$parentSpellAlertOffsetSlider" inherits="OptionsSliderTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertScaleSlider" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-32"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Slider>
+      <CheckButton name="$parentGlowingButtons" inherits="InterfaceOptionsCheckButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertOffsetSlider" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="-24" y="-32"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
       </CheckButton>
     </Frames>
     <Scripts>

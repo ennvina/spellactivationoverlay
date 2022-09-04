@@ -3,6 +3,7 @@ local AddonName, SAO = ...
 -- Apply all values from the database to the engine
 function SAO.ApplyAllVariables(self)
     self:ApplySpellAlertOpacity();
+    self:ApplySpellAlertGeometry();
     self:ApplyGlowingButtonsToggle();
 end
 
@@ -10,6 +11,13 @@ end
 function SAO.ApplySpellAlertOpacity(self)
     -- Change the main frame's opacity and adjust in-combat and out-of-combat animation transparency
     SpellActivationOverlayContainerFrame:SetAlpha(SpellActivationOverlayDB.alert.opacity);
+end
+
+-- Apply spell alert geometry i.e., scale and offset
+function SAO.ApplySpellAlertGeometry(self)
+    SpellActivationOverlayFrame.scale = SpellActivationOverlayDB.alert.scale;
+    SpellActivationOverlayFrame.offset = SpellActivationOverlayDB.alert.offset;
+    SpellActivationOverlay_OnChangeGeometry(SpellActivationOverlayFrame);
 end
 
 -- Apply glowing buttons on/off
