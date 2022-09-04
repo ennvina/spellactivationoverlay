@@ -1,5 +1,11 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.6.1 (2022-09-xx)
+
+- Buttons should glow correctly when using Dominos
+- Reload UI should no longer cause a Lua error because of options
+- Glowing Buttons checkbox should now apply the option correctly
+
 #### v0.6.0 (2022-09-04)
 
 - After extensive testing, SpellActivationOverlay now leaves its Beta phase!
