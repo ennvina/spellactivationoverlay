@@ -43,7 +43,7 @@ function SpellActivationOverlay_OnLoad(self)
 	self:RegisterEvent("SPELLS_CHANGED");
 	self:RegisterEvent("LEARNED_SPELL_IN_TAB");
 end
-	
+
 function SpellActivationOverlay_OnChangeGeometry(self)
 	-- Ignores self.scale because it should be used to scale alerts, not core
 	local newSize = 256 * sizeScale + self.offset;
@@ -81,13 +81,13 @@ function SpellActivationOverlay_OnEvent(self, event, ...)
 		end
 	end]]
 	if ( not self.disableDimOutOfCombat ) then
-	if ( event == "PLAYER_REGEN_DISABLED" ) then
-		self.combatAnimOut:Stop();	--In case we're in the process of animating this out.
-		self.combatAnimIn:Play();
-	elseif ( event == "PLAYER_REGEN_ENABLED" ) then
-		self.combatAnimIn:Stop();	--In case we're in the process of animating this out.
-		self.combatAnimOut:Play();
-	end
+		if ( event == "PLAYER_REGEN_DISABLED" ) then
+			self.combatAnimOut:Stop();	--In case we're in the process of animating this out.
+			self.combatAnimIn:Play();
+		elseif ( event == "PLAYER_REGEN_ENABLED" ) then
+			self.combatAnimIn:Stop();	--In case we're in the process of animating this out.
+			self.combatAnimOut:Play();
+		end
 	end
 	if ( event ) then
 		SAO:OnEvent(event, ...);
@@ -166,45 +166,45 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	else
 		overlay.texture:SetTexCoord(texRight,texTop, texLeft,texTop, texRight,texBottom, texLeft,texBottom);
 	end
-	
+
 	overlay.SetGeometry = function(self, longSide, shortSide)
 		local parent = self:GetParent();
 
 		self:ClearAllPoints();
 
-	local width, height;
-	if ( position == "CENTER" ) then
-		width, height = longSide, longSide;
+		local width, height;
+		if ( position == "CENTER" ) then
+			width, height = longSide, longSide;
 			self:SetPoint("CENTER", parent, "CENTER", 0, 0);
-	elseif ( position == "LEFT" ) then
-		width, height = shortSide, longSide;
+		elseif ( position == "LEFT" ) then
+			width, height = shortSide, longSide;
 			self:SetPoint("RIGHT", parent, "LEFT", 0, 0);
-	elseif ( position == "RIGHT" ) then
-		width, height = shortSide, longSide;
+		elseif ( position == "RIGHT" ) then
+			width, height = shortSide, longSide;
 			self:SetPoint("LEFT", parent, "RIGHT", 0, 0);
-	elseif ( position == "TOP" ) then
-		width, height = longSide, shortSide;
+		elseif ( position == "TOP" ) then
+			width, height = longSide, shortSide;
 			self:SetPoint("BOTTOM", parent, "TOP");
-	elseif ( position == "BOTTOM" ) then
-		width, height = longSide, shortSide;
+		elseif ( position == "BOTTOM" ) then
+			width, height = longSide, shortSide;
 			self:SetPoint("TOP", parent, "BOTTOM");
-	elseif ( position == "TOPRIGHT" ) then
-		width, height = shortSide, shortSide;
+		elseif ( position == "TOPRIGHT" ) then
+			width, height = shortSide, shortSide;
 			self:SetPoint("BOTTOMLEFT", parent, "TOPRIGHT", 0, 0);
-	elseif ( position == "TOPLEFT" ) then
-		width, height = shortSide, shortSide;
+		elseif ( position == "TOPLEFT" ) then
+			width, height = shortSide, shortSide;
 			self:SetPoint("BOTTOMRIGHT", parent, "TOPLEFT", 0, 0);
-	elseif ( position == "BOTTOMRIGHT" ) then
-		width, height = shortSide, shortSide;
+		elseif ( position == "BOTTOMRIGHT" ) then
+			width, height = shortSide, shortSide;
 			self:SetPoint("TOPLEFT", parent, "BOTTOMRIGHT", 0, 0);
-	elseif ( position == "BOTTOMLEFT" ) then
-		width, height = shortSide, shortSide;
+		elseif ( position == "BOTTOMLEFT" ) then
+			width, height = shortSide, shortSide;
 			self:SetPoint("TOPRIGHT", parent, "BOTTOMLEFT", 0, 0);
-	else
-		--GMError("Unknown SpellActivationOverlay position: "..tostring(position));
-		return;
-	end
-	
+		else
+			--GMError("Unknown SpellActivationOverlay position: "..tostring(position));
+			return;
+		end
+
 		self:SetSize(width * scale, height * scale);
 	end
 	overlay:SetGeometry(longSide, shortSide);
