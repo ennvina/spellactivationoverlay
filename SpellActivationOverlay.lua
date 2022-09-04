@@ -80,12 +80,14 @@ function SpellActivationOverlay_OnEvent(self, event, ...)
 			SpellActivationOverlay_HideAllOverlays(self);
 		end
 	end]]
+	if ( not self.disableDimOutOfCombat ) then
 	if ( event == "PLAYER_REGEN_DISABLED" ) then
 		self.combatAnimOut:Stop();	--In case we're in the process of animating this out.
 		self.combatAnimIn:Play();
 	elseif ( event == "PLAYER_REGEN_ENABLED" ) then
 		self.combatAnimIn:Stop();	--In case we're in the process of animating this out.
 		self.combatAnimOut:Play();
+	end
 	end
 	if ( event ) then
 		SAO:OnEvent(event, ...);

@@ -49,12 +49,20 @@ function SpellActivationOverlayOptionsPanel_Init(self)
             self.isTesting = true;
             SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName["imp_empowerment"], "Left + Right (Flipped)", 1, 255, 255, 255, false);
             SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName["brain_freeze"], "Top", 1, 255, 255, 255, false);
+            -- Hack the frame to force full opacity even when out of combat
+            SpellActivationOverlayFrame.disableDimOutOfCombat = true;
+            SpellActivationOverlayFrame:SetAlpha(1);
         end
     end
     testButton.StopTest = function(self)
         if (self.isTesting) then
             self.isTesting = false;
             SAO:DeactivateOverlay(self.fakeSpellID);
+            -- Undo hack
+            SpellActivationOverlayFrame.disableDimOutOfCombat = nil;
+            if (not InCombatLockdown()) then
+                SpellActivationOverlayFrame.combatAnimOut:Play();
+            end
         end
     end
     testButton:SetEnabled(SpellActivationOverlayDB.alert.enabled);
