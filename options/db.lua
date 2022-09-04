@@ -1,4 +1,4 @@
-Addon, SAO =...
+local AddonName, SAO = ...
 
 -- Load database and use default values if needed
 function SAO.LoadDB(self)
@@ -20,10 +20,12 @@ function SAO.LoadDB(self)
     SpellActivationOverlayDB = db;
 end
 
-local frame = CreateFrame("Frame", "SpellActivationOverlayDBLoader");
-frame:RegisterEvent("VARIABLES_LOADED");
-frame:SetScript("OnEvent", function (event)
-    SAO.LoadDB();
-    SpellActivationOverlayOptionsPanel_Init();
-    frame:UnregisterEvent("VARIABLES_LOADED");
+-- Utility frame dedicated to react to variable loading
+local loader = CreateFrame("Frame", "SpellActivationOverlayDBLoader");
+loader:RegisterEvent("VARIABLES_LOADED");
+loader:SetScript("OnEvent", function (event)
+    SAO:LoadDB();
+    SAO:ApplyAllVariables();
+    SpellActivationOverlayOptionsPanel_Init(SAO.OptionsPanel);
+    loader:UnregisterEvent("VARIABLES_LOADED");
 end);

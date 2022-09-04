@@ -1,4 +1,4 @@
-local Addon, SAO = ...
+local AddonName, SAO = ...
 
 function SpellActivationOverlayOptionsPanel_Init(self)
     local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
@@ -6,32 +6,44 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     _G[opacitySlider:GetName().."Low"]:SetText(OFF);
     opacitySlider:SetMinMaxValues(0, 1);
     opacitySlider:SetValueStep(0.05);
-    opacitySlider:SetValue(SpellActivationOverlayDB.alert.opacity);
 
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     glowingButtonCheckbox.Text:SetText("Glowing Buttons");
-    glowingButtonCheckbox:SetChecked(SpellActivationOverlayDB.glow.enabled);
+
+    -- Hack to apply database variables to UI elements
+    self.cancel();
 end
 
-function SpellActivationOverlayOptionsPanel_OnLoad(self)
-    self.name = Addon;
-
+-- User clicks OK to the options panel
+local function okayFunc(self)
     local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
-    local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
-
-    self.okay = function(self)
+    if (SpellActivationOverlayDB.alert.opacity ~= opacitySlider:GetValue()) then
         SpellActivationOverlayDB.alert.opacity = opacitySlider:GetValue();
-
-        SpellActivationOverlayDB.glow.enabled = glowingButtonCheckbox:GetChecked();
-
-        -- TODO also apply values in the SAO/GAB engine
+        SAO.ApplySpellAlertOpacity();
     end
 
-    self.cancel = function(self)
+    local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
+    if (SpellActivationOverlayDB.glow.enabled ~= glowingButtonCheckbox:GetChecked()) then
+        SpellActivationOverlayDB.glow.enabled = glowingButtonCheckbox:GetChecked();
+        SAO.ApplyGlowingButtonsToggle();
+    end
+    end
+
+-- User clicked Cancel to the options panel
+local function cancelFunc(self)
+    local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
         opacitySlider:SetValue(SpellActivationOverlayDB.alert.opacity);
 
+    local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
         glowingButtonCheckbox:SetChecked(SpellActivationOverlayDB.glow.enabled);
     end
 
+function SpellActivationOverlayOptionsPanel_OnLoad(self)
+    self.name = AddonName;
+    self.okay = okayFunc;
+    self.cancel = cancelFunc;
+
     InterfaceOptions_AddCategory(self);
+
+    SAO.OptionsPanel = self;
 end
