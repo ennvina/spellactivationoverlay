@@ -6,6 +6,13 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     _G[opacitySlider:GetName().."Low"]:SetText(OFF);
     opacitySlider:SetMinMaxValues(0, 1);
     opacitySlider:SetValueStep(0.05);
+    opacitySlider.initialValue = SpellActivationOverlayDB.alert.opacity;
+    opacitySlider:SetValue(opacitySlider.initialValue);
+    opacitySlider.ApplyValueToEngine = function(self, value)
+        SpellActivationOverlayDB.alert.opacity = value;
+        SpellActivationOverlayDB.alert.enabled = value > 0;
+        SAO:ApplySpellAlertOpacity();
+    end
 
     local scaleSlider = SpellActivationOverlayOptionsPanelSpellAlertScaleSlider;
     scaleSlider.Text:SetText("Spell Alert scale");
@@ -13,6 +20,12 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     _G[scaleSlider:GetName().."High"]:SetText(LARGE);
     scaleSlider:SetMinMaxValues(0.5, 2);
     scaleSlider:SetValueStep(0.05);
+    scaleSlider.initialValue = SpellActivationOverlayDB.alert.scale;
+    scaleSlider:SetValue(scaleSlider.initialValue);
+    scaleSlider.ApplyValueToEngine = function(self, value)
+        SpellActivationOverlayDB.alert.scale = value;
+        SAO:ApplySpellAlertGeometry();
+    end
 
     local offsetSlider = SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider;
     offsetSlider.Text:SetText("Spell Alert offset");
@@ -20,6 +33,12 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     _G[offsetSlider:GetName().."High"]:SetText(FAR);
     offsetSlider:SetMinMaxValues(-200, 400);
     offsetSlider:SetValueStep(20);
+    offsetSlider.initialValue = SpellActivationOverlayDB.alert.offset;
+    offsetSlider:SetValue(offsetSlider.initialValue);
+    offsetSlider.ApplyValueToEngine = function(self, value)
+        SpellActivationOverlayDB.alert.offset = value;
+        SAO:ApplySpellAlertGeometry();
+    end
 
     local testButton = SpellActivationOverlayOptionsPanelSpellAlertTestButton;
     testButton:SetText("Toggle Test");
@@ -38,60 +57,74 @@ function SpellActivationOverlayOptionsPanel_Init(self)
             SAO:DeactivateOverlay(self.fakeSpellID);
         end
     end
+    testButton:SetEnabled(SpellActivationOverlayDB.alert.enabled);
 
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     glowingButtonCheckbox.Text:SetText("Glowing Buttons");
-
-    -- Hack to apply database variables to UI elements
-    self.cancel();
+    glowingButtonCheckbox.initialValue = SpellActivationOverlayDB.glow.enabled;
+    glowingButtonCheckbox:SetChecked(glowingButtonCheckbox.initialValue);
 end
 
 -- User clicks OK to the options panel
 local function okayFunc(self)
     local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
-    if (SpellActivationOverlayDB.alert.opacity ~= opacitySlider:GetValue()) then
-        SpellActivationOverlayDB.alert.opacity = opacitySlider:GetValue();
-        SAO.ApplySpellAlertOpacity();
+    opacitySlider.initialValue = opacitySlider:GetValue();
+    -- SAO:ApplySpellAlertOpacity(); -- Not necessary because this option is interactive
+
+    local scaleSlider = SpellActivationOverlayOptionsPanelSpellAlertScaleSlider;
+    scaleSlider.initialValue = scaleSlider:GetValue();
+    -- SAO:ApplySpellAlertGeometry(); -- Not necessary because this option is interactive
+
+    local offsetSlider = SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider;
+    offsetSlider.initialValue = offsetSlider:GetValue();
+    -- SAO:ApplySpellAlertGeometry(); -- Not necessary because this option is interactive
+
+    local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
+    glowingButtonCheckbox.initialValue = glowingButtonCheckbox:GetChecked();
+    SAO:ApplyGlowingButtonsToggle();
+end
+
+-- User clicked Cancel to the options panel
+local function cancelFunc(self)
+    local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
+    opacitySlider:SetValue(opacitySlider.initialValue);
+    if (SpellActivationOverlayDB.alert.opacity ~= opacitySlider.initialValue) then
+        SpellActivationOverlayDB.alert.opacity = opacitySlider.initialValue;
+        SpellActivationOverlayDB.alert.enabled = opacitySlider.initialValue > 0;
+        SAO:ApplySpellAlertOpacity();
     end
 
     local geometryChanged = false;
 
     local scaleSlider = SpellActivationOverlayOptionsPanelSpellAlertScaleSlider;
-    if (SpellActivationOverlayDB.alert.scale ~= scaleSlider:GetValue()) then
-        SpellActivationOverlayDB.alert.scale = scaleSlider:GetValue();
+    scaleSlider:SetValue(scaleSlider.initialValue);
+    if (SpellActivationOverlayDB.alert.scale ~= scaleSlider.initialValue) then
+        SpellActivationOverlayDB.alert.scale = scaleSlider.initialValue;
         geometryChanged = true;
     end
 
     local offsetSlider = SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider;
-    if (SpellActivationOverlayDB.alert.offset ~= offsetSlider:GetValue()) then
-        SpellActivationOverlayDB.alert.offset = offsetSlider:GetValue();
+    offsetSlider:SetValue(offsetSlider.initialValue);
+    if (SpellActivationOverlayDB.alert.offset ~= offsetSlider.initialValue) then
+        SpellActivationOverlayDB.alert.offset = offsetSlider.initialValue;
         geometryChanged = true;
     end
 
     if (geometryChanged) then
-        SAO.ApplySpellAlertGeometry();
+        SAO:ApplySpellAlertGeometry();
     end
+
+    local testButton = SpellActivationOverlayOptionsPanelSpellAlertTestButton;
+    -- Enable/disable the test button with alert.enabled, which was set/reset a few lines above, alongside opacity
+    testButton:SetEnabled(SpellActivationOverlayDB.alert.enabled);
 
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
-    if (SpellActivationOverlayDB.glow.enabled ~= glowingButtonCheckbox:GetChecked()) then
-        SpellActivationOverlayDB.glow.enabled = glowingButtonCheckbox:GetChecked();
-        SAO.ApplyGlowingButtonsToggle();
-    end
-    end
-
--- User clicked Cancel to the options panel
-local function cancelFunc(self)
-    local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
-        opacitySlider:SetValue(SpellActivationOverlayDB.alert.opacity);
-
-    local scaleSlider = SpellActivationOverlayOptionsPanelSpellAlertScaleSlider;
-    scaleSlider:SetValue(SpellActivationOverlayDB.alert.scale);
-
-    local offsetSlider = SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider;
-    offsetSlider:SetValue(SpellActivationOverlayDB.alert.offset);
-
-    local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
-        glowingButtonCheckbox:SetChecked(SpellActivationOverlayDB.glow.enabled);
+    glowingButtonCheckbox:SetChecked(glowingButtonCheckbox.initialValue);
+    -- Not necessary because this option is non-interactive
+    --if (SpellActivationOverlayDB.glow.enabled ~= glowingButtonCheckbox.initialValue) then
+    --    SpellActivationOverlayDB.glow.enabled = glowingButtonCheckbox.initialValue;
+    --    SAO:ApplyGlowingButtonsToggle();
+    --end
     end
 
 function SpellActivationOverlayOptionsPanel_OnLoad(self)

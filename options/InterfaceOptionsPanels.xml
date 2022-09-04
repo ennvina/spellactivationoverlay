@@ -33,6 +33,11 @@
             end
             self.value = value;
             self:SetValue(value);
+
+            if (self.ApplyValueToEngine) then
+              self:ApplyValueToEngine(value);
+            end
+            _G[self:GetParent():GetName().."SpellAlertTestButton"]:SetEnabled(value > 0);
           </OnValueChanged>
         </Scripts>
       </Slider>
@@ -44,6 +49,13 @@
             </Offset>
           </Anchor>
         </Anchors>
+        <Scripts>
+          <OnValueChanged>
+            if (self.ApplyValueToEngine) then
+              self:ApplyValueToEngine(value);
+            end
+          </OnValueChanged>
+        </Scripts>
       </Slider>
       <Slider name="$parentSpellAlertOffsetSlider" inherits="OptionsSliderTemplate">
         <Anchors>
@@ -53,6 +65,13 @@
             </Offset>
           </Anchor>
         </Anchors>
+        <Scripts>
+          <OnValueChanged>
+            if (self.ApplyValueToEngine) then
+              self:ApplyValueToEngine(value);
+            end
+          </OnValueChanged>
+        </Scripts>
       </Slider>
       <Button name="$parentSpellAlertTestButton" inherits="OptionsButtonTemplate">
         <Anchors>
