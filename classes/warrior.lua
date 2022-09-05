@@ -24,8 +24,8 @@ local function registerClass(self)
     self:RegisterCounter("revenge"); -- Must match name from above call
 
     -- Victory Rush
-    self:RegisterAura("victoryRush", 0, victoryRush, nil, "", 0, 0, 0, 0, false, { victoryRush });
-    self:RegisterCounter("victoryRush"); -- Must match name from above call
+    self:RegisterAura("victory_rush", 0, victoryRush, nil, "", 0, 0, 0, 0, false, { victoryRush });
+    self:RegisterCounter("victory_rush"); -- Must match name from above call
 end
 
 SAO.Class["WARRIOR"] = {

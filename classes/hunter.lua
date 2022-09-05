@@ -3,7 +3,7 @@ local AddonName, SAO = ...
 local function registerClass(self)
     local aimedShot = 19434;
     local arcaneShot = 3044;
-    local kill_shot  = 61006;
+    local killShot  = 61006;
     local chimeraShot = 53209;
     local explosiveShot = 53301;
     local counterattack = 19306;
@@ -32,7 +32,7 @@ local function registerClass(self)
     self:RegisterCounter("counterattack"); -- Must match name from above call
 
     -- Kill Shot, execute based on 20% and below
-    self:RegisterAura("kill_shot", 0, kill_shot, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(kill_shot)) });
+    self:RegisterAura("kill_shot", 0, killShot, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(killShot)) });
     self:RegisterCounter("kill_shot");
 end
 
