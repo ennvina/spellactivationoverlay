@@ -240,6 +240,11 @@ end
 local binder = CreateFrame("Frame", "SpellActivationOverlayLABBinder");
 binder:RegisterEvent("PLAYER_LOGIN");
 binder:SetScript("OnEvent", function()
+    if (not LibStub) then
+        -- LibStub is a must-have to load libraries required by this binder
+        return
+    end
+
     local LAB = LibStub("LibActionButton-1.0", true);
     local LAB_ElvUI = LibStub("LibActionButton-1.0-ElvUI", true);
     local LBG = LibStub("LibButtonGlow-1.0", true);
