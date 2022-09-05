@@ -109,28 +109,38 @@ function SAO.UpdateActionButton(self, button, forceRefresh)
 
     if (not wasGlowing and mustGlow) then
         if (not SpellActivationOverlayDB or not SpellActivationOverlayDB.glow or SpellActivationOverlayDB.glow.enabled) then
-            ActionButton_ShowOverlayGlow(button);
+            button:EnableGlow();
         end
     elseif (wasGlowing and not mustGlow) then
-        ActionButton_HideOverlayGlow(button);
+        button:DisableGlow();
     end
 end
 
 -- Grab all action button activity that allows us to know which button has which spell
-function HookActionButton_Update(self)
-    if (self:GetParent() == OverrideActionBar) then
+function HookActionButton_Update(button)
+    if (button:GetParent() == OverrideActionBar) then
         -- Act on all buttons but the ones from OverrideActionBar, whatever that is
         return;
     end
 
-    if (not self.GetGlowID) then
-        self.GetGlowID = function(self)
-            if (self.action and HasAction(self.action)) then
-                return SAO:GetSpellIDByActionSlot(self.action);
+    if (not button.GetGlowID) then
+        button.GetGlowID = function(button)
+            if (button.action and HasAction(button.action)) then
+                return SAO:GetSpellIDByActionSlot(button.action);
             end
         end
     end
-    SAO:UpdateActionButton(self);
+    if (not button.EnableGlow) then
+        button.EnableGlow = function(button)
+            ActionButton_ShowOverlayGlow(button);
+        end
+    end
+    if (not button.DisableGlow) then
+        button.DisableGlow = function(button)
+            ActionButton_HideOverlayGlow(button);
+        end
+    end
+    SAO:UpdateActionButton(button);
 end
 hooksecurefunc("ActionButton_Update", HookActionButton_Update);
 
@@ -164,7 +174,7 @@ function SAO.AddGlowNumber(self, spellID, glowID)
         self.GlowingSpells[glowID] = { [spellID] = true };
         for _, frame in pairs(actionButtons or {}) do
             if (not SpellActivationOverlayDB or not SpellActivationOverlayDB.glow or SpellActivationOverlayDB.glow.enabled) then
-                ActionButton_ShowOverlayGlow(frame);
+                frame:EnableGlow();
             end
         end
     end
@@ -219,7 +229,7 @@ function SAO.RemoveGlow(self, spellID)
             self.GlowingSpells[glowSpellID] = nil;
             local actionButtons = self.ActionButtons[glowSpellID];
             for _, frame in pairs(actionButtons or {}) do
-                ActionButton_HideOverlayGlow(frame);
+                frame:DisableGlow();
             end
         end
     end
