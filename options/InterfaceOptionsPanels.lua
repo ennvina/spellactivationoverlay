@@ -71,25 +71,25 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     glowingButtonCheckbox.Text:SetText("Glowing Buttons");
     glowingButtonCheckbox.initialValue = SpellActivationOverlayDB.glow.enabled;
     glowingButtonCheckbox:SetChecked(glowingButtonCheckbox.initialValue);
+    glowingButtonCheckbox.ApplyValueToEngine = function(self, checked)
+        SpellActivationOverlayDB.glow.enabled = checked;
+        SAO:ApplyGlowingButtonsToggle();
+    end
 end
 
 -- User clicks OK to the options panel
 local function okayFunc(self)
     local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
     opacitySlider.initialValue = opacitySlider:GetValue();
-    -- SAO:ApplySpellAlertOpacity(); -- Not necessary because this option is interactive
 
     local scaleSlider = SpellActivationOverlayOptionsPanelSpellAlertScaleSlider;
     scaleSlider.initialValue = scaleSlider:GetValue();
-    -- SAO:ApplySpellAlertGeometry(); -- Not necessary because this option is interactive
 
     local offsetSlider = SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider;
     offsetSlider.initialValue = offsetSlider:GetValue();
-    -- SAO:ApplySpellAlertGeometry(); -- Not necessary because this option is interactive
 
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     glowingButtonCheckbox.initialValue = glowingButtonCheckbox:GetChecked();
-    SAO:ApplyGlowingButtonsToggle();
 end
 
 -- User clicked Cancel to the options panel

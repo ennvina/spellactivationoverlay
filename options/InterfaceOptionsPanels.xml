@@ -102,6 +102,13 @@
             </Offset>
           </Anchor>
         </Anchors>
+        <Scripts>
+          <PostClick>
+            if (self.ApplyValueToEngine) then
+              self:ApplyValueToEngine(self:GetChecked());
+            end
+          </PostClick>
+        </Scripts>
       </CheckButton>
     </Frames>
     <Scripts>
