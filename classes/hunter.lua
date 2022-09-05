@@ -3,6 +3,7 @@ local AddonName, SAO = ...
 local function registerClass(self)
     local aimedShot = 19434;
     local arcaneShot = 3044;
+    local killShot  = 61006;
     local chimeraShot = 53209;
     local explosiveShot = 53301;
     local counterattack = 19306;
@@ -29,6 +30,10 @@ local function registerClass(self)
     -- Counterattack, registered as both aura and counter, but only used as counter
     self:RegisterAura("counterattack", 0, counterattack, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(counterattack)) });
     self:RegisterCounter("counterattack"); -- Must match name from above call
+
+    -- Kill Shot, execute based on 20% and below
+    self:RegisterAura("killShot", 0, killShot, nil, "", 0, 0, 0, 0, false, { {GetSpellInfo(killShot)} });
+    self:RegisterCounter("killShot");
 end
 
 SAO.Class["HUNTER"] = {

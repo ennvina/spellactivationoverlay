@@ -4,6 +4,11 @@ local function registerClass(self)
     local flashOfLight = GetSpellInfo(19750);
     local exorcism = GetSpellInfo(879);
     local holyLight = GetSpellInfo(635);
+	local how = GetSpellInfo(24275);
+
+	-- Hammer of Light
+	self:RegisterAura("how", 0, how, nil, "", 0, 0, 0, 0, false, { how });
+	self:RegisterCounter("how");
 
     -- Art of War
     self:RegisterAura("art_of_war", 0, 59578, "art_of_war", "Left + Right (Flipped)", 1, 255, 255, 255, true, { flashOfLight, exorcism });
