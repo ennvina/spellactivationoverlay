@@ -32,7 +32,7 @@ local function registerClass(self)
     self:RegisterCounter("counterattack"); -- Must match name from above call
 
     -- Kill Shot, execute based on 20% and below
-    self:RegisterAura("kill_shot", 0, kill_shot, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(killShot)) });
+    self:RegisterAura("kill_shot", 0, kill_shot, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(kill_shot)) });
     self:RegisterCounter("kill_shot");
 end
 
