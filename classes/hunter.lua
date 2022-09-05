@@ -3,7 +3,7 @@ local AddonName, SAO = ...
 local function registerClass(self)
     local aimedShot = 19434;
     local arcaneShot = 3044;
-    local killShot  = 61006;
+    local killShot  = 53351;
     local chimeraShot = 53209;
     local explosiveShot = 53301;
     local counterattack = 19306;
