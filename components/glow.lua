@@ -234,3 +234,42 @@ function SAO.RemoveGlow(self, spellID)
         end
     end
 end
+
+-- Track PLAYER_LOGIN which happens immediately after all ADDON_LOADED events
+-- Which means, at this point we know which addons are installed and loaded
+local binder = CreateFrame("Frame", "SpellActivationOverlayLABBinder");
+binder:RegisterEvent("PLAYER_LOGIN");
+binder:SetScript("OnEvent", function()
+    local LAB = LibStub("LibActionButton-1.0", true);
+    local LAB_ElvUI = LibStub("LibActionButton-1.0-ElvUI", true);
+    local LBG = LibStub("LibButtonGlow-1.0", true);
+
+    if ((LAB or LAB_ElvUI) and LBG) then
+
+        local buttonUpdateFunc = function(event, self)
+            if (not self.GetGlowID) then
+                self.GetGlowID = self.GetSpellId;
+            end
+            if (not self.EnableGlow) then
+                self.EnableGlow = function(button)
+                    LBG.ShowOverlayGlow(button);
+                end
+            end
+            if (not self.DisableGlow) then
+                self.DisableGlow = function(button)
+                    LBG.HideOverlayGlow(button);
+                end
+            end
+            SAO:UpdateActionButton(self);
+        end
+
+        if (LAB) then
+            LAB:RegisterCallback("OnButtonUpdate", buttonUpdateFunc);
+        end
+        if (LAB_ElvUI) then
+            LAB_ElvUI:RegisterCallback("OnButtonUpdate", buttonUpdateFunc);
+        end
+    end
+
+    binder:UnregisterEvent("PLAYER_LOGIN");
+end);
