@@ -6,7 +6,7 @@ local function registerClass(self)
     local holyLight = GetSpellInfo(635);
     local how = GetSpellInfo(24275);
 
-    -- Hammer of Light
+    -- Hammer of Wrath, Execute-like ability for targets at 20% hp or less
     self:RegisterAura("how", 0, how, nil, "", 0, 0, 0, 0, false, { how });
     self:RegisterCounter("how");
 

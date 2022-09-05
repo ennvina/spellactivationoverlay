@@ -1,8 +1,8 @@
 local AddonName, SAO = ...
 
 local function registerClass(self)
-    local tasteforBlood = GetSpellInfo(60503);
-    local overpower = GetSpellInfo(7384); -- Unused as of now, might be used in the future.
+    local tasteforBlood = GetSpellInfo(60503); -- Unused as of now, might be used in the future.
+    local overpower = GetSpellInfo(7384);
     local execute = GetSpellInfo(5308);
     local revenge = GetSpellInfo(6572);
     local victoryRush = GetSpellInfo(34428);

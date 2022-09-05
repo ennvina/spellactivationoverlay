@@ -31,7 +31,7 @@ local function registerClass(self)
     self:RegisterAura("counterattack", 0, counterattack, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(counterattack)) });
     self:RegisterCounter("counterattack"); -- Must match name from above call
 
-    -- Kill Shot, execute based on 20% and below
+    -- Kill Shot, Execute-like ability for targets at 20% hp or less
     self:RegisterAura("kill_shot", 0, killShot, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(killShot)) });
     self:RegisterCounter("kill_shot");
 end
