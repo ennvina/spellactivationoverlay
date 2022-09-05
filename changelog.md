@@ -2,7 +2,13 @@
 
 #### v0.6.1 (2022-09-xx)
 
+Shout-out to MartGon and xHashii for their contribution to the code. Thanks!
+
 - Buttons should glow correctly when using Bartender, ElvUI or Dominos
+- New GAB: Hunter's Kill Shot button glows when the target has low HP
+- New GAB: Paladin's Hammer of Wrath button glows when the target has low HP
+- New GAB: Warrior's Execute button glows when the target has low HP
+- New GAB: Warrior's Victory Rush button glows after killing an enemy
 - Riposte should display its SAO as intended
 - Reload UI should no longer cause a Lua error because of options
 - Glowing Buttons checkbox should now apply the option correctly
