@@ -3,7 +3,7 @@ local AddonName, SAO = ...
 -- List of known ActionButton instances that currently match one of the spell IDs to track
 -- This does not mean that buttons are glowing right now, but they could glow at any time
 -- key = glowID (= spellID of action), value = list of ActionButton objects for this spell
--- (side note: the sublist of buttons is a map of key = action slot and value = button)
+-- (side note: the sublist of buttons is a table of key = button and a dummy value = true)
 -- The list will change each time an action button changes, which may happen very often
 -- For example, any macro with [mod:shift] updates the list every time Shift is pressed
 SAO.ActionButtons = {}
