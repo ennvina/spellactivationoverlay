@@ -1,5 +1,9 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.6.2 (2022-09-xx)
+
+- Glowing buttons no longer "un-glow" during the Global Cooldown (GCD)
+
 #### v0.6.1 (2022-09-06)
 
 Shout-out to MartGon and xHashii for their contribution to the code. Thanks!
