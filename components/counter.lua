@@ -52,7 +52,11 @@ function SAO.CheckCounterAction(self, spellID, auraID)
     end
 
     local isCounterUsable = IsUsableSpell(spellID);
-    local counterMustBeActivated = isCounterUsable and start == 0;
+    local _, gcdDuration, _, _ = GetSpellCooldown(61304); -- GCD SpellID
+    -- We check against gcdDuration because it's not always 1.5s
+    local isGCD = duration <= gcdDuration;
+    local isCounterOnCD = start > 0 and not isGCD; 
+    local counterMustBeActivated = isCounterUsable and not isCounterOnCD;
 
     if (not self.ActivatedCounters[spellID] and counterMustBeActivated) then
         -- Counter triggered but not shown yet: just do it!
