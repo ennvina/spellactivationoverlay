@@ -1,8 +1,8 @@
 ## Interface: 30400
-## Title: SpellActivationOverlay |cffa2f3ff0.6.1|r
+## Title: SpellActivationOverlay |cffa2f3ff0.6.2|r
 ## Notes: Mimic Spell Activation Overlays from Retail
 ## Author: Vinny
-## Version: 0.6.1
+## Version: 0.6.2
 ## SavedVariables: SpellActivationOverlayDB
 
 # SpellActivationOverlay.lua, SpellActivationOverlay.xml and all textures
