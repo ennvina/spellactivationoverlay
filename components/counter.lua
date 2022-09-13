@@ -51,12 +51,22 @@ function SAO.CheckCounterAction(self, spellID, auraID)
         return;
     end
 
-    local isCounterUsable = IsUsableSpell(spellID);
+    local isCounterUsable, notEnoughPower = IsUsableSpell(spellID);
+    
     local _, gcdDuration, _, _ = GetSpellCooldown(61304); -- GCD SpellID
-    -- We check against gcdDuration because it's not always 1.5s
-    local isGCD = duration <= gcdDuration;
+    local isGCD = duration <= gcdDuration; -- We check against gcdDuration because it's not always 1.5s
     local isCounterOnCD = start > 0 and not isGCD; 
-    local counterMustBeActivated = isCounterUsable and not isCounterOnCD;
+
+    -- Non-mana spells should always glow, regardless of player's current resources.
+    local costsMana = false
+    for _, spellCost in ipairs(GetSpellPowerCost(spellID)) do
+        if spellCost.name == "MANA" then
+            costsMana = true;
+            break;
+        end
+    end
+
+    local counterMustBeActivated = not isCounterOnCD and (isCounterUsable or (notEnoughPower and not costsMana));
 
     if (not self.ActivatedCounters[spellID] and counterMustBeActivated) then
         -- Counter triggered but not shown yet: just do it!
