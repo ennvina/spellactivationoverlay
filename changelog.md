@@ -35,7 +35,7 @@ Shout-out to MartGon and xHashii for their contribution to the code. Thanks!
 #### v0.5.0-beta (2022-08-31)
 
 SpellActivationOverlay now has a Discord server!
-Make sure to check it out at https://discord.gg/VrDkvDV4
+Make sure to check it out at https://discord.gg/xJmGfGcd4M
 
 Support for Glowing Action Buttons (GABs), making some actions glow, namely:
 - Death Knight's Rune Strike button glows after parrying or dodging an attack
