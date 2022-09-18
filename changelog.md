@@ -1,5 +1,11 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.6.3 (2022-09-xx)
+
+- New SAO: Warlock's Decimation
+- New GAB: Warlock's Soul Fire button glows during Decimation
+- Changed SAO: Warlock's Molten Core SAO no longer displays the 3rd charge
+
 #### v0.6.2 (2022-09-13)
 
 Shout-out to MartGon once again for his contribution to the code. Thanks!
