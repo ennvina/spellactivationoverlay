@@ -3,9 +3,7 @@ local AddonName, SAO = ...
 local function registerMolenCore(self, baseName, spellID, glowIDs)
     self:RegisterAura(baseName.."_1", 1, spellID, "molten_core", "Left", 1, 255, 255, 255, true, glowIDs);
     self:RegisterAura(baseName.."_2", 2, spellID, "molten_core", "Left + Right (Flipped)", 1, 255, 255, 255, true, glowIDs);
-    self:RegisterAura(baseName.."_3", 3, spellID, "molten_core", "Left + Right (Flipped)", 1, 255, 255, 255, true, glowIDs);
-    self:RegisterAura(baseName.."_3_top", 3, spellID, "lock_and_load", "Top", 1, 255, 255, 255, true --[[, glowIDs]]);
---    self:RegisterAura(baseName.."_3_top", 3, spellID, "impact", "Top", 1, 255, 255, 255, true --[[, glowIDs]]);
+    self:RegisterAura(baseName.."_3", 3, spellID, "molten_core", "Left + Right (Flipped)", 1, 255, 255, 255, true, glowIDs); -- Same as 2 charges
 end
 
 local function registerClass(self)
