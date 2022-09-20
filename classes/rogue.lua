@@ -1,21 +1,28 @@
 local AddonName, SAO = ...
 
 local function customLogin(self, ...)
-    -- Must initialize class on PLAYER_LOGIN instead of registerClass
-    -- Because we need the talent tree, which is not always available right off the bat
+    -- Initialization on PLAYER_LOGIN event because the talent tree may not be available before
 
-    -- Register Riposte as both an aura and a counter
-    -- Rogue does not really have a 'Riposte' aura, but it will be used by RegisterCounter
     local riposteSpellID = 14251;
     local riposteSpellName = GetSpellInfo(riposteSpellID);
+
     local _, _, tab, index = self:GetTalentByName(riposteSpellName);
-    local talent = type(tab) == "number" and type(index) == "number" and { tab, index };
-    self:RegisterAura("riposte", 0, riposteSpellID, "bandits_guile", "Top (CW)", 1, 255, 255, 255, true, { riposteSpellID });
-    self:RegisterCounter("riposte", talent); -- Must match name from above call
+    local talent;
+    if (type(tab) == "number" and type(index) == "number") then
+        talent = { tab, index };
+    end
+
+    self:RegisterCounter("riposte", talent); -- 1st arguement must match 1st argument passed to RegisterAura
 end
 
 local function registerClass(self)
-    -- Nothing to do, because everything is done in customLogin()
+    -- Register Riposte as both an aura and a counter
+    -- Rogue does not really have a 'Riposte' aura, but it will be used by RegisterCounter in customLogin()
+
+    -- The aura must be registered as soon as possible, because it registers the glowID before parsing action buttons
+    -- The counter must be registered as late as possible, because it requires the talent tree, which is not available now
+    local riposteSpellID = 14251;
+    self:RegisterAura("riposte", 0, riposteSpellID, "bandits_guile", "Top (CW)", 1, 255, 255, 255, true, { riposteSpellID });
 end
 
 SAO.Class["ROGUE"] = {
