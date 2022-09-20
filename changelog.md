@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.6.3 (2022-09-xx)
+#### v0.6.3 (2022-09-20)
 
 - New SAO: Warlock's Decimation
 - New GAB: Warlock's Soul Fire button glows during Decimation
