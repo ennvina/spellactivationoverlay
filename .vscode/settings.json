@@ -131,7 +131,15 @@
         "GetSpellBookItemName",
         "BOOKTYPE_SPELL",
         "GetActionInfo",
-        "GetMacroSpell"
+        "GetMacroSpell",
+        "GetSpellPowerCost",
+        "SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider",
+        "SpellActivationOverlayOptionsPanelSpellAlertScaleSlider",
+        "SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider",
+        "SpellActivationOverlayOptionsPanelSpellAlertTestButton",
+        "SpellActivationOverlayFrame",
+        "SpellActivationOverlayOptionsPanelGlowingButtons",
+        "SpellActivationOverlayContainerFrame"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",

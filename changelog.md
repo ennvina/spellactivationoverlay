@@ -5,6 +5,7 @@
 - New SAO: Warlock's Decimation
 - New GAB: Warlock's Soul Fire button glows during Decimation
 - Changed SAO: Warlock's Molten Core SAO no longer displays the 3rd charge
+- Rogue's Riposte SAO should no longer trigger without the talent
 
 #### v0.6.2 (2022-09-13)
 
