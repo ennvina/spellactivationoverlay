@@ -310,5 +310,5 @@ end
 
 function SpellActivationOverlayFrame_OnFadeOutFinished(anim)
 	local frame = anim:GetParent();
-	frame:SetAlpha(0.5);
+	frame:SetAlpha(0);
 end
