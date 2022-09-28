@@ -70,7 +70,7 @@ function SAO.CheckCounterAction(self, spellID, auraID, talent)
 
     -- Non-mana spells should always glow, regardless of player's current resources.
     local costsMana = false
-    for _, spellCost in ipairs(GetSpellPowerCost(spellID)) do
+    for _, spellCost in ipairs(GetSpellPowerCost(spellID) or {}) do
         if spellCost.name == "MANA" then
             costsMana = true;
             break;

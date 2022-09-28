@@ -1,5 +1,9 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.6.4 (2022-09-xx)
+
+- Lua errors of 'ipairs' should no longer occur after a loading screen
+
 #### v0.6.3 (2022-09-20)
 
 - New SAO: Warlock's Decimation
