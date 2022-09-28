@@ -2,6 +2,7 @@
 
 #### v0.6.4 (2022-09-xx)
 
+- SAOs and GABs should disappear if their triggers fade during a loading screen
 - Lua errors of 'ipairs' should no longer occur after a loading screen
 
 #### v0.6.3 (2022-09-20)
