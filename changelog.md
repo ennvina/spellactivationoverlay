@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.6.4 (2022-09-xx)
+#### v0.6.4 (2022-09-29)
 
 - Spell Alerts fade out after being out of combat for 30 seconds
 - Spell Alerts triggering out-of-combat are not dimmed for 5 seconds
