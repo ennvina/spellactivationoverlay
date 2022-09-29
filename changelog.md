@@ -3,6 +3,7 @@
 #### v0.6.4 (2022-09-xx)
 
 - Spell Alerts fade out after being out of combat for 30 seconds
+- Spell Alerts triggering out-of-combat are not dimmed for 5 seconds
 - SAOs and GABs should disappear if their triggers fade during a loading screen
 - Lua errors of 'ipairs' should no longer occur after a loading screen
 - Pulse animations should no longer start earlier thn expected
