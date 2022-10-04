@@ -1,5 +1,9 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.6.5 (2022-10-xx)
+
+- Entering a vehicle should no longer cause a Lua error
+
 #### v0.6.4 (2022-09-29)
 
 - Spell Alerts fade out after being out of combat for 30 seconds
