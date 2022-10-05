@@ -112,6 +112,7 @@
       </CheckButton>
     </Frames>
     <Scripts>
+      <OnShow function="SpellActivationOverlayOptionsPanel_OnShow"/>
       <OnLoad function="SpellActivationOverlayOptionsPanel_OnLoad"/>
     </Scripts>
   </Frame>

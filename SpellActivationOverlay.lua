@@ -22,9 +22,9 @@ function SpellActivationOverlay_OnLoad(self)
 		class.Register(SAO);
 		SAO.CurrentClass = class;
 
-		-- Keys of the class other than "Register" are expected to be event names
+		-- Keys of the class other than "Register" and "LoadOptions" are expected to be event names
 		for key, _ in pairs(class) do
-			if (key ~= "Register") then
+			if (key ~= "Register" and key ~= "LoadOptions") then
 				self:RegisterEvent(key);
 			end
 		end

@@ -170,6 +170,13 @@ function SpellActivationOverlayOptionsPanel_OnLoad(self)
     SAO.OptionsPanel = self;
 end
 
+function SpellActivationOverlayOptionsPanel_OnShow(self)
+    if (SAO.CurrentClass.LoadOptions) then
+        SAO.CurrentClass.LoadOptions(SAO);
+        SAO.CurrentClass.LoadOptions = nil; -- Reset callback so that it is not called again on next show
+    end
+end
+
 SLASH_SAO1 = "/sao"
 SLASH_SAO2 = "/spellactivationoverlay"
 
