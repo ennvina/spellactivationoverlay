@@ -209,10 +209,12 @@ function SpellActivationOverlayOptionsPanel_OnShow(self)
 end
 
 function SAO.AddGlowingOption(self, text, spellID, glowID)
+    local className = self.CurrentClass.Intrinsics[1];
     local classFile = self.CurrentClass.Intrinsics[2];
     local cb = CreateFrame("CheckButton", nil, SpellActivationOverlayOptionsPanel, "InterfaceOptionsCheckButtonTemplate");
 
-    cb.Text:SetText(text);
+    local classTextColored = WrapTextInColorCode(className, select(4,GetClassColor(classFile)));
+    cb.Text:SetText(classTextColored.." "..text);
 
     cb.ApplyValue = function()
         cb:SetEnabled(SpellActivationOverlayDB.glow.enabled);
