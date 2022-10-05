@@ -75,9 +75,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
         SpellActivationOverlayDB.glow.enabled = checked;
         for _, checkbox in ipairs(SpellActivationOverlayOptionsPanel.additionalGlowingCheckboxes) do
             -- Additional glowing checkboxes are enabled/disabled depending on the main glowing checkbox
-            checkbox:SetEnabled(checked);
-            local color = checked and 1 or 0.5;
-            checkbox.Text:SetTextColor(color, color, color);
+            checkbox:ApplyParentEnabling();
         end
         SAO:ApplyGlowingButtonsToggle();
     end
@@ -216,14 +214,27 @@ function SAO.AddGlowingOption(self, text, spellID, glowID)
     local classTextColored = WrapTextInColorCode(className, select(4,GetClassColor(classFile)));
     cb.Text:SetText(classTextColored.." "..text);
 
+    cb.ApplyParentEnabling = function()
+        -- Enable/disable the checkbox if the parent (i.e. main "Glowing Buttons" checkbox) is checked or not
+        if (SpellActivationOverlayDB.glow.enabled) then
+            cb:SetEnabled(true);
+            cb.Text:SetText(classTextColored.." "..text);
+            cb.Text:SetTextColor(1, 1, 1);
+        else
+            cb:SetEnabled(false);
+            local dimmedClassColor = CreateColor(0.5*RAID_CLASS_COLORS[classFile].r, 0.5*RAID_CLASS_COLORS[classFile].g, 0.5*RAID_CLASS_COLORS[classFile].b);
+            local classTextDimmed = WrapTextInColorCode(className, dimmedClassColor:GenerateHexColor());
+            cb.Text:SetText(classTextDimmed.." "..text);
+            cb.Text:SetTextColor(0.5, 0.5, 0.5);
+        end
+    end
+
     cb.ApplyValue = function()
-        cb:SetEnabled(SpellActivationOverlayDB.glow.enabled);
-        local color = SpellActivationOverlayDB.glow.enabled and 1 or 0.5;
-        cb.Text:SetTextColor(color, color, color);
         cb:SetChecked(SpellActivationOverlayDB.classes[classFile].glow[spellID][glowID]);
     end
 
     -- Init
+    cb:ApplyParentEnabling();
     cb:ApplyValue();
 
     cb:SetScript("PostClick", function()

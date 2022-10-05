@@ -142,7 +142,8 @@
         "SpellActivationOverlayContainerFrame",
         "SpellActivationOverlayOptionsPanel",
         "InterfaceOptionsFrame_OpenToCategory",
-        "CopyTable"
+        "CopyTable",
+        "RAID_CLASS_COLORS"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",
