@@ -17,14 +17,16 @@ function SpellActivationOverlay_OnLoad(self)
 	self.scale = 1;
 	SpellActivationOverlay_OnChangeGeometry(self);
 
-	local class = SAO.Class[select(2, UnitClass("player"))];
+	local className, classFile, classId = UnitClass("player");
+	local class = SAO.Class[classFile];
 	if class then
+		class.Intrinsics = { className, classFile, classId };
 		class.Register(SAO);
 		SAO.CurrentClass = class;
 
-		-- Keys of the class other than "Register" and "LoadOptions" are expected to be event names
+		-- Keys of the class other than "Intrinsics", "Register" and "LoadOptions" are expected to be event names
 		for key, _ in pairs(class) do
-			if (key ~= "Register" and key ~= "LoadOptions") then
+			if (key ~= "Intrinsics" and key ~= "Register" and key ~= "LoadOptions") then
 				self:RegisterEvent(key);
 			end
 		end

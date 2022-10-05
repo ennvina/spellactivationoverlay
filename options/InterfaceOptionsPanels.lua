@@ -82,8 +82,12 @@ function SpellActivationOverlayOptionsPanel_Init(self)
         SAO:ApplyGlowingButtonsToggle();
     end
 
-    local classOptions = SpellActivationOverlayDB.classes;
-    SpellActivationOverlayOptionsPanel.classOptions = { initialValue = CopyTable(classOptions) };
+    local classOptions = SpellActivationOverlayDB.classes and SAO.CurrentClass and SpellActivationOverlayDB.classes[SAO.CurrentClass.Intrinsics[2]];
+    if (classOptions) then
+        SpellActivationOverlayOptionsPanel.classOptions = { initialValue = CopyTable(classOptions) };
+    else
+        SpellActivationOverlayOptionsPanel.classOptions = { initialValue = {} };
+    end
 end
 
 -- User clicks OK to the options panel
@@ -100,8 +104,10 @@ local function okayFunc(self)
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     glowingButtonCheckbox.initialValue = glowingButtonCheckbox:GetChecked();
 
-    local classOptions = SpellActivationOverlayDB.classes;
-    SpellActivationOverlayOptionsPanel.classOptions.initialValue = CopyTable(classOptions);
+    local classOptions = SpellActivationOverlayDB.classes and SAO.CurrentClass and SpellActivationOverlayDB.classes[SAO.CurrentClass.Intrinsics[2]];
+    if (classOptions) then
+        SpellActivationOverlayOptionsPanel.classOptions.initialValue = CopyTable(classOptions);
+    end
 end
 
 -- User clicked Cancel to the options panel
@@ -123,12 +129,13 @@ end
 
 -- User reset settings to default values
 local function defaultFunc(self)
+    local defaultClassOptions = SAO.defaults.classes and SAO.CurrentClass and SAO.defaults.classes[SAO.CurrentClass.Intrinsics[2]];
     self:applyAll(
         1, -- opacity
         1, -- scale
         0, -- offset
         true, -- glow
-        SAO.defaults.classes -- class options
+        defaultClassOptions -- class options
     );
 end
 
@@ -172,9 +179,11 @@ local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, isGlowE
         SAO:ApplyGlowingButtonsToggle();
     end
 
-    SpellActivationOverlayDB.classes = CopyTable(classOptions);
-    for _, checkbox in ipairs(SpellActivationOverlayOptionsPanel.additionalGlowingCheckboxes) do
-        checkbox:ApplyValue();
+    if (SpellActivationOverlayDB.classes and SAO.CurrentClass and SpellActivationOverlayDB.classes[SAO.CurrentClass.Intrinsics[2]] and classOptions) then
+        SpellActivationOverlayDB.classes[SAO.CurrentClass.Intrinsics[2]] = CopyTable(classOptions);
+        for _, checkbox in ipairs(SpellActivationOverlayOptionsPanel.additionalGlowingCheckboxes) do
+            checkbox:ApplyValue();
+        end
     end
 end
 
@@ -191,13 +200,16 @@ function SpellActivationOverlayOptionsPanel_OnLoad(self)
 end
 
 function SpellActivationOverlayOptionsPanel_OnShow(self)
-    if (SAO.CurrentClass.LoadOptions) then
-        SAO.CurrentClass.LoadOptions(SAO);
-        SAO.CurrentClass.LoadOptions = nil; -- Reset callback so that it is not called again on next show
+    if (SAO.CurrentClass) then
+        if (SAO.CurrentClass.LoadOptions) then
+            SAO.CurrentClass.LoadOptions(SAO);
+            SAO.CurrentClass.LoadOptions = nil; -- Reset callback so that it is not called again on next show
+        end
     end
 end
 
-function SAO.AddGlowingOption(self, text, class, spellID, glowID)
+function SAO.AddGlowingOption(self, text, spellID, glowID)
+    local classFile = self.CurrentClass.Intrinsics[2];
     local cb = CreateFrame("CheckButton", nil, SpellActivationOverlayOptionsPanel, "InterfaceOptionsCheckButtonTemplate");
 
     cb.Text:SetText(text);
@@ -206,7 +218,7 @@ function SAO.AddGlowingOption(self, text, class, spellID, glowID)
         cb:SetEnabled(SpellActivationOverlayDB.glow.enabled);
         local color = SpellActivationOverlayDB.glow.enabled and 1 or 0.5;
         cb.Text:SetTextColor(color, color, color);
-        cb:SetChecked(SpellActivationOverlayDB.classes[class].glow[spellID][glowID]);
+        cb:SetChecked(SpellActivationOverlayDB.classes[classFile].glow[spellID][glowID]);
     end
 
     -- Init
@@ -214,7 +226,7 @@ function SAO.AddGlowingOption(self, text, class, spellID, glowID)
 
     cb:SetScript("PostClick", function()
         local checked = cb:GetChecked();
-        SpellActivationOverlayDB.classes[class].glow[spellID][glowID] = checked;
+        SpellActivationOverlayDB.classes[classFile].glow[spellID][glowID] = checked;
     end);
 
     cb:SetSize(20, 20);

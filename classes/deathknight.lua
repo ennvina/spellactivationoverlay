@@ -14,7 +14,7 @@ end
 
 local function loadOptions(self)
     local runeStrike = 56815;
-    self:AddGlowingOption("DK: RS", "DEATHKNIGHT", runeStrike, runeStrike);
+    self:AddGlowingOption("DK: RS", runeStrike, runeStrike);
 end
 
 SAO.Class["DEATHKNIGHT"] = {
