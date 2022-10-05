@@ -73,6 +73,12 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     glowingButtonCheckbox:SetChecked(glowingButtonCheckbox.initialValue);
     glowingButtonCheckbox.ApplyValueToEngine = function(self, checked)
         SpellActivationOverlayDB.glow.enabled = checked;
+        for _, checkbox in ipairs(SpellActivationOverlayOptionsPanel.additionalGlowingCheckboxes) do
+            -- Additional glowing checkboxes are enabled/disabled depending on the main glowing checkbox
+            checkbox:SetEnabled(checked);
+            local color = checked and 1 or 0.5;
+            checkbox.Text:SetTextColor(color, color, color);
+        end
         SAO:ApplyGlowingButtonsToggle();
     end
 
@@ -197,9 +203,14 @@ function SAO.AddGlowingOption(self, text, class, spellID, glowID)
     cb.Text:SetText(text);
 
     cb.ApplyValue = function()
+        cb:SetEnabled(SpellActivationOverlayDB.glow.enabled);
+        local color = SpellActivationOverlayDB.glow.enabled and 1 or 0.5;
+        cb.Text:SetTextColor(color, color, color);
         cb:SetChecked(SpellActivationOverlayDB.classes[class].glow[spellID][glowID]);
     end
-    cb:ApplyValue(); -- Init
+
+    -- Init
+    cb:ApplyValue();
 
     cb:SetScript("PostClick", function()
         local checked = cb:GetChecked();
