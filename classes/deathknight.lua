@@ -12,6 +12,12 @@ local function registerClass(self)
     self:RegisterCounter("rune_strike"); -- Must match name from above call
 end
 
+local function loadOptions(self)
+    local runeStrike = 56815;
+    self:AddGlowingOption("DK: RS", "DEATHKNIGHT", runeStrike, runeStrike);
+end
+
 SAO.Class["DEATHKNIGHT"] = {
     ["Register"] = registerClass,
+    ["LoadOptions"] = loadOptions,
 }
