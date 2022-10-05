@@ -39,6 +39,7 @@ classes\shaman.lua
 classes\warlock.lua
 classes\warrior.lua
 
+options\defaults.lua
 options\db.lua
 options\variables.lua
 options\InterfaceOptionsPanels.lua

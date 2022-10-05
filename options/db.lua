@@ -2,7 +2,7 @@ local AddonName, SAO = ...
 
 -- Load database and use default values if needed
 function SAO.LoadDB(self)
-    local currentversion = 060;
+    local currentversion = 070;
     local db = SpellActivationOverlayDB or {};
 
     if not db.alert then
@@ -28,6 +28,10 @@ function SAO.LoadDB(self)
     end
     if (type(db.glow.enabled) == "nil") then
         db.glow.enabled = true;
+    end
+
+    if not db.class then
+        db.classes = CopyTable(SAO.defaults.classes);
     end
 
     db.version = currentversion;
