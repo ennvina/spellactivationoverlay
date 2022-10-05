@@ -177,6 +177,37 @@ function SpellActivationOverlayOptionsPanel_OnShow(self)
     end
 end
 
+function SAO.AddGlowingOption(self, text, class, spellID, glowID)
+    local cb = CreateFrame("CheckButton", nil, SpellActivationOverlayOptionsPanel, "InterfaceOptionsCheckButtonTemplate");
+
+    cb.Text:SetText(text);
+    cb.SetValue = function(_, value)
+        if type(value) == "string" then
+            value = (value == "1");
+        end
+        SpellActivationOverlayDB.classes[class].glow[spellID][glowID] = value;
+        cb:SetChecked(value);
+    end
+
+    -- Init
+    cb:SetValue(SpellActivationOverlayDB.classes[class].glow[spellID][glowID]);
+
+    cb:SetScript("PostClick", function()
+        local checked = cb:GetChecked();
+        SpellActivationOverlayDB.classes[class].glow[spellID][glowID] = checked;
+    end);
+
+    cb:SetSize(20, 20);
+    if (type(SpellActivationOverlayOptionsPanel.glowingCheckboxAnchor) == "nil") then
+        cb:SetPoint("TOPLEFT", SpellActivationOverlayOptionsPanelGlowingButtons, "BOTTOMLEFT", 16, 2);
+    else
+        cb:SetPoint("TOPLEFT", SpellActivationOverlayOptionsPanel.glowingCheckboxAnchor, "BOTTOMLEFT", 0, 0);
+    end
+    SpellActivationOverlayOptionsPanel.glowingCheckboxAnchor = cb;
+
+    return cb;
+end
+
 SLASH_SAO1 = "/sao"
 SLASH_SAO2 = "/spellactivationoverlay"
 
