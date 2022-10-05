@@ -139,7 +139,10 @@
         "SpellActivationOverlayOptionsPanelSpellAlertTestButton",
         "SpellActivationOverlayFrame",
         "SpellActivationOverlayOptionsPanelGlowingButtons",
-        "SpellActivationOverlayContainerFrame"
+        "SpellActivationOverlayContainerFrame",
+        "SpellActivationOverlayOptionsPanel",
+        "InterfaceOptionsFrame_OpenToCategory",
+        "CopyTable"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",

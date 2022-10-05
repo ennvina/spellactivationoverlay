@@ -75,6 +75,9 @@ function SpellActivationOverlayOptionsPanel_Init(self)
         SpellActivationOverlayDB.glow.enabled = checked;
         SAO:ApplyGlowingButtonsToggle();
     end
+
+    local classOptions = SpellActivationOverlayDB.classes;
+    SpellActivationOverlayOptionsPanel.classOptions = { initialValue = CopyTable(classOptions) };
 end
 
 -- User clicks OK to the options panel
@@ -90,6 +93,9 @@ local function okayFunc(self)
 
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     glowingButtonCheckbox.initialValue = glowingButtonCheckbox:GetChecked();
+
+    local classOptions = SpellActivationOverlayDB.classes;
+    SpellActivationOverlayOptionsPanel.classOptions.initialValue = CopyTable(classOptions);
 end
 
 -- User clicked Cancel to the options panel
@@ -98,12 +104,14 @@ local function cancelFunc(self)
     local scaleSlider = SpellActivationOverlayOptionsPanelSpellAlertScaleSlider;
     local offsetSlider = SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider;
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
+    local classOptions = SpellActivationOverlayOptionsPanel.classOptions;
 
     self:applyAll(
         opacitySlider.initialValue,
         scaleSlider.initialValue,
         offsetSlider.initialValue,
-        glowingButtonCheckbox.initialValue
+        glowingButtonCheckbox.initialValue,
+        classOptions.initialValue
     );
 end
 
@@ -113,11 +121,12 @@ local function defaultFunc(self)
         1, -- opacity
         1, -- scale
         0, -- offset
-        true -- glow
+        true, -- glow
+        SAO.defaults.classes -- class options
     );
 end
 
-local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, isGlowEnabled)
+local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, isGlowEnabled, classOptions)
     local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
     opacitySlider:SetValue(opacityValue);
     if (SpellActivationOverlayDB.alert.opacity ~= opacityValue) then
@@ -156,6 +165,11 @@ local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, isGlowE
         SpellActivationOverlayDB.glow.enabled = isGlowEnabled;
         SAO:ApplyGlowingButtonsToggle();
     end
+
+    SpellActivationOverlayDB.classes = CopyTable(classOptions);
+    for _, checkbox in ipairs(SpellActivationOverlayOptionsPanel.additionalGlowingCheckboxes) do
+        checkbox:ApplyValue();
+    end
 end
 
 function SpellActivationOverlayOptionsPanel_OnLoad(self)
@@ -181,16 +195,11 @@ function SAO.AddGlowingOption(self, text, class, spellID, glowID)
     local cb = CreateFrame("CheckButton", nil, SpellActivationOverlayOptionsPanel, "InterfaceOptionsCheckButtonTemplate");
 
     cb.Text:SetText(text);
-    cb.SetValue = function(_, value)
-        if type(value) == "string" then
-            value = (value == "1");
-        end
-        SpellActivationOverlayDB.classes[class].glow[spellID][glowID] = value;
-        cb:SetChecked(value);
-    end
 
-    -- Init
-    cb:SetValue(SpellActivationOverlayDB.classes[class].glow[spellID][glowID]);
+    cb.ApplyValue = function()
+        cb:SetChecked(SpellActivationOverlayDB.classes[class].glow[spellID][glowID]);
+    end
+    cb:ApplyValue(); -- Init
 
     cb:SetScript("PostClick", function()
         local checked = cb:GetChecked();
@@ -198,12 +207,17 @@ function SAO.AddGlowingOption(self, text, class, spellID, glowID)
     end);
 
     cb:SetSize(20, 20);
-    if (type(SpellActivationOverlayOptionsPanel.glowingCheckboxAnchor) == "nil") then
+
+    if (type(SpellActivationOverlayOptionsPanel.additionalGlowingCheckboxes) == "nil") then
+        -- The first additional glowing checkbox is anchored to the main "Glowing Buttons" checkbox
         cb:SetPoint("TOPLEFT", SpellActivationOverlayOptionsPanelGlowingButtons, "BOTTOMLEFT", 16, 2);
+        SpellActivationOverlayOptionsPanel.additionalGlowingCheckboxes = { cb };
     else
-        cb:SetPoint("TOPLEFT", SpellActivationOverlayOptionsPanel.glowingCheckboxAnchor, "BOTTOMLEFT", 0, 0);
+        -- Each subsequent glowing checkbox is anchored to the previous one
+        local lastCheckBox = SpellActivationOverlayOptionsPanel.additionalGlowingCheckboxes[#SpellActivationOverlayOptionsPanel.additionalGlowingCheckboxes];
+        cb:SetPoint("TOPLEFT", lastCheckBox, "BOTTOMLEFT", 0, 0);
+        table.insert(SpellActivationOverlayOptionsPanel.additionalGlowingCheckboxes, cb);
     end
-    SpellActivationOverlayOptionsPanel.glowingCheckboxAnchor = cb;
 
     return cb;
 end
