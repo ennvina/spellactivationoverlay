@@ -169,3 +169,12 @@ function SpellActivationOverlayOptionsPanel_OnLoad(self)
 
     SAO.OptionsPanel = self;
 end
+
+SLASH_SAO1 = "/sao"
+SLASH_SAO2 = "/spellactivationoverlay"
+
+SlashCmdList.SAO = function(msg, editBox)
+	-- https://github.com/Stanzilla/WoWUIBugs/issues/89
+	InterfaceOptionsFrame_OpenToCategory(SAO.OptionsPanel);
+	InterfaceOptionsFrame_OpenToCategory(SAO.OptionsPanel);
+end
