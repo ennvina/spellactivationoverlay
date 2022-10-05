@@ -30,7 +30,7 @@ function SAO.LoadDB(self)
         db.glow.enabled = true;
     end
 
-    if not db.class then
+    if not db.classes then
         db.classes = CopyTable(SAO.defaults.classes);
     end
 
