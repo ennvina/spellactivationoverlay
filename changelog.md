@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.7.0 (2022-10-xx)
+
+- Glowing buttons may now be enabled or disabled individually
+- Options panel is opened by entering /sao or /spellactivationoverlay
+
 #### v0.6.5 (2022-10-05)
 
 - Entering a vehicle should no longer cause a Lua error
