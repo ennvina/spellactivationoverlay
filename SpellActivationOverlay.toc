@@ -44,6 +44,7 @@ options\db.lua
 options\variables.lua
 options\InterfaceOptionsPanels.lua
 options\InterfaceOptionsPanels.xml
+options\glowoptions.lua
 
 SpellActivationOverlay.lua
 SpellActivationOverlay.xml
