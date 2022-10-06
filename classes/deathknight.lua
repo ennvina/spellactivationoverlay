@@ -14,7 +14,7 @@ end
 
 local function loadOptions(self)
     local runeStrike = 56815;
-    self:AddGlowingOption(GetSpellInfo(runeStrike), runeStrike, runeStrike);
+    self:AddGlowingOption(nil, runeStrike, runeStrike);
 
     local rimeBuff = 59052;
     local rimeTalent = 49188;
