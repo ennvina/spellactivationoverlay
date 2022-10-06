@@ -46,5 +46,25 @@ SAO.defaults = {
                 },
             }
         },
+        ["MAGE"] = {
+            glow = {
+                [44401] = { -- Missile Barrage
+                    [5143] = true, -- Arcane Missiles
+                },
+                [48108] = { -- Hot Streak
+                    [11366] = true, -- Pyroblast
+                },
+                [64343] = { -- Impact
+                    [2136] = true, -- Fire Blast
+                },
+                [54741] = { -- Firestarter
+                    [2120] = true, -- Flamestrike
+                },
+                [57761] = { -- Brain Freeze
+                    [133]   = true, -- Fireball
+                    [44614] = true, -- Frostfire Bolt
+                },
+            },
+        },
     }
 }
