@@ -24,9 +24,9 @@ local function loadOptions(self)
     local frostStrike = 49143;
     local howlingBlast = 49184;
     self:AddGlowingOption(GetSpellInfo(howlingBlast).." ("..GetSpellInfo(rimeTalent)..")", rime, howlingBlast);
+    self:AddGlowingOption(GetSpellInfo(howlingBlast).." ("..GetSpellInfo(killingMachineTalent)..")", killingMachine, howlingBlast);
     self:AddGlowingOption(GetSpellInfo(icyTouch).." ("..GetSpellInfo(killingMachineTalent)..")", killingMachine, icyTouch);
     self:AddGlowingOption(GetSpellInfo(frostStrike).." ("..GetSpellInfo(killingMachineTalent)..")", killingMachine, frostStrike);
-    self:AddGlowingOption(GetSpellInfo(howlingBlast).." ("..GetSpellInfo(killingMachineTalent)..")", killingMachine, howlingBlast);
 end
 
 SAO.Class["DEATHKNIGHT"] = {
