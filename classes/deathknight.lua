@@ -23,10 +23,10 @@ local function loadOptions(self)
     local icyTouch = 45477;
     local frostStrike = 49143;
     local howlingBlast = 49184;
-    self:AddGlowingOption(GetSpellInfo(howlingBlast).." ("..GetSpellInfo(rimeTalent)..")", rimeBuff, howlingBlast);
-    self:AddGlowingOption(GetSpellInfo(howlingBlast).." ("..GetSpellInfo(killingMachineTalent)..")", killingMachineBuff, howlingBlast);
-    self:AddGlowingOption(GetSpellInfo(icyTouch).." ("..GetSpellInfo(killingMachineTalent)..")", killingMachineBuff, icyTouch);
-    self:AddGlowingOption(GetSpellInfo(frostStrike).." ("..GetSpellInfo(killingMachineTalent)..")", killingMachineBuff, frostStrike);
+    self:AddGlowingOption(rimeTalent, rimeBuff, howlingBlast);
+    self:AddGlowingOption(killingMachineTalent, killingMachineBuff, howlingBlast);
+    self:AddGlowingOption(killingMachineTalent, killingMachineBuff, icyTouch);
+    self:AddGlowingOption(killingMachineTalent, killingMachineBuff, frostStrike);
 end
 
 SAO.Class["DEATHKNIGHT"] = {

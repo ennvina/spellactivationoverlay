@@ -224,25 +224,34 @@ local function createOptionForGlow(classFile, spellID, glowID)
     end
 end
 
-function SAO.AddGlowingOption(self, text, spellID, glowID)
+function SAO.AddGlowingOption(self, subText, spellID, glowID)
     local className = self.CurrentClass.Intrinsics[1];
     local classFile = self.CurrentClass.Intrinsics[2];
     local cb = CreateFrame("CheckButton", nil, SpellActivationOverlayOptionsPanel, "InterfaceOptionsCheckButtonTemplate");
 
-    local classTextColored = WrapTextInColorCode(className, select(4,GetClassColor(classFile)));
-    cb.Text:SetText(classTextColored.." "..text);
+    cb.ApplyText = function(_, classColor)
+        local text = WrapTextInColorCode(className, classColor);
+        text = text.." "..GetSpellInfo(glowID);
+        if (type(subText) == "number") then
+            -- if subText is a number, this is a spellID, probably ID of the corresponding talent
+            text = text.." ("..GetSpellInfo(subText)..")";
+        elseif (type(subText) == "string") then
+            -- if subText is a string, the caller wants to control what's inside the subtext
+            text = text.." ("..subText..")";
+        end
+        cb.Text:SetText(text);
+    end
 
     cb.ApplyParentEnabling = function()
         -- Enable/disable the checkbox if the parent (i.e. main "Glowing Buttons" checkbox) is checked or not
         if (SpellActivationOverlayDB.glow.enabled) then
             cb:SetEnabled(true);
-            cb.Text:SetText(classTextColored.." "..text);
+            cb:ApplyText(select(4,GetClassColor(classFile)));
             cb.Text:SetTextColor(1, 1, 1);
         else
             cb:SetEnabled(false);
             local dimmedClassColor = CreateColor(0.5*RAID_CLASS_COLORS[classFile].r, 0.5*RAID_CLASS_COLORS[classFile].g, 0.5*RAID_CLASS_COLORS[classFile].b);
-            local classTextDimmed = WrapTextInColorCode(className, dimmedClassColor:GenerateHexColor());
-            cb.Text:SetText(classTextDimmed.." "..text);
+            cb:ApplyText(dimmedClassColor:GenerateHexColor());
             cb.Text:SetTextColor(0.5, 0.5, 0.5);
         end
     end

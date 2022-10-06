@@ -188,8 +188,8 @@ local function loadOptions(self)
     local starfire = 2912;
     local wrath = 5176;
     local eclipseTalent = 48516;
-    self:AddGlowingOption(GetSpellInfo(starfire).." ("..GetSpellInfo(eclipseTalent)..")", starfire, starfire);
-    self:AddGlowingOption(GetSpellInfo(wrath).." ("..GetSpellInfo(eclipseTalent)..")", wrath, wrath);
+    self:AddGlowingOption(eclipseTalent, starfire, starfire);
+    self:AddGlowingOption(eclipseTalent, wrath, wrath);
 end
 
 SAO.Class["DRUID"] = {

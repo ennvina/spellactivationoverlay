@@ -48,13 +48,13 @@ local function loadOptions(self)
     local lockAndLoadBuff = 56453;
     local lockAndLoadTalent = 56342;
 
-    self:AddGlowingOption(GetSpellInfo(killShot), killShot, killShot);
-    self:AddGlowingOption(GetSpellInfo(counterattack), counterattack, counterattack);
-    self:AddGlowingOption(GetSpellInfo(aimedShot).." ("..GetSpellInfo(improvedSteadyShotTalent)..")", improvedSteadyShotBuff, aimedShot);
-    self:AddGlowingOption(GetSpellInfo(arcaneShot).." ("..GetSpellInfo(improvedSteadyShotTalent)..")", improvedSteadyShotBuff, arcaneShot);
-    self:AddGlowingOption(GetSpellInfo(chimeraShot).." ("..GetSpellInfo(improvedSteadyShotTalent)..")", improvedSteadyShotBuff, chimeraShot);
-    self:AddGlowingOption(GetSpellInfo(arcaneShot).." ("..GetSpellInfo(lockAndLoadTalent)..")", lockAndLoadBuff, arcaneShot);
-    self:AddGlowingOption(GetSpellInfo(explosiveShot).." ("..GetSpellInfo(lockAndLoadTalent)..")", lockAndLoadBuff, explosiveShot);
+    self:AddGlowingOption(nil, killShot, killShot);
+    self:AddGlowingOption(nil, counterattack, counterattack);
+    self:AddGlowingOption(improvedSteadyShotTalent, improvedSteadyShotBuff, aimedShot);
+    self:AddGlowingOption(improvedSteadyShotTalent, improvedSteadyShotBuff, arcaneShot);
+    self:AddGlowingOption(improvedSteadyShotTalent, improvedSteadyShotBuff, chimeraShot);
+    self:AddGlowingOption(lockAndLoadTalent, lockAndLoadBuff, arcaneShot);
+    self:AddGlowingOption(lockAndLoadTalent, lockAndLoadBuff, explosiveShot);
 end
 
 SAO.Class["HUNTER"] = {
