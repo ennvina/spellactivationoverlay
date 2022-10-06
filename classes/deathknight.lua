@@ -16,17 +16,17 @@ local function loadOptions(self)
     local runeStrike = 56815;
     self:AddGlowingOption(GetSpellInfo(runeStrike), runeStrike, runeStrike);
 
-    local rime = 59052;
+    local rimeBuff = 59052;
     local rimeTalent = 49188;
-    local killingMachine = 51124;
+    local killingMachineBuff = 51124;
     local killingMachineTalent = 51130;
     local icyTouch = 45477;
     local frostStrike = 49143;
     local howlingBlast = 49184;
-    self:AddGlowingOption(GetSpellInfo(howlingBlast).." ("..GetSpellInfo(rimeTalent)..")", rime, howlingBlast);
-    self:AddGlowingOption(GetSpellInfo(howlingBlast).." ("..GetSpellInfo(killingMachineTalent)..")", killingMachine, howlingBlast);
-    self:AddGlowingOption(GetSpellInfo(icyTouch).." ("..GetSpellInfo(killingMachineTalent)..")", killingMachine, icyTouch);
-    self:AddGlowingOption(GetSpellInfo(frostStrike).." ("..GetSpellInfo(killingMachineTalent)..")", killingMachine, frostStrike);
+    self:AddGlowingOption(GetSpellInfo(howlingBlast).." ("..GetSpellInfo(rimeTalent)..")", rimeBuff, howlingBlast);
+    self:AddGlowingOption(GetSpellInfo(howlingBlast).." ("..GetSpellInfo(killingMachineTalent)..")", killingMachineBuff, howlingBlast);
+    self:AddGlowingOption(GetSpellInfo(icyTouch).." ("..GetSpellInfo(killingMachineTalent)..")", killingMachineBuff, icyTouch);
+    self:AddGlowingOption(GetSpellInfo(frostStrike).." ("..GetSpellInfo(killingMachineTalent)..")", killingMachineBuff, frostStrike);
 end
 
 SAO.Class["DEATHKNIGHT"] = {
