@@ -224,19 +224,21 @@ local function createOptionForGlow(classFile, spellID, glowID)
     end
 end
 
-function SAO.AddGlowingOption(self, subText, spellID, glowID)
+function SAO.AddGlowingOption(self, talentID, spellID, glowID, subText)
     local className = self.CurrentClass.Intrinsics[1];
     local classFile = self.CurrentClass.Intrinsics[2];
     local cb = CreateFrame("CheckButton", nil, SpellActivationOverlayOptionsPanel, "InterfaceOptionsCheckButtonTemplate");
 
     cb.ApplyText = function(_, classColor)
         local text = WrapTextInColorCode(className, classColor);
-        text = text.." "..GetSpellInfo(glowID);
-        if (type(subText) == "number") then
-            -- if subText is a number, this is a spellID, probably ID of the corresponding talent
-            text = text.." ("..GetSpellInfo(subText)..")";
-        elseif (type(subText) == "string") then
-            -- if subText is a string, the caller wants to control what's inside the subtext
+        local spellName, spellIcon;
+        if (talentID) then
+            spellName, _, spellIcon = GetSpellInfo(talentID);
+            text = text.." |T"..spellIcon..":0|t "..spellName.." +"
+        end
+        spellName, _, spellIcon = GetSpellInfo(glowID);
+        text = text.." |T"..spellIcon..":0|t "..spellName;
+        if (subText) then
             text = text.." ("..subText..")";
         end
         cb.Text:SetText(text);
