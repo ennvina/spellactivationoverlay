@@ -100,5 +100,17 @@ SAO.defaults = {
                 },
             },
         },
+        ["SHAMAN"] = {
+            glow = {
+                [53817] = { -- Maelstorm Weapon
+                    [403]   = false, -- Lightning Bolt
+                    [421]   = false, -- Chain Lightning
+                    [8004]  = false, -- lesser Healing Wave
+                    [331]   = false, -- Healing Wave
+                    [1064]  = false, -- Chain Heal
+                    [51514] = false, -- Hex
+                },
+            },
+        },
     }
 }
