@@ -207,7 +207,7 @@ function SpellActivationOverlayOptionsPanel_OnShow(self)
 end
 
 local function createOptionForGlow(classFile, spellID, glowID)
-    local default = false;
+    local default = true;
     if (SAO.defaults.classes[classFile] and SAO.defaults.classes[classFile].glow and SAO.defaults.classes[classFile].glow[spellID]) then
         default = SAO.defaults.classes[classFile].glow[spellID][glowID];
     end
