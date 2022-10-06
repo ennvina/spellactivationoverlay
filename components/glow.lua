@@ -197,26 +197,30 @@ function SAO.AddGlow(self, spellID, glowIDs)
     end
 
     for _, glowID in ipairs(glowIDs) do
-        local glowEnabled = true; -- Enabled by default
-        if (type(glowID) == "number") then
-            -- glowID is a direct spell identifier
-            if (glowOptions) then
+
+        -- Find if the glow option is enabled
+        local glowEnabled = true; -- Enabled by default, in case there is not an option for it
+        if (glowOptions) then
+            if (type(glowID) == "number" and type(glowOptions[glowID]) == "boolean") then
                 glowEnabled = glowOptions[glowID];
-            end
-            if (glowEnabled) then
-                self:AddGlowNumber(spellID, glowID);
-            end
-        elseif (type(glowID) == "string") then
-            -- glowID is a spell name: find spell identifiers and then parse them
-            if (glowOptions) then
-                for id, enabled in pairs(glowOptions) do
-                    if (GetSpellInfo(id) == glowID) then
-                        glowEnabled = enabled;
+            else
+                local glowSpellName = (type(glowID) == "number") and GetSpellInfo(glowID) or glowID;
+                for optionSpellID, optionEnabled in pairs(glowOptions) do
+                    if (GetSpellInfo(optionSpellID) == glowSpellName) then
+                        glowEnabled = optionEnabled;
                         break;
                     end
                 end
             end
-            if (glowEnabled) then
+        end
+
+        -- Let it glow
+        if (glowEnabled) then
+            if (type(glowID) == "number") then
+                -- glowID is a direct spell identifier
+                self:AddGlowNumber(spellID, glowID);
+            elseif (type(glowID) == "string") then
+                -- glowID is a spell name: find spell identifiers and then parse them
                 local glowSpellIDs = self:GetSpellIDsByName(glowID);
                 for _, glowSpellID in ipairs(glowSpellIDs) do
                     self:AddGlowNumber(spellID, glowSpellID);
