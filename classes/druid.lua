@@ -184,8 +184,17 @@ local function registerClass(self)
     self:RegisterGlowIDs({ starfire, wrath });
 end
 
+local function loadOptions(self)
+    local starfire = 2912;
+    local wrath = 5176;
+    local eclipseTalent = 48516;
+    self:AddGlowingOption(GetSpellInfo(starfire).." ("..GetSpellInfo(eclipseTalent)..")", starfire, starfire);
+    self:AddGlowingOption(GetSpellInfo(wrath).." ("..GetSpellInfo(eclipseTalent)..")", wrath, wrath);
+end
+
 SAO.Class["DRUID"] = {
     ["Register"] = registerClass,
+    ["LoadOptions"] = loadOptions,
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
     ["UPDATE_SHAPESHIFT_FORM"] = updateShapeshift,
     ["PLAYER_ENTERING_WORLD"] = customLoad,
