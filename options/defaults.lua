@@ -93,5 +93,12 @@ SAO.defaults = {
                 },
             },
         },
+        ["ROGUE"] = {
+            glow = {
+                [14251] = { -- Riposte
+                    [14251] = true, -- Riposte
+                },
+            },
+        },
     }
 }
