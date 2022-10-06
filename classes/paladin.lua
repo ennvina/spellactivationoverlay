@@ -4,7 +4,8 @@ local function registerClass(self)
     local flashOfLight = GetSpellInfo(19750);
     local exorcism = GetSpellInfo(879);
     local holyLight = GetSpellInfo(635);
-    local how = GetSpellInfo(24275);
+
+    local how = 24275;
 
     local infusionOfLightBuff1 = 53672;
     local infusionOfLightBuff2 = 54149;
@@ -12,7 +13,7 @@ local function registerClass(self)
     local artOfWarBuff2 = 59578;
 
     -- Hammer of Wrath, Execute-like ability for targets at 20% hp or less
-    self:RegisterAura("how", 0, how, nil, "", 0, 0, 0, 0, false, { how });
+    self:RegisterAura("how", 0, how, nil, "", 0, 0, 0, 0, false, { GetSpellInfo(how) });
     self:RegisterCounter("how");
 
     -- Art of War, 1/2 talent points
