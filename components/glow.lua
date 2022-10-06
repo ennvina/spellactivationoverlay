@@ -192,7 +192,11 @@ function SAO.AddGlow(self, spellID, glowIDs)
         local classFile = self.CurrentClass.Intrinsics[2];
         local classOptions = SpellActivationOverlayDB.classes and SpellActivationOverlayDB.classes[classFile];
         if (classOptions) then
-            glowOptions = classOptions.glow and classOptions.glow[spellID];
+            if (self.GlowingOptionLinks and self.GlowingOptionLinks[spellID]) then
+                glowOptions = classOptions.glow and classOptions.glow[self.GlowingOptionLinks[spellID]];
+            else
+                glowOptions = classOptions.glow and classOptions.glow[spellID];
+            end
         end
     end
 

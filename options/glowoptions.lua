@@ -81,3 +81,11 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, subText)
 
     return cb;
 end
+
+function SAO.AddGlowingLink(self, srcOption, dstOption)
+    if (not self.GlowingOptionLinks) then
+        self.GlowingOptionLinks = { [dstOption] = srcOption };
+    else
+        self.GlowingOptionLinks[dstOption] = srcOption;
+    end
+end
