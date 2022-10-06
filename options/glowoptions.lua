@@ -18,23 +18,33 @@ local function createOptionForGlow(classFile, spellID, glowID)
     end
 end
 
-function SAO.AddGlowingOption(self, talentID, spellID, glowID, subText)
+function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText)
     local className = self.CurrentClass.Intrinsics[1];
     local classFile = self.CurrentClass.Intrinsics[2];
     local cb = CreateFrame("CheckButton", nil, SpellActivationOverlayOptionsPanel, "InterfaceOptionsCheckButtonTemplate");
 
     cb.ApplyText = function(_, classColor)
+        -- Class text
         local text = WrapTextInColorCode(className, classColor);
+
+        -- Talent text
         local spellName, spellIcon;
         if (talentID) then
             spellName, _, spellIcon = GetSpellInfo(talentID);
             text = text.." |T"..spellIcon..":0|t "..spellName.." +"
+            if (talentSubText) then
+                text = text.." ("..talentSubText..")";
+            end
         end
+
+        -- Spell text
         spellName, _, spellIcon = GetSpellInfo(glowID);
         text = text.." |T"..spellIcon..":0|t "..spellName;
-        if (subText) then
-            text = text.." ("..subText..")";
+        if (spellSubText) then
+            text = text.." ("..spellSubText..")";
         end
+
+        -- Set final text to checkbox
         cb.Text:SetText(text);
     end
 
