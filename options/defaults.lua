@@ -81,5 +81,17 @@ SAO.defaults = {
                 },
             },
         },
+        ["PRIEST"] = {
+            glow = {
+                [33151] = { -- Surge of Light
+                    [585]  = true, -- Smite
+                    [2061] = true, -- Flash Heal
+                },
+                [63734] = { -- Serendipity 3/3
+                    [2060] = true, -- Greater Heal
+                    [596]  = true, -- Prayer of Healing
+                },
+            },
+        },
     }
 }
