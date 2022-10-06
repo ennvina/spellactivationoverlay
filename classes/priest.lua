@@ -45,10 +45,12 @@ local function loadOptions(self)
     local serendipityBuff3 = 63734;
     local serendipityTalent = 63730;
 
+    local threeStacks = string.format(STACKS, 3);
+
     self:AddGlowingOption(surgeOfLightTalent, surgeOfLightBuff, smite);
     self:AddGlowingOption(surgeOfLightTalent, surgeOfLightBuff, flashHeal);
-    self:AddGlowingOption(serendipityTalent, serendipityBuff3, greaterHeal);
-    self:AddGlowingOption(serendipityTalent, serendipityBuff3, prayerOfHealing);
+    self:AddGlowingOption(serendipityTalent, serendipityBuff3, greaterHeal, threeStacks);
+    self:AddGlowingOption(serendipityTalent, serendipityBuff3, prayerOfHealing, threeStacks);
 end
 
 SAO.Class["PRIEST"] = {

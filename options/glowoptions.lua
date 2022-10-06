@@ -31,10 +31,11 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
         local spellName, spellIcon;
         if (talentID) then
             spellName, _, spellIcon = GetSpellInfo(talentID);
-            text = text.." |T"..spellIcon..":0|t "..spellName.." +"
+            text = text.." |T"..spellIcon..":0|t "..spellName;
             if (talentSubText) then
                 text = text.." ("..talentSubText..")";
             end
+            text = text.." +"
         end
 
         -- Spell text
