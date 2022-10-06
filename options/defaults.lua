@@ -130,5 +130,30 @@ SAO.defaults = {
                 },
             },
         },
+        ["WARRIOR"] = {
+            ["glow"] = {
+                [5308] = { -- Execute
+                    [5308] = true, -- Execute
+                },
+                [52437] = { -- Sudden Death
+                    [5308] = true, -- Execute
+                },
+                [7384] = { -- Overpower
+                    [7384] = true, -- Overpower
+                },
+                [6572] = { -- Revenge
+                    [6572] = true, -- Revenge
+                },
+                [34428] = { -- Victory Rush
+                    [34428] = true, -- Victory Rush
+                },
+                [46916] = { -- Bloodsurge
+                    [1464] = true, -- Slam
+                },
+                [50227] = { -- Sword and Board
+                    [23922] = true, -- Shield Slam
+                },
+            },
+        },
     }
 }
