@@ -36,6 +36,28 @@ local function registerClass(self)
     self:RegisterCounter("kill_shot");
 end
 
+local function loadOptions(self)
+    local killShot  = 53351;
+    local counterattack = 19306;
+    local aimedShot = 19434;
+    local arcaneShot = 3044;
+    local chimeraShot = 53209;
+    local explosiveShot = 53301;
+    local improvedSteadyShotBuff = 53220;
+    local improvedSteadyShotTalent = 53221;
+    local lockAndLoadBuff = 56453;
+    local lockAndLoadTalent = 56342;
+
+    self:AddGlowingOption(GetSpellInfo(killShot), killShot, killShot);
+    self:AddGlowingOption(GetSpellInfo(counterattack), counterattack, counterattack);
+    self:AddGlowingOption(GetSpellInfo(aimedShot).." ("..GetSpellInfo(improvedSteadyShotTalent)..")", improvedSteadyShotBuff, aimedShot);
+    self:AddGlowingOption(GetSpellInfo(arcaneShot).." ("..GetSpellInfo(improvedSteadyShotTalent)..")", improvedSteadyShotBuff, arcaneShot);
+    self:AddGlowingOption(GetSpellInfo(chimeraShot).." ("..GetSpellInfo(improvedSteadyShotTalent)..")", improvedSteadyShotBuff, chimeraShot);
+    self:AddGlowingOption(GetSpellInfo(arcaneShot).." ("..GetSpellInfo(lockAndLoadTalent)..")", lockAndLoadBuff, arcaneShot);
+    self:AddGlowingOption(GetSpellInfo(explosiveShot).." ("..GetSpellInfo(lockAndLoadTalent)..")", lockAndLoadBuff, explosiveShot);
+end
+
 SAO.Class["HUNTER"] = {
     ["Register"] = registerClass,
+    ["LoadOptions"] = loadOptions,
 }

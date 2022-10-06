@@ -27,5 +27,24 @@ SAO.defaults = {
                 },
             }
         },
+        ["HUNTER"] = {
+            glow = {
+                [53351] = { -- Kill Shot
+                    [53351] = true -- Kill Shot
+                },
+                [19306] = { -- Counterattack
+                    [19306] = true -- Counterattack
+                },
+                [53220] = { -- Improved Steady Shot
+                    [19434] = true, --  Aimed Shot
+                    [3044]  = true, --  Arcane Shot
+                    [53209] = true, --  Chimera Shot
+                },
+                [56453] = { -- Lock and Load
+                    [3044]  = true, --  Arcane Shot
+                    [53301] = true, --  Explosive Shot
+                },
+            }
+        },
     }
 }
