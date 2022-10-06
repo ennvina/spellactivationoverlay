@@ -206,6 +206,24 @@ function SpellActivationOverlayOptionsPanel_OnShow(self)
     end
 end
 
+local function createOptionForGlow(classFile, spellID, glowID)
+    local default = false;
+    if (SAO.defaults.classes[classFile] and SAO.defaults.classes[classFile].glow and SAO.defaults.classes[classFile].glow[spellID]) then
+        default = SAO.defaults.classes[classFile].glow[spellID][glowID];
+    end
+    if (not SpellActivationOverlayDB.classes) then
+        SpellActivationOverlayDB.classes = { [classFile] = { glow = { [spellID] = { [glowID] = default } } } };
+    elseif (not SpellActivationOverlayDB.classes[classFile]) then
+        SpellActivationOverlayDB.classes[classFile] = { glow = { [spellID] = { [glowID] = default } } };
+    elseif (not SpellActivationOverlayDB.classes[classFile].glow) then
+        SpellActivationOverlayDB.classes[classFile].glow = { [spellID] = { [glowID] = default } };
+    elseif (not SpellActivationOverlayDB.classes[classFile].glow[spellID]) then
+        SpellActivationOverlayDB.classes[classFile].glow[spellID] = { [glowID] = default };
+    elseif (type (SpellActivationOverlayDB.classes[classFile].glow[spellID][glowID]) == "nil") then
+        SpellActivationOverlayDB.classes[classFile].glow[spellID][glowID] = default;
+    end
+end
+
 function SAO.AddGlowingOption(self, text, spellID, glowID)
     local className = self.CurrentClass.Intrinsics[1];
     local classFile = self.CurrentClass.Intrinsics[2];
@@ -234,6 +252,7 @@ function SAO.AddGlowingOption(self, text, spellID, glowID)
     end
 
     -- Init
+    createOptionForGlow(classFile, spellID, glowID);
     cb:ApplyParentEnabling();
     cb:ApplyValue();
 
