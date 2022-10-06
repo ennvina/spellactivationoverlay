@@ -187,9 +187,14 @@ end
 local function loadOptions(self)
     local starfire = 2912;
     local wrath = 5176;
-    local eclipseTalent = 48516;
-    self:AddGlowingOption(eclipseTalent, starfire, starfire);
-    self:AddGlowingOption(eclipseTalent, wrath, wrath);
+--    local eclipseTalent = 48516;
+    -- Cheat with fake talents, to tell explicitly which type of eclipse is involved
+    -- Otherwise the player would always see a generic "Eclipse" text
+    local lunarEclipseTalent = lunarSpellID; -- Not really a talent
+    local solarEclipseTalent = solarSpellID; -- Not really a talent
+
+    self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
+    self:AddGlowingOption(solarEclipseTalent, wrath, wrath);
 end
 
 SAO.Class["DRUID"] = {
