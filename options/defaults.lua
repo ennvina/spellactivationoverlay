@@ -112,5 +112,23 @@ SAO.defaults = {
                 },
             },
         },
+        ["WARLOCK"] = {
+            glow = {
+                [17941] = { -- Nightfall
+                    [686] = true, -- Shadow Bolt
+                },
+                [34936] = { -- Backlash
+                    [686]   = true, -- Shadow Bolt
+                    [29722] = true, -- Incinerate
+                },
+                [71165] = { -- Molten Core
+                    [29722] = true, -- Incinerate
+                    [6353]  = true, -- Soul Fire
+                },
+                [63167] = { -- Decimation
+                    [6353] = true, -- Soul Fire
+                },
+            },
+        },
     }
 }
