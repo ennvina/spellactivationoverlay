@@ -66,5 +66,20 @@ SAO.defaults = {
                 },
             },
         },
+        ["PALADIN"] = {
+            glow = {
+                [24275] = { -- Hammer of Wrath
+                    [24275] = true, -- Hammer of Wrath
+                },
+                [54149] = { -- Infusion of Light (2/2)
+                    [19750] = true, -- Flash of Light
+                    [635]   = true, -- Holy Light
+                },
+                [59578] = {
+                    [879]   = true, -- Exorcism
+                    [19750] = true, -- Flash of Light
+                },
+            },
+        },
     }
 }
