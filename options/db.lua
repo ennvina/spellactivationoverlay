@@ -31,7 +31,33 @@ function SAO.LoadDB(self)
     end
 
     if not db.classes then
+        -- The first time, deep copy classes from defaults
         db.classes = CopyTable(SAO.defaults.classes);
+    else
+        -- Subsequent initializations will deep-merge from defaults
+        for classFile, classData in pairs(SAO.defaults.classes) do
+            if (not db.classes[classFile]) then
+                db.classes[classFile] = CopyTable(classData);
+            else
+                for optionType, optionData in pairs(classData) do
+                    if (not db.classes[classFile][optionType]) then
+                        db.classes[classFile][optionType] = CopyTable(optionData);
+                    else
+                        for auraID, auraData in pairs(optionData) do
+                            if (not db.classes[classFile][optionType][auraID]) then
+                                db.classes[classFile][optionType][auraID] = CopyTable(auraData);
+                            else
+                                for id, value in pairs(auraData) do
+                                    if (type(db.classes[classFile][optionType][auraID][id]) == "nil") then
+                                        db.classes[classFile][optionType][auraID][id] = value;
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
     end
 
     db.version = currentversion;
