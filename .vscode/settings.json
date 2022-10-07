@@ -144,7 +144,8 @@
         "InterfaceOptionsFrame_OpenToCategory",
         "CopyTable",
         "RAID_CLASS_COLORS",
-        "STACKS"
+        "STACKS",
+        "SpellActivationOverlayDB"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",

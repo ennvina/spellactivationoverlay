@@ -73,7 +73,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     glowingButtonCheckbox:SetChecked(glowingButtonCheckbox.initialValue);
     glowingButtonCheckbox.ApplyValueToEngine = function(self, checked)
         SpellActivationOverlayDB.glow.enabled = checked;
-        for _, checkbox in ipairs(SpellActivationOverlayOptionsPanel.additionalGlowingCheckboxes) do
+        for _, checkbox in ipairs(SpellActivationOverlayOptionsPanel.additionalCheckboxes.glow or {}) do
             -- Additional glowing checkboxes are enabled/disabled depending on the main glowing checkbox
             checkbox:ApplyParentEnabling();
         end
@@ -86,6 +86,8 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     else
         SpellActivationOverlayOptionsPanel.classOptions = { initialValue = {} };
     end
+
+    SpellActivationOverlayOptionsPanel.additionalCheckboxes = {};
 end
 
 -- User clicks OK to the options panel
@@ -179,7 +181,7 @@ local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, isGlowE
 
     if (SpellActivationOverlayDB.classes and SAO.CurrentClass and SpellActivationOverlayDB.classes[SAO.CurrentClass.Intrinsics[2]] and classOptions) then
         SpellActivationOverlayDB.classes[SAO.CurrentClass.Intrinsics[2]] = CopyTable(classOptions);
-        for _, checkbox in ipairs(SpellActivationOverlayOptionsPanel.additionalGlowingCheckboxes) do
+        for _, checkbox in ipairs(SpellActivationOverlayOptionsPanel.additionalCheckboxes.glow or {}) do
             checkbox:ApplyValue();
         end
     end
