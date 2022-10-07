@@ -176,9 +176,6 @@ local function customCLEU(self, ...)
 end
 
 local function registerClass(self)
-    -- Predatory Strikes, inspired by Predatory Swiftness
-    self:RegisterAura("predatory_strikes", 0, 69369, "predatory_swiftness", "Top", 1, 255, 255, 255, false);
-
     -- Track Eclipses with a custom CLEU function, so that eclipses can coexist with Omen of Clarity
     -- self:RegisterAura("eclipse_lunar", 0, lunarSpellID, "eclipse_moon", "Left", 1, 255, 255, 255, true);
     -- self:RegisterAura("eclipse_solar", 0, solarSpellID, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true);
@@ -190,11 +187,42 @@ local function registerClass(self)
     local starfire = GetSpellInfo(2912);
     local wrath = GetSpellInfo(5176);
     self:RegisterGlowIDs({ starfire, wrath });
+
+    -- Predatory Strikes, inspired by Predatory Swiftness
+    local regrowth = GetSpellInfo(8936);
+    local healingTouch = GetSpellInfo(5185);
+    local nourish = GetSpellInfo(50464);
+    local rebirth = GetSpellInfo(20484);
+    -- local wrath = GetSpellInfo(5176);
+    local entanglingRoots = GetSpellInfo(339);
+    local cyclone = GetSpellInfo(33786);
+    local hibernate = GetSpellInfo(2637);
+    local predatoryStrikesSpells = {
+        regrowth,
+        healingTouch,
+        nourish,
+        rebirth,
+        wrath,
+        entanglingRoots,
+        cyclone,
+        hibernate,
+    }
+    self:RegisterAura("predatory_strikes", 0, 69369, "predatory_swiftness", "Top", 1, 255, 255, 255, false, predatoryStrikesSpells);
 end
 
 local function loadOptions(self)
     local starfire = 2912;
     local wrath = 5176;
+
+    -- Predatory Strikes candidates
+    local regrowth = 8936;
+    local healingTouch = 5185;
+    local nourish = 50464;
+    local rebirth = 20484;
+    -- local wrath = 5176;
+    local entanglingRoots = 339;
+    local cyclone = 33786;
+    local hibernate = 2637;
 
     local omenOfClarityTalent = 16864;
 --    local eclipseTalent = 48516;
@@ -213,6 +241,14 @@ local function loadOptions(self)
 
     self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
     self:AddGlowingOption(solarEclipseTalent, wrath, wrath);
+    self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, regrowth);
+    self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, healingTouch);
+    self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, nourish);
+    self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, rebirth);
+    self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, wrath);
+    self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, entanglingRoots);
+    self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, cyclone);
+    self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, hibernate);
 end
 
 SAO.Class["DRUID"] = {

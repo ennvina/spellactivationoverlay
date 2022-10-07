@@ -47,6 +47,16 @@ SAO.defaults = {
                 [5176] = { -- Wrath
                     [5176] = true, --  Wrath
                 },
+                [69369] = { -- Predatory Strikes
+                    [8936]  = false, -- Regrowth
+                    [5185]  = false, -- Healing Touch
+                    [50464] = false, -- Nourish
+                    [20484] = false, -- Rebirth
+                    [5176]  = false, -- Wrath
+                    [339]   = false, -- Entangling Roots
+                    [33786] = false, -- Cyclone
+                    [2637]  = false, -- Hibernate
+                },
             }
         },
         ["HUNTER"] = {
