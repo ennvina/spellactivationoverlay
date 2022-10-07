@@ -181,6 +181,9 @@ local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, isGlowE
 
     if (SpellActivationOverlayDB.classes and SAO.CurrentClass and SpellActivationOverlayDB.classes[SAO.CurrentClass.Intrinsics[2]] and classOptions) then
         SpellActivationOverlayDB.classes[SAO.CurrentClass.Intrinsics[2]] = CopyTable(classOptions);
+        for _, checkbox in ipairs(SpellActivationOverlayOptionsPanel.additionalCheckboxes.alert or {}) do
+            checkbox:ApplyValue();
+        end
         for _, checkbox in ipairs(SpellActivationOverlayOptionsPanel.additionalCheckboxes.glow or {}) do
             checkbox:ApplyValue();
         end

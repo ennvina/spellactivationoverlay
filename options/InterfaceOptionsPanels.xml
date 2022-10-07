@@ -38,6 +38,10 @@
               self:ApplyValueToEngine(value);
             end
             _G[self:GetParent():GetName().."SpellAlertTestButton"]:SetEnabled(value > 0);
+            for _, checkbox in ipairs(_G[self:GetParent():GetName()].additionalCheckboxes and _G[self:GetParent():GetName()].additionalCheckboxes.alert or {}) do
+              checkbox:SetEnabled(value > 0);
+              checkbox:ApplyParentEnabling();
+            end
           </OnValueChanged>
         </Scripts>
       </Slider>
