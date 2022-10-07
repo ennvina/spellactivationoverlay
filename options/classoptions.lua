@@ -36,11 +36,11 @@ function SAO.AddOption(self, optionType, auraID, id, applyTextFunc, firstAnchor)
     end
 
     cb.ApplyValue = function()
+        createOptionFor(classFile, optionType, auraID, id); -- Safety call, in case the value is not defined in defaults
         cb:SetChecked(SpellActivationOverlayDB.classes[classFile][optionType][auraID][id]);
     end
 
     -- Init
-    createOptionFor(classFile, optionType, auraID, id);
     cb:ApplyParentEnabling();
     cb:ApplyValue();
 
