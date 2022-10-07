@@ -13,6 +13,11 @@ end
 -- Add or refresh an overlay
 function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay)
     if (texture) then
+        local overlayOptions = self:GetOverlayOptions(spellID);
+        if (overlayOptions and type(overlayOptions[stacks] ~= "nil") and not overlayOptions[stacks]) then
+            -- Option tells to discard this overlay
+            return;
+        end
         if (type(forcePulsePlay) == 'table') then -- Hack to avoid glowIDs to be treated as forcePulsePlay
             forcePulsePlay = false;
         end
