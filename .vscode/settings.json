@@ -145,7 +145,14 @@
         "CopyTable",
         "RAID_CLASS_COLORS",
         "STACKS",
-        "SpellActivationOverlayDB"
+        "SpellActivationOverlayDB",
+        "SPELL_ALERT_OPACITY",
+        "SpellActivationOverlayOptionsPanelSpellAlertLabel",
+        "OFF",
+        "SMALL",
+        "LARGE",
+        "NEAR",
+        "FAR"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",

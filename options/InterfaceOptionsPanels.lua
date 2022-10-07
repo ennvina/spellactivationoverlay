@@ -2,7 +2,7 @@ local AddonName, SAO = ...
 
 function SpellActivationOverlayOptionsPanel_Init(self)
     local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
-    opacitySlider.Text:SetText("Spell Alert opacity");
+    opacitySlider.Text:SetText(SPELL_ALERT_OPACITY);
     _G[opacitySlider:GetName().."Low"]:SetText(OFF);
     opacitySlider:SetMinMaxValues(0, 1);
     opacitySlider:SetValueStep(0.05);
