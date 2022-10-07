@@ -3,12 +3,20 @@ local AddonName, SAO = ...
 SAO.defaults = {
     classes = {
         ["DEATHKNIGHT"] = {
+            alert = {
+                [59052] = { -- Rime
+                    [0] = true,
+                },
+                [51124] = { -- Killing Machine
+                    [0] = true,
+                },
+            },
             glow = {
                 [56815] = { -- Rune Strike
-                    [56815] = true -- Rune Strike
+                    [56815] = true, -- Rune Strike
                 },
                 [59052] = { -- Rime
-                    [49184] = true --  Howling Blast
+                    [49184] = true, --  Howling Blast
                 },
                 [51124] = { -- Killing Machine
                     [45477] = true, -- Icy Touch
