@@ -53,7 +53,7 @@ function SAO.AddOption(self, optionType, auraID, id, applyTextFunc, firstAnchor)
 
     if (type(SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType]) == "nil") then
         -- The first additional glowing checkbox is anchored an initial widget
-        cb:SetPoint("TOPLEFT", firstAnchor, "BOTTOMLEFT", 16, 2);
+        cb:SetPoint("TOPLEFT", firstAnchor.frame, "BOTTOMLEFT", firstAnchor.xOffset or 0, firstAnchor.yOffset or 0);
         SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType] = { cb };
     else
         -- Each subsequent glowing checkbox is anchored to the previous one

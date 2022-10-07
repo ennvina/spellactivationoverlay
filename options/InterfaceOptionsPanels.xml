@@ -115,6 +115,19 @@
         </Scripts>
       </CheckButton>
     </Frames>
+    <Layers>
+      <Layer level="ARTWORK">
+        <FontString name="$parentSpellAlertLabel" text="Spell Alerts" inherits="GameFontHighlight" justifyH="LEFT" justifyV="TOP">
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertTestButton" relativePoint="TOPRIGHT">
+              <Offset>
+                <AbsDimension x="32" y="10"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
     <Scripts>
       <OnShow function="SpellActivationOverlayOptionsPanel_OnShow"/>
       <OnLoad function="SpellActivationOverlayOptionsPanel_OnLoad"/>

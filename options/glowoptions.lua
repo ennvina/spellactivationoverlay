@@ -45,7 +45,7 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
         end
     end
 
-    self:AddOption("glow", spellID, glowID, applyTextFunc, SpellActivationOverlayOptionsPanelGlowingButtons);
+    self:AddOption("glow", spellID, glowID, applyTextFunc, { frame = SpellActivationOverlayOptionsPanelGlowingButtons, xOffset = 16, yOffset = 2 });
 end
 
 function SAO.AddGlowingLink(self, srcOption, dstOption)

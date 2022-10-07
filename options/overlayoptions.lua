@@ -34,7 +34,7 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText)
         end
     end
 
-    self:AddOption("alert", auraID, count or 0, applyTextFunc, SpellActivationOverlayOptionsPanelSpellAlertTestButton);
+    self:AddOption("alert", auraID, count or 0, applyTextFunc, { frame = SpellActivationOverlayOptionsPanelSpellAlertLabel, xOffset = 4, yOffset = -4 });
 end
 
 
