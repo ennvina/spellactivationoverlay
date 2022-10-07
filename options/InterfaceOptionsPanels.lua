@@ -176,7 +176,7 @@ local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, isGlowE
     glowingButtonCheckbox:SetChecked(isGlowEnabled);
     if (SpellActivationOverlayDB.glow.enabled ~= isGlowEnabled) then
         SpellActivationOverlayDB.glow.enabled = isGlowEnabled;
-        SAO:ApplyGlowingButtonsToggle();
+        glowingButtonCheckbox:ApplyValueToEngine(isGlowEnabled);
     end
 
     if (SpellActivationOverlayDB.classes and SAO.CurrentClass and SpellActivationOverlayDB.classes[SAO.CurrentClass.Intrinsics[2]] and classOptions) then
