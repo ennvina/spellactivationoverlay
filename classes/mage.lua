@@ -174,8 +174,44 @@ local function registerClass(self)
     self:RegisterAura("missile_barrage", 0, 44401, "arcane_missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(5143)) });
 end
 
+local function loadOptions(self)
+    local missileBarrageBuff = 44401;
+    local missileBarrageTalent = 44404;
+
+    local hotStreakBuff = hotStreakSpellID;
+    local hotStreakTalent = 44445;
+
+    local firestarterBuff = 54741;
+    local firestarterTalent = 44442;
+
+    local impactBuff = 64343;
+    local impactTalent = 11103;
+
+    local brainFreezeBuff = 57761;
+    local brainFreezeTalent = 44546;
+
+    local fingersOfFrostBuff = 74396;
+    local fingersOfFrostTalent = 44543;
+
+    local arcaneMissiles = 5143;
+    local pyroblast = 11366;
+    local flamestrike = 2120;
+    local fireBlast = 2136;
+    local fireball = 133;
+    local frostfireBolt = 44614;
+
+    self:AddGlowingOption(missileBarrageTalent, missileBarrageBuff, arcaneMissiles);
+    self:AddGlowingOption(hotStreakTalent, hotStreakBuff, pyroblast);
+    self:AddGlowingOption(firestarterTalent, firestarterBuff, flamestrike);
+    self:AddGlowingOption(impactTalent, impactBuff, fireBlast);
+    self:AddGlowingOption(brainFreezeTalent, brainFreezeBuff, fireball);
+    self:AddGlowingOption(brainFreezeTalent, brainFreezeBuff, frostfireBolt);
+    -- self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuff, ...); -- Maybe add spell options for Fingers of Frost
+end
+
 SAO.Class["MAGE"] = {
     ["Register"] = registerClass,
+    ["LoadOptions"] = loadOptions,
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
     ["PLAYER_LOGIN"] = customLogin,
 }

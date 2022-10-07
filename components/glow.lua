@@ -187,15 +187,48 @@ function SAO.AddGlow(self, spellID, glowIDs)
         return;
     end
 
+    local glowOptions;
+    if (self.CurrentClass) then
+        local classFile = self.CurrentClass.Intrinsics[2];
+        local classOptions = SpellActivationOverlayDB.classes and SpellActivationOverlayDB.classes[classFile];
+        if (classOptions) then
+            if (self.GlowingOptionLinks and self.GlowingOptionLinks[spellID]) then
+                glowOptions = classOptions.glow and classOptions.glow[self.GlowingOptionLinks[spellID]];
+            else
+                glowOptions = classOptions.glow and classOptions.glow[spellID];
+            end
+        end
+    end
+
     for _, glowID in ipairs(glowIDs) do
-        if (type(glowID) == "number") then
-            -- glowID is a direct spell identifier
-            self:AddGlowNumber(spellID, glowID);
-        elseif (type(glowID) == "string") then
-            -- glowID is a spell name: find spell identifiers first, then parse them
-            local glowSpellIDs = self:GetSpellIDsByName(glowID);
-            for _, glowSpellID in ipairs(glowSpellIDs) do
-                self:AddGlowNumber(spellID, glowSpellID);
+
+        -- Find if the glow option is enabled
+        local glowEnabled = true; -- Enabled by default, in case there is not an option for it
+        if (glowOptions) then
+            if (type(glowID) == "number" and type(glowOptions[glowID]) == "boolean") then
+                glowEnabled = glowOptions[glowID];
+            else
+                local glowSpellName = (type(glowID) == "number") and GetSpellInfo(glowID) or glowID;
+                for optionSpellID, optionEnabled in pairs(glowOptions) do
+                    if (GetSpellInfo(optionSpellID) == glowSpellName) then
+                        glowEnabled = optionEnabled;
+                        break;
+                    end
+                end
+            end
+        end
+
+        -- Let it glow
+        if (glowEnabled) then
+            if (type(glowID) == "number") then
+                -- glowID is a direct spell identifier
+                self:AddGlowNumber(spellID, glowID);
+            elseif (type(glowID) == "string") then
+                -- glowID is a spell name: find spell identifiers and then parse them
+                local glowSpellIDs = self:GetSpellIDsByName(glowID);
+                for _, glowSpellID in ipairs(glowSpellIDs) do
+                    self:AddGlowNumber(spellID, glowSpellID);
+                end
             end
         end
     end

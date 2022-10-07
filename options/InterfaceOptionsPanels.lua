@@ -73,7 +73,18 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     glowingButtonCheckbox:SetChecked(glowingButtonCheckbox.initialValue);
     glowingButtonCheckbox.ApplyValueToEngine = function(self, checked)
         SpellActivationOverlayDB.glow.enabled = checked;
+        for _, checkbox in ipairs(SpellActivationOverlayOptionsPanel.additionalGlowingCheckboxes) do
+            -- Additional glowing checkboxes are enabled/disabled depending on the main glowing checkbox
+            checkbox:ApplyParentEnabling();
+        end
         SAO:ApplyGlowingButtonsToggle();
+    end
+
+    local classOptions = SpellActivationOverlayDB.classes and SAO.CurrentClass and SpellActivationOverlayDB.classes[SAO.CurrentClass.Intrinsics[2]];
+    if (classOptions) then
+        SpellActivationOverlayOptionsPanel.classOptions = { initialValue = CopyTable(classOptions) };
+    else
+        SpellActivationOverlayOptionsPanel.classOptions = { initialValue = {} };
     end
 end
 
@@ -90,6 +101,11 @@ local function okayFunc(self)
 
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     glowingButtonCheckbox.initialValue = glowingButtonCheckbox:GetChecked();
+
+    local classOptions = SpellActivationOverlayDB.classes and SAO.CurrentClass and SpellActivationOverlayDB.classes[SAO.CurrentClass.Intrinsics[2]];
+    if (classOptions) then
+        SpellActivationOverlayOptionsPanel.classOptions.initialValue = CopyTable(classOptions);
+    end
 end
 
 -- User clicked Cancel to the options panel
@@ -98,26 +114,30 @@ local function cancelFunc(self)
     local scaleSlider = SpellActivationOverlayOptionsPanelSpellAlertScaleSlider;
     local offsetSlider = SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider;
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
+    local classOptions = SpellActivationOverlayOptionsPanel.classOptions;
 
     self:applyAll(
         opacitySlider.initialValue,
         scaleSlider.initialValue,
         offsetSlider.initialValue,
-        glowingButtonCheckbox.initialValue
+        glowingButtonCheckbox.initialValue,
+        classOptions.initialValue
     );
 end
 
 -- User reset settings to default values
 local function defaultFunc(self)
+    local defaultClassOptions = SAO.defaults.classes and SAO.CurrentClass and SAO.defaults.classes[SAO.CurrentClass.Intrinsics[2]];
     self:applyAll(
         1, -- opacity
         1, -- scale
         0, -- offset
-        true -- glow
+        true, -- glow
+        defaultClassOptions -- class options
     );
 end
 
-local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, isGlowEnabled)
+local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, isGlowEnabled, classOptions)
     local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
     opacitySlider:SetValue(opacityValue);
     if (SpellActivationOverlayDB.alert.opacity ~= opacityValue) then
@@ -156,6 +176,13 @@ local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, isGlowE
         SpellActivationOverlayDB.glow.enabled = isGlowEnabled;
         SAO:ApplyGlowingButtonsToggle();
     end
+
+    if (SpellActivationOverlayDB.classes and SAO.CurrentClass and SpellActivationOverlayDB.classes[SAO.CurrentClass.Intrinsics[2]] and classOptions) then
+        SpellActivationOverlayDB.classes[SAO.CurrentClass.Intrinsics[2]] = CopyTable(classOptions);
+        for _, checkbox in ipairs(SpellActivationOverlayOptionsPanel.additionalGlowingCheckboxes) do
+            checkbox:ApplyValue();
+        end
+    end
 end
 
 function SpellActivationOverlayOptionsPanel_OnLoad(self)
@@ -168,4 +195,22 @@ function SpellActivationOverlayOptionsPanel_OnLoad(self)
     InterfaceOptions_AddCategory(self);
 
     SAO.OptionsPanel = self;
+end
+
+function SpellActivationOverlayOptionsPanel_OnShow(self)
+    if (SAO.CurrentClass) then
+        if (SAO.CurrentClass.LoadOptions) then
+            SAO.CurrentClass.LoadOptions(SAO);
+            SAO.CurrentClass.LoadOptions = nil; -- Reset callback so that it is not called again on next show
+        end
+    end
+end
+
+SLASH_SAO1 = "/sao"
+SLASH_SAO2 = "/spellactivationoverlay"
+
+SlashCmdList.SAO = function(msg, editBox)
+    -- https://github.com/Stanzilla/WoWUIBugs/issues/89
+    InterfaceOptionsFrame_OpenToCategory(SAO.OptionsPanel);
+    InterfaceOptionsFrame_OpenToCategory(SAO.OptionsPanel);
 end

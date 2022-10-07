@@ -184,8 +184,22 @@ local function registerClass(self)
     self:RegisterGlowIDs({ starfire, wrath });
 end
 
+local function loadOptions(self)
+    local starfire = 2912;
+    local wrath = 5176;
+--    local eclipseTalent = 48516;
+    -- Cheat with fake talents, to tell explicitly which type of eclipse is involved
+    -- Otherwise the player would always see a generic "Eclipse" text
+    local lunarEclipseTalent = lunarSpellID; -- Not really a talent
+    local solarEclipseTalent = solarSpellID; -- Not really a talent
+
+    self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
+    self:AddGlowingOption(solarEclipseTalent, wrath, wrath);
+end
+
 SAO.Class["DRUID"] = {
     ["Register"] = registerClass,
+    ["LoadOptions"] = loadOptions,
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
     ["UPDATE_SHAPESHIFT_FORM"] = updateShapeshift,
     ["PLAYER_ENTERING_WORLD"] = customLoad,
