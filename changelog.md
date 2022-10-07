@@ -2,6 +2,7 @@
 
 #### v0.7.0 (2022-10-xx)
 
+- Spell Alerts may now be enabled or disabled individually
 - Glowing buttons may now be enabled or disabled individually
 - Options panel is opened by entering /sao or /spellactivationoverlay
 
