@@ -15,7 +15,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     end
 
     local scaleSlider = SpellActivationOverlayOptionsPanelSpellAlertScaleSlider;
-    scaleSlider.Text:SetText("Spell Alert scale");
+    scaleSlider.Text:SetText("Spell Alert Scale");
     _G[scaleSlider:GetName().."Low"]:SetText(SMALL);
     _G[scaleSlider:GetName().."High"]:SetText(LARGE);
     scaleSlider:SetMinMaxValues(0.25, 2.5);
@@ -28,7 +28,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     end
 
     local offsetSlider = SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider;
-    offsetSlider.Text:SetText("Spell Alert offset");
+    offsetSlider.Text:SetText("Spell Alert Offset");
     _G[offsetSlider:GetName().."Low"]:SetText(NEAR);
     _G[offsetSlider:GetName().."High"]:SetText(FAR);
     offsetSlider:SetMinMaxValues(-200, 400);
