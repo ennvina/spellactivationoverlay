@@ -66,17 +66,25 @@ local function updateSAOs(self)
     local lunarTexture = "eclipse_moon";
     local solarTexture = "eclipse_sun";
 
-    if (lunarCache) then
+    local omenOptions = self:GetOverlayOptions(omenSpellID);
+    local lunarOptions = self:GetOverlayOptions(lunarSpellID);
+    local solarOptions = self:GetOverlayOptions(solarSpellID);
+
+    local mayActivateOmen = clarityCache and (not omenOptions or type(omenOptions[0]) == "nil" or omenOptions[0]);
+    local mustActivateLunar = lunarCache and (not lunarOptions or type(lunarOptions[0]) == "nil" or lunarOptions[0]);
+    local mustActivateSolar = solarCache and (not solarOptions or type(solarOptions[0]) == "nil" or solarOptions[0]);
+
+    if (mustActivateLunar) then
         -- Lunar Eclipse
         updateLeftSAO (self, lunarTexture); -- Left is always Lunar Eclipse
-        updateRightSAO(self, clarityCache and omenTexture or ''); -- Right is either Omen or nothing
-    elseif (solarCache) then
+        updateRightSAO(self, mayActivateOmen and omenTexture or ''); -- Right is either Omen or nothing
+    elseif (mustActivateSolar) then
         -- Solar Eclipse
-        updateLeftSAO (self, clarityCache and omenTexture or ''); -- Left is either Omen or nothing
+        updateLeftSAO (self, mayActivateOmen and omenTexture or ''); -- Left is either Omen or nothing
         updateRightSAO(self, solarTexture); -- Right is always Solar Eclipse
     else
         -- No Eclipse: either both SAOs are Omen of Clarity, or both are nothing
-        if (clarityCache) then
+        if (mayActivateOmen) then
             updateLeftSAO (self, omenTexture);
             updateRightSAO(self, omenTexture);
         else
@@ -187,11 +195,21 @@ end
 local function loadOptions(self)
     local starfire = 2912;
     local wrath = 5176;
+
+    local omenOfClarityTalent = 16864;
 --    local eclipseTalent = 48516;
     -- Cheat with fake talents, to tell explicitly which type of eclipse is involved
     -- Otherwise the player would always see a generic "Eclipse" text
     local lunarEclipseTalent = lunarSpellID; -- Not really a talent
     local solarEclipseTalent = solarSpellID; -- Not really a talent
+
+    local predatoryStrikesTalent = 16972;
+    local predatoryStrikesBuff = 69369;
+
+    self:AddOverlayOption(omenOfClarityTalent, omenSpellID); -- Spell ID not used by ActivateOverlay like typical overlays
+    self:AddOverlayOption(lunarEclipseTalent, lunarSpellID); -- Spell ID not used by ActivateOverlay like typical overlays
+    self:AddOverlayOption(solarEclipseTalent, solarSpellID); -- Spell ID not used by ActivateOverlay like typical overlays
+    self:AddOverlayOption(predatoryStrikesTalent, predatoryStrikesBuff);
 
     self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
     self:AddGlowingOption(solarEclipseTalent, wrath, wrath);

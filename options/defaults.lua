@@ -26,12 +26,26 @@ SAO.defaults = {
             }
         },
         ["DRUID"] = {
+            alert = {
+                [16870] = { -- Omen of Clarity
+                    [0] = true,
+                },
+                [48518] = { -- Eclipse (Lunar)
+                    [0] = true,
+                },
+                [48517] = { -- Eclipse (Solar)
+                    [0] = true,
+                },
+                [69369] = { -- Predatory Strikes
+                    [0] = true,
+                },
+            },
             glow = {
                 [2912] = { -- Starfire
-                    [2912] = true -- Starfire
+                    [2912] = true, -- Starfire
                 },
                 [5176] = { -- Wrath
-                    [5176] = true --  Wrath
+                    [5176] = true, --  Wrath
                 },
             }
         },
