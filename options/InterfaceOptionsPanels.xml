@@ -81,7 +81,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertOpacitySlider" relativePoint="TOPRIGHT">
             <Offset>
-              <AbsDimension x="32" y="2"/>
+              <AbsDimension x="24" y="2"/>
             </Offset>
           </Anchor>
         </Anchors>
@@ -121,7 +121,7 @@
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertTestButton" relativePoint="TOPRIGHT">
               <Offset>
-                <AbsDimension x="32" y="10"/>
+                <AbsDimension x="24" y="10"/>
               </Offset>
             </Anchor>
           </Anchors>
