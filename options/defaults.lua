@@ -60,6 +60,14 @@ SAO.defaults = {
             }
         },
         ["HUNTER"] = {
+            alert = {
+                [53220] = { -- Improved Steady Shot
+                    [0] = true,
+                },
+                [56453] = { -- Lock and Load
+                    [0] = true, -- any stacks
+                },
+            },
             glow = {
                 [53351] = { -- Kill Shot
                     [53351] = true -- Kill Shot
