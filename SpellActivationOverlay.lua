@@ -21,7 +21,6 @@ function SpellActivationOverlay_OnLoad(self)
 	local class = SAO.Class[classFile];
 	if class then
 		class.Intrinsics = { className, classFile, classId };
-		class.Register(SAO);
 		SAO.CurrentClass = class;
 
 		-- Keys of the class other than "Intrinsics", "Register" and "LoadOptions" are expected to be event names
