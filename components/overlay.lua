@@ -14,6 +14,14 @@ end
 -- By default, do *not* discard
 -- This happens e.g., if there is no option for this auraID
 local function discardedByOverlayOption(self, auraID, stacks)
+    if (not SpellActivationOverlayDB) then
+        return false; -- By default, do not discard
+    end
+
+    if (SpellActivationOverlayDB.alert and not SpellActivationOverlayDB.alert.enabled) then
+        return true;
+    end
+
     local overlayOptions = self:GetOverlayOptions(auraID);
 
     if (not overlayOptions) then
@@ -36,13 +44,21 @@ end
 -- Add or refresh an overlay
 function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay)
     if (texture) then
+        -- Tell the overlay is active, even though the overlay may be discarded below
+        -- This "active state" tells the aura is in place, which is used by e.g. the glowing button system
+        self.ActiveOverlays[spellID] = stacks;
+
+        -- Discard the overlay if options are not favorable
         if (discardedByOverlayOption(self, spellID, stacks)) then
             return;
         end
-        if (type(forcePulsePlay) == 'table') then -- Hack to avoid glowIDs to be treated as forcePulsePlay
+
+        -- Hack to avoid glowIDs to be treated as forcePulsePlay
+        if (type(forcePulsePlay) == 'table') then
             forcePulsePlay = false;
         end
-        self.ActiveOverlays[spellID] = stacks;
+
+        -- Actually show the overlay(s)
         self.ShowAllOverlays(self.Frame, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay);
     end
 end

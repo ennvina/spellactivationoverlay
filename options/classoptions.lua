@@ -78,7 +78,7 @@ end
 function SAO.GetOptions(self, optionType, auraID)
     if (self.CurrentClass) then
         local classFile = self.CurrentClass.Intrinsics[2];
-        local classOptions = SpellActivationOverlayDB.classes and SpellActivationOverlayDB.classes[classFile];
+        local classOptions = SpellActivationOverlayDB and SpellActivationOverlayDB.classes and SpellActivationOverlayDB.classes[classFile];
         if (classOptions and classOptions[optionType]) then
             if (self.OptionLinks and self.OptionLinks[optionType] and self.OptionLinks[optionType][auraID]) then
                 return classOptions[optionType][self.OptionLinks[optionType][auraID]];

@@ -150,7 +150,8 @@ end
 
 function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, vFlip, hFlip, cw, autoPulse, forcePulsePlay)
 	if (SpellActivationOverlayDB and SpellActivationOverlayDB.alert and not SpellActivationOverlayDB.alert.enabled) then
-		return
+		-- Last chance to quit displaying the overlay, if the main overlay flag is disabled
+		return;
 	end
 
 	local overlay = SpellActivationOverlay_GetOverlay(self, spellID, position);
