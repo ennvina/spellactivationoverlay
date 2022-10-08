@@ -152,7 +152,8 @@
         "SMALL",
         "LARGE",
         "NEAR",
-        "FAR"
+        "FAR",
+        "LOC_TYPE_FULL"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",

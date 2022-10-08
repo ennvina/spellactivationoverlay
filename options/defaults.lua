@@ -87,6 +87,29 @@ SAO.defaults = {
             }
         },
         ["MAGE"] = {
+            alert = {
+                [44401] = { -- Missile Barrage
+                    [0] = true,
+                },
+                [48107] = { -- Heating Up (not an actual buff)
+                    [0] = true,
+                },
+                [48108] = { -- Hot Streak
+                    [0] = true,
+                },
+                [64343] = { -- Impact
+                    [0] = true,
+                },
+                [54741] = { -- Firestarter
+                    [0] = true,
+                },
+                [74396] = { -- Fingers of Frost
+                    [0] = true, -- any stacks
+                },
+                [57761] = { -- Brain Freeze
+                    [0] = true,
+                },
+            },
             glow = {
                 [44401] = { -- Missile Barrage
                     [5143] = true, -- Arcane Missiles
