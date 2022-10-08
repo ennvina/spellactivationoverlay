@@ -207,7 +207,7 @@ local function registerClass(self)
         cyclone,
         hibernate,
     }
-    self:RegisterAura("predatory_strikes", 0, 69369, "predatory_swiftness", "Top", 1, 255, 255, 255, false, predatoryStrikesSpells);
+    self:RegisterAura("predatory_strikes", 0, 69369, "predatory_swiftness", "Top", 1, 255, 255, 255, true, predatoryStrikesSpells);
 end
 
 local function loadOptions(self)
