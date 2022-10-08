@@ -29,6 +29,8 @@ local function registerClass(self)
     self:RegisterAura("infusion_of_light_high", 0, infusionOfLightBuff2, "daybreak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { flashOfLight, holyLight });
 
     -- Add option links during registerClass(), not because loadOptions() which would be loaded only when the options panel is opened
+    self:AddOverlayLink(infusionOfLightBuff2, infusionOfLightBuff1);
+    self:AddOverlayLink(artOfWarBuff2, artOfWarBuff1);
     self:AddGlowingLink(infusionOfLightBuff2, infusionOfLightBuff1);
     self:AddGlowingLink(artOfWarBuff2, artOfWarBuff1);
 end
@@ -46,6 +48,9 @@ local function loadOptions(self)
 --    local artOfWarBuff1 = 53489;
     local artOfWarBuff2 = 59578;
     local artOfWarTalent = 53486;
+
+    self:AddOverlayOption(infusionOfLightTalent, infusionOfLightBuff2);
+    self:AddOverlayOption(artOfWarTalent, artOfWarBuff2);
 
     self:AddGlowingOption(nil, how, how);
     self:AddGlowingOption(infusionOfLightTalent, infusionOfLightBuff2, flashOfLight);

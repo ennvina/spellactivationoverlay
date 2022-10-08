@@ -70,10 +70,10 @@ SAO.defaults = {
             },
             glow = {
                 [53351] = { -- Kill Shot
-                    [53351] = true -- Kill Shot
+                    [53351] = true, -- Kill Shot
                 },
                 [19306] = { -- Counterattack
-                    [19306] = true -- Counterattack
+                    [19306] = true, -- Counterattack
                 },
                 [53220] = { -- Improved Steady Shot
                     [19434] = true, --  Aimed Shot
@@ -130,6 +130,14 @@ SAO.defaults = {
             },
         },
         ["PALADIN"] = {
+            alert = {
+                [54149] = { -- Infusion of Light (2/2)
+                    [0] = true,
+                },
+                [59578] = { -- The Art of War (2/2)
+                    [0] = true,
+                },
+            },
             glow = {
                 [24275] = { -- Hammer of Wrath
                     [24275] = true, -- Hammer of Wrath
@@ -138,7 +146,7 @@ SAO.defaults = {
                     [19750] = true, -- Flash of Light
                     [635]   = true, -- Holy Light
                 },
-                [59578] = {
+                [59578] = { -- The Art of War (2/2)
                     [879]   = true, -- Exorcism
                     [19750] = true, -- Flash of Light
                 },
