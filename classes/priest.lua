@@ -43,7 +43,7 @@ local function loadOptions(self)
     local serendipityBuff3 = 63734;
     local serendipityTalent = 63730;
 
-    local oneOrTwoStacks = string.format(CALENDAR_TOOLTIP_DATE_RANGE, string.format(STACKS, 1), string.format(STACKS, 2));
+    local oneOrTwoStacks = string.format(CALENDAR_TOOLTIP_DATE_RANGE, "1", string.format(STACKS, 2));
     local threeStacks = string.format(STACKS, 3);
 
     self:AddOverlayOption(surgeOfLightTalent, surgeOfLightBuff);

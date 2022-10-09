@@ -41,7 +41,7 @@ local function loadOptions(self)
     local elementalFocusBuff = 16246;
     local elementalFocusTalent = 16164;
 
-    local oneToFourStacks = string.format(CALENDAR_TOOLTIP_DATE_RANGE, string.format(STACKS, 1), string.format(STACKS, 4));
+    local oneToFourStacks = string.format(CALENDAR_TOOLTIP_DATE_RANGE, "1", string.format(STACKS, 4));
     local fiveStacks = string.format(STACKS, 5);
 
     self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff);
