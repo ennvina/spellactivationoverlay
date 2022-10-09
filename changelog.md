@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.7.0 (2022-10-xx)
+#### v0.7.0 (2022-10-09)
 
 - Spell Alerts may now be enabled or disabled individually
 - Glowing buttons may now be enabled or disabled individually
