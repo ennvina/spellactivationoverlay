@@ -21,6 +21,9 @@ local function registerClass(self)
 
     -- Add option links during registerClass(), not because loadOptions() which would be loaded only when the options panel is opened
     -- Add option links before RegisterAura() calls, so that options they are used by initial triggers, if any
+    self:AddOverlayLink(moltenCoreBuff3, moltenCoreBuff1);
+    self:AddOverlayLink(moltenCoreBuff3, moltenCoreBuff2);
+    self:AddOverlayLink(decimationBuff2, decimationBuff1);
     self:AddGlowingLink(moltenCoreBuff3, moltenCoreBuff1);
     self:AddGlowingLink(moltenCoreBuff3, moltenCoreBuff2);
     self:AddGlowingLink(decimationBuff2, decimationBuff1);
@@ -65,6 +68,12 @@ local function loadOptions(self)
     local decimationTalent = 63156;
 
 --    local akaShadowTrance = GetSpellInfo(nightfallBuff);
+
+    self:AddOverlayOption(nightfallTalent, nightfallBuff --[[, 0, akaShadowTrance]]);
+    self:AddOverlayOption(backlashTalent, backlashBuff);
+    self:AddOverlayOption(moltenCoreTalent, moltenCoreBuff3, 0); -- any stacks
+    self:AddOverlayOption(decimationTalent, decimationBuff2);
+    self:AddOverlayOption(empoweredImpTalent, empoweredImpBuff);
 
     self:AddGlowingOption(nightfallTalent, nightfallBuff, shadowBolt --[[, akaShadowTrance]]);
     self:AddGlowingOption(backlashTalent, backlashBuff, shadowBolt);
