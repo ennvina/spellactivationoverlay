@@ -23,6 +23,10 @@ local function loadOptions(self)
     local icyTouch = 45477;
     local frostStrike = 49143;
     local howlingBlast = 49184;
+
+    self:AddOverlayOption(rimeTalent, rimeBuff);
+    self:AddOverlayOption(killingMachineTalent, killingMachineBuff);
+
     self:AddGlowingOption(rimeTalent, rimeBuff, howlingBlast);
     self:AddGlowingOption(killingMachineTalent, killingMachineBuff, howlingBlast);
     self:AddGlowingOption(killingMachineTalent, killingMachineBuff, icyTouch);

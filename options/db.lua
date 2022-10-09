@@ -62,6 +62,12 @@ function SAO.LoadDB(self)
 
     db.version = currentversion;
     SpellActivationOverlayDB = db;
+
+    -- At the very end, register the class
+    -- This must be done after db init because registering may need options from db
+    if (self.CurrentClass) then
+        self.CurrentClass.Register(SAO);
+    end
 end
 
 -- Utility frame dedicated to react to variable loading

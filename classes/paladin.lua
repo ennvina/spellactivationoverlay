@@ -12,6 +12,13 @@ local function registerClass(self)
     local artOfWarBuff1 = 53489;
     local artOfWarBuff2 = 59578;
 
+    -- Add option links during registerClass(), not because loadOptions() which would be loaded only when the options panel is opened
+    -- Add option links before RegisterAura() calls, so that options they are used by initial triggers, if any
+    self:AddOverlayLink(infusionOfLightBuff2, infusionOfLightBuff1);
+    self:AddOverlayLink(artOfWarBuff2, artOfWarBuff1);
+    self:AddGlowingLink(infusionOfLightBuff2, infusionOfLightBuff1);
+    self:AddGlowingLink(artOfWarBuff2, artOfWarBuff1);
+
     -- Hammer of Wrath, Execute-like ability for targets at 20% hp or less
     self:RegisterAura("how", 0, how, nil, "", 0, 0, 0, 0, false, { GetSpellInfo(how) });
     self:RegisterCounter("how");
@@ -27,10 +34,6 @@ local function registerClass(self)
 
     -- Infusion of Light, 2/2 talent points
     self:RegisterAura("infusion_of_light_high", 0, infusionOfLightBuff2, "daybreak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { flashOfLight, holyLight });
-
-    -- Add option links during registerClass(), not because loadOptions() which would be loaded only when the options panel is opened
-    self:AddGlowingLink(infusionOfLightBuff2, infusionOfLightBuff1);
-    self:AddGlowingLink(artOfWarBuff2, artOfWarBuff1);
 end
 
 local function loadOptions(self)
@@ -46,6 +49,9 @@ local function loadOptions(self)
 --    local artOfWarBuff1 = 53489;
     local artOfWarBuff2 = 59578;
     local artOfWarTalent = 53486;
+
+    self:AddOverlayOption(infusionOfLightTalent, infusionOfLightBuff2);
+    self:AddOverlayOption(artOfWarTalent, artOfWarBuff2);
 
     self:AddGlowingOption(nil, how, how);
     self:AddGlowingOption(infusionOfLightTalent, infusionOfLightBuff2, flashOfLight);

@@ -187,29 +187,18 @@ function SAO.AddGlow(self, spellID, glowIDs)
         return;
     end
 
-    local glowOptions;
-    if (self.CurrentClass) then
-        local classFile = self.CurrentClass.Intrinsics[2];
-        local classOptions = SpellActivationOverlayDB.classes and SpellActivationOverlayDB.classes[classFile];
-        if (classOptions) then
-            if (self.GlowingOptionLinks and self.GlowingOptionLinks[spellID]) then
-                glowOptions = classOptions.glow and classOptions.glow[self.GlowingOptionLinks[spellID]];
-            else
-                glowOptions = classOptions.glow and classOptions.glow[spellID];
-            end
-        end
-    end
+    local glowingOptions = self:GetGlowingOptions(spellID);
 
     for _, glowID in ipairs(glowIDs) do
 
         -- Find if the glow option is enabled
         local glowEnabled = true; -- Enabled by default, in case there is not an option for it
-        if (glowOptions) then
-            if (type(glowID) == "number" and type(glowOptions[glowID]) == "boolean") then
-                glowEnabled = glowOptions[glowID];
+        if (glowingOptions) then
+            if (type(glowID) == "number" and type(glowingOptions[glowID]) == "boolean") then
+                glowEnabled = glowingOptions[glowID];
             else
                 local glowSpellName = (type(glowID) == "number") and GetSpellInfo(glowID) or glowID;
-                for optionSpellID, optionEnabled in pairs(glowOptions) do
+                for optionSpellID, optionEnabled in pairs(glowingOptions) do
                     if (GetSpellInfo(optionSpellID) == glowSpellName) then
                         glowEnabled = optionEnabled;
                         break;

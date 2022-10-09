@@ -1,6 +1,6 @@
 local AddonName, SAO = ...
 
-function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText)
+function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText)
     local className = self.CurrentClass.Intrinsics[1];
     local classFile = self.CurrentClass.Intrinsics[2];
 
@@ -18,21 +18,13 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
         local text = WrapTextInColorCode(className, classColor);
 
         -- Talent text
-        local spellName, spellIcon;
-        if (talentID) then
-            spellName, _, spellIcon = GetSpellInfo(talentID);
-            text = text.." |T"..spellIcon..":0|t "..spellName;
-            if (talentSubText) then
-                text = text.." ("..talentSubText..")";
-            end
-            text = text.." +"
-        end
-
-        -- Spell text
-        spellName, _, spellIcon = GetSpellInfo(glowID);
+        local spellName, _, spellIcon = GetSpellInfo(talentID);
         text = text.." |T"..spellIcon..":0|t "..spellName;
-        if (spellSubText) then
-            text = text.." ("..spellSubText..")";
+        if (count and count > 0) then
+            text = text .. " ("..string.format(STACKS, count)..")";
+        end
+        if (talentSubText) then
+            text = text.." ("..talentSubText..")";
         end
 
         -- Set final text to checkbox
@@ -45,13 +37,13 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
         end
     end
 
-    self:AddOption("glow", spellID, glowID, applyTextFunc, { frame = SpellActivationOverlayOptionsPanelGlowingButtons, xOffset = 16, yOffset = 2 });
+    self:AddOption("alert", auraID, count or 0, applyTextFunc, { frame = SpellActivationOverlayOptionsPanelSpellAlertLabel, xOffset = 4, yOffset = -4 });
 end
 
-function SAO.AddGlowingLink(self, srcOption, dstOption)
-    return self:AddOptionLink("glow", srcOption, dstOption);
+function SAO.AddOverlayLink(self, srcOption, dstOption)
+    return self:AddOptionLink("alert", srcOption, dstOption);
 end
 
-function SAO.GetGlowingOptions(self, spellID)
-    return self:GetOptions("glow", spellID);
+function SAO.GetOverlayOptions(self, auraID)
+    return self:GetOptions("alert", auraID);
 end

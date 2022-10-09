@@ -144,7 +144,17 @@
         "InterfaceOptionsFrame_OpenToCategory",
         "CopyTable",
         "RAID_CLASS_COLORS",
-        "STACKS"
+        "STACKS",
+        "SpellActivationOverlayDB",
+        "SPELL_ALERT_OPACITY",
+        "SpellActivationOverlayOptionsPanelSpellAlertLabel",
+        "OFF",
+        "SMALL",
+        "LARGE",
+        "NEAR",
+        "FAR",
+        "LOC_TYPE_FULL",
+        "CALENDAR_TOOLTIP_DATE_RANGE"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",

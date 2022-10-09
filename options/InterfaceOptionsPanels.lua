@@ -2,7 +2,7 @@ local AddonName, SAO = ...
 
 function SpellActivationOverlayOptionsPanel_Init(self)
     local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
-    opacitySlider.Text:SetText("Spell Alert opacity");
+    opacitySlider.Text:SetText(SPELL_ALERT_OPACITY);
     _G[opacitySlider:GetName().."Low"]:SetText(OFF);
     opacitySlider:SetMinMaxValues(0, 1);
     opacitySlider:SetValueStep(0.05);
@@ -15,7 +15,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     end
 
     local scaleSlider = SpellActivationOverlayOptionsPanelSpellAlertScaleSlider;
-    scaleSlider.Text:SetText("Spell Alert scale");
+    scaleSlider.Text:SetText("Spell Alert Scale");
     _G[scaleSlider:GetName().."Low"]:SetText(SMALL);
     _G[scaleSlider:GetName().."High"]:SetText(LARGE);
     scaleSlider:SetMinMaxValues(0.25, 2.5);
@@ -28,7 +28,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     end
 
     local offsetSlider = SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider;
-    offsetSlider.Text:SetText("Spell Alert offset");
+    offsetSlider.Text:SetText("Spell Alert Offset");
     _G[offsetSlider:GetName().."Low"]:SetText(NEAR);
     _G[offsetSlider:GetName().."High"]:SetText(FAR);
     offsetSlider:SetMinMaxValues(-200, 400);
@@ -73,7 +73,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     glowingButtonCheckbox:SetChecked(glowingButtonCheckbox.initialValue);
     glowingButtonCheckbox.ApplyValueToEngine = function(self, checked)
         SpellActivationOverlayDB.glow.enabled = checked;
-        for _, checkbox in ipairs(SpellActivationOverlayOptionsPanel.additionalGlowingCheckboxes) do
+        for _, checkbox in ipairs(SpellActivationOverlayOptionsPanel.additionalCheckboxes.glow or {}) do
             -- Additional glowing checkboxes are enabled/disabled depending on the main glowing checkbox
             checkbox:ApplyParentEnabling();
         end
@@ -86,6 +86,8 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     else
         SpellActivationOverlayOptionsPanel.classOptions = { initialValue = {} };
     end
+
+    SpellActivationOverlayOptionsPanel.additionalCheckboxes = {};
 end
 
 -- User clicks OK to the options panel
@@ -174,12 +176,15 @@ local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, isGlowE
     glowingButtonCheckbox:SetChecked(isGlowEnabled);
     if (SpellActivationOverlayDB.glow.enabled ~= isGlowEnabled) then
         SpellActivationOverlayDB.glow.enabled = isGlowEnabled;
-        SAO:ApplyGlowingButtonsToggle();
+        glowingButtonCheckbox:ApplyValueToEngine(isGlowEnabled);
     end
 
     if (SpellActivationOverlayDB.classes and SAO.CurrentClass and SpellActivationOverlayDB.classes[SAO.CurrentClass.Intrinsics[2]] and classOptions) then
         SpellActivationOverlayDB.classes[SAO.CurrentClass.Intrinsics[2]] = CopyTable(classOptions);
-        for _, checkbox in ipairs(SpellActivationOverlayOptionsPanel.additionalGlowingCheckboxes) do
+        for _, checkbox in ipairs(SpellActivationOverlayOptionsPanel.additionalCheckboxes.alert or {}) do
+            checkbox:ApplyValue();
+        end
+        for _, checkbox in ipairs(SpellActivationOverlayOptionsPanel.additionalCheckboxes.glow or {}) do
             checkbox:ApplyValue();
         end
     end

@@ -21,7 +21,6 @@ function SpellActivationOverlay_OnLoad(self)
 	local class = SAO.Class[classFile];
 	if class then
 		class.Intrinsics = { className, classFile, classId };
-		class.Register(SAO);
 		SAO.CurrentClass = class;
 
 		-- Keys of the class other than "Intrinsics", "Register" and "LoadOptions" are expected to be event names
@@ -151,7 +150,8 @@ end
 
 function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, vFlip, hFlip, cw, autoPulse, forcePulsePlay)
 	if (SpellActivationOverlayDB and SpellActivationOverlayDB.alert and not SpellActivationOverlayDB.alert.enabled) then
-		return
+		-- Last chance to quit displaying the overlay, if the main overlay flag is disabled
+		return;
 	end
 
 	local overlay = SpellActivationOverlay_GetOverlay(self, spellID, position);
