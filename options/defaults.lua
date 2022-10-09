@@ -153,6 +153,15 @@ SAO.defaults = {
             },
         },
         ["PRIEST"] = {
+            alert = {
+                [33151] = {  -- Surge of Light
+                    [0] = true,
+                },
+                [63734] = { -- Serendipity
+                    [3] = true,  -- 3 stacks
+                    [0] = false, -- any stacks but 3
+                },
+            },
             glow = {
                 [33151] = { -- Surge of Light
                     [585]  = true, -- Smite

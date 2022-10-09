@@ -153,7 +153,8 @@
         "LARGE",
         "NEAR",
         "FAR",
-        "LOC_TYPE_FULL"
+        "LOC_TYPE_FULL",
+        "CALENDAR_TOOLTIP_DATE_RANGE"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",
