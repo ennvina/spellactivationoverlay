@@ -47,11 +47,15 @@ local function loadOptions(self)
     local swordAndBoardBuff = 50227;
     local swordAndBoardTalent = 46951;
 
-    self:AddGlowingOption(nil, execute, execute);
-    self:AddGlowingOption(suddenDeathTalent, suddenDeathBuff, execute);
+    self:AddOverlayOption(suddenDeathTalent, suddenDeathBuff);
+    self:AddOverlayOption(bloodsurgeTalent, bloodsurgeBuff);
+    self:AddOverlayOption(swordAndBoardTalent, swordAndBoardBuff);
+
     self:AddGlowingOption(nil, overpower, overpower);
     self:AddGlowingOption(nil, revenge, revenge);
     self:AddGlowingOption(nil, victoryRush, victoryRush);
+    self:AddGlowingOption(nil, execute, execute);
+    self:AddGlowingOption(suddenDeathTalent, suddenDeathBuff, execute);
     self:AddGlowingOption(bloodsurgeTalent, bloodsurgeBuff, slam);
     self:AddGlowingOption(swordAndBoardTalent, swordAndBoardBuff, shieldSlam);
 end
