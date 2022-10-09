@@ -186,6 +186,15 @@ SAO.defaults = {
             },
         },
         ["SHAMAN"] = {
+            alert = {
+                [16246] = {  -- Elemental Focus
+                    [0] = true, -- any stacks
+                },
+                [53817] = { -- Maelstorm Weapon
+                    [5] = true, -- 5 stacks
+                    [0] = true, -- any stacks but 5
+                },
+            },
             glow = {
                 [53817] = { -- Maelstorm Weapon
                     [403]   = false, -- Lightning Bolt
