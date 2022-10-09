@@ -27,6 +27,7 @@ end
 
 local function loadOptions(self)
     local riposte = 14251;
+    self:AddOverlayOption(riposte, riposte);
     self:AddGlowingOption(nil, riposte, riposte);
 end
 

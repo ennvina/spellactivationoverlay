@@ -174,6 +174,11 @@ SAO.defaults = {
             },
         },
         ["ROGUE"] = {
+            alert = {
+                [14251] = { -- Riposte
+                    [0] = true,
+                },
+            },
             glow = {
                 [14251] = { -- Riposte
                     [14251] = true, -- Riposte
