@@ -1,6 +1,7 @@
 local AddonName, SAO = ...
 
 local omenSpellID = 16870;
+local soupSpellID = 60512;
 local lunarSpellID = 48518;
 local solarSpellID = 48517;
 
@@ -28,7 +29,7 @@ local function isFeral(self)
 end
 
 local function hasClarity(self)
-    return self:FindPlayerAuraByID(omenSpellID) ~= nil;
+    return (self:FindPlayerAuraByID(omenSpellID) ~= nil or self:FindPlayerAuraByID(soupSpellID) ~= nil);
 end
 
 local function hasLunar(self)
@@ -145,7 +146,7 @@ local function customCLEU(self, ...)
     local spellID, spellName, spellSchool = select(12, CombatLogGetCurrentEventInfo()) -- For SPELL_*
 
     if (event == "SPELL_AURA_APPLIED") then
-        if (spellID == omenSpellID) then
+        if (spellID == omenSpellID or spellID == soupSpellID) then
             clarityCache = true;
             updateSAOs(self);
         elseif (spellID == lunarSpellID) then
@@ -159,7 +160,7 @@ local function customCLEU(self, ...)
         end
         return;
     elseif (event == "SPELL_AURA_REMOVED") then
-        if (spellID == omenSpellID) then
+        if (spellID == omenSpellID or spellID == soupSpellID) then
             clarityCache = false;
             updateSAOs(self);
         elseif (spellID == lunarSpellID) then
