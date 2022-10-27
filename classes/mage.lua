@@ -76,7 +76,6 @@ local function customCLEU(self, ...)
     local spellID, spellName, spellSchool = select(12, CombatLogGetCurrentEventInfo()) -- For SPELL_*
 
     -- If Hot Streak buff was acquired or lost, we have our immediate answer
-    -- We assume there is no third charge i.e., if a crit occurs under Hot Streak buff, there is no hidden Heating Up
     if (event == "SPELL_AURA_APPLIED") then
         if (spellID == hotStreakSpellID) then
             deactivateHeatingUp(self);
@@ -128,15 +127,19 @@ local function customCLEU(self, ...)
         end
     elseif (HotStreakHandler.state == 'hot_streak') then
         if (critical) then
-            -- If crit during a Hot Streak, store this 'charge' to eventually restore it when Pyroblast is cast
-            -- This is called "hot streaking heating up", which means Hot Streak has a pending Heating Up effect
+            -- A crit during Hot Streak => Heating Up!
             HotStreakHandler.state = 'hot_streak_heating_up';
+            activateHeatingUp(self);
             -- Please note this works only because we are fairly certain that SPELL_AURA_APPLIED of a Hot Streak
             -- always occur *after* the critical effect of the spell which triggered it.
             -- Should it be the other way around (SPELL_AURA_APPLIED before SPELL_DAMAGE, or worse, random order)
             -- we would be in big trouble to know whether the crit is piling up before or after a Hot Streak.
         end
     elseif (HotStreakHandler.state == 'hot_streak_heating_up') then
+        -- Either we crit and refresh hot streak (which does not trigger SPELL_AURA_APPLIED) or we don't crit and we lose heating up
+        -- Either way we deactivate the heating up overlay
+        deactivateHeatingUp(self);
+
         if (not critical) then
             -- If Hot Streak had a pending Heating Up effect but a spell did not crit afterwards, the pending Heating Up is lost
             HotStreakHandler.state = 'hot_streak';
