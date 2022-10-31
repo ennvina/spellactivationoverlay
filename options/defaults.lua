@@ -88,6 +88,9 @@ SAO.defaults = {
         },
         ["MAGE"] = {
             alert = {
+                [12536] = { -- Arcane Concentration
+                    [0] = false,
+                },
                 [44401] = { -- Missile Barrage
                     [0] = true,
                 },
