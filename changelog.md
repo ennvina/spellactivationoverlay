@@ -1,5 +1,9 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.7.1 (2022-11-xx)
+
+- New SAO: Mage's Arcane Concentration (a.k.a. Clearcasting), optional
+
 #### v0.7.0 (2022-10-09)
 
 - Spell Alerts may now be enabled or disabled individually
