@@ -172,9 +172,13 @@ local function registerClass(self)
 
     -- Arcane Procs
     self:RegisterAura("missile_barrage", 0, 44401, "arcane_missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(5143)) });
+    self:RegisterAura("clearcasting", 0, 12536, "genericarc_02", "Left + Right (Flipped)", 1.5, 192, 192, 192, false);
 end
 
 local function loadOptions(self)
+    local clearcastingTalent = 11213;
+    local clearcastingBuff = 12536;
+
     local missileBarrageBuff = 44401;
     local missileBarrageTalent = 44404;
 
@@ -229,6 +233,7 @@ local function loadOptions(self)
     -- local hotStreakDetails = string.format(LFG_READY_CHECK_PLAYER_IS_READY, "|T"..spellIcon..":0|t "..spellName):gsub("%.", "");
     local hotStreakDetails = LOC_TYPE_FULL;
 
+    self:AddOverlayOption(clearcastingTalent, clearcastingBuff);
     self:AddOverlayOption(missileBarrageTalent, missileBarrageBuff);
     self:AddOverlayOption(hotStreakTalent, heatingUpBuff, 0, heatingUpDetails);
     self:AddOverlayOption(hotStreakTalent, hotStreakBuff, 0, hotStreakDetails);
