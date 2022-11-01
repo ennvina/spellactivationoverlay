@@ -43,7 +43,7 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, subV
         end
     end
 
-    self:AddOption("alert", auraID, count or 0, subValues, applyTextFunc, { frame = SpellActivationOverlayOptionsPanelSpellAlertLabel, xOffset = 4, yOffset = -4 });
+    self:AddOption("alert", auraID, count or 0, subValues, applyTextFunc, nil, { frame = SpellActivationOverlayOptionsPanelSpellAlertLabel, xOffset = 4, yOffset = -4 });
 end
 
 function SAO.AddOverlayLink(self, srcOption, dstOption)
