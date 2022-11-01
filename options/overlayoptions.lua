@@ -43,7 +43,34 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, subV
         end
     end
 
-    self:AddOption("alert", auraID, count or 0, subValues, applyTextFunc, nil, { frame = SpellActivationOverlayOptionsPanelSpellAlertLabel, xOffset = 4, yOffset = -4 });
+    local testFunc = function(start)
+        local auras = self.RegisteredAurasBySpellID[auraID];
+        if (not auras) then
+            return
+        end
+
+        local stacks;
+        if (count and auras[count]) then
+            stacks = count;
+        elseif (auras[0]) then
+            stacks = 0;
+        elseif (auras[1]) then
+            stacks = 1;
+        else
+            return;
+        end
+
+        local fakeOffset = 42000000;
+        if (start) then
+            for _, aura in ipairs(auras[stacks]) do
+                self:ActivateOverlay(stacks, fakeOffset+auraID, select(4,unpack(aura)));
+            end
+        else
+            self:DeactivateOverlay(fakeOffset+auraID);
+        end
+    end
+
+    self:AddOption("alert", auraID, count or 0, subValues, applyTextFunc, testFunc, { frame = SpellActivationOverlayOptionsPanelSpellAlertLabel, xOffset = 4, yOffset = -4 });
 end
 
 function SAO.AddOverlayLink(self, srcOption, dstOption)
