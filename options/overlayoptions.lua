@@ -6,7 +6,8 @@ local AddonName, SAO = ...
 -- count is the number of stacks expected for this option; use 0 is aura has no stacks or for "any stacks"
 -- talentSubText is a string describing the specificity of this option
 -- subValues is the key/value list to add an combo box next to the item, if not defined then there is no combo box
-function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, subValues)
+-- testStacks if defined, forces the number of stacks for the test function
+function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, subValues, testStacks)
     local className = self.CurrentClass.Intrinsics[1];
     local classFile = self.CurrentClass.Intrinsics[2];
 
@@ -49,19 +50,13 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, subV
             return
         end
 
-        local stacks;
-        if (count and auras[count]) then
-            stacks = count;
-        elseif (auras[0]) then
-            stacks = 0;
-        elseif (auras[1]) then
-            stacks = 1;
-        else
-            return;
-        end
-
         local fakeOffset = 42000000;
         if (start) then
+            local stacks = testStacks or count or 0;
+            if (not auras[stacks]) then
+                return;
+            end
+
             for _, aura in ipairs(auras[stacks]) do
                 self:ActivateOverlay(stacks, fakeOffset+auraID, select(4,unpack(aura)));
             end

@@ -252,7 +252,7 @@ local function loadOptions(self)
     self:AddOverlayOption(hotStreakTalent, hotStreakBuff, 0, hotStreakDetails);
     self:AddOverlayOption(firestarterTalent, firestarterBuff);
     self:AddOverlayOption(impactTalent, impactBuff);
-    self:AddOverlayOption(fingersOfFrostTalent, fingersOfFrostBuff, 0); -- any stacks
+    self:AddOverlayOption(fingersOfFrostTalent, fingersOfFrostBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
     self:AddOverlayOption(brainFreezeTalent, brainFreezeBuff);
 
     self:AddGlowingOption(missileBarrageTalent, missileBarrageBuff, arcaneMissiles);
