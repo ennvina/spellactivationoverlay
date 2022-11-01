@@ -31,7 +31,18 @@ end
 local function setSelectBoxValue(sb, subValues, value)
     if (sb) then
         sb.currentValue = value;
-        UIDropDownMenu_SetText(sb, subValues[value]);
+        if (value) then
+            UIDropDownMenu_SetText(sb, subValues[value]);
+        else
+            local currentText = UIDropDownMenu_GetText(sb);
+            if not currentText or currentText == "" then
+                -- Find any value to put in the disabled text
+                for _, text in pairs(subValues) do
+                    UIDropDownMenu_SetText(sb, text);
+                    break
+                end
+            end
+        end
     end
 end
 
