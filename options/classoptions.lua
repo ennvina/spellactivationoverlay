@@ -67,11 +67,20 @@ local function createSelectBox(self, cb, classFile, optionType, auraID, id, subV
         end
     end);
 
-    UIDropDownMenu_SetWidth(sb, 80);
+    -- Compute an appropriate width; it may not be perfect but should help having something neither too wide nor too narrow
+    local widestText = 4;
+    for _, obj in ipairs(subValues) do
+        if (#obj.text > widestText) then
+            widestText = #obj.text;
+        end
+    end
+    UIDropDownMenu_SetWidth(sb, widestText*8+24);
+
+    -- Initialize the value and text from config
     setSelectBoxValue(sb, subValues, SpellActivationOverlayDB.classes[classFile][optionType][auraID][id]);
 
     sb:SetPoint("TOP", cb, "TOP", 0, 4);
-    sb:SetPoint("RIGHT", cb:GetParent():GetParent(), "RIGHT");
+    sb:SetPoint("LEFT", cb.Text, "RIGHT", -12, 0);
 
     return sb;
 end
