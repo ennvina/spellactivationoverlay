@@ -172,7 +172,11 @@ local function registerClass(self)
 
     -- Arcane Procs
     self:RegisterAura("missile_barrage", 0, 44401, "arcane_missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(5143)) });
-    self:RegisterAura("clearcasting", 0, 12536, "genericarc_02", "Left + Right (Flipped)", 1.5, 192, 192, 192, false);
+    local getClearcastingTexture = function(self)
+        -- Arcane concentration texture may be either weak or strong
+        return self.TexName[self:GetOverlayOptions(12536)[0]];
+    end
+    self:RegisterAura("clearcasting", 0, 12536, getClearcastingTexture, "Left + Right (Flipped)", 1.5, 192, 192, 192, false);
 end
 
 local function loadOptions(self)
@@ -234,7 +238,15 @@ local function loadOptions(self)
     -- local hotStreakDetails = string.format(LFG_READY_CHECK_PLAYER_IS_READY, "|T"..spellIcon..":0|t "..spellName):gsub("%.", "");
     local hotStreakDetails = LOC_TYPE_FULL;
 
-    self:AddOverlayOption(clearcastingTalent, clearcastingBuff);
+    -- Arcane Concentration has a dedicated combo box
+    local weakText = PET_BATTLE_COMBAT_LOG_DAMAGE_WEAK:gsub("[ ()]","");
+    local strongText = PET_BATTLE_COMBAT_LOG_DAMAGE_STRONG:gsub("[ ()]","");
+    local clearcastingTable = {
+        ["genericarc_05"] = weakText,
+        ["genericarc_02"] = strongText
+    }
+
+    self:AddOverlayOption(clearcastingTalent, clearcastingBuff, 0, nil, clearcastingTable);
     self:AddOverlayOption(missileBarrageTalent, missileBarrageBuff);
     self:AddOverlayOption(hotStreakTalent, heatingUpBuff, 0, heatingUpDetails);
     self:AddOverlayOption(hotStreakTalent, hotStreakBuff, 0, hotStreakDetails);
