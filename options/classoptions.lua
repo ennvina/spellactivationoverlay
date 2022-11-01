@@ -30,17 +30,20 @@ end
 
 local function setSelectBoxValue(sb, subValues, value)
     if (sb) then
-        sb.currentValue = value;
         if (value) then
-            UIDropDownMenu_SetText(sb, subValues[value]);
+            sb.currentValue = value;
+            for _, obj in ipairs(subValues) do
+                if (obj.value == value) then
+                    UIDropDownMenu_SetText(sb, obj.text);
+                    break;
+                end
+            end
         else
             local currentText = UIDropDownMenu_GetText(sb);
             if not currentText or currentText == "" then
-                -- Find any value to put in the disabled text
-                for _, text in pairs(subValues) do
-                    UIDropDownMenu_SetText(sb, text);
-                    break
-                end
+                -- Find any value to put as default
+                sb.currentValue = subValues[1].value;
+                UIDropDownMenu_SetText(sb, subValues[1].text);
             end
         end
     end
@@ -56,10 +59,10 @@ local function createSelectBox(self, cb, classFile, optionType, auraID, id, subV
             SpellActivationOverlayDB.classes[classFile][optionType][auraID][id] = arg1;
             CloseDropDownMenus();
         end
-        for value, text in pairs(subValues) do -- Beware, value is the 'key' or the map (not the 'value')
-            info.text = text;
-            info.arg1 = value;
-            info.checked = SpellActivationOverlayDB.classes[classFile][optionType][auraID][id] == value;
+        for _, obj in ipairs(subValues) do
+            info.text = obj.text;
+            info.arg1 = obj.value;
+            info.checked = SpellActivationOverlayDB.classes[classFile][optionType][auraID][id] == obj.value;
             UIDropDownMenu_AddButton(info);
         end
     end);

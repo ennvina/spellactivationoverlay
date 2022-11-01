@@ -242,8 +242,8 @@ local function loadOptions(self)
     local weakText = PET_BATTLE_COMBAT_LOG_DAMAGE_WEAK:gsub("[ ()]","");
     local strongText = PET_BATTLE_COMBAT_LOG_DAMAGE_STRONG:gsub("[ ()]","");
     local clearcastingTable = {
-        ["genericarc_05"] = weakText,
-        ["genericarc_02"] = strongText
+        { value = "genericarc_05", text = weakText },
+        { value = "genericarc_02", text = strongText }
     }
 
     self:AddOverlayOption(clearcastingTalent, clearcastingBuff, 0, nil, clearcastingTable);
