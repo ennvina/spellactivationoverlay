@@ -50,12 +50,16 @@ local function loadOptions(self)
     local elementalFocusBuff = 16246;
     local elementalFocusTalent = 16164;
 
+    local tidalWavesBuff = 53390;
+    local tidalWavesTalent = 51562;
+
     local oneToFourStacks = string.format(CALENDAR_TOOLTIP_DATE_RANGE, "1", string.format(STACKS, 4));
     local fiveStacks = string.format(STACKS, 5);
 
     self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff);
     self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 0, oneToFourStacks);
     self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 5);
+    self:AddOverlayOption(tidalWavesTalent, tidalWavesBuff);
 
     self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, lightningBolt, fiveStacks);
     self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, chainLightning, fiveStacks);
@@ -63,6 +67,8 @@ local function loadOptions(self)
     self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, healingWave, fiveStacks);
     self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, chainHeal, fiveStacks);
     self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, hex, fiveStacks);
+    self:AddGlowingOption(tidalWavesTalent, tidalWavesBuff, lesserHealingWave);
+    self:AddGlowingOption(tidalWavesTalent, tidalWavesBuff, healingWave);
 end
 
 SAO.Class["SHAMAN"] = {

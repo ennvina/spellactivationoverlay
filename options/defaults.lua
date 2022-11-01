@@ -197,6 +197,9 @@ SAO.defaults = {
                     [5] = true, -- 5 stacks
                     [0] = true, -- any stacks but 5
                 },
+                [53390] = { -- Tidal Waves
+                    [0] = false, -- any stacks
+                },
             },
             glow = {
                 [53817] = { -- Maelstorm Weapon
@@ -206,6 +209,10 @@ SAO.defaults = {
                     [331]   = false, -- Healing Wave
                     [1064]  = false, -- Chain Heal
                     [51514] = false, -- Hex
+                },
+                [53390] = { -- Tidal Waves
+                    [8004] = false, -- lesser Healing Wave
+                    [331]  = false, -- Healing Wave
                 },
             },
         },
