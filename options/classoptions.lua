@@ -139,6 +139,9 @@ function SAO.AddOption(self, optionType, auraID, id, subValues, applyTextFunc, t
         cb.hoverFrame:SetPoint("RIGHT", cb.Text, "RIGHT");
         cb.hoverFrame:SetScript("OnEnter", function() testFunc(true) end);
         cb.hoverFrame:SetScript("OnLeave", function() testFunc(false) end);
+        -- Setting scripts for OnEnter/OnLeave automatically enables the mouse
+        -- Enabling the mouse catches motion (which we want) but also catches clicks (which we don't want)
+        cb.hoverFrame:SetMouseClickEnabled(false); -- Let clicks go through hoverFrame to reach cb
     end
 
     if (type(SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType]) == "nil") then
