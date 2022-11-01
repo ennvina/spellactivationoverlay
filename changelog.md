@@ -2,6 +2,7 @@
 
 #### v0.7.1 (2022-11-xx)
 
+- New SAO: Druid's Nature's Grace, optional
 - New SAO: Mage's Arcane Concentration (a.k.a. Clearcasting), optional
 - New SAO: Shaman's Tidal Waves, optional
 

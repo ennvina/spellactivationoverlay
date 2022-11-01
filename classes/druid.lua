@@ -208,6 +208,9 @@ local function registerClass(self)
         hibernate,
     }
     self:RegisterAura("predatory_strikes", 0, 69369, "predatory_swiftness", "Top", 1, 255, 255, 255, true, predatoryStrikesSpells);
+
+    -- Nature's Grace
+    self:RegisterAura("natures_grace", 0, 16886, "serendipity", "Top", 1, 255, 255, 255, true);
 end
 
 local function loadOptions(self)
@@ -234,9 +237,13 @@ local function loadOptions(self)
     local predatoryStrikesTalent = 16972;
     local predatoryStrikesBuff = 69369;
 
+    local naturesGraceTalent = 61346;
+    local naturesGraceBuff = 16886;
+
     self:AddOverlayOption(omenOfClarityTalent, omenSpellID); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(lunarEclipseTalent, lunarSpellID); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(solarEclipseTalent, solarSpellID); -- Spell ID not used by ActivateOverlay like typical overlays
+    self:AddOverlayOption(naturesGraceTalent, naturesGraceBuff);
     self:AddOverlayOption(predatoryStrikesTalent, predatoryStrikesBuff);
 
     self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);

@@ -36,6 +36,9 @@ SAO.defaults = {
                 [48517] = { -- Eclipse (Solar)
                     [0] = true,
                 },
+                [16886] = { -- Nature's Grace
+                    [0] = false,
+                },
                 [69369] = { -- Predatory Strikes
                     [0] = true,
                 },
