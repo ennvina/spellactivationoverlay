@@ -18,9 +18,58 @@ local function createOptionFor(classFile, optionType, auraID, id)
     end
 end
 
-function SAO.AddOption(self, optionType, auraID, id, applyTextFunc, firstAnchor)
+local function setSelectBoxEnabled(sb, enabled)
+    if (sb) then
+        if (enabled) then
+            UIDropDownMenu_EnableDropDown(sb);
+        else
+            UIDropDownMenu_DisableDropDown(sb);
+        end
+    end
+end
+
+local function setSelectBoxValue(sb, subValues, value)
+    if (sb) then
+        sb.currentValue = value;
+        UIDropDownMenu_SetText(sb, subValues[value]);
+    end
+end
+
+local function createSelectBox(self, cb, classFile, optionType, auraID, id, subValues)
+    local sb = CreateFrame("Frame", "OptionSubValues_"..optionType.."_"..auraID.."_"..id, SpellActivationOverlayOptionsPanel, "UIDropDownMenuTemplate");
+
+    UIDropDownMenu_Initialize(sb, function()
+        local info = UIDropDownMenu_CreateInfo();
+        info.func = function(self, arg1)
+            setSelectBoxValue(sb, subValues, arg1);
+            SpellActivationOverlayDB.classes[classFile][optionType][auraID][id] = arg1;
+            CloseDropDownMenus();
+        end
+        for value, text in pairs(subValues) do -- Beware, value is the 'key' or the map (not the 'value')
+            info.text = text;
+            info.arg1 = value;
+            info.checked = SpellActivationOverlayDB.classes[classFile][optionType][auraID][id] == value;
+            UIDropDownMenu_AddButton(info);
+        end
+    end);
+
+    UIDropDownMenu_SetWidth(sb, 80);
+    setSelectBoxValue(sb, subValues, SpellActivationOverlayDB.classes[classFile][optionType][auraID][id]);
+
+    sb:SetPoint("TOP", cb, "TOP", 0, 4);
+    sb:SetPoint("RIGHT", cb:GetParent():GetParent(), "RIGHT");
+
+    return sb;
+end
+
+function SAO.AddOption(self, optionType, auraID, id, subValues, applyTextFunc, firstAnchor)
     local classFile = self.CurrentClass.Intrinsics[2];
     local cb = CreateFrame("CheckButton", nil, SpellActivationOverlayOptionsPanel, "InterfaceOptionsCheckButtonTemplate");
+
+    local sb = nil;
+    if (type(subValues) == 'table') then
+        sb = createSelectBox(self, cb, classFile, optionType, auraID, id, subValues);
+    end
 
     cb.ApplyText = applyTextFunc;
 
@@ -29,15 +78,20 @@ function SAO.AddOption(self, optionType, auraID, id, applyTextFunc, firstAnchor)
         if (SpellActivationOverlayDB[optionType].enabled) then
             cb:SetEnabled(true);
             cb:ApplyText();
+            setSelectBoxEnabled(sb, true);
         else
             cb:SetEnabled(false);
             cb:ApplyText();
+            setSelectBoxEnabled(sb, false);
         end
     end
 
     cb.ApplyValue = function()
         createOptionFor(classFile, optionType, auraID, id); -- Safety call, in case the value is not defined in defaults
-        cb:SetChecked(SpellActivationOverlayDB.classes[classFile][optionType][auraID][id]);
+        local value = SpellActivationOverlayDB.classes[classFile][optionType][auraID][id];
+        cb:SetChecked(not not value);
+        setSelectBoxEnabled(sb, not not value);
+        setSelectBoxValue(sb, subValues, value);
     end
 
     -- Init
@@ -46,7 +100,12 @@ function SAO.AddOption(self, optionType, auraID, id, applyTextFunc, firstAnchor)
 
     cb:SetScript("PostClick", function()
         local checked = cb:GetChecked();
-        SpellActivationOverlayDB.classes[classFile][optionType][auraID][id] = checked;
+        if (sb) then
+            SpellActivationOverlayDB.classes[classFile][optionType][auraID][id] = checked and sb.currentValue;
+            setSelectBoxEnabled(sb, checked);
+        else
+            SpellActivationOverlayDB.classes[classFile][optionType][auraID][id] = checked;
+        end
     end);
 
     cb:SetSize(20, 20);
