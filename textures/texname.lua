@@ -36,6 +36,7 @@ local mapping =
     ["450924"] 	= "GenericTop 02",
     ["450925"] 	= "Grand Crusader",
     ["459314"] 	= "Hand of Light",
+    ["2851788"] = "High Tide",
     ["449490"] 	= "Hot Streak",
     ["801267"] 	= "Imp Empowerment Green",
     ["449491"] 	= "Imp Empowerment",
