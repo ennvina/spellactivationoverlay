@@ -176,7 +176,8 @@ local function registerClass(self)
 end
 
 local function loadOptions(self)
-    local clearcastingTalent = 11213;
+--    local clearcastingTalent = 11213; -- Real talent
+    local clearcastingTalent = 12536; -- Use buff instead of talent because everyone knows the buff name
     local clearcastingBuff = 12536;
 
     local missileBarrageBuff = 44401;
