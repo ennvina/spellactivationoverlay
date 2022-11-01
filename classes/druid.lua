@@ -237,9 +237,13 @@ local function loadOptions(self)
     local predatoryStrikesTalent = 16972;
     local predatoryStrikesBuff = 69369;
 
+    local naturesGraceTalent = 61346;
+    local naturesGraceBuff = 16886;
+
     self:AddOverlayOption(omenOfClarityTalent, omenSpellID); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(lunarEclipseTalent, lunarSpellID); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(solarEclipseTalent, solarSpellID); -- Spell ID not used by ActivateOverlay like typical overlays
+    self:AddOverlayOption(naturesGraceTalent, naturesGraceBuff);
     self:AddOverlayOption(predatoryStrikesTalent, predatoryStrikesBuff);
 
     self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
