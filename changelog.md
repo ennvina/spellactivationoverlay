@@ -3,6 +3,7 @@
 #### v0.7.1 (2022-11-xx)
 
 - New SAO: Mage's Arcane Concentration (a.k.a. Clearcasting), optional
+- New SAO: Shaman's Tidal Waves, optional
 
 #### v0.7.0 (2022-10-09)
 
