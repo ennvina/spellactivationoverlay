@@ -50,6 +50,8 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, subV
             return
         end
 
+        SpellActivationOverlayFrame_SetForceAlpha2(start);
+
         local fakeOffset = 42000000;
         if (start) then
             local stacks = testStacks or count or 0;
