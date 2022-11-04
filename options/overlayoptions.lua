@@ -7,7 +7,9 @@ local AddonName, SAO = ...
 -- talentSubText is a string describing the specificity of this option
 -- subValues is the key/value list to add an combo box next to the item, if not defined then there is no combo box
 -- testStacks if defined, forces the number of stacks for the test function
-function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, subValues, testStacks)
+-- testAuraID optional spell ID used to test the aura in lieu of auraID
+-- auraTransformer optional callback to transform auras before activation an overlay preview
+function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, subValues, testStacks, testAuraID, auraTransformer)
     local className = self.CurrentClass.Intrinsics[1];
     local classFile = self.CurrentClass.Intrinsics[2];
 
@@ -44,8 +46,8 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, subV
         end
     end
 
-    local testFunc = function(start)
-        local auras = self.RegisteredAurasBySpellID[auraID];
+    local testFunc = function(start, cb, sb)
+        local auras = self.RegisteredAurasBySpellID[testAuraID or auraID];
         if (not auras) then
             return
         end
@@ -60,10 +62,14 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, subV
             end
 
             for _, aura in ipairs(auras[stacks]) do
-                self:ActivateOverlay(stacks, fakeOffset+auraID, select(4,unpack(aura)));
+                if (type(auraTransformer) == 'function') then
+                    self:ActivateOverlay(stacks, fakeOffset+(testAuraID or auraID), auraTransformer(cb, sb, select(4,unpack(aura))));
+                else
+                    self:ActivateOverlay(stacks, fakeOffset+(testAuraID or auraID), select(4,unpack(aura)));
+                end
             end
         else
-            self:DeactivateOverlay(fakeOffset+auraID);
+            self:DeactivateOverlay(fakeOffset+(testAuraID or auraID));
         end
     end
 
