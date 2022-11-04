@@ -179,9 +179,12 @@ local function registerClass(self)
     -- Track Eclipses with a custom CLEU function, so that eclipses can coexist with Omen of Clarity
     -- self:RegisterAura("eclipse_lunar", 0, lunarSpellID, "eclipse_moon", "Left", 1, 255, 255, 255, true);
     -- self:RegisterAura("eclipse_solar", 0, solarSpellID, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true);
+    self:RegisterAura("eclipse_lunar", 0, lunarSpellID+1000000, "eclipse_moon", "Left", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
+    self:RegisterAura("eclipse_solar", 0, solarSpellID+1000000, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
 
     -- Track Omen of Clarity with a custom CLEU function, to be able to switch between feral and non-feral texture
     -- self:RegisterAura("omen_of_clarity", 0, 16870, "natures_grace", "Left + Right (Flipped)", 1, 255, 255, 255, true);
+    self:RegisterAura("omen_of_clarity", 0, 16870+1000000, "natures_grace", "Left + Right (Flipped)", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
 
     -- Register glow IDs for glowing buttons, namely Starfire and Wrath
     local starfire = GetSpellInfo(2912);
@@ -240,9 +243,9 @@ local function loadOptions(self)
     local naturesGraceTalent = 61346;
     local naturesGraceBuff = 16886;
 
-    self:AddOverlayOption(omenOfClarityTalent, omenSpellID); -- Spell ID not used by ActivateOverlay like typical overlays
-    self:AddOverlayOption(lunarEclipseTalent, lunarSpellID); -- Spell ID not used by ActivateOverlay like typical overlays
-    self:AddOverlayOption(solarEclipseTalent, solarSpellID); -- Spell ID not used by ActivateOverlay like typical overlays
+    self:AddOverlayOption(omenOfClarityTalent, omenSpellID, 0, nil, nil, nil,  omenSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
+    self:AddOverlayOption(lunarEclipseTalent, lunarSpellID, 0, nil, nil, nil, lunarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
+    self:AddOverlayOption(solarEclipseTalent, solarSpellID, 0, nil, nil, nil, solarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(naturesGraceTalent, naturesGraceBuff);
     self:AddOverlayOption(predatoryStrikesTalent, predatoryStrikesBuff);
 
