@@ -160,7 +160,7 @@ local function registerClass(self)
     self:RegisterAura("impact", 0, 64343, "lock_and_load", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(2136)) });
     self:RegisterAura("firestarter", 0, 54741, "impact", "Top", 0.8, 255, 255, 255, true, { (GetSpellInfo(2120)) }); -- May conflict with Impact location
     self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(11366)) });
-    --self:RegisterAura("hot_streak_half", 0, heatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255, false);
+    self:RegisterAura("hot_streak_half", 0, heatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255, false); -- Does not exist, but define it for option testing
     -- Heating Up (spellID == 48107) doesn't exist in Wrath Classic, so we can't use the above aura
     -- Instead, we track Fire Blast, Fireball, Living Bomb and Scorch non-periodic critical strikes
     -- Please look at HotStreakHandler and customCLEU for more information
@@ -245,14 +245,30 @@ local function loadOptions(self)
         { value = "genericarc_05", text = weakText },
         { value = "genericarc_02", text = strongText }
     }
+    local clearcastingTransformer = function(cb, sb, texture, positions, scale, r, g, b, autoPulse, glowIDs)
+        if (cb:GetChecked()) then
+            -- Checkbox is checked, preview will work well
+            return texture, positions, scale, r, g, b, autoPulse, glowIDs;
+        else
+            -- Checkbox is not checked, must force texture otherwise preview will not display anything
+            local sbText = sb and UIDropDownMenu_GetText(sb);
+            for _, obj in ipairs(clearcastingTable) do
+                if (obj.text == sbText) then
+                    texture = self.TexName[obj.value];
+                    break
+                end
+            end
+            return texture, positions, scale, r, g, b, autoPulse, glowIDs;
+        end
+    end
 
-    self:AddOverlayOption(clearcastingTalent, clearcastingBuff, 0, nil, clearcastingTable);
+    self:AddOverlayOption(clearcastingTalent, clearcastingBuff, 0, nil, clearcastingTable, nil, nil, clearcastingTransformer);
     self:AddOverlayOption(missileBarrageTalent, missileBarrageBuff);
     self:AddOverlayOption(hotStreakTalent, heatingUpBuff, 0, heatingUpDetails);
     self:AddOverlayOption(hotStreakTalent, hotStreakBuff, 0, hotStreakDetails);
     self:AddOverlayOption(firestarterTalent, firestarterBuff);
     self:AddOverlayOption(impactTalent, impactBuff);
-    self:AddOverlayOption(fingersOfFrostTalent, fingersOfFrostBuff, 0); -- any stacks
+    self:AddOverlayOption(fingersOfFrostTalent, fingersOfFrostBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
     self:AddOverlayOption(brainFreezeTalent, brainFreezeBuff);
 
     self:AddGlowingOption(missileBarrageTalent, missileBarrageBuff, arcaneMissiles);

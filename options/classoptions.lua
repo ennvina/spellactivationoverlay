@@ -85,7 +85,7 @@ local function createSelectBox(self, cb, classFile, optionType, auraID, id, subV
     return sb;
 end
 
-function SAO.AddOption(self, optionType, auraID, id, subValues, applyTextFunc, firstAnchor)
+function SAO.AddOption(self, optionType, auraID, id, subValues, applyTextFunc, testFunc, firstAnchor)
     local classFile = self.CurrentClass.Intrinsics[2];
     local cb = CreateFrame("CheckButton", nil, SpellActivationOverlayOptionsPanel, "InterfaceOptionsCheckButtonTemplate");
 
@@ -132,6 +132,17 @@ function SAO.AddOption(self, optionType, auraID, id, subValues, applyTextFunc, f
     end);
 
     cb:SetSize(20, 20);
+
+    if (testFunc) then
+        cb.hoverFrame = CreateFrame("Frame", nil, cb)
+        cb.hoverFrame:SetAllPoints();
+        cb.hoverFrame:SetPoint("RIGHT", cb.Text, "RIGHT");
+        cb.hoverFrame:SetScript("OnEnter", function() testFunc(true, cb, sb) end);
+        cb.hoverFrame:SetScript("OnLeave", function() testFunc(false) end);
+        -- Setting scripts for OnEnter/OnLeave automatically enables the mouse
+        -- Enabling the mouse catches motion (which we want) but also catches clicks (which we don't want)
+        cb.hoverFrame:SetMouseClickEnabled(false); -- Let clicks go through hoverFrame to reach cb
+    end
 
     if (type(SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType]) == "nil") then
         -- The first additional checkbox is anchored an initial widget
