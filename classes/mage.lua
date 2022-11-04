@@ -245,8 +245,24 @@ local function loadOptions(self)
         { value = "genericarc_05", text = weakText },
         { value = "genericarc_02", text = strongText }
     }
+    local clearcastingTransformer = function(cb, sb, texture, positions, scale, r, g, b, autoPulse, glowIDs)
+        if (cb:GetChecked()) then
+            -- Checkbox is checked, preview will work well
+            return texture, positions, scale, r, g, b, autoPulse, glowIDs;
+        else
+            -- Checkbox is not checked, must force texture otherwise preview will not display anything
+            local sbText = sb and UIDropDownMenu_GetText(sb);
+            for _, obj in ipairs(clearcastingTable) do
+                if (obj.text == sbText) then
+                    texture = self.TexName[obj.value];
+                    break
+                end
+            end
+            return texture, positions, scale, r, g, b, autoPulse, glowIDs;
+        end
+    end
 
-    self:AddOverlayOption(clearcastingTalent, clearcastingBuff, 0, nil, clearcastingTable);
+    self:AddOverlayOption(clearcastingTalent, clearcastingBuff, 0, nil, clearcastingTable, nil, nil, clearcastingTransformer);
     self:AddOverlayOption(missileBarrageTalent, missileBarrageBuff);
     self:AddOverlayOption(hotStreakTalent, heatingUpBuff, 0, heatingUpDetails);
     self:AddOverlayOption(hotStreakTalent, hotStreakBuff, 0, hotStreakDetails);
