@@ -1,5 +1,7 @@
 local AddonName, SAO = ...
 
+local clearcastingVariants; -- Lazy init in lazyCreateClearcastingVariants()
+
 local hotStreakSpellID = 48108;
 local heatingUpSpellID = 48107; -- Does not exist in Wrath Classic
 
@@ -155,6 +157,20 @@ local function customLogin(self, ...)
     end
 end
 
+local function lazyCreateClearcastingVariants(self)
+    if (clearcastingVariants) then
+        return;
+    end
+
+    local weakText = PET_BATTLE_COMBAT_LOG_DAMAGE_WEAK:gsub("[ ()]","");
+    local strongText = PET_BATTLE_COMBAT_LOG_DAMAGE_STRONG:gsub("[ ()]","");
+
+    clearcastingVariants = self:CreateTextureVariants(12536, 0, {
+        self:TextureVariantValue("genericarc_05", false, weakText),
+        self:TextureVariantValue("genericarc_02", false, strongText),
+    });
+end
+
 local function registerClass(self)
     -- Fire Procs
     self:RegisterAura("impact", 0, 64343, "lock_and_load", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(2136)) });
@@ -172,11 +188,9 @@ local function registerClass(self)
 
     -- Arcane Procs
     self:RegisterAura("missile_barrage", 0, 44401, "arcane_missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(5143)) });
-    local getClearcastingTexture = function(self)
-        -- Arcane concentration texture may be either weak or strong
-        return self.TexName[self:GetOverlayOptions(12536)[0]];
-    end
-    self:RegisterAura("clearcasting", 0, 12536, getClearcastingTexture, "Left + Right (Flipped)", 1.5, 192, 192, 192, false);
+
+    lazyCreateClearcastingVariants(self);
+    self:RegisterAura("clearcasting", 0, 12536, clearcastingVariants.textureFunc, "Left + Right (Flipped)", 1.5, 192, 192, 192, false);
 end
 
 local function loadOptions(self)
@@ -238,31 +252,10 @@ local function loadOptions(self)
     -- local hotStreakDetails = string.format(LFG_READY_CHECK_PLAYER_IS_READY, "|T"..spellIcon..":0|t "..spellName):gsub("%.", "");
     local hotStreakDetails = LOC_TYPE_FULL;
 
-    -- Arcane Concentration has a dedicated combo box
-    local weakText = PET_BATTLE_COMBAT_LOG_DAMAGE_WEAK:gsub("[ ()]","");
-    local strongText = PET_BATTLE_COMBAT_LOG_DAMAGE_STRONG:gsub("[ ()]","");
-    local clearcastingTable = {
-        { value = "genericarc_05", text = weakText },
-        { value = "genericarc_02", text = strongText }
-    }
-    local clearcastingTransformer = function(cb, sb, texture, positions, scale, r, g, b, autoPulse, glowIDs)
-        if (cb:GetChecked()) then
-            -- Checkbox is checked, preview will work well
-            return texture, positions, scale, r, g, b, autoPulse, glowIDs;
-        else
-            -- Checkbox is not checked, must force texture otherwise preview will not display anything
-            local sbText = sb and UIDropDownMenu_GetText(sb);
-            for _, obj in ipairs(clearcastingTable) do
-                if (obj.text == sbText) then
-                    texture = self.TexName[obj.value];
-                    break
-                end
-            end
-            return texture, positions, scale, r, g, b, autoPulse, glowIDs;
-        end
-    end
+    -- Clearcasting variants
+    lazyCreateClearcastingVariants(self);
 
-    self:AddOverlayOption(clearcastingTalent, clearcastingBuff, 0, nil, clearcastingTable, nil, nil, clearcastingTransformer);
+    self:AddOverlayOption(clearcastingTalent, clearcastingBuff, 0, nil, clearcastingVariants);
     self:AddOverlayOption(missileBarrageTalent, missileBarrageBuff);
     self:AddOverlayOption(hotStreakTalent, heatingUpBuff, 0, heatingUpDetails);
     self:AddOverlayOption(hotStreakTalent, hotStreakBuff, 0, hotStreakDetails);

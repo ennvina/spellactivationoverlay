@@ -71,10 +71,10 @@ local function createSelectBox(self, cb, classFile, optionType, auraID, id, subV
     local widestText = 4;
     for _, obj in ipairs(subValues) do
         if (#obj.text > widestText) then
-            widestText = #obj.text;
+            widestText = obj.width;
         end
     end
-    UIDropDownMenu_SetWidth(sb, widestText*8+24);
+    UIDropDownMenu_SetWidth(sb, widestText*8+12);
 
     -- Initialize the value and text from config
     setSelectBoxValue(sb, subValues, SpellActivationOverlayDB.classes[classFile][optionType][auraID][id]);
