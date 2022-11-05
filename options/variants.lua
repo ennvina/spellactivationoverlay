@@ -37,9 +37,9 @@ end
 function SAO.TextureVariantValue(self, texture, horizontal, suffix)
     local text;
     if (horizontal) then
-        text = "|T"..self.TexName[texture]..":16:32:0:0:256:128:16:240:16:112|t";
+        text = "|T"..self.TexName[texture]..":16:32:0:0:256:128:16:240:16:112:255:255:255|t";
     else
-        text = "|T"..self.TexName[texture]..":16:16:0:0:128:256:16:112:80:176|t";
+        text = "|T"..self.TexName[texture]..":16:16:0:0:128:256:16:112:80:176:255:255:255|t";
     end
     if (suffix) then
         text = (text or "").." "..suffix;

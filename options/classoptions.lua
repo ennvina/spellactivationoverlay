@@ -20,10 +20,17 @@ end
 
 local function setSelectBoxEnabled(sb, enabled)
     if (sb) then
+        local currentText = UIDropDownMenu_GetText(sb);
         if (enabled) then
             UIDropDownMenu_EnableDropDown(sb);
+            if (currentText and currentText ~= "") then
+                UIDropDownMenu_SetText(sb, currentText:gsub(":127:127:127|t",":255:255:255|t"));
+            end
         else
             UIDropDownMenu_DisableDropDown(sb);
+            if (currentText and currentText ~= "") then
+                UIDropDownMenu_SetText(sb, currentText:gsub(":255:255:255|t",":127:127:127|t"));
+            end
         end
     end
 end
