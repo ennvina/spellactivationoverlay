@@ -45,7 +45,7 @@ function SAO.TextureVariantValue(self, texture, horizontal, suffix)
         text = (text or "").." "..suffix;
     end
 
-    local width = horizontal and 2 or 1;
+    local width = horizontal and 6 or 3;
     if (suffix) then
         width = width+1+#suffix;
     end
