@@ -1,8 +1,9 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.7.1 (2022-11-xx)
+#### v0.8.0 (2022-11-xx)
 
 - SAOs and GABs can be previewed by moving the cursor over their options
+- SAOs may have variants when e.g. there is no obvious texture to use
 - New SAO: Druid's Nature's Grace, optional
 - New SAO: Mage's Arcane Concentration (a.k.a. Clearcasting), optional
 - New SAO: Shaman's Tidal Waves, optional

@@ -20,10 +20,17 @@ end
 
 local function setSelectBoxEnabled(sb, enabled)
     if (sb) then
+        local currentText = UIDropDownMenu_GetText(sb);
         if (enabled) then
             UIDropDownMenu_EnableDropDown(sb);
+            if (currentText and currentText ~= "") then
+                UIDropDownMenu_SetText(sb, currentText:gsub(":127:127:127|t",":255:255:255|t"));
+            end
         else
             UIDropDownMenu_DisableDropDown(sb);
+            if (currentText and currentText ~= "") then
+                UIDropDownMenu_SetText(sb, currentText:gsub(":255:255:255|t",":127:127:127|t"));
+            end
         end
     end
 end
@@ -71,10 +78,10 @@ local function createSelectBox(self, cb, classFile, optionType, auraID, id, subV
     local widestText = 4;
     for _, obj in ipairs(subValues) do
         if (#obj.text > widestText) then
-            widestText = #obj.text;
+            widestText = obj.width;
         end
     end
-    UIDropDownMenu_SetWidth(sb, widestText*8+24);
+    UIDropDownMenu_SetWidth(sb, widestText*8+12);
 
     -- Initialize the value and text from config
     setSelectBoxValue(sb, subValues, SpellActivationOverlayDB.classes[classFile][optionType][auraID][id]);
