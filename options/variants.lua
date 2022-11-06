@@ -14,7 +14,7 @@ function SAO.CreateTextureVariants(self, auraID, stacks, values)
             -- Checkbox is not checked, must force texture otherwise preview will not display anything
             local sbText = sb and UIDropDownMenu_GetText(sb);
             for _, obj in ipairs(values) do
-                if (obj.text == sbText) then
+                if (obj.text == sbText or obj.text == sbText:gsub(":127:127:127|t",":255:255:255|t")) then
                     texture = self.TexName[obj.value];
                     break
                 end
