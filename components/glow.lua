@@ -311,10 +311,24 @@ binder:SetScript("OnEvent", function()
     end
 
     -- Support for ElvUI's LibActionButton
-    if (LAB_ElvUI and LCG) then -- Prioritize LibCustomGlow, if available
-        LAB_ElvUI:RegisterCallback("OnButtonUpdate", LCGButtonUpdateFunc);
-    elseif (LAB_ElvUI and LBG) then -- Otherwise fall back to LibButtonGlow
-        LAB_ElvUI:RegisterCallback("OnButtonUpdate", LBGButtonUpdateFunc);
+    if (LAB_ElvUI) then
+        -- For some time, ElvUI favored LibCustomGlow by default
+        -- On ElvUI 13.01 and higher, LibButtonGlow is the official lib for ElvUI
+        -- This is probably due to a bug of LibCustomGlow under ElvUI 13
+        -- Although we're not sure if the bug existed in 13.00, we favor LBG for all 13.xx versions
+        if (ElvUI and ElvUI[1] and type(ElvUI[1].version) == 'number' and ElvUI[1].version >= 13) then
+            if (LBG) then
+                LAB_ElvUI:RegisterCallback("OnButtonUpdate", LBGButtonUpdateFunc);
+            elseif (LCG) then
+                LAB_ElvUI:RegisterCallback("OnButtonUpdate", LCGButtonUpdateFunc);
+            end
+        else
+            if (LCG) then -- Prioritize LibCustomGlow, if available
+                LAB_ElvUI:RegisterCallback("OnButtonUpdate", LCGButtonUpdateFunc);
+            elseif (LBG) then -- Otherwise fall back to LibButtonGlow
+                LAB_ElvUI:RegisterCallback("OnButtonUpdate", LBGButtonUpdateFunc);
+            end
+        end
     end
 
     binder:UnregisterEvent("PLAYER_LOGIN");
