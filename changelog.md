@@ -1,5 +1,9 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.8.1 (2022-11-13)
+
+- The default glowing button library is now LibButtonGlow for ElvUI 13
+
 #### v0.8.0 (2022-11-08)
 
 - SAOs and GABs can be previewed by moving the cursor over their options
