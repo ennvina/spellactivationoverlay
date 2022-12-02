@@ -154,7 +154,19 @@
         "NEAR",
         "FAR",
         "LOC_TYPE_FULL",
-        "CALENDAR_TOOLTIP_DATE_RANGE"
+        "CALENDAR_TOOLTIP_DATE_RANGE",
+        "PET_BATTLE_COMBAT_LOG_DAMAGE_WEAK",
+        "PET_BATTLE_COMBAT_LOG_DAMAGE_STRONG",
+        "UIDropDownMenu_Initialize",
+        "UIDropDownMenu_CreateInfo",
+        "UIDropDownMenu_AddButton",
+        "UIDropDownMenu_SetWidth",
+        "UIDropDownMenu_SetText",
+        "UIDropDownMenu_GetText",
+        "UIDropDownMenu_EnableDropDown",
+        "UIDropDownMenu_DisableDropDown",
+        "CloseDropDownMenus",
+        "ElvUI"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",

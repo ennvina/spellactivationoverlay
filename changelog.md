@@ -1,5 +1,19 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.8.1 (2022-11-13)
+
+- The default glowing button library is now LibButtonGlow for ElvUI 13
+
+#### v0.8.0 (2022-11-08)
+
+- SAOs and GABs can be previewed by moving the cursor over their options
+- SAOs may have variants when e.g. there is no obvious texture to use
+- New SAO: Druid's Nature's Grace, optional
+- New SAO: Mage's Arcane Concentration (a.k.a. Clearcasting), optional
+- New SAO: Shaman's Tidal Waves, optional
+- New GAB: Shaman's Lesser Healing Wave button may glow during Tidal Waves
+- New GAB: Shaman's Healing Wave button may glow during Tidal Waves
+
 #### v0.7.0 (2022-10-09)
 
 - Spell Alerts may now be enabled or disabled individually
