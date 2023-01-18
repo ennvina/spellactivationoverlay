@@ -1,5 +1,9 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.8.2 (2022-01-18)
+
+- Bump in TOC file for Ulduar patch
+
 #### v0.8.1 (2022-11-13)
 
 - The default glowing button library is now LibButtonGlow for ElvUI 13
