@@ -316,7 +316,22 @@ binder:SetScript("OnEvent", function()
         -- On ElvUI 13.01 and higher, LibButtonGlow is the official lib for ElvUI
         -- This is probably due to a bug of LibCustomGlow under ElvUI 13
         -- Although we're not sure if the bug existed in 13.00, we favor LBG for all 13.xx versions
-        if (ElvUI and ElvUI[1] and type(ElvUI[1].version) == 'number' and ElvUI[1].version >= 13) then
+        local hasElvUI13OrHigher = false
+        if (ElvUI and ElvUI[1] and type(ElvUI[1].version) == 'number') then
+            hasElvUI13OrHigher = ElvUI[1].version >= 13
+        end
+        -- However, there is a bug with ProjectAzilroka which hasn't been updated since Ulduar patch
+        -- So we switch back to the old priority if an old Azilroka is found
+        local hasAzilroka186OrLower = false
+        if (ProjectAzilroka and type(ProjectAzilroka.Version) == 'string') then
+            local _, _, azilMajor, azilMinor = strfind(ProjectAzilroka.Version, "(%d+)%.(%d+)")
+            azilMajor = tonumber(azilMajor)
+            azilMinor = tonumber(azilMinor)
+            if (type(azilMajor) == 'number' and type(azilMinor) == 'number') then
+                hasAzilroka186OrLower = azilMajor < 1 or azilMajor == 1 and azilMinor <= 86
+            end
+        end 
+        if (hasElvUI13OrHigher and not hasAzilroka186OrLower) then
             if (LBG) then
                 LAB_ElvUI:RegisterCallback("OnButtonUpdate", LBGButtonUpdateFunc);
             elseif (LCG) then
