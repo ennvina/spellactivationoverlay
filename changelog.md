@@ -1,5 +1,11 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.8.3 (2022-01-29)
+
+- Glowing buttons work again with ProjectAzilroka, after Ulduar patch
+- Mage's Heating Up works again with ProjectAzilroka, after Ulduar patch
+- Other features may also work back to normal for ProjectAzilroka users
+
 #### v0.8.2 (2022-01-18)
 
 - Bump in TOC file for Ulduar patch
