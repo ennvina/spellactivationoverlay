@@ -257,6 +257,22 @@ function SAO.RemoveGlow(self, spellID)
     end
 end
 
+local warnedOutdatedLBG = false
+local function warnOutdatedLBG()
+    -- Warn players that their configuration has an issue with glowing buttons
+    -- There is one case where this warning is misleading: if LibActionButton for ElvUI and for non-ElvUI are loaded at the same time
+    -- But this should not happen in practice, because ElvUI usually replaces pretty much anything UI-related in the game
+    if warnedOutdatedLBG then return end
+
+    local text = "[|cffa2f3ff"..AddonName.."|r] One of your addons uses an old version of LibButtonGlow. "
+               .."|cffff0000Please consider updating your addons|r. "
+               .."Glowing buttons have been |cffff8040temporarily disabled|r to prevent issues. "
+               .."(note: the Glowing Buttons option can still be enabled, but it will have no effect until the faulty addon is up-to-date)";
+    print(text);
+
+    warnedOutdatedLBG = true
+end
+
 -- Track PLAYER_LOGIN which happens immediately after all ADDON_LOADED events
 -- Which means, at this point we know which addons are installed and loaded
 local binder = CreateFrame("Frame", "SpellActivationOverlayLABBinder");
@@ -269,7 +285,7 @@ binder:SetScript("OnEvent", function()
 
     local LAB = LibStub("LibActionButton-1.0", true);
     local LAB_ElvUI = LibStub("LibActionButton-1.0-ElvUI", true);
-    local LBG = LibStub("LibButtonGlow-1.0", true);
+    local LBG, LBGversion = LibStub("LibButtonGlow-1.0", true);
     local LCG = LibStub("LibCustomGlow-1.0", true);
 
     local buttonUpdateFunc = function(libGlow, event, self)
@@ -303,11 +319,13 @@ binder:SetScript("OnEvent", function()
         buttonUpdateFunc(LCG, event, self);
     end
 
-    -- Support for LibActionButton e.g., used by Bartender
-    if (LAB and LBG) then -- Prioritize LibButtonGlow, if available
+    -- Support for LibActionButton used by e.g., Bartender
+    if (LAB and LBG and LBGversion >= 8) then -- Prioritize LibButtonGlow, if available
         LAB:RegisterCallback("OnButtonUpdate", LBGButtonUpdateFunc);
     elseif (LAB and LCG) then -- Otherwise fall back to LibCustomGlow
         LAB:RegisterCallback("OnButtonUpdate", LCGButtonUpdateFunc);
+    elseif (LAB and LBG) then
+        warnOutdatedLBG();
     end
 
     -- Support for ElvUI's LibActionButton
@@ -332,16 +350,20 @@ binder:SetScript("OnEvent", function()
             end
         end 
         if (hasElvUI13OrHigher and not hasAzilroka186OrLower) then
-            if (LBG) then
+            if (LBG and LBGversion >= 8) then
                 LAB_ElvUI:RegisterCallback("OnButtonUpdate", LBGButtonUpdateFunc);
             elseif (LCG) then
                 LAB_ElvUI:RegisterCallback("OnButtonUpdate", LCGButtonUpdateFunc);
+            elseif (LBG) then
+                warnOutdatedLBG();
             end
         else
             if (LCG) then -- Prioritize LibCustomGlow, if available
                 LAB_ElvUI:RegisterCallback("OnButtonUpdate", LCGButtonUpdateFunc);
-            elseif (LBG) then -- Otherwise fall back to LibButtonGlow
+            elseif (LBG and LBGversion >= 8) then -- Otherwise fall back to LibButtonGlow
                 LAB_ElvUI:RegisterCallback("OnButtonUpdate", LBGButtonUpdateFunc);
+            elseif (LBG) then
+                warnOutdatedLBG();
             end
         end
     end
