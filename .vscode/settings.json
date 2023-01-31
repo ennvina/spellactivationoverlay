@@ -166,7 +166,8 @@
         "UIDropDownMenu_EnableDropDown",
         "UIDropDownMenu_DisableDropDown",
         "CloseDropDownMenus",
-        "ElvUI"
+        "ElvUI",
+        "STATUS_TEXT_BOTH"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",
