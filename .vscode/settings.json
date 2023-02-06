@@ -167,7 +167,8 @@
         "UIDropDownMenu_DisableDropDown",
         "CloseDropDownMenus",
         "ElvUI",
-        "STATUS_TEXT_BOTH"
+        "STATUS_TEXT_BOTH",
+        "ACTION_SPELL_AURA_APPLIED_DOSE"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",

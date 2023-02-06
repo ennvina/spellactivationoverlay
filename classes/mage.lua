@@ -262,7 +262,7 @@ local function loadOptions(self)
     local hotStreakDetails = GetSpellInfo(hotStreakBuff);
 
     -- local hotStreakHeatingUpDetails = string.format("%s+%s", heatingUpDetails, hotStreakDetails);
-    local hotStreakHeatingUpDetails = STATUS_TEXT_BOTH;
+    local hotStreakHeatingUpDetails = string.format("%s %s", STATUS_TEXT_BOTH, ACTION_SPELL_AURA_APPLIED_DOSE);
 
     -- Clearcasting variants
     lazyCreateClearcastingVariants(self);
