@@ -4,6 +4,7 @@ local clearcastingVariants; -- Lazy init in lazyCreateClearcastingVariants()
 
 local hotStreakSpellID = 48108;
 local heatingUpSpellID = 48107; -- Does not exist in Wrath Classic
+local hotStreakHeatingUpSpellID = hotStreakSpellID+heatingUpSpellID; -- Made up entirely, does not even exist in Retail
 
 -- Because the Heating Up buff does not exist in Wrath of the Lich King
 -- We try to guess when the mage should virtually get this buff
@@ -47,13 +48,13 @@ HotStreakHandler.isSpellTracked = function(self, spellID)
     return self.spells[spellID];
 end
 
-local function activateHeatingUp(self)
+local function activateHeatingUp(self, spellID)
     -- Heating Up uses the Hot Streak texture, but scaled at 50%
-    self:ActivateOverlay(0, heatingUpSpellID, self.TexName["hot_streak"], "Left + Right (Flipped)", 0.5, 255, 255, 255, false);
+    self:ActivateOverlay(0, spellID, self.TexName["hot_streak"], "Left + Right (Flipped)", 0.5, 255, 255, 255, false);
 end
 
-local function deactivateHeatingUp(self)
-    self:DeactivateOverlay(heatingUpSpellID);
+local function deactivateHeatingUp(self, spellID)
+    self:DeactivateOverlay(spellID);
 end
 
 local function customCLEU(self, ...)
@@ -64,7 +65,9 @@ local function customCLEU(self, ...)
     -- The code is kept commented instead of removed, because Blizzard may change this behaviour
     --if (event == "UNIT_DIED" and destGUID == UnitGUID("player")) then
     --    if (HotStreakHandler.state == 'heating_up') then
-    --        deactivateHeatingUp(self);
+    --        deactivateHeatingUp(self, heatingUpSpellID);
+    --    elseif (HotStreakHandler.state == 'hot_streak_heating_up') then
+    --        deactivateHeatingUp(self, hotStreakHeatingUpSpellID);
     --    end
     --    HotStreakHandler.state = 'cold';
     --
@@ -81,14 +84,15 @@ local function customCLEU(self, ...)
     -- We assume there is no third charge i.e., if a crit occurs under Hot Streak buff, there is no hidden Heating Up
     if (event == "SPELL_AURA_APPLIED") then
         if (spellID == hotStreakSpellID) then
-            deactivateHeatingUp(self);
+            deactivateHeatingUp(self, heatingUpSpellID);
             HotStreakHandler.state = 'hot_streak';
         end
         return;
     elseif (event == "SPELL_AURA_REMOVED") then
         if (spellID == hotStreakSpellID) then
             if (HotStreakHandler.state == 'hot_streak_heating_up') then
-                activateHeatingUp(self);
+                deactivateHeatingUp(self, hotStreakHeatingUpSpellID);
+                activateHeatingUp(self, heatingUpSpellID);
                 HotStreakHandler.state = 'heating_up';
             else
                 HotStreakHandler.state = 'cold';
@@ -117,13 +121,13 @@ local function customCLEU(self, ...)
         if (critical) then
             -- A crit while cold => Heating Up!
             HotStreakHandler.state = 'heating_up';
-            activateHeatingUp(self);
+            activateHeatingUp(self, heatingUpSpellID);
         end
     elseif (HotStreakHandler.state == 'heating_up') then
         if (not critical) then
             -- No crit while Heating Up => cooling down
             HotStreakHandler.state = 'cold';
-            deactivateHeatingUp(self);
+            deactivateHeatingUp(self, heatingUpSpellID);
         -- else
             -- We could put the state to 'hot_streak' here, but the truth is, we don't know for sure if it's accurate
             -- Either way, if the Hot Streak buff is deserved, we'll know soon enough with a "SPELL_AURA_APPLIED"
@@ -133,6 +137,7 @@ local function customCLEU(self, ...)
             -- If crit during a Hot Streak, store this 'charge' to eventually restore it when Pyroblast is cast
             -- This is called "hot streaking heating up", which means Hot Streak has a pending Heating Up effect
             HotStreakHandler.state = 'hot_streak_heating_up';
+            activateHeatingUp(self, hotStreakHeatingUpSpellID);
             -- Please note this works only because we are fairly certain that SPELL_AURA_APPLIED of a Hot Streak
             -- always occur *after* the critical effect of the spell which triggered it.
             -- Should it be the other way around (SPELL_AURA_APPLIED before SPELL_DAMAGE, or worse, random order)
@@ -142,6 +147,7 @@ local function customCLEU(self, ...)
         if (not critical) then
             -- If Hot Streak had a pending Heating Up effect but a spell did not crit afterwards, the pending Heating Up is lost
             HotStreakHandler.state = 'hot_streak';
+            deactivateHeatingUp(self, hotStreakHeatingUpSpellID);
         end
     else
         print("Unknown HotStreakHandler state");
@@ -177,6 +183,8 @@ local function registerClass(self)
     self:RegisterAura("firestarter", 0, 54741, "impact", "Top", 0.8, 255, 255, 255, true, { (GetSpellInfo(2120)) }); -- May conflict with Impact location
     self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(11366)) });
     self:RegisterAura("hot_streak_half", 0, heatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255, false); -- Does not exist, but define it for option testing
+    self:RegisterAura("hot_streak_duo", 0, hotStreakHeatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255, false); -- Does not exist, but define it for option testing
+    self:RegisterAura("hot_streak_duo", 0, hotStreakHeatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true); -- Does not exist, but define it for option testing
     -- Heating Up (spellID == 48107) doesn't exist in Wrath Classic, so we can't use the above aura
     -- Instead, we track Fire Blast, Fireball, Living Bomb and Scorch non-periodic critical strikes
     -- Please look at HotStreakHandler and customCLEU for more information
@@ -203,6 +211,7 @@ local function loadOptions(self)
 
     local heatingUpBuff = heatingUpSpellID; -- Not really a buff
     local hotStreakBuff = hotStreakSpellID;
+    local hotStreakHeatingUpBuff = hotStreakHeatingUpSpellID; -- Made up
     local hotStreakTalent = 44445;
 
     local firestarterBuff = 54741;
@@ -250,7 +259,10 @@ local function loadOptions(self)
 
     -- local spellName, _, spellIcon = GetSpellInfo(pyroblast);
     -- local hotStreakDetails = string.format(LFG_READY_CHECK_PLAYER_IS_READY, "|T"..spellIcon..":0|t "..spellName):gsub("%.", "");
-    local hotStreakDetails = LOC_TYPE_FULL;
+    local hotStreakDetails = GetSpellInfo(hotStreakBuff);
+
+    -- local hotStreakHeatingUpDetails = string.format("%s+%s", heatingUpDetails, hotStreakDetails);
+    local hotStreakHeatingUpDetails = string.format("%s %s", STATUS_TEXT_BOTH, ACTION_SPELL_AURA_APPLIED_DOSE);
 
     -- Clearcasting variants
     lazyCreateClearcastingVariants(self);
@@ -259,6 +271,7 @@ local function loadOptions(self)
     self:AddOverlayOption(missileBarrageTalent, missileBarrageBuff);
     self:AddOverlayOption(hotStreakTalent, heatingUpBuff, 0, heatingUpDetails);
     self:AddOverlayOption(hotStreakTalent, hotStreakBuff, 0, hotStreakDetails);
+    self:AddOverlayOption(hotStreakTalent, hotStreakHeatingUpBuff, 0, hotStreakHeatingUpDetails);
     self:AddOverlayOption(firestarterTalent, firestarterBuff);
     self:AddOverlayOption(impactTalent, impactBuff);
     self:AddOverlayOption(fingersOfFrostTalent, fingersOfFrostBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks

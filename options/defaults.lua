@@ -115,6 +115,9 @@ SAO.defaults = {
                 [57761] = { -- Brain Freeze
                     [0] = true,
                 },
+                [96215] = { -- Hot Streak + Heating Up (not an actual buff)
+                    [0] = false,
+                },
             },
             glow = {
                 [44401] = { -- Missile Barrage

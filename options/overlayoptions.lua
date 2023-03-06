@@ -3,7 +3,7 @@ local AddonName, SAO = ...
 -- Add a checkbox for an overlay
 -- talentID is the spell ID of the associated talent
 -- auraID is the spell ID that triggers the overlay; it must match a spell ID of an aura registered with RegisterAura
--- count is the number of stacks expected for this option; use 0 is aura has no stacks or for "any stacks"
+-- count is the number of stacks expected for this option; use 0 if aura has no stacks or for "any stacks"
 -- talentSubText is a string describing the specificity of this option
 -- variants optional variant object that tells which are sub-options and how to use them
 -- testStacks if defined, forces the number of stacks for the test function
@@ -66,9 +66,14 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, vari
                 else
                     self:ActivateOverlay(stacks, fakeOffset+(testAuraID or auraID), select(4,unpack(aura)));
                 end
+                fakeOffset = fakeOffset + 1000000; -- Add offset so that different sub-auras may share the same 'location' for testing purposes
             end
         else
-            self:DeactivateOverlay(fakeOffset+(testAuraID or auraID));
+            local stacks = testStacks or count or 0;
+            for _, _ in ipairs(auras[stacks] or {42}) do -- list size is the only thing that matters, {42} is just a random thing to have a list with 1 element
+                self:DeactivateOverlay(fakeOffset+(testAuraID or auraID));
+                fakeOffset = fakeOffset + 1000000;
+            end
         end
     end
 
