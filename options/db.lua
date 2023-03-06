@@ -2,7 +2,7 @@ local AddonName, SAO = ...
 
 -- Load database and use default values if needed
 function SAO.LoadDB(self)
-    local currentversion = 080;
+    local currentversion = 083;
     local db = SpellActivationOverlayDB or {};
 
     if not db.alert then
