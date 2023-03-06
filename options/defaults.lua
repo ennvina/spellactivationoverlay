@@ -39,6 +39,12 @@ SAO.defaults = {
                 [16886] = { -- Nature's Grace
                     [0] = false,
                 },
+                [46833] = { -- Wrath of Elune
+                    [0] = false,
+                },
+                [64823] = { -- Elune's Wrath
+                    [0] = false,
+                },
                 [69369] = { -- Predatory Strikes
                     [0] = true,
                 },
@@ -49,6 +55,12 @@ SAO.defaults = {
                 },
                 [5176] = { -- Wrath
                     [5176] = true, --  Wrath
+                },
+                [46833] = { -- Wrath of Elune
+                    [2912] = true, -- Starfire
+                },
+                [64823] = { -- Elune's Wrath
+                    [2912] = true, -- Starfire
                 },
                 [69369] = { -- Predatory Strikes
                     [8936]  = false, -- Regrowth

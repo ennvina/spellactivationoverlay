@@ -228,6 +228,10 @@ local function registerClass(self)
     -- Nature's Grace
     lazyCreateNaturesGraceVariants(self);
     self:RegisterAura("natures_grace", 0, 16886, naturesGraceVariants.textureFunc, "Top", 1, 255, 255, 255, true);
+
+    -- Balance 4p set bonuses
+    self:RegisterAura("wrath_of_elune", 0, 46833, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvP season 5-6-7-8
+    self:RegisterAura("elunes_wrath", 0, 64823, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvE tier 8
 end
 
 local function loadOptions(self)
@@ -251,6 +255,11 @@ local function loadOptions(self)
     local lunarEclipseTalent = lunarSpellID; -- Not really a talent
     local solarEclipseTalent = solarSpellID; -- Not really a talent
 
+    local wrathOfEluneBuff = 46833;
+    local elunesWrathBuff = 64823;
+    local wrathOfEluneTalent = wrathOfEluneBuff; -- Not really a talent
+    local elunesWrathTalent = elunesWrathBuff; -- Not really a talent
+
     local predatoryStrikesTalent = 16972;
     local predatoryStrikesBuff = 69369;
 
@@ -263,11 +272,15 @@ local function loadOptions(self)
     self:AddOverlayOption(omenOfClarityTalent, omenSpellID, 0, nil, nil, nil,  omenSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(lunarEclipseTalent, lunarSpellID, 0, nil, nil, nil, lunarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(solarEclipseTalent, solarSpellID, 0, nil, nil, nil, solarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
+    self:AddOverlayOption(wrathOfEluneTalent, wrathOfEluneBuff);
+    self:AddOverlayOption(elunesWrathTalent, elunesWrathBuff);
     self:AddOverlayOption(naturesGraceTalent, naturesGraceBuff, 0, nil, naturesGraceVariants);
     self:AddOverlayOption(predatoryStrikesTalent, predatoryStrikesBuff);
 
     self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
     self:AddGlowingOption(solarEclipseTalent, wrath, wrath);
+    self:AddGlowingOption(wrathOfEluneTalent, wrathOfEluneBuff, starfire);
+    self:AddGlowingOption(elunesWrathTalent, elunesWrathBuff, starfire);
     self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, regrowth);
     self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, healingTouch);
     self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, nourish);
