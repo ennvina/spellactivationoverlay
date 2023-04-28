@@ -8,7 +8,7 @@
 - New GAB: Druid's Starfire button glows during Wrath of Elune
 - New GAB: Druid's Starfire button glows during Elune's Wrath
 
-These options are disabled by default; enter /sao to open the options panel
+Enter /sao to enable or disable these options
 
 #### v0.8.3 (2022-01-29)
 

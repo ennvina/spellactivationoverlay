@@ -54,7 +54,7 @@ SAO.defaults = {
                     [2912] = true, -- Starfire
                 },
                 [5176] = { -- Wrath
-                    [5176] = true, --  Wrath
+                    [5176] = true, -- Wrath
                 },
                 [46833] = { -- Wrath of Elune
                     [2912] = true, -- Starfire
