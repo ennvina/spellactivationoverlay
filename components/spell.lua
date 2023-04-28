@@ -1,5 +1,8 @@
 local AddonName, SAO = ...
 
+-- Optimize frequent calls
+local GetSpellInfo = GetSpellInfo
+
 -- List of spell IDs sharing the same name
 -- key = spell name, value = list of spell IDs
 -- The list is a cache of calls to GetSpellIDsByName

@@ -1,5 +1,11 @@
 local AddonName, SAO = ...
 
+-- Optimize frequent calls
+local GetSpellCooldown = GetSpellCooldown
+local GetSpellPowerCost = GetSpellPowerCost
+local GetTalentInfo = GetTalentInfo
+local IsUsableSpell = IsUsableSpell
+
 -- List of spell names or IDs of actions that can trigger as 'counter'
 -- key = spellName / spellID, value = { auraID, talent }
 SAO.ActivableCountersByName = {};

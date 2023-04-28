@@ -1,5 +1,11 @@
 local AddonName, SAO = ...
 
+-- Optimize frequent calls
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
+local GetShapeshiftForm = GetShapeshiftForm
+local GetSpellInfo = GetSpellInfo
+local UnitGUID = UnitGUID
+
 local omenSpellID = 16870;
 local lunarSpellID = 48518;
 local solarSpellID = 48517;

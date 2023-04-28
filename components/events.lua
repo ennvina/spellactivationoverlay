@@ -1,5 +1,8 @@
 local AddonName, SAO = ...
 
+-- Optimize frequent calls
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
+
 -- Events starting with SPELL_AURA e.g., SPELL_AURA_APPLIED
 -- This should be invoked only if the buff is done on the player i.e., UnitGUID("player") == destGUID
 function SAO.SPELL_AURA(self, ...)
