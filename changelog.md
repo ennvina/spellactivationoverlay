@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.8.4 (2022-03-xx)
+#### v0.8.4 (2022-04-28)
 
 - New SAO: Druid's Wrath of Elune (4p set bonus of PvP season 5-6-7-8)
 - New SAO: Druid's Elune's Wrath (4p set bonus of tier 8)
