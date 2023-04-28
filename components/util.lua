@@ -2,6 +2,16 @@ local AddonName, SAO = ...
 
 -- This script file is not a 'component' per se, but its functions are used across components
 
+-- Optimize frequent calls
+local GetActionInfo = GetActionInfo
+local GetNumTalents = GetNumTalents
+local GetNumTalentTabs = GetNumTalentTabs
+local GetSpellBookItemName = GetSpellBookItemName
+local GetSpellInfo = GetSpellInfo
+local GetSpellTabInfo = GetSpellTabInfo
+local GetTalentInfo = GetTalentInfo
+local UnitBuff = UnitBuff
+
 -- Utility aura function, one of the many that Blizzard could've done better years ago...
 function SAO.FindPlayerAuraByID(self, id)
     local i = 1

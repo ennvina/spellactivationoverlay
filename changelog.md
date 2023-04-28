@@ -1,5 +1,9 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.8.5 (2022-05-xx)
+
+- The addon should now use a bit less CPU than before
+
 #### v0.8.4 (2022-04-28)
 
 - New SAO: Druid's Wrath of Elune (4p set bonus of PvP season 5-6-7-8)

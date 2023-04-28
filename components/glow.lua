@@ -1,5 +1,8 @@
 local AddonName, SAO = ...
 
+-- Optimize frequent calls
+local HasAction = HasAction
+
 -- List of known ActionButton instances that currently match one of the spell IDs to track
 -- This does not mean that buttons are glowing right now, but they could glow at any time
 -- key = glowID (= spellID of action), value = list of ActionButton objects for this spell

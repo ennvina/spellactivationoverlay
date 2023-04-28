@@ -1,5 +1,9 @@
 local AddonName, SAO = ...
 
+-- Optimize frequent calls
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
+local GetTalentInfo = GetTalentInfo
+
 local clearcastingVariants; -- Lazy init in lazyCreateClearcastingVariants()
 
 local hotStreakSpellID = 48108;
