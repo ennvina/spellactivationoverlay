@@ -159,11 +159,39 @@ local availableTextures = {
   ["sword_and_board"] = true,
 }
 
--- Global function
-function SAO_PrintUnmarkedTextures()
+-- Global functions, helpful for optimizing package
+
+function SAO_DB_ResetMarkedTextures()
+  if not SpellActivationOverlayDB.debug then
+    SpellActivationOverlayDB.debug = { marked = {} };
+  else
+    SpellActivationOverlayDB.debug.marked = {};
+  end
+end
+
+function SAO_DB_AddMarkedTextures()
+  if not SpellActivationOverlayDB.debug or not SpellActivationOverlayDB.debug.marked then
+    SAO_DB_ResetMarkedTextures();
+  end
+
   for fullTextureName, filename in pairs(SAO.TextureFilenameFromFullname) do
-    if not SAO.MarkedTextures[fullTextureName] and availableTextures[filename] then
-      print("SAO: Unmarked: "..filename);
+    if SAO.MarkedTextures[fullTextureName] then
+      SpellActivationOverlayDB.debug.marked[filename] = true;
+    end
+  end
+end
+
+function SAO_DB_ComputeUnmarkedTextures()
+  SAO_DB_AddMarkedTextures(); -- Not needed in theory, but it avoids confusion
+  SpellActivationOverlayDB.debug.unmarked = {};
+
+  for fullTextureName, filename in pairs(SAO.TextureFilenameFromFullname) do
+    if availableTextures[filename] then
+      if     not SAO.MarkedTextures[fullTextureName] -- Not marked by current class
+        and (not SpellActivationOverlayDB.debug.marked or not SpellActivationOverlayDB.debug.marked[filename]) -- Mark not stored in database
+      then
+        SpellActivationOverlayDB.debug.unmarked[filename] = true;
+      end
     end
   end
 end
