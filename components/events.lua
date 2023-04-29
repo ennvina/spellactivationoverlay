@@ -11,7 +11,22 @@ function SAO.SPELL_AURA(self, ...)
     local auraApplied = event:sub(0,18) == "SPELL_AURA_APPLIED";
     local auraRemoved = event:sub(0,18) == "SPELL_AURA_REMOVED";
 
-    local auras = self.RegisteredAurasBySpellID[spellID];
+    local auras;
+    if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+        auras = self.RegisteredAurasBySpellID[spellID];
+    else
+        -- Due to Classic Era limitation, aura is registered by its spell name
+        auras = self.RegisteredAurasBySpellID[spellName];
+        if (auras) then
+            -- Must fetch spellID from aura, because spellID from CLEU is most likely 0 at this point
+            -- We can fetch any aura from auras because all auras store the same spellID
+            for _, auraStacks in pairs(auras) do
+                spellID = auraStacks[1][3]; -- [1] for first aura in auraStacks, [3] because spellID is the third item
+                break;
+            end
+        end
+    end
+
     if auras and (auraApplied or auraRemoved) then
         local count = 0;
         if (not auras[0]) then
