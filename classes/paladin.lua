@@ -20,7 +20,7 @@ local function registerClass(self)
     self:AddGlowingLink(artOfWarBuff2, artOfWarBuff1);
 
     -- Hammer of Wrath, Execute-like ability for targets at 20% hp or less
-    self:RegisterAura("how", 0, how, nil, "", 0, 0, 0, 0, false, { GetSpellInfo(how) });
+    self:RegisterAura("how", 0, how, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(how)) });
     self:RegisterCounter("how");
 
     -- Art of War, 1/2 talent points

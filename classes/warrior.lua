@@ -9,24 +9,24 @@ local function registerClass(self)
     local slam = 1464;
     local shieldSlam = 23922;
 
-    self:RegisterAura("bloodsurge", 0, 46916, "blood_surge", "Top", 1, 255, 255, 255, true, { GetSpellInfo(slam) });
-    self:RegisterAura("sudden_death", 0, 52437, "sudden_death", "Left + Right (Flipped)", 1, 255, 255, 255, true, { GetSpellInfo(execute) });
-    self:RegisterAura("sword_and_board", 0, 50227, "sword_and_board", "Left + Right (Flipped)", 1, 255, 255, 255, true, { GetSpellInfo(shieldSlam) });
+    self:RegisterAura("bloodsurge", 0, 46916, "blood_surge", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(slam)) });
+    self:RegisterAura("sudden_death", 0, 52437, "sudden_death", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(execute)) });
+    self:RegisterAura("sword_and_board", 0, 50227, "sword_and_board", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(shieldSlam)) });
 
     -- Overpower
-    self:RegisterAura("overpower", 0, overpower, nil, "", 0, 0, 0, 0, false, { GetSpellInfo(overpower) });
+    self:RegisterAura("overpower", 0, overpower, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(overpower)) });
     self:RegisterCounter("overpower"); -- Must match name from above call
 
     -- Execute
-    self:RegisterAura("execute", 0, execute, nil, "", 0, 0, 0, 0, false, { GetSpellInfo(execute) });
+    self:RegisterAura("execute", 0, execute, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(execute)) });
     self:RegisterCounter("execute"); -- Must match name from above call
 
     -- Revenge
-    self:RegisterAura("revenge", 0, revenge, nil, "", 0, 0, 0, 0, false, { GetSpellInfo(revenge) });
+    self:RegisterAura("revenge", 0, revenge, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(revenge)) });
     self:RegisterCounter("revenge"); -- Must match name from above call
 
     -- Victory Rush
-    self:RegisterAura("victory_rush", 0, victoryRush, nil, "", 0, 0, 0, 0, false, { GetSpellInfo(victoryRush) });
+    self:RegisterAura("victory_rush", 0, victoryRush, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(victoryRush)) });
     self:RegisterCounter("victory_rush"); -- Must match name from above call
 end
 
