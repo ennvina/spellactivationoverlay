@@ -161,17 +161,20 @@ local availableTextures = {
 
 -- Global functions, helpful for optimizing package
 
-function SAO_DB_ResetMarkedTextures()
+function SAO_DB_ResetMarkedTextures(output)
   if not SpellActivationOverlayDB.debug then
     SpellActivationOverlayDB.debug = { marked = {} };
   else
     SpellActivationOverlayDB.debug.marked = {};
   end
+  if type(output) ~= 'boolean' or output then
+    print("SAO_DB_ResetMarkedTextures() "..WrapTextInColorCode("OK", "FF00FF00"));
+  end
 end
 
-function SAO_DB_AddMarkedTextures()
+function SAO_DB_AddMarkedTextures(output)
   if not SpellActivationOverlayDB.debug or not SpellActivationOverlayDB.debug.marked then
-    SAO_DB_ResetMarkedTextures();
+    SAO_DB_ResetMarkedTextures(false);
   end
 
   for fullTextureName, filename in pairs(SAO.TextureFilenameFromFullname) do
@@ -179,10 +182,14 @@ function SAO_DB_AddMarkedTextures()
       SpellActivationOverlayDB.debug.marked[filename] = true;
     end
   end
+
+  if type(output) ~= 'boolean' or output then
+    print("SAO_DB_AddMarkedTextures() "..WrapTextInColorCode("OK", "FF00FF00"));
+  end
 end
 
-function SAO_DB_ComputeUnmarkedTextures()
-  SAO_DB_AddMarkedTextures(); -- Not needed in theory, but it avoids confusion
+function SAO_DB_ComputeUnmarkedTextures(output)
+  SAO_DB_AddMarkedTextures(false); -- Not needed in theory, but it avoids confusion
   SpellActivationOverlayDB.debug.unmarked = {};
 
   for fullTextureName, filename in pairs(SAO.TextureFilenameFromFullname) do
@@ -193,5 +200,9 @@ function SAO_DB_ComputeUnmarkedTextures()
         SpellActivationOverlayDB.debug.unmarked[filename] = true;
       end
     end
+  end
+
+  if type(output) ~= 'boolean' or output then
+    print("SAO_DB_ComputeUnmarkedTextures() "..WrapTextInColorCode("OK", "FF00FF00"));
   end
 end
