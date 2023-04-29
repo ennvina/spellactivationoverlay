@@ -31,6 +31,10 @@ function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale
         if not registeredSpellID then return end
     end
 
+    if texture then
+        self:MarkTexture(texture);
+    end
+
     -- Register aura in the spell list, sorted by spell ID and by stack count
     self.RegisteredAurasByName[name] = aura;
     if self.RegisteredAurasBySpellID[registeredSpellID] then
