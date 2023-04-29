@@ -3,6 +3,7 @@
 #### v0.8.5 (2022-05-xx)
 
 - Support for Classic Era, although many WotLK spells and talents are missing
+- Fixed an issue where paladin and warrior buttons would not glow
 - The addon should now use a bit less CPU than before
 
 #### v0.8.4 (2022-04-28)
