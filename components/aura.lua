@@ -31,7 +31,7 @@ function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale
         if not registeredSpellID then return end
     end
 
-    if texture then
+    if (type(texture) == 'string') then
         self:MarkTexture(texture);
     end
 
