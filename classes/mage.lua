@@ -46,10 +46,29 @@ HotStreakHandler.init = function(self, spellName)
     -- There is a known issue when the player disconnects with the virtual "Heating Up" buff, then reconnects
     -- Ideally, we'd keep track of the virtual buff, but it's really hard to do, and sometimes not even possible
     -- It's best not to over-design something to try to fix fringe cases, so we simply accept this limitation
+
+    -- Hot Streak can be banked or not
+    -- Banking means there was a Heating Up proc on a previous spec, then the mage changed spec and lost the talent
+    -- When the mage gets back the Hot Streak talent, the state comes back immediately to heating_up if it was banked
+    -- Always start as not banked, for the same reason the state always starts as cold
+    self.banked = false;
 end
 
 HotStreakHandler.isSpellTracked = function(self, spellID)
     return self.spells[spellID];
+end
+
+HotStreakHandler.hasHotStreakTalent = function(self)
+    -- Talent information could not be retrieved for Hot Streak
+    if (not self.talent) then
+        return false;
+    end
+
+    -- Talent information must include at least one point in Hot Streak
+    -- This may not be accurate, but it's almost impossible to do better
+    -- Not to mention, almost no one will play with only 1 or 2 points
+    local rank = select(5, GetTalentInfo(self.talent[1], self.talent[2]));
+    return rank > 0;
 end
 
 local function activateHeatingUp(self, spellID)
@@ -74,6 +93,7 @@ local function customCLEU(self, ...)
     --        deactivateHeatingUp(self, hotStreakHeatingUpSpellID);
     --    end
     --    HotStreakHandler.state = 'cold';
+    --    HotStreakHandler.banked = false;
     --
     --    return;
     --end
@@ -107,14 +127,8 @@ local function customCLEU(self, ...)
 
     -- The rest of the code is dedicated to try to catch the Heating Up buff, or if the buff is lost.
 
-    -- Talent information could not be retrieved for Hot Streak
-    if (not HotStreakHandler.talent) then return end
-
-    -- Talent information must include at least one point in Hot Streak
-    -- This may not be accurate, but it's almost impossible to do better
-    -- Not to mention, almost no one will play with only 1 or 2 points
-    local rank = select(5, GetTalentInfo(HotStreakHandler.talent[1], HotStreakHandler.talent[2]));
-    if (not (rank > 0)) then return end
+    -- Must have the Hot Streak talent to go on
+    if (not HotStreakHandler:hasHotStreakTalent()) then return end
 
     -- Spell must be match a known spell ID that can proc Hot Streak
     if (not HotStreakHandler:isSpellTracked(spellID)) then return end
@@ -155,6 +169,27 @@ local function customCLEU(self, ...)
         end
     else
         print("Unknown HotStreakHandler state");
+    end
+end
+
+local function recheckTalents(self)
+    local hasHotStreakTalent = HotStreakHandler:hasHotStreakTalent();
+    if not hasHotStreakTalent and HotStreakHandler.state == 'heating_up' then
+        -- Just lost the Hot Streak talent, and a Heating Up proc is there: bank it
+        HotStreakHandler.state = 'cold';
+        HotStreakHandler.banked = true;
+        deactivateHeatingUp(self, heatingUpSpellID);
+    elseif not hasHotStreakTalent and HotStreakHandler.state == 'hot_streak_heating_up' then
+        -- Just lost the Hot Streak talent, and a the double Heating Up + Hot Streak proc is there: bank Heating Up
+        HotStreakHandler.state = 'hot_streak';
+        HotStreakHandler.banked = true;
+        deactivateHeatingUp(self, hotStreakHeatingUpSpellID);
+    elseif hasHotStreakTalent and HotStreakHandler.banked then
+        -- Just gained the Hot Streak talent, and a Heating Up proc was banked: 'unbank' it
+        -- Note: we don't ever go back to hot_streak_heating_up because we assume the mage cannot swap specs twice before Hot Streak fades
+        HotStreakHandler.state = 'heating_up';
+        HotStreakHandler.banked = false;
+        activateHeatingUp(self, heatingUpSpellID);
     end
 end
 
@@ -261,8 +296,6 @@ local function loadOptions(self)
         heatingUpDetails = "Riscaldamento";
     elseif (locale == "ptBR") then
         heatingUpDetails = "Aquecendo";
-    elseif (locale == "frFR") then
-        heatingUpDetails = "Réchauffement";
     elseif (locale == "koKR") then
         heatingUpDetails = "열기";
     elseif (locale == "zhCN" or locale == "zhTW") then
@@ -307,4 +340,6 @@ SAO.Class["MAGE"] = {
     ["LoadOptions"] = loadOptions,
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
     ["PLAYER_LOGIN"] = customLogin,
+    ["CHARACTER_POINTS_CHANGED"] = recheckTalents,
+    ["PLAYER_TALENT_UPDATE"] = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC and recheckTalents or nil, -- This event was introduced in Wrath, and causes errors before
 }
