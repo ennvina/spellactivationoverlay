@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.8.5 (2022-05-xx)
+#### v0.9.0 (2022-05-xx)
 
 - Support for Classic Era, although many WotLK spells and talents are missing
 - Fixed an issue where paladin and warrior buttons would not glow
