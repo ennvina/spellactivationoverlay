@@ -1,4 +1,4 @@
-local AddonName, Private = ...
+local AddonName, SAO = ...
 
 -- Credits to WeakAuras for listing these textures https://github.com/WeakAuras
 local mapping =
@@ -84,12 +84,125 @@ local mapping =
     ["603339"] 	= "White Tiger",
 }
 
-Private.TexName = {}
+SAO.TexName = {}
+SAO.TextureFilenameFromFullname = {}
 for retailTexture, classicTexture in pairs(mapping) do
   -- For now, all textures are copied locally in the addon's texture folder
-  local fullTextureName = "Interface\\Addons\\SpellActivationOverlay\\textures\\"..classicTexture:gsub(" ", "_"):gsub("'", "");
-  Private.TexName[retailTexture] = fullTextureName;
-  Private.TexName[tonumber(retailTexture,10)] = fullTextureName;
-  Private.TexName[strlower(classicTexture)] = fullTextureName;
-  Private.TexName[strlower(classicTexture):gsub(" ", "_"):gsub("'", "")] = fullTextureName;
+  local filename = classicTexture:gsub(" ", "_"):gsub("'", "");
+  local fullTextureName = "Interface\\Addons\\SpellActivationOverlay\\textures\\"..filename;
+  SAO.TexName[retailTexture] = fullTextureName;
+  SAO.TexName[tonumber(retailTexture,10)] = fullTextureName;
+  SAO.TexName[strlower(classicTexture)] = fullTextureName;
+  SAO.TexName[strlower(classicTexture):gsub(" ", "_"):gsub("'", "")] = fullTextureName;
+  SAO.TextureFilenameFromFullname[fullTextureName] = strlower(filename);
+end
+
+SAO.MarkedTextures = {}
+function SAO.MarkTexture(self, texName)
+  if not texName then return end
+
+  local pointedTexName = self.TexName[texName];
+  local fullTextureName;
+  if pointedTexName then
+    self.MarkedTextures[pointedTexName] = true;
+    fullTextureName = pointedTexName;
+  elseif self.TextureFilenameFromFullname[texName] then
+    self.MarkedTextures[texName] = true;
+    fullTextureName = texName;
+  else
+    print(WrapTextInColorCode("SAO: Error: Unknown texture "..texName, "FFFF0000"));
+  end
+
+  if fullTextureName and not GetFileIDFromPath(fullTextureName) then
+    print(WrapTextInColorCode("SAO: Error: Missing file for texture "..texName, "FFFF0000"));
+  end
+end
+
+-- List fetched from bash: cd textures && ls -1 *.blp | cut -d. -f1 | tr 'A-Z' 'a-z' | awk 'BEGIN{ print "local availableTextures = {" } {printf "  [\"%s\"] = true,\n", $0} END { print "}" }'
+local availableTextures = {
+  ["arcane_missiles"] = true,
+  ["art_of_war"] = true,
+  ["backlash"] = true,
+  ["bandits_guile"] = true,
+  ["blood_surge"] = true,
+  ["brain_freeze"] = true,
+  ["daybreak"] = true,
+  ["echo_of_the_elements"] = true,
+  ["eclipse_moon"] = true,
+  ["eclipse_sun"] = true,
+  ["feral_omenofclarity"] = true,
+  ["frozen_fingers"] = true,
+  ["fury_of_stormrage"] = true,
+  ["genericarc_02"] = true,
+  ["genericarc_05"] = true,
+  ["high_tide"] = true,
+  ["hot_streak"] = true,
+  ["imp_empowerment"] = true,
+  ["impact"] = true,
+  ["killing_machine"] = true,
+  ["lock_and_load"] = true,
+  ["maelstrom_weapon"] = true,
+  ["maelstrom_weapon_1"] = true,
+  ["maelstrom_weapon_2"] = true,
+  ["maelstrom_weapon_3"] = true,
+  ["maelstrom_weapon_4"] = true,
+  ["master_marksman"] = true,
+  ["molten_core"] = true,
+  ["natures_grace"] = true,
+  ["nightfall"] = true,
+  ["predatory_swiftness"] = true,
+  ["rime"] = true,
+  ["serendipity"] = true,
+  ["shooting_stars"] = true,
+  ["sudden_death"] = true,
+  ["surge_of_light"] = true,
+  ["sword_and_board"] = true,
+}
+
+-- Global functions, helpful for optimizing package
+
+function SAO_DB_ResetMarkedTextures(output)
+  if not SpellActivationOverlayDB.debug then
+    SpellActivationOverlayDB.debug = { marked = {} };
+  else
+    SpellActivationOverlayDB.debug.marked = {};
+  end
+  if type(output) ~= 'boolean' or output then
+    print("SAO_DB_ResetMarkedTextures() "..WrapTextInColorCode("OK", "FF00FF00"));
+  end
+end
+
+function SAO_DB_AddMarkedTextures(output)
+  if not SpellActivationOverlayDB.debug or not SpellActivationOverlayDB.debug.marked then
+    SAO_DB_ResetMarkedTextures(false);
+  end
+
+  for fullTextureName, filename in pairs(SAO.TextureFilenameFromFullname) do
+    if SAO.MarkedTextures[fullTextureName] then
+      SpellActivationOverlayDB.debug.marked[filename] = true;
+    end
+  end
+
+  if type(output) ~= 'boolean' or output then
+    print("SAO_DB_AddMarkedTextures() "..WrapTextInColorCode("OK", "FF00FF00"));
+  end
+end
+
+function SAO_DB_ComputeUnmarkedTextures(output)
+  SAO_DB_AddMarkedTextures(false); -- Not needed in theory, but it avoids confusion
+  SpellActivationOverlayDB.debug.unmarked = {};
+
+  for fullTextureName, filename in pairs(SAO.TextureFilenameFromFullname) do
+    if availableTextures[filename] then
+      if     not SAO.MarkedTextures[fullTextureName] -- Not marked by current class
+        and (not SpellActivationOverlayDB.debug.marked or not SpellActivationOverlayDB.debug.marked[filename]) -- Mark not stored in database
+      then
+        SpellActivationOverlayDB.debug.unmarked[filename] = true;
+      end
+    end
+  end
+
+  if type(output) ~= 'boolean' or output then
+    print("SAO_DB_ComputeUnmarkedTextures() "..WrapTextInColorCode("OK", "FF00FF00"));
+  end
 end

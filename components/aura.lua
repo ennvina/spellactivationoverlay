@@ -24,16 +24,27 @@ function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale
     end
     local aura = { name, stacks, spellID, texture, positions, scale, r, g, b, autoPulse, glowIDs }
 
+    -- Cannot track spell ID on Classic Era, but can track spell name
+    local registeredSpellID = spellID;
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and spellID < 1000000 then -- spell IDs over 1000000 are fake ones
+        registeredSpellID = GetSpellInfo(spellID);
+        if not registeredSpellID then return end
+    end
+
+    if (type(texture) == 'string') then
+        self:MarkTexture(texture);
+    end
+
     -- Register aura in the spell list, sorted by spell ID and by stack count
     self.RegisteredAurasByName[name] = aura;
-    if self.RegisteredAurasBySpellID[spellID] then
-        if self.RegisteredAurasBySpellID[spellID][stacks] then
-            table.insert(self.RegisteredAurasBySpellID[spellID][stacks], aura)
+    if self.RegisteredAurasBySpellID[registeredSpellID] then
+        if self.RegisteredAurasBySpellID[registeredSpellID][stacks] then
+            table.insert(self.RegisteredAurasBySpellID[registeredSpellID][stacks], aura)
         else
-            self.RegisteredAurasBySpellID[spellID][stacks] = { aura };
+            self.RegisteredAurasBySpellID[registeredSpellID][stacks] = { aura };
         end
     else
-        self.RegisteredAurasBySpellID[spellID] = { [stacks] = { aura } }
+        self.RegisteredAurasBySpellID[registeredSpellID] = { [stacks] = { aura } }
     end
 
     -- Register the glow IDs

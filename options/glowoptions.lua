@@ -1,6 +1,12 @@
 local AddonName, SAO = ...
 
 function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText)
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+        if (talentID and not GetSpellInfo(talentID)) or not GetSpellInfo(glowID) then
+            return
+        end
+    end
+
     local className = self.CurrentClass.Intrinsics[1];
     local classFile = self.CurrentClass.Intrinsics[2];
 

@@ -9,6 +9,12 @@ local AddonName, SAO = ...
 -- testStacks if defined, forces the number of stacks for the test function
 -- testAuraID optional spell ID used to test the aura in lieu of auraID
 function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, variants, testStacks, testAuraID)
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+        if not GetSpellInfo(talentID) or not GetSpellInfo(auraID) then
+            return
+        end
+    end
+
     local className = self.CurrentClass.Intrinsics[1];
     local classFile = self.CurrentClass.Intrinsics[2];
 
@@ -46,7 +52,15 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, vari
     end
 
     local testFunc = function(start, cb, sb)
-        local auras = self.RegisteredAurasBySpellID[testAuraID or auraID];
+        local registeredSpellID;
+        if testAuraID then
+            registeredSpellID = testAuraID;
+        elseif WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+            registeredSpellID = GetSpellInfo(auraID); -- Cannot track spell ID on Classic Era, but can track spell name
+        else
+            registeredSpellID = auraID;
+        end
+        local auras = self.RegisteredAurasBySpellID[registeredSpellID];
         if (not auras) then
             return
         end

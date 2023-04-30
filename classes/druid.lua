@@ -188,9 +188,19 @@ local function lazyCreateNaturesGraceVariants(self)
         return;
     end
 
-    naturesGraceVariants = self:CreateTextureVariants(16886, 0, {
-        self:TextureVariantValue("serendipity", true),
-        self:TextureVariantValue("fury_of_stormrage", true),
+    local spellID = 16886;
+
+    local textureVariant1 = "serendipity";
+    local textureVariant2 = "fury_of_stormrage";
+
+    if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC or GetSpellInfo(spellID) then
+        self:MarkTexture(textureVariant1);
+        self:MarkTexture(textureVariant2);
+    end
+
+    naturesGraceVariants = self:CreateTextureVariants(spellID, 0, {
+        self:TextureVariantValue(textureVariant1, true),
+        self:TextureVariantValue(textureVariant2, true),
     });
 end
 
@@ -198,8 +208,10 @@ local function registerClass(self)
     -- Track Eclipses with a custom CLEU function, so that eclipses can coexist with Omen of Clarity
     -- self:RegisterAura("eclipse_lunar", 0, lunarSpellID, "eclipse_moon", "Left", 1, 255, 255, 255, true);
     -- self:RegisterAura("eclipse_solar", 0, solarSpellID, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true);
-    self:RegisterAura("eclipse_lunar", 0, lunarSpellID+1000000, "eclipse_moon", "Left", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
-    self:RegisterAura("eclipse_solar", 0, solarSpellID+1000000, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
+    if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then -- Must exclude Eclipses for Classic Era, because there are no Eclipses, but the fake spell IDs would be accepted
+        self:RegisterAura("eclipse_lunar", 0, lunarSpellID+1000000, "eclipse_moon", "Left", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
+        self:RegisterAura("eclipse_solar", 0, solarSpellID+1000000, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
+    end
 
     -- Track Omen of Clarity with a custom CLEU function, to be able to switch between feral and non-feral texture
     -- self:RegisterAura("omen_of_clarity", 0, 16870, "natures_grace", "Left + Right (Flipped)", 1, 255, 255, 255, true);
@@ -238,6 +250,22 @@ local function registerClass(self)
     -- Balance 4p set bonuses
     self:RegisterAura("wrath_of_elune", 0, 46833, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvP season 5-6-7-8
     self:RegisterAura("elunes_wrath", 0, 64823, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvE tier 8
+
+    -- Mark textures that aren't marked automatically
+    local omenTextureFeral = "feral_omenofclarity";
+    local omenTextureResto = "natures_grace";
+    local lunarTexture = "eclipse_moon";
+    local solarTexture = "eclipse_sun";
+    if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC or GetSpellInfo(omenSpellID) then
+        self:MarkTexture(omenTextureFeral);
+        self:MarkTexture(omenTextureResto);
+    end
+    if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC or GetSpellInfo(lunarSpellID) then
+        self:MarkTexture(lunarTexture);
+    end
+    if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC or GetSpellInfo(solarSpellID) then
+        self:MarkTexture(solarTexture);
+    end
 end
 
 local function loadOptions(self)
@@ -287,14 +315,16 @@ local function loadOptions(self)
     self:AddGlowingOption(solarEclipseTalent, wrath, wrath);
     self:AddGlowingOption(wrathOfEluneTalent, wrathOfEluneBuff, starfire);
     self:AddGlowingOption(elunesWrathTalent, elunesWrathBuff, starfire);
-    self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, regrowth);
-    self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, healingTouch);
-    self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, nourish);
-    self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, rebirth);
-    self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, wrath);
-    self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, entanglingRoots);
-    self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, cyclone);
-    self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, hibernate);
+    if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then -- Must exclude this option specifically for Classic Era, because the talent exists in Era but it has no proc
+        self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, regrowth);
+        self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, healingTouch);
+        self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, nourish);
+        self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, rebirth);
+        self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, wrath);
+        self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, entanglingRoots);
+        self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, cyclone);
+        self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, hibernate);
+    end
 end
 
 SAO.Class["DRUID"] = {

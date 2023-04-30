@@ -172,12 +172,22 @@ local function lazyCreateClearcastingVariants(self)
         return;
     end
 
+    local spellID = 12536;
+
+    local textureVariant1 = "genericarc_05";
+    local textureVariant2 = "genericarc_02";
+
+    if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC or GetSpellInfo(spellID) then
+        self:MarkTexture(textureVariant1);
+        self:MarkTexture(textureVariant2);
+    end
+
     local weakText = PET_BATTLE_COMBAT_LOG_DAMAGE_WEAK:gsub("[ ()]","");
     local strongText = PET_BATTLE_COMBAT_LOG_DAMAGE_STRONG:gsub("[ ()]","");
 
-    clearcastingVariants = self:CreateTextureVariants(12536, 0, {
-        self:TextureVariantValue("genericarc_05", false, weakText),
-        self:TextureVariantValue("genericarc_02", false, strongText),
+    clearcastingVariants = self:CreateTextureVariants(spellID, 0, {
+        self:TextureVariantValue(textureVariant1, false, weakText),
+        self:TextureVariantValue(textureVariant2, false, strongText),
     });
 end
 
@@ -284,7 +294,9 @@ local function loadOptions(self)
     self:AddGlowingOption(missileBarrageTalent, missileBarrageBuff, arcaneMissiles);
     self:AddGlowingOption(hotStreakTalent, hotStreakBuff, pyroblast);
     self:AddGlowingOption(firestarterTalent, firestarterBuff, flamestrike);
-    self:AddGlowingOption(impactTalent, impactBuff, fireBlast);
+    if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then -- Must exclude this option specifically for Classic Era, because the talent exists in Era but the proc is passive
+        self:AddGlowingOption(impactTalent, impactBuff, fireBlast);
+    end
     self:AddGlowingOption(brainFreezeTalent, brainFreezeBuff, fireball);
     self:AddGlowingOption(brainFreezeTalent, brainFreezeBuff, frostfireBolt);
     -- self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuff, ...); -- Maybe add spell options for Fingers of Frost

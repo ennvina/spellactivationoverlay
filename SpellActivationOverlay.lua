@@ -30,9 +30,9 @@ function SpellActivationOverlay_OnLoad(self)
 			end
 		end
 	else
-		print("Class unknown or not converted yet: "..select(1, UnitClass("player")));
+		print(WrapTextInColorCode("Class unknown or not converted yet: ", "FFFF0000")..select(1, UnitClass("player")));
 	end
-	
+
 	-- These events do not exist in Classic Era, BC Classic, nor Wrath Classic
 --	self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_SHOW");
 --	self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_HIDE");

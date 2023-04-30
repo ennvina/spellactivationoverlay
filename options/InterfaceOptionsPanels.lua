@@ -44,11 +44,13 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     testButton:SetText("Toggle Test");
     testButton.fakeSpellID = 42;
     testButton.isTesting = false;
+    local testTextureLeftRight = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and "echo_of_the_elements" or "imp_empowerment";
+    local testTextureTop = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and "fury_of_stormrage" or "brain_freeze";
     testButton.StartTest = function(self)
         if (not self.isTesting) then
             self.isTesting = true;
-            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName["imp_empowerment"], "Left + Right (Flipped)", 1, 255, 255, 255, false);
-            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName["brain_freeze"], "Top", 1, 255, 255, 255, false);
+            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName[testTextureLeftRight], "Left + Right (Flipped)", 1, 255, 255, 255, false);
+            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName[testTextureTop], "Top", 1, 255, 255, 255, false);
             -- Hack the frame to force full opacity even when out of combat
             SpellActivationOverlayFrame_SetForceAlpha1(true);
         end
@@ -62,6 +64,9 @@ function SpellActivationOverlayOptionsPanel_Init(self)
         end
     end
     testButton:SetEnabled(SpellActivationOverlayDB.alert.enabled);
+    -- Manually mark textures used for testing
+    SAO:MarkTexture(testTextureLeftRight);
+    SAO:MarkTexture(testTextureTop);
 
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     glowingButtonCheckbox.Text:SetText("Glowing Buttons");
