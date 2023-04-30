@@ -294,7 +294,9 @@ local function loadOptions(self)
     self:AddGlowingOption(missileBarrageTalent, missileBarrageBuff, arcaneMissiles);
     self:AddGlowingOption(hotStreakTalent, hotStreakBuff, pyroblast);
     self:AddGlowingOption(firestarterTalent, firestarterBuff, flamestrike);
-    self:AddGlowingOption(impactTalent, impactBuff, fireBlast);
+    if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then -- Must exclude this option specifically for Classic Era, because the talent exists in Era but the proc is passive
+        self:AddGlowingOption(impactTalent, impactBuff, fireBlast);
+    end
     self:AddGlowingOption(brainFreezeTalent, brainFreezeBuff, fireball);
     self:AddGlowingOption(brainFreezeTalent, brainFreezeBuff, frostfireBolt);
     -- self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuff, ...); -- Maybe add spell options for Fingers of Frost
