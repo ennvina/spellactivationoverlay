@@ -171,7 +171,8 @@
         "strfind",
         "STATUS_TEXT_BOTH",
         "ACTION_SPELL_AURA_APPLIED_DOSE",
-        "GetFileIDFromPath"
+        "GetFileIDFromPath",
+        "WOW_PROJECT_WRATH_CLASSIC"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",
