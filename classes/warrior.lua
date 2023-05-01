@@ -1,5 +1,100 @@
 local AddonName, SAO = ...
 
+-- Optimize frequent calls
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
+local UnitGUID = UnitGUID
+
+local OverpowerHandler = {
+    initialized = false,
+    -- Variables
+    targetGuid = nil,
+    vanishTime = nil,
+    glowing = false,
+    -- Constants; spellName and fakeSpellID are computed during init
+    maxDuration = 5,
+    tolerance = 0.2,
+    spellName = nil,
+    spellID = 7384,
+    fakeSpellID = nil,
+}
+
+OverpowerHandler.init = function(self, name)
+    self.spellName = name;
+    self.fakeSpellID = self.spellID + 1000000;
+    self.initialized = true;
+end
+
+OverpowerHandler.glow = function(self)
+    SAO:AddGlow(self.fakeSpellID, { self.spellName });
+    self.glowing = true;
+end
+
+OverpowerHandler.unglow = function(self)
+    SAO:RemoveGlow(self.fakeSpellID);
+    self.glowing = false;
+end
+
+OverpowerHandler.dodge = function(self, guid)
+    self.targetGuid = guid;
+    self.vanishTime = GetTime() + self.maxDuration - self.tolerance;
+    C_Timer.After(self.maxDuration, function()
+        self:timeout();
+    end)
+
+    if UnitGUID("target") == guid then
+        self:glow();
+    end
+end
+
+OverpowerHandler.overpower = function(self)
+    self.targetGuid = nil;
+    -- Always unglow, even if not needed. Better unglow too much than not enough.
+    self:unglow();
+end
+
+OverpowerHandler.timeout = function(self)
+    if self.targetGuid and GetTime() > self.vanishTime then
+        self.targetGuid = nil;
+        self:unglow();
+    end
+end
+
+OverpowerHandler.retarget = function(self, ...)
+    if not self.targetGuid then return end
+
+    if self.glowing and UnitGUID("target") ~= self.targetGuid then
+        self:unglow();
+    elseif not self.glowing and UnitGUID("target") == self.targetGuid then
+        self:glow();
+    end
+end
+
+local function customLogin(self, ...)
+    local overpowerName = GetSpellInfo(OverpowerHandler.spellID);
+    if (overpowerName) then
+        OverpowerHandler:init(overpowerName);
+    end
+end
+
+local function customCLEU(self, ...)
+    if not OverpowerHandler.initialized then return end
+
+    local timestamp, event, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo(); -- For all events
+
+    if sourceGUID ~= UnitGUID("player") then return end
+
+    if event == "SWING_MISSED" and select(12, CombatLogGetCurrentEventInfo()) == "DODGE"
+    or event == "SPELL_MISSED" and select(15, CombatLogGetCurrentEventInfo()) == "DODGE" then
+        OverpowerHandler:dodge(destGUID);
+    elseif event == "SPELL_CAST_SUCCESS" and select(13, CombatLogGetCurrentEventInfo()) == OverpowerHandler.spellName then
+        OverpowerHandler:overpower();
+    end
+end
+
+local function retarget(self, ...)
+    OverpowerHandler:retarget(...);
+end
+
 local function registerClass(self)
     local tasteforBlood = 60503; -- Unused as of now, might be used in the future.
     local overpower = 7384;
@@ -63,4 +158,7 @@ end
 SAO.Class["WARRIOR"] = {
     ["Register"] = registerClass,
     ["LoadOptions"] = loadOptions,
+    ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
+    ["PLAYER_LOGIN"] = customLogin,
+    ["PLAYER_TARGET_CHANGED"] = retarget,
 }
