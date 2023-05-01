@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.9.0 (2022-05-xx)
+#### v0.9.0 (2022-05-01)
 
 - Support for Classic Era, although many WotLK spells and talents are missing
 - Mage's Heating Up effect is now hidden when the talent is lost e.g., respec
