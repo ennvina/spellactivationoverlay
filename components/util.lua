@@ -93,3 +93,40 @@ function SAO.GetHomonymSpellIDs(self, spell)
 
     return homonyms;
 end
+
+--[[
+    GlowInterface generalizes how to invoke custom glowing buttons
+
+    Inheritance is done by the bind function, then init must be called e.g.
+        MyHandler = { var = 42 }
+        GlowInterface:bind(MyHandler);
+        MyHandler:init(spellID, spellName);
+
+    Once this is done, the glow() and unglow() methods can be called
+        MyHandler:glow();
+        MyHandler:unglow();
+]]
+SAO.GlowInterface = {
+    bind = function(self, obj)
+        self.__index = nil;
+        setmetatable(obj, self);
+        self.__index = self;
+    end,
+
+    initVars = function(self, id, name)
+        self.spellID = id;
+        self.spellName = name;
+        self.fakeSpellID = id + 1000000; -- 1M ought to be enough for anybody
+        self.glowing = false;
+    end,
+
+    glow = function(self)
+        SAO:AddGlow(self.fakeSpellID, { self.spellName });
+        self.glowing = true;
+    end,
+
+    unglow = function(self)
+        SAO:RemoveGlow(self.fakeSpellID);
+        self.glowing = false;
+    end,
+}

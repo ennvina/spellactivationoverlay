@@ -5,43 +5,6 @@ local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local UnitGUID = UnitGUID
 
 --[[
-    GlowInterface generalizes how to invoke custom glowing buttons
-
-    Inheritance is done by the bind function, then init must be called e.g.
-        MyHandler = { var = 42 }
-        GlowInterface:bind(MyHandler);
-        MyHandler:init(spellID, spellName);
-
-    Once this is done, the glow() and unglow() methods can be called
-        MyHandler:glow();
-        MyHandler:unglow();
-]]
-local GlowInterface = {
-    bind = function(self, obj)
-        self.__index = nil;
-        setmetatable(obj, self);
-        self.__index = self;
-    end,
-
-    initVars = function(self, id, name)
-        self.spellID = id;
-        self.spellName = name;
-        self.fakeSpellID = id + 1000000;
-        self.glowing = false;
-    end,
-
-    glow = function(self)
-        SAO:AddGlow(self.fakeSpellID, { self.spellName });
-        self.glowing = true;
-    end,
-
-    unglow = function(self)
-        SAO:RemoveGlow(self.fakeSpellID);
-        self.glowing = false;
-    end,
-}
-
---[[
     OverpowerHandler guesses when Overpower is available
 
     The following conditions must be met:
@@ -80,7 +43,7 @@ local OverpowerHandler = {
     -- Methods
 
     init = function(self, id, name)
-        GlowInterface:bind(self);
+        SAO.GlowInterface:bind(self);
         self:initVars(id, name);
         self.initialized = true;
     end,
