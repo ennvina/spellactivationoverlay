@@ -341,7 +341,9 @@ local function loadOptions(self)
         self:AddGlowingOption(nil, RevengeHandler.fakeSpellID, revenge, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
     end
     self:AddGlowingOption(nil, execute, execute, nil, string.format("%s = %s", DEFAULT, string.format("%s, %s", battleStance, berserkerStance)));
-    --self:AddGlowingOption(nil, ---, execute, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
+    if ExecuteHandler.initialized then
+        self:AddGlowingOption(nil, ExecuteHandler.fakeSpellID, execute, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
+    end
     self:AddGlowingOption(nil, victoryRush, victoryRush);
     self:AddGlowingOption(suddenDeathTalent, suddenDeathBuff, execute);
     self:AddGlowingOption(bloodsurgeTalent, bloodsurgeBuff, slam);
