@@ -142,14 +142,21 @@ local function loadOptions(self)
     local swordAndBoardBuff = 50227;
     local swordAndBoardTalent = 46951;
 
+    local battleStance = GetSpellInfo(2457);
+    local defensiveStance = GetSpellInfo(71);
+    local berserkerStance = GetSpellInfo(2458);
+
     self:AddOverlayOption(suddenDeathTalent, suddenDeathBuff);
     self:AddOverlayOption(bloodsurgeTalent, bloodsurgeBuff);
     self:AddOverlayOption(swordAndBoardTalent, swordAndBoardBuff);
 
-    self:AddGlowingOption(nil, overpower, overpower);
-    self:AddGlowingOption(nil, revenge, revenge);
+    self:AddGlowingOption(nil, overpower, overpower, nil, string.format("%s = %s", DEFAULT, string.format(RACE_CLASS_ONLY, battleStance)));
+    self:AddGlowingOption(nil, OverpowerHandler.fakeSpellID, overpower, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
+    self:AddGlowingOption(nil, revenge, revenge, nil, string.format("%s = %s", DEFAULT, string.format(RACE_CLASS_ONLY, defensiveStance)));
+    --self:AddGlowingOption(nil, ---, revenge, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
+    self:AddGlowingOption(nil, execute, execute, nil, string.format("%s = %s", DEFAULT, string.format("%s, %s", battleStance, berserkerStance)));
+    --self:AddGlowingOption(nil, ---, execute, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
     self:AddGlowingOption(nil, victoryRush, victoryRush);
-    self:AddGlowingOption(nil, execute, execute);
     self:AddGlowingOption(suddenDeathTalent, suddenDeathBuff, execute);
     self:AddGlowingOption(bloodsurgeTalent, bloodsurgeBuff, slam);
     self:AddGlowingOption(swordAndBoardTalent, swordAndBoardBuff, shieldSlam);
