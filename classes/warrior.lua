@@ -112,7 +112,9 @@ local function customCLEU(self, ...)
 end
 
 local function retarget(self, ...)
-    OverpowerHandler:retarget(...);
+    if OverpowerHandler.initialized then
+        OverpowerHandler:retarget(...);
+    end
 end
 
 local function registerClass(self)
