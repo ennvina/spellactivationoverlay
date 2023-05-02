@@ -267,7 +267,9 @@ local function loadOptions(self)
         self:AddGlowingOption(nil, OverpowerHandler.fakeSpellID, overpower, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
     end
     self:AddGlowingOption(nil, revenge, revenge, nil, string.format("%s = %s", DEFAULT, string.format(RACE_CLASS_ONLY, defensiveStance)));
-    --self:AddGlowingOption(nil, ---, revenge, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
+    if RevengeHandler.initialized then
+        self:AddGlowingOption(nil, RevengeHandler.fakeSpellID, revenge, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
+    end
     self:AddGlowingOption(nil, execute, execute, nil, string.format("%s = %s", DEFAULT, string.format("%s, %s", battleStance, berserkerStance)));
     --self:AddGlowingOption(nil, ---, execute, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
     self:AddGlowingOption(nil, victoryRush, victoryRush);
