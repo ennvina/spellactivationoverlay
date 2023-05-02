@@ -54,7 +54,7 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
     local testFunc = function(start)
         local fakeOffset = 42000000;
         if (start) then
-            self:AddGlow(fakeOffset+spellID, { GetSpellInfo(glowID) });
+            self:AddGlow(fakeOffset+spellID, { (GetSpellInfo(glowID)) });
         else
             self:RemoveGlow(fakeOffset+spellID);
         end

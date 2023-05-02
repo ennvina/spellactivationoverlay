@@ -285,14 +285,17 @@ SAO.defaults = {
                 [7384] = { -- Overpower
                     [7384] = true, -- Overpower
                 },
+                [1007384] = { -- Overpower, any stance
+                    [7384] = true, -- Overpower
+                },
                 [6572] = { -- Revenge
                     [6572] = true, -- Revenge
                 },
-                [34428] = { -- Victory Rush
-                    [34428] = true, -- Victory Rush
-                },
                 [5308] = { -- Execute
                     [5308] = true, -- Execute
+                },
+                [34428] = { -- Victory Rush
+                    [34428] = true, -- Victory Rush
                 },
                 [52437] = { -- Sudden Death
                     [5308] = true, -- Execute
