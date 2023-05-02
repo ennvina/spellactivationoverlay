@@ -82,6 +82,19 @@ local OverpowerHandler = {
             self:glow();
         end
     end,
+
+    cleu = function(self, ...)
+        local timestamp, event, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = ...; -- For all events
+
+        if sourceGUID ~= UnitGUID("player") then return end
+
+        if event == "SWING_MISSED" and select(12, ...) == "DODGE"
+        or event == "SPELL_MISSED" and select(15, ...) == "DODGE" then
+            self:dodge(destGUID);
+        elseif event == "SPELL_CAST_SUCCESS" and select(13, ...) == self.spellName then
+            self:overpower();
+        end
+    end,
 }
 
 local function customLogin(self, ...)
@@ -93,17 +106,8 @@ local function customLogin(self, ...)
 end
 
 local function customCLEU(self, ...)
-    if not OverpowerHandler.initialized then return end
-
-    local timestamp, event, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo(); -- For all events
-
-    if sourceGUID ~= UnitGUID("player") then return end
-
-    if event == "SWING_MISSED" and select(12, CombatLogGetCurrentEventInfo()) == "DODGE"
-    or event == "SPELL_MISSED" and select(15, CombatLogGetCurrentEventInfo()) == "DODGE" then
-        OverpowerHandler:dodge(destGUID);
-    elseif event == "SPELL_CAST_SUCCESS" and select(13, CombatLogGetCurrentEventInfo()) == OverpowerHandler.spellName then
-        OverpowerHandler:overpower();
+    if OverpowerHandler.initialized then
+        OverpowerHandler:cleu(CombatLogGetCurrentEventInfo());
     end
 end
 
