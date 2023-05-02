@@ -174,7 +174,10 @@
         "GetFileIDFromPath",
         "WOW_PROJECT_WRATH_CLASSIC",
         "RACE_CLASS_ONLY",
-        "DEFAULT"
+        "DEFAULT",
+        "UnitCanAttack",
+        "UnitHealth",
+        "UnitHealthMax"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",

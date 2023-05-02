@@ -297,9 +297,9 @@ SAO.defaults = {
                 [5308] = { -- Execute
                     [5308] = true, -- Execute
                 },
-                -- [1005308] = { -- Execute, any stance
-                --     [5308] = false, -- Execute
-                -- },
+                [1005308] = { -- Execute, any stance
+                    [5308] = false, -- Execute
+                },
                 [34428] = { -- Victory Rush
                     [34428] = true, -- Victory Rush
                 },

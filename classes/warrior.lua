@@ -2,7 +2,10 @@ local AddonName, SAO = ...
 
 -- Optimize frequent calls
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
+local UnitCanAttack = UnitCanAttack
 local UnitGUID = UnitGUID
+local UnitHealth = UnitHealth
+local UnitHealthMax = UnitHealthMax
 
 --[[
     OverpowerHandler guesses when Overpower is available,
@@ -177,6 +180,57 @@ local RevengeHandler = {
     end,
 }
 
+--[[
+    ExecuteHandler guesses when Execute is available,
+    even without being in Battle or Berserker Stance
+
+    The following conditions must be met:
+    - the current target can be attacked
+    - the current target has less than 20% health
+
+    This stops if either:
+    - the target cannot be attacked
+    - the target is healed at or over 20% health
+]]
+local ExecuteHandler = {
+
+    initialized = false,
+
+    -- Methods
+
+    init = function(self, id, name)
+        SAO.GlowInterface:bind(self);
+        self:initVars(id, name);
+        self.initialized = true;
+    end,
+
+    checkTargetHealth = function(self)
+        local canExecute = false;
+
+        if UnitCanAttack("player", "target") then
+            local hp = UnitHealth("target");
+            local hpMax = UnitHealthMax("target");
+            canExecute = hp > 0 and hp/hpMax < 0.2;
+        end
+
+        if canExecute and not self.glowing then
+            self:glow();
+        elseif not canExecute and self.glowing then
+            self:unglow();
+        end
+    end,
+
+    retarget = function(self, ...)
+        self:checkTargetHealth();
+    end,
+
+    healthChanged = function(self, unitID)
+        if unitID == "target" then
+            self:checkTargetHealth();
+        end
+    end
+}
+
 local function customLogin(self, ...)
     local overpower = 7384;
     local overpowerName = GetSpellInfo(overpower);
@@ -188,6 +242,12 @@ local function customLogin(self, ...)
     local revengeName = GetSpellInfo(revenge);
     if (revengeName) then
         RevengeHandler:init(revenge, revengeName);
+    end
+
+    local execute = 5308;
+    local executeName = GetSpellInfo(execute);
+    if (executeName) then
+        ExecuteHandler:init(execute, executeName);
     end
 end
 
@@ -204,6 +264,16 @@ end
 local function retarget(self, ...)
     if OverpowerHandler.initialized then
         OverpowerHandler:retarget(...);
+    end
+
+    if ExecuteHandler.initialized then
+        ExecuteHandler:retarget(...);
+    end
+end
+
+local function unitHealth(self, ...)
+    if ExecuteHandler.initialized then
+        ExecuteHandler:healthChanged(...);
     end
 end
 
@@ -271,7 +341,9 @@ local function loadOptions(self)
         self:AddGlowingOption(nil, RevengeHandler.fakeSpellID, revenge, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
     end
     self:AddGlowingOption(nil, execute, execute, nil, string.format("%s = %s", DEFAULT, string.format("%s, %s", battleStance, berserkerStance)));
-    --self:AddGlowingOption(nil, ---, execute, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
+    if ExecuteHandler.initialized then
+        self:AddGlowingOption(nil, ExecuteHandler.fakeSpellID, execute, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
+    end
     self:AddGlowingOption(nil, victoryRush, victoryRush);
     self:AddGlowingOption(suddenDeathTalent, suddenDeathBuff, execute);
     self:AddGlowingOption(bloodsurgeTalent, bloodsurgeBuff, slam);
@@ -284,4 +356,5 @@ SAO.Class["WARRIOR"] = {
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
     ["PLAYER_LOGIN"] = customLogin,
     ["PLAYER_TARGET_CHANGED"] = retarget,
+    ["UNIT_HEALTH"] = unitHealth,
 }
