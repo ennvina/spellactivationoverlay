@@ -4,6 +4,18 @@ local AddonName, SAO = ...
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local UnitGUID = UnitGUID
 
+--[[
+    GlowInterface generalizes how to invoke custom glowing buttons
+
+    Inheritance is done by the bind function, then init must be called e.g.
+        MyHandler = { var = 42 }
+        GlowInterface:bind(MyHandler);
+        MyHandler:init(spellID, spellName);
+
+    Once this is done, the glow() and unglow() methods can be called
+        MyHandler:glow();
+        MyHandler:unglow();
+]]
 local GlowInterface = {
     bind = function(self, obj)
         self.__index = nil;
@@ -29,6 +41,28 @@ local GlowInterface = {
     end,
 }
 
+--[[
+    OverpowerHandler guesses when Overpower is available
+
+    The following conditions must be met:
+    - an enemy dodged recently
+    - that enemy is the current target
+
+    This stops if either:
+    - Overpower has been cast
+    - the current target is not the enemy who dodged
+    - more than 5 seconds have elapsed since last dodge
+
+    The Overpower button will glow/unglow successively when
+    switching the target back and forth the enemy who dodged.
+    This prevents players from switching to Battle Stance
+    and then wondering "why am I unable to cast Overpower?"
+
+    If multiple enemies have dodged recently, Overpower
+    can only be cast on the last enemy who dodged.
+    This matches behavior on current Wrath phase (Ulduar).
+    May need testing for Classic Era and other Wrath phases.
+]]
 local OverpowerHandler = {
 
     initialized = false,
