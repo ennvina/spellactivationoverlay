@@ -4,75 +4,94 @@ local AddonName, SAO = ...
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local UnitGUID = UnitGUID
 
-local OverpowerHandler = {
-    initialized = false,
-    -- Variables
-    targetGuid = nil,
-    vanishTime = nil,
-    glowing = false,
-    -- Constants; spellName and fakeSpellID are computed during init
-    maxDuration = 5,
-    tolerance = 0.2,
-    spellName = nil,
-    spellID = 7384,
-    fakeSpellID = nil,
+local GlowInterface = {
+    bind = function(self, obj)
+        self.__index = nil;
+        setmetatable(obj, self);
+        self.__index = self;
+    end,
+
+    initVars = function(self, id, name)
+        self.spellID = id;
+        self.spellName = name;
+        self.fakeSpellID = id + 1000000;
+        self.glowing = false;
+    end,
+
+    glow = function(self)
+        SAO:AddGlow(self.fakeSpellID, { self.spellName });
+        self.glowing = true;
+    end,
+
+    unglow = function(self)
+        SAO:RemoveGlow(self.fakeSpellID);
+        self.glowing = false;
+    end,
 }
 
-OverpowerHandler.init = function(self, name)
-    self.spellName = name;
-    self.fakeSpellID = self.spellID + 1000000;
-    self.initialized = true;
-end
+local OverpowerHandler = {
 
-OverpowerHandler.glow = function(self)
-    SAO:AddGlow(self.fakeSpellID, { self.spellName });
-    self.glowing = true;
-end
+    initialized = false,
 
-OverpowerHandler.unglow = function(self)
-    SAO:RemoveGlow(self.fakeSpellID);
-    self.glowing = false;
-end
+    -- Variables
 
-OverpowerHandler.dodge = function(self, guid)
-    self.targetGuid = guid;
-    self.vanishTime = GetTime() + self.maxDuration - self.tolerance;
-    C_Timer.After(self.maxDuration, function()
-        self:timeout();
-    end)
+    targetGuid = nil,
+    vanishTime = nil,
 
-    if UnitGUID("target") == guid then
-        self:glow();
-    end
-end
+    -- Constants
 
-OverpowerHandler.overpower = function(self)
-    self.targetGuid = nil;
-    -- Always unglow, even if not needed. Better unglow too much than not enough.
-    self:unglow();
-end
+    maxDuration = 5,
+    tolerance = 0.2,
 
-OverpowerHandler.timeout = function(self)
-    if self.targetGuid and GetTime() > self.vanishTime then
+    -- Methods
+
+    init = function(self, id, name)
+        GlowInterface:bind(self);
+        self:initVars(id, name);
+        self.initialized = true;
+    end,
+
+    dodge = function(self, guid)
+        self.targetGuid = guid;
+        self.vanishTime = GetTime() + self.maxDuration - self.tolerance;
+        C_Timer.After(self.maxDuration, function()
+            self:timeout();
+        end)
+
+        if UnitGUID("target") == guid then
+            self:glow();
+        end
+    end,
+
+    overpower = function(self)
         self.targetGuid = nil;
+        -- Always unglow, even if not needed. Better unglow too much than not enough.
         self:unglow();
-    end
-end
+    end,
 
-OverpowerHandler.retarget = function(self, ...)
-    if not self.targetGuid then return end
+    timeout = function(self)
+        if self.targetGuid and GetTime() > self.vanishTime then
+            self.targetGuid = nil;
+            self:unglow();
+        end
+    end,
 
-    if self.glowing and UnitGUID("target") ~= self.targetGuid then
-        self:unglow();
-    elseif not self.glowing and UnitGUID("target") == self.targetGuid then
-        self:glow();
-    end
-end
+    retarget = function(self, ...)
+        if not self.targetGuid then return end
+
+        if self.glowing and UnitGUID("target") ~= self.targetGuid then
+            self:unglow();
+        elseif not self.glowing and UnitGUID("target") == self.targetGuid then
+            self:glow();
+        end
+    end,
+}
 
 local function customLogin(self, ...)
-    local overpowerName = GetSpellInfo(OverpowerHandler.spellID);
+    local overpower = 7384;
+    local overpowerName = GetSpellInfo(overpower);
     if (overpowerName) then
-        OverpowerHandler:init(overpowerName);
+        OverpowerHandler:init(overpower, overpowerName);
     end
 end
 
@@ -151,7 +170,9 @@ local function loadOptions(self)
     self:AddOverlayOption(swordAndBoardTalent, swordAndBoardBuff);
 
     self:AddGlowingOption(nil, overpower, overpower, nil, string.format("%s = %s", DEFAULT, string.format(RACE_CLASS_ONLY, battleStance)));
-    self:AddGlowingOption(nil, OverpowerHandler.fakeSpellID, overpower, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
+    if OverpowerHandler.initialized then
+        self:AddGlowingOption(nil, OverpowerHandler.fakeSpellID, overpower, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
+    end
     self:AddGlowingOption(nil, revenge, revenge, nil, string.format("%s = %s", DEFAULT, string.format(RACE_CLASS_ONLY, defensiveStance)));
     --self:AddGlowingOption(nil, ---, revenge, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
     self:AddGlowingOption(nil, execute, execute, nil, string.format("%s = %s", DEFAULT, string.format("%s, %s", battleStance, berserkerStance)));
