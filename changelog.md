@@ -3,6 +3,7 @@
 #### v0.9.1 (2022-05-xx)
 
 - Option to cast Warrior's Overpower in any stance
+- Option to cast Warrior's Revenge in any stance
 
 #### v0.9.0 (2022-05-01)
 
