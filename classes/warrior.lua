@@ -5,7 +5,8 @@ local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local UnitGUID = UnitGUID
 
 --[[
-    OverpowerHandler guesses when Overpower is available
+    OverpowerHandler guesses when Overpower is available,
+    even without being in Battle Stance
 
     The following conditions must be met:
     - an enemy dodged recently
@@ -97,17 +98,106 @@ local OverpowerHandler = {
     end,
 }
 
+--[[
+    RevengeHandler guesses when Revenge is available,
+    even without being in Defensive Stance
+
+    The following conditions must be met:
+    - the player dodged, parried or blocked recently
+
+    This stops if either:
+    - Revenge has been cast
+    - more than 5 seconds have elapsed since last dodge/parry/block
+]]
+local RevengeHandler = {
+
+    initialized = false,
+
+    -- Variables
+
+    vanishTime = nil,
+
+    -- Constants
+
+    maxDuration = 5,
+    tolerance = 0.2,
+
+    -- Methods
+
+    init = function(self, id, name)
+        SAO.GlowInterface:bind(self);
+        self:initVars(id, name);
+        self.initialized = true;
+    end,
+
+    dpb = function(self) -- 'DPB' means Dodge, Parry, or Block
+        self.vanishTime = GetTime() + self.maxDuration - self.tolerance;
+        C_Timer.After(self.maxDuration, function()
+            self:timeout();
+        end)
+
+        self:glow();
+    end,
+
+    revenge = function(self)
+        self.vanishTime = nil;
+        -- Always unglow, even if not needed. Better unglow too much than not enough.
+        self:unglow();
+    end,
+
+    timeout = function(self)
+        if self.vanishTime and GetTime() > self.vanishTime then
+            self.vanishTime = nil;
+            self:unglow();
+        end
+    end,
+
+    cleu = function(self, ...)
+        local timestamp, event, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = ...; -- For all events
+
+        local myGuid = UnitGUID("player");
+
+        if sourceGUID == myGuid then
+            if event == "SPELL_CAST_SUCCESS" and select(13, ...) == self.spellName then
+                self:revenge();
+            end
+        end
+
+        if destGUID == myGuid then
+            local missType;
+            if event == "SWING_MISSED" then
+                missType = select(12, ...);
+            elseif event == "SPELL_MISSED" then
+                missType = select(15, ...);
+            end
+            if missType == "DODGE" or missType == "PARRY" or missType == "BLOCK" then
+                self:dpb();
+            end
+        end
+    end,
+}
+
 local function customLogin(self, ...)
     local overpower = 7384;
     local overpowerName = GetSpellInfo(overpower);
     if (overpowerName) then
         OverpowerHandler:init(overpower, overpowerName);
     end
+
+    local revenge = 6572;
+    local revengeName = GetSpellInfo(revenge);
+    if (revengeName) then
+        RevengeHandler:init(revenge, revengeName);
+    end
 end
 
 local function customCLEU(self, ...)
     if OverpowerHandler.initialized then
         OverpowerHandler:cleu(CombatLogGetCurrentEventInfo());
+    end
+
+    if RevengeHandler.initialized then
+        RevengeHandler:cleu(CombatLogGetCurrentEventInfo());
     end
 end
 
