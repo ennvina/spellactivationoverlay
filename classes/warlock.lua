@@ -153,7 +153,7 @@ local function loadOptions(self)
     self:AddOverlayOption(empoweredImpTalent, empoweredImpBuff);
 
     if DrainSoulHandler.initialized then
-        self:AddGlowingOption(nil, DrainSoulHandler.fakeSpellID, drainSoul, nil, string.format("< %s", string.format(HEALTH_COST_PCT, 25)));
+        self:AddGlowingOption(nil, DrainSoulHandler.fakeSpellID, drainSoul, nil, string.format(string.format(HEALTH_COST_PCT, "<%s%"), 25));
     end
     self:AddGlowingOption(nightfallTalent, nightfallBuff, shadowBolt --[[, akaShadowTrance]]);
     self:AddGlowingOption(backlashTalent, backlashBuff, shadowBolt);
