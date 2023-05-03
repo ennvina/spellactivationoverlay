@@ -177,7 +177,8 @@
         "DEFAULT",
         "UnitCanAttack",
         "UnitHealth",
-        "UnitHealthMax"
+        "UnitHealthMax",
+        "HEALTH_COST_PCT"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",

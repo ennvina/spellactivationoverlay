@@ -1,5 +1,81 @@
 local AddonName, SAO = ...
 
+-- Optimize frequent calls
+local UnitCanAttack = UnitCanAttack
+local UnitHealth = UnitHealth
+local UnitHealthMax = UnitHealthMax
+
+--[[
+    DrainSoulHandler evaluates when the Drain Soul button should glow
+    because the target has 25% health or less. Only in Wrath Classic.
+
+    The following conditions must be met:
+    - the current target can be attacked
+    - the current target has 25% or less than 25% health
+
+    This stops if either:
+    - the target cannot be attacked
+    - the target is healed over 25% health
+]]
+local DrainSoulHandler = {
+
+    initialized = false,
+
+    -- Methods
+
+    init = function(self, id, name)
+        SAO.GlowInterface:bind(self);
+        self:initVars(id, name);
+        self.initialized = true;
+    end,
+
+    checkTargetHealth = function(self)
+        local canExecute = false;
+
+        if UnitCanAttack("player", "target") then
+            local hp = UnitHealth("target");
+            local hpMax = UnitHealthMax("target");
+            canExecute = hp > 0 and hp/hpMax <= 0.25;
+        end
+
+        if canExecute and not self.glowing then
+            self:glow();
+        elseif not canExecute and self.glowing then
+            self:unglow();
+        end
+    end,
+}
+
+local function customLogin(self, ...)
+    if WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
+        -- Drain Soul is empowered on low health enemies only in Wrath Classic
+        local spellID = 1120;
+        local spellName = GetSpellInfo(spellID);
+        if (spellName) then
+            -- Must register glowing buttons manually, because Drain Soul is not registered by an aura/counter/etc.
+            self:RegisterGlowIDs({ spellName });
+            local allSpellIDs = self:GetSpellIDsByName(spellName);
+            for _, oneSpellID in ipairs(allSpellIDs) do
+                self:AwakeButtonsBySpellID(oneSpellID);
+            end
+            -- Initialize handler
+            DrainSoulHandler:init(spellID, spellName);
+        end
+    end
+end
+
+local function retarget(self, ...)
+    if DrainSoulHandler.initialized then
+        DrainSoulHandler:checkTargetHealth();
+    end
+end
+
+local function unitHealth(self, unitID)
+    if DrainSoulHandler.initialized and unitID == "target" then
+        DrainSoulHandler:checkTargetHealth();
+    end
+end
+
 local function registerMolenCore(self, baseName, spellID, glowIDs)
     self:RegisterAura(baseName.."_1", 1, spellID, "molten_core", "Left", 1, 255, 255, 255, true, glowIDs);
     self:RegisterAura(baseName.."_2", 2, spellID, "molten_core", "Left + Right (Flipped)", 1, 255, 255, 255, true, glowIDs);
@@ -51,6 +127,7 @@ local function loadOptions(self)
     local shadowBolt = 686;
     local incinerate = 29722;
     local soulFire = 6353;
+    local drainSoul = 1120;
 
     local nightfallBuff = 17941;
     local nightfallTalent = 18094;
@@ -75,6 +152,9 @@ local function loadOptions(self)
     self:AddOverlayOption(decimationTalent, decimationBuff2);
     self:AddOverlayOption(empoweredImpTalent, empoweredImpBuff);
 
+    if DrainSoulHandler.initialized then
+        self:AddGlowingOption(nil, DrainSoulHandler.fakeSpellID, drainSoul, nil, string.format(string.format(HEALTH_COST_PCT, "<%s%"), 25));
+    end
     self:AddGlowingOption(nightfallTalent, nightfallBuff, shadowBolt --[[, akaShadowTrance]]);
     self:AddGlowingOption(backlashTalent, backlashBuff, shadowBolt);
     self:AddGlowingOption(backlashTalent, backlashBuff, incinerate);
@@ -87,4 +167,7 @@ end
 SAO.Class["WARLOCK"] = {
     ["Register"] = registerClass,
     ["LoadOptions"] = loadOptions,
+    ["PLAYER_LOGIN"] = customLogin,
+    ["PLAYER_TARGET_CHANGED"] = retarget,
+    ["UNIT_HEALTH"] = unitHealth,
 }
