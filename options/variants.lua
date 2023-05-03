@@ -82,9 +82,9 @@ function SAO.SpecVariantValue(self, specs)
     local value = 0;
 
     if #specs == 1 then
-        value = specs[1] or 666;
+        value = specs[1];
         text = string.format(RACE_CLASS_ONLY, select(1, GetTalentTabInfo(specs[1])));
-    else
+    elseif #specs > 1 then
         for _, spec in ipairs(specs) do
             value = 10*value + spec;
             text = text..", "..select(1, GetTalentTabInfo(spec));
