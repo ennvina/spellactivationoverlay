@@ -1,6 +1,7 @@
 local AddonName, SAO = ...
 
 -- Optimize frequent calls
+local GetTalentTabInfo = GetTalentTabInfo
 local UnitCanAttack = UnitCanAttack
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
@@ -43,7 +44,19 @@ local DrainSoulHandler = {
         end
 
         if canExecute and not self.glowing then
-            self:glow();
+            local option = self.variants.getOption();
+            if option == "123" then
+                -- Always glow if 'all specs' option is chosen
+                self:glow();
+            elseif option == "1" then
+                -- If 'affliction only' option is chosen, check if Affliction is the majority spec
+                local afflictionPoints = select(3, GetTalentTabInfo(1));
+                local demonologyPoints = select(3, GetTalentTabInfo(2));
+                local destructionPoints = select(3, GetTalentTabInfo(3));
+                if afflictionPoints > demonologyPoints and afflictionPoints > destructionPoints then
+                    self:glow();
+                end
+            end
         elseif not canExecute and self.glowing then
             self:unglow();
         end
