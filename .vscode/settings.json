@@ -178,7 +178,8 @@
         "UnitCanAttack",
         "UnitHealth",
         "UnitHealthMax",
-        "HEALTH_COST_PCT"
+        "HEALTH_COST_PCT",
+        "GetTalentTabInfo"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",

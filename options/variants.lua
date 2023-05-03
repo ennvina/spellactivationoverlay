@@ -1,6 +1,6 @@
 local AddonName, SAO = ...
 
--- Create an empty texture variant object
+-- Create a texture variant object
 function SAO.CreateTextureVariants(self, auraID, stacks, values)
     local textureFunc = function()
         return self.TexName[self:GetOverlayOptions(auraID)[stacks]];
@@ -33,7 +33,7 @@ function SAO.CreateTextureVariants(self, auraID, stacks, values)
     return variants;
 end
 
--- Utility function to create value for variants
+-- Utility function to create value for texture variants
 function SAO.TextureVariantValue(self, texture, horizontal, suffix)
     local text;
     if (horizontal) then
@@ -53,6 +53,50 @@ function SAO.TextureVariantValue(self, texture, horizontal, suffix)
     return {
         value = texture,
         text = text or texture,
+        width = width,
+    }
+end
+
+-- Create a string variant object
+function SAO.CreateStringVariants(self, optionType, auraID, id, values)
+    local getOption = function()
+        if optionType == "glow" then
+            return self:GetGlowingOptions(auraID)[id];
+        else
+            return self:GetOverlayOptions(auraID)[id];
+        end
+    end
+
+    local variants = {
+        variantType = 'string',
+        getOption = getOption,
+        values = values,
+    }
+
+    return variants;
+end
+
+-- Utility function to create value for string variants
+function SAO.SpecVariantValue(self, specs)
+    local text = "";
+    local value = 0;
+
+    if #specs == 1 then
+        value = specs[1] or 666;
+        text = string.format(RACE_CLASS_ONLY, select(1, GetTalentTabInfo(specs[1])));
+    else
+        for _, spec in ipairs(specs) do
+            value = 10*value + spec;
+            text = text..", "..select(1, GetTalentTabInfo(spec));
+        end
+        text = text:sub(3);
+    end
+
+    local width = ceil(#text*0.4);
+
+    return {
+        value = tostring(value),
+        text = text,
         width = width,
     }
 end
