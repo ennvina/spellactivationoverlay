@@ -26,6 +26,10 @@ local DrainSoulHandler = {
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
         self:initVars(id, name);
+        self.variants = SAO:CreateStringVariants("glow", self.fakeSpellID, self.spellID, {
+            SAO:SpecVariantValue({ 1 }),
+            SAO:SpecVariantValue({ 1, 2, 3 }),
+        });
         self.initialized = true;
     end,
 
@@ -153,7 +157,7 @@ local function loadOptions(self)
     self:AddOverlayOption(empoweredImpTalent, empoweredImpBuff);
 
     if DrainSoulHandler.initialized then
-        self:AddGlowingOption(nil, DrainSoulHandler.fakeSpellID, drainSoul, nil, string.format(string.format(HEALTH_COST_PCT, "<%s%"), 25));
+        self:AddGlowingOption(nil, DrainSoulHandler.fakeSpellID, drainSoul, nil, string.format(string.format(HEALTH_COST_PCT, "<%s%"), 25), DrainSoulHandler.variants);
     end
     self:AddGlowingOption(nightfallTalent, nightfallBuff, shadowBolt --[[, akaShadowTrance]]);
     self:AddGlowingOption(backlashTalent, backlashBuff, shadowBolt);
