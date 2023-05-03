@@ -52,7 +52,13 @@ local function customLogin(self, ...)
         local spellID = 1120;
         local spellName = GetSpellInfo(spellID);
         if (spellName) then
-            self:RegisterGlowIDs({ (spellName) });
+            -- Must register glowing buttons manually, because Drain Soul is not registered by an aura/counter/etc.
+            self:RegisterGlowIDs({ spellName });
+            local allSpellIDs = self:GetSpellIDsByName(spellName);
+            for _, oneSpellID in ipairs(allSpellIDs) do
+                self:AwakeButtonsBySpellID(oneSpellID);
+            end
+            -- Initialize handler
             DrainSoulHandler:init(spellID, spellName);
         end
     end
