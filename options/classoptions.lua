@@ -77,7 +77,7 @@ local function createSelectBox(self, cb, classFile, optionType, auraID, id, subV
     -- Compute an appropriate width; it may not be perfect but should help having something neither too wide nor too narrow
     local widestText = 4;
     for _, obj in ipairs(subValues) do
-        if (#obj.text > widestText) then
+        if (obj.width > widestText) then
             widestText = obj.width;
         end
     end
