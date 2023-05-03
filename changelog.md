@@ -2,9 +2,13 @@
 
 #### v0.9.1 (2022-05-xx)
 
-- Option to see Warrior's Overpower in any stance
-- Option to see Warrior's Revenge in any stance
-- Option to see Warrior's Execute in any stance
+- New GAB: Warlock's Drain Soul when the enemy has low HP, optional
+- The Drain Soul option is available for Wrath Classic only
+- Additional GAB: Warrior's Overpower in any stance, optional
+- Additional GAB: Warrior's Revenge in any stance, optional
+- Additional GAB: Warrior's Execute in any stance, optional
+
+Please enter /sao to enable or disable these options
 
 #### v0.9.0 (2022-05-01)
 
