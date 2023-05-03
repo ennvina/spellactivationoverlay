@@ -267,6 +267,9 @@ SAO.defaults = {
                 [63167] = { -- Decimation
                     [6353] = true, -- Soul Fire
                 },
+                [1001120] = { -- Drain Soul, execute phase
+                    [1120] = false, -- Drain Soul
+                },
             },
         },
         ["WARRIOR"] = {

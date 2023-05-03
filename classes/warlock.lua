@@ -121,6 +121,7 @@ local function loadOptions(self)
     local shadowBolt = 686;
     local incinerate = 29722;
     local soulFire = 6353;
+    local drainSoul = 1120;
 
     local nightfallBuff = 17941;
     local nightfallTalent = 18094;
@@ -145,6 +146,9 @@ local function loadOptions(self)
     self:AddOverlayOption(decimationTalent, decimationBuff2);
     self:AddOverlayOption(empoweredImpTalent, empoweredImpBuff);
 
+    if DrainSoulHandler.initialized then
+        self:AddGlowingOption(nil, DrainSoulHandler.fakeSpellID, drainSoul, nil, string.format("< %s", string.format(HEALTH_COST_PCT, 25)));
+    end
     self:AddGlowingOption(nightfallTalent, nightfallBuff, shadowBolt --[[, akaShadowTrance]]);
     self:AddGlowingOption(backlashTalent, backlashBuff, shadowBolt);
     self:AddGlowingOption(backlashTalent, backlashBuff, incinerate);
