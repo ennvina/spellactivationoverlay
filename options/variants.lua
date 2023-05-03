@@ -77,17 +77,17 @@ function SAO.CreateStringVariants(self, optionType, auraID, id, values)
 end
 
 -- Utility function to create value for string variants
-function SAO.SpecVariantValue(self, specs)
+function SAO.StringVariantValue(self, items, getTextFunc)
     local text = "";
-    local value = 0;
+    local value = "";
 
-    if #specs == 1 then
-        value = specs[1];
-        text = string.format(RACE_CLASS_ONLY, select(1, GetTalentTabInfo(specs[1])));
-    elseif #specs > 1 then
-        for _, spec in ipairs(specs) do
-            value = 10*value + spec;
-            text = text..", "..select(1, GetTalentTabInfo(spec));
+    if #items == 1 then
+        value = tostring(items[1]);
+        text = string.format(RACE_CLASS_ONLY, getTextFunc(items[1]));
+    elseif #items > 1 then
+        for _, item in ipairs(items) do
+            value = value == "" and tostring(item) or value..","..tostring(item);
+            text = text..", "..getTextFunc(item);
         end
         text = text:sub(3);
     end
@@ -95,8 +95,24 @@ function SAO.SpecVariantValue(self, specs)
     local width = ceil(#text*0.4);
 
     return {
-        value = tostring(value),
+        value = value,
         text = text,
         width = width,
     }
+end
+
+-- Utility function to create value for string variants for specializations
+function SAO.SpecVariantValue(self, specs)
+    return self:StringVariantValue(specs,
+    function(spec)
+        return select(1, GetTalentTabInfo(spec));
+    end);
+end
+
+-- Utility function to create value for string variants for spells
+function SAO.SpellVariantValue(self, spellIDs)
+    return self:StringVariantValue(spellIDs,
+    function(spellID)
+        return select(1, GetSpellInfo(spellID));
+    end);
 end

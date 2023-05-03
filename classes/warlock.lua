@@ -45,7 +45,7 @@ local DrainSoulHandler = {
 
         if canExecute and not self.glowing then
             local option = self.variants.getOption();
-            if option == "123" then
+            if option == "1,2,3" then
                 -- Always glow if 'all specs' option is chosen
                 self:glow();
             elseif option == "1" then
