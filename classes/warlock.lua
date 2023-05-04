@@ -24,13 +24,27 @@ local DrainSoulHandler = {
 
     -- Methods
 
+    checkOption = function(option)
+        if option == "1,2,3" then
+            -- Always glow if 'all specs' option is chosen
+            return true;
+        elseif option == "1" then
+            -- If 'affliction only' option is chosen, check if Affliction is the majority spec
+            local afflictionPoints = select(3, GetTalentTabInfo(1));
+            local demonologyPoints = select(3, GetTalentTabInfo(2));
+            local destructionPoints = select(3, GetTalentTabInfo(3));
+            return afflictionPoints > demonologyPoints and afflictionPoints > destructionPoints;
+        end
+        return false;
+    end,
+
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
-        self:initVars(id, name);
-        self.variants = SAO:CreateStringVariants("glow", self.optionID, self.spellID, {
+        self:initVars(id, name, false,
+        {
             SAO:SpecVariantValue({ 1 }),
             SAO:SpecVariantValue({ 1, 2, 3 }),
-        });
+        }, self.checkOption);
         self.initialized = true;
     end,
 
@@ -44,19 +58,7 @@ local DrainSoulHandler = {
         end
 
         if canExecute and not self.glowing then
-            local option = self.variants.getOption();
-            if option == "1,2,3" then
-                -- Always glow if 'all specs' option is chosen
-                self:glow();
-            elseif option == "1" then
-                -- If 'affliction only' option is chosen, check if Affliction is the majority spec
-                local afflictionPoints = select(3, GetTalentTabInfo(1));
-                local demonologyPoints = select(3, GetTalentTabInfo(2));
-                local destructionPoints = select(3, GetTalentTabInfo(3));
-                if afflictionPoints > demonologyPoints and afflictionPoints > destructionPoints then
-                    self:glow();
-                end
-            end
+            self:glow();
         elseif not canExecute and self.glowing then
             self:unglow();
         end

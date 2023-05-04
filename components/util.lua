@@ -124,7 +124,7 @@ SAO.GlowInterface = {
     end,
 
     glow = function(self)
-        if not self.optionTestFunc or self.optionTestFunc(self.variants.getOption()) then
+        if type(self.optionTestFunc) ~= 'function' or self.optionTestFunc(self.variants.getOption()) then
             SAO:AddGlow(self.auraID, { self.spellName });
             self.glowing = true;
         end
