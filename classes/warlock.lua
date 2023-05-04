@@ -40,8 +40,7 @@ local DrainSoulHandler = {
 
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
-        self:initVars(id, name, false,
-        {
+        self:initVars(id, name, false, nil, {
             SAO:SpecVariantValue({ 1 }),
             SAO:SpecVariantValue({ 1, 2, 3 }),
         }, self.checkOption);

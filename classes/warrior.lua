@@ -41,18 +41,12 @@ local OverpowerHandler = {
     -- Variables
 
     targetGuid = nil,
-    vanishTime = nil,
-
-    -- Constants
-
-    maxDuration = 5,
-    tolerance = 0.2,
 
     -- Methods
 
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
-        self:initVars(id, name, true, {
+        self:initVars(id, name, true, 5, {
             SAO:StanceVariantValue({ 1 }),
             SAO:StanceVariantValue({ 1, 2, 3 }),
         }, easyAs123);
@@ -61,10 +55,6 @@ local OverpowerHandler = {
 
     dodge = function(self, guid)
         self.targetGuid = guid;
-        self.vanishTime = GetTime() + self.maxDuration - self.tolerance;
-        C_Timer.After(self.maxDuration, function()
-            self:timeout();
-        end)
 
         if UnitGUID("target") == guid then
             self:glow();
@@ -75,13 +65,6 @@ local OverpowerHandler = {
         self.targetGuid = nil;
         -- Always unglow, even if not needed. Better unglow too much than not enough.
         self:unglow();
-    end,
-
-    timeout = function(self)
-        if self.targetGuid and GetTime() > self.vanishTime then
-            self.targetGuid = nil;
-            self:unglow();
-        end
     end,
 
     retarget = function(self, ...)
@@ -123,20 +106,11 @@ local RevengeHandler = {
 
     initialized = false,
 
-    -- Variables
-
-    vanishTime = nil,
-
-    -- Constants
-
-    maxDuration = 5,
-    tolerance = 0.2,
-
     -- Methods
 
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
-        self:initVars(id, name, true, {
+        self:initVars(id, name, true, 5, {
             SAO:StanceVariantValue({ 2 }),
             SAO:StanceVariantValue({ 1, 2, 3 }),
         }, easyAs123);
@@ -144,25 +118,12 @@ local RevengeHandler = {
     end,
 
     dpb = function(self) -- 'DPB' means Dodge, Parry, or Block
-        self.vanishTime = GetTime() + self.maxDuration - self.tolerance;
-        C_Timer.After(self.maxDuration, function()
-            self:timeout();
-        end)
-
         self:glow();
     end,
 
     revenge = function(self)
-        self.vanishTime = nil;
         -- Always unglow, even if not needed. Better unglow too much than not enough.
         self:unglow();
-    end,
-
-    timeout = function(self)
-        if self.vanishTime and GetTime() > self.vanishTime then
-            self.vanishTime = nil;
-            self:unglow();
-        end
     end,
 
     cleu = function(self, ...)
@@ -233,7 +194,7 @@ local ExecuteHandler = {
 
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
-        self:initVars(id, name, true, {
+        self:initVars(id, name, true, nil, {
             SAO:StanceVariantValue({ 1, 3 }),
             SAO:StanceVariantValue({ 1, 2, 3 }),
         }, easyAs123);
