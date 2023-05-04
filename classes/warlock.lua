@@ -25,7 +25,7 @@ local DrainSoulHandler = {
     -- Methods
 
     checkOption = function(option)
-        if option == "spec:1,2,3" then
+        if option == "spec:1/2/3" then
             -- Always glow if 'all specs' option is chosen
             return true;
         elseif option == "spec:1" then

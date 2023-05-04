@@ -86,7 +86,7 @@ function SAO.StringVariantValue(self, items, valuePrefix, getTextFunc)
         text = string.format(RACE_CLASS_ONLY, getTextFunc(items[1]));
     elseif #items > 1 then
         for _, item in ipairs(items) do
-            value = value == "" and tostring(item) or value..","..tostring(item);
+            value = value == "" and tostring(item) or value.."/"..tostring(item);
             text = text..", "..getTextFunc(item);
         end
         text = text:sub(3);

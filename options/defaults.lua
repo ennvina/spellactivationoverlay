@@ -292,7 +292,7 @@ SAO.defaults = {
                     [6572] = "stance:2", -- Revenge
                 },
                 [5308] = { -- Execute
-                    [5308] = "stance:1,3", -- Execute
+                    [5308] = "stance:1/3", -- Execute
                 },
                 [34428] = { -- Victory Rush
                     [34428] = true, -- Victory Rush
