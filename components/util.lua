@@ -113,16 +113,20 @@ SAO.GlowInterface = {
         self.__index = self;
     end,
 
-    initVars = function(self, id, name, optionOffset)
+    initVars = function(self, id, name, variantValues, optionTestFunc)
         self.spellID = id;
         self.spellName = name;
-        self.optionID = id + (optionOffset and optionOffset or 0);
+        self.optionID = id;
         self.glowing = false;
+        self.variants = variantValues and SAO:CreateStringVariants("glow", self.optionID, self.spellID, variantValues) or nil;
+        self.optionTestFunc = self.variants and optionTestFunc or nil;
     end,
 
     glow = function(self)
-        SAO:AddGlow(self.optionID, { self.spellName });
-        self.glowing = true;
+        if not self.optionTestFunc or self.optionTestFunc(self.variants.getOption()) then
+            SAO:AddGlow(self.optionID, { self.spellName });
+            self.glowing = true;
+        end
     end,
 
     unglow = function(self)

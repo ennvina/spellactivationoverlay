@@ -7,6 +7,10 @@ local UnitGUID = UnitGUID
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
+local function easyAs123(option)
+    return option == "1,2,3";
+end
+
 --[[
     OverpowerHandler guesses when Overpower is available,
     even without being in Battle Stance
@@ -48,11 +52,10 @@ local OverpowerHandler = {
 
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
-        self:initVars(id, name);
-        self.variants = SAO:CreateStringVariants("glow", self.optionID, self.spellID, {
+        self:initVars(id, name, {
             SAO:StanceVariantValue({ 1 }),
             SAO:StanceVariantValue({ 1, 2, 3 }),
-        });
+        }, easyAs123);
         self.initialized = true;
     end,
 
@@ -133,11 +136,10 @@ local RevengeHandler = {
 
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
-        self:initVars(id, name);
-        self.variants = SAO:CreateStringVariants("glow", self.optionID, self.spellID, {
+        self:initVars(id, name, {
             SAO:StanceVariantValue({ 2 }),
             SAO:StanceVariantValue({ 1, 2, 3 }),
-        });
+        }, easyAs123);
         self.initialized = true;
     end,
 
@@ -208,11 +210,10 @@ local ExecuteHandler = {
 
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
-        self:initVars(id, name);
-        self.variants = SAO:CreateStringVariants("glow", self.optionID, self.spellID, {
+        self:initVars(id, name, {
             SAO:StanceVariantValue({ 1, 3 }),
             SAO:StanceVariantValue({ 1, 2, 3 }),
-        });
+        }, easyAs123);
         self.initialized = true;
     end,
 
@@ -290,7 +291,7 @@ local function unitHealth(self, ...)
 end
 
 local function registerClass(self)
-    local tasteforBlood = 60503; -- Unused as of now, might be used in the future.
+    -- local tasteforBlood = 60503; -- Unused as of now, might be used in the future.
     local overpower = 7384;
     local execute = 5308;
     local revenge = 6572;
