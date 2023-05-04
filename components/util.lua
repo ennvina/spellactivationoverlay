@@ -113,20 +113,20 @@ SAO.GlowInterface = {
         self.__index = self;
     end,
 
-    initVars = function(self, id, name)
+    initVars = function(self, id, name, optionOffset)
         self.spellID = id;
         self.spellName = name;
-        self.fakeSpellID = id + 1000000; -- 1M ought to be enough for anybody
+        self.optionID = id + (optionOffset and optionOffset or 0);
         self.glowing = false;
     end,
 
     glow = function(self)
-        SAO:AddGlow(self.fakeSpellID, { self.spellName });
+        SAO:AddGlow(self.optionID, { self.spellName });
         self.glowing = true;
     end,
 
     unglow = function(self)
-        SAO:RemoveGlow(self.fakeSpellID);
+        SAO:RemoveGlow(self.optionID);
         self.glowing = false;
     end,
 }

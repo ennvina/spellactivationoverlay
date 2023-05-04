@@ -58,12 +58,12 @@ function SAO.TextureVariantValue(self, texture, horizontal, suffix)
 end
 
 -- Create a string variant object
-function SAO.CreateStringVariants(self, optionType, auraID, id, values)
+function SAO.CreateStringVariants(self, optionType, optionID, optionSubID, values)
     local getOption = function()
         if optionType == "glow" then
-            return self:GetGlowingOptions(auraID)[id];
+            return self:GetGlowingOptions(optionID)[optionSubID];
         else
-            return self:GetOverlayOptions(auraID)[id];
+            return self:GetOverlayOptions(optionID)[optionSubID];
         end
     end
 
