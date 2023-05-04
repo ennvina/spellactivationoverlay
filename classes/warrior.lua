@@ -178,6 +178,13 @@ local RevengeHandler = {
 
         if destGUID == myGuid then
 
+            if event:sub(0,6) == "SPELL_" then
+                local spellID = select(12, ...);
+                if spellID == 42463 or spellID == 53739 then
+                    return; -- Seal of Vengeance and Seal of Corruption do not trigger Revenge, probably because of PvP balancing issues
+                end
+            end
+
             if event == "SWING_MISSED" or event == "SPELL_MISSED" then
                 -- Check for full dodge/parry/block
                 local missType;
