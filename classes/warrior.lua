@@ -8,7 +8,7 @@ local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
 local function easyAs123(option)
-    return option == "1,2,3";
+    return option == "stance:1,2,3";
 end
 
 --[[

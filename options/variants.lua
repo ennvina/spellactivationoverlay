@@ -77,7 +77,7 @@ function SAO.CreateStringVariants(self, optionType, optionID, optionSubID, value
 end
 
 -- Utility function to create value for string variants
-function SAO.StringVariantValue(self, items, getTextFunc)
+function SAO.StringVariantValue(self, items, valuePrefix, getTextFunc)
     local text = "";
     local value = "";
 
@@ -95,7 +95,7 @@ function SAO.StringVariantValue(self, items, getTextFunc)
     local width = ceil(#text*0.4);
 
     return {
-        value = value,
+        value = valuePrefix..value,
         text = text,
         width = width,
     }
@@ -103,7 +103,7 @@ end
 
 -- Utility function to create value for string variants for specializations
 function SAO.SpecVariantValue(self, specs)
-    return self:StringVariantValue(specs,
+    return self:StringVariantValue(specs, "spec:",
     function(spec)
         return select(1, GetTalentTabInfo(spec));
     end);
@@ -111,7 +111,7 @@ end
 
 -- Utility function to create value for string variants for spells
 function SAO.SpellVariantValue(self, spellIDs)
-    return self:StringVariantValue(spellIDs,
+    return self:StringVariantValue(spellIDs, "spell:",
     function(spellID)
         return select(1, GetSpellInfo(spellID));
     end);
@@ -154,7 +154,7 @@ local ClassStance = {
 function SAO.StanceVariantValue(self, stances)
     local classFile = self.CurrentClass and self.CurrentClass.Intrinsics[2] or select(2, UnitClass("player"));
 
-    return self:StringVariantValue(stances,
+    return self:StringVariantValue(stances, "stance:",
     function(stance)
         if ClassStance[classFile] and ClassStance[classFile][stance] then
             return select(1, GetSpellInfo(ClassStance[classFile][stance]));

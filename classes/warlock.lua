@@ -25,10 +25,10 @@ local DrainSoulHandler = {
     -- Methods
 
     checkOption = function(option)
-        if option == "1,2,3" then
+        if option == "spec:1,2,3" then
             -- Always glow if 'all specs' option is chosen
             return true;
-        elseif option == "1" then
+        elseif option == "spec:1" then
             -- If 'affliction only' option is chosen, check if Affliction is the majority spec
             local afflictionPoints = select(3, GetTalentTabInfo(1));
             local demonologyPoints = select(3, GetTalentTabInfo(2));

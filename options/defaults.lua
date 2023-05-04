@@ -268,7 +268,7 @@ SAO.defaults = {
                     [6353] = true, -- Soul Fire
                 },
                 [1120] = { -- Drain Soul
-                    [1120] = "1", -- Drain Soul
+                    [1120] = "spec:1", -- Drain Soul
                 },
             },
         },
@@ -286,16 +286,16 @@ SAO.defaults = {
             },
             glow = {
                 [7384] = { -- Overpower
-                    [7384] = "1", -- Overpower
+                    [7384] = "stance:1", -- Overpower
                 },
                 [6572] = { -- Revenge
-                    [6572] = "2", -- Revenge
+                    [6572] = "stance:2", -- Revenge
                 },
                 [5308] = { -- Execute
-                    [5308] = "1,3", -- Execute
+                    [5308] = "stance:1,3", -- Execute
                 },
                 [34428] = { -- Victory Rush
-                    [34428] = "1,3", -- Victory Rush
+                    [34428] = "stance:1,3", -- Victory Rush
                 },
                 [52437] = { -- Sudden Death
                     [5308] = true, -- Execute
