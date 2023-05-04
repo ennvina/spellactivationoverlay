@@ -1,6 +1,6 @@
 local AddonName, SAO = ...
 
-function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText)
+function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText, variants)
     if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
         if (talentID and not GetSpellInfo(talentID)) or not GetSpellInfo(glowID) then
             return
@@ -60,7 +60,7 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
         end
     end
 
-    self:AddOption("glow", spellID, glowID, nil, applyTextFunc, testFunc, { frame = SpellActivationOverlayOptionsPanelGlowingButtons, xOffset = 16, yOffset = 2 });
+    self:AddOption("glow", spellID, glowID, type(variants) == 'table' and variants.values, applyTextFunc, testFunc, { frame = SpellActivationOverlayOptionsPanelGlowingButtons, xOffset = 16, yOffset = 2 });
 end
 
 function SAO.AddGlowingLink(self, srcOption, dstOption)

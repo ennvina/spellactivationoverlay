@@ -7,6 +7,10 @@ local UnitGUID = UnitGUID
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
+local function easyAs123(option)
+    return option == "stance:1/2/3";
+end
+
 --[[
     OverpowerHandler guesses when Overpower is available,
     even without being in Battle Stance
@@ -48,7 +52,10 @@ local OverpowerHandler = {
 
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
-        self:initVars(id, name);
+        self:initVars(id, name, true, {
+            SAO:StanceVariantValue({ 1 }),
+            SAO:StanceVariantValue({ 1, 2, 3 }),
+        }, easyAs123);
         self.initialized = true;
     end,
 
@@ -129,7 +136,10 @@ local RevengeHandler = {
 
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
-        self:initVars(id, name);
+        self:initVars(id, name, true, {
+            SAO:StanceVariantValue({ 2 }),
+            SAO:StanceVariantValue({ 1, 2, 3 }),
+        }, easyAs123);
         self.initialized = true;
     end,
 
@@ -200,7 +210,10 @@ local ExecuteHandler = {
 
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
-        self:initVars(id, name);
+        self:initVars(id, name, true, {
+            SAO:StanceVariantValue({ 1, 3 }),
+            SAO:StanceVariantValue({ 1, 2, 3 }),
+        }, easyAs123);
         self.initialized = true;
     end,
 
@@ -278,7 +291,7 @@ local function unitHealth(self, ...)
 end
 
 local function registerClass(self)
-    local tasteforBlood = 60503; -- Unused as of now, might be used in the future.
+    -- local tasteforBlood = 60503; -- Unused as of now, might be used in the future.
     local overpower = 7384;
     local execute = 5308;
     local revenge = 6572;
@@ -308,9 +321,9 @@ local function registerClass(self)
 end
 
 local function loadOptions(self)
-    local overpower = 7384;
+    -- local overpower = 7384;
     local execute = 5308;
-    local revenge = 6572;
+    -- local revenge = 6572;
     local victoryRush = 34428;
     local slam = 1464;
     local shieldSlam = 23922;
@@ -324,25 +337,19 @@ local function loadOptions(self)
     local swordAndBoardBuff = 50227;
     local swordAndBoardTalent = 46951;
 
-    local battleStance = GetSpellInfo(2457);
-    local defensiveStance = GetSpellInfo(71);
-    local berserkerStance = GetSpellInfo(2458);
 
     self:AddOverlayOption(suddenDeathTalent, suddenDeathBuff);
     self:AddOverlayOption(bloodsurgeTalent, bloodsurgeBuff);
     self:AddOverlayOption(swordAndBoardTalent, swordAndBoardBuff);
 
-    self:AddGlowingOption(nil, overpower, overpower, nil, string.format("%s = %s", DEFAULT, string.format(RACE_CLASS_ONLY, battleStance)));
     if OverpowerHandler.initialized then
-        self:AddGlowingOption(nil, OverpowerHandler.fakeSpellID, overpower, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
+        self:AddGlowingOption(nil, OverpowerHandler.optionID, OverpowerHandler.spellID, nil, nil, OverpowerHandler.variants);
     end
-    self:AddGlowingOption(nil, revenge, revenge, nil, string.format("%s = %s", DEFAULT, string.format(RACE_CLASS_ONLY, defensiveStance)));
     if RevengeHandler.initialized then
-        self:AddGlowingOption(nil, RevengeHandler.fakeSpellID, revenge, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
+        self:AddGlowingOption(nil, RevengeHandler.optionID, RevengeHandler.spellID, nil, nil, RevengeHandler.variants);
     end
-    self:AddGlowingOption(nil, execute, execute, nil, string.format("%s = %s", DEFAULT, string.format("%s, %s", battleStance, berserkerStance)));
     if ExecuteHandler.initialized then
-        self:AddGlowingOption(nil, ExecuteHandler.fakeSpellID, execute, nil, string.format("%s, %s, %s", battleStance, defensiveStance, berserkerStance));
+        self:AddGlowingOption(nil, ExecuteHandler.optionID, ExecuteHandler.spellID, nil, nil, ExecuteHandler.variants);
     end
     self:AddGlowingOption(nil, victoryRush, victoryRush);
     self:AddGlowingOption(suddenDeathTalent, suddenDeathBuff, execute);

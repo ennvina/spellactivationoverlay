@@ -1,6 +1,7 @@
 local AddonName, SAO = ...
 
 -- Optimize frequent calls
+local GetTalentTabInfo = GetTalentTabInfo
 local UnitCanAttack = UnitCanAttack
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
@@ -23,9 +24,27 @@ local DrainSoulHandler = {
 
     -- Methods
 
+    checkOption = function(option)
+        if option == "spec:1/2/3" then
+            -- Always glow if 'all specs' option is chosen
+            return true;
+        elseif option == "spec:1" then
+            -- If 'affliction only' option is chosen, check if Affliction is the majority spec
+            local afflictionPoints = select(3, GetTalentTabInfo(1));
+            local demonologyPoints = select(3, GetTalentTabInfo(2));
+            local destructionPoints = select(3, GetTalentTabInfo(3));
+            return afflictionPoints > demonologyPoints and afflictionPoints > destructionPoints;
+        end
+        return false;
+    end,
+
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
-        self:initVars(id, name);
+        self:initVars(id, name, false,
+        {
+            SAO:SpecVariantValue({ 1 }),
+            SAO:SpecVariantValue({ 1, 2, 3 }),
+        }, self.checkOption);
         self.initialized = true;
     end,
 
@@ -153,7 +172,7 @@ local function loadOptions(self)
     self:AddOverlayOption(empoweredImpTalent, empoweredImpBuff);
 
     if DrainSoulHandler.initialized then
-        self:AddGlowingOption(nil, DrainSoulHandler.fakeSpellID, drainSoul, nil, string.format(string.format(HEALTH_COST_PCT, "<%s%"), 25));
+        self:AddGlowingOption(nil, DrainSoulHandler.optionID, drainSoul, nil, string.format(string.format(HEALTH_COST_PCT, "<%s%"), 25), DrainSoulHandler.variants);
     end
     self:AddGlowingOption(nightfallTalent, nightfallBuff, shadowBolt --[[, akaShadowTrance]]);
     self:AddGlowingOption(backlashTalent, backlashBuff, shadowBolt);

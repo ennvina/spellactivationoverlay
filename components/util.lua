@@ -113,20 +113,25 @@ SAO.GlowInterface = {
         self.__index = self;
     end,
 
-    initVars = function(self, id, name)
+    initVars = function(self, id, name, separateAuraID, variantValues, optionTestFunc)
         self.spellID = id;
         self.spellName = name;
-        self.fakeSpellID = id + 1000000; -- 1M ought to be enough for anybody
+        self.auraID = id + (separateAuraID and 1000000 or 0); -- 1M ought to be enough for anybody
+        self.optionID = id;
         self.glowing = false;
+        self.variants = variantValues and SAO:CreateStringVariants("glow", self.optionID, self.spellID, variantValues) or nil;
+        self.optionTestFunc = self.variants and optionTestFunc or nil;
     end,
 
     glow = function(self)
-        SAO:AddGlow(self.fakeSpellID, { self.spellName });
-        self.glowing = true;
+        if type(self.optionTestFunc) ~= 'function' or self.optionTestFunc(self.variants.getOption()) then
+            SAO:AddGlow(self.auraID, { self.spellName });
+            self.glowing = true;
+        end
     end,
 
     unglow = function(self)
-        SAO:RemoveGlow(self.fakeSpellID);
+        SAO:RemoveGlow(self.auraID);
         self.glowing = false;
     end,
 }
