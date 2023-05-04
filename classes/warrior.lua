@@ -177,15 +177,31 @@ local RevengeHandler = {
         end
 
         if destGUID == myGuid then
-            local missType;
-            if event == "SWING_MISSED" then
-                missType = select(12, ...);
-            elseif event == "SPELL_MISSED" then
-                missType = select(15, ...);
+
+            if event == "SWING_MISSED" or event == "SPELL_MISSED" then
+                -- Check for full dodge/parry/block
+                local missType;
+                if event == "SWING_MISSED" then
+                    missType = select(12, ...);
+                elseif event == "SPELL_MISSED" then
+                    missType = select(15, ...);
+                end
+                if missType == "DODGE" or missType == "PARRY" or missType == "BLOCK" then
+                    self:dpb();
+                end
+            elseif event == "SWING_DAMAGE" or event == "SPELL_DAMAGE" then
+                -- Check for partial block
+                local blocked;
+                if event == "SWING_DAMAGE" then
+                    blocked = select(16, ...);
+                elseif event == "SPELL_DAMAGE" then
+                    blocked = select(19, ...);
+                end
+                if blocked then
+                    self:dpb();
+                end
             end
-            if missType == "DODGE" or missType == "PARRY" or missType == "BLOCK" then
-                self:dpb();
-            end
+
         end
     end,
 }
