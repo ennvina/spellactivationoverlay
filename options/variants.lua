@@ -116,3 +116,49 @@ function SAO.SpellVariantValue(self, spellIDs)
         return select(1, GetSpellInfo(spellID));
     end);
 end
+
+-- Mapping between class stance and their respective spells
+-- It works well for all classes except maybe Druid, which has dynamic stances
+-- Fortunately, druids currently do not need to deal with StanceVariantValue
+local ClassStance = {
+    ["DRUID"] = {
+        5487,  -- Bear Form, could also be Dire Bear Form is 9634
+        1066,  -- Aquatic Form
+        768,   -- Cat Form
+        783,   -- Travel Form
+        24858, -- Moonkin Form
+    },
+    ["ROGUE"] = {
+        1784, -- Stealth
+    },
+    ["PALADIN"] = {
+        465,   -- Devotion Aura (rank 1)
+        7294,  -- Retribution Aura (rank 1)
+        19746, -- Concentration Aura
+        19876, -- Shadow Resistance Aura (rank 1)
+        19888, -- Frost Resistance Aura (rank 1)
+        19891, -- Fire Resistance Aura (rank 1)
+        32223, -- Crusader Aura
+    },
+    ["PRIEST"] = {
+        15473, -- Shadowform
+    },
+    ["WARRIOR"] = {
+        2457, -- Battle Stance
+        71,   -- Defensive Stance
+        2458, -- Berserker Stance
+    },
+}
+
+-- Utility function to create value for string variants for stances
+function SAO.StanceVariantValue(self, stances)
+    local classFile = self.CurrentClass and self.CurrentClass.Intrinsics[2] or select(2, UnitClass("player"));
+
+    return self:StringVariantValue(stances,
+    function(stance)
+        if ClassStance[classFile] and ClassStance[classFile][stance] then
+            return select(1, GetSpellInfo(ClassStance[classFile][stance]));
+        end
+        return UNKNOWN;
+    end);
+end
