@@ -52,7 +52,7 @@ local OverpowerHandler = {
 
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
-        self:initVars(id, name, {
+        self:initVars(id, name, true, {
             SAO:StanceVariantValue({ 1 }),
             SAO:StanceVariantValue({ 1, 2, 3 }),
         }, easyAs123);
@@ -136,7 +136,7 @@ local RevengeHandler = {
 
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
-        self:initVars(id, name, {
+        self:initVars(id, name, true, {
             SAO:StanceVariantValue({ 2 }),
             SAO:StanceVariantValue({ 1, 2, 3 }),
         }, easyAs123);
@@ -210,7 +210,7 @@ local ExecuteHandler = {
 
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
-        self:initVars(id, name, {
+        self:initVars(id, name, true, {
             SAO:StanceVariantValue({ 1, 3 }),
             SAO:StanceVariantValue({ 1, 2, 3 }),
         }, easyAs123);
