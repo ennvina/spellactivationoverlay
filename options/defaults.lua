@@ -295,7 +295,7 @@ SAO.defaults = {
                     [5308] = "stance:1,3", -- Execute
                 },
                 [34428] = { -- Victory Rush
-                    [34428] = "stance:1,3", -- Victory Rush
+                    [34428] = true, -- Victory Rush
                 },
                 [52437] = { -- Sudden Death
                     [5308] = true, -- Execute

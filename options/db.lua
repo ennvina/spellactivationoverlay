@@ -4,10 +4,9 @@ local AddonName, SAO = ...
 local function migrateTo091(db)
     -- Warrior glowing buttons changed from boolean to string
     local warriorSpells = {
-        7384,  -- Overpower
-        6572,  -- Revenge
-        5308,  -- Execute
-        34428, -- Victory Rush
+        7384, -- Overpower
+        6572, -- Revenge
+        5308, -- Execute
     }
     for _, spellID in ipairs(warriorSpells) do
         if db.classes["WARRIOR"]["glow"][spellID][spellID] == true and SAO.defaults.classes["WARRIOR"]["glow"][spellID][spellID] then
