@@ -41,18 +41,12 @@ local OverpowerHandler = {
     -- Variables
 
     targetGuid = nil,
-    vanishTime = nil,
-
-    -- Constants
-
-    maxDuration = 5,
-    tolerance = 0.2,
 
     -- Methods
 
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
-        self:initVars(id, name, true, {
+        self:initVars(id, name, true, 5, {
             SAO:StanceVariantValue({ 1 }),
             SAO:StanceVariantValue({ 1, 2, 3 }),
         }, easyAs123);
@@ -61,10 +55,6 @@ local OverpowerHandler = {
 
     dodge = function(self, guid)
         self.targetGuid = guid;
-        self.vanishTime = GetTime() + self.maxDuration - self.tolerance;
-        C_Timer.After(self.maxDuration, function()
-            self:timeout();
-        end)
 
         if UnitGUID("target") == guid then
             self:glow();
@@ -75,13 +65,6 @@ local OverpowerHandler = {
         self.targetGuid = nil;
         -- Always unglow, even if not needed. Better unglow too much than not enough.
         self:unglow();
-    end,
-
-    timeout = function(self)
-        if self.targetGuid and GetTime() > self.vanishTime then
-            self.targetGuid = nil;
-            self:unglow();
-        end
     end,
 
     retarget = function(self, ...)
@@ -123,20 +106,11 @@ local RevengeHandler = {
 
     initialized = false,
 
-    -- Variables
-
-    vanishTime = nil,
-
-    -- Constants
-
-    maxDuration = 5,
-    tolerance = 0.2,
-
     -- Methods
 
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
-        self:initVars(id, name, true, {
+        self:initVars(id, name, true, 5, {
             SAO:StanceVariantValue({ 2 }),
             SAO:StanceVariantValue({ 1, 2, 3 }),
         }, easyAs123);
@@ -144,25 +118,12 @@ local RevengeHandler = {
     end,
 
     dpb = function(self) -- 'DPB' means Dodge, Parry, or Block
-        self.vanishTime = GetTime() + self.maxDuration - self.tolerance;
-        C_Timer.After(self.maxDuration, function()
-            self:timeout();
-        end)
-
         self:glow();
     end,
 
     revenge = function(self)
-        self.vanishTime = nil;
         -- Always unglow, even if not needed. Better unglow too much than not enough.
         self:unglow();
-    end,
-
-    timeout = function(self)
-        if self.vanishTime and GetTime() > self.vanishTime then
-            self.vanishTime = nil;
-            self:unglow();
-        end
     end,
 
     cleu = function(self, ...)
@@ -177,15 +138,38 @@ local RevengeHandler = {
         end
 
         if destGUID == myGuid then
-            local missType;
-            if event == "SWING_MISSED" then
-                missType = select(12, ...);
-            elseif event == "SPELL_MISSED" then
-                missType = select(15, ...);
+
+            if event:sub(0,6) == "SPELL_" then
+                local spellID = select(12, ...);
+                if spellID == 42463 or spellID == 53739 then
+                    return; -- Seal of Vengeance and Seal of Corruption do not trigger Revenge, probably because of PvP balancing issues
+                end
             end
-            if missType == "DODGE" or missType == "PARRY" or missType == "BLOCK" then
-                self:dpb();
+
+            if event == "SWING_MISSED" or event == "SPELL_MISSED" then
+                -- Check for full dodge/parry/block
+                local missType;
+                if event == "SWING_MISSED" then
+                    missType = select(12, ...);
+                elseif event == "SPELL_MISSED" then
+                    missType = select(15, ...);
+                end
+                if missType == "DODGE" or missType == "PARRY" or missType == "BLOCK" then
+                    self:dpb();
+                end
+            elseif event == "SWING_DAMAGE" or event == "SPELL_DAMAGE" then
+                -- Check for partial block
+                local blocked;
+                if event == "SWING_DAMAGE" then
+                    blocked = select(16, ...);
+                elseif event == "SPELL_DAMAGE" then
+                    blocked = select(19, ...);
+                end
+                if blocked then
+                    self:dpb();
+                end
             end
+
         end
     end,
 }
@@ -210,7 +194,7 @@ local ExecuteHandler = {
 
     init = function(self, id, name)
         SAO.GlowInterface:bind(self);
-        self:initVars(id, name, true, {
+        self:initVars(id, name, true, nil, {
             SAO:StanceVariantValue({ 1, 3 }),
             SAO:StanceVariantValue({ 1, 2, 3 }),
         }, easyAs123);

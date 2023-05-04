@@ -113,25 +113,51 @@ SAO.GlowInterface = {
         self.__index = self;
     end,
 
-    initVars = function(self, id, name, separateAuraID, variantValues, optionTestFunc)
+    initVars = function(self, id, name, separateAuraID, maxDuration, variantValues, optionTestFunc)
+        -- IDs
         self.spellID = id;
         self.spellName = name;
         self.auraID = id + (separateAuraID and 1000000 or 0); -- 1M ought to be enough for anybody
         self.optionID = id;
+
+        -- Glowing state
         self.glowing = false;
+
+        -- Timers
+        self.vanishTime = nil;
+        self.maxDuration = maxDuration;
+
+        -- Variants
         self.variants = variantValues and SAO:CreateStringVariants("glow", self.optionID, self.spellID, variantValues) or nil;
         self.optionTestFunc = self.variants and optionTestFunc or nil;
     end,
 
     glow = function(self)
         if type(self.optionTestFunc) ~= 'function' or self.optionTestFunc(self.variants.getOption()) then
+            -- Let it glow
             SAO:AddGlow(self.auraID, { self.spellName });
             self.glowing = true;
+
+            -- Start timer if needed
+            if self.maxDuration then
+                local tolerance = 0.2;
+                self.vanishTime = GetTime() + self.maxDuration - tolerance;
+                C_Timer.After(self.maxDuration, function()
+                    self:timeout();
+                end)
+            end
         end
     end,
 
     unglow = function(self)
         SAO:RemoveGlow(self.auraID);
         self.glowing = false;
+        self.vanishTime = nil;
+    end,
+
+    timeout = function(self)
+        if self.vanishTime and GetTime() > self.vanishTime then
+            self:unglow();
+        end
     end,
 }
