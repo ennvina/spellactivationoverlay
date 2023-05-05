@@ -2,6 +2,7 @@ local AddonName, SAO = ...
 
 -- Migrate from pre-091 to 091 or higher
 local function migrateTo091(db)
+
     -- Warrior glowing buttons changed from boolean to string
     local warriorSpells = {
         7384, -- Overpower
@@ -13,6 +14,12 @@ local function migrateTo091(db)
             db.classes["WARRIOR"]["glow"][spellID][spellID] = SAO.defaults.classes["WARRIOR"]["glow"][spellID][spellID];
         end
     end
+
+    -- Classic Era mages probably want Clearcasting by default, because it's the only proc available
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+        db.classes["MAGE"]["alert"][12536][0] = SAO.defaults.classes["MAGE"]["alert"][12536][0];
+    end
+
     print(WrapTextInColorCode("SAO: Migrated options from pre-0.9.1 to 0.9.1", "FFA2F3FF"));
 end
 
@@ -77,7 +84,7 @@ function SAO.LoadDB(self)
     end
 
     -- Migration from older versions
-    if (db.version < 091) then
+    if not db.version or db.version < 091 then
         migrateTo091(db);
     end
 

@@ -310,3 +310,8 @@ SAO.defaults = {
         },
     }
 }
+
+if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+    -- Options that have different default values for Classic Era
+    SAO.defaults.classes["MAGE"]["alert"][12536][0] = "genericarc_05";
+end
