@@ -1,6 +1,8 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.9.1 (2022-05-xx)
+#### v0.9.1-alpha (2022-05-05)
+
+This is a special release for the TOGC PTR with a sense of urgency
 
 - Mage's Clearcasting is now enabled by default on Classic Era
 - Mage's Clearcasting has been scaled to 100% (down from 150%) on Classic Era
