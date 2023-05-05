@@ -180,7 +180,8 @@
         "UnitHealthMax",
         "HEALTH_COST_PCT",
         "GetTalentTabInfo",
-        "UNKNOWN"
+        "UNKNOWN",
+        "Settings"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",
