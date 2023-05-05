@@ -1,4 +1,4 @@
-## Interface: 30401
+## Interface: 30402
 ## Title: SpellActivationOverlay |cffa2f3ff0.9.1|r
 ## Notes: Mimic Spell Activation Overlays from Retail
 ## Author: Vinny
