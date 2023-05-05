@@ -46,8 +46,11 @@ mkdir -p ./_release/vanilla/SpellActivationOverlay || bye "Cannot create vanilla
 cp -R changelog.md LICENSE SpellActivationOverlay.* classes components options textures ./_release/vanilla/SpellActivationOverlay/ || bye "Cannot copy vanilla files"
 cd ./_release/vanilla || bye "Cannot cd to vanilla directory"
 echo -n "Cleaning up vanilla directory... "
+# Change Interface version; to know the version of a specific game client, enter: /dump select(4, GetBuildInfo())
+VANILLA_BUILD_VERSION=11403
+sed -i s/'^## Interface:.*'/"## Interface: $VANILLA_BUILD_VERSION"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update version of TOC file"
 # Remove everything related to DK
-sed -i '/deathknight/d' SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot cleanup vanilla TOC file"
+sed -i '/deathknight/d' SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot remove deathknight from TOC file"
 rm -f SpellActivationOverlay/classes/deathknight.lua || bye "Cannot remove deathknight class file"
 # Remove unused textures to reduce the archive size.
 # The list below, WRATH_ONLY_TEXTURES, is based on the contents of
