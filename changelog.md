@@ -2,6 +2,8 @@
 
 #### v0.9.1 (2022-05-xx)
 
+- Mage's Clearcasting is now enabled by default on Classic Era
+- Mage's Clearcasting has been scaled to 100% (down from 150%) on Classic Era
 - New GAB: Warlock's Drain Soul when the enemy has low HP
 - The Drain Soul option is available for Wrath Classic only
 - Warrior's Overpower has an option to be detected in any stance
