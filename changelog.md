@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.9.1 (2022-05-xx)
+#### v0.9.1 (2022-05-28)
 
 - Mage's Clearcasting is now enabled by default on Classic Era
 - Mage's Clearcasting has been scaled to 100% (down from 150%) on Classic Era
