@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.9.2 (2022-06-21)
+
+- Bump in TOC file for Trial of the Grand Crusader patch
+- The options window is compatible with the new settings UI
+
 #### v0.9.1 (2022-05-28)
 
 - Mage's Clearcasting is now enabled by default on Classic Era
