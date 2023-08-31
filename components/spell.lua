@@ -88,3 +88,14 @@ function SAO.LearnNewSpell(self, spellID)
         self:CheckCounterAction(spellID, unpack(counter));
     end
 end
+
+-- Spell ID tester that falls back on spell name testing if spell ID is zero
+-- This function helps when the game client fails to give a spell ID
+-- Ideally, this function should be pointless, but Classic Era has some issues
+function SAO.IsSpellIdentical(self, spellID, spellName, referenceID)
+    if spellID ~= 0 then
+        return spellID == referenceID
+    else
+        return spellName == GetSpellInfo(referenceID)
+    end
+end
