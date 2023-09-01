@@ -1,5 +1,9 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.9.3 (2022-08-31)
+
+- Druid's Omen of Clarity was no longer working since Classic Era last patch
+
 #### v0.9.2 (2022-06-21)
 
 - Bump in TOC file for Trial of the Grand Crusader patch

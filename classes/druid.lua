@@ -153,28 +153,28 @@ local function customCLEU(self, ...)
     local spellID, spellName, spellSchool = select(12, CombatLogGetCurrentEventInfo()) -- For SPELL_*
 
     if (event == "SPELL_AURA_APPLIED") then
-        if (spellID == omenSpellID) then
+        if self:IsSpellIdentical(spellID, spellName, omenSpellID) then
             clarityCache = true;
             updateSAOs(self);
-        elseif (spellID == lunarSpellID) then
+        elseif self:IsSpellIdentical(spellID, spellName, lunarSpellID) then
             lunarCache = true;
             updateSAOs(self);
             updateGABs(self);
-        elseif (spellID == solarSpellID) then
+        elseif self:IsSpellIdentical(spellID, spellName, solarSpellID) then
             solarCache = true;
             updateSAOs(self);
             updateGABs(self);
         end
         return;
     elseif (event == "SPELL_AURA_REMOVED") then
-        if (spellID == omenSpellID) then
+        if self:IsSpellIdentical(spellID, spellName, omenSpellID) then
             clarityCache = false;
             updateSAOs(self);
-        elseif (spellID == lunarSpellID) then
+        elseif self:IsSpellIdentical(spellID, spellName, lunarSpellID) then
             lunarCache = false;
             updateSAOs(self);
             updateGABs(self);
-        elseif (spellID == solarSpellID) then
+        elseif self:IsSpellIdentical(spellID, spellName, solarSpellID) then
             solarCache = false;
             updateSAOs(self);
             updateGABs(self);
