@@ -275,7 +275,7 @@ local function unitHealth(self, ...)
 end
 
 local function registerClass(self)
-    -- local tasteforBlood = 60503; -- Unused as of now, might be used in the future.
+    local tasteforBlood = 60503;
     local overpower = 7384;
     local execute = 5308;
     local revenge = 6572;
@@ -286,6 +286,9 @@ local function registerClass(self)
     self:RegisterAura("bloodsurge", 0, 46916, "blood_surge", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(slam)) });
     self:RegisterAura("sudden_death", 0, 52437, "sudden_death", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(execute)) });
     self:RegisterAura("sword_and_board", 0, 50227, "sword_and_board", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(shieldSlam)) });
+
+    -- Taste for Blood
+    self:RegisterAura("taste_for_blood", 0, tasteforBlood, "blood_surge", "Top", 0, 0, 0, 0, false, { (GetSpellInfo(overpower)) });
 
     -- Overpower
     self:RegisterAura("overpower", 0, overpower, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(overpower)) });
@@ -305,7 +308,7 @@ local function registerClass(self)
 end
 
 local function loadOptions(self)
-    -- local overpower = 7384;
+    local overpower = 7384;
     local execute = 5308;
     -- local revenge = 6572;
     local victoryRush = 34428;
@@ -321,6 +324,8 @@ local function loadOptions(self)
     local swordAndBoardBuff = 50227;
     local swordAndBoardTalent = 46951;
 
+    local tasteforBloodBuff = 60503;
+    local tasteforBloodTalent = 56636;
 
     self:AddOverlayOption(suddenDeathTalent, suddenDeathBuff);
     self:AddOverlayOption(bloodsurgeTalent, bloodsurgeBuff);
@@ -339,6 +344,7 @@ local function loadOptions(self)
     self:AddGlowingOption(suddenDeathTalent, suddenDeathBuff, execute);
     self:AddGlowingOption(bloodsurgeTalent, bloodsurgeBuff, slam);
     self:AddGlowingOption(swordAndBoardTalent, swordAndBoardBuff, shieldSlam);
+    self:AddGlowingOption(tasteforBloodTalent, tasteforBloodBuff, overpower)
 end
 
 SAO.Class["WARRIOR"] = {

@@ -283,6 +283,11 @@ SAO.defaults = {
                 [50227] = { -- Sword and Board
                     [0] = true,
                 },
+                [60503] = { -- Taste for Blood
+                    -- Not used in practice as a spell alert
+                    -- Even unused, it helps with alertless glowing buttons
+                    [0] = false,
+                },
             },
             glow = {
                 [7384] = { -- Overpower
@@ -305,6 +310,9 @@ SAO.defaults = {
                 },
                 [50227] = { -- Sword and Board
                     [23922] = true, -- Shield Slam
+                },
+                [60503] = { -- Taste for Blood
+                    [7384] = true, -- Overpower
                 },
             },
         },
