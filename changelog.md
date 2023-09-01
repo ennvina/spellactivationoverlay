@@ -1,15 +1,17 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.9.3 (2022-08-31)
+#### v0.9.3 (2023-09-01)
 
 - Druid's Omen of Clarity was no longer working since Classic Era last patch
+- New GAB: Warrior's Overpower button glows during Taste for Blood
+- Taste for Blood will make the Overpower button glow in any stance
 
-#### v0.9.2 (2022-06-21)
+#### v0.9.2 (2023-06-21)
 
 - Bump in TOC file for Trial of the Grand Crusader patch
 - The options window is compatible with the new settings UI
 
-#### v0.9.1 (2022-05-28)
+#### v0.9.1 (2023-05-28)
 
 - Mage's Clearcasting is now enabled by default on Classic Era
 - Mage's Clearcasting has been scaled to 100% (down from 150%) on Classic Era
@@ -21,14 +23,14 @@
 
 Please enter /sao to enable or disable these options
 
-#### v0.9.0 (2022-05-01)
+#### v0.9.0 (2023-05-01)
 
 - Support for Classic Era, although many WotLK spells and talents are missing
 - Mage's Heating Up effect is now hidden when the talent is lost e.g., respec
 - Fixed an issue where paladin and warrior buttons would sometimes not glow
 - The addon should now use a bit less CPU than before
 
-#### v0.8.4 (2022-04-28)
+#### v0.8.4 (2023-04-28)
 
 - New SAO: Druid's Wrath of Elune (4p set bonus of PvP season 5-6-7-8)
 - New SAO: Druid's Elune's Wrath (4p set bonus of tier 8)
@@ -38,7 +40,7 @@ Please enter /sao to enable or disable these options
 
 Enter /sao to enable or disable these options
 
-#### v0.8.3 (2022-01-29)
+#### v0.8.3 (2023-01-29)
 
 - Glowing buttons work again with ProjectAzilroka, after Ulduar patch
 - Mage's Heating Up works again with ProjectAzilroka, after Ulduar patch
@@ -46,7 +48,7 @@ Enter /sao to enable or disable these options
 - These fixes also apply to addons embedding an outdated LibButtonGlow
 - If there is no fallback solution, glowing buttons are temporarily disabled
 
-#### v0.8.2 (2022-01-18)
+#### v0.8.2 (2023-01-18)
 
 - Bump in TOC file for Ulduar patch
 
