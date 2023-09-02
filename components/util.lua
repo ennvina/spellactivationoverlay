@@ -117,7 +117,11 @@ SAO.GlowInterface = {
         -- IDs
         self.spellID = id;
         self.spellName = name;
-        self.auraID = id + (separateAuraID and 1000000 or 0); -- 1M ought to be enough for anybody
+        local shiftID = separateAuraID and 1000000 or 0; -- 1M ought to be enough for anybody
+        if type(separateAuraID) == 'number' then
+            shiftID = shiftID * separateAuraID;
+        end
+        self.auraID = id + shiftID;
         self.optionID = id;
 
         -- Glowing state
