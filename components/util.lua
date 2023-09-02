@@ -117,7 +117,11 @@ SAO.GlowInterface = {
         -- IDs
         self.spellID = id;
         self.spellName = name;
-        self.auraID = id + (separateAuraID and 1000000 or 0); -- 1M ought to be enough for anybody
+        local shiftID = separateAuraID and 1000000 or 0; -- 1M ought to be enough for anybody
+        if type(separateAuraID) == 'number' then
+            shiftID = shiftID * separateAuraID;
+        end
+        self.auraID = id + shiftID;
         self.optionID = id;
 
         -- Glowing state
@@ -132,14 +136,18 @@ SAO.GlowInterface = {
         self.optionTestFunc = self.variants and optionTestFunc or nil;
     end,
 
-    glow = function(self)
+    -- Make the button glow if the glowing button is enabled in options
+    -- When the button glows, start or restart the timer, unless either condtion is true
+    -- - the glowing button was not initialized with a duration
+    -- - the skipTimer argument is true
+    glow = function(self, skipTimer)
         if type(self.optionTestFunc) ~= 'function' or self.optionTestFunc(self.variants.getOption()) then
             -- Let it glow
             SAO:AddGlow(self.auraID, { self.spellName });
             self.glowing = true;
 
             -- Start timer if needed
-            if self.maxDuration then
+            if self.maxDuration and not skipTimer then
                 local tolerance = 0.2;
                 self.vanishTime = GetTime() + self.maxDuration - tolerance;
                 C_Timer.After(self.maxDuration, function()
@@ -149,15 +157,23 @@ SAO.GlowInterface = {
         end
     end,
 
-    unglow = function(self)
+    -- Make the button unglow
+    -- The button unglows even if it was disabled in options; better unglow too much than not enough
+    -- The vanish timer, if any, is reset unless skipTimer is true
+    unglow = function(self, skipTimer)
         SAO:RemoveGlow(self.auraID);
         self.glowing = false;
-        self.vanishTime = nil;
+        if not skipTimer then
+            self.vanishTime = nil;
+        end
     end,
 
     timeout = function(self)
         if self.vanishTime and GetTime() > self.vanishTime then
             self:unglow();
+            if type(self.onTimeout) == 'function' then
+                self:onTimeout()
+            end
         end
     end,
 }

@@ -2,6 +2,7 @@ local AddonName, SAO = ...
 
 -- Optimize frequent calls
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
+local GetShapeshiftForm = GetShapeshiftForm
 local UnitCanAttack = UnitCanAttack
 local UnitGUID = UnitGUID
 local UnitHealth = UnitHealth
@@ -71,10 +72,14 @@ local OverpowerHandler = {
         if not self.targetGuid then return end
 
         if self.glowing and UnitGUID("target") ~= self.targetGuid then
-            self:unglow();
+            self:unglow(true);
         elseif not self.glowing and UnitGUID("target") == self.targetGuid then
-            self:glow();
+            self:glow(true);
         end
+    end,
+
+    onTimeout = function(self)
+        self.targetGuid = nil;
     end,
 
     cleu = function(self, ...)
@@ -87,6 +92,77 @@ local OverpowerHandler = {
             self:dodge(destGUID);
         elseif event == "SPELL_CAST_SUCCESS" and select(13, ...) == self.spellName then
             self:overpower();
+        end
+    end,
+}
+
+--[[
+    OPTFBHandler guesses when Overpower is available,
+    specifically for Taste for Blood
+
+    This must be a different handler than OverpowerHandler.
+    Because Taste for Blood does not have a target requirement,
+    the glow/unglow reasons are quite different, and trying
+    to combine them into a single handler would be a mess.
+
+    The following condition must be met:
+    - the player gains the Taste for Blood effect
+
+    This stops if:
+    - the player loses the Taste for Blood effect
+    
+    The player may lose the effect because Overpower was cast,
+    or because the effect faded after its full duration
+
+    If the Taste for Blood effect is refreshed before Overpower
+    was cast, it will not re-glow the button
+]]
+local OPTFBHandler = {
+
+    initialized = false,
+
+    -- Variables
+
+    buffID = 60503,
+    hasBuff = nil,
+
+    -- Methods
+
+    init = function(self, id, name)
+        SAO.GlowInterface:bind(self);
+        self:initVars(id, name, 2, nil, {
+            -- Must be the same variant values as OverpowerHandler
+            -- Because OPTFBHandler and OverpowerHandler share the same optionID
+            SAO:StanceVariantValue({ 1 }),
+            SAO:StanceVariantValue({ 1, 2, 3 }),
+        }, function(option)
+            -- Unlike other warrior handlers, this handler may be active with "stance:1"
+            return option == "stance:1/2/3" or GetShapeshiftForm() == 1
+        end);
+
+        self.hasBuff = SAO:FindPlayerAuraByID(self.buffID);
+        if self.hasBuff then
+            self:glow();
+        end
+
+        self.initialized = true;
+    end,
+
+    cleu = function(self, ...)
+        local _, event, _, _, _, _, _, destGUID = ...;
+        if destGUID ~= UnitGUID("player") then return end
+        if (event:sub(0,11) ~= "SPELL_AURA_") then return end
+        local spellID, spellName = select(12, CombatLogGetCurrentEventInfo());
+
+        if event == "SPELL_AURA_APPLIED" and SAO:IsSpellIdentical(spellID, spellName, self.buffID) then
+            if not self.hasBuff then
+                self.hasBuff = true;
+                self:glow();
+            end
+        elseif event == "SPELL_AURA_REMOVED" and SAO:IsSpellIdentical(spellID, spellName, self.buffID) then
+            -- Always unglow, even if not needed. Better unglow too much than not enough.
+            self.hasBuff = false;
+            self:unglow();
         end
     end,
 }
@@ -233,6 +309,7 @@ local function customLogin(self, ...)
     local overpowerName = GetSpellInfo(overpower);
     if (overpowerName) then
         OverpowerHandler:init(overpower, overpowerName);
+        OPTFBHandler:init(overpower, overpowerName);
     end
 
     local revenge = 6572;
@@ -251,6 +328,10 @@ end
 local function customCLEU(self, ...)
     if OverpowerHandler.initialized then
         OverpowerHandler:cleu(CombatLogGetCurrentEventInfo());
+    end
+
+    if OPTFBHandler.initialized then
+        OPTFBHandler:cleu(CombatLogGetCurrentEventInfo());
     end
 
     if RevengeHandler.initialized then
@@ -275,7 +356,6 @@ local function unitHealth(self, ...)
 end
 
 local function registerClass(self)
-    -- local tasteforBlood = 60503; -- Unused as of now, might be used in the future.
     local overpower = 7384;
     local execute = 5308;
     local revenge = 6572;
@@ -305,9 +385,7 @@ local function registerClass(self)
 end
 
 local function loadOptions(self)
-    -- local overpower = 7384;
     local execute = 5308;
-    -- local revenge = 6572;
     local victoryRush = 34428;
     local slam = 1464;
     local shieldSlam = 23922;
@@ -321,6 +399,8 @@ local function loadOptions(self)
     local swordAndBoardBuff = 50227;
     local swordAndBoardTalent = 46951;
 
+    local tasteforBloodBuff = 60503;
+    local tasteforBloodTalent = 56636;
 
     self:AddOverlayOption(suddenDeathTalent, suddenDeathBuff);
     self:AddOverlayOption(bloodsurgeTalent, bloodsurgeBuff);
