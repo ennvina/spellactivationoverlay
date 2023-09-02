@@ -1,10 +1,16 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.9.3 (2023-09-01)
+#### v0.9.3 (2023-09-02)
 
+- Bump in TOC file for Classic Hardcore patch
 - Druid's Omen of Clarity was no longer working since Classic Era last patch
-- New GAB: Warrior's Overpower button glows during Taste for Blood
-- Taste for Blood will make the Overpower button glow in any stance
+- Warrior's Overpower button glows during Taste for Blood
+- The 'baseline' Overpower can only be cast on the target who dodged
+- Taste for Blood, on the other hand, allows to cast Overpower on any target
+- Taste for Blood is available on Wrath Classic only
+
+The bug that happened to druids may also happen to other classes
+Please report bugs to the addon's Discord, GitHub or CurseForge
 
 #### v0.9.2 (2023-06-21)
 
