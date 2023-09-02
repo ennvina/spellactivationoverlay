@@ -4,6 +4,7 @@
 
 - Bump in TOC file for Classic Hardcore patch
 - Druid's Omen of Clarity was no longer working since Classic Era last patch
+- Warrior's Overpower button could glow for too long after the target dodged
 - Warrior's Overpower button glows during Taste for Blood
 - The 'baseline' Overpower can only be cast on the target who dodged
 - Taste for Blood, on the other hand, allows to cast Overpower on any target

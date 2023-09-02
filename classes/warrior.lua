@@ -72,10 +72,14 @@ local OverpowerHandler = {
         if not self.targetGuid then return end
 
         if self.glowing and UnitGUID("target") ~= self.targetGuid then
-            self:unglow();
+            self:unglow(true);
         elseif not self.glowing and UnitGUID("target") == self.targetGuid then
-            self:glow();
+            self:glow(true);
         end
+    end,
+
+    onTimeout = function(self)
+        self.targetGuid = nil;
     end,
 
     cleu = function(self, ...)
