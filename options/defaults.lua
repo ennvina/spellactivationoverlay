@@ -148,6 +148,10 @@ SAO.defaults = {
                     [133]   = true, -- Fireball
                     [44614] = true, -- Frostfire Bolt
                 },
+                [74396] = { -- Fingers of Frost
+                    [30455] = true, -- Ice Lance
+                    [44572] = true, -- Deep Freeze
+                },
             },
         },
         ["PALADIN"] = {

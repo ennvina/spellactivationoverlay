@@ -239,8 +239,9 @@ local function registerClass(self)
     -- Please look at HotStreakHandler and customCLEU for more information
 
     -- Frost Procs
-    self:RegisterAura("fingers_of_frost_1", 1, 74396, "frozen_fingers", "Left", 1, 255, 255, 255, true);
-    self:RegisterAura("fingers_of_frost_2", 2, 74396, "frozen_fingers", "Left + Right (Flipped)", 1, 255, 255, 255, true);
+    local iceLanceAndDeepFreeze = { (GetSpellInfo(30455)), (GetSpellInfo(44572)) };
+    self:RegisterAura("fingers_of_frost_1", 1, 74396, "frozen_fingers", "Left", 1, 255, 255, 255, true, iceLanceAndDeepFreeze);
+    self:RegisterAura("fingers_of_frost_2", 2, 74396, "frozen_fingers", "Left + Right (Flipped)", 1, 255, 255, 255, true, iceLanceAndDeepFreeze);
     self:RegisterAura("brain_freeze", 0, 57761, "brain_freeze", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(44614)) });
 
     -- Arcane Procs
@@ -285,6 +286,8 @@ local function loadOptions(self)
     local fireBlast = 2136;
     local fireball = 133;
     local frostfireBolt = 44614;
+    local iceLance = 30455;
+    local deepFreeze = 44572;
 
     local heatingUpDetails;
     local locale = GetLocale();
@@ -336,7 +339,9 @@ local function loadOptions(self)
     end
     self:AddGlowingOption(brainFreezeTalent, brainFreezeBuff, fireball);
     self:AddGlowingOption(brainFreezeTalent, brainFreezeBuff, frostfireBolt);
-    -- self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuff, ...); -- Maybe add spell options for Fingers of Frost
+    self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuff, iceLance);
+    self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuff, deepFreeze);
+    -- self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuff, ...); -- Maybe add more spell options for Fingers of Frost
 end
 
 SAO.Class["MAGE"] = {
