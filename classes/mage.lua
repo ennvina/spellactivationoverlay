@@ -208,12 +208,13 @@ local FrozenHandler = {
     shattered_barrier = { 55080 },
     ice_lance = { 30455, 42913, 42914 },
 
-    freezeID = 40875, -- Not really a 'Frozen' spell ID, but the name should help players identify the intent
-    freezeTalent = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC and 40875 or 5276, -- Freeze (40875) introduced in Wrath
+    freezeID = 5276, -- Not really a 'Frozen' spell ID, but the name should help players identify the intent
+    freezeTalent = 5276,
     deepFreezeTalent = 44572,
 
     -- Constants that will be initialized at init()
     allSpellIDs = {},
+    allSpellNames = {},
 
     -- Variables
     initialized = false,
@@ -244,8 +245,10 @@ local FrozenHandler = {
 
     addSpellIDCandidates = function(self, ids)
         for _, id in pairs(ids) do
-            if GetSpellInfo(id) then
+            local name = GetSpellInfo(id);
+            if name then
                 self.allSpellIDs[id] = true;
+                self.allSpellNames[name] = true;
             end
         end
     end,
@@ -276,6 +279,10 @@ local FrozenHandler = {
                 self.freezable = true;
                 self:setFrozen(self:isTargetFrozen()); -- Must call isTargetFrozen() in case another spell is freezing
             end
+        elseif (spellID == 0 and spellName and self.allSpellNames[spellName]) then
+            -- Special case for Classic Era: check spell name instead of spell ID (regression since HC patch)
+            self.freezable = true;
+            self:setFrozen(self:isTargetFrozen()); -- Must call isTargetFrozen() to make sure spell *ID* is correct
         end
     end,
 

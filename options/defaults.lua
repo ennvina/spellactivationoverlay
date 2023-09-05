@@ -130,7 +130,7 @@ SAO.defaults = {
                 [96215] = { -- Hot Streak + Heating Up (not an actual buff)
                     [0] = false,
                 },
-                [40875] = { -- Representative of spells triggering Frozen effect
+                [5276] = { -- Representative of spells triggering Frozen effect
                     [0] = false,
                 }
             },
@@ -155,7 +155,7 @@ SAO.defaults = {
                     [30455] = true, -- Ice Lance
                     [44572] = true, -- Deep Freeze
                 },
-                [40875] = { -- Representative of spells triggering Frozen effect
+                [5276] = { -- Representative of spells triggering Frozen effect
                     [30455] = true, -- Ice Lance
                     [44572] = true, -- Deep Freeze
                 },
