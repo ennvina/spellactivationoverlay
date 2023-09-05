@@ -204,7 +204,7 @@ local FrozenHandler = {
     frostbite = { 12494 },
     frost_nova = { 122, 865, 6131, 10230, 27088, 42917 },
     freezing_trap = { 3355, 14308, 14309 }, -- from hunters
-    freeze = { 40875 }, -- from Frost Elemental
+    freeze = { 33395 }, -- from Frost Elemental
     shattered_barrier = { 55080 },
     ice_lance = { 30455, 42913, 42914 },
 
@@ -284,6 +284,8 @@ local FrozenHandler = {
     end,
 
     isTargetFrozen = function(self)
+        -- Test debuffs on target with following code
+        -- /run for i=1,40 do a,_,_,_,_,_,_,_,_,b=UnitDebuff("target",i) if a then print(i,a,b) end end
         for i = 1,200 do -- 200 is a security to prevent infinite loops
             local name, _, _, _, _, _, _, _, _, id = UnitDebuff("target", i);
             if not name then
