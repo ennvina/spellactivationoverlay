@@ -321,17 +321,34 @@ local FrozenHandler = {
     end,
 
     activate = function(self)
-print("FREEZE!!");
+        -- SAO
         local saoOption = SAO:GetOverlayOptions(self.freezeID);
         local hasSAO = not saoOption or type(saoOption[0]) == "nil" or saoOption[0];
         if (hasSAO) then
             SAO:ActivateOverlay(0, self.freezeID, SAO.TexName["frozen_fingers"], "Top (CW)", 0.75, 255, 255, 255, false);
         end
+
+        -- GABs
+        local gabOption = SAO:GetGlowingOptions(self.freezeID);
+        local iceLance = self.ice_lance[1];
+        local hasIceLanceGAB = not gabOption or type(gabOption[iceLance]) == "nil" or gabOption[iceLance];
+        if (hasIceLanceGAB) then
+            SAO:AddGlow(iceLance, self.ice_lance);
+        end
+        local deepFreeze = self.deepFreezeTalent;
+        local hasDeepFreezeGAB = not gabOption or type(gabOption[deepFreeze]) == "nil" or gabOption[deepFreeze];
+        if (hasDeepFreezeGAB) then
+            SAO:AddGlow(deepFreeze, { deepFreeze });
+        end
     end,
 
     deactivate = function(self)
-print("Unfreeze");
+        -- SAO
         SAO:DeactivateOverlay(self.freezeID);
+
+        -- GAB
+        SAO:RemoveGlow(self.ice_lance[1]);
+        SAO:RemoveGlow(self.deepFreezeTalent);
     end,
 }
 
@@ -509,6 +526,8 @@ local function loadOptions(self)
     self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuff, iceLance);
     self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuff, deepFreeze);
     -- self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuff, ...); -- Maybe add more spell options for Fingers of Frost
+    self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, iceLance);
+    self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, deepFreeze);
 end
 
 SAO.Class["MAGE"] = {

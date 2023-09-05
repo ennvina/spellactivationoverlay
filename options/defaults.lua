@@ -155,6 +155,10 @@ SAO.defaults = {
                     [30455] = true, -- Ice Lance
                     [44572] = true, -- Deep Freeze
                 },
+                [40875] = { -- Representative of spells triggering Frozen effect
+                    [30455] = true, -- Ice Lance
+                    [44572] = true, -- Deep Freeze
+                },
             },
         },
         ["PALADIN"] = {
