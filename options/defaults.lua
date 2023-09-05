@@ -130,6 +130,9 @@ SAO.defaults = {
                 [96215] = { -- Hot Streak + Heating Up (not an actual buff)
                     [0] = false,
                 },
+                [40875] = { -- Representative of spells triggering Frozen effect
+                    [0] = false,
+                }
             },
             glow = {
                 [44401] = { -- Missile Barrage

@@ -322,10 +322,16 @@ local FrozenHandler = {
 
     activate = function(self)
 print("FREEZE!!");
+        local saoOption = SAO:GetOverlayOptions(self.freezeID);
+        local hasSAO = not saoOption or type(saoOption[0]) == "nil" or saoOption[0];
+        if (hasSAO) then
+            SAO:ActivateOverlay(0, self.freezeID, SAO.TexName["frozen_fingers"], "Top (CW)", 0.75, 255, 255, 255, false);
+        end
     end,
 
     deactivate = function(self)
 print("Unfreeze");
+        SAO:DeactivateOverlay(self.freezeID);
     end,
 }
 
@@ -401,6 +407,7 @@ local function registerClass(self)
     local iceLanceAndDeepFreeze = { (GetSpellInfo(FrozenHandler.ice_lance[1])), (GetSpellInfo(FrozenHandler.deepFreezeTalent)) };
     self:RegisterAura("fingers_of_frost_1", 1, 74396, "frozen_fingers", "Left", 1, 255, 255, 255, true, iceLanceAndDeepFreeze);
     self:RegisterAura("fingers_of_frost_2", 2, 74396, "frozen_fingers", "Left + Right (Flipped)", 1, 255, 255, 255, true, iceLanceAndDeepFreeze);
+    self:RegisterAura("freeze", 0, FrozenHandler.freezeID+1000000, "frozen_fingers", "Top (CW)", 0.75, 255, 255, 255, false); -- Fake spell ID, for option testing
     self:RegisterAura("brain_freeze", 0, 57761, "brain_freeze", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(44614)) });
 
     -- Arcane Procs
@@ -488,6 +495,7 @@ local function loadOptions(self)
     self:AddOverlayOption(firestarterTalent, firestarterBuff);
     self:AddOverlayOption(impactTalent, impactBuff);
     self:AddOverlayOption(fingersOfFrostTalent, fingersOfFrostBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
+    self:AddOverlayOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, 0, nil, nil, nil, FrozenHandler.freezeID+1000000);
     self:AddOverlayOption(brainFreezeTalent, brainFreezeBuff);
 
     self:AddGlowingOption(missileBarrageTalent, missileBarrageBuff, arcaneMissiles);
