@@ -2,7 +2,11 @@ local AddonName, SAO = ...
 
 -- Optimize frequent calls
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
+local GetSpellInfo = GetSpellInfo
 local GetTalentInfo = GetTalentInfo
+local UnitCanAttack = UnitCanAttack
+local UnitExists = UnitExists
+local UnitHealth = UnitHealth
 
 local clearcastingVariants; -- Lazy init in lazyCreateClearcastingVariants()
 
@@ -80,7 +84,7 @@ local function deactivateHeatingUp(self, spellID)
     self:DeactivateOverlay(spellID);
 end
 
-local function customCLEU(self, ...)
+local function hotStreakCLEU(self, ...)
     local timestamp, event, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo() -- For all events
 
     -- Special case: if player dies, we assumed the "Heating Up" virtual buff was lost
@@ -193,12 +197,167 @@ local function recheckTalents(self)
     end
 end
 
+
+-- Detect if the target is Frozen
+local FrozenHandler = {
+    -- Constants
+    frostbite = { 12494 },
+    frost_nova = { 122, 865, 6131, 10230, 27088, 42917 },
+    freezing_trap = { 3355, 14308, 14309 }, -- from hunters
+    freeze = { 40875 }, -- from Frost Elemental
+    shattered_barrier = { 55080 },
+    ice_lance = { 30455, 42913, 42914 },
+
+    freezeID = 40875, -- Not really a 'Frozen' spell ID, but the name should help players identify the intent
+    freezeTalent = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC and 40875 or 5276, -- Freeze (40875) introduced in Wrath
+    deepFreezeTalent = 44572,
+
+    -- Constants that will be initialized at init()
+    allSpellIDs = {},
+
+    -- Variables
+    initialized = false,
+
+    freezable = false,
+    frozen = false,
+
+    saoActive = nil,
+    gabIceLinceActive = nil,
+    gabDeepFreezeActive = nil,
+
+    -- Methods
+    init = function(self)
+        self:addSpellIDCandidates(self.frostbite);
+        self:addSpellIDCandidates(self.frost_nova);
+        self:addSpellIDCandidates(self.freezing_trap);
+        self:addSpellIDCandidates(self.freeze);
+        self:addSpellIDCandidates(self.shattered_barrier);
+
+        self.freezable = self:isTargetFreezable();
+        if (self.freezable and self:isTargetFrozen()) then
+            self.frozen = true;
+            self:activate();
+        end
+
+        self.initialized = true;
+    end,
+
+    addSpellIDCandidates = function(self, ids)
+        for _, id in pairs(ids) do
+            if GetSpellInfo(id) then
+                self.allSpellIDs[id] = true;
+            end
+        end
+    end,
+
+    cleu = function(self)
+        local _, event, _, _, _, _, _, destGUID = CombatLogGetCurrentEventInfo()
+
+        -- Event must relate to the player's target
+        if (not destGUID) or (destGUID ~= UnitGUID("target")) then return end
+
+        -- Event must be about spell auras
+        if (event:sub(0,11) ~= "SPELL_AURA_") then return end
+
+        if not self:isTargetFreezable() then
+            self.freezable = false;
+            self:setFrozen(false);
+            return;
+        end
+
+        local spellID, spellName = select(12, CombatLogGetCurrentEventInfo());
+
+        if (self.allSpellIDs[spellID]) then
+            -- The current event info is related to a spell that can trigger the Frozen effect
+            if (event == "SPELL_AURA_APPLIED") then
+                self.freezable = true;
+                self:setFrozen(true);
+            elseif (event == "SPELL_AURA_REMOVED") then
+                self.freezable = true;
+                self:setFrozen(self:isTargetFrozen()); -- Must call isTargetFrozen() in case another spell is freezing
+            end
+        end
+    end,
+
+    isTargetFreezable = function(self)
+        return UnitExists("target") and UnitCanAttack("player", "target") and UnitHealth("target") ~= 0;
+    end,
+
+    isTargetFrozen = function(self)
+        for i = 1,200 do -- 200 is a security to prevent infinite loops
+            local name, _, _, _, _, _, _, _, _, id = UnitDebuff("target", i);
+            if not name then
+                return false;
+            end
+            if self.allSpellIDs[id] then
+                return true;
+            end
+        end
+    end,
+
+    retarget = function(self, ...)
+        if (self.freezable ~= self:isTargetFreezable()) then
+            self.freezable = not self.freezable;
+        end
+        self:setFrozen(self.freezable and self:isTargetFrozen());
+    end,
+
+    checkTargetHealth = function(self)
+        if (self.freezable ~= self:isTargetFreezable()) then
+            self.freezable = not self.freezable;
+            -- Check isTargetFrozen() only when 'freezable' changes, to avoid unnecessary computations
+            self:setFrozen(self.freezable and self:isTargetFrozen());
+        end
+    end,
+
+    setFrozen = function(self, frozen)
+        if frozen and not self.frozen then
+            self.frozen = true;
+            self:activate();
+        elseif not frozen and self.frozen then
+            self.frozen = false;
+            self:deactivate();
+        end
+    end,
+
+    activate = function(self)
+print("FREEZE!!");
+    end,
+
+    deactivate = function(self)
+print("Unfreeze");
+    end,
+}
+
 local function customLogin(self, ...)
     -- Must initialize class on PLAYER_LOGIN instead of registerClass
     -- Because we need the talent tree, which is not always available right off the bat
     local hotStreakSpellName = GetSpellInfo(hotStreakSpellID);
     if (hotStreakSpellName) then
         HotStreakHandler:init(hotStreakSpellName);
+    end
+
+    if (not FrozenHandler.initialized) then
+        FrozenHandler:init();
+    end
+end
+
+local function customCLEU(self, ...)
+    hotStreakCLEU(self, ...);
+    if FrozenHandler.initialized then
+        FrozenHandler:cleu();
+    end
+end
+
+local function retarget(self, ...)
+    if FrozenHandler.initialized then
+        FrozenHandler:retarget(...);
+    end
+end
+
+local function unitHealth(self, unitID)
+    if FrozenHandler.initialized and unitID == "target" then
+        FrozenHandler:checkTargetHealth();
     end
 end
 
@@ -239,7 +398,7 @@ local function registerClass(self)
     -- Please look at HotStreakHandler and customCLEU for more information
 
     -- Frost Procs
-    local iceLanceAndDeepFreeze = { (GetSpellInfo(30455)), (GetSpellInfo(44572)) };
+    local iceLanceAndDeepFreeze = { (GetSpellInfo(FrozenHandler.ice_lance[1])), (GetSpellInfo(FrozenHandler.deepFreezeTalent)) };
     self:RegisterAura("fingers_of_frost_1", 1, 74396, "frozen_fingers", "Left", 1, 255, 255, 255, true, iceLanceAndDeepFreeze);
     self:RegisterAura("fingers_of_frost_2", 2, 74396, "frozen_fingers", "Left + Right (Flipped)", 1, 255, 255, 255, true, iceLanceAndDeepFreeze);
     self:RegisterAura("brain_freeze", 0, 57761, "brain_freeze", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(44614)) });
@@ -286,8 +445,8 @@ local function loadOptions(self)
     local fireBlast = 2136;
     local fireball = 133;
     local frostfireBolt = 44614;
-    local iceLance = 30455;
-    local deepFreeze = 44572;
+    local iceLance = FrozenHandler.ice_lance[1];
+    local deepFreeze = FrozenHandler.deepFreezeTalent;
 
     local heatingUpDetails;
     local locale = GetLocale();
@@ -350,5 +509,7 @@ SAO.Class["MAGE"] = {
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
     ["PLAYER_LOGIN"] = customLogin,
     ["CHARACTER_POINTS_CHANGED"] = recheckTalents,
+    ["PLAYER_TARGET_CHANGED"] = retarget,
+    ["UNIT_HEALTH"] = unitHealth,
     ["PLAYER_TALENT_UPDATE"] = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC and recheckTalents or nil, -- This event was introduced in Wrath, and causes errors before
 }
