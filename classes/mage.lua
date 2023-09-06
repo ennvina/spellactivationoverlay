@@ -207,10 +207,14 @@ local FrozenHandler = {
     freeze = { 33395 }, -- from Frost Elemental
     shattered_barrier = { 55080 },
     ice_lance = { 30455, 42913, 42914 },
+    deep_freeze = { 44572 },
 
     freezeID = 5276, -- Not really a 'Frozen' spell ID, but the name should help players identify the intent
     freezeTalent = 5276,
-    deepFreezeTalent = 44572,
+    fakeSpellID = 5276+1000000, -- For option testing
+
+    saoTexture = "frozen_fingers",
+    saoScaleFactor = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 1 or 0.75, -- Scaling down on Wrath because of conflict
 
     -- Constants that will be initialized at init()
     allSpellIDs = {},
@@ -334,7 +338,7 @@ local FrozenHandler = {
         local saoOption = SAO:GetOverlayOptions(self.freezeID);
         local hasSAO = not saoOption or type(saoOption[0]) == "nil" or saoOption[0];
         if (hasSAO) then
-            SAO:ActivateOverlay(0, self.freezeID, SAO.TexName["frozen_fingers"], "Top (CW)", 0.75, 255, 255, 255, false);
+            SAO:ActivateOverlay(0, self.freezeID, SAO.TexName[self.saoTexture], "Top (CW)", self.saoScaleFactor, 255, 255, 255, false);
         end
 
         -- GABs
@@ -342,12 +346,12 @@ local FrozenHandler = {
         local iceLance = self.ice_lance[1];
         local hasIceLanceGAB = not gabOption or type(gabOption[iceLance]) == "nil" or gabOption[iceLance];
         if (hasIceLanceGAB) then
-            SAO:AddGlow(iceLance, self.ice_lance);
+            SAO:AddGlow(iceLance, self.ice_lance); -- First arg is option ID, second arg is spell ID list
         end
-        local deepFreeze = self.deepFreezeTalent;
+        local deepFreeze = self.deep_freeze[1];
         local hasDeepFreezeGAB = not gabOption or type(gabOption[deepFreeze]) == "nil" or gabOption[deepFreeze];
         if (hasDeepFreezeGAB) then
-            SAO:AddGlow(deepFreeze, { deepFreeze });
+            SAO:AddGlow(deepFreeze, self.deep_freeze); -- First arg is option ID, second arg is spell ID list
         end
     end,
 
@@ -357,7 +361,7 @@ local FrozenHandler = {
 
         -- GAB
         SAO:RemoveGlow(self.ice_lance[1]);
-        SAO:RemoveGlow(self.deepFreezeTalent);
+        SAO:RemoveGlow(self.deep_freeze[1]);
     end,
 }
 
@@ -430,10 +434,10 @@ local function registerClass(self)
     -- Please look at HotStreakHandler and customCLEU for more information
 
     -- Frost Procs
-    local iceLanceAndDeepFreeze = { (GetSpellInfo(FrozenHandler.ice_lance[1])), (GetSpellInfo(FrozenHandler.deepFreezeTalent)) };
+    local iceLanceAndDeepFreeze = { (GetSpellInfo(FrozenHandler.ice_lance[1])), (GetSpellInfo(FrozenHandler.deep_freeze[1])) };
     self:RegisterAura("fingers_of_frost_1", 1, 74396, "frozen_fingers", "Left", 1, 255, 255, 255, true, iceLanceAndDeepFreeze);
     self:RegisterAura("fingers_of_frost_2", 2, 74396, "frozen_fingers", "Left + Right (Flipped)", 1, 255, 255, 255, true, iceLanceAndDeepFreeze);
-    self:RegisterAura("freeze", 0, FrozenHandler.freezeID+1000000, "frozen_fingers", "Top (CW)", 0.75, 255, 255, 255, false); -- Fake spell ID, for option testing
+    self:RegisterAura("freeze", 0, FrozenHandler.fakeSpellID, FrozenHandler.saoTexture, "Top (CW)", FrozenHandler.saoScaleFactor, 255, 255, 255, false);
     self:RegisterAura("brain_freeze", 0, 57761, "brain_freeze", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(44614)) });
 
     -- Arcane Procs
@@ -479,7 +483,7 @@ local function loadOptions(self)
     local fireball = 133;
     local frostfireBolt = 44614;
     local iceLance = FrozenHandler.ice_lance[1];
-    local deepFreeze = FrozenHandler.deepFreezeTalent;
+    local deepFreeze = FrozenHandler.deep_freeze[1];
 
     local heatingUpDetails;
     local locale = GetLocale();
@@ -521,7 +525,7 @@ local function loadOptions(self)
     self:AddOverlayOption(firestarterTalent, firestarterBuff);
     self:AddOverlayOption(impactTalent, impactBuff);
     self:AddOverlayOption(fingersOfFrostTalent, fingersOfFrostBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
-    self:AddOverlayOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, 0, nil, nil, nil, FrozenHandler.freezeID+1000000);
+    self:AddOverlayOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, 0, nil, nil, nil, FrozenHandler.fakeSpellID);
     self:AddOverlayOption(brainFreezeTalent, brainFreezeBuff);
 
     self:AddGlowingOption(missileBarrageTalent, missileBarrageBuff, arcaneMissiles);
