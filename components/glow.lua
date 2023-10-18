@@ -288,6 +288,7 @@ binder:SetScript("OnEvent", function()
 
     local LAB = LibStub("LibActionButton-1.0", true);
     local LAB_ElvUI = LibStub("LibActionButton-1.0-ElvUI", true);
+    local LAB_GE = LibStub("LibActionButton-1.0-GE", true);
     local LBG, LBGversion = LibStub("LibButtonGlow-1.0", true);
     local LCG = LibStub("LibCustomGlow-1.0", true);
 
@@ -351,7 +352,7 @@ binder:SetScript("OnEvent", function()
             if (type(azilMajor) == 'number' and type(azilMinor) == 'number') then
                 hasAzilroka186OrLower = azilMajor < 1 or azilMajor == 1 and azilMinor <= 86
             end
-        end 
+        end
         if (hasElvUI13OrHigher and not hasAzilroka186OrLower) then
             if (LBG and LBGversion >= 8) then
                 LAB_ElvUI:RegisterCallback("OnButtonUpdate", LBGButtonUpdateFunc);
@@ -369,6 +370,39 @@ binder:SetScript("OnEvent", function()
                 warnOutdatedLBG();
             end
         end
+    end
+
+    -- Support for AzeriteUI5's LibActionButton
+    if (LAB_GE) then
+        local buttonUpdateFunc = function(lib, event, self)
+            if (self._state_type ~= "action") then
+                -- If button is not an "action", then GetSpellId is unusable
+                -- This happens for instance with vehicle buttons
+                -- They are probably not meant to glow, so it's simpler to just ignore them
+                return
+            end
+            if (not self.GetGlowID) then
+                self.GetGlowID = self.GetSpellId;
+            end
+            if (not self.EnableGlow) then
+                self.EnableGlow = function(button)
+                    button:SetSpellActivationColor(1, 1, 1);
+                    button:ShowSpellActivation();
+                end
+            end
+            if (not self.DisableGlow) then
+                self.DisableGlow = function(button)
+                    button:HideSpellActivation();
+                end
+            end
+            SAO:UpdateActionButton(self);
+        end
+
+        local LAB_GEButtonUpdateFunc = function(event, self)
+            buttonUpdateFunc(LAB_GE, event, self);
+        end
+
+        LAB_GE:RegisterCallback("OnButtonUpdate", LAB_GEButtonUpdateFunc)
     end
 
     binder:UnregisterEvent("PLAYER_LOGIN");
