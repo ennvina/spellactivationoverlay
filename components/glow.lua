@@ -323,6 +323,10 @@ binder:SetScript("OnEvent", function()
         buttonUpdateFunc(LCG, event, self);
     end
 
+    local LAB_GEButtonUpdateFunc = function(event, self)
+        buttonUpdateFunc(LAB_GE, event, self);
+    end
+
     -- Support for LibActionButton used by e.g., Bartender
     if (LAB and LBG and LBGversion >= 8) then -- Prioritize LibButtonGlow, if available
         LAB:RegisterCallback("OnButtonUpdate", LBGButtonUpdateFunc);
@@ -374,34 +378,6 @@ binder:SetScript("OnEvent", function()
 
     -- Support for AzeriteUI5's LibActionButton
     if (LAB_GE) then
-        local buttonUpdateFunc = function(lib, event, self)
-            if (self._state_type ~= "action") then
-                -- If button is not an "action", then GetSpellId is unusable
-                -- This happens for instance with vehicle buttons
-                -- They are probably not meant to glow, so it's simpler to just ignore them
-                return
-            end
-            if (not self.GetGlowID) then
-                self.GetGlowID = self.GetSpellId;
-            end
-            if (not self.EnableGlow) then
-                self.EnableGlow = function(button)
-                    button:SetSpellActivationColor(1, 1, 1);
-                    button:ShowSpellActivation();
-                end
-            end
-            if (not self.DisableGlow) then
-                self.DisableGlow = function(button)
-                    button:HideSpellActivation();
-                end
-            end
-            SAO:UpdateActionButton(self);
-        end
-
-        local LAB_GEButtonUpdateFunc = function(event, self)
-            buttonUpdateFunc(LAB_GE, event, self);
-        end
-
         LAB_GE:RegisterCallback("OnButtonUpdate", LAB_GEButtonUpdateFunc)
     end
 
