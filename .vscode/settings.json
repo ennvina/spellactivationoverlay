@@ -181,7 +181,8 @@
         "HEALTH_COST_PCT",
         "GetTalentTabInfo",
         "UNKNOWN",
-        "Settings"
+        "Settings",
+        "UnitExists"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",

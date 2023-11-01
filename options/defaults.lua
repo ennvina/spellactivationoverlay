@@ -130,6 +130,9 @@ SAO.defaults = {
                 [96215] = { -- Hot Streak + Heating Up (not an actual buff)
                     [0] = false,
                 },
+                [5276] = { -- Representative of spells triggering Frozen effect
+                    [0] = false,
+                }
             },
             glow = {
                 [44401] = { -- Missile Barrage
@@ -147,6 +150,14 @@ SAO.defaults = {
                 [57761] = { -- Brain Freeze
                     [133]   = true, -- Fireball
                     [44614] = true, -- Frostfire Bolt
+                },
+                [74396] = { -- Fingers of Frost
+                    [30455] = true, -- Ice Lance
+                    [44572] = true, -- Deep Freeze
+                },
+                [5276] = { -- Representative of spells triggering Frozen effect
+                    [30455] = true, -- Ice Lance
+                    [44572] = true, -- Deep Freeze
                 },
             },
         },

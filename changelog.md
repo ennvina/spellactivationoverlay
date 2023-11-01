@@ -1,5 +1,20 @@
 ## SpellActivationOverlay Changelog
 
+#### v0.9.4 (2023-09-xx)
+
+- New SAO: Mage's Frozen when the target is under a Frozen effect
+- New GAB: Mage's Ice Lance button glows during Fingers of Frost
+- New GAB: Mage's Deep Freeze button glows during Fingers of Frost
+- New GAB: Mage's Ice Lance button glows when the target Frozen
+- New GAB: Mage's Deep Freeze button glows when the target Frozen
+
+List of spells that trigger the Frozen effect:
+- Mage's Frost Nova
+- Mage's Frostbite (Frost talent)
+- Mage's Shattered Barrier (Frost talent, Wrath Classic only)
+- Mage's Frost Elemental's Freeze spell (Wrath Classic only)
+- Hunter's Freezing Trap
+
 #### v0.9.3 (2023-09-02)
 
 - Bump in TOC file for Classic Hardcore patch

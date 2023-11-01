@@ -65,7 +65,6 @@ art_of_war
 lock_and_load
 blood_surge
 brain_freeze
-frozen_fingers
 maelstrom_weapon_2
 sudden_death
 shooting_stars

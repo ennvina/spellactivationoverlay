@@ -44,6 +44,7 @@ For visual previews, please visit the above CurseForge link.
 - Hot Streak + Heating Up (optional)
 - Brain Freeze
 - Fingers of Frost
+- Frozen (enemy debuff)
 
 ## <img src="https://static.wikia.nocookie.net/wowpedia/images/f/fa/Charactercreate-class_paladin.png" alt="Paladin" width="20" height="20" /> Paladin
 
