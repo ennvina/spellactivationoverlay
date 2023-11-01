@@ -1,7 +1,8 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.9.4 (2023-09-xx)
+#### v0.9.4 (2023-11-01)
 
+- Bump in TOC file for Icecrown Citadel patch
 - New SAO: Mage's Frozen when the target is under a Frozen effect
 - New GAB: Mage's Ice Lance button glows during Fingers of Frost
 - New GAB: Mage's Deep Freeze button glows during Fingers of Frost
