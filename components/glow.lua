@@ -288,6 +288,7 @@ binder:SetScript("OnEvent", function()
 
     local LAB = LibStub("LibActionButton-1.0", true);
     local LAB_ElvUI = LibStub("LibActionButton-1.0-ElvUI", true);
+    local LAB_GE = LibStub("LibActionButton-1.0-GE", true);
     local LBG, LBGversion = LibStub("LibButtonGlow-1.0", true);
     local LCG = LibStub("LibCustomGlow-1.0", true);
 
@@ -322,6 +323,10 @@ binder:SetScript("OnEvent", function()
         buttonUpdateFunc(LCG, event, self);
     end
 
+    local LAB_GEButtonUpdateFunc = function(event, self)
+        buttonUpdateFunc(LAB_GE, event, self);
+    end
+
     -- Support for LibActionButton used by e.g., Bartender
     if (LAB and LBG and LBGversion >= 8) then -- Prioritize LibButtonGlow, if available
         LAB:RegisterCallback("OnButtonUpdate", LBGButtonUpdateFunc);
@@ -351,7 +356,7 @@ binder:SetScript("OnEvent", function()
             if (type(azilMajor) == 'number' and type(azilMinor) == 'number') then
                 hasAzilroka186OrLower = azilMajor < 1 or azilMajor == 1 and azilMinor <= 86
             end
-        end 
+        end
         if (hasElvUI13OrHigher and not hasAzilroka186OrLower) then
             if (LBG and LBGversion >= 8) then
                 LAB_ElvUI:RegisterCallback("OnButtonUpdate", LBGButtonUpdateFunc);
@@ -369,6 +374,11 @@ binder:SetScript("OnEvent", function()
                 warnOutdatedLBG();
             end
         end
+    end
+
+    -- Support for AzeriteUI5's LibActionButton
+    if (LAB_GE) then
+        LAB_GE:RegisterCallback("OnButtonUpdate", LAB_GEButtonUpdateFunc)
     end
 
     binder:UnregisterEvent("PLAYER_LOGIN");
