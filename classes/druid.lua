@@ -251,6 +251,9 @@ local function registerClass(self)
     self:RegisterAura("wrath_of_elune", 0, 46833, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvP season 5-6-7-8
     self:RegisterAura("elunes_wrath", 0, 64823, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvE tier 8
 
+    -- Healing Trance / Soul Preserver
+    self:RegisterAuraSoulPreserver("soul_preserver_druid", 60512); -- 60512 = Druid buff
+
     -- Mark textures that aren't marked automatically
     local omenTextureFeral = "feral_omenofclarity";
     local omenTextureResto = "natures_grace";
@@ -310,6 +313,7 @@ local function loadOptions(self)
     self:AddOverlayOption(elunesWrathTalent, elunesWrathBuff);
     self:AddOverlayOption(naturesGraceTalent, naturesGraceBuff, 0, nil, naturesGraceVariants);
     self:AddOverlayOption(predatoryStrikesTalent, predatoryStrikesBuff);
+    self:AddSoulPreserverOverlayOption(60512); -- 60512 = Druid buff
 
     self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
     self:AddGlowingOption(solarEclipseTalent, wrath, wrath);

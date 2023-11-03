@@ -48,6 +48,9 @@ SAO.defaults = {
                 [69369] = { -- Predatory Strikes
                     [0] = true,
                 },
+                [60512] = { -- Healing Trance / Soul Preserver
+                    [0] = false,
+                },
             },
             glow = {
                 [2912] = { -- Starfire
