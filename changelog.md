@@ -1,8 +1,9 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.9.5 (2023-11-xx)
+#### v0.9.5-beta (2023-11-xx)
 
 - Buttons should glow correctly when using AzeriteUI
+- New SAOs: Healing Trance / Soul Preserver, for all healing classes
 - New GAB: Hunter's Mongoose Bite (Classic Era only)
 - Warriors can hold 2 charges of Sudden Death thanks to tier 10 set bonus
 - Warriors can hold 2 charges of Bloodsurge thanks to tier 10 set bonus
