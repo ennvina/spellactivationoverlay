@@ -232,6 +232,9 @@ SAO.defaults = {
                 [53390] = { -- Tidal Waves
                     [0] = false, -- any stacks
                 },
+                [60515] = { -- Healing Trance / Soul Preserver
+                    [0] = false,
+                },
             },
             glow = {
                 [53817] = { -- Maelstorm Weapon
