@@ -25,6 +25,13 @@ local function registerClass(self)
     -- Kill Shot, Execute-like ability for targets at 20% hp or less
     self:RegisterAura("kill_shot", 0, killShot, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(killShot)) });
     self:RegisterCounter("kill_shot");
+
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+        -- Mongoose Bite, Classic Era only because there is no longer a proc since Wrath
+        local mongooseBite = 1495;
+        self:RegisterAura("mongoose_bite", 0, mongooseBite, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(mongooseBite)) });
+        self:RegisterCounter("mongoose_bite");
+    end
 end
 
 local function loadOptions(self)
@@ -46,6 +53,10 @@ local function loadOptions(self)
 
     self:AddGlowingOption(nil, killShot, killShot);
     self:AddGlowingOption(nil, counterattack, counterattack);
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+        local mongooseBite = 1495;
+        self:AddGlowingOption(nil, mongooseBite, mongooseBite);
+    end
     self:AddGlowingOption(improvedSteadyShotTalent, improvedSteadyShotBuff, aimedShot);
     self:AddGlowingOption(improvedSteadyShotTalent, improvedSteadyShotBuff, arcaneShot);
     self:AddGlowingOption(improvedSteadyShotTalent, improvedSteadyShotBuff, chimeraShot);

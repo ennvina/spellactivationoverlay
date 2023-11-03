@@ -2,6 +2,7 @@
 
 #### v0.9.5 (2023-11-xx)
 
+- New GAB: Hunter's Mongoose Bite (Classic Era only)
 - Warriors can hold 2 charges of Sudden Death thanks to tier 10 set bonus
 - Warriors can hold 2 charges of Bloodsurge thanks to tier 10 set bonus
 

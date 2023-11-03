@@ -32,6 +32,7 @@ For visual previews, please visit the above CurseForge link.
 - Lock and Load
 - Counterattack (glowing button only)
 - Kill Shot (glowing button only)
+- Mongoose Bite (glowing button only)
 
 ## <img src="https://static.wikia.nocookie.net/wowpedia/images/c/cc/Charactercreate-class_mage.png" alt="Mage" width="20" height="20" /> Mage
 
