@@ -182,7 +182,8 @@
         "GetTalentTabInfo",
         "UNKNOWN",
         "Settings",
-        "UnitExists"
+        "UnitExists",
+        "GetItemInfo"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",
