@@ -286,10 +286,10 @@ SAO.defaults = {
         ["WARRIOR"] = {
             alert = {
                 [52437] = { -- Sudden Death
-                    [0] = true,
+                    [0] = true, -- any stacks
                 },
                 [46916] = { -- Bloodsurge
-                    [0] = true,
+                    [0] = true, -- any stacks
                 },
                 [50227] = { -- Sword and Board
                     [0] = true,
