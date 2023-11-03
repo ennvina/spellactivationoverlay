@@ -196,6 +196,9 @@ SAO.defaults = {
                     [3] = true,  -- 3 stacks
                     [0] = false, -- any stacks but 3
                 },
+                [60514] = { -- Healing Trance / Soul Preserver
+                    [0] = false,
+                },
             },
             glow = {
                 [33151] = { -- Surge of Light

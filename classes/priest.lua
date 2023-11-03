@@ -29,6 +29,9 @@ local function registerClass(self)
             self:RegisterAura(auraName, nbStacks, auraBuff, "serendipity", "Top", scale, 255, 255, 255, pulse, glowIDs);
         end
     end
+
+    -- Healing Trance / Soul Preserver
+    self:RegisterAuraSoulPreserver("soul_preserver_priest", 60514); -- 60514 = Priest buff
 end
 
 local function loadOptions(self)
@@ -49,6 +52,7 @@ local function loadOptions(self)
     self:AddOverlayOption(surgeOfLightTalent, surgeOfLightBuff);
     self:AddOverlayOption(serendipityTalent, serendipityBuff3, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks
     self:AddOverlayOption(serendipityTalent, serendipityBuff3, 3); -- setup 3 stacks
+    self:AddSoulPreserverOverlayOption(60514); -- 60514 = Priest buff
 
     self:AddGlowingOption(surgeOfLightTalent, surgeOfLightBuff, smite);
     self:AddGlowingOption(surgeOfLightTalent, surgeOfLightBuff, flashHeal);
