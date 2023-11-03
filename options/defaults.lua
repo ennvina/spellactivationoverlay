@@ -172,6 +172,9 @@ SAO.defaults = {
                 [59578] = { -- The Art of War (2/2)
                     [0] = true,
                 },
+                [60513] = { -- Healing Trance / Soul Preserver
+                    [0] = false,
+                },
             },
             glow = {
                 [24275] = { -- Hammer of Wrath
