@@ -99,6 +99,9 @@ SAO.defaults = {
                     [3044]  = true, --  Arcane Shot
                     [53301] = true, --  Explosive Shot
                 },
+                [1495] = { -- Mongoose Bite
+                    [1495]  = true, -- Mongoose Bite
+                },
             }
         },
         ["MAGE"] = {
