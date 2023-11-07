@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v0.9.5-beta (2023-11-xx)
+#### v0.9.5 (2023-11-07)
 
 - Buttons should glow correctly when using AzeriteUI
 - New SAOs: Healing Trance / Soul Preserver, for all healing classes
