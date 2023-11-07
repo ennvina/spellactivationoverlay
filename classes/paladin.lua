@@ -34,6 +34,9 @@ local function registerClass(self)
 
     -- Infusion of Light, 2/2 talent points
     self:RegisterAura("infusion_of_light_high", 0, infusionOfLightBuff2, "daybreak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { flashOfLight, holyLight });
+
+    -- Healing Trance / Soul Preserver
+    self:RegisterAuraSoulPreserver("soul_preserver_paladin", 60513); -- 60513 = Paladin buff
 end
 
 local function loadOptions(self)
@@ -52,6 +55,7 @@ local function loadOptions(self)
 
     self:AddOverlayOption(infusionOfLightTalent, infusionOfLightBuff2);
     self:AddOverlayOption(artOfWarTalent, artOfWarBuff2);
+    self:AddSoulPreserverOverlayOption(60513); -- 60513 = Paladin buff
 
     self:AddGlowingOption(nil, how, how);
     self:AddGlowingOption(infusionOfLightTalent, infusionOfLightBuff2, flashOfLight);

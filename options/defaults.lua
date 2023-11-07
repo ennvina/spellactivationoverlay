@@ -48,6 +48,9 @@ SAO.defaults = {
                 [69369] = { -- Predatory Strikes
                     [0] = true,
                 },
+                [60512] = { -- Healing Trance / Soul Preserver
+                    [0] = false,
+                },
             },
             glow = {
                 [2912] = { -- Starfire
@@ -172,6 +175,9 @@ SAO.defaults = {
                 [59578] = { -- The Art of War (2/2)
                     [0] = true,
                 },
+                [60513] = { -- Healing Trance / Soul Preserver
+                    [0] = false,
+                },
             },
             glow = {
                 [24275] = { -- Hammer of Wrath
@@ -195,6 +201,9 @@ SAO.defaults = {
                 [63734] = { -- Serendipity
                     [3] = true,  -- 3 stacks
                     [0] = false, -- any stacks but 3
+                },
+                [60514] = { -- Healing Trance / Soul Preserver
+                    [0] = false,
                 },
             },
             glow = {
@@ -231,6 +240,9 @@ SAO.defaults = {
                 },
                 [53390] = { -- Tidal Waves
                     [0] = false, -- any stacks
+                },
+                [60515] = { -- Healing Trance / Soul Preserver
+                    [0] = false,
                 },
             },
             glow = {
