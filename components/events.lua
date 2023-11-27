@@ -48,6 +48,7 @@ function SAO.SPELL_AURA(self, ...)
             (auras[count])
         ) then
             -- Activate aura
+            self:Debug("events - Activating aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
             for _, aura in ipairs(auras[count]) do
                 self:ActivateOverlay(count, select(3,unpack(aura)));
                 self:AddGlow(spellID, select(11,unpack(aura)));
@@ -63,6 +64,7 @@ function SAO.SPELL_AURA(self, ...)
             (auras[count])
         ) then
             -- Deactivate old aura and activate the new one
+            self:Debug("events - Changing number of stacks from "..currentlyActiveOverlay.." to "..count.." for aura "..spellID.." "..(GetSpellInfo(spellID) or ""));
             self:DeactivateOverlay(spellID);
             self:RemoveGlow(spellID);
             for _, aura in ipairs(auras[count]) do
@@ -80,6 +82,7 @@ function SAO.SPELL_AURA(self, ...)
             -- Which means either there is no stacks, or the number of stacks is not supported
         ) then
             -- Aura just disappeared or is not supported for this number of stacks
+            self:Debug("events - Removing aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
             self:DeactivateOverlay(spellID);
             self:RemoveGlow(spellID);
         end

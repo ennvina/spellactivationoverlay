@@ -183,7 +183,8 @@
         "UNKNOWN",
         "Settings",
         "UnitExists",
-        "GetItemInfo"
+        "GetItemInfo",
+        "SAO_DEBUG"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",

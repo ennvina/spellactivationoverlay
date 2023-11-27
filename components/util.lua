@@ -12,6 +12,12 @@ local GetSpellTabInfo = GetSpellTabInfo
 local GetTalentInfo = GetTalentInfo
 local UnitBuff = UnitBuff
 
+function SAO.Debug(self, msg, ...)
+    if SAO_DEBUG then
+        print("[SAO@"..GetTime().."] "..msg, ...);
+    end
+end
+
 -- Utility aura function, one of the many that Blizzard could've done better years ago...
 function SAO.FindPlayerAuraByID(self, id)
     local i = 1
