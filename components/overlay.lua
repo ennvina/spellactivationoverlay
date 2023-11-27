@@ -63,8 +63,19 @@ function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r
             texture = texture(self);
         end
 
+        -- Find whe the effect ends, if it will end
+        local endTime;
+        -- @todo do not fetch endTime if option is disabled, because this fetch may have a significant CPU cost
+        if type(spellID) == 'string' then
+            -- spellID is a spell name
+            endTime = select(6, self:FindPlayerAuraByName(spellID));
+        elseif type(spellID) == 'number' and spellID < 1000000 then -- spell IDs over 1000000 are fake ones
+            -- spellID is a spell ID number
+            endTime = select(6, self:FindPlayerAuraByID(spellID));
+        end
+
         -- Actually show the overlay(s)
-        self.ShowAllOverlays(self.Frame, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay);
+        self.ShowAllOverlays(self.Frame, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime);
     end
 end
 

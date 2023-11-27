@@ -37,6 +37,25 @@ function SAO.FindPlayerAuraByID(self, id)
     end
 end
 
+-- Utility aura function, similar to AuraUtil.FindAuraByName
+function SAO.FindPlayerAuraByName(self, spellName)
+    local i = 1
+    local name, icon, count, dispelType, duration, expirationTime,
+        source, isStealable, nameplateShowPersonal, spellId,
+        canApplyAura, isBossDebuff, castByPlayer = UnitBuff("player", i);
+    while name do
+        if (name == spellName) then
+            return name, icon, count, dispelType, duration, expirationTime,
+                source, isStealable, nameplateShowPersonal, spellId,
+                canApplyAura, isBossDebuff, castByPlayer;
+        end
+        i = i+1
+        name, icon, count, dispelType, duration, expirationTime,
+            source, isStealable, nameplateShowPersonal, spellId,
+            canApplyAura, isBossDebuff, castByPlayer = UnitBuff("player", i);
+    end
+end
+
 --[[
     Utility function to know how many talent points the player has spent on a specific talent
 
