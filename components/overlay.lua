@@ -42,7 +42,7 @@ local function discardedByOverlayOption(self, auraID, stacks)
 end
 
 -- Add or refresh an overlay
-function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay)
+function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime)
     if (texture) then
         -- Tell the overlay is active, even though the overlay may be discarded below
         -- This "active state" tells the aura is in place, which is used by e.g. the glowing button system
@@ -64,14 +64,15 @@ function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r
         end
 
         -- Find whe the effect ends, if it will end
-        local endTime;
-        -- @todo do not fetch endTime if option is disabled, because this fetch may have a significant CPU cost
-        if type(spellID) == 'string' then
-            -- spellID is a spell name
-            endTime = select(6, self:FindPlayerAuraByName(spellID));
-        elseif type(spellID) == 'number' and spellID < 1000000 then -- spell IDs over 1000000 are fake ones
-            -- spellID is a spell ID number
-            endTime = select(6, self:FindPlayerAuraByID(spellID));
+        if (type(endTime) ~= 'number') then
+            -- @todo do not fetch endTime if option is disabled, because this fetch may have a significant CPU cost
+            if type(spellID) == 'string' then
+                -- spellID is a spell name
+                endTime = select(6, self:FindPlayerAuraByName(spellID));
+            elseif type(spellID) == 'number' and spellID < 1000000 then -- spell IDs over 1000000 are fake ones
+                -- spellID is a spell ID number
+                endTime = select(6, self:FindPlayerAuraByID(spellID));
+            end
         end
 
         -- Actually show the overlay(s)

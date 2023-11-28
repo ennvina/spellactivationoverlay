@@ -308,6 +308,20 @@ local FrozenHandler = {
         end
     end,
 
+    longestFrozenTime = function(self)
+        local longestTime = 0;
+        for i = 1,200 do -- 200 is a security to prevent infinite loops
+            local name, _, _, _, _, expirationTime, _, _, _, id = UnitDebuff("target", i);
+            if not name then
+                break;
+            end
+            if self.allSpellIDs[id] and expirationTime > longestTime then
+                longestTime = expirationTime;
+            end
+        end
+        return longestTime;
+    end,
+
     retarget = function(self, ...)
         if (self.freezable ~= self:isTargetFreezable()) then
             self.freezable = not self.freezable;
@@ -338,7 +352,8 @@ local FrozenHandler = {
         local saoOption = SAO:GetOverlayOptions(self.freezeID);
         local hasSAO = not saoOption or type(saoOption[0]) == "nil" or saoOption[0];
         if (hasSAO) then
-            SAO:ActivateOverlay(0, self.freezeID, SAO.TexName[self.saoTexture], "Top (CW)", self.saoScaleFactor, 255, 255, 255, false);
+            local endTime = self:longestFrozenTime();
+            SAO:ActivateOverlay(0, self.freezeID, SAO.TexName[self.saoTexture], "Top (CW)", self.saoScaleFactor, 255, 255, 255, false, nil, endTime);
         end
 
         -- GABs
