@@ -231,7 +231,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 
 	if ( endTime and endTime > GetTime() ) then
 		overlay.mask:SetScale(1); -- Reset scale, in case a previous animation shrank it to 0.01
-		local duration = endTime - GetTime();
+		local duration = endTime - GetTime() - 0.1; -- Subtract 0.1 to account for final shrink
 		local isHorizontal = position:sub(1, 3) == "TOP" or position:sub(1, 6) == "BOTTOM";
 		local isVertical = position:sub(#position-3) == "LEFT" or position:sub(#position-4) == "RIGHT";
 		if ( isHorizontal and isVertical ) then
@@ -329,7 +329,7 @@ function SpellActivationOverlayTexture_TerminateOverlay(overlay)
 end
 
 function SpellActivationOverlayFrame_OnTimeoutFinished(anim)
-	local mask = anim:GetRegionParent();
+	local mask = anim:GetParent();
 	local overlay = mask:GetParent();
 	mask:SetScale(0.01); -- Shrink mask scale to 0.01 to avoid glitches with final animation below
 	-- Start the fade-out animation, which will eventually terminate the overlay
