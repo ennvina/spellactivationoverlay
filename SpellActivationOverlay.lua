@@ -291,26 +291,35 @@ function SpellActivationOverlay_SetAllOverlayTimers(self, spellID, endTime)
 end
 
 function SpellActivationOverlay_SetOverlayTimer(self, overlay, endTime)
+	if ( not endTime or endTime <= GetTime() ) then
+		return; -- endTime not set or "too soon"
+	end
+
+	local maxLag = 0.25; -- Estimated maximum lag, used to compare existing endTime with new endTime
+	if ( type(overlay.endTime) == 'number' and endTime-maxLag < overlay.endTime and overlay.endTime < endTime+maxLag ) then
+		return; -- Overlay already has similar endTime: assume this is the same timer
+	end
+	overlay.endTime = endTime;
+
 	SAO:Debug("main - Setting Overlay Timer at location "..overlay.position.." for spell ID "..overlay.spellID.." "..(GetSpellInfo(overlay.spellID) or "")..(endTime and (" for "..math.floor(endTime-GetTime()+0.5).." secs") or " without time"));
-	if ( endTime and endTime > GetTime() ) then
-		overlay.mask:SetScale(1); -- Reset scale, in case a previous animation shrank it to 0.01
-		local duration = endTime - GetTime() - 0.1; -- Subtract 0.1 to account for final shrink
-		local position = overlay.position;
-		local isHorizontal = position:sub(1, 3) == "TOP" or position:sub(1, 6) == "BOTTOM";
-		local isVertical = position:sub(#position-3) == "LEFT" or position:sub(#position-4) == "RIGHT";
-		if ( isHorizontal and isVertical ) then
-			overlay.mask.timeoutXY.scaleXY:SetDuration(duration);
-			overlay.mask.timeoutXY:Stop();
-			overlay.mask.timeoutXY:Play();
-		elseif ( isHorizontal ) then
-			overlay.mask.timeoutX.scaleX:SetDuration(duration);
-			overlay.mask.timeoutX:Stop();
-			overlay.mask.timeoutX:Play();
-		elseif ( isVertical ) then
-			overlay.mask.timeoutY.scaleY:SetDuration(duration);
-			overlay.mask.timeoutY:Stop();
-			overlay.mask.timeoutY:Play();
-		end
+
+	overlay.mask:SetScale(1); -- Reset scale, in case a previous animation shrank it to 0.01
+	local duration = endTime - GetTime() - 0.1; -- Subtract 0.1 to account for final shrink
+	local position = overlay.position;
+	local isHorizontal = position:sub(1, 3) == "TOP" or position:sub(1, 6) == "BOTTOM";
+	local isVertical = position:sub(#position-3) == "LEFT" or position:sub(#position-4) == "RIGHT";
+	if ( isHorizontal and isVertical ) then
+		overlay.mask.timeoutXY.scaleXY:SetDuration(duration);
+		overlay.mask.timeoutXY:Stop();
+		overlay.mask.timeoutXY:Play();
+	elseif ( isHorizontal ) then
+		overlay.mask.timeoutX.scaleX:SetDuration(duration);
+		overlay.mask.timeoutX:Stop();
+		overlay.mask.timeoutX:Play();
+	elseif ( isVertical ) then
+		overlay.mask.timeoutY.scaleY:SetDuration(duration);
+		overlay.mask.timeoutY:Stop();
+		overlay.mask.timeoutY:Play();
 	end
 end
 
