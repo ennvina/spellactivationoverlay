@@ -1,5 +1,11 @@
 ## SpellActivationOverlay Changelog
 
+#### v1.0.0 (2023-11-xx)
+
+- Spell Alerts have a shrinking effect to know when the alert is about to fade
+- Feel free to report spell alerts that should have but do not have this effect
+- Please note, some effects never fade on purpose, such as Mage's Heating Up
+
 #### v0.9.5 (2023-11-07)
 
 - Buttons should glow correctly when using AzeriteUI
