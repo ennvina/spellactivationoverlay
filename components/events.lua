@@ -10,6 +10,7 @@ function SAO.SPELL_AURA(self, ...)
     local spellID, spellName, spellSchool, auraType, amount = select(12, CombatLogGetCurrentEventInfo());
     local auraApplied = event:sub(0,18) == "SPELL_AURA_APPLIED";
     local auraRemoved = event:sub(0,18) == "SPELL_AURA_REMOVED";
+    local auraRefresh = event:sub(0,18) == "SPELL_AURA_REFRESH";
 
     local auras;
     if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
@@ -27,7 +28,7 @@ function SAO.SPELL_AURA(self, ...)
         end
     end
 
-    if auras and (auraApplied or auraRemoved) then
+    if auras and (auraApplied or auraRemoved or auraRefresh) then
         local count = 0;
         if (not auras[0]) then
             -- If there is no aura with stacks == 0, this must mean that this aura is stackable
@@ -54,17 +55,30 @@ function SAO.SPELL_AURA(self, ...)
                 self:AddGlow(spellID, select(11,unpack(aura)));
             end
         elseif (
+            -- Aura is already visible
+            (currentlyActiveOverlay)
+        and
+            -- Aura is re-applied
+            (auraRefresh)
+        and
+            -- The number of stacks is supported
+            (auras[count])
+        ) then
+            -- Reactivate aura timer
+            self:Debug("events - Refreshing aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
+            self:RefreshOverlayTimer(spellID);
+        elseif (
             -- Aura is already visible but its number of stack changed
             (currentlyActiveOverlay and currentlyActiveOverlay ~= count)
         and
             -- The new stack count allows it to be visible
-            (count and count > 0)
+            ((auraApplied or auraRemoved) and (count and count > 0))
         and
             -- The number of stacks is supported
             (auras[count])
         ) then
             -- Deactivate old aura and activate the new one
-            self:Debug("events - Changing number of stacks from "..currentlyActiveOverlay.." to "..count.." for aura "..spellID.." "..(GetSpellInfo(spellID) or ""));
+            self:Debug("events - Changing number of stacks from "..tostring(currentlyActiveOverlay).." to "..count.." for aura "..spellID.." "..(GetSpellInfo(spellID) or ""));
             self:DeactivateOverlay(spellID);
             self:RemoveGlow(spellID);
             for _, aura in ipairs(auras[count]) do
@@ -77,7 +91,7 @@ function SAO.SPELL_AURA(self, ...)
             -- Aura is already visible and its number of stacks changed
             (currentlyActiveOverlay and currentlyActiveOverlay ~= count)
         and
-            ((count and count > 0) or auraRemoved)
+            ((auraApplied and count and count > 0) or auraRemoved)
             -- If condition end up here, it means the previous 'if' was false
             -- Which means either there is no stacks, or the number of stacks is not supported
         ) then

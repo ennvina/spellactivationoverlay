@@ -9,6 +9,7 @@ function SpellActivationOverlay_OnLoad(self)
 	SAO.ShowAllOverlays = SpellActivationOverlay_ShowAllOverlays;
 	SAO.HideOverlays = SpellActivationOverlay_HideOverlays;
 	SAO.HideAllOverlays = SpellActivationOverlay_HideAllOverlays;
+	SAO.SetOverlayTimer = SpellActivationOverlay_SetAllOverlayTimers;
 
 	self.overlaysInUse = {};
 	self.unusedOverlays = {};
@@ -229,22 +230,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	end
 	overlay.pulse.autoPlay = autoPulse;
 
-	if ( endTime and endTime > GetTime() ) then
-		overlay.mask:SetScale(1); -- Reset scale, in case a previous animation shrank it to 0.01
-		local duration = endTime - GetTime() - 0.1; -- Subtract 0.1 to account for final shrink
-		local isHorizontal = position:sub(1, 3) == "TOP" or position:sub(1, 6) == "BOTTOM";
-		local isVertical = position:sub(#position-3) == "LEFT" or position:sub(#position-4) == "RIGHT";
-		if ( isHorizontal and isVertical ) then
-			overlay.mask.timeoutXY.scaleXY:SetDuration(duration);
-			overlay.mask.timeoutXY:Play();
-		elseif ( isHorizontal ) then
-			overlay.mask.timeoutX.scaleX:SetDuration(duration);
-			overlay.mask.timeoutX:Play();
-		elseif ( isVertical ) then
-			overlay.mask.timeoutY.scaleY:SetDuration(duration);
-			overlay.mask.timeoutY:Play();
-		end
-	end
+	SpellActivationOverlay_SetOverlayTimer(self, overlay, endTime);
 
 	if ( not self.disableDimOutOfCombat and not InCombatLockdown() ) then
 		-- Simulate a short, fake in-combat mode, to make the spell alert more visible
@@ -281,6 +267,7 @@ function SpellActivationOverlay_HideOverlays(self, spellID)
 	if ( overlayList ) then
 		for i=1, #overlayList do
 			local overlay = overlayList[i];
+			SAO:Debug("main - Hiding Overlay at location "..overlay.position.." for spell ID "..overlay.spellID.." "..(GetSpellInfo(overlay.spellID) or ""));
 			overlay.pulse:Pause();
 			overlay.animOut:Play();
 		end
@@ -290,6 +277,40 @@ end
 function SpellActivationOverlay_HideAllOverlays(self)
 	for spellID, overlayList in pairs(self.overlaysInUse) do
 		SpellActivationOverlay_HideOverlays(self, spellID);
+	end
+end
+
+function SpellActivationOverlay_SetAllOverlayTimers(self, spellID, endTime)
+	local overlayList = self.overlaysInUse[spellID];
+	if ( overlayList ) then
+		for i=1, #overlayList do
+			local overlay = overlayList[i];
+			SpellActivationOverlay_SetOverlayTimer(self, overlay, endTime);
+		end
+	end
+end
+
+function SpellActivationOverlay_SetOverlayTimer(self, overlay, endTime)
+	SAO:Debug("main - Setting Overlay Timer at location "..overlay.position.." for spell ID "..overlay.spellID.." "..(GetSpellInfo(overlay.spellID) or "")..(endTime and (" for "..math.floor(endTime-GetTime()+0.5).." secs") or " without time"));
+	if ( endTime and endTime > GetTime() ) then
+		overlay.mask:SetScale(1); -- Reset scale, in case a previous animation shrank it to 0.01
+		local duration = endTime - GetTime() - 0.1; -- Subtract 0.1 to account for final shrink
+		local position = overlay.position;
+		local isHorizontal = position:sub(1, 3) == "TOP" or position:sub(1, 6) == "BOTTOM";
+		local isVertical = position:sub(#position-3) == "LEFT" or position:sub(#position-4) == "RIGHT";
+		if ( isHorizontal and isVertical ) then
+			overlay.mask.timeoutXY.scaleXY:SetDuration(duration);
+			overlay.mask.timeoutXY:Stop();
+			overlay.mask.timeoutXY:Play();
+		elseif ( isHorizontal ) then
+			overlay.mask.timeoutX.scaleX:SetDuration(duration);
+			overlay.mask.timeoutX:Stop();
+			overlay.mask.timeoutX:Play();
+		elseif ( isVertical ) then
+			overlay.mask.timeoutY.scaleY:SetDuration(duration);
+			overlay.mask.timeoutY:Stop();
+			overlay.mask.timeoutY:Play();
+		end
 	end
 end
 

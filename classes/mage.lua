@@ -344,6 +344,8 @@ local FrozenHandler = {
         elseif not frozen and self.frozen then
             self.frozen = false;
             self:deactivate();
+        elseif frozen and self.frozen then
+            self:reactivate();
         end
     end,
 
@@ -377,6 +379,16 @@ local FrozenHandler = {
         -- GAB
         SAO:RemoveGlow(self.ice_lance[1]);
         SAO:RemoveGlow(self.deep_freeze[1]);
+    end,
+
+    reactivate = function(self)
+        -- SAO
+        local saoOption = SAO:GetOverlayOptions(self.freezeID);
+        local hasSAO = not saoOption or type(saoOption[0]) == "nil" or saoOption[0];
+        if (hasSAO) then
+            local endTime = self:longestFrozenTime();
+            self:RefreshOverlayTimer(self.freezeID, endTime);
+        end
     end,
 }
 
