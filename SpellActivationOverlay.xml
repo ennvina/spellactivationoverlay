@@ -25,7 +25,7 @@
 		<Layers>
 			<Layer level="ARTWORK">
 				<Texture parentKey="texture" setAllPoints="true"/>
-				<MaskTexture parentKey="mask" file="Interface\CharacterFrame\TempPortraitAlphaMask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+				<MaskTexture parentKey="mask" file="Interface/Addons/SpellActivationOverlay/textures/mask" hWrapMode="CLAMP" vWrapMode="CLAMP">
 					<Size x="256" y="256"/><!-- Must match, or be quivalent to, overlay size -->
 					<Anchors>
 						<Anchor point="CENTER" relativeKey="$parent.texture" relativePoint="CENTER"/>
