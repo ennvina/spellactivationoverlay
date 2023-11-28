@@ -25,6 +25,38 @@
 		<Layers>
 			<Layer level="ARTWORK">
 				<Texture parentKey="texture" setAllPoints="true"/>
+				<MaskTexture parentKey="mask" file="Interface\CharacterFrame\TempPortraitAlphaMask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+					<Size x="256" y="256"/><!-- Must match, or be quivalent to, overlay size -->
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.texture" relativePoint="CENTER"/>
+					</Anchors>
+					<MaskedTextures>
+						<MaskedTexture childKey="texture"/>
+					</MaskedTextures>
+					<Animations>
+						<AnimationGroup name="$parentAnimTimeoutX" parentKey="timeoutX">
+							<Scale scaleX="0.01" scaleY="1" duration="10" smoothing="NONE" parentKey="scaleX">
+								<Scripts>
+									<OnFinished function="SpellActivationOverlayFrame_OnTimeoutFinished"/>
+								</Scripts>
+							</Scale>
+						</AnimationGroup>
+						<AnimationGroup name="$parentAnimTimeoutY" parentKey="timeoutY">
+							<Scale scaleX="1" scaleY="0.01" duration="10" smoothing="NONE" parentKey="scaleY">
+								<Scripts>
+									<OnFinished function="SpellActivationOverlayFrame_OnTimeoutFinished"/>
+								</Scripts>
+							</Scale>
+						</AnimationGroup>
+						<AnimationGroup name="$parentAnimTimeoutXY" parentKey="timeoutXY">
+							<Scale scaleX="0.01" scaleY="0.01" duration="10" smoothing="NONE" parentKey="scaleXY">
+								<Scripts>
+									<OnFinished function="SpellActivationOverlayFrame_OnTimeoutFinished"/>
+								</Scripts>
+							</Scale>
+						</AnimationGroup>
+					</Animations>
+				</MaskTexture>
 			</Layer>
 		</Layers>
 		<Scripts>
