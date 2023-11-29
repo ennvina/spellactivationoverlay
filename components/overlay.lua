@@ -41,21 +41,6 @@ local function discardedByOverlayOption(self, auraID, stacks)
     return false; -- By default, do not discard
 end
 
--- Get the time when the effect ends, or nil if it either does not end or we do not know when it will end
-local function getEndTime(self, spellID, suggestedEndTime)
-    if (type(suggestedEndTime) == 'number') then
-        return suggestedEndTime;
-    end
-
-    if type(spellID) == 'string' then
-        -- spellID is a spell name
-        return select(6, self:FindPlayerAuraByName(spellID));
-    elseif type(spellID) == 'number' and spellID < 1000000 then -- spell IDs over 1000000 are fake ones
-        -- spellID is a spell ID number
-        return select(6, self:FindPlayerAuraByID(spellID));
-    end
-end
-
 -- Add or refresh an overlay
 function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime)
     if (texture) then
@@ -80,7 +65,7 @@ function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r
 
         -- Find when the effect ends, if it will end
         -- @todo do not fetch endTime if option is disabled, because this fetch may have a significant CPU cost
-        endTime = getEndTime(self, spellID, endTime);
+        endTime = self:GetSpellEndTime(spellID, endTime);
 
         -- Actually show the overlay(s)
         self.ShowAllOverlays(self.Frame, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime);
@@ -95,7 +80,7 @@ end
 
 -- Refresh the duration of an overlay
 function SAO.RefreshOverlayTimer(self, spellID, endTime)
-    endTime = getEndTime(self, spellID, endTime);
+    endTime = self:GetSpellEndTime(spellID, endTime);
     if (endTime) then
         self.SetOverlayTimer(self.Frame, spellID, endTime);
     end

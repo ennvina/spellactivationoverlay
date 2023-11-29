@@ -99,3 +99,18 @@ function SAO.IsSpellIdentical(self, spellID, spellName, referenceID)
         return spellName == GetSpellInfo(referenceID)
     end
 end
+
+-- Get the time when the effect ends, or nil if it either does not end or we do not know when it will end
+function SAO.GetSpellEndTime(self, spellID, suggestedEndTime)
+    if (type(suggestedEndTime) == 'number') then
+        return suggestedEndTime;
+    end
+
+    if type(spellID) == 'string' then
+        -- spellID is a spell name
+        return select(6, self:FindPlayerAuraByName(spellID));
+    elseif type(spellID) == 'number' and spellID < 1000000 then -- spell IDs over 1000000 are fake ones
+        -- spellID is a spell ID number
+        return select(6, self:FindPlayerAuraByID(spellID));
+    end
+end

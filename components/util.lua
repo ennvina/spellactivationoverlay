@@ -18,6 +18,11 @@ function SAO.Debug(self, msg, ...)
     end
 end
 
+-- Utility function to assume times are identical or almost identical
+function SAO.IsTimeAlmostEqual(self, t1, t2, delta)
+	return t1-delta < t2 and t2 < t1+delta;
+end
+
 -- Utility aura function, one of the many that Blizzard could've done better years ago...
 function SAO.FindPlayerAuraByID(self, id)
     local i = 1

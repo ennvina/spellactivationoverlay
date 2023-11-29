@@ -296,7 +296,7 @@ function SpellActivationOverlay_SetOverlayTimer(self, overlay, endTime)
 	end
 
 	local maxLag = 0.25; -- Estimated maximum lag, used to compare existing endTime with new endTime
-	if ( type(overlay.endTime) == 'number' and endTime-maxLag < overlay.endTime and overlay.endTime < endTime+maxLag ) then
+	if ( type(overlay.endTime) == 'number' and SAO:IsTimeAlmostEqual(endTime, overlay.endTime, maxLag) ) then
 		return; -- Overlay already has similar endTime: assume this is the same timer
 	end
 	overlay.endTime = endTime;
