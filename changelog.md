@@ -6,6 +6,7 @@
 - Feel free to report spell alerts that should have but do not have this effect
 - Please note, some effects never fade on purpose, such as Mage's Heating Up
 - Mage's Deep Freeze debuff now counts as a Frozen effect (Wrath Classic only)
+- Mage's Heating Up lingered after 4 critical strikes without casting Pyroblast
 
 #### v0.9.5 (2023-11-07)
 

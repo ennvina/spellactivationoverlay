@@ -103,7 +103,10 @@ local function hotStreakCLEU(self, ...)
     --end
 
     -- Accept only certain events, and only when done by the player
-    if (event ~= "SPELL_DAMAGE" and event ~= "SPELL_AURA_APPLIED" and event ~= "SPELL_AURA_REMOVED") then return end
+    if (event ~= "SPELL_DAMAGE"
+    and event ~= "SPELL_AURA_APPLIED"
+    and event ~= "SPELL_AURA_REFRESH"
+    and event ~= "SPELL_AURA_REMOVED") then return end
     if (sourceGUID ~= UnitGUID("player")) then return end
 
     local spellID, spellName, spellSchool = select(12, CombatLogGetCurrentEventInfo()) -- For SPELL_*
@@ -113,6 +116,12 @@ local function hotStreakCLEU(self, ...)
     if (event == "SPELL_AURA_APPLIED") then
         if (spellID == hotStreakSpellID) then
             deactivateHeatingUp(self, heatingUpSpellID);
+            HotStreakHandler.state = 'hot_streak';
+        end
+        return;
+    elseif (event == "SPELL_AURA_REFRESH") then
+        if (spellID == hotStreakSpellID) then
+            deactivateHeatingUp(self, hotStreakHeatingUpSpellID);
             HotStreakHandler.state = 'hot_streak';
         end
         return;
