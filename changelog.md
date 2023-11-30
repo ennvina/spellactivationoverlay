@@ -5,6 +5,7 @@
 - Spell Alerts have a shrinking effect to know when the alert is about to fade
 - Feel free to report spell alerts that should have but do not have this effect
 - Please note, some effects never fade on purpose, such as Mage's Heating Up
+- Mage's Deep Freeze debuff now counts as a Frozen effect (Wrath Classic only)
 
 #### v0.9.5 (2023-11-07)
 
@@ -20,8 +21,8 @@
 - New SAO: Mage's Frozen when the target is under a Frozen effect
 - New GAB: Mage's Ice Lance button glows during Fingers of Frost
 - New GAB: Mage's Deep Freeze button glows during Fingers of Frost
-- New GAB: Mage's Ice Lance button glows when the target Frozen
-- New GAB: Mage's Deep Freeze button glows when the target Frozen
+- New GAB: Mage's Ice Lance button glows when the target is Frozen
+- New GAB: Mage's Deep Freeze button glows when the target is Frozen
 
 List of spells that trigger the Frozen effect:
 - Mage's Frost Nova

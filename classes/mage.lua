@@ -207,7 +207,7 @@ local FrozenHandler = {
     freeze = { 33395 }, -- from Frost Elemental
     shattered_barrier = { 55080 },
     ice_lance = { 30455, 42913, 42914 },
-    deep_freeze = { 44572 },
+    deep_freeze = { 44572 }, -- Deep Freeze is both a debuff for 'Frozen' Spell Alert and its own Glowing Button
 
     freezeID = 5276, -- Not really a 'Frozen' spell ID, but the name should help players identify the intent
     freezeTalent = 5276,
@@ -237,6 +237,7 @@ local FrozenHandler = {
         self:addSpellIDCandidates(self.freezing_trap);
         self:addSpellIDCandidates(self.freeze);
         self:addSpellIDCandidates(self.shattered_barrier);
+        self:addSpellIDCandidates(self.deep_freeze);
 
         self.freezable = self:isTargetFreezable();
         if (self.freezable and self:isTargetFrozen()) then
@@ -276,7 +277,7 @@ local FrozenHandler = {
 
         if (self.allSpellIDs[spellID]) then
             -- The current event info is related to a spell that can trigger the Frozen effect
-            if (event == "SPELL_AURA_APPLIED") then
+            if (event == "SPELL_AURA_APPLIED" or event == "SPELL_AURA_REFRESH") then
                 self.freezable = true;
                 self:setFrozen(true);
             elseif (event == "SPELL_AURA_REMOVED") then
@@ -387,7 +388,7 @@ local FrozenHandler = {
         local hasSAO = not saoOption or type(saoOption[0]) == "nil" or saoOption[0];
         if (hasSAO) then
             local endTime = self:longestFrozenTime();
-            self:RefreshOverlayTimer(self.freezeID, endTime);
+            SAO:RefreshOverlayTimer(self.freezeID, endTime);
         end
     end,
 }
