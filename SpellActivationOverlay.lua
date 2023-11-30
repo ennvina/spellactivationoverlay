@@ -303,7 +303,6 @@ function SpellActivationOverlay_SetOverlayTimer(self, overlay, endTime)
 
 	SAO:Debug("main - Setting Overlay Timer at location "..overlay.position.." for spell ID "..overlay.spellID.." "..(GetSpellInfo(overlay.spellID) or "")..(endTime and (" for "..math.floor(endTime-GetTime()+0.5).." secs") or " without time"));
 
-	overlay.mask:SetScale(1); -- Reset scale, in case a previous animation shrank it to 0.01
 	local duration = endTime - GetTime() - 0.1; -- Subtract 0.1 to account for final shrink
 	local position = overlay.position;
 	local isHorizontal = position:sub(1, 3) == "TOP" or position:sub(1, 6) == "BOTTOM";
@@ -353,6 +352,7 @@ function SpellActivationOverlayTexture_TerminateOverlay(overlay)
 	overlay.mask.timeoutY:Stop();
 
 	-- Hide the overlay and make it available again in the pool for future use
+	overlay.mask:SetScale(1); -- Reset scale, in case a previous animation shrank it to 0.01
 	overlay:Hide();
 	tDeleteItem(overlayParent.overlaysInUse[overlay.spellID], overlay)
 	tinsert(overlayParent.unusedOverlays, overlay);
