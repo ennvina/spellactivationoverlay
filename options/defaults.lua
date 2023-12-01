@@ -130,6 +130,9 @@ SAO.defaults = {
                 [74396] = { -- Fingers of Frost
                     [0] = true, -- any stacks
                 },
+                [400670]= { -- Fingers of Frost (Season of Discovery)
+                    [0] = true, -- any stacks
+                },
                 [57761] = { -- Brain Freeze
                     [0] = true,
                 },
@@ -161,9 +164,13 @@ SAO.defaults = {
                     [30455] = true, -- Ice Lance
                     [44572] = true, -- Deep Freeze
                 },
+                [400670]= { -- Fingers of Frost (Season of Discovery)
+                    [400640]= true, -- Ice Lance (Season of Discovery)
+                },
                 [5276] = { -- Representative of spells triggering Frozen effect
                     [30455] = true, -- Ice Lance
                     [44572] = true, -- Deep Freeze
+                    [400640]= true, -- Ice Lance (Season of Discovery)
                 },
             },
         },
