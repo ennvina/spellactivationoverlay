@@ -87,7 +87,6 @@ maelstrom_weapon_4
 backlash
 predatory_swiftness
 sword_and_board
-impact
 arcane_missiles
 hot_streak
 killing_machine

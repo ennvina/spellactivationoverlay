@@ -276,6 +276,9 @@ SAO.defaults = {
                 [60515] = { -- Healing Trance / Soul Preserver
                     [0] = false,
                 },
+                [425339]= { -- Molten Blast (Season of Discovery)
+                    [0] = true,
+                },
             },
             glow = {
                 [53817] = { -- Maelstorm Weapon
@@ -289,6 +292,9 @@ SAO.defaults = {
                 [53390] = { -- Tidal Waves
                     [8004] = false, -- lesser Healing Wave
                     [331]  = false, -- Healing Wave
+                },
+                [425339]= { -- Molten Blast (Season of Discovery)
+                    [425339] = true, -- Molten Blast (Season of Discovery)
                 },
             },
         },
