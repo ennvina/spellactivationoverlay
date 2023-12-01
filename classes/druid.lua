@@ -110,8 +110,8 @@ local function updateSAOs(self)
             updateLeftSAO (self, omenTexture, omenSpellID);
             updateRightSAO(self, omenTexture, omenSpellID);
         else
-            updateLeftSAO (self, '', 0);
-            updateRightSAO(self, '', 0);
+            updateLeftSAO (self, '', nil);
+            updateRightSAO(self, '', nil);
         end
     end
 end

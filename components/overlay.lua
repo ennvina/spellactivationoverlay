@@ -64,7 +64,6 @@ function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r
         end
 
         -- Find when the effect ends, if it will end
-        -- @todo do not fetch endTime if option is disabled, because this fetch may have a significant CPU cost
         endTime = self:GetSpellEndTime(spellID, endTime);
 
         -- Actually show the overlay(s)
