@@ -3,6 +3,7 @@ local AddonName, SAO = ...
 local sizeScale = 0.8;
 local longSide = 256 * sizeScale;
 local shortSide = 128 * sizeScale;
+local useTimer = true;
 
 function SpellActivationOverlay_OnLoad(self)
 	SAO.Frame = self;
@@ -17,6 +18,9 @@ function SpellActivationOverlay_OnLoad(self)
 	self.offset = 0;
 	self.scale = 1;
 	SpellActivationOverlay_OnChangeGeometry(self);
+
+	self.useTimer = true;
+	SpellActivationOverlay_OnChangeTimerVisibility(self);
 
 	local className, classFile, classId = UnitClass("player");
 	local class = SAO.Class[classFile];
@@ -60,6 +64,16 @@ function SpellActivationOverlay_OnChangeGeometry(self)
 		for i=1, #overlayList do
 			local overlay = overlayList[i];
 			overlay:SetGeometry(longSide, shortSide);
+		end
+	end
+end
+
+function SpellActivationOverlay_OnChangeTimerVisibility(self)
+	useTimer = self.useTimer;
+	for _, overlayList in pairs(self.overlaysInUse) do
+		for i=1, #overlayList do
+			local overlay = overlayList[i];
+			overlay.mask:SetShown(useTimer);
 		end
 	end
 end
@@ -229,6 +243,8 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 		overlay.pulse:Play();
 	end
 	overlay.pulse.autoPlay = autoPulse;
+
+	overlay.mask:SetShown(useTimer);
 
 	SpellActivationOverlay_SetOverlayTimer(self, overlay, endTime);
 

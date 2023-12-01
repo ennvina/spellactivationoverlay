@@ -3,6 +3,7 @@
 #### v1.0.0 (2023-11-xx)
 
 - Spell Alerts have a shrinking effect to know when the alert is about to fade
+- This effect is enabled by default; enter /sao to enable or disable it
 - Feel free to report spell alerts that should have but do not have this effect
 - Please note, some effects never fade on purpose, such as Mage's Heating Up
 - Mage's Deep Freeze debuff now counts as a Frozen effect (Wrath Classic only)

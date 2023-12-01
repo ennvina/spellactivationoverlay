@@ -4,6 +4,7 @@ local AddonName, SAO = ...
 function SAO.ApplyAllVariables(self)
     self:ApplySpellAlertOpacity();
     self:ApplySpellAlertGeometry();
+    self:ApplySpellAlertTimer();
     self:ApplyGlowingButtonsToggle();
 end
 
@@ -19,6 +20,12 @@ function SAO.ApplySpellAlertGeometry(self)
     SpellActivationOverlayFrame.scale = SpellActivationOverlayDB.alert.scale;
     SpellActivationOverlayFrame.offset = SpellActivationOverlayDB.alert.offset;
     SpellActivationOverlay_OnChangeGeometry(SpellActivationOverlayFrame);
+end
+
+-- Apply spell alert progressive timer effect
+function SAO.ApplySpellAlertTimer(self)
+    SpellActivationOverlayFrame.useTimer = SpellActivationOverlayDB.alert.timer ~= 0;
+    SpellActivationOverlay_OnChangeTimerVisibility(SpellActivationOverlayFrame);
 end
 
 -- Apply glowing buttons on/off

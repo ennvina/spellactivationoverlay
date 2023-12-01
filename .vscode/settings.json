@@ -136,6 +136,7 @@
         "SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider",
         "SpellActivationOverlayOptionsPanelSpellAlertScaleSlider",
         "SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider",
+        "SpellActivationOverlayOptionsPanelSpellAlertTimerSlider",
         "SpellActivationOverlayOptionsPanelSpellAlertTestButton",
         "SpellActivationOverlayFrame",
         "SpellActivationOverlayOptionsPanelGlowingButtons",
@@ -184,7 +185,9 @@
         "Settings",
         "UnitExists",
         "GetItemInfo",
-        "SAO_DEBUG"
+        "SAO_DEBUG",
+        "DISABLE",
+        "ENABLE"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",
