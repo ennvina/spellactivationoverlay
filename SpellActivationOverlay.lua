@@ -373,6 +373,7 @@ function SpellActivationOverlayTexture_TerminateOverlay(overlay)
 
 	-- Hide the overlay and make it available again in the pool for future use
 	overlay.mask:SetScale(1); -- Reset scale, in case a previous animation shrank it to 0.01
+	overlay.endTime = nil; -- Reset endTime, to avoid excessive optimizations when re-using this overlay
 	overlay:Hide();
 	tDeleteItem(overlayParent.overlaysInUse[overlay.spellID], overlay)
 	tinsert(overlayParent.unusedOverlays, overlay);
