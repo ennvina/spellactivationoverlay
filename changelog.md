@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v1.0.0 (2023-11-xx)
+#### v1.0.0 (2023-12-01)
 
 Spell Alerts have a shrinking effect to know when the alert is about to fade
 - This effect is enabled by default; enter /sao to enable or disable it
