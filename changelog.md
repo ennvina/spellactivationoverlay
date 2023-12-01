@@ -4,8 +4,11 @@
 
 This release focuses on supporting runes introduced in Season of Discovery
 - New SAO: Druid's Fury of Stormrage
+- New SAO: Hunter's Flanking Strike
+- New SAO: Hunter's Cobra Strikes
 - New SAO: Mage's Fingers of Frost
 - New GAB: Druid's Healing Touch, during Fury of Stormrage
+- New GAB: Hunter's Flanking Strike, when the action is usable
 - New GAB: Mage's Ice Lance, during Fingers of Frost
 - New GAB: Mage's Ice Lance, when the enemy target is Frozen
 

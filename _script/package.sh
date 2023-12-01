@@ -33,6 +33,17 @@ rm -rf ./_release/wrath || bye "Cannot clean wrath directory"
 mkdir -p ./_release/wrath/SpellActivationOverlay || bye "Cannot create wrath directory"
 cp -R changelog.md LICENSE SpellActivationOverlay.* classes components options textures ./_release/wrath/SpellActivationOverlay/ || bye "Cannot copy wrath files"
 cd ./_release/wrath || bye "Cannot cd to wrath directory"
+echo -n "Cleaning up wrath directory... "
+# Remove unused textures to reduce the archive size.
+# The list below, SOD_ONLY_TEXTURES, is a list of textures added exclusively for Season of Discovery.
+SOD_ONLY_TEXTURES=(tooth_and_claw
+monk_serpent
+)
+for texname in ${SOD_ONLY_TEXTURES[@]}
+do
+    rm -f SpellActivationOverlay/textures/"$texname".* || bye "Cannot cleanup textures from wrath installation"
+done
+echo
 echo -n "Zipping wrath directory... "
 "$CWD"/zip -9 -r -q SpellActivationOverlay-"$VERSION_TOC_VERSION"-wrath.zip SpellActivationOverlay || bye "Cannot zip wrath directory"
 echo

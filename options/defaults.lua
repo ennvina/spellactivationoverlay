@@ -91,6 +91,12 @@ SAO.defaults = {
                 [56453] = { -- Lock and Load
                     [0] = true, -- any stacks
                 },
+                [415320]= { -- Flanking Strike (Season of Discovery)
+                    [0] = true,
+                },
+                [425714]= { -- Cobra Strikes (Season of Discovery)
+                    [0] = true, -- any stacks
+                },
             },
             glow = {
                 [53351] = { -- Kill Shot
@@ -110,6 +116,9 @@ SAO.defaults = {
                 },
                 [1495] = { -- Mongoose Bite
                     [1495]  = true, -- Mongoose Bite
+                },
+                [415320]= { -- Flanking Strike (Season of Discovery)
+                    [415320]= true, -- Flanking Strike (Season of Discovery)
                 },
             }
         },
