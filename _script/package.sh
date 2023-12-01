@@ -38,6 +38,7 @@ echo -n "Cleaning up wrath directory... "
 # The list below, SOD_ONLY_TEXTURES, is a list of textures added exclusively for Season of Discovery.
 SOD_ONLY_TEXTURES=(tooth_and_claw
 monk_serpent
+raging_blow
 )
 for texname in ${SOD_ONLY_TEXTURES[@]}
 do

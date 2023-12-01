@@ -347,6 +347,9 @@ SAO.defaults = {
                 [50227] = { -- Sword and Board
                     [0] = true,
                 },
+                [402911]= { -- Raging Blow (Season of Discovery)
+                    [0] = true,
+                },
             },
             glow = {
                 [7384] = { -- Overpower
@@ -360,6 +363,12 @@ SAO.defaults = {
                 },
                 [34428] = { -- Victory Rush
                     [34428] = true, -- Victory Rush
+                },
+                [402927]= { -- Victory Rush (Season of Discovery)
+                    [402927]= true, -- Victory Rush (Season of Discovery)
+                },
+                [402911]= { -- Raging Blow (Season of Discovery)
+                    [402911]= true, -- Raging Blow (Season of Discovery)
                 },
                 [52437] = { -- Sudden Death
                     [5308] = true, -- Execute

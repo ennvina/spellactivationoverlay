@@ -9,6 +9,7 @@ This release focuses on supporting runes introduced in Season of Discovery
 - New SAO: Mage's Fingers of Frost
 - New SAO: Priest's Serendipity
 - New SAO: Shaman's Molten Blast
+- New SAO: Warrior's Raging Blow
 - New GAB: Druid's Healing Touch, during Fury of Stormrage
 - New GAB: Hunter's Flanking Strike, when the action is usable
 - New GAB: Mage's Ice Lance, during Fingers of Frost
@@ -18,6 +19,8 @@ This release focuses on supporting runes introduced in Season of Discovery
 - New GAB: Priest's Greater Heal, during Serendipity
 - New GAB: Priest's Prayer of Healing, during Serendipity
 - New GAB: Shaman's Molten Blast, when the action is usable
+- New GAB: Warrior's Raging Blow, when the action is usable
+- New GAB: Warrior's Victory Rush, when the action is usable
 
 #### v1.0.0 (2023-12-01)
 
