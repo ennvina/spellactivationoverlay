@@ -25,6 +25,38 @@
 		<Layers>
 			<Layer level="ARTWORK">
 				<Texture parentKey="texture" setAllPoints="true"/>
+				<MaskTexture parentKey="mask" file="Interface/Addons/SpellActivationOverlay/textures/mask" hWrapMode="CLAMP" vWrapMode="CLAMP">
+					<Size x="256" y="256"/><!-- Must match, or be quivalent to, overlay size -->
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.texture" relativePoint="CENTER"/>
+					</Anchors>
+					<MaskedTextures>
+						<MaskedTexture childKey="texture"/>
+					</MaskedTextures>
+					<Animations>
+						<AnimationGroup name="$parentAnimTimeoutX" parentKey="timeoutX">
+							<Scale scaleX="0.05" scaleY="1" duration="10" smoothing="IN" parentKey="scaleX" order="1"/>
+							<Scale scaleX="0.01" scaleY="0.01" duration="0.1" smoothing="NONE" order="2"/>
+							<Scripts>
+								<OnFinished function="SpellActivationOverlayFrame_OnTimeoutFinished"/>
+							</Scripts>
+						</AnimationGroup>
+						<AnimationGroup name="$parentAnimTimeoutY" parentKey="timeoutY">
+							<Scale scaleX="1" scaleY="0.05" duration="10" smoothing="IN" parentKey="scaleY" order="1"/>
+							<Scale scaleX="0.01" scaleY="0.01" duration="0.1" smoothing="NONE" order="2"/>
+							<Scripts>
+								<OnFinished function="SpellActivationOverlayFrame_OnTimeoutFinished"/>
+							</Scripts>
+						</AnimationGroup>
+						<AnimationGroup name="$parentAnimTimeoutXY" parentKey="timeoutXY">
+							<Scale scaleX="0.05" scaleY="0.05" duration="10" smoothing="IN" parentKey="scaleXY" order="1"/>
+							<Scale scaleX="0.01" scaleY="0.01" duration="0.1" smoothing="NONE" order="2"/>
+							<Scripts>
+								<OnFinished function="SpellActivationOverlayFrame_OnTimeoutFinished"/>
+							</Scripts>
+						</AnimationGroup>
+					</Animations>
+				</MaskTexture>
 			</Layer>
 		</Layers>
 		<Scripts>

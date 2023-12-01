@@ -12,6 +12,17 @@ local GetSpellTabInfo = GetSpellTabInfo
 local GetTalentInfo = GetTalentInfo
 local UnitBuff = UnitBuff
 
+function SAO.Debug(self, msg, ...)
+    if SAO_DEBUG then
+        print("[SAO@"..GetTime().."] "..msg, ...);
+    end
+end
+
+-- Utility function to assume times are identical or almost identical
+function SAO.IsTimeAlmostEqual(self, t1, t2, delta)
+	return t1-delta < t2 and t2 < t1+delta;
+end
+
 -- Utility aura function, one of the many that Blizzard could've done better years ago...
 function SAO.FindPlayerAuraByID(self, id)
     local i = 1
@@ -20,6 +31,25 @@ function SAO.FindPlayerAuraByID(self, id)
         canApplyAura, isBossDebuff, castByPlayer = UnitBuff("player", i);
     while name do
         if (spellId == id) then
+            return name, icon, count, dispelType, duration, expirationTime,
+                source, isStealable, nameplateShowPersonal, spellId,
+                canApplyAura, isBossDebuff, castByPlayer;
+        end
+        i = i+1
+        name, icon, count, dispelType, duration, expirationTime,
+            source, isStealable, nameplateShowPersonal, spellId,
+            canApplyAura, isBossDebuff, castByPlayer = UnitBuff("player", i);
+    end
+end
+
+-- Utility aura function, similar to AuraUtil.FindAuraByName
+function SAO.FindPlayerAuraByName(self, spellName)
+    local i = 1
+    local name, icon, count, dispelType, duration, expirationTime,
+        source, isStealable, nameplateShowPersonal, spellId,
+        canApplyAura, isBossDebuff, castByPlayer = UnitBuff("player", i);
+    while name do
+        if (name == spellName) then
             return name, icon, count, dispelType, duration, expirationTime,
                 source, isStealable, nameplateShowPersonal, spellId,
                 canApplyAura, isBossDebuff, castByPlayer;

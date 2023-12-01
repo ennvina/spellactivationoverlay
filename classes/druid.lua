@@ -25,8 +25,8 @@ local glowingStarfire = false;
 -- If we used the 'real' spell IDs instead of fake IDs, we would see weird transitions
 -- If spell IDs were identical, hiding the left or right SAO could also hide the other
 -- (the latter is a limitation, some would say a feature, of Blizzard's original code)
-local leftFakeSpellID  = 0xD001D001;
-local rightFakeSpellID = 0xD001D002;
+local leftFakeSpellID  = 0x0D00001D;
+local rightFakeSpellID = 0x0D00002D;
 
 local naturesGraceVariants; -- Lazy init in lazyCreateNaturesGraceVariants()
 
@@ -47,26 +47,40 @@ local function hasSolar(self)
     return self:FindPlayerAuraByID(solarSpellID) ~= nil;
 end
 
-local function updateOneSAO(self, position, spellID, texture)
+local function updateOneSAO(self, position, fakeSpellID, realSpellID, texture)
     if (texture == "") then
-        self:DeactivateOverlay(spellID);
+        self:DeactivateOverlay(fakeSpellID);
     else
-        self:ActivateOverlay(0, spellID, self.TexName[texture], position, 1, 255, 255, 255, true);
+        local endTime = SAO:GetSpellEndTime(realSpellID);
+        self:ActivateOverlay(0, fakeSpellID, self.TexName[texture], position, 1, 255, 255, 255, true, nil, endTime);
     end
 end
 
-local function updateLeftSAO(self, texture)
+local function updateLeftSAO(self, texture, realSpellID)
     if (leftTexture ~= texture) then
         leftTexture = texture;
-        updateOneSAO(self, "Left", leftFakeSpellID, texture);
+        updateOneSAO(self, "Left", leftFakeSpellID, realSpellID, texture);
     end
 end
 
-local function updateRightSAO(self, texture)
+local function updateRightSAO(self, texture, realSpellID)
     if (rightTexture ~= texture) then
         rightTexture = texture;
-        updateOneSAO(self, "Right (Flipped)", rightFakeSpellID, texture);
+        updateOneSAO(self, "Right (Flipped)", rightFakeSpellID, realSpellID, texture);
     end
+end
+
+local function updateOneSAOTimer(self, leftFakeSpellID, realSpellID)
+    local endTime = self:GetSpellEndTime(realSpellID);
+    self:RefreshOverlayTimer(leftFakeSpellID, endTime);
+end
+
+local function updateLeftSAOTimer(self, realSpellID)
+    updateOneSAOTimer(self, leftFakeSpellID, realSpellID);
+end
+
+local function updateRightSAOTimer(self, realSpellID)
+    updateOneSAOTimer(self, rightFakeSpellID, realSpellID);
 end
 
 local function updateSAOs(self)
@@ -84,20 +98,46 @@ local function updateSAOs(self)
 
     if (mustActivateLunar) then
         -- Lunar Eclipse
-        updateLeftSAO (self, lunarTexture); -- Left is always Lunar Eclipse
-        updateRightSAO(self, mayActivateOmen and omenTexture or ''); -- Right is either Omen or nothing
+        updateLeftSAO (self, lunarTexture, lunarSpellID); -- Left is always Lunar Eclipse
+        updateRightSAO(self, mayActivateOmen and omenTexture or '', mayActivateOmen and omenSpellID or nil); -- Right is either Omen or nothing
     elseif (mustActivateSolar) then
         -- Solar Eclipse
-        updateLeftSAO (self, mayActivateOmen and omenTexture or ''); -- Left is either Omen or nothing
-        updateRightSAO(self, solarTexture); -- Right is always Solar Eclipse
+        updateLeftSAO (self, mayActivateOmen and omenTexture or '', mayActivateOmen and omenSpellID or nil); -- Left is either Omen or nothing
+        updateRightSAO(self, solarTexture, solarSpellID); -- Right is always Solar Eclipse
     else
         -- No Eclipse: either both SAOs are Omen of Clarity, or both are nothing
         if (mayActivateOmen) then
-            updateLeftSAO (self, omenTexture);
-            updateRightSAO(self, omenTexture);
+            updateLeftSAO (self, omenTexture, omenSpellID);
+            updateRightSAO(self, omenTexture, omenSpellID);
         else
-            updateLeftSAO (self, '');
-            updateRightSAO(self, '');
+            updateLeftSAO (self, '', 0);
+            updateRightSAO(self, '', 0);
+        end
+    end
+end
+
+local function updateSAOTimers(self)
+    local omenOptions = self:GetOverlayOptions(omenSpellID);
+    local lunarOptions = self:GetOverlayOptions(lunarSpellID);
+    local solarOptions = self:GetOverlayOptions(solarSpellID);
+
+    local mayActivateOmen = clarityCache and (not omenOptions or type(omenOptions[0]) == "nil" or omenOptions[0]);
+    local mustActivateLunar = lunarCache and (not lunarOptions or type(lunarOptions[0]) == "nil" or lunarOptions[0]);
+    local mustActivateSolar = solarCache and (not solarOptions or type(solarOptions[0]) == "nil" or solarOptions[0]);
+
+    if (mustActivateLunar) then
+        -- Lunar Eclipse
+        updateLeftSAOTimer (self, lunarSpellID); -- Left is always Lunar Eclipse
+        updateRightSAOTimer(self, mayActivateOmen and omenSpellID or nil); -- Right is either Omen or nothing
+    elseif (mustActivateSolar) then
+        -- Solar Eclipse
+        updateLeftSAOTimer (self, mayActivateOmen and omenSpellID or nil); -- Left is either Omen or nothing
+        updateRightSAOTimer(self, solarSpellID); -- Right is always Solar Eclipse
+    else
+        -- No Eclipse: either both SAOs are Omen of Clarity, or both are nothing
+        if (mayActivateOmen) then
+            updateLeftSAOTimer (self, omenSpellID);
+            updateRightSAOTimer(self, omenSpellID);
         end
     end
 end
@@ -147,7 +187,7 @@ local function customCLEU(self, ...)
     local timestamp, event, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo() -- For all events
 
     -- Accept only certain events, and only when done by the player
-    if (event ~= "SPELL_AURA_APPLIED" and event ~= "SPELL_AURA_REMOVED") then return end
+    if (event ~= "SPELL_AURA_APPLIED" and event ~= "SPELL_AURA_REMOVED" and event ~= "SPELL_AURA_REFRESH") then return end
     if (sourceGUID ~= UnitGUID("player")) then return end
 
     local spellID, spellName, spellSchool = select(12, CombatLogGetCurrentEventInfo()) -- For SPELL_*
@@ -178,6 +218,14 @@ local function customCLEU(self, ...)
             solarCache = false;
             updateSAOs(self);
             updateGABs(self);
+        end
+        return;
+    elseif (event == "SPELL_AURA_REFRESH") then
+        if self:IsSpellIdentical(spellID, spellName, omenSpellID)
+        or self:IsSpellIdentical(spellID, spellName, lunarSpellID)
+        or self:IsSpellIdentical(spellID, spellName, solarSpellID)
+        then
+            updateSAOTimers(self);
         end
         return;
     end

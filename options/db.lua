@@ -25,7 +25,7 @@ end
 
 -- Load database and use default values if needed
 function SAO.LoadDB(self)
-    local currentversion = 091;
+    local currentversion = 100;
     local db = SpellActivationOverlayDB or {};
 
     if not db.alert then
@@ -44,6 +44,9 @@ function SAO.LoadDB(self)
     end
     if (type(db.alert.scale) == "nil") then
         db.alert.scale = 1;
+    end
+    if (type(db.alert.timer) == "nil") then
+        db.alert.timer = 1;
     end
 
     if not db.glow then

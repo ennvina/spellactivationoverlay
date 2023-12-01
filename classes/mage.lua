@@ -103,7 +103,10 @@ local function hotStreakCLEU(self, ...)
     --end
 
     -- Accept only certain events, and only when done by the player
-    if (event ~= "SPELL_DAMAGE" and event ~= "SPELL_AURA_APPLIED" and event ~= "SPELL_AURA_REMOVED") then return end
+    if (event ~= "SPELL_DAMAGE"
+    and event ~= "SPELL_AURA_APPLIED"
+    and event ~= "SPELL_AURA_REFRESH"
+    and event ~= "SPELL_AURA_REMOVED") then return end
     if (sourceGUID ~= UnitGUID("player")) then return end
 
     local spellID, spellName, spellSchool = select(12, CombatLogGetCurrentEventInfo()) -- For SPELL_*
@@ -113,6 +116,12 @@ local function hotStreakCLEU(self, ...)
     if (event == "SPELL_AURA_APPLIED") then
         if (spellID == hotStreakSpellID) then
             deactivateHeatingUp(self, heatingUpSpellID);
+            HotStreakHandler.state = 'hot_streak';
+        end
+        return;
+    elseif (event == "SPELL_AURA_REFRESH") then
+        if (spellID == hotStreakSpellID) then
+            deactivateHeatingUp(self, hotStreakHeatingUpSpellID);
             HotStreakHandler.state = 'hot_streak';
         end
         return;
@@ -207,7 +216,7 @@ local FrozenHandler = {
     freeze = { 33395 }, -- from Frost Elemental
     shattered_barrier = { 55080 },
     ice_lance = { 30455, 42913, 42914 },
-    deep_freeze = { 44572 },
+    deep_freeze = { 44572 }, -- Deep Freeze is both a debuff for 'Frozen' Spell Alert and its own Glowing Button
 
     freezeID = 5276, -- Not really a 'Frozen' spell ID, but the name should help players identify the intent
     freezeTalent = 5276,
@@ -237,6 +246,7 @@ local FrozenHandler = {
         self:addSpellIDCandidates(self.freezing_trap);
         self:addSpellIDCandidates(self.freeze);
         self:addSpellIDCandidates(self.shattered_barrier);
+        self:addSpellIDCandidates(self.deep_freeze);
 
         self.freezable = self:isTargetFreezable();
         if (self.freezable and self:isTargetFrozen()) then
@@ -276,7 +286,7 @@ local FrozenHandler = {
 
         if (self.allSpellIDs[spellID]) then
             -- The current event info is related to a spell that can trigger the Frozen effect
-            if (event == "SPELL_AURA_APPLIED") then
+            if (event == "SPELL_AURA_APPLIED" or event == "SPELL_AURA_REFRESH") then
                 self.freezable = true;
                 self:setFrozen(true);
             elseif (event == "SPELL_AURA_REMOVED") then
@@ -308,6 +318,31 @@ local FrozenHandler = {
         end
     end,
 
+    longestFrozenTime = function(self)
+        local longestTime, durationOfLongestTime = 0, 0;
+        for i = 1,200 do -- 200 is a security to prevent infinite loops
+            local name, _, _, _, duration, expirationTime, _, _, _, id = UnitDebuff("target", i);
+            if not name then
+                break;
+            end
+            if self.allSpellIDs[id] and expirationTime > longestTime then
+                longestTime = expirationTime;
+                durationOfLongestTime = duration;
+            end
+        end
+        local startTime, endTime = longestTime-durationOfLongestTime, longestTime;
+        return startTime, endTime;
+    end,
+
+    getEndTime = function(self)
+        if not SAO.Frame.useTimer then
+            return; -- Return nil if there is no timer effect, to save CPU
+        end
+
+        local startTime, endTime = self:longestFrozenTime();
+        return { startTime = startTime, endTime = endTime }
+    end,
+
     retarget = function(self, ...)
         if (self.freezable ~= self:isTargetFreezable()) then
             self.freezable = not self.freezable;
@@ -330,6 +365,8 @@ local FrozenHandler = {
         elseif not frozen and self.frozen then
             self.frozen = false;
             self:deactivate();
+        elseif frozen and self.frozen then
+            self:reactivate();
         end
     end,
 
@@ -338,7 +375,8 @@ local FrozenHandler = {
         local saoOption = SAO:GetOverlayOptions(self.freezeID);
         local hasSAO = not saoOption or type(saoOption[0]) == "nil" or saoOption[0];
         if (hasSAO) then
-            SAO:ActivateOverlay(0, self.freezeID, SAO.TexName[self.saoTexture], "Top (CW)", self.saoScaleFactor, 255, 255, 255, false);
+            local endTime = self:getEndTime();
+            SAO:ActivateOverlay(0, self.freezeID, SAO.TexName[self.saoTexture], "Top (CW)", self.saoScaleFactor, 255, 255, 255, false, nil, endTime);
         end
 
         -- GABs
@@ -362,6 +400,16 @@ local FrozenHandler = {
         -- GAB
         SAO:RemoveGlow(self.ice_lance[1]);
         SAO:RemoveGlow(self.deep_freeze[1]);
+    end,
+
+    reactivate = function(self)
+        -- SAO
+        local saoOption = SAO:GetOverlayOptions(self.freezeID);
+        local hasSAO = not saoOption or type(saoOption[0]) == "nil" or saoOption[0];
+        if (hasSAO) then
+            local endTime = self:getEndTime();
+            SAO:RefreshOverlayTimer(self.freezeID, endTime);
+        end
     end,
 }
 

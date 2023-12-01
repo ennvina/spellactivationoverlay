@@ -3,12 +3,14 @@ local AddonName, SAO = ...
 local sizeScale = 0.8;
 local longSide = 256 * sizeScale;
 local shortSide = 128 * sizeScale;
+local useTimer = true;
 
 function SpellActivationOverlay_OnLoad(self)
 	SAO.Frame = self;
 	SAO.ShowAllOverlays = SpellActivationOverlay_ShowAllOverlays;
 	SAO.HideOverlays = SpellActivationOverlay_HideOverlays;
 	SAO.HideAllOverlays = SpellActivationOverlay_HideAllOverlays;
+	SAO.SetOverlayTimer = SpellActivationOverlay_SetAllOverlayTimers;
 
 	self.overlaysInUse = {};
 	self.unusedOverlays = {};
@@ -16,6 +18,9 @@ function SpellActivationOverlay_OnLoad(self)
 	self.offset = 0;
 	self.scale = 1;
 	SpellActivationOverlay_OnChangeGeometry(self);
+
+	self.useTimer = true;
+	SpellActivationOverlay_OnChangeTimerVisibility(self);
 
 	local className, classFile, classId = UnitClass("player");
 	local class = SAO.Class[classFile];
@@ -59,6 +64,16 @@ function SpellActivationOverlay_OnChangeGeometry(self)
 		for i=1, #overlayList do
 			local overlay = overlayList[i];
 			overlay:SetGeometry(longSide, shortSide);
+		end
+	end
+end
+
+function SpellActivationOverlay_OnChangeTimerVisibility(self)
+	useTimer = self.useTimer;
+	for _, overlayList in pairs(self.overlaysInUse) do
+		for i=1, #overlayList do
+			local overlay = overlayList[i];
+			overlay.mask:SetShown(useTimer);
 		end
 	end
 end
@@ -137,18 +152,19 @@ local complexLocationTable = {
 	},
 }
 
-function SpellActivationOverlay_ShowAllOverlays(self, spellID, texturePath, positions, scale, r, g, b, autoPulse, forcePulsePlay)
+function SpellActivationOverlay_ShowAllOverlays(self, spellID, texturePath, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime)
 	positions = strupper(positions);
 	if ( complexLocationTable[positions] ) then
 		for location, info in pairs(complexLocationTable[positions]) do
-			SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, location, scale, r, g, b, info.vFlip, info.hFlip, info.cw, autoPulse, forcePulsePlay);
+			SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, location, scale, r, g, b, info.vFlip, info.hFlip, info.cw, autoPulse, forcePulsePlay, endTime);
 		end
 	else
-		SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, positions, scale, r, g, b, false, false, 0, autoPulse, forcePulsePlay);
+		SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, positions, scale, r, g, b, false, false, 0, autoPulse, forcePulsePlay, endTime);
 	end
 end
 
-function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, vFlip, hFlip, cw, autoPulse, forcePulsePlay)
+function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, vFlip, hFlip, cw, autoPulse, forcePulsePlay, endTime)
+	SAO:Debug("main - Starting Overlay at location "..position.." for spell ID "..spellID.." "..(GetSpellInfo(spellID) or "")..(endTime and (" for "..math.floor((type(endTime) == 'number' and endTime or endTime.endTime)-GetTime()+0.5).." secs") or ""));
 	if (SpellActivationOverlayDB and SpellActivationOverlayDB.alert and not SpellActivationOverlayDB.alert.enabled) then
 		-- Last chance to quit displaying the overlay, if the main overlay flag is disabled
 		return;
@@ -213,6 +229,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 		end
 
 		self:SetSize(width * scale, height * scale);
+		self.mask:SetSize(longSide * scale, longSide * scale);
 	end
 	overlay:SetGeometry(longSide, shortSide);
 	
@@ -226,6 +243,10 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 		overlay.pulse:Play();
 	end
 	overlay.pulse.autoPlay = autoPulse;
+
+	overlay.mask:SetShown(useTimer);
+
+	SpellActivationOverlay_SetOverlayTimer(self, overlay, endTime);
 
 	if ( not self.disableDimOutOfCombat and not InCombatLockdown() ) then
 		-- Simulate a short, fake in-combat mode, to make the spell alert more visible
@@ -262,6 +283,7 @@ function SpellActivationOverlay_HideOverlays(self, spellID)
 	if ( overlayList ) then
 		for i=1, #overlayList do
 			local overlay = overlayList[i];
+			SAO:Debug("main - Hiding Overlay at location "..overlay.position.." for spell ID "..overlay.spellID.." "..(GetSpellInfo(overlay.spellID) or ""));
 			overlay.pulse:Pause();
 			overlay.animOut:Play();
 		end
@@ -271,6 +293,58 @@ end
 function SpellActivationOverlay_HideAllOverlays(self)
 	for spellID, overlayList in pairs(self.overlaysInUse) do
 		SpellActivationOverlay_HideOverlays(self, spellID);
+	end
+end
+
+function SpellActivationOverlay_SetAllOverlayTimers(self, spellID, endTime)
+	if ( not endTime ) then
+		return
+	end
+
+	local overlayList = self.overlaysInUse[spellID];
+	if ( overlayList ) then
+		for i=1, #overlayList do
+			local overlay = overlayList[i];
+			SpellActivationOverlay_SetOverlayTimer(self, overlay, endTime);
+		end
+	end
+end
+
+function SpellActivationOverlay_SetOverlayTimer(self, overlay, endTime)
+	local startTime = type(endTime) == 'table' and endTime.startTime or nil;
+	endTime = type(endTime) == 'table' and endTime.endTime or endTime;
+	if ( not endTime or endTime <= GetTime() ) then
+		return; -- endTime not set or "too soon"
+	end
+
+	local maxLag = 0.25; -- Estimated maximum lag, used to compare existing endTime with new endTime
+	if ( type(overlay.endTime) == 'number' and SAO:IsTimeAlmostEqual(endTime, overlay.endTime, maxLag) ) then
+		return; -- Overlay already has similar endTime: assume this is the same timer
+	end
+	overlay.endTime = endTime;
+
+	SAO:Debug("main - Setting Overlay Timer at location "..overlay.position.." for spell ID "..overlay.spellID.." "..(GetSpellInfo(overlay.spellID) or "")..(endTime and (" for "..math.floor(endTime-GetTime()+0.5).." secs") or " without time"));
+
+	local offset = startTime and (GetTime() - startTime) or 0;
+	local duration = endTime - GetTime() + offset - 0.1; -- Subtract 0.1 to account for final shrink
+	local position = overlay.position;
+	local isHorizontal = position:sub(1, 3) == "TOP" or position:sub(1, 6) == "BOTTOM";
+	local isVertical = position:sub(#position-3) == "LEFT" or position:sub(#position-4) == "RIGHT";
+	if ( isHorizontal and isVertical ) then
+		-- Corner
+		overlay.mask.timeoutXY.scaleXY:SetDuration(duration);
+		overlay.mask.timeoutXY:Stop();
+		overlay.mask.timeoutXY:Play(false, offset);
+	elseif ( isHorizontal ) then
+		-- Top/Bottom
+		overlay.mask.timeoutX.scaleX:SetDuration(duration);
+		overlay.mask.timeoutX:Stop();
+		overlay.mask.timeoutX:Play(false, offset);
+	elseif ( isVertical ) then
+		-- Left/Right
+		overlay.mask.timeoutY.scaleY:SetDuration(duration);
+		overlay.mask.timeoutY:Stop();
+		overlay.mask.timeoutY:Play(false, offset);
 	end
 end
 
@@ -290,6 +364,35 @@ function SpellActivationOverlayTexture_OnShow(self)
 	self.animIn:Play();
 end
 
+function SpellActivationOverlayTexture_TerminateOverlay(overlay)
+	SAO:Debug("main - Terminating Overlay at location "..overlay.position.." for spell ID "..overlay.spellID.." "..(GetSpellInfo(overlay.spellID) or ""));
+	local overlayParent = overlay:GetParent();
+
+	-- No longer need to pulse
+	overlay.pulse:Stop();
+
+	-- Stop animations that may re-trigger terminate when they finish
+	overlay.animOut:Stop();
+	overlay.mask.timeoutXY:Stop();
+	overlay.mask.timeoutX:Stop();
+	overlay.mask.timeoutY:Stop();
+
+	-- Hide the overlay and make it available again in the pool for future use
+	overlay.mask:SetScale(1); -- Reset scale, in case a previous animation shrank it to 0.01
+	overlay.endTime = nil; -- Reset endTime, to avoid excessive optimizations when re-using this overlay
+	overlay:Hide();
+	tDeleteItem(overlayParent.overlaysInUse[overlay.spellID], overlay)
+	tinsert(overlayParent.unusedOverlays, overlay);
+end
+
+function SpellActivationOverlayFrame_OnTimeoutFinished(anim)
+	local mask = anim:GetParent();
+	local overlay = mask:GetParent();
+	mask:SetScale(0.01); -- Shrink mask scale to 0.01 to avoid glitches with final animation below
+	-- Start the fade-out animation, which will eventually terminate the overlay
+	overlay.animOut:Play();
+end
+
 function SpellActivationOverlayTexture_OnFadeInPlay(animGroup)
 	animGroup:GetParent():SetAlpha(0);
 end
@@ -304,11 +407,7 @@ end
 
 function SpellActivationOverlayTexture_OnFadeOutFinished(anim)
 	local overlay = anim:GetRegionParent();
-	local overlayParent = overlay:GetParent();
-	overlay.pulse:Stop();
-	overlay:Hide();
-	tDeleteItem(overlayParent.overlaysInUse[overlay.spellID], overlay)
-	tinsert(overlayParent.unusedOverlays, overlay);
+	SpellActivationOverlayTexture_TerminateOverlay(overlay);
 end
 
 function SpellActivationOverlayFrame_OnFadeInFinished(anim)

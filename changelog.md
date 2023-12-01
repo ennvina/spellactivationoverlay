@@ -1,5 +1,21 @@
 ## SpellActivationOverlay Changelog
 
+#### v1.0.0 (2023-12-01)
+
+Spell Alerts have a shrinking effect to know when the alert is about to fade
+- This effect is enabled by default; enter /sao to enable or disable it
+- Feel free to report spell alerts that should have but do not have this effect
+- Please note, some effects never fade on purpose, such as Mage's Heating Up
+
+Bug Fixes
+- Mage's Deep Freeze debuff now counts as a Frozen effect (Wrath Classic only)
+- Mage's Heating Up lingered after 4 critical strikes without casting Pyroblast
+
+This release bumps TOC file for Season of Discovery patch (Classic Era)
+- Runes of Season of Discovery will be supported over time
+- To support them, we need technical information not always available day 1
+- Make sure to head over GitHub or Discord to help us, thank you :)
+
 #### v0.9.5 (2023-11-07)
 
 - Buttons should glow correctly when using AzeriteUI
@@ -10,12 +26,12 @@
 
 #### v0.9.4 (2023-11-01)
 
-- Bump in TOC file for Icecrown Citadel patch
+- Bump in TOC file for Icecrown Citadel patch (Wrath Classic)
 - New SAO: Mage's Frozen when the target is under a Frozen effect
 - New GAB: Mage's Ice Lance button glows during Fingers of Frost
 - New GAB: Mage's Deep Freeze button glows during Fingers of Frost
-- New GAB: Mage's Ice Lance button glows when the target Frozen
-- New GAB: Mage's Deep Freeze button glows when the target Frozen
+- New GAB: Mage's Ice Lance button glows when the target is Frozen
+- New GAB: Mage's Deep Freeze button glows when the target is Frozen
 
 List of spells that trigger the Frozen effect:
 - Mage's Frost Nova
@@ -26,7 +42,7 @@ List of spells that trigger the Frozen effect:
 
 #### v0.9.3 (2023-09-02)
 
-- Bump in TOC file for Classic Hardcore patch
+- Bump in TOC file for Classic Hardcore patch (Classic Era)
 - Druid's Omen of Clarity was no longer working since Classic Era last patch
 - Warrior's Overpower button could glow for too long after the target dodged
 - Warrior's Overpower button glows during Taste for Blood
@@ -39,7 +55,7 @@ Please report bugs to the addon's Discord, GitHub or CurseForge
 
 #### v0.9.2 (2023-06-21)
 
-- Bump in TOC file for Trial of the Grand Crusader patch
+- Bump in TOC file for Trial of the Grand Crusader patch (Wrath Classic)
 - The options window is compatible with the new settings UI
 
 #### v0.9.1 (2023-05-28)

@@ -47,7 +47,7 @@ cp -R changelog.md LICENSE SpellActivationOverlay.* classes components options t
 cd ./_release/vanilla || bye "Cannot cd to vanilla directory"
 echo -n "Cleaning up vanilla directory... "
 # Change Interface version; to know the version of a specific game client, enter: /dump select(4, GetBuildInfo())
-VANILLA_BUILD_VERSION=11404
+VANILLA_BUILD_VERSION=11500
 sed -i s/'^## Interface:.*'/"## Interface: $VANILLA_BUILD_VERSION"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update version of TOC file"
 # Remove everything related to DK
 sed -i '/deathknight/d' SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot remove deathknight from TOC file"

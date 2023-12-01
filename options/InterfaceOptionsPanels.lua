@@ -40,6 +40,19 @@ function SpellActivationOverlayOptionsPanel_Init(self)
         SAO:ApplySpellAlertGeometry();
     end
 
+    local timerSlider = SpellActivationOverlayOptionsPanelSpellAlertTimerSlider;
+    timerSlider.Text:SetText("Spell Alert Progressive Timer");
+    _G[timerSlider:GetName().."Low"]:SetText(DISABLE);
+    _G[timerSlider:GetName().."High"]:SetText(ENABLE);
+    timerSlider:SetMinMaxValues(0, 1);
+    timerSlider:SetValueStep(1);
+    timerSlider.initialValue = SpellActivationOverlayDB.alert.timer;
+    timerSlider:SetValue(timerSlider.initialValue);
+    timerSlider.ApplyValueToEngine = function(self, value)
+        SpellActivationOverlayDB.alert.timer = value;
+        SAO:ApplySpellAlertTimer();
+    end
+
     local testButton = SpellActivationOverlayOptionsPanelSpellAlertTestButton;
     testButton:SetText("Toggle Test");
     testButton.fakeSpellID = 42;
@@ -49,8 +62,12 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     testButton.StartTest = function(self)
         if (not self.isTesting) then
             self.isTesting = true;
-            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName[testTextureLeftRight], "Left + Right (Flipped)", 1, 255, 255, 255, false);
-            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName[testTextureTop], "Top", 1, 255, 255, 255, false);
+            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName[testTextureLeftRight], "Left + Right (Flipped)", 1, 255, 255, 255, false, nil, GetTime()+5);
+            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName[testTextureTop], "Top", 1, 255, 255, 255, false, nil, GetTime()+5);
+            self.testTimerTicker = C_Timer.NewTicker(4.9, -- Ticker must be slightly shorter than overlay duration, to refresh it before losing it
+            function()
+                SAO:RefreshOverlayTimer(self.fakeSpellID, GetTime()+5);
+            end);
             -- Hack the frame to force full opacity even when out of combat
             SpellActivationOverlayFrame_SetForceAlpha1(true);
         end
@@ -58,6 +75,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     testButton.StopTest = function(self)
         if (self.isTesting) then
             self.isTesting = false;
+            self.testTimerTicker:Cancel();
             SAO:DeactivateOverlay(self.fakeSpellID);
             -- Undo hack
             SpellActivationOverlayFrame_SetForceAlpha1(false);
@@ -102,6 +120,9 @@ local function okayFunc(self)
     local offsetSlider = SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider;
     offsetSlider.initialValue = offsetSlider:GetValue();
 
+    local timerSlider = SpellActivationOverlayOptionsPanelSpellAlertTimerSlider;
+    timerSlider.initialValue = timerSlider:GetValue();
+
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     glowingButtonCheckbox.initialValue = glowingButtonCheckbox:GetChecked();
 
@@ -116,6 +137,7 @@ local function cancelFunc(self)
     local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
     local scaleSlider = SpellActivationOverlayOptionsPanelSpellAlertScaleSlider;
     local offsetSlider = SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider;
+    local timerSlider = SpellActivationOverlayOptionsPanelSpellAlertTimerSlider;
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     local classOptions = SpellActivationOverlayOptionsPanel.classOptions;
 
@@ -123,6 +145,7 @@ local function cancelFunc(self)
         opacitySlider.initialValue,
         scaleSlider.initialValue,
         offsetSlider.initialValue,
+        timerSlider.initialValue,
         glowingButtonCheckbox.initialValue,
         classOptions.initialValue
     );
@@ -135,12 +158,13 @@ local function defaultFunc(self)
         1, -- opacity
         1, -- scale
         0, -- offset
+        1, -- timer
         true, -- glow
         defaultClassOptions -- class options
     );
 end
 
-local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, isGlowEnabled, classOptions)
+local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, timerValue, isGlowEnabled, classOptions)
     local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
     opacitySlider:SetValue(opacityValue);
     if (SpellActivationOverlayDB.alert.opacity ~= opacityValue) then
@@ -167,6 +191,13 @@ local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, isGlowE
 
     if (geometryChanged) then
         SAO:ApplySpellAlertGeometry();
+    end
+
+    local timerSlider = SpellActivationOverlayOptionsPanelSpellAlertTimerSlider;
+    timerSlider:SetValue(timerValue);
+    if (SpellActivationOverlayDB.alert.timer ~= timerValue) then
+        SpellActivationOverlayDB.alert.timer = timerValue;
+        SAO:ApplySpellAlertTimer();
     end
 
     local testButton = SpellActivationOverlayOptionsPanelSpellAlertTestButton;
