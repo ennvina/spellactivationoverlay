@@ -7,10 +7,15 @@ This release focuses on supporting runes introduced in Season of Discovery
 - New SAO: Hunter's Flanking Strike
 - New SAO: Hunter's Cobra Strikes
 - New SAO: Mage's Fingers of Frost
+- New SAO: Priest's Serendipity
 - New GAB: Druid's Healing Touch, during Fury of Stormrage
 - New GAB: Hunter's Flanking Strike, when the action is usable
 - New GAB: Mage's Ice Lance, during Fingers of Frost
 - New GAB: Mage's Ice Lance, when the enemy target is Frozen
+- New GAB: Priest's Lesser Heal, during Serendipity
+- New GAB: Priest's Heal, during Serendipity
+- New GAB: Priest's Greater Heal, during Serendipity
+- New GAB: Priest's Prayer of Healing, during Serendipity
 
 #### v1.0.0 (2023-12-01)
 

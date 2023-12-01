@@ -227,6 +227,10 @@ SAO.defaults = {
                 [60514] = { -- Healing Trance / Soul Preserver
                     [0] = false,
                 },
+                [413247]= { -- Serendipity (Season of Discovery)
+                    [3] = true,  -- 3 stacks
+                    [0] = false, -- any stacks but 3
+                },
             },
             glow = {
                 [33151] = { -- Surge of Light
@@ -234,6 +238,12 @@ SAO.defaults = {
                     [2061] = true, -- Flash Heal
                 },
                 [63734] = { -- Serendipity 3/3
+                    [2060] = true, -- Greater Heal
+                    [596]  = true, -- Prayer of Healing
+                },
+                [413247]= { -- Serendipity 3/3 (Season of Discovery)
+                    [2050] = true, -- Lesser Heal
+                    [2054] = true, -- Heal
                     [2060] = true, -- Greater Heal
                     [596]  = true, -- Prayer of Healing
                 },
