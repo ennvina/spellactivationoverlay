@@ -299,6 +299,9 @@ local function registerClass(self)
     self:RegisterAura("wrath_of_elune", 0, 46833, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvP season 5-6-7-8
     self:RegisterAura("elunes_wrath", 0, 64823, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvE tier 8
 
+    -- Fury of Stormrage (Season of Discovery)
+    self:RegisterAura("fury_of_stormrage", 0, 414800, "fury_of_stormrage", "Top", 1, 255, 255, 255, true, { healingTouch });
+
     -- Healing Trance / Soul Preserver
     self:RegisterAuraSoulPreserver("soul_preserver_druid", 60512); -- 60512 = Druid buff
 
@@ -345,6 +348,9 @@ local function loadOptions(self)
     local wrathOfEluneTalent = wrathOfEluneBuff; -- Not really a talent
     local elunesWrathTalent = elunesWrathBuff; -- Not really a talent
 
+    local furyOfStormrageBuff = 414800;
+    local furyOfStormrageTalent = furyOfStormrageBuff; -- Not really a talent
+
     local predatoryStrikesTalent = 16972;
     local predatoryStrikesBuff = 69369;
 
@@ -359,6 +365,7 @@ local function loadOptions(self)
     self:AddOverlayOption(solarEclipseTalent, solarSpellID, 0, nil, nil, nil, solarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(wrathOfEluneTalent, wrathOfEluneBuff);
     self:AddOverlayOption(elunesWrathTalent, elunesWrathBuff);
+    self:AddOverlayOption(furyOfStormrageTalent, furyOfStormrageBuff);
     self:AddOverlayOption(naturesGraceTalent, naturesGraceBuff, 0, nil, naturesGraceVariants);
     self:AddOverlayOption(predatoryStrikesTalent, predatoryStrikesBuff);
     self:AddSoulPreserverOverlayOption(60512); -- 60512 = Druid buff
@@ -367,6 +374,7 @@ local function loadOptions(self)
     self:AddGlowingOption(solarEclipseTalent, wrath, wrath);
     self:AddGlowingOption(wrathOfEluneTalent, wrathOfEluneBuff, starfire);
     self:AddGlowingOption(elunesWrathTalent, elunesWrathBuff, starfire);
+    self:AddGlowingOption(furyOfStormrageTalent, furyOfStormrageBuff, healingTouch);
     if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then -- Must exclude this option specifically for Classic Era, because the talent exists in Era but it has no proc
         self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, regrowth);
         self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, healingTouch);

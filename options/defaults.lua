@@ -51,6 +51,9 @@ SAO.defaults = {
                 [60512] = { -- Healing Trance / Soul Preserver
                     [0] = false,
                 },
+                [414800]= { -- Fury of Stormrage (Season of Discovery)
+                    [0] = true,
+                },
             },
             glow = {
                 [2912] = { -- Starfire
@@ -74,6 +77,9 @@ SAO.defaults = {
                     [339]   = false, -- Entangling Roots
                     [33786] = true,  -- Cyclone
                     [2637]  = false, -- Hibernate
+                },
+                [414800]= { -- Fury of Stormrage (Season of Discovery)
+                    [5185] = true, -- Healing Touch
                 },
             }
         },
