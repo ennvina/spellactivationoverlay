@@ -164,7 +164,7 @@ function SpellActivationOverlay_ShowAllOverlays(self, spellID, texturePath, posi
 end
 
 function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, vFlip, hFlip, cw, autoPulse, forcePulsePlay, endTime)
-	SAO:Debug("main - Starting Overlay at location "..position.." for spell ID "..spellID.." "..(GetSpellInfo(spellID) or "")..(endTime and (" for "..math.floor(endTime-GetTime()+0.5).." secs") or ""));
+	SAO:Debug("main - Starting Overlay at location "..position.." for spell ID "..spellID.." "..(GetSpellInfo(spellID) or "")..(endTime and (" for "..math.floor((type(endTime) == 'number' and endTime or endTime.endTime)-GetTime()+0.5).." secs") or ""));
 	if (SpellActivationOverlayDB and SpellActivationOverlayDB.alert and not SpellActivationOverlayDB.alert.enabled) then
 		-- Last chance to quit displaying the overlay, if the main overlay flag is disabled
 		return;
@@ -311,6 +311,8 @@ function SpellActivationOverlay_SetAllOverlayTimers(self, spellID, endTime)
 end
 
 function SpellActivationOverlay_SetOverlayTimer(self, overlay, endTime)
+	local startTime = type(endTime) == 'table' and endTime.startTime or nil;
+	endTime = type(endTime) == 'table' and endTime.endTime or endTime;
 	if ( not endTime or endTime <= GetTime() ) then
 		return; -- endTime not set or "too soon"
 	end
@@ -323,22 +325,26 @@ function SpellActivationOverlay_SetOverlayTimer(self, overlay, endTime)
 
 	SAO:Debug("main - Setting Overlay Timer at location "..overlay.position.." for spell ID "..overlay.spellID.." "..(GetSpellInfo(overlay.spellID) or "")..(endTime and (" for "..math.floor(endTime-GetTime()+0.5).." secs") or " without time"));
 
-	local duration = endTime - GetTime() - 0.1; -- Subtract 0.1 to account for final shrink
+	local offset = startTime and (GetTime() - startTime) or 0;
+	local duration = endTime - GetTime() + offset - 0.1; -- Subtract 0.1 to account for final shrink
 	local position = overlay.position;
 	local isHorizontal = position:sub(1, 3) == "TOP" or position:sub(1, 6) == "BOTTOM";
 	local isVertical = position:sub(#position-3) == "LEFT" or position:sub(#position-4) == "RIGHT";
 	if ( isHorizontal and isVertical ) then
+		-- Corner
 		overlay.mask.timeoutXY.scaleXY:SetDuration(duration);
 		overlay.mask.timeoutXY:Stop();
-		overlay.mask.timeoutXY:Play();
+		overlay.mask.timeoutXY:Play(false, offset);
 	elseif ( isHorizontal ) then
+		-- Top/Bottom
 		overlay.mask.timeoutX.scaleX:SetDuration(duration);
 		overlay.mask.timeoutX:Stop();
-		overlay.mask.timeoutX:Play();
+		overlay.mask.timeoutX:Play(false, offset);
 	elseif ( isVertical ) then
+		-- Left/Right
 		overlay.mask.timeoutY.scaleY:SetDuration(duration);
 		overlay.mask.timeoutY:Stop();
-		overlay.mask.timeoutY:Play();
+		overlay.mask.timeoutY:Play(false, offset);
 	end
 end
 

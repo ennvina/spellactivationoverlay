@@ -319,18 +319,28 @@ local FrozenHandler = {
     end,
 
     longestFrozenTime = function(self)
-        if not SAO.Frame.useTimer then return end -- Return nil if there is no timer effect, to save CPU
-        local longestTime = 0;
+        local longestTime, durationOfLongestTime = 0, 0;
         for i = 1,200 do -- 200 is a security to prevent infinite loops
-            local name, _, _, _, _, expirationTime, _, _, _, id = UnitDebuff("target", i);
+            local name, _, _, _, duration, expirationTime, _, _, _, id = UnitDebuff("target", i);
             if not name then
                 break;
             end
             if self.allSpellIDs[id] and expirationTime > longestTime then
                 longestTime = expirationTime;
+                durationOfLongestTime = duration;
             end
         end
-        return longestTime;
+        local startTime, endTime = longestTime-durationOfLongestTime, longestTime;
+        return startTime, endTime;
+    end,
+
+    getEndTime = function(self)
+        if not SAO.Frame.useTimer then
+            return; -- Return nil if there is no timer effect, to save CPU
+        end
+
+        local startTime, endTime = self:longestFrozenTime();
+        return { startTime = startTime, endTime = endTime }
     end,
 
     retarget = function(self, ...)
@@ -365,7 +375,7 @@ local FrozenHandler = {
         local saoOption = SAO:GetOverlayOptions(self.freezeID);
         local hasSAO = not saoOption or type(saoOption[0]) == "nil" or saoOption[0];
         if (hasSAO) then
-            local endTime = self:longestFrozenTime();
+            local endTime = self:getEndTime();
             SAO:ActivateOverlay(0, self.freezeID, SAO.TexName[self.saoTexture], "Top (CW)", self.saoScaleFactor, 255, 255, 255, false, nil, endTime);
         end
 
@@ -397,7 +407,7 @@ local FrozenHandler = {
         local saoOption = SAO:GetOverlayOptions(self.freezeID);
         local hasSAO = not saoOption or type(saoOption[0]) == "nil" or saoOption[0];
         if (hasSAO) then
-            local endTime = self:longestFrozenTime();
+            local endTime = self:getEndTime();
             SAO:RefreshOverlayTimer(self.freezeID, endTime);
         end
     end,
