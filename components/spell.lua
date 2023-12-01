@@ -106,6 +106,10 @@ function SAO.GetSpellEndTime(self, spellID, suggestedEndTime)
         return suggestedEndTime;
     end
 
+    if (not self.Frame.useTimer) then
+        return -- Return nil if there is no timer effect, to save CPU
+    end
+
     if type(spellID) == 'string' then
         -- spellID is a spell name
         return select(6, self:FindPlayerAuraByName(spellID));

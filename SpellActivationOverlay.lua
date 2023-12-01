@@ -297,6 +297,10 @@ function SpellActivationOverlay_HideAllOverlays(self)
 end
 
 function SpellActivationOverlay_SetAllOverlayTimers(self, spellID, endTime)
+	if ( not endTime ) then
+		return
+	end
+
 	local overlayList = self.overlaysInUse[spellID];
 	if ( overlayList ) then
 		for i=1, #overlayList do

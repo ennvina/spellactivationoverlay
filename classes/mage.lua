@@ -319,6 +319,7 @@ local FrozenHandler = {
     end,
 
     longestFrozenTime = function(self)
+        if not SAO.Frame.useTimer then return end -- Return nil if there is no timer effect, to save CPU
         local longestTime = 0;
         for i = 1,200 do -- 200 is a security to prevent infinite loops
             local name, _, _, _, _, expirationTime, _, _, _, id = UnitDebuff("target", i);
