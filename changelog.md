@@ -22,6 +22,10 @@ This release focuses on supporting runes introduced in Season of Discovery
 - New GAB: Warrior's Raging Blow, when the action is usable
 - New GAB: Warrior's Victory Rush, when the action is usable
 
+Bug Fixes
+- In rare circumstances, glowing buttons would never glow
+- Reloading the UI would always fix the issue, until next log out
+
 #### v1.0.0 (2023-12-01)
 
 Spell Alerts have a shrinking effect to know when the alert is about to fade
