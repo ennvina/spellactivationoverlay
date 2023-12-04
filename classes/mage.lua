@@ -507,6 +507,21 @@ local function registerClass(self)
         clearcastingScaleFactor = 1; -- No need to scale up Clearcasting on Classic Era, because they are no other spell alerts that share this spot
     end
     self:RegisterAura("clearcasting", 0, 12536, clearcastingVariants.textureFunc, "Left + Right (Flipped)", clearcastingScaleFactor, 192, 192, 192, false);
+
+    local arcaneBlastSoDBuff = 400573;
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(arcaneBlastSoDBuff) then
+        local arcaneMissiles = 5143;
+        local arcaneExplosion = 1449;
+        -- local arcaneHealingSpellTBD = ...; -- @todo add healing spell that resets stacks, which might exist, according to the in-game tooltip
+        local resettingSpells = { (GetSpellInfo(arcaneMissiles)), (GetSpellInfo(arcaneExplosion)) };
+        for nbStacks=1,4 do
+            local scale = nbStacks == 4 and 1.2 or 0.6; -- 60%, 60%, 60%, 120%
+            local pulse = nbStacks == 4;
+            local glowIDs = nbStacks == 4 and resettingSpells or nil;
+            local texture = ({ "arcane_missiles_1", "arcane_missiles_2", "arcane_missiles_3", "arcane_missiles" })[nbStacks];
+            self:RegisterAura("serendipity_sod", nbStacks, arcaneBlastSoDBuff, texture, "Left + Right (Flipped)", scale, 255, 255, 255, pulse, glowIDs);
+        end
+    end
 end
 
 local function loadOptions(self)
@@ -536,7 +551,10 @@ local function loadOptions(self)
     local fingersOfFrostSoDBuff = 400670;
     local fingersOfFrostSoDTalent = fingersOfFrostSoDBuff; -- Not really a talent
 
+    local arcaneBlastSoDBuff = 400573;
+
     local arcaneMissiles = 5143;
+    local arcaneExplosion = 1449;
     local pyroblast = 11366;
     local flamestrike = 2120;
     local fireBlast = 2136;
@@ -575,11 +593,18 @@ local function loadOptions(self)
     -- local hotStreakHeatingUpDetails = string.format("%s+%s", heatingUpDetails, hotStreakDetails);
     local hotStreakHeatingUpDetails = string.format("%s %s", STATUS_TEXT_BOTH, ACTION_SPELL_AURA_APPLIED_DOSE);
 
+    local oneToThreeStacks = string.format(CALENDAR_TOOLTIP_DATE_RANGE, "1", string.format(STACKS, 3));
+    local fourStacks = string.format(STACKS, 4);
+
     -- Clearcasting variants
     lazyCreateClearcastingVariants(self);
 
     self:AddOverlayOption(clearcastingTalent, clearcastingBuff, 0, nil, clearcastingVariants);
     self:AddOverlayOption(missileBarrageTalent, missileBarrageBuff);
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(arcaneBlastSoDBuff) then
+        self:AddOverlayOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, 0, oneToThreeStacks, nil, 3); -- setup any stacks, test with 3 stacks
+        self:AddOverlayOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, 4); -- setup 4 stacks
+    end
     self:AddOverlayOption(hotStreakTalent, heatingUpBuff, 0, heatingUpDetails);
     self:AddOverlayOption(hotStreakTalent, hotStreakBuff, 0, hotStreakDetails);
     self:AddOverlayOption(hotStreakTalent, hotStreakHeatingUpBuff, 0, hotStreakHeatingUpDetails);
@@ -591,6 +616,10 @@ local function loadOptions(self)
     self:AddOverlayOption(brainFreezeTalent, brainFreezeBuff);
 
     self:AddGlowingOption(missileBarrageTalent, missileBarrageBuff, arcaneMissiles);
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(arcaneBlastSoDBuff) then
+        self:AddGlowingOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, arcaneMissiles, fourStacks);
+        self:AddGlowingOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, arcaneExplosion, fourStacks);
+    end
     self:AddGlowingOption(hotStreakTalent, hotStreakBuff, pyroblast);
     self:AddGlowingOption(firestarterTalent, firestarterBuff, flamestrike);
     if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then -- Must exclude this option specifically for Classic Era, because the talent exists in Era but the proc is passive

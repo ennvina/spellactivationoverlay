@@ -39,6 +39,9 @@ echo -n "Cleaning up wrath directory... "
 SOD_ONLY_TEXTURES=(tooth_and_claw
 monk_serpent
 raging_blow
+arcane_missiles_1
+arcane_missiles_2
+arcane_missiles_3
 )
 for texname in ${SOD_ONLY_TEXTURES[@]}
 do
@@ -88,7 +91,6 @@ maelstrom_weapon_4
 backlash
 predatory_swiftness
 sword_and_board
-arcane_missiles
 hot_streak
 killing_machine
 maelstrom_weapon_3

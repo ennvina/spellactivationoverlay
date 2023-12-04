@@ -130,6 +130,10 @@ SAO.defaults = {
                 [44401] = { -- Missile Barrage
                     [0] = true,
                 },
+                [400573]= { -- Arcane Blast (Season of Discovery)
+                    [4] = true, -- 4 stacks
+                    [0] = true, -- any stacks but 4
+                },
                 [48107] = { -- Heating Up (not an actual buff)
                     [0] = true,
                 },
@@ -161,6 +165,10 @@ SAO.defaults = {
             glow = {
                 [44401] = { -- Missile Barrage
                     [5143] = true, -- Arcane Missiles
+                },
+                [400573]= { -- Arcane Blast 4/4 (Season of Discovery)
+                    [5143] = true,  -- Arcane Missiles
+                    [1449] = false, -- Arcane Explosion
                 },
                 [48108] = { -- Hot Streak
                     [11366] = true, -- Pyroblast

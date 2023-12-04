@@ -1,6 +1,12 @@
 ## SpellActivationOverlay Changelog
 
-#### v1.1.0-beta (2023-12-xx)
+#### v1.1.1-beta (2023-12-xx)
+
+- New SAO: Mage's Arcane Blast
+- New GAB: Mage's Arcane Missiles, during Arcane Blast
+- New GAB: Mage's Arcane Explosion, during Arcane Blast
+
+#### v1.1.0-beta (2023-12-01)
 
 This release focuses on supporting runes introduced in Season of Discovery
 - New SAO: Druid's Fury of Stormrage
