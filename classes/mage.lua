@@ -502,11 +502,7 @@ local function registerClass(self)
     self:RegisterAura("missile_barrage", 0, 44401, "arcane_missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(5143)) });
 
     lazyCreateClearcastingVariants(self);
-    local clearcastingScaleFactor = 1.5;
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
-        clearcastingScaleFactor = 1; -- No need to scale up Clearcasting on Classic Era, because they are no other spell alerts that share this spot
-    end
-    self:RegisterAura("clearcasting", 0, 12536, clearcastingVariants.textureFunc, "Left + Right (Flipped)", clearcastingScaleFactor, 192, 192, 192, false);
+    self:RegisterAura("clearcasting", 0, 12536, clearcastingVariants.textureFunc, "Left + Right (Flipped)", 1.5, 192, 192, 192, false);
 
     local arcaneBlastSoDBuff = 400573;
     if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(arcaneBlastSoDBuff) then
