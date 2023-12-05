@@ -6,6 +6,8 @@
 - New GAB: Mage's Arcane Missiles, during Arcane Blast
 - New GAB: Mage's Arcane Explosion, during Arcane Blast
 - Updated SAO: Mage's Clearcasting is back to 150% size, to avoid overlap
+- Hunter's Flanking Strike Spell Alert is no longer always displayed upon login
+- Shaman's Molten Blast Spell Alert is no longer always displayed upon login
 
 #### v1.1.0-beta (2023-12-01)
 

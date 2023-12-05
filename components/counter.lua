@@ -56,6 +56,11 @@ function SAO.CheckCounterAction(self, spellID, auraID, talent)
         end
     end
 
+    if (not IsPlayerSpell(spellID)) then
+        -- Spell not learned
+        return;
+    end
+
     local start, duration, enabled, modRate = GetSpellCooldown(spellID);
     if (type(start) ~= "number") then
         -- Spell not available
