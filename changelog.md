@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v1.1.1-beta (2023-12-xx)
+#### v1.1.1 (2023-12-05)
 
 - New SAO: Mage's Arcane Blast
 - New GAB: Mage's Arcane Missiles, during Arcane Blast
