@@ -388,12 +388,16 @@ local function registerClass(self)
     self:RegisterCounter("victory_rush"); -- Must match name from above call
 
     -- Victory Rush (Season of Discovery)
-    self:RegisterAura("victory_rush_sod", 0, victoryRushSoD, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(victoryRushSoD)) });
-    self:RegisterCounter("victory_rush_sod"); -- Must match name from above call
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(victoryRushSoD) then
+        self:RegisterAura("victory_rush_sod", 0, victoryRushSoD, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(victoryRushSoD)) });
+        self:RegisterCounter("victory_rush_sod"); -- Must match name from above call
+    end
 
     -- Raging Blow (Season of Discovery), with a spell alert, unlike other Warrior 'counters'
-    self:RegisterAura("raging_blow", 0, ragingBlowSoD, "raging_blow", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(ragingBlowSoD)) });
-    self:RegisterCounter("raging_blow"); -- Must match name from above call
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(ragingBlowSoD) then
+        self:RegisterAura("raging_blow", 0, ragingBlowSoD, "raging_blow", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(ragingBlowSoD)) });
+        self:RegisterCounter("raging_blow"); -- Must match name from above call
+    end
 end
 
 local function loadOptions(self)
@@ -420,7 +424,9 @@ local function loadOptions(self)
     self:AddOverlayOption(suddenDeathTalent, suddenDeathBuff);
     self:AddOverlayOption(bloodsurgeTalent, bloodsurgeBuff);
     self:AddOverlayOption(swordAndBoardTalent, swordAndBoardBuff);
-    self:AddOverlayOption(ragingBlowSoD, ragingBlowSoD);
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(ragingBlowSoD) then
+        self:AddOverlayOption(ragingBlowSoD, ragingBlowSoD);
+    end
 
     if OverpowerHandler.initialized then
         self:AddGlowingOption(nil, OverpowerHandler.optionID, OverpowerHandler.spellID, nil, nil, OverpowerHandler.variants);
@@ -432,8 +438,12 @@ local function loadOptions(self)
         self:AddGlowingOption(nil, ExecuteHandler.optionID, ExecuteHandler.spellID, nil, nil, ExecuteHandler.variants);
     end
     self:AddGlowingOption(nil, victoryRush, victoryRush);
-    self:AddGlowingOption(nil, victoryRushSoD, victoryRushSoD);
-    self:AddGlowingOption(nil, ragingBlowSoD, ragingBlowSoD);
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(victoryRushSoD) then
+        self:AddGlowingOption(nil, victoryRushSoD, victoryRushSoD);
+    end
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(ragingBlowSoD) then
+        self:AddGlowingOption(nil, ragingBlowSoD, ragingBlowSoD);
+    end
     self:AddGlowingOption(suddenDeathTalent, suddenDeathBuff, execute);
     self:AddGlowingOption(bloodsurgeTalent, bloodsurgeBuff, slam);
     self:AddGlowingOption(swordAndBoardTalent, swordAndBoardBuff, shieldSlam);

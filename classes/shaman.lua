@@ -38,8 +38,8 @@ local function registerClass(self)
     -- Healing Trance / Soul Preserver
     self:RegisterAuraSoulPreserver("soul_preserver_shaman", 60515); -- 60515 = Shaman buff
 
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
-        local moltenBlast = 425339;
+    local moltenBlast = 425339;
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(moltenBlast) then
         self:RegisterAura("molten_blast", 0, moltenBlast, "impact", "Top", 0.8, 255, 255, 255, true, { moltenBlast });
         self:RegisterCounter("molten_blast");
     end
@@ -71,7 +71,9 @@ local function loadOptions(self)
     self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 0, oneToFourStacks, nil, 4); -- setup any stacks, test with 4 stacks
     self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 5); -- setup 5 stacks
     self:AddOverlayOption(tidalWavesTalent, tidalWavesBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
-    self:AddOverlayOption(moltenBlast, moltenBlast);
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(moltenBlast) then
+        self:AddOverlayOption(moltenBlast, moltenBlast);
+    end
     self:AddSoulPreserverOverlayOption(60515); -- 60515 = Shaman buff
 
     self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, lightningBolt, fiveStacks);
@@ -82,7 +84,9 @@ local function loadOptions(self)
     self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, hex, fiveStacks);
     self:AddGlowingOption(tidalWavesTalent, tidalWavesBuff, lesserHealingWave);
     self:AddGlowingOption(tidalWavesTalent, tidalWavesBuff, healingWave);
-    self:AddGlowingOption(nil, moltenBlast, moltenBlast);
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(moltenBlast) then
+        self:AddGlowingOption(nil, moltenBlast, moltenBlast);
+    end
 end
 
 SAO.Class["SHAMAN"] = {
