@@ -1,5 +1,40 @@
 ## SpellActivationOverlay Changelog
 
+#### v1.1.1 (2023-12-05)
+
+- New SAO: Mage's Arcane Blast
+- New GAB: Mage's Arcane Missiles, during Arcane Blast
+- New GAB: Mage's Arcane Explosion, during Arcane Blast
+- Updated SAO: Mage's Clearcasting is back to 150% size, to avoid overlap
+- Hunter's Flanking Strike Spell Alert is no longer always displayed upon login
+- Shaman's Molten Blast Spell Alert is no longer always displayed upon login
+
+#### v1.1.0-beta (2023-12-01)
+
+This release focuses on supporting runes introduced in Season of Discovery
+- New SAO: Druid's Fury of Stormrage
+- New SAO: Hunter's Flanking Strike
+- New SAO: Hunter's Cobra Strikes
+- New SAO: Mage's Fingers of Frost
+- New SAO: Priest's Serendipity
+- New SAO: Shaman's Molten Blast
+- New SAO: Warrior's Raging Blow
+- New GAB: Druid's Healing Touch, during Fury of Stormrage
+- New GAB: Hunter's Flanking Strike, when the action is usable
+- New GAB: Mage's Ice Lance, during Fingers of Frost
+- New GAB: Mage's Ice Lance, when the enemy target is Frozen
+- New GAB: Priest's Lesser Heal, during Serendipity
+- New GAB: Priest's Heal, during Serendipity
+- New GAB: Priest's Greater Heal, during Serendipity
+- New GAB: Priest's Prayer of Healing, during Serendipity
+- New GAB: Shaman's Molten Blast, when the action is usable
+- New GAB: Warrior's Raging Blow, when the action is usable
+- New GAB: Warrior's Victory Rush, when the action is usable
+
+Bug Fixes
+- In rare circumstances, glowing buttons would never glow
+- Reloading the UI would always fix the issue, until next log out
+
 #### v1.0.0 (2023-12-01)
 
 Spell Alerts have a shrinking effect to know when the alert is about to fade

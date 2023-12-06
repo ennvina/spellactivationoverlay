@@ -36,12 +36,14 @@ function SAO.RegisterGlowIDs(self, glowIDs)
     for _, glowID in ipairs(glowIDs or {}) do
         if (type(glowID) == "number") then
             self.RegisteredGlowSpellIDs[glowID] = true;
+            self:AwakeButtonsBySpellID(glowID);
         elseif (type(glowID) == "string") then
             if (not SAO.RegisteredGlowSpellNames[glowID]) then
                 SAO.RegisteredGlowSpellNames[glowID] = true;
                 local glowSpellIDs = self:GetSpellIDsByName(glowID);
                 for _, glowSpellID in ipairs(glowSpellIDs) do
                     self.RegisteredGlowSpellIDs[glowSpellID] = true;
+                    self:AwakeButtonsBySpellID(glowSpellID);
                 end
             end
         end

@@ -51,6 +51,9 @@ SAO.defaults = {
                 [60512] = { -- Healing Trance / Soul Preserver
                     [0] = false,
                 },
+                [414800]= { -- Fury of Stormrage (Season of Discovery)
+                    [0] = true,
+                },
             },
             glow = {
                 [2912] = { -- Starfire
@@ -75,6 +78,9 @@ SAO.defaults = {
                     [33786] = true,  -- Cyclone
                     [2637]  = false, -- Hibernate
                 },
+                [414800]= { -- Fury of Stormrage (Season of Discovery)
+                    [5185] = true, -- Healing Touch
+                },
             }
         },
         ["HUNTER"] = {
@@ -83,6 +89,12 @@ SAO.defaults = {
                     [0] = true,
                 },
                 [56453] = { -- Lock and Load
+                    [0] = true, -- any stacks
+                },
+                [415320]= { -- Flanking Strike (Season of Discovery)
+                    [0] = true,
+                },
+                [425714]= { -- Cobra Strikes (Season of Discovery)
                     [0] = true, -- any stacks
                 },
             },
@@ -105,6 +117,9 @@ SAO.defaults = {
                 [1495] = { -- Mongoose Bite
                     [1495]  = true, -- Mongoose Bite
                 },
+                [415320]= { -- Flanking Strike (Season of Discovery)
+                    [415320]= true, -- Flanking Strike (Season of Discovery)
+                },
             }
         },
         ["MAGE"] = {
@@ -114,6 +129,10 @@ SAO.defaults = {
                 },
                 [44401] = { -- Missile Barrage
                     [0] = true,
+                },
+                [400573]= { -- Arcane Blast (Season of Discovery)
+                    [4] = true, -- 4 stacks
+                    [0] = true, -- any stacks but 4
                 },
                 [48107] = { -- Heating Up (not an actual buff)
                     [0] = true,
@@ -130,6 +149,9 @@ SAO.defaults = {
                 [74396] = { -- Fingers of Frost
                     [0] = true, -- any stacks
                 },
+                [400670]= { -- Fingers of Frost (Season of Discovery)
+                    [0] = true, -- any stacks
+                },
                 [57761] = { -- Brain Freeze
                     [0] = true,
                 },
@@ -143,6 +165,10 @@ SAO.defaults = {
             glow = {
                 [44401] = { -- Missile Barrage
                     [5143] = true, -- Arcane Missiles
+                },
+                [400573]= { -- Arcane Blast 4/4 (Season of Discovery)
+                    [5143] = true,  -- Arcane Missiles
+                    [1449] = false, -- Arcane Explosion
                 },
                 [48108] = { -- Hot Streak
                     [11366] = true, -- Pyroblast
@@ -161,9 +187,13 @@ SAO.defaults = {
                     [30455] = true, -- Ice Lance
                     [44572] = true, -- Deep Freeze
                 },
+                [400670]= { -- Fingers of Frost (Season of Discovery)
+                    [400640]= true, -- Ice Lance (Season of Discovery)
+                },
                 [5276] = { -- Representative of spells triggering Frozen effect
                     [30455] = true, -- Ice Lance
                     [44572] = true, -- Deep Freeze
+                    [400640]= true, -- Ice Lance (Season of Discovery)
                 },
             },
         },
@@ -205,6 +235,10 @@ SAO.defaults = {
                 [60514] = { -- Healing Trance / Soul Preserver
                     [0] = false,
                 },
+                [413247]= { -- Serendipity (Season of Discovery)
+                    [3] = true,  -- 3 stacks
+                    [0] = false, -- any stacks but 3
+                },
             },
             glow = {
                 [33151] = { -- Surge of Light
@@ -212,6 +246,12 @@ SAO.defaults = {
                     [2061] = true, -- Flash Heal
                 },
                 [63734] = { -- Serendipity 3/3
+                    [2060] = true, -- Greater Heal
+                    [596]  = true, -- Prayer of Healing
+                },
+                [413247]= { -- Serendipity 3/3 (Season of Discovery)
+                    [2050] = true, -- Lesser Heal
+                    [2054] = true, -- Heal
                     [2060] = true, -- Greater Heal
                     [596]  = true, -- Prayer of Healing
                 },
@@ -244,6 +284,9 @@ SAO.defaults = {
                 [60515] = { -- Healing Trance / Soul Preserver
                     [0] = false,
                 },
+                [425339]= { -- Molten Blast (Season of Discovery)
+                    [0] = true,
+                },
             },
             glow = {
                 [53817] = { -- Maelstorm Weapon
@@ -257,6 +300,9 @@ SAO.defaults = {
                 [53390] = { -- Tidal Waves
                     [8004] = false, -- lesser Healing Wave
                     [331]  = false, -- Healing Wave
+                },
+                [425339]= { -- Molten Blast (Season of Discovery)
+                    [425339] = true, -- Molten Blast (Season of Discovery)
                 },
             },
         },
@@ -309,6 +355,9 @@ SAO.defaults = {
                 [50227] = { -- Sword and Board
                     [0] = true,
                 },
+                [402911]= { -- Raging Blow (Season of Discovery)
+                    [0] = true,
+                },
             },
             glow = {
                 [7384] = { -- Overpower
@@ -322,6 +371,12 @@ SAO.defaults = {
                 },
                 [34428] = { -- Victory Rush
                     [34428] = true, -- Victory Rush
+                },
+                [402927]= { -- Victory Rush (Season of Discovery)
+                    [402927]= true, -- Victory Rush (Season of Discovery)
+                },
+                [402911]= { -- Raging Blow (Season of Discovery)
+                    [402911]= true, -- Raging Blow (Season of Discovery)
                 },
                 [52437] = { -- Sudden Death
                     [5308] = true, -- Execute

@@ -187,7 +187,8 @@
         "GetItemInfo",
         "SAO_DEBUG",
         "DISABLE",
-        "ENABLE"
+        "ENABLE",
+        "IsPlayerSpell"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",

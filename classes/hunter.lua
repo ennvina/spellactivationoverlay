@@ -31,10 +31,19 @@ local function registerClass(self)
         local mongooseBite = 1495;
         self:RegisterAura("mongoose_bite", 0, mongooseBite, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(mongooseBite)) });
         self:RegisterCounter("mongoose_bite");
+
+        local flankingStrike = 415320;
+        self:RegisterAura("flanking_strike", 0, flankingStrike, "tooth_and_claw", "Left + Right (Flipped)", 1, 255, 255, 255, true, { flankingStrike });
+        self:RegisterCounter("flanking_strike");
+
+        local cobraStrikes = 425714;
+        self:RegisterAura("cobra_strikes_1", 1, cobraStrikes, "monk_serpent", "Left", 0.7, 255, 255, 255, true);
+        self:RegisterAura("cobra_strikes_2", 2, cobraStrikes, "monk_serpent", "Left + Right (Flipped)", 0.7, 255, 255, 255, true);
     end
 end
 
 local function loadOptions(self)
+    local mongooseBite = 1495;
     local killShot = 53351;
     local counterattack = 19306;
     local aimedShot = 19434;
@@ -48,14 +57,21 @@ local function loadOptions(self)
     local lockAndLoadBuff = 56453;
     local lockAndLoadTalent = 56342;
 
+    local flankingStrike = 415320;
+    local cobraStrikes = 425714;
+
     self:AddOverlayOption(improvedSteadyShotTalent, improvedSteadyShotBuff);
     self:AddOverlayOption(lockAndLoadTalent, lockAndLoadBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+        self:AddOverlayOption(flankingStrike, flankingStrike);
+        self:AddOverlayOption(cobraStrikes, cobraStrikes, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
+    end
 
     self:AddGlowingOption(nil, killShot, killShot);
     self:AddGlowingOption(nil, counterattack, counterattack);
     if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
-        local mongooseBite = 1495;
         self:AddGlowingOption(nil, mongooseBite, mongooseBite);
+        self:AddGlowingOption(nil, flankingStrike, flankingStrike);
     end
     self:AddGlowingOption(improvedSteadyShotTalent, improvedSteadyShotBuff, aimedShot);
     self:AddGlowingOption(improvedSteadyShotTalent, improvedSteadyShotBuff, arcaneShot);
