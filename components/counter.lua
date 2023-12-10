@@ -56,7 +56,7 @@ function SAO.CheckCounterAction(self, spellID, auraID, talent)
         end
     end
 
-    if (not IsPlayerSpell(spellID)) then
+    if (not self:IsSpellLearned(spellID)) then
         -- Spell not learned
         return;
     end
