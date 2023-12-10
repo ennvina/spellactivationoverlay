@@ -13,7 +13,7 @@ local GetTalentInfo = GetTalentInfo
 local UnitBuff = UnitBuff
 
 function SAO.Debug(self, msg, ...)
-    if SAO_DEBUG then
+    if SpellActivationOverlayDB.debug then
         print("[SAO@"..GetTime().."] "..msg, ...);
     end
 end

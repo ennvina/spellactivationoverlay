@@ -86,6 +86,10 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     SAO:MarkTexture(testTextureLeftRight);
     SAO:MarkTexture(testTextureTop);
 
+    local debugButton = SpellActivationOverlayOptionsPanelSpellAlertDebugButton;
+    debugButton.Text:SetText("Write Debug to Chatbox");
+    debugButton:SetChecked(SpellActivationOverlayDB.debug == true);
+
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     glowingButtonCheckbox.Text:SetText("Glowing Buttons");
     glowingButtonCheckbox.initialValue = SpellActivationOverlayDB.glow.enabled;

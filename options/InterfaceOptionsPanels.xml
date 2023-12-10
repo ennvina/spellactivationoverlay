@@ -134,6 +134,20 @@
           </PostClick>
         </Scripts>
       </CheckButton>
+      <CheckButton name="$parentSpellAlertDebugButton" inherits="InterfaceOptionsCheckButtonTemplate">
+        <Anchors>
+          <Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+        <Scripts>
+          <PostClick>
+            if (self:GetChecked()) then
+              SpellActivationOverlayDB.debug = true;
+            else
+              SpellActivationOverlayDB.debug = nil;
+            end
+          </PostClick>
+        </Scripts>
+      </CheckButton>
     </Frames>
     <Layers>
       <Layer level="ARTWORK">
