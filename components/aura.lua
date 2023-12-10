@@ -26,7 +26,7 @@ function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale
 
     -- Cannot track spell ID on Classic Era, but can track spell name
     local registeredSpellID = spellID;
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and spellID < 1000000 then -- spell IDs over 1000000 are fake ones
+    if self.IsEra() and spellID < 1000000 then -- spell IDs over 1000000 are fake ones
         registeredSpellID = GetSpellInfo(spellID);
         if not registeredSpellID then return end
     end

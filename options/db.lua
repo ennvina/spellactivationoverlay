@@ -16,7 +16,7 @@ local function migrateTo091(db)
     end
 
     -- Classic Era mages probably want Clearcasting by default, because it's the only proc available
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+    if SAO.IsEra() then
         db.classes["MAGE"]["alert"][12536][0] = SAO.defaults.classes["MAGE"]["alert"][12536][0];
     end
 

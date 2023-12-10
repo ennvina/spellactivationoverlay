@@ -1,5 +1,9 @@
 ## SpellActivationOverlay Changelog
 
+#### v1.1.2 (2023-12-xx)
+
+- Seasonal effects are no longer displayed as options in non-Seasonal realms
+
 #### v1.1.1 (2023-12-05)
 
 - New SAO: Mage's Arcane Blast

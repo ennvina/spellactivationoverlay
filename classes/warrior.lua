@@ -388,13 +388,13 @@ local function registerClass(self)
     self:RegisterCounter("victory_rush"); -- Must match name from above call
 
     -- Victory Rush (Season of Discovery)
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(victoryRushSoD) then
+    if self.IsSoD() then
         self:RegisterAura("victory_rush_sod", 0, victoryRushSoD, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(victoryRushSoD)) });
         self:RegisterCounter("victory_rush_sod"); -- Must match name from above call
     end
 
     -- Raging Blow (Season of Discovery), with a spell alert, unlike other Warrior 'counters'
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(ragingBlowSoD) then
+    if self.IsSoD() then
         self:RegisterAura("raging_blow", 0, ragingBlowSoD, "raging_blow", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(ragingBlowSoD)) });
         self:RegisterCounter("raging_blow"); -- Must match name from above call
     end
@@ -424,7 +424,7 @@ local function loadOptions(self)
     self:AddOverlayOption(suddenDeathTalent, suddenDeathBuff);
     self:AddOverlayOption(bloodsurgeTalent, bloodsurgeBuff);
     self:AddOverlayOption(swordAndBoardTalent, swordAndBoardBuff);
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(ragingBlowSoD) then
+    if self.IsSoD() then
         self:AddOverlayOption(ragingBlowSoD, ragingBlowSoD);
     end
 
@@ -438,10 +438,8 @@ local function loadOptions(self)
         self:AddGlowingOption(nil, ExecuteHandler.optionID, ExecuteHandler.spellID, nil, nil, ExecuteHandler.variants);
     end
     self:AddGlowingOption(nil, victoryRush, victoryRush);
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(victoryRushSoD) then
+    if self.IsSoD() then
         self:AddGlowingOption(nil, victoryRushSoD, victoryRushSoD);
-    end
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(ragingBlowSoD) then
         self:AddGlowingOption(nil, ragingBlowSoD, ragingBlowSoD);
     end
     self:AddGlowingOption(suddenDeathTalent, suddenDeathBuff, execute);

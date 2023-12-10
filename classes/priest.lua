@@ -1,7 +1,7 @@
 local AddonName, SAO = ...
 
 local function registerClass(self)
-    if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+    if not self.IsEra() then
         local smite = GetSpellInfo(585);
         local flashHeal = GetSpellInfo(2061);
 
@@ -33,10 +33,9 @@ local function registerClass(self)
 
         -- Healing Trance / Soul Preserver
         self:RegisterAuraSoulPreserver("soul_preserver_priest", 60514); -- 60514 = Priest buff
-    end
 
-    local serendipityBuff = 413247;
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(serendipityBuff) then
+    elseif self.IsSoD() then
+        local serendipityBuff = 413247;
         local lesserHeal = 2050;
         local heal = 2054;
         local greaterHeal = 2060;
@@ -69,7 +68,7 @@ local function loadOptions(self)
     local oneOrTwoStacks = string.format(CALENDAR_TOOLTIP_DATE_RANGE, "1", string.format(STACKS, 2));
     local threeStacks = string.format(STACKS, 3);
 
-    if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+    if not self.IsEra() then
         self:AddOverlayOption(surgeOfLightTalent, surgeOfLightBuff);
         self:AddOverlayOption(serendipityTalent, serendipityBuff3, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks
         self:AddOverlayOption(serendipityTalent, serendipityBuff3, 3); -- setup 3 stacks
@@ -79,7 +78,7 @@ local function loadOptions(self)
         self:AddGlowingOption(surgeOfLightTalent, surgeOfLightBuff, flashHeal);
         self:AddGlowingOption(serendipityTalent, serendipityBuff3, greaterHeal, threeStacks);
         self:AddGlowingOption(serendipityTalent, serendipityBuff3, prayerOfHealing, threeStacks);
-    elseif GetSpellInfo(serendipitySoDBuff) then
+    elseif self.IsSoD() then
         self:AddOverlayOption(serendipitySoDBuff, serendipitySoDBuff, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks
         self:AddOverlayOption(serendipitySoDBuff, serendipitySoDBuff, 3); -- setup 3 stacks
 
