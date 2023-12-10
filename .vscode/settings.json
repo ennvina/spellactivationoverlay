@@ -12,6 +12,8 @@
         "GetTime",
         "WOW_PROJECT_ID",
         "WOW_PROJECT_CLASSIC",
+        "WOW_PROJECT_BURNING_CRUSADE_CLASSIC",
+        "WOW_PROJECT_WRATH_CLASSIC",
         "Ambiguate",
         "C_ChatInfo",
         "RegisterAddonMessagePrefix",
@@ -173,7 +175,6 @@
         "STATUS_TEXT_BOTH",
         "ACTION_SPELL_AURA_APPLIED_DOSE",
         "GetFileIDFromPath",
-        "WOW_PROJECT_WRATH_CLASSIC",
         "RACE_CLASS_ONLY",
         "DEFAULT",
         "UnitCanAttack",
@@ -188,7 +189,8 @@
         "SAO_DEBUG",
         "DISABLE",
         "ENABLE",
-        "IsPlayerSpell"
+        "IsPlayerSpell",
+        "C_Engraving"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",

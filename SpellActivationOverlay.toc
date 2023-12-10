@@ -23,6 +23,7 @@ components\events.lua
 components\glow.lua
 components\item.lua
 components\overlay.lua
+components\project.lua
 components\spell.lua
 components\util.lua
 
