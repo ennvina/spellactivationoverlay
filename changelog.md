@@ -7,6 +7,7 @@
 - Updated GAB: Rogue's Riposte can now trigger independently of cooldown
 - Rogue's new options are independent; make sure to enable both, if needed
 - Rogue new options are disabled by default, similar to Warrior stance options
+- Mage's Arcane Blast should now trigger correctly (Season of Discovery only)
 - Season of Discovery action counters should now glow correctly
 
 The action counter fix includes the following spells and abilities:

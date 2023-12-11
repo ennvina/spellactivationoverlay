@@ -10,7 +10,7 @@ local GetSpellBookItemName = GetSpellBookItemName
 local GetSpellInfo = GetSpellInfo
 local GetSpellTabInfo = GetSpellTabInfo
 local GetTalentInfo = GetTalentInfo
-local UnitBuff = UnitBuff
+local UnitAura = UnitAura
 
 function SAO.Debug(self, msg, ...)
     if SpellActivationOverlayDB.debug then
@@ -28,7 +28,7 @@ function SAO.FindPlayerAuraByID(self, id)
     local i = 1
     local name, icon, count, dispelType, duration, expirationTime,
         source, isStealable, nameplateShowPersonal, spellId,
-        canApplyAura, isBossDebuff, castByPlayer = UnitBuff("player", i);
+        canApplyAura, isBossDebuff, castByPlayer = UnitAura("player", i);
     while name do
         if (spellId == id) then
             return name, icon, count, dispelType, duration, expirationTime,
@@ -38,7 +38,7 @@ function SAO.FindPlayerAuraByID(self, id)
         i = i+1
         name, icon, count, dispelType, duration, expirationTime,
             source, isStealable, nameplateShowPersonal, spellId,
-            canApplyAura, isBossDebuff, castByPlayer = UnitBuff("player", i);
+            canApplyAura, isBossDebuff, castByPlayer = UnitAura("player", i);
     end
 end
 
@@ -47,7 +47,7 @@ function SAO.FindPlayerAuraByName(self, spellName)
     local i = 1
     local name, icon, count, dispelType, duration, expirationTime,
         source, isStealable, nameplateShowPersonal, spellId,
-        canApplyAura, isBossDebuff, castByPlayer = UnitBuff("player", i);
+        canApplyAura, isBossDebuff, castByPlayer = UnitAura("player", i);
     while name do
         if (name == spellName) then
             return name, icon, count, dispelType, duration, expirationTime,
@@ -57,7 +57,7 @@ function SAO.FindPlayerAuraByName(self, spellName)
         i = i+1
         name, icon, count, dispelType, duration, expirationTime,
             source, isStealable, nameplateShowPersonal, spellId,
-            canApplyAura, isBossDebuff, castByPlayer = UnitBuff("player", i);
+            canApplyAura, isBossDebuff, castByPlayer = UnitAura("player", i);
     end
 end
 
