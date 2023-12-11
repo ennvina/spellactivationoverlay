@@ -68,14 +68,27 @@ local RiposteHandler = {
     end,
 
     alert = function(self)
-        if not self.alerting and self.optionTestFunc(self.alertVariants.getOption()) then
-            self.alerting = true;
-            local aura = SAO.RegisteredAurasByName["riposte"];
-            if aura then
-                -- It might conflict with 'default' counter effect
-                -- But tests showed no significant issues so far
-                SAO:ActivateOverlay(select(2, unpack(aura)));
+        if self.optionTestFunc(self.alertVariants.getOption()) then
+            if not self.alerting then
+                local aura = SAO.RegisteredAurasByName["riposte"];
+                if aura then
+                    -- It might conflict with 'default' counter effect
+                    -- But tests showed no significant issues so far
+                    SAO:ActivateOverlay(select(2, unpack(aura)));
+                end
+                self.alerting = true;
             end
+
+            -- Start alert timer, very similar to glow timer
+            -- There might exist a timer for glow already, and we could benefit from it by implementing onTimeout()
+            -- But because alert option and glow option are independent, the glow timer may not be running right now
+            local tolerance = 0.2;
+            self.alertVanishTime = GetTime() + self.maxDuration - tolerance;
+            C_Timer.After(self.maxDuration, function()
+                if self.alertVanishTime and GetTime() > self.alertVanishTime then
+                    self:unalert();
+                end
+            end);
         end
     end,
 
@@ -87,6 +100,9 @@ local RiposteHandler = {
                 local auraSpellID = aura[3];
                 SAO:DeactivateOverlay(auraSpellID);
             end
+
+            -- Tell the timer that there is no need to remove alert after timeout, because alert is already removed
+            self.alertVanishTime = nil;
         end
     end,
 }

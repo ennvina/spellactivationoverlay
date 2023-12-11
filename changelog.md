@@ -5,6 +5,7 @@
 - Seasonal effects are no longer displayed as options in non-Seasonal realms
 - Updated SAO: Rogue's Riposte can now trigger independently of cooldown
 - Updated GAB: Rogue's Riposte can now trigger independently of cooldown
+- Rogue's new options are independent; make sure to enable both, if needed
 - Rogue new options are disabled by default, similar to Warrior stance options
 
 #### v1.1.1 (2023-12-05)
