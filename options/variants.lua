@@ -162,3 +162,15 @@ function SAO.StanceVariantValue(self, stances)
         return UNKNOWN;
     end);
 end
+
+function SAO.CooldownVariantValue(self, cooldowns)
+    return self:StringVariantValue(cooldowns, "cd:",
+    function(cooldown)
+        if cooldown == "on" then
+            return string.format("%s %s", COMBATLOG_HIGHLIGHT_ABILITY, ON_COOLDOWN);
+        elseif cooldown == "off" then
+            return string.format("%s %s", COMBATLOG_HIGHLIGHT_ABILITY, AVAILABLE);
+        end
+        return UNKNOWN;
+    end)
+end

@@ -190,7 +190,10 @@
         "DISABLE",
         "ENABLE",
         "IsPlayerSpell",
-        "C_Engraving"
+        "C_Engraving",
+        "COMBATLOG_HIGHLIGHT_ABILITY",
+        "AVAILABLE",
+        "ON_COOLDOWN"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",
