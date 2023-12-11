@@ -17,13 +17,15 @@ end
 
 local function initRuneMapping()
     local categories = C_Engraving and C_Engraving.GetRuneCategories(false, true) or {};
+    local foundRune = false;
     for _, cat in pairs(categories) do
-        local runes = C_Engraving.GetRunesForCategory(cat, true);
+        local runes = C_Engraving.GetRunesForCategory(cat, true) or {};
         for _, rune in pairs(runes) do
             addRuneMapping(rune);
+            foundRune = true;
         end
     end
-    runeMapping.initialized = true;
+    runeMapping.initialized = foundRune;
 end
 
 function SAO.GetRuneFromSpell(self, spellID)
@@ -47,9 +49,11 @@ if SAO.IsSoD() then
     RuneUpdateTracker = CreateFrame("FRAME");
     RuneUpdateTracker:RegisterEvent("RUNE_UPDATED");
     RuneUpdateTracker:SetScript("OnEvent", function(self, event, rune)
-        if runeMapping.initialized then
+        if runeMapping.initialized and rune then
             addRuneMapping(rune);
         else
+            -- Either rune mapping is not initialized (then init it)
+            -- or there is no rune (then re-init all, to refresh list)
             initRuneMapping();
         end
     end);
