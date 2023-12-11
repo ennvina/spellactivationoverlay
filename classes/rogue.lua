@@ -29,15 +29,27 @@ local RiposteHandler = {
         end);
         self.alertVariants = SAO:CreateStringVariants("alert", self.optionID, 0, variantValues);
         self.alerting = false;
+        self.lastRiposteTime = nil;
         self.initialized = true;
     end,
 
     parried = function(self)
+        if self.lastRiposteTime and GetTime() < self.lastRiposteTime + 1 then
+            -- When the player parries too quickly after last Riposte cast, Riposte cannot be cast
+            -- More exactly, the ability will look like it will be usable, but it will fade before cooldown allows to re-cast it
+            -- This is due to the fact that Riposte is available for 5 secs after a parry, but the cooldown is 6 secs
+            -- So, there is a 1-second window where a parry event would trigger a misleading Riposte effect
+            -- If we displayed the effect, the player would believe Riposte is available either now or soon, whereas in practice it's never available
+            -- We simply ignore parry events in this 1-second window, hence the (GetTime() < self.lastRiposteTime + 1) test
+            SAO:Debug("rogue - Ignoring a parry event because it occurred less than 1 second after last Riposte cast");
+            return;
+        end
         self:glow();
         self:alert();
     end,
 
     riposte = function(self)
+        self.lastRiposteTime = GetTime();
         -- Always unglow, even if not needed. Better unglow too much than not enough.
         self:unglow();
         self:unalert();
