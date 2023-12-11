@@ -7,6 +7,13 @@
 - Updated GAB: Rogue's Riposte can now trigger independently of cooldown
 - Rogue's new options are independent; make sure to enable both, if needed
 - Rogue new options are disabled by default, similar to Warrior stance options
+- Season of Discovery action counters should now glow correctly
+
+The action counter fix includes the following spells and abilities:
+- Hunter's Flanking Strike
+- Shaman's Molten Blast
+- Warrior's Raging Blow
+- Warrior's Victory Rush (fixed for Season of Discovery only, Wrath was fine)
 
 #### v1.1.1 (2023-12-05)
 
