@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v1.1.2 (2023-12-xx)
+#### v1.1.2 (2023-12-12)
 
 - Seasonal effects are no longer displayed as options in non-Seasonal realms
 - Updated SAO: Rogue's Riposte can now trigger independently of cooldown
