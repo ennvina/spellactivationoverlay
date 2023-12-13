@@ -1,5 +1,19 @@
 ## SpellActivationOverlay Changelog
 
+#### v1.1.3 (2023-12-13)
+
+Effects based on stackable auras could sometimes not be triggered correctly:
+- Hunter's Cobra Strikes (Season of Discovery)
+- Hunter's Lock and Load (Wrath Classic)
+- Mage's Arcane Blast (Season of Discovery)
+- Mage's Fingers of Frost (Wrath Classic, Season of Discovery)
+- Priest's Serendipity (Wrath Classic, Season of Discovery)
+- Shaman's Maelstrom Weapon (Wrath Classic)
+- Shaman's Tidal Waves (Wrath Classic)
+- Warlock's Molten Core (Wrath Classic)
+- Warrior's Bloodsurge (Wrath Classic)
+- Warrior's Sudden Death (Wrath Classic)
+
 #### v1.1.2 (2023-12-12)
 
 - Seasonal effects are no longer displayed as options in non-Seasonal realms
