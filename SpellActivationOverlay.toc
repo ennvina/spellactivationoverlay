@@ -1,12 +1,11 @@
 ## Interface: 30403
-## Title: |TInterface/Icons/Spell_Frost_Stun:16:16:0:0:512:512:64:448:64:448|t SpellActivationOverlay |cffa2f3ff1.1.2|r
-## Notes: Mimic Spell Activation Overlays from Retail
+## Title: |TInterface/Icons/Spell_Frost_Stun:16:16:0:0:512:512:64:448:64:448|t SpellActivationOverlay |cffa2f3ff1.1.3|r
+## Notes: Mimic Spell Activation Overlays from Modern World of Warcraft
 ## Author: Vinny/Ennvina
-## Version: 1.1.2
+## Version: 1.1.3
 ## SavedVariables: SpellActivationOverlayDB
 
-# SpellActivationOverlay.lua, SpellActivationOverlay.xml and all textures
-# were created by Blizzard Entertainment, Inc.
+# SpellActivationOverlay.lua, SpellActivationOverlay.xml and all textures were created by Blizzard Entertainment, Inc.
 #
 # World of Warcraft®: Cataclysm®
 # ©2010 Blizzard Entertainment, Inc. All rights reserved. Cataclysm is a trademark, and World of Warcraft, Warcraft and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc. in the U.S. and/or other countries.
