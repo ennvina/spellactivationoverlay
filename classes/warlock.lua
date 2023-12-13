@@ -65,7 +65,7 @@ local DrainSoulHandler = {
 }
 
 local function customLogin(self, ...)
-    if WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
+    if self.IsWrath() then
         -- Drain Soul is empowered on low health enemies only in Wrath Classic
         local spellID = 1120;
         local spellName = GetSpellInfo(spellID);

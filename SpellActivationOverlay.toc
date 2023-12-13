@@ -1,8 +1,8 @@
 ## Interface: 30403
-## Title: |TInterface/Icons/Spell_Frost_Stun:16:16:0:0:512:512:64:448:64:448|t SpellActivationOverlay |cffa2f3ff1.1.1|r
+## Title: |TInterface/Icons/Spell_Frost_Stun:16:16:0:0:512:512:64:448:64:448|t SpellActivationOverlay |cffa2f3ff1.1.2|r
 ## Notes: Mimic Spell Activation Overlays from Retail
-## Author: Vinny
-## Version: 1.1.1
+## Author: Vinny/Ennvina
+## Version: 1.1.2
 ## SavedVariables: SpellActivationOverlayDB
 
 # SpellActivationOverlay.lua, SpellActivationOverlay.xml and all textures
@@ -23,6 +23,8 @@ components\events.lua
 components\glow.lua
 components\item.lua
 components\overlay.lua
+components\project.lua
+components\rune.lua
 components\spell.lua
 components\util.lua
 

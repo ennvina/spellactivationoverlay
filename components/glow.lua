@@ -114,9 +114,11 @@ function SAO.UpdateActionButton(self, button, forceRefresh)
 
     if (not wasGlowing and mustGlow) then
         if (not SpellActivationOverlayDB or not SpellActivationOverlayDB.glow or SpellActivationOverlayDB.glow.enabled) then
+            SAO:Debug("glow - Enabling Glow for button "..tostring(newGlowID).." due to action button update");
             button:EnableGlow();
         end
     elseif (wasGlowing and not mustGlow) then
+        SAO:Debug("glow - Disabling Glow for button "..tostring(newGlowID).." due to action button update");
         button:DisableGlow();
     end
 end
@@ -179,6 +181,7 @@ function SAO.AddGlowNumber(self, spellID, glowID)
         self.GlowingSpells[glowID] = { [spellID] = true };
         for _, frame in pairs(actionButtons or {}) do
             if (not SpellActivationOverlayDB or not SpellActivationOverlayDB.glow or SpellActivationOverlayDB.glow.enabled) then
+                SAO:Debug("glow - Enabling Glow for button "..tostring(frame.GetGlowID and frame:GetGlowID()).." due to direct activation");
                 frame:EnableGlow();
             end
         end
@@ -256,6 +259,7 @@ function SAO.RemoveGlow(self, spellID)
             self.GlowingSpells[glowSpellID] = nil;
             local actionButtons = self.ActionButtons[glowSpellID];
             for _, frame in pairs(actionButtons or {}) do
+                SAO:Debug("glow - Disabling Glow for button "..tostring(frame.GetGlowID and frame:GetGlowID()).." due to direct deactivation");
                 frame:DisableGlow();
             end
         end

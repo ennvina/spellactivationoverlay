@@ -10,10 +10,10 @@ local GetSpellBookItemName = GetSpellBookItemName
 local GetSpellInfo = GetSpellInfo
 local GetSpellTabInfo = GetSpellTabInfo
 local GetTalentInfo = GetTalentInfo
-local UnitBuff = UnitBuff
+local UnitAura = UnitAura
 
 function SAO.Debug(self, msg, ...)
-    if SAO_DEBUG then
+    if SpellActivationOverlayDB.debug then
         print("[SAO@"..GetTime().."] "..msg, ...);
     end
 end
@@ -23,12 +23,17 @@ function SAO.IsTimeAlmostEqual(self, t1, t2, delta)
 	return t1-delta < t2 and t2 < t1+delta;
 end
 
+-- Factorize API calls to get player buff or debuff
+local function PlayerAura(index)
+    return UnitAura("player", index, "HELPFUL|HARMFUL");
+end
+
 -- Utility aura function, one of the many that Blizzard could've done better years ago...
 function SAO.FindPlayerAuraByID(self, id)
     local i = 1
     local name, icon, count, dispelType, duration, expirationTime,
         source, isStealable, nameplateShowPersonal, spellId,
-        canApplyAura, isBossDebuff, castByPlayer = UnitBuff("player", i);
+        canApplyAura, isBossDebuff, castByPlayer = PlayerAura(i);
     while name do
         if (spellId == id) then
             return name, icon, count, dispelType, duration, expirationTime,
@@ -38,7 +43,7 @@ function SAO.FindPlayerAuraByID(self, id)
         i = i+1
         name, icon, count, dispelType, duration, expirationTime,
             source, isStealable, nameplateShowPersonal, spellId,
-            canApplyAura, isBossDebuff, castByPlayer = UnitBuff("player", i);
+            canApplyAura, isBossDebuff, castByPlayer = PlayerAura(i);
     end
 end
 
@@ -47,7 +52,7 @@ function SAO.FindPlayerAuraByName(self, spellName)
     local i = 1
     local name, icon, count, dispelType, duration, expirationTime,
         source, isStealable, nameplateShowPersonal, spellId,
-        canApplyAura, isBossDebuff, castByPlayer = UnitBuff("player", i);
+        canApplyAura, isBossDebuff, castByPlayer = PlayerAura(i);
     while name do
         if (name == spellName) then
             return name, icon, count, dispelType, duration, expirationTime,
@@ -57,7 +62,7 @@ function SAO.FindPlayerAuraByName(self, spellName)
         i = i+1
         name, icon, count, dispelType, duration, expirationTime,
             source, isStealable, nameplateShowPersonal, spellId,
-            canApplyAura, isBossDebuff, castByPlayer = UnitBuff("player", i);
+            canApplyAura, isBossDebuff, castByPlayer = PlayerAura(i);
     end
 end
 

@@ -224,7 +224,7 @@ local FrozenHandler = {
     fakeSpellID = 5276+1000000, -- For option testing
 
     saoTexture = "frozen_fingers",
-    saoScaleFactor = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 1 or 0.75, -- Scaling down on Wrath because of conflict
+    saoScaleFactor = (SAO.IsEra() or SAO.IsTBC()) and 1 or 0.75, -- Scaling down on Wrath because of conflict
 
     -- Constants that will be initialized at init()
     allSpellIDs = {},
@@ -462,10 +462,8 @@ local function lazyCreateClearcastingVariants(self)
     local textureVariant1 = "genericarc_05";
     local textureVariant2 = "genericarc_02";
 
-    if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC or GetSpellInfo(spellID) then
-        self:MarkTexture(textureVariant1);
-        self:MarkTexture(textureVariant2);
-    end
+    self:MarkTexture(textureVariant1);
+    self:MarkTexture(textureVariant2);
 
     local weakText = PET_BATTLE_COMBAT_LOG_DAMAGE_WEAK:gsub("[ ()]","");
     local strongText = PET_BATTLE_COMBAT_LOG_DAMAGE_STRONG:gsub("[ ()]","");
@@ -489,11 +487,11 @@ local function registerClass(self)
     -- Please look at HotStreakHandler and customCLEU for more information
 
     -- Frost Procs
-    if WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
+    if self.IsWrath() then
         local iceLanceAndDeepFreeze = { (GetSpellInfo(FrozenHandler.ice_lance[1])), (GetSpellInfo(FrozenHandler.deep_freeze[1])) };
         self:RegisterAura("fingers_of_frost_1", 1, 74396, "frozen_fingers", "Left", 1, 255, 255, 255, true, iceLanceAndDeepFreeze);
         self:RegisterAura("fingers_of_frost_2", 2, 74396, "frozen_fingers", "Left + Right (Flipped)", 1, 255, 255, 255, true, iceLanceAndDeepFreeze);
-    elseif GetSpellInfo(FrozenHandler.ice_lance_sod[1]) then
+    elseif self.IsSoD() then
         local iceLanceSoD = { (GetSpellInfo(FrozenHandler.ice_lance_sod[1])) };
         self:RegisterAura("fingers_of_frost_1_sod", 1, 400670, "frozen_fingers", "Left", 1, 255, 255, 255, true, iceLanceSoD);
         self:RegisterAura("fingers_of_frost_2_sod", 2, 400670, "frozen_fingers", "Left + Right (Flipped)", 1, 255, 255, 255, true, iceLanceSoD);
@@ -507,8 +505,8 @@ local function registerClass(self)
     lazyCreateClearcastingVariants(self);
     self:RegisterAura("clearcasting", 0, 12536, clearcastingVariants.textureFunc, "Left + Right (Flipped)", 1.5, 192, 192, 192, false);
 
-    local arcaneBlastSoDBuff = 400573;
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(arcaneBlastSoDBuff) then
+    if self.IsSoD() then
+        local arcaneBlastSoDBuff = 400573;
         local arcaneMissiles = 5143;
         local arcaneExplosion = 1449;
         -- local arcaneHealingSpellTBD = ...; -- @todo add healing spell that resets stacks, which might exist, according to the in-game tooltip
@@ -600,7 +598,7 @@ local function loadOptions(self)
 
     self:AddOverlayOption(clearcastingTalent, clearcastingBuff, 0, nil, clearcastingVariants);
     self:AddOverlayOption(missileBarrageTalent, missileBarrageBuff);
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(arcaneBlastSoDBuff) then
+    if self.IsSoD() then
         self:AddOverlayOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, 0, oneToThreeStacks, nil, 3); -- setup any stacks, test with 3 stacks
         self:AddOverlayOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, 4); -- setup 4 stacks
     end
@@ -609,33 +607,33 @@ local function loadOptions(self)
     self:AddOverlayOption(hotStreakTalent, hotStreakHeatingUpBuff, 0, hotStreakHeatingUpDetails);
     self:AddOverlayOption(firestarterTalent, firestarterBuff);
     self:AddOverlayOption(impactTalent, impactBuff);
-    if WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
+    if self.IsWrath() then
         self:AddOverlayOption(fingersOfFrostTalent, fingersOfFrostBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
-    elseif GetSpellInfo(fingersOfFrostSoDBuff) then
+    elseif self.IsSoD() then
         self:AddOverlayOption(fingersOfFrostSoDTalent, fingersOfFrostSoDBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
     end
     self:AddOverlayOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, 0, nil, nil, nil, FrozenHandler.fakeSpellID);
     self:AddOverlayOption(brainFreezeTalent, brainFreezeBuff);
 
     self:AddGlowingOption(missileBarrageTalent, missileBarrageBuff, arcaneMissiles);
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and GetSpellInfo(arcaneBlastSoDBuff) then
+    if self.IsSoD() then
         self:AddGlowingOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, arcaneMissiles, fourStacks);
         self:AddGlowingOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, arcaneExplosion, fourStacks);
     end
     self:AddGlowingOption(hotStreakTalent, hotStreakBuff, pyroblast);
     self:AddGlowingOption(firestarterTalent, firestarterBuff, flamestrike);
-    if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then -- Must exclude this option specifically for Classic Era, because the talent exists in Era but the proc is passive
+    if not self.IsEra() then -- Must exclude this option specifically for Classic Era, because the talent exists in Era but the proc is passive
         self:AddGlowingOption(impactTalent, impactBuff, fireBlast);
     end
     self:AddGlowingOption(brainFreezeTalent, brainFreezeBuff, fireball);
     self:AddGlowingOption(brainFreezeTalent, brainFreezeBuff, frostfireBolt);
-    if WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
+    if self.IsWrath() then
         self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuff, iceLance);
         self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuff, deepFreeze);
         -- self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuff, ...); -- Maybe add more spell options for Fingers of Frost
         self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, iceLance);
         self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, deepFreeze);
-    elseif GetSpellInfo(fingersOfFrostSoDBuff) and GetSpellInfo(iceLanceSoD) then
+    elseif self.IsSoD() then
         self:AddGlowingOption(fingersOfFrostSoDTalent, fingersOfFrostSoDBuff, iceLanceSoD);
         self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, iceLanceSoD);
     end
@@ -649,5 +647,5 @@ SAO.Class["MAGE"] = {
     ["CHARACTER_POINTS_CHANGED"] = recheckTalents,
     ["PLAYER_TARGET_CHANGED"] = retarget,
     ["UNIT_HEALTH"] = unitHealth,
-    ["PLAYER_TALENT_UPDATE"] = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC and recheckTalents or nil, -- This event was introduced in Wrath, and causes errors before
+    [SAO.IsWrath() and "PLAYER_TALENT_UPDATE" or "CHARACTER_POINTS_CHANGED"] = recheckTalents, -- Event changed in Wrath
 }

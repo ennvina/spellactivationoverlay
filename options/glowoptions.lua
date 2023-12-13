@@ -1,9 +1,9 @@
 local AddonName, SAO = ...
 
 function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText, variants)
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+    if self.IsEra() then -- @todo Maybe run the test below for all projects, not only Classic Era
         if (talentID and not GetSpellInfo(talentID)) or not GetSpellInfo(glowID) then
-            return
+            return;
         end
     end
 

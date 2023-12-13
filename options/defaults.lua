@@ -260,12 +260,12 @@ SAO.defaults = {
         ["ROGUE"] = {
             alert = {
                 [14251] = { -- Riposte
-                    [0] = true,
+                    [0] = "cd:off",
                 },
             },
             glow = {
                 [14251] = { -- Riposte
-                    [14251] = true, -- Riposte
+                    [14251] = "cd:off", -- Riposte
                 },
             },
         },

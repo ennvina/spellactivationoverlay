@@ -57,8 +57,8 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     testButton:SetText("Toggle Test");
     testButton.fakeSpellID = 42;
     testButton.isTesting = false;
-    local testTextureLeftRight = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and "echo_of_the_elements" or "imp_empowerment";
-    local testTextureTop = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and "fury_of_stormrage" or "brain_freeze";
+    local testTextureLeftRight = SAO.IsEra() and "echo_of_the_elements" or "imp_empowerment";
+    local testTextureTop = SAO.IsEra() and "fury_of_stormrage" or "brain_freeze";
     testButton.StartTest = function(self)
         if (not self.isTesting) then
             self.isTesting = true;
@@ -85,6 +85,10 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     -- Manually mark textures used for testing
     SAO:MarkTexture(testTextureLeftRight);
     SAO:MarkTexture(testTextureTop);
+
+    local debugButton = SpellActivationOverlayOptionsPanelSpellAlertDebugButton;
+    debugButton.Text:SetText("Write Debug to Chatbox");
+    debugButton:SetChecked(SpellActivationOverlayDB.debug == true);
 
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     glowingButtonCheckbox.Text:SetText("Glowing Buttons");

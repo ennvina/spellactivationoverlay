@@ -13,7 +13,7 @@ function SAO.SPELL_AURA(self, ...)
     local auraRefresh = event:sub(0,18) == "SPELL_AURA_REFRESH";
 
     local auras;
-    if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+    if not self.IsEra() then
         auras = self.RegisteredAurasBySpellID[spellID];
     else
         -- Due to Classic Era limitation, aura is registered by its spell name

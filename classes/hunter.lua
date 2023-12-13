@@ -26,16 +26,20 @@ local function registerClass(self)
     self:RegisterAura("kill_shot", 0, killShot, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(killShot)) });
     self:RegisterCounter("kill_shot");
 
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
-        -- Mongoose Bite, Classic Era only because there is no longer a proc since Wrath
+    if self.IsEra() or self.IsTBC() then
+        -- Mongoose Bite, before Wrath because there is no longer a proc since Wrath
         local mongooseBite = 1495;
         self:RegisterAura("mongoose_bite", 0, mongooseBite, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(mongooseBite)) });
         self:RegisterCounter("mongoose_bite");
+    end
 
+    if self.IsSoD() then
+        -- Flanking Strike (Season of Discovery)
         local flankingStrike = 415320;
         self:RegisterAura("flanking_strike", 0, flankingStrike, "tooth_and_claw", "Left + Right (Flipped)", 1, 255, 255, 255, true, { flankingStrike });
         self:RegisterCounter("flanking_strike");
 
+        -- Cobra Strikes (Season of Discovery)
         local cobraStrikes = 425714;
         self:RegisterAura("cobra_strikes_1", 1, cobraStrikes, "monk_serpent", "Left", 0.7, 255, 255, 255, true);
         self:RegisterAura("cobra_strikes_2", 2, cobraStrikes, "monk_serpent", "Left + Right (Flipped)", 0.7, 255, 255, 255, true);
@@ -62,15 +66,17 @@ local function loadOptions(self)
 
     self:AddOverlayOption(improvedSteadyShotTalent, improvedSteadyShotBuff);
     self:AddOverlayOption(lockAndLoadTalent, lockAndLoadBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+    if self.IsSoD() then
         self:AddOverlayOption(flankingStrike, flankingStrike);
         self:AddOverlayOption(cobraStrikes, cobraStrikes, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
     end
 
     self:AddGlowingOption(nil, killShot, killShot);
     self:AddGlowingOption(nil, counterattack, counterattack);
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+    if self.IsEra() or self.IsTBC() then
         self:AddGlowingOption(nil, mongooseBite, mongooseBite);
+    end
+    if self.IsSoD() then
         self:AddGlowingOption(nil, flankingStrike, flankingStrike);
     end
     self:AddGlowingOption(improvedSteadyShotTalent, improvedSteadyShotBuff, aimedShot);

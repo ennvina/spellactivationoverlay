@@ -1,5 +1,21 @@
 ## SpellActivationOverlay Changelog
 
+#### v1.1.2 (2023-12-12)
+
+- Seasonal effects are no longer displayed as options in non-Seasonal realms
+- Updated SAO: Rogue's Riposte can now trigger independently of cooldown
+- Updated GAB: Rogue's Riposte can now trigger independently of cooldown
+- Rogue's new options are independent; make sure to enable both, if needed
+- Rogue new options are disabled by default, similar to Warrior stance options
+- Mage's Arcane Blast should now trigger correctly (Season of Discovery only)
+- Season of Discovery action counters should now glow correctly
+
+The action counter fix includes the following spells and abilities:
+- Hunter's Flanking Strike
+- Shaman's Molten Blast
+- Warrior's Raging Blow
+- Warrior's Victory Rush (fixed for Season of Discovery only, Wrath was fine)
+
 #### v1.1.1 (2023-12-05)
 
 - New SAO: Mage's Arcane Blast
