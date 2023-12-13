@@ -272,7 +272,7 @@ SAO.defaults = {
         ["SHAMAN"] = {
             alert = {
                 [16246] = {  -- Elemental Focus
-                    [0] = true, -- any stacks
+                    [0] = true,
                 },
                 [53817] = { -- Maelstorm Weapon
                     [5] = true, -- 5 stacks
@@ -347,10 +347,10 @@ SAO.defaults = {
         ["WARRIOR"] = {
             alert = {
                 [52437] = { -- Sudden Death
-                    [0] = true, -- any stacks
+                    [0] = true, -- any stacks (up to 2 stacks with tier 10)
                 },
                 [46916] = { -- Bloodsurge
-                    [0] = true, -- any stacks
+                    [0] = true, -- any stacks (up to 2 stacks with tier 10)
                 },
                 [50227] = { -- Sword and Board
                     [0] = true,
