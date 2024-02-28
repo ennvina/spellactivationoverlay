@@ -365,7 +365,6 @@ local function registerClass(self)
     local victoryRushSoD = 402927;
     local ragingBlowSoD = 402911;
     local bloodSurgeSoD = 413380;
-    local bloodSurgeSoDBuff = 413399;
 
     for stacks = 1, 2 do -- Bloodsurge and Sudden Death may have several charges, due to T10 4pc
         self:RegisterAura("bloodsurge_"..stacks, stacks, 46916, "blood_surge", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(slam)) });
@@ -426,9 +425,7 @@ local function loadOptions(self)
     local tasteforBloodTalent = 56636;
 
     local victoryRushSoD = 402927;
-    
     local ragingBlowSoD = 402911;
-
     local bloodSurgeSoDBuff = 413380;
 
     self:AddOverlayOption(suddenDeathTalent, suddenDeathBuff);
