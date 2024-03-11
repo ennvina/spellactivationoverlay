@@ -1,8 +1,14 @@
 ## SpellActivationOverlay Changelog
 
-#### v1.1.5 (2024-03-xx)
+#### v1.2.0 (2024-03-xx)
 
-- Bump in TOC file for Season of Discovery and Hardcore update (Classic Era)
+Bump in TOC file for Season of Discovery and Hardcore update (Classic Era)
+
+Shout-out to abecks for his contribution to the code. Thanks!
+
+New runes for Season of Discovery:
+- New SAO: Mage's Missile Barrage, blue-ish tint to differ from Arcane Blast
+- New GAB: Mage's Arcane Missiles button glows during Missile Barrage
 
 #### v1.1.4 (2024-01-23)
 
