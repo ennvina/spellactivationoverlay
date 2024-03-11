@@ -1,5 +1,9 @@
 ## SpellActivationOverlay Changelog
 
+#### v1.1.5 (2024-03-xx)
+
+- Bump in TOC file for Season of Discovery and Hardcore update (Classic Era)
+
 #### v1.1.4 (2024-01-23)
 
 - Rune list is refreshed explicitly, so that detection no longer fails
