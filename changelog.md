@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v1.1.4 (2024-01-23)
+
+- Rune list is refreshed explicitly, so that detection no longer fails
+- Runes are checked every 10 secs until one is found, to detect them sooner
+
 #### v1.1.3 (2023-12-13)
 
 Effects based on stackable auras could sometimes not be triggered correctly:
