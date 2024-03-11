@@ -500,7 +500,11 @@ local function registerClass(self)
     self:RegisterAura("brain_freeze", 0, 57761, "brain_freeze", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(44614)) });
 
     -- Arcane Procs
-    self:RegisterAura("missile_barrage", 0, 44401, "arcane_missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(5143)) });
+    if self.IsSoD() then
+        self:RegisterAura("missile_barrage", 0, 400588, "arcane_missiles", "Left + Right (Flipped)", 0.8, 103, 184, 238, true, { (GetSpellInfo(5143)) });
+    else
+        self:RegisterAura("missile_barrage", 0, 44401, "arcane_missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(5143)) });
+    end
 
     lazyCreateClearcastingVariants(self);
     self:RegisterAura("clearcasting", 0, 12536, clearcastingVariants.textureFunc, "Left + Right (Flipped)", 1.5, 192, 192, 192, false);
@@ -549,6 +553,7 @@ local function loadOptions(self)
     local fingersOfFrostSoDTalent = fingersOfFrostSoDBuff; -- Not really a talent
 
     local arcaneBlastSoDBuff = 400573;
+    local arcaneBarrageSoDBuff = 400588;
 
     local arcaneMissiles = 5143;
     local arcaneExplosion = 1449;
@@ -601,6 +606,7 @@ local function loadOptions(self)
     if self.IsSoD() then
         self:AddOverlayOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, 0, oneToThreeStacks, nil, 3); -- setup any stacks, test with 3 stacks
         self:AddOverlayOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, 4); -- setup 4 stacks
+        self:AddOverlayOption(arcaneBarrageSoDBuff, arcaneBarrageSoDBuff, 0); -- setup 4 stacks
     end
     self:AddOverlayOption(hotStreakTalent, heatingUpBuff, 0, heatingUpDetails);
     self:AddOverlayOption(hotStreakTalent, hotStreakBuff, 0, hotStreakDetails);
@@ -619,6 +625,7 @@ local function loadOptions(self)
     if self.IsSoD() then
         self:AddGlowingOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, arcaneMissiles, fourStacks);
         self:AddGlowingOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, arcaneExplosion, fourStacks);
+        self:AddGlowingOption(arcaneBarrageSoDBuff, arcaneBarrageSoDBuff, arcaneMissiles);
     end
     self:AddGlowingOption(hotStreakTalent, hotStreakBuff, pyroblast);
     self:AddGlowingOption(firestarterTalent, firestarterBuff, flamestrike);
