@@ -143,3 +143,23 @@ function SAO.GetSpellEndTime(self, spellID, suggestedEndTime)
         return expirationTime;
     end
 end
+
+-- Determine if the spell belongs is made up for internal purposes
+function SAO.IsFakeSpell(self, spellID)
+    if spellID >= 1000000 then
+        -- Spell IDs over 1M are impossible for now
+        return true
+    end
+
+    if (self.IsEra() or self.IsTBC() or self.IsWrath()) and spellID == 48107 then
+        -- Mage's Heating Up does not exist in Era/TBC/Wrath
+        return true
+    end
+
+    if spellID == 96215 then
+        -- Hot Streak + Heating Up is made up
+        return true
+    end
+
+    return false
+end

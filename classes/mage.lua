@@ -13,8 +13,11 @@ local clearcastingVariants; -- Lazy init in lazyCreateClearcastingVariants()
 local hotStreakSpellID = 48108;
 local heatingUpSpellID = 48107; -- Does not exist in Wrath Classic
 local hotStreakHeatingUpSpellID = hotStreakSpellID+heatingUpSpellID; -- Made up entirely, does not even exist in Retail
+local hotStreakSoDSpellID = 400625;
+-- Do not define a 'heatingUpSoDSpellID' nor a 'hotStreakHeatingUpSoDSpellID'
+-- This would not matter because they are made-up spell IDs
 
--- Because the Heating Up buff does not exist in Wrath of the Lich King
+-- Because the Heating Up buff does not exist in Wrath of the Lich King nor Classic Era
 -- We try to guess when the mage should virtually get this buff
 local HotStreakHandler = {}
 
@@ -22,9 +25,12 @@ local HotStreakHandler = {}
 HotStreakHandler.init = function(self, spellName)
     local fire_blast = { 2136, 2137, 2138, 8412, 8413, 10197, 10199, 27078, 27079, 42872, 42873 }
     local fireball = { 133, 143, 145, 3140, 8400, 8401, 8402, 10148, 10149, 10150, 10151, 25306, 27070, 38692, 42832, 42833 }
-    local frostfire_bolt = { 44614, 47610 };
+    local frostfire_bolt = { 44614, 47610 }
+    local frostfire_bolt_sod = { 401502 }
     -- local living_bomb = { 44457, 55359, 55360 } this is the DOT effect, which we do NOT want
     local living_bomb = { 44461, 55361, 55362 }
+    -- local living_bomb_sod = { 400613 } this is the DOT effect, which we do NOT want
+    local living_bomb_sod = { 401731 }
     local scorch = { 2948, 8444, 8445, 8446, 10205, 10206, 10207, 27073, 27074, 42858, 42859 }
 
     self.spells = {}
@@ -36,7 +42,9 @@ HotStreakHandler.init = function(self, spellName)
     addSpellPack(fire_blast);
     addSpellPack(fireball);
     addSpellPack(frostfire_bolt);
+    addSpellPack(frostfire_bolt_sod);
     addSpellPack(living_bomb);
+    addSpellPack(living_bomb_sod);
     addSpellPack(scorch);
 
     local _, _, tab, index = SAO:GetTalentByName(spellName);
@@ -63,6 +71,11 @@ HotStreakHandler.isSpellTracked = function(self, spellID)
 end
 
 HotStreakHandler.hasHotStreakTalent = function(self)
+    if (SAO.IsSoD()) then
+        -- Not really a 'talent' but in Season of Discovery, hot streak comes from a rune
+        return C_Engraving and C_Engraving.IsRuneEquipped(400624);
+    end
+
     -- Talent information could not be retrieved for Hot Streak
     if (not self.talent) then
         return false;
@@ -114,19 +127,19 @@ local function hotStreakCLEU(self, ...)
     -- If Hot Streak buff was acquired or lost, we have our immediate answer
     -- We assume there is no third charge i.e., if a crit occurs under Hot Streak buff, there is no hidden Heating Up
     if (event == "SPELL_AURA_APPLIED") then
-        if (spellID == hotStreakSpellID) then
+        if (spellID == hotStreakSpellID or spellID == hotStreakSoDSpellID) then
             deactivateHeatingUp(self, heatingUpSpellID);
             HotStreakHandler.state = 'hot_streak';
         end
         return;
     elseif (event == "SPELL_AURA_REFRESH") then
-        if (spellID == hotStreakSpellID) then
+        if (spellID == hotStreakSpellID or spellID == hotStreakSoDSpellID) then
             deactivateHeatingUp(self, hotStreakHeatingUpSpellID);
             HotStreakHandler.state = 'hot_streak';
         end
         return;
     elseif (event == "SPELL_AURA_REMOVED") then
-        if (spellID == hotStreakSpellID) then
+        if (spellID == hotStreakSpellID or spellID == hotStreakSoDSpellID) then
             if (HotStreakHandler.state == 'hot_streak_heating_up') then
                 deactivateHeatingUp(self, hotStreakHeatingUpSpellID);
                 activateHeatingUp(self, heatingUpSpellID);
@@ -423,7 +436,7 @@ local FrozenHandler = {
 local function customLogin(self, ...)
     -- Must initialize class on PLAYER_LOGIN instead of registerClass
     -- Because we need the talent tree, which is not always available right off the bat
-    local hotStreakSpellName = GetSpellInfo(hotStreakSpellID);
+    local hotStreakSpellName = SAO.IsSoD() and GetSpellInfo(hotStreakSoDSpellID) or GetSpellInfo(hotStreakSpellID);
     if (hotStreakSpellName) then
         HotStreakHandler:init(hotStreakSpellName);
     end
@@ -478,7 +491,11 @@ local function registerClass(self)
     -- Fire Procs
     self:RegisterAura("impact", 0, 64343, "lock_and_load", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(2136)) });
     self:RegisterAura("firestarter", 0, 54741, "impact", "Top", 0.8, 255, 255, 255, true, { (GetSpellInfo(2120)) }); -- May conflict with Impact location
-    self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(11366)) });
+    if self.IsSoD() then
+        self:RegisterAura("hot_streak_full", 0, hotStreakSoDSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(11366)) });
+    else
+        self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(11366)) });
+    end
     self:RegisterAura("hot_streak_half", 0, heatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255, false); -- Does not exist, but define it for option testing
     self:RegisterAura("hot_streak_duo", 0, hotStreakHeatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255, false); -- Does not exist, but define it for option testing
     self:RegisterAura("hot_streak_duo", 0, hotStreakHeatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true); -- Does not exist, but define it for option testing
@@ -536,7 +553,9 @@ local function loadOptions(self)
 
     local heatingUpBuff = heatingUpSpellID; -- Not really a buff
     local hotStreakBuff = hotStreakSpellID;
+    local hotStreakSoDBuff = hotStreakSoDSpellID;
     local hotStreakHeatingUpBuff = hotStreakHeatingUpSpellID; -- Made up
+    local hotStreakSoDRune = 400624;
     local hotStreakTalent = 44445;
 
     local firestarterBuff = 54741;
@@ -591,7 +610,7 @@ local function loadOptions(self)
 
     -- local spellName, _, spellIcon = GetSpellInfo(pyroblast);
     -- local hotStreakDetails = string.format(LFG_READY_CHECK_PLAYER_IS_READY, "|T"..spellIcon..":0|t "..spellName):gsub("%.", "");
-    local hotStreakDetails = GetSpellInfo(hotStreakBuff);
+    local hotStreakDetails = self.IsSoD() and GetSpellInfo(hotStreakSoDBuff) or GetSpellInfo(hotStreakBuff);
 
     -- local hotStreakHeatingUpDetails = string.format("%s+%s", heatingUpDetails, hotStreakDetails);
     local hotStreakHeatingUpDetails = string.format("%s %s", STATUS_TEXT_BOTH, ACTION_SPELL_AURA_APPLIED_DOSE);
@@ -612,9 +631,15 @@ local function loadOptions(self)
         self:AddOverlayOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, 0, oneToThreeStacks, nil, 3); -- setup any stacks, test with 3 stacks
         self:AddOverlayOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, 4); -- setup 4 stacks
     end
-    self:AddOverlayOption(hotStreakTalent, heatingUpBuff, 0, heatingUpDetails);
-    self:AddOverlayOption(hotStreakTalent, hotStreakBuff, 0, hotStreakDetails);
-    self:AddOverlayOption(hotStreakTalent, hotStreakHeatingUpBuff, 0, hotStreakHeatingUpDetails);
+    if self.IsSoD() then
+        self:AddOverlayOption(hotStreakSoDRune, heatingUpBuff, 0, heatingUpDetails);
+        self:AddOverlayOption(hotStreakSoDRune, hotStreakSoDBuff, 0, hotStreakDetails);
+        self:AddOverlayOption(hotStreakSoDRune, hotStreakHeatingUpBuff, 0, hotStreakHeatingUpDetails);
+    else
+        self:AddOverlayOption(hotStreakTalent, heatingUpBuff, 0, heatingUpDetails);
+        self:AddOverlayOption(hotStreakTalent, hotStreakBuff, 0, hotStreakDetails);
+        self:AddOverlayOption(hotStreakTalent, hotStreakHeatingUpBuff, 0, hotStreakHeatingUpDetails);
+    end
     self:AddOverlayOption(firestarterTalent, firestarterBuff);
     self:AddOverlayOption(impactTalent, impactBuff);
     if self.IsWrath() then
@@ -634,7 +659,11 @@ local function loadOptions(self)
         self:AddGlowingOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, arcaneMissiles, fourStacks);
         self:AddGlowingOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, arcaneExplosion, fourStacks);
     end
-    self:AddGlowingOption(hotStreakTalent, hotStreakBuff, pyroblast);
+    if self.IsSoD() then
+        self:AddGlowingOption(hotStreakSoDRune, hotStreakSoDBuff, pyroblast);
+    else
+        self:AddGlowingOption(hotStreakTalent, hotStreakBuff, pyroblast);
+    end
     self:AddGlowingOption(firestarterTalent, firestarterBuff, flamestrike);
     if not self.IsEra() then -- Must exclude this option specifically for Classic Era, because the talent exists in Era but the proc is passive
         self:AddGlowingOption(impactTalent, impactBuff, fireBlast);
@@ -662,4 +691,5 @@ SAO.Class["MAGE"] = {
     ["PLAYER_TARGET_CHANGED"] = retarget,
     ["UNIT_HEALTH"] = unitHealth,
     [SAO.IsWrath() and "PLAYER_TALENT_UPDATE" or "CHARACTER_POINTS_CHANGED"] = recheckTalents, -- Event changed in Wrath
+    ["RUNE_UPDATED"] = SAO.IsSoD() and recheckTalents or nil,
 }

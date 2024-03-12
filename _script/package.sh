@@ -91,7 +91,6 @@ maelstrom_weapon_4
 backlash
 predatory_swiftness
 sword_and_board
-hot_streak
 killing_machine
 maelstrom_weapon_3
 rime

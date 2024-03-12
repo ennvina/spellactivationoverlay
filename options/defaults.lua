@@ -143,6 +143,9 @@ SAO.defaults = {
                 [48108] = { -- Hot Streak
                     [0] = true,
                 },
+                [400625] = { -- Hot Streak (Season of Discovery)
+                    [0] = true,
+                },
                 [64343] = { -- Impact
                     [0] = true,
                 },
@@ -177,6 +180,9 @@ SAO.defaults = {
                     [1449] = false, -- Arcane Explosion
                 },
                 [48108] = { -- Hot Streak
+                    [11366] = true, -- Pyroblast
+                },
+                [400625] = { -- Hot Streak (Season of Discovery)
                     [11366] = true, -- Pyroblast
                 },
                 [64343] = { -- Impact
