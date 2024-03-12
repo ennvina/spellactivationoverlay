@@ -79,7 +79,6 @@ imp_empowerment
 art_of_war
 lock_and_load
 blood_surge
-brain_freeze
 maelstrom_weapon_2
 sudden_death
 shooting_stars
@@ -91,7 +90,6 @@ maelstrom_weapon_4
 backlash
 predatory_swiftness
 sword_and_board
-hot_streak
 killing_machine
 maelstrom_weapon_3
 rime

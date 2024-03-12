@@ -9,10 +9,8 @@ local AddonName, SAO = ...
 -- testStacks if defined, forces the number of stacks for the test function
 -- testAuraID optional spell ID used to test the aura in lieu of auraID
 function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, variants, testStacks, testAuraID)
-    if self.IsEra() then -- @todo Maybe run the test below for all projects, not only Classic Era
-        if not GetSpellInfo(talentID) or not GetSpellInfo(auraID) then
-            return;
-        end
+    if not GetSpellInfo(talentID) or (not self:IsFakeSpell(auraID) and not GetSpellInfo(auraID)) then
+        return;
     end
 
     local className = self.CurrentClass.Intrinsics[1];
@@ -55,7 +53,7 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, vari
         local registeredSpellID;
         if testAuraID then
             registeredSpellID = testAuraID;
-        elseif self.IsEra() then
+        elseif self.IsEra() and not self:IsFakeSpell(auraID) then
             registeredSpellID = GetSpellInfo(auraID); -- Cannot track spell ID on Classic Era, but can track spell name
         else
             registeredSpellID = auraID;
