@@ -514,7 +514,11 @@ local function registerClass(self)
         self:RegisterAura("fingers_of_frost_2_sod", 2, 400670, "frozen_fingers", "Left + Right (Flipped)", 1, 255, 255, 255, true, iceLanceSoD);
     end
     self:RegisterAura("freeze", 0, FrozenHandler.fakeSpellID, FrozenHandler.saoTexture, "Top (CW)", FrozenHandler.saoScaleFactor, 255, 255, 255, false);
-    self:RegisterAura("brain_freeze", 0, 57761, "brain_freeze", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(44614)) });
+    if self.IsSoD() then
+        self:RegisterAura("brain_freeze", 0, 400730, "brain_freeze", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(412532)), (GetSpellInfo(401502)) });
+    else
+        self:RegisterAura("brain_freeze", 0, 57761, "brain_freeze", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(44614)) });
+    end
 
     -- Arcane Procs
     if self.IsSoD() then
@@ -566,6 +570,8 @@ local function loadOptions(self)
 
     local brainFreezeBuff = 57761;
     local brainFreezeTalent = 44546;
+    local brainFreezeSoDRune = 400731;
+    local brainFreezeSoDBuff = 400730;
 
     local fingersOfFrostBuff = 74396;
     local fingersOfFrostTalent = 44543;
@@ -582,6 +588,8 @@ local function loadOptions(self)
     local fireBlast = 2136;
     local fireball = 133;
     local frostfireBolt = 44614;
+    local frostfireBoltSoD = 401502;
+    local spellfrostBoltSoD = 412532;
     local iceLance = FrozenHandler.ice_lance[1];
     local iceLanceSoD = FrozenHandler.ice_lance_sod[1];
     local deepFreeze = FrozenHandler.deep_freeze[1];
@@ -648,7 +656,11 @@ local function loadOptions(self)
         self:AddOverlayOption(fingersOfFrostSoDTalent, fingersOfFrostSoDBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
     end
     self:AddOverlayOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, 0, nil, nil, nil, FrozenHandler.fakeSpellID);
-    self:AddOverlayOption(brainFreezeTalent, brainFreezeBuff);
+    if self.IsSoD() then
+        self:AddOverlayOption(brainFreezeSoDRune, brainFreezeSoDBuff);
+    else
+        self:AddOverlayOption(brainFreezeTalent, brainFreezeBuff);
+    end
 
     if self.IsSoD() then
         self:AddGlowingOption(missileBarrageSoDBuff, missileBarrageSoDBuff, arcaneMissiles);
@@ -668,8 +680,14 @@ local function loadOptions(self)
     if not self.IsEra() then -- Must exclude this option specifically for Classic Era, because the talent exists in Era but the proc is passive
         self:AddGlowingOption(impactTalent, impactBuff, fireBlast);
     end
-    self:AddGlowingOption(brainFreezeTalent, brainFreezeBuff, fireball);
-    self:AddGlowingOption(brainFreezeTalent, brainFreezeBuff, frostfireBolt);
+    if self.IsSoD() then
+        self:AddGlowingOption(brainFreezeSoDRune, brainFreezeSoDBuff, fireball);
+        self:AddGlowingOption(brainFreezeSoDRune, brainFreezeSoDBuff, spellfrostBoltSoD);
+        self:AddGlowingOption(brainFreezeSoDRune, brainFreezeSoDBuff, frostfireBoltSoD);
+    else
+        self:AddGlowingOption(brainFreezeTalent, brainFreezeBuff, fireball);
+        self:AddGlowingOption(brainFreezeTalent, brainFreezeBuff, frostfireBolt);
+    end
     if self.IsWrath() then
         self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuff, iceLance);
         self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuff, deepFreeze);

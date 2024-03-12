@@ -161,6 +161,9 @@ SAO.defaults = {
                 [57761] = { -- Brain Freeze
                     [0] = true,
                 },
+                [400730] = { -- Brain Freeze (Season of Discovery)
+                    [0] = true,
+                },
                 [96215] = { -- Hot Streak + Heating Up (not an actual buff)
                     [0] = false,
                 },
@@ -194,6 +197,11 @@ SAO.defaults = {
                 [57761] = { -- Brain Freeze
                     [133]   = true, -- Fireball
                     [44614] = true, -- Frostfire Bolt
+                },
+                [400730] = { -- Brain Freeze (Season of Discovery)
+                    [133]   = true, -- Fireball
+                    [412532]= true, -- Spellfrost Bolt (Season of Discovery)
+                    [401502]= true, -- Frostfire Bolt (Season of Discovery)
                 },
                 [74396] = { -- Fingers of Frost
                     [30455] = true, -- Ice Lance

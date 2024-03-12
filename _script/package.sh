@@ -79,7 +79,6 @@ imp_empowerment
 art_of_war
 lock_and_load
 blood_surge
-brain_freeze
 maelstrom_weapon_2
 sudden_death
 shooting_stars

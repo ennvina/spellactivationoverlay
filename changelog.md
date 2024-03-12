@@ -11,6 +11,10 @@ New runes for Season of Discovery:
 - New GAB: Mage's Pyroblast button glows during Hot Streak
 - New SAO: Mage's Missile Barrage, blue-ish tint to differ from Arcane Blast
 - New GAB: Mage's Arcane Missiles button glows during Missile Barrage
+- New SAO: Mage's Brain Freeze
+- New GAB: Mage's Fireball button glows during Brain Freeze
+- New GAB: Mage's Spellfrost Bolt button glows during Brain Freeze
+- New GAB: Mage's Frostfire Bolt button glows during Brain Freeze
 
 #### v1.1.4 (2024-01-23)
 
