@@ -1,12 +1,14 @@
 local AddonName, SAO = ...
 
 local function registerClass(self)
-    
-    if self.IsWrath() then
-        -- Elemental Focus
+
+    if self.IsWrath() or self.IsTBC() then
+        -- Elemental Focus has 2 charges on TBC and Wrath
         self:RegisterAura("elemental_focus_1", 1, 16246, "echo_of_the_elements", "Left", 1, 255, 255, 255, true);
         self:RegisterAura("elemental_focus_2", 2, 16246, "echo_of_the_elements", "Left + Right (Flipped)", 1, 255, 255, 255, true);
+    end
 
+    if self.IsWrath() then
         -- Maelstrom Weapon
         local lightningBolt = 403;
         local chainLightning = 421;
@@ -40,10 +42,12 @@ local function registerClass(self)
         -- Healing Trance / Soul Preserver
         self:RegisterAuraSoulPreserver("soul_preserver_shaman", 60515); -- 60515 = Shaman buff
     end
+
     if self.IsEra() and not self.IsSoD() then
-        -- Elemental Focus
+        -- On non-SoD Era, Elemental Focus is simply displayed Left and Right
         self:RegisterAura("elemental_focus", 1, 16246, "echo_of_the_elements", "Left + Right (Flipped)", 1, 255, 255, 255, true);
     end
+
     if self.IsSoD() then
 
         local moltenBlastSoD = 425339;
@@ -139,26 +143,28 @@ local function loadOptions(self)
 
     local oneToFourStacks = string.format(CALENDAR_TOOLTIP_DATE_RANGE, "1", string.format(STACKS, 4));
     local fiveStacks = string.format(STACKS, 5);
-    if self.IsWrath() then
+
+    if self.IsEra() then
+        -- Elemental Focus has 1 charge on Classic Era
+        self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff);
+    else
+        -- Elemental Focus has 2 charges on TBC and Wrath
         self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
+    end
+
+    if self.IsWrath() then
         self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 0, oneToFourStacks, nil, 4); -- setup any stacks, test with 4 stacks
         self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 5); -- setup 5 stacks
         self:AddOverlayOption(tidalWavesTalent, tidalWavesBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
-    end
-    if self.IsEra() and not self.IsSoD() then
-        self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff, 0, nil, nil, 1);
-    end
-    if self.IsSoD() then
-        self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff, 0, nil, nil, 1);
+        self:AddSoulPreserverOverlayOption(60515); -- 60515 = Shaman buff
+    elseif self.IsSoD() then
         self:AddOverlayOption(powerSurgeSoD, powerSurgeSoDBuff, 0, nil, nil, 1);
         self:AddOverlayOption(moltenBlastSoD, moltenBlastSoD);
         self:AddOverlayOption(maelstromSoD, maelstromSoDBuff, 0, oneToFourStacks, nil, 4); -- setup any stacks, test with 4 stacks
         self:AddOverlayOption(maelstromSoD, maelstromSoDBuff, 5); -- setup 5 stacks
-
     end
-    if self.IsWrath() then
-        self:AddSoulPreserverOverlayOption(60515); -- 60515 = Shaman buff
 
+    if self.IsWrath() then
         self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, lightningBolt, fiveStacks);
         self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, chainLightning, fiveStacks);
         self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, lesserHealingWave, fiveStacks);
