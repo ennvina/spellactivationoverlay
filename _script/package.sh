@@ -75,27 +75,21 @@ rm -f SpellActivationOverlay/classes/deathknight.lua || bye "Cannot remove death
 # Because these textures are not 'marked', we don't need them.
 WRATH_ONLY_TEXTURES=(master_marksman
 molten_core
-imp_empowerment
 art_of_war
 lock_and_load
 blood_surge
-maelstrom_weapon_2
 sudden_death
 shooting_stars
-maelstrom_weapon
 high_tide
 daybreak
 eclipse_moon
-maelstrom_weapon_4
 backlash
 predatory_swiftness
 sword_and_board
 killing_machine
-maelstrom_weapon_3
 rime
 surge_of_light
-eclipse_sun
-maelstrom_weapon_1)
+eclipse_sun)
 for texname in ${WRATH_ONLY_TEXTURES[@]}
 do
     rm -f SpellActivationOverlay/textures/"$texname".* || bye "Cannot cleanup textures from vanilla installation"
