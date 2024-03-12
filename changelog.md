@@ -4,7 +4,7 @@
 
 Bump in TOC file for Season of Discovery and Hardcore update (Classic Era)
 
-Shout-out to abecks for his contribution to the code. Thanks!
+Shout-out to abecks and Amanthuul for their contribution to the code. Thanks!
 
 New runes for Season of Discovery:
 - New SAO: Mage's Hot Streak
@@ -15,6 +15,17 @@ New runes for Season of Discovery:
 - New GAB: Mage's Fireball button glows during Brain Freeze
 - New GAB: Mage's Spellfrost Bolt button glows during Brain Freeze
 - New GAB: Mage's Frostfire Bolt button glows during Brain Freeze
+- New SAO: Shaman's Maelstrom Weapon
+- New GAB: Shaman's Lightning Bolt glows during Maelstrom Weapon
+- New GAB: Shaman's Chain Lightning glows during Maelstrom Weapon
+- New GAB: Shaman's Lesser Healing Wave glows during Maelstrom Weapon
+- New GAB: Shaman's Healing Wave glows during Maelstrom Weapon
+- New GAB: Shaman's Chain Heal glows during Maelstrom Weapon
+- New GAB: Shaman's Lava Burst glows during Maelstrom Weapon
+- New SAO: Shaman's Power Surge
+- New GAB: Shaman's Chain Lightning glows during Power Surge
+- New GAB: Shaman's Chain Heal glows during Power Surge
+- New GAB: Shaman's Lava Burst glows during Power Surge
 
 #### v1.1.4 (2024-01-23)
 
