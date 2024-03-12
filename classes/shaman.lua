@@ -1,12 +1,14 @@
 local AddonName, SAO = ...
 
 local function registerClass(self)
-    
-    if self.IsWrath() then
-        -- Elemental Focus
+
+    if self.IsWrath() or self.IsTBC() then
+        -- Elemental Focus has 2 charges on TBC and Wrath
         self:RegisterAura("elemental_focus_1", 1, 16246, "echo_of_the_elements", "Left", 1, 255, 255, 255, true);
         self:RegisterAura("elemental_focus_2", 2, 16246, "echo_of_the_elements", "Left + Right (Flipped)", 1, 255, 255, 255, true);
+    end
 
+    if self.IsWrath() then
         -- Maelstrom Weapon
         local lightningBolt = 403;
         local chainLightning = 421;
@@ -40,17 +42,19 @@ local function registerClass(self)
         -- Healing Trance / Soul Preserver
         self:RegisterAuraSoulPreserver("soul_preserver_shaman", 60515); -- 60515 = Shaman buff
     end
+
     if self.IsEra() and not self.IsSoD() then
-        -- Elemental Focus
+        -- On non-SoD Era, Elemental Focus is simply displayed Left and Right
         self:RegisterAura("elemental_focus", 1, 16246, "echo_of_the_elements", "Left + Right (Flipped)", 1, 255, 255, 255, true);
     end
+
     if self.IsSoD() then
 
-        local moltenBlast = 425339;
-        self:RegisterAura("molten_blast", 0, moltenBlast, "impact", "Top", 0.8, 255, 255, 255, true, { moltenBlast });
+        local moltenBlastSoD = 425339;
+        self:RegisterAura("molten_blast", 0, moltenBlastSoD, "impact", "Top", 0.8, 255, 255, 255, true, { moltenBlastSoD });
         self:RegisterCounter("molten_blast");
-        
-        -- Maelstrom Weapon/Power Surge
+
+        -- Maelstrom Weapon & Power Surge
         local maelstromSoDBuff = 408505;
         local lightningBolt = 403;
         local chainLightning = 421;
@@ -58,7 +62,7 @@ local function registerClass(self)
         local healingWave = 331;
         local chainHeal = 1064;
         local lavaBurstSoD = 408490;
-        local powersurgeSoDBuff = 415105;
+        local powerSurgeSoDBuff = 415105;
         local maelstromSpells = {
             GetSpellInfo(lightningBolt),
             GetSpellInfo(chainLightning),
@@ -72,12 +76,16 @@ local function registerClass(self)
             GetSpellInfo(chainHeal),
             GetSpellInfo(lavaBurstSoD),
         }
-        self:RegisterAura("maelstrom_weapon_SoD_1", 1, maelstromSoDBuff, "maelstrom_weapon_1", "Top", 0.8, 255, 255, 255, false);
-        self:RegisterAura("maelstrom_weapon_SoD_2", 2, maelstromSoDBuff, "maelstrom_weapon_2", "Top", 0.8, 255, 255, 255, false);
-        self:RegisterAura("maelstrom_weapon_SoD_3", 3, maelstromSoDBuff, "maelstrom_weapon_3", "Top", 0.8, 255, 255, 255, false);
-        self:RegisterAura("maelstrom_weapon_SoD_4", 4, maelstromSoDBuff, "maelstrom_weapon_4", "Top", 0.8, 255, 255, 255, false);
-        self:RegisterAura("maelstrom_weapon_SoD_5", 5, maelstromSoDBuff, "maelstrom_weapon", "Top", 0.8, 255, 255, 255, true, maelstromSpells);
-        -- Show only left part of Power Surge and right part of Elemental Focus if both are enabled
+        self:RegisterAura("maelstrom_weapon_sod_1", 1, maelstromSoDBuff, "maelstrom_weapon_1", "Top", 0.8, 255, 255, 255, false);
+        self:RegisterAura("maelstrom_weapon_sod_2", 2, maelstromSoDBuff, "maelstrom_weapon_2", "Top", 0.8, 255, 255, 255, false);
+        self:RegisterAura("maelstrom_weapon_sod_3", 3, maelstromSoDBuff, "maelstrom_weapon_3", "Top", 0.8, 255, 255, 255, false);
+        self:RegisterAura("maelstrom_weapon_sod_4", 4, maelstromSoDBuff, "maelstrom_weapon_4", "Top", 0.8, 255, 255, 255, false);
+        self:RegisterAura("maelstrom_weapon_sod_5", 5, maelstromSoDBuff, "maelstrom_weapon", "Top", 0.8, 255, 255, 255, true, maelstromSpells);
+
+        -- If Power Surge is enabled but not Elemental Focus, display Power Surge Left and Right
+        -- If Elemental Focus is enabled but not Power Surge, display Elemental Focus Left and Right
+        -- If both are enabled, show only left part of Power Surge and right part of Elemental Focus
+        -- PS. 'enabled' means the option is enabled and the talent/rune is equipped
         local elementalFocusBuff = 16246;
         local elementalFocusTalent = 16164;
         local _, _, efTalentTab, efTalentIndex = SAO:GetTalentByName(GetSpellInfo(elementalFocusTalent));
@@ -87,13 +95,13 @@ local function registerClass(self)
             local hasElementalFocusOption = SpellActivationOverlayDB.classes["SHAMAN"]["alert"][elementalFocusBuff][0];
             local canProcElementalFocus = efTalentTab and efTalentIndex and select(5, GetTalentInfo(efTalentTab, efTalentIndex)) > 0;
             if hasElementalFocusOption and canProcElementalFocus then
-				return;
+                return;
             end
             return self.TexName["imp_empowerment"];
         end
 
         local elementalFocusLeftTextureFunc = function()
-            local hasPowerSurgeOption = SpellActivationOverlayDB.classes["SHAMAN"]["alert"][powersurgeSoDBuff][0];
+            local hasPowerSurgeOption = SpellActivationOverlayDB.classes["SHAMAN"]["alert"][powerSurgeSoDBuff][0];
             local canProcPowerSurge = C_Engraving and C_Engraving.IsRuneEquipped(powerSurgeSoDRune);
             if hasPowerSurgeOption and canProcPowerSurge then
                 return;
@@ -101,8 +109,8 @@ local function registerClass(self)
             return self.TexName["echo_of_the_elements"];
         end
 
-        self:RegisterAura("power_surge_sod", 1, powersurgeSoDBuff, "imp_empowerment", "Left", 1, 255, 255, 255, true, powerSurgeSpells);
-        self:RegisterAura("power_surge_sod", 1, powersurgeSoDBuff, powerSurgeRightTextureFunc, "Right (Flipped)", 1, 255, 255, 255, true, powerSurgeSpells);
+        self:RegisterAura("power_surge_sod", 1, powerSurgeSoDBuff, "imp_empowerment", "Left", 1, 255, 255, 255, true, powerSurgeSpells);
+        self:RegisterAura("power_surge_sod", 1, powerSurgeSoDBuff, powerSurgeRightTextureFunc, "Right (Flipped)", 1, 255, 255, 255, true, powerSurgeSpells);
         self:RegisterAura("elemental_focus", 1, elementalFocusBuff, elementalFocusLeftTextureFunc, "Left", 1, 255, 255, 255, true);
         self:RegisterAura("elemental_focus", 1, elementalFocusBuff, "echo_of_the_elements", "Right (Flipped)", 1, 255, 255, 255, true);
     end
@@ -124,37 +132,39 @@ local function loadOptions(self)
 
     local tidalWavesBuff = 53390;
     local tidalWavesTalent = 51562;
-    
-    --SoD stuff
-    local moltenBlast = 425339;
+
+    -- Season of Discovery
+    local moltenBlastSoD = 425339;
     local maelstromSoDBuff = 408505;
     local maelstromSoD = 408498;
     local lavaBurstSoD = 408490;
-    local powersurgeSoDBuff = 415105;
+    local powerSurgeSoDBuff = 415105;
     local powerSurgeSoD = 415100;
-        
+
     local oneToFourStacks = string.format(CALENDAR_TOOLTIP_DATE_RANGE, "1", string.format(STACKS, 4));
     local fiveStacks = string.format(STACKS, 5);
-    if self.IsWrath() then
+
+    if self.IsEra() then
+        -- Elemental Focus has 1 charge on Classic Era
+        self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff);
+    else
+        -- Elemental Focus has 2 charges on TBC and Wrath
         self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
+    end
+
+    if self.IsWrath() then
         self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 0, oneToFourStacks, nil, 4); -- setup any stacks, test with 4 stacks
         self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 5); -- setup 5 stacks
         self:AddOverlayOption(tidalWavesTalent, tidalWavesBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
-    end
-    if self.IsEra() and not self.IsSoD() then
-        self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff, 0, nil, nil, 1);
-    end
-    if self.IsSoD() then
-        self:AddOverlayOption(powerSurgeSoD, powersurgeSoDBuff, 0, nil, nil, 1);
-        self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff, 0, nil, nil, 1);
-        self:AddOverlayOption(moltenBlast, moltenBlast);
+        self:AddSoulPreserverOverlayOption(60515); -- 60515 = Shaman buff
+    elseif self.IsSoD() then
+        self:AddOverlayOption(powerSurgeSoD, powerSurgeSoDBuff, 0, nil, nil, 1);
+        self:AddOverlayOption(moltenBlastSoD, moltenBlastSoD);
         self:AddOverlayOption(maelstromSoD, maelstromSoDBuff, 0, oneToFourStacks, nil, 4); -- setup any stacks, test with 4 stacks
         self:AddOverlayOption(maelstromSoD, maelstromSoDBuff, 5); -- setup 5 stacks
-
     end
-    if self.IsWrath() then
-        self:AddSoulPreserverOverlayOption(60515); -- 60515 = Shaman buff
 
+    if self.IsWrath() then
         self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, lightningBolt, fiveStacks);
         self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, chainLightning, fiveStacks);
         self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, lesserHealingWave, fiveStacks);
@@ -163,12 +173,11 @@ local function loadOptions(self)
         self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, hex, fiveStacks);
         self:AddGlowingOption(tidalWavesTalent, tidalWavesBuff, lesserHealingWave);
         self:AddGlowingOption(tidalWavesTalent, tidalWavesBuff, healingWave);
-    end
-    if self.IsSoD() then
-        self:AddGlowingOption(nil, moltenBlast, moltenBlast);
-        self:AddGlowingOption(powerSurgeSoD, powersurgeSoDBuff, chainLightning);
-        self:AddGlowingOption(powerSurgeSoD, powersurgeSoDBuff, chainHeal);
-        self:AddGlowingOption(powerSurgeSoD, powersurgeSoDBuff, lavaBurstSoD);
+    elseif self.IsSoD() then
+        self:AddGlowingOption(nil, moltenBlastSoD, moltenBlastSoD);
+        self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, chainLightning);
+        self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, chainHeal);
+        self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, lavaBurstSoD);
         self:AddGlowingOption(maelstromSoD, maelstromSoDBuff, lightningBolt, fiveStacks);
         self:AddGlowingOption(maelstromSoD, maelstromSoDBuff, chainLightning, fiveStacks);
         self:AddGlowingOption(maelstromSoD, maelstromSoDBuff, lesserHealingWave, fiveStacks);

@@ -297,11 +297,11 @@ SAO.defaults = {
                 [415105] = {  -- Power Surge (Season of Discovery)
                     [0] = true,
                 },
-                [53817] = { -- Maelstorm Weapon
+                [53817] = { -- Maelstrom Weapon
                     [5] = true, -- 5 stacks
                     [0] = true, -- any stacks but 5
                 },
-                [408505] = { -- Maelstorm Weapon (Season of Discovery)
+                [408505] = { -- Maelstrom Weapon (Season of Discovery)
                     [5] = true, -- 5 stacks
                     [0] = true, -- any stacks but 5
                 },
@@ -316,7 +316,7 @@ SAO.defaults = {
                 },
             },
             glow = {
-                [53817] = { -- Maelstorm Weapon
+                [53817] = { -- Maelstrom Weapon
                     [403]   = false, -- Lightning Bolt
                     [421]   = false, -- Chain Lightning
                     [8004]  = false, -- lesser Healing Wave
@@ -324,7 +324,7 @@ SAO.defaults = {
                     [1064]  = false, -- Chain Heal
                     [51514] = false, -- Hex
                 },
-                [408505] = { -- Maelstorm Weapon (Season of Discovery)
+                [408505] = { -- Maelstrom Weapon (Season of Discovery)
                     [403]   = false, -- Lightning Bolt
                     [421]   = false, -- Chain Lightning
                     [8004]  = false, -- lesser Healing Wave
