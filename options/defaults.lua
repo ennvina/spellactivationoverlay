@@ -143,6 +143,9 @@ SAO.defaults = {
                 [48108] = { -- Hot Streak
                     [0] = true,
                 },
+                [400625] = { -- Hot Streak (Season of Discovery)
+                    [0] = true,
+                },
                 [64343] = { -- Impact
                     [0] = true,
                 },
@@ -156,6 +159,9 @@ SAO.defaults = {
                     [0] = true, -- any stacks
                 },
                 [57761] = { -- Brain Freeze
+                    [0] = true,
+                },
+                [400730] = { -- Brain Freeze (Season of Discovery)
                     [0] = true,
                 },
                 [96215] = { -- Hot Streak + Heating Up (not an actual buff)
@@ -179,6 +185,9 @@ SAO.defaults = {
                 [48108] = { -- Hot Streak
                     [11366] = true, -- Pyroblast
                 },
+                [400625] = { -- Hot Streak (Season of Discovery)
+                    [11366] = true, -- Pyroblast
+                },
                 [64343] = { -- Impact
                     [2136] = true, -- Fire Blast
                 },
@@ -188,6 +197,11 @@ SAO.defaults = {
                 [57761] = { -- Brain Freeze
                     [133]   = true, -- Fireball
                     [44614] = true, -- Frostfire Bolt
+                },
+                [400730] = { -- Brain Freeze (Season of Discovery)
+                    [133]   = true, -- Fireball
+                    [412532]= true, -- Spellfrost Bolt (Season of Discovery)
+                    [401502]= true, -- Frostfire Bolt (Season of Discovery)
                 },
                 [74396] = { -- Fingers of Frost
                     [30455] = true, -- Ice Lance

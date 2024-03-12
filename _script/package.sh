@@ -78,7 +78,6 @@ molten_core
 art_of_war
 lock_and_load
 blood_surge
-brain_freeze
 sudden_death
 shooting_stars
 high_tide
@@ -87,7 +86,6 @@ eclipse_moon
 backlash
 predatory_swiftness
 sword_and_board
-hot_streak
 killing_machine
 rime
 surge_of_light
