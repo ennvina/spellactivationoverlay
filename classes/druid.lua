@@ -292,8 +292,15 @@ local function registerClass(self)
     self:RegisterAura("predatory_strikes", 0, 69369, "predatory_swiftness", "Top", 1, 255, 255, 255, true, predatoryStrikesSpells);
 
     -- Nature's Grace
-    lazyCreateNaturesGraceVariants(self);
-    self:RegisterAura("natures_grace", 0, 16886, naturesGraceVariants.textureFunc, "Top", 1, 255, 255, 255, true);
+    if self.IsEra() then
+        -- Texture of Nature's Grace is always "serendipity" to avoid confusion with SoD's Fury of Stormrage which, obvisouly, uses "fury_of_stormrage"
+        -- This limitation is necessary for Season of Discovery only, but because SoD and non-SoD Era share the same config file, we have to dumb down
+        self:RegisterAura("natures_grace", 0, 16886, "serendipity", "Top", 1, 255, 255, 255, true);
+    else
+        -- Let the player select between "serendipity" and "fury_of_stormrage"
+        lazyCreateNaturesGraceVariants(self);
+        self:RegisterAura("natures_grace", 0, 16886, naturesGraceVariants.textureFunc, "Top", 1, 255, 255, 255, true);
+    end
 
     -- Balance 4p set bonuses
     self:RegisterAura("wrath_of_elune", 0, 46833, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvP season 5-6-7-8
@@ -353,11 +360,9 @@ local function loadOptions(self)
     local predatoryStrikesTalent = 16972;
     local predatoryStrikesBuff = 69369;
 
-    local naturesGraceTalent = 61346;
+    local naturesGraceEraTalent = 16880;
+    local naturesGraceWrathTalent = 61346;
     local naturesGraceBuff = 16886;
-
-    -- Nature's Grace variants
-    lazyCreateNaturesGraceVariants(self);
 
     self:AddOverlayOption(omenOfClarityTalent, omenSpellID, 0, nil, nil, nil,  omenSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(lunarEclipseTalent, lunarSpellID, 0, nil, nil, nil, lunarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
@@ -367,7 +372,15 @@ local function loadOptions(self)
     if self.IsSoD() then
         self:AddOverlayOption(furyOfStormrageTalent, furyOfStormrageBuff);
     end
-    self:AddOverlayOption(naturesGraceTalent, naturesGraceBuff, 0, nil, naturesGraceVariants);
+    if self.IsEra() then
+        self:AddOverlayOption(naturesGraceEraTalent, naturesGraceBuff);
+    elseif self.IsTBC() then
+        lazyCreateNaturesGraceVariants(self);
+        self:AddOverlayOption(naturesGraceEraTalent, naturesGraceBuff, 0, nil, naturesGraceVariants); -- Same talent as Era
+    else
+        lazyCreateNaturesGraceVariants(self);
+        self:AddOverlayOption(naturesGraceWrathTalent, naturesGraceBuff, 0, nil, naturesGraceVariants);
+    end
     self:AddOverlayOption(predatoryStrikesTalent, predatoryStrikesBuff);
     self:AddSoulPreserverOverlayOption(60512); -- 60512 = Druid buff
 
