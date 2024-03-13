@@ -130,6 +130,9 @@ SAO.defaults = {
                 [44401] = { -- Missile Barrage
                     [0] = true,
                 },
+                [400588] = { -- Missile Barrage (Season of Discovery)
+                    [0] = true,
+                },
                 [400573]= { -- Arcane Blast (Season of Discovery)
                     [4] = true, -- 4 stacks
                     [0] = true, -- any stacks but 4
@@ -138,6 +141,9 @@ SAO.defaults = {
                     [0] = true,
                 },
                 [48108] = { -- Hot Streak
+                    [0] = true,
+                },
+                [400625] = { -- Hot Streak (Season of Discovery)
                     [0] = true,
                 },
                 [64343] = { -- Impact
@@ -155,6 +161,9 @@ SAO.defaults = {
                 [57761] = { -- Brain Freeze
                     [0] = true,
                 },
+                [400730] = { -- Brain Freeze (Season of Discovery)
+                    [0] = true,
+                },
                 [96215] = { -- Hot Streak + Heating Up (not an actual buff)
                     [0] = false,
                 },
@@ -166,11 +175,17 @@ SAO.defaults = {
                 [44401] = { -- Missile Barrage
                     [5143] = true, -- Arcane Missiles
                 },
+                [400588] = { -- Missile Barrage (Season of Discovery)
+                    [5143] = true, -- Arcane Missiles
+                },
                 [400573]= { -- Arcane Blast 4/4 (Season of Discovery)
                     [5143] = true,  -- Arcane Missiles
                     [1449] = false, -- Arcane Explosion
                 },
                 [48108] = { -- Hot Streak
+                    [11366] = true, -- Pyroblast
+                },
+                [400625] = { -- Hot Streak (Season of Discovery)
                     [11366] = true, -- Pyroblast
                 },
                 [64343] = { -- Impact
@@ -182,6 +197,11 @@ SAO.defaults = {
                 [57761] = { -- Brain Freeze
                     [133]   = true, -- Fireball
                     [44614] = true, -- Frostfire Bolt
+                },
+                [400730] = { -- Brain Freeze (Season of Discovery)
+                    [133]   = true, -- Fireball
+                    [412532]= true, -- Spellfrost Bolt (Season of Discovery)
+                    [401502]= true, -- Frostfire Bolt (Season of Discovery)
                 },
                 [74396] = { -- Fingers of Frost
                     [30455] = true, -- Ice Lance
@@ -274,7 +294,14 @@ SAO.defaults = {
                 [16246] = {  -- Elemental Focus
                     [0] = true,
                 },
-                [53817] = { -- Maelstorm Weapon
+                [415105] = {  -- Power Surge (Season of Discovery)
+                    [0] = true,
+                },
+                [53817] = { -- Maelstrom Weapon
+                    [5] = true, -- 5 stacks
+                    [0] = true, -- any stacks but 5
+                },
+                [408505] = { -- Maelstrom Weapon (Season of Discovery)
                     [5] = true, -- 5 stacks
                     [0] = true, -- any stacks but 5
                 },
@@ -289,13 +316,26 @@ SAO.defaults = {
                 },
             },
             glow = {
-                [53817] = { -- Maelstorm Weapon
+                [53817] = { -- Maelstrom Weapon
                     [403]   = false, -- Lightning Bolt
                     [421]   = false, -- Chain Lightning
                     [8004]  = false, -- lesser Healing Wave
                     [331]   = false, -- Healing Wave
                     [1064]  = false, -- Chain Heal
                     [51514] = false, -- Hex
+                },
+                [408505] = { -- Maelstrom Weapon (Season of Discovery)
+                    [403]   = false, -- Lightning Bolt
+                    [421]   = false, -- Chain Lightning
+                    [8004]  = false, -- lesser Healing Wave
+                    [331]   = false, -- Healing Wave
+                    [1064]  = false, -- Chain Heal
+                    [408490] = false, -- Lava Burst (Season of Discovery)
+                },
+                [415105] = {  -- Power Surge (Season of Discovery)
+                    [421]   = false, -- Chain Lightning
+                    [1064]  = false, -- Chain Heal
+                    [408490] = false, -- Lava Burst (Season of Discovery)
                 },
                 [53390] = { -- Tidal Waves
                     [8004] = false, -- lesser Healing Wave

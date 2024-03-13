@@ -1,10 +1,8 @@
 local AddonName, SAO = ...
 
 function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText, variants)
-    if self.IsEra() then -- @todo Maybe run the test below for all projects, not only Classic Era
-        if (talentID and not GetSpellInfo(talentID)) or not GetSpellInfo(glowID) then
-            return;
-        end
+    if (talentID and not GetSpellInfo(talentID)) or (not self:IsFakeSpell(glowID) and not GetSpellInfo(glowID)) then
+        return;
     end
 
     local className = self.CurrentClass.Intrinsics[1];
