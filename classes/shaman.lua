@@ -45,7 +45,7 @@ local function registerClass(self)
 
     if self.IsEra() and not self.IsSoD() then
         -- On non-SoD Era, Elemental Focus is simply displayed Left and Right
-        self:RegisterAura("elemental_focus", 1, 16246, "echo_of_the_elements", "Left + Right (Flipped)", 1, 255, 255, 255, true);
+        self:RegisterAura("elemental_focus", 0, 16246, "echo_of_the_elements", "Left + Right (Flipped)", 1, 255, 255, 255, true);
     end
 
     if self.IsSoD() then
@@ -109,10 +109,10 @@ local function registerClass(self)
             return self.TexName["echo_of_the_elements"];
         end
 
-        self:RegisterAura("power_surge_sod", 1, powerSurgeSoDBuff, "imp_empowerment", "Left", 1, 255, 255, 255, true, powerSurgeSpells);
-        self:RegisterAura("power_surge_sod", 1, powerSurgeSoDBuff, powerSurgeRightTextureFunc, "Right (Flipped)", 1, 255, 255, 255, true, powerSurgeSpells);
-        self:RegisterAura("elemental_focus", 1, elementalFocusBuff, elementalFocusLeftTextureFunc, "Left", 1, 255, 255, 255, true);
-        self:RegisterAura("elemental_focus", 1, elementalFocusBuff, "echo_of_the_elements", "Right (Flipped)", 1, 255, 255, 255, true);
+        self:RegisterAura("power_surge_sod", 0, powerSurgeSoDBuff, "imp_empowerment", "Left", 1, 255, 255, 255, true, powerSurgeSpells);
+        self:RegisterAura("power_surge_sod", 0, powerSurgeSoDBuff, powerSurgeRightTextureFunc, "Right (Flipped)", 1, 255, 255, 255, true, powerSurgeSpells);
+        self:RegisterAura("elemental_focus", 0, elementalFocusBuff, elementalFocusLeftTextureFunc, "Left", 1, 255, 255, 255, true);
+        self:RegisterAura("elemental_focus", 0, elementalFocusBuff, "echo_of_the_elements", "Right (Flipped)", 1, 255, 255, 255, true);
     end
 end
 
@@ -158,7 +158,7 @@ local function loadOptions(self)
         self:AddOverlayOption(tidalWavesTalent, tidalWavesBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
         self:AddSoulPreserverOverlayOption(60515); -- 60515 = Shaman buff
     elseif self.IsSoD() then
-        self:AddOverlayOption(powerSurgeSoD, powerSurgeSoDBuff, 0, nil, nil, 1);
+        self:AddOverlayOption(powerSurgeSoD, powerSurgeSoDBuff);
         self:AddOverlayOption(moltenBlastSoD, moltenBlastSoD);
         self:AddOverlayOption(maelstromSoD, maelstromSoDBuff, 0, oneToFourStacks, nil, 4); -- setup any stacks, test with 4 stacks
         self:AddOverlayOption(maelstromSoD, maelstromSoDBuff, 5); -- setup 5 stacks
