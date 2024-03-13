@@ -6,6 +6,9 @@ Bump in TOC file for Season of Discovery and Hardcore update (Classic Era)
 
 Shout-out to fellow developers abecks, Amanthuul and AboveAzureSkies. Thanks!
 
+Talent update:
+- New SAO: Druid's Nature's Grace (Classic Era)
+
 New runes for Season of Discovery:
 - New SAO: Mage's Hot Streak
 - New GAB: Mage's Pyroblast button glows during Hot Streak
