@@ -4,7 +4,7 @@
 
 Bump in TOC file for Season of Discovery and Hardcore update (Classic Era)
 
-Shout-out to abecks and Amanthuul for their contribution to the code. Thanks!
+Shout-out to fellow developers abecks, Amanthuul and AboveAzureSkies. Thanks!
 
 New runes for Season of Discovery:
 - New SAO: Mage's Hot Streak
@@ -26,6 +26,8 @@ New runes for Season of Discovery:
 - New GAB: Shaman's Chain Lightning glows during Power Surge
 - New GAB: Shaman's Chain Heal glows during Power Surge
 - New GAB: Shaman's Lava Burst glows during Power Surge
+- New SAO: Warrior's Bloodsurge
+- New GAB: Warrior's Slam glows during Bloodsurge
 
 #### v1.1.4 (2024-01-23)
 
