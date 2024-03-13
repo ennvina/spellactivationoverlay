@@ -130,7 +130,7 @@ SAO.defaults = {
                 [44401] = { -- Missile Barrage
                     [0] = true,
                 },
-                [400588] = { -- Missile Barrage (Season of Discovery)
+                [400589] = { -- Missile Barrage (Season of Discovery)
                     [0] = true,
                 },
                 [400573]= { -- Arcane Blast (Season of Discovery)
@@ -175,7 +175,7 @@ SAO.defaults = {
                 [44401] = { -- Missile Barrage
                     [5143] = true, -- Arcane Missiles
                 },
-                [400588] = { -- Missile Barrage (Season of Discovery)
+                [400589] = { -- Missile Barrage (Season of Discovery)
                     [5143] = true, -- Arcane Missiles
                 },
                 [400573]= { -- Arcane Blast 4/4 (Season of Discovery)

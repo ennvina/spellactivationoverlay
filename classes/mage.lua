@@ -523,7 +523,7 @@ local function registerClass(self)
     -- Arcane Procs
     if self.IsSoD() then
     	-- Blue-ish, slightly smaller, to avoid confusion and overlap with Arcane Blast
-        self:RegisterAura("missile_barrage", 0, 400588, "arcane_missiles", "Left + Right (Flipped)", 0.8, 103, 184, 238, true, { (GetSpellInfo(5143)) });
+        self:RegisterAura("missile_barrage", 0, 400589, "arcane_missiles", "Left + Right (Flipped)", 0.8, 103, 184, 238, true, { (GetSpellInfo(5143)) });
     else
         self:RegisterAura("missile_barrage", 0, 44401, "arcane_missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(5143)) });
     end
@@ -579,7 +579,8 @@ local function loadOptions(self)
     local fingersOfFrostSoDTalent = fingersOfFrostSoDBuff; -- Not really a talent
 
     local arcaneBlastSoDBuff = 400573;
-    local missileBarrageSoDBuff = 400588;
+    local missileBarrageSoDRune = 400588;
+    local missileBarrageSoDBuff = 400589;
 
     local arcaneMissiles = 5143;
     local arcaneExplosion = 1449;
@@ -631,7 +632,7 @@ local function loadOptions(self)
 
     self:AddOverlayOption(clearcastingTalent, clearcastingBuff, 0, nil, clearcastingVariants);
     if self.IsSoD() then
-        self:AddOverlayOption(missileBarrageSoDBuff, missileBarrageSoDBuff);
+        self:AddOverlayOption(missileBarrageSoDRune, missileBarrageSoDBuff);
     else
         self:AddOverlayOption(missileBarrageTalent, missileBarrageBuff);
     end
@@ -663,7 +664,7 @@ local function loadOptions(self)
     end
 
     if self.IsSoD() then
-        self:AddGlowingOption(missileBarrageSoDBuff, missileBarrageSoDBuff, arcaneMissiles);
+        self:AddGlowingOption(missileBarrageSoDRune, missileBarrageSoDBuff, arcaneMissiles);
     else
         self:AddGlowingOption(missileBarrageTalent, missileBarrageBuff, arcaneMissiles);
     end
