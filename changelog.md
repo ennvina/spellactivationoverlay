@@ -10,6 +10,9 @@ Talent update:
 - New SAO: Druid's Nature's Grace (Classic Era)
 
 New runes for Season of Discovery:
+- New SAO: Druid's Eclipse
+- New GAB: Druid's Starfire button glows during Lunar Eclipse
+- New GAB: Druid's Wrath button glows during Solar Eclipse
 - New SAO: Mage's Hot Streak
 - New GAB: Mage's Pyroblast button glows during Hot Streak
 - New SAO: Mage's Missile Barrage, blue-ish tint to differ from Arcane Blast

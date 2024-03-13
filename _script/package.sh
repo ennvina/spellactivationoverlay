@@ -81,14 +81,12 @@ sudden_death
 shooting_stars
 high_tide
 daybreak
-eclipse_moon
 backlash
 predatory_swiftness
 sword_and_board
 killing_machine
 rime
-surge_of_light
-eclipse_sun)
+surge_of_light)
 for texname in ${WRATH_ONLY_TEXTURES[@]}
 do
     rm -f SpellActivationOverlay/textures/"$texname".* || bye "Cannot cleanup textures from vanilla installation"

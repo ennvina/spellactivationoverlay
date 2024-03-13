@@ -7,8 +7,8 @@ local GetSpellInfo = GetSpellInfo
 local UnitGUID = UnitGUID
 
 local omenSpellID = 16870;
-local lunarSpellID = 48518;
-local solarSpellID = 48517;
+local lunarSpellID = SAO:IsSoD() and 408255 or 48518;
+local solarSpellID = SAO:IsSoD() and 408250 or 48517;
 
 local feralCache = false;
 local clarityCache = false;
@@ -256,7 +256,7 @@ local function registerClass(self)
     -- Track Eclipses with a custom CLEU function, so that eclipses can coexist with Omen of Clarity
     -- self:RegisterAura("eclipse_lunar", 0, lunarSpellID, "eclipse_moon", "Left", 1, 255, 255, 255, true);
     -- self:RegisterAura("eclipse_solar", 0, solarSpellID, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true);
-    if not self.IsEra() then -- Must exclude Eclipses for Classic Era, because there are no Eclipses, but the fake spell IDs would be accepted
+    if self.IsWrath() or self.IsSoD() then -- Must exclude Eclipses for expansions which have no Eclipses, because the fake spell IDs would be accepted
         self:RegisterAura("eclipse_lunar", 0, lunarSpellID+1000000, "eclipse_moon", "Left", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
         self:RegisterAura("eclipse_solar", 0, solarSpellID+1000000, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
     end
