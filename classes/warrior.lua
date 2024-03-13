@@ -364,6 +364,7 @@ local function registerClass(self)
     local shieldSlam = 23922;
     local victoryRushSoD = 402927;
     local ragingBlowSoD = 402911;
+    local bloodSurgeSoD = 413380;
 
     for stacks = 1, 2 do -- Bloodsurge and Sudden Death may have several charges, due to T10 4pc
         self:RegisterAura("bloodsurge_"..stacks, stacks, 46916, "blood_surge", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(slam)) });
@@ -398,6 +399,11 @@ local function registerClass(self)
         self:RegisterAura("raging_blow", 0, ragingBlowSoD, "raging_blow", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(ragingBlowSoD)) });
         self:RegisterCounter("raging_blow"); -- Must match name from above call
     end
+
+    -- Blood Surge (Season of Discovery)
+    if self.IsSoD() then
+        self:RegisterAura("blood_surge", 0, bloodSurgeSoD, "blood_surge", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(slam)) });
+    end
 end
 
 local function loadOptions(self)
@@ -420,12 +426,14 @@ local function loadOptions(self)
 
     local victoryRushSoD = 402927;
     local ragingBlowSoD = 402911;
+    local bloodSurgeSoDBuff = 413380;
 
     self:AddOverlayOption(suddenDeathTalent, suddenDeathBuff);
     self:AddOverlayOption(bloodsurgeTalent, bloodsurgeBuff);
     self:AddOverlayOption(swordAndBoardTalent, swordAndBoardBuff);
     if self.IsSoD() then
         self:AddOverlayOption(ragingBlowSoD, ragingBlowSoD);
+        self:AddOverlayOption(bloodSurgeSoDBuff, bloodSurgeSoDBuff);
     end
 
     if OverpowerHandler.initialized then
@@ -441,6 +449,7 @@ local function loadOptions(self)
     if self.IsSoD() then
         self:AddGlowingOption(nil, victoryRushSoD, victoryRushSoD);
         self:AddGlowingOption(nil, ragingBlowSoD, ragingBlowSoD);
+        self:AddGlowingOption(bloodSurgeSoDBuff, bloodSurgeSoDBuff, slam);
     end
     self:AddGlowingOption(suddenDeathTalent, suddenDeathBuff, execute);
     self:AddGlowingOption(bloodsurgeTalent, bloodsurgeBuff, slam);

@@ -77,7 +77,6 @@ WRATH_ONLY_TEXTURES=(master_marksman
 molten_core
 art_of_war
 lock_and_load
-blood_surge
 sudden_death
 shooting_stars
 high_tide
