@@ -83,6 +83,25 @@ local function updateRightSAOTimer(self, realSpellID)
     updateOneSAOTimer(self, rightFakeSpellID, realSpellID);
 end
 
+--[[
+    Update Lest/Right SAO
+
+    On Wrath, Lunar and Solar Eclipse are exclusive, and have priority over Omen.
+    Possibilities ("X / Y" means "Left uses texture X and Right uses texture Y"):
+    - Lunar   / nothing (Lunar proc, no Omen)
+    - Lunar   / Omen    (Lunar proc, Omen proc)
+    - nothing / Solar   (Solar proc, no Omen)
+    - Omen    / Solar   (Solar proc, Omen proc)
+    - Omen    / Omen    (Omen proc, no eclipse)
+    - nothing / nothing (no proc)
+
+    On Season of Discovery, Lunar and Solar Eclipse have charges, and have priority over Omen.
+    Possibilities are the same as Wrath, plus these ones:
+    - Lunar   / Solar   (Lunar proc, Solar proc, no Omen)
+    - Lunar   / Solar   (Lunar proc, Solar proc, Omen proc)
+    The problem is, we don't get to see the Omen proc in the last case.
+    If this is unacceptable, please file an issue.
+]]
 local function updateSAOs(self)
     local omenTexture = feralCache and "feral_omenofclarity" or "natures_grace";
     local lunarTexture = "eclipse_moon";
@@ -96,22 +115,43 @@ local function updateSAOs(self)
     local mustActivateLunar = lunarCache and (not lunarOptions or type(lunarOptions[0]) == "nil" or lunarOptions[0]);
     local mustActivateSolar = solarCache and (not solarOptions or type(solarOptions[0]) == "nil" or solarOptions[0]);
 
-    if (mustActivateLunar) then
-        -- Lunar Eclipse
-        updateLeftSAO (self, lunarTexture, lunarSpellID); -- Left is always Lunar Eclipse
-        updateRightSAO(self, mayActivateOmen and omenTexture or '', mayActivateOmen and omenSpellID or nil); -- Right is either Omen or nothing
-    elseif (mustActivateSolar) then
-        -- Solar Eclipse
-        updateLeftSAO (self, mayActivateOmen and omenTexture or '', mayActivateOmen and omenSpellID or nil); -- Left is either Omen or nothing
-        updateRightSAO(self, solarTexture, solarSpellID); -- Right is always Solar Eclipse
-    else
-        -- No Eclipse: either both SAOs are Omen of Clarity, or both are nothing
+    if self:IsSoD() then
+        -- Season of Discovery
+        local leftImage, rightImage = '', '';
+        local leftSpell, rightSpell = nil, nil;
         if (mayActivateOmen) then
-            updateLeftSAO (self, omenTexture, omenSpellID);
-            updateRightSAO(self, omenTexture, omenSpellID);
+            leftImage, rightImage = omenTexture, omenTexture;
+            leftSpell, rightSpell = omenSpellID, omenSpellID;
+        end
+        if (mustActivateLunar) then
+            leftImage = lunarTexture;
+            leftSpell = lunarSpellID;
+        end
+        if (mustActivateSolar) then
+            rightImage = solarTexture;
+            rightSpell = solarSpellID;
+        end
+        updateLeftSAO (self, leftImage , leftSpell );
+        updateRightSAO(self, rightImage, rightSpell);
+    else
+        -- Wrath of the Lich King
+        if (mustActivateLunar) then
+            -- Lunar Eclipse
+            updateLeftSAO (self, lunarTexture, lunarSpellID); -- Left is always Lunar Eclipse
+            updateRightSAO(self, mayActivateOmen and omenTexture or '', mayActivateOmen and omenSpellID or nil); -- Right is either Omen or nothing
+        elseif (mustActivateSolar) then
+            -- Solar Eclipse
+            updateLeftSAO (self, mayActivateOmen and omenTexture or '', mayActivateOmen and omenSpellID or nil); -- Left is either Omen or nothing
+            updateRightSAO(self, solarTexture, solarSpellID); -- Right is always Solar Eclipse
         else
-            updateLeftSAO (self, '', nil);
-            updateRightSAO(self, '', nil);
+            -- No Eclipse: either both SAOs are Omen of Clarity, or both are nothing
+            if (mayActivateOmen) then
+                updateLeftSAO (self, omenTexture, omenSpellID);
+                updateRightSAO(self, omenTexture, omenSpellID);
+            else
+                updateLeftSAO (self, '', nil);
+                updateRightSAO(self, '', nil);
+            end
         end
     end
 end
