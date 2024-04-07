@@ -314,6 +314,14 @@ SAO.defaults = {
                 [425339]= { -- Molten Blast (Season of Discovery)
                     [0] = true,
                 },
+                [324]= { -- Rolling Thunder (Season of Discovery)
+                    [7] = false,
+                    [8] = false,
+                    [9] = true,
+                },
+                [432041] = { -- Tidal Waves SoD
+                    [0] = false, -- any stacks
+                },
             },
             glow = {
                 [53817] = { -- Maelstrom Weapon
@@ -343,6 +351,13 @@ SAO.defaults = {
                 },
                 [425339]= { -- Molten Blast (Season of Discovery)
                     [425339] = true, -- Molten Blast (Season of Discovery)
+                },
+                [432056]= { -- Rolling Thunder (Season of Discovery)
+                    [8042] = true, -- Rolling Thunder (Season of Discovery)
+                },
+                [432041] = { -- Tidal Waves SoD
+                    [8004] = false, -- lesser Healing Wave
+                    [331]  = false, -- Healing Wave
                 },
             },
         },

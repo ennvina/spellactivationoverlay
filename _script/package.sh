@@ -42,6 +42,7 @@ raging_blow
 arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
+fulmination
 )
 for texname in ${SOD_ONLY_TEXTURES[@]}
 do
@@ -79,7 +80,6 @@ art_of_war
 lock_and_load
 sudden_death
 shooting_stars
-high_tide
 daybreak
 backlash
 predatory_swiftness

@@ -157,6 +157,7 @@ local availableTextures = {
   ["sudden_death"] = true,
   ["surge_of_light"] = true,
   ["sword_and_board"] = true,
+  ["fulmination"] = true,
 }
 
 -- Global functions, helpful for optimizing package
