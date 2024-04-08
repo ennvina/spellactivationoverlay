@@ -42,7 +42,16 @@ local rollingThunderHandler = {
         local spellID, spellName = select(12, CombatLogGetCurrentEventInfo());
 
         if (self.allSpellIDs[spellID]) then
-            if (event == "SPELL_AURA_APPLIED_DOSE" ) then
+            if event == "SPELL_AURA_REMOVED" then
+            --Need to delay check since rune swap event happens long after LS is removed 
+            C_Timer.After(0.5, function()                
+                local RollingThunderEquipped = C_Engraving and C_Engraving.IsRuneEquipped(49680);
+                    if not RollingThunderEquipped then
+                        self.deactivate();
+                        return;
+                    end
+                end)
+            elseif (event == "SPELL_AURA_APPLIED_DOSE" ) then
                 if stacks >= 7 then self.activate(_,stacks)
                 end
             elseif (event == "SPELL_AURA_REMOVED_DOSE") then
