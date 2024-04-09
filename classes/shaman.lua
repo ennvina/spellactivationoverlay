@@ -156,7 +156,7 @@ local function registerClass(self)
                 end
             end);
         
-        --Initializing Rollinf Thunder handler
+        --Initializing Rolling Thunder handler
         if (not rollingThunderHandler.initialized) then
             rollingThunderHandler:init();
         end
