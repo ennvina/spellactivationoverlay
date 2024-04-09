@@ -259,6 +259,9 @@ SAO.defaults = {
                     [3] = true,  -- 3 stacks
                     [0] = false, -- any stacks but 3
                 },
+                [431666] = {  -- Surge of Light (Season of Discovery)
+                    [0] = true,
+                },
             },
             glow = {
                 [33151] = { -- Surge of Light
@@ -274,6 +277,10 @@ SAO.defaults = {
                     [2054] = true, -- Heal
                     [2060] = true, -- Greater Heal
                     [596]  = true, -- Prayer of Healing
+                },
+                [431666] = {  -- Surge of Light (Season of Discovery)
+                    [585]  = true, -- Smite
+                    [2061] = true, -- Flash Heal
                 },
             },
         },
