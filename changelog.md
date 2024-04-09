@@ -1,5 +1,9 @@
 ## SpellActivationOverlay Changelog
 
+#### v1.2.1 (2024-04-xx)
+
+Bump in TOC file for Season of Discovery update (Classic Era)
+
 #### v1.2.0 (2024-03-19)
 
 Bump in TOC file for Season of Discovery and Hardcore update (Classic Era)
