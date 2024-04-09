@@ -45,12 +45,12 @@ local rollingThunderHandler = {
         if (self.allSpellIDs[spellID]) then
             if (event == "SPELL_AURA_APPLIED_DOSE" ) then
                 -- Deactivating old overlays and activating new one when Lightning Shield stack is gained
-                if stacks >= 7 then self.deactivate(); self.activate(_,stacks)
+                if stacks >= 7 then self:deactivate(); self:activate(stacks)
                 end
             elseif (event == "SPELL_AURA_REMOVED_DOSE") then
                 -- Deactivating old overlays and activating new one when Lightning Shield stack is lost
-                if stacks >= 7 then self.deactivate(); self.activate(_,stacks);
-                else self.deactivate(); 
+                if stacks >= 7 then self:deactivate(); self:activate(stacks);
+                else self:deactivate(); 
                 end
             end
         end
@@ -145,22 +145,27 @@ local function registerClass(self)
     end
 
     if self.IsSoD() then
-    
-        --Deactivating Rolling Thunder on wrists rune change
-        local RTRuneUpdateTracker = CreateFrame("FRAME");
-            RTRuneUpdateTracker:RegisterEvent("SPELLS_CHANGED");
-            RTRuneUpdateTracker:SetScript("OnEvent", function(self)
-                local RollingThunderEquipped = C_Engraving and IsSpellKnownOrOverridesKnown(432056);
-                if not RollingThunderEquipped then
-                    rollingThunderHandler.deactivate();
-                end
-            end);
-        
+
         --Initializing Rolling Thunder handler
         if (not rollingThunderHandler.initialized) then
             rollingThunderHandler:init();
         end
         
+        --Deactivating Rolling Thunder on wrists rune change and activating on login if stack count is right, not refreshing overlay is currently active
+        local RTRuneUpdateTracker = CreateFrame("FRAME");
+            RTRuneUpdateTracker:RegisterEvent("SPELLS_CHANGED");
+            RTRuneUpdateTracker:SetScript("OnEvent", function(self)
+                local RollingThunderEquipped = C_Engraving and IsSpellKnownOrOverridesKnown(432056);
+                if not RollingThunderEquipped then
+                    rollingThunderHandler:deactivate();
+                else
+                    local _, _, stacks = AuraUtil.FindAuraByName(GetSpellInfo(324), "player")
+                    if stacks and stacks > 6 and not SAO:GetActiveOverlay(324) then
+                        rollingThunderHandler:activate(stacks);
+                    end
+                end
+            end);
+
         local moltenBlastSoD = 425339;
         self:RegisterAura("molten_blast", 0, moltenBlastSoD, "impact", "Top", 0.8, 255, 255, 255, true, { moltenBlastSoD });
         self:RegisterCounter("molten_blast");
