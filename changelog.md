@@ -4,6 +4,9 @@
 
 Bump in TOC file for Season of Discovery update (Classic Era)
 
+Bug Fixes
+- Druid's Eclipse now refreshes its visual timer when gaining a stack
+
 #### v1.2.0 (2024-03-19)
 
 Bump in TOC file for Season of Discovery and Hardcore update (Classic Era)

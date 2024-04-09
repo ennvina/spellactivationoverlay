@@ -165,19 +165,36 @@ local function updateSAOTimers(self)
     local mustActivateLunar = lunarCache and (not lunarOptions or type(lunarOptions[0]) == "nil" or lunarOptions[0]);
     local mustActivateSolar = solarCache and (not solarOptions or type(solarOptions[0]) == "nil" or solarOptions[0]);
 
-    if (mustActivateLunar) then
-        -- Lunar Eclipse
-        updateLeftSAOTimer (self, lunarSpellID); -- Left is always Lunar Eclipse
-        updateRightSAOTimer(self, mayActivateOmen and omenSpellID or nil); -- Right is either Omen or nothing
-    elseif (mustActivateSolar) then
-        -- Solar Eclipse
-        updateLeftSAOTimer (self, mayActivateOmen and omenSpellID or nil); -- Left is either Omen or nothing
-        updateRightSAOTimer(self, solarSpellID); -- Right is always Solar Eclipse
-    else
-        -- No Eclipse: either both SAOs are Omen of Clarity, or both are nothing
+    if self:IsSoD() then
+        -- Season of Discovery
+        local leftSpell, rightSpell = nil, nil;
         if (mayActivateOmen) then
-            updateLeftSAOTimer (self, omenSpellID);
-            updateRightSAOTimer(self, omenSpellID);
+            leftSpell, rightSpell = omenSpellID, omenSpellID;
+        end
+        if (mustActivateLunar) then
+            leftSpell = lunarSpellID;
+        end
+        if (mustActivateSolar) then
+            rightSpell = solarSpellID;
+        end
+        updateLeftSAOTimer (self, leftSpell );
+        updateRightSAOTimer(self, rightSpell);
+    else
+        -- Wrath of the Lich King
+        if (mustActivateLunar) then
+            -- Lunar Eclipse
+            updateLeftSAOTimer (self, lunarSpellID); -- Left is always Lunar Eclipse
+            updateRightSAOTimer(self, mayActivateOmen and omenSpellID or nil); -- Right is either Omen or nothing
+        elseif (mustActivateSolar) then
+            -- Solar Eclipse
+            updateLeftSAOTimer (self, mayActivateOmen and omenSpellID or nil); -- Left is either Omen or nothing
+            updateRightSAOTimer(self, solarSpellID); -- Right is always Solar Eclipse
+        else
+            -- No Eclipse: either both SAOs are Omen of Clarity, or both are nothing
+            if (mayActivateOmen) then
+                updateLeftSAOTimer (self, omenSpellID);
+                updateRightSAOTimer(self, omenSpellID);
+            end
         end
     end
 end
