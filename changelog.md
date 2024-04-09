@@ -4,6 +4,11 @@
 
 Bump in TOC file for Season of Discovery update (Classic Era)
 
+New runes for Season of Discovery:
+- New SAO: Priest's Surge of Light
+- New GAB: Priest's Flash Heal button glows during Surge of Light
+- New GAB: Priest's Smite button glows during Surge of Light
+
 Bug Fixes
 - Druid's Eclipse now refreshes its visual timer when gaining a stack
 
