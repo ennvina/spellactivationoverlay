@@ -36,6 +36,12 @@ SAO.defaults = {
                 [48517] = { -- Eclipse (Solar)
                     [0] = true,
                 },
+                [408255] = { -- Eclipse (Lunar, Season of Discovery)
+                    [0] = true,
+                },
+                [408250] = { -- Eclipse (Solar, Season of Discovery)
+                    [0] = true,
+                },
                 [16886] = { -- Nature's Grace
                     [0] = false,
                 },
