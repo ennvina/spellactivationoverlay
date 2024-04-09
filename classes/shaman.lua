@@ -40,21 +40,15 @@ local rollingThunderHandler = {
         if (event:sub(0,11) ~= "SPELL_AURA_") then return end
 
         local spellID, spellName = select(12, CombatLogGetCurrentEventInfo());
+        
 
         if (self.allSpellIDs[spellID]) then
-            if event == "SPELL_AURA_REMOVED" then
-            --Need to delay check since rune swap event happens long after LS is removed 
-            C_Timer.After(0.5, function()                
-                local RollingThunderEquipped = C_Engraving and C_Engraving.IsRuneEquipped(49680);
-                    if not RollingThunderEquipped then
-                        self.deactivate();
-                        return;
-                    end
-                end)
-            elseif (event == "SPELL_AURA_APPLIED_DOSE" ) then
-                if stacks >= 7 then self.activate(_,stacks)
+            if (event == "SPELL_AURA_APPLIED_DOSE" ) then
+                -- Deactivating old overlays and activating new one when Lightning Shield stack is gained
+                if stacks >= 7 then self.deactivate(); self.activate(_,stacks)
                 end
             elseif (event == "SPELL_AURA_REMOVED_DOSE") then
+                -- Deactivating old overlays and activating new one when Lightning Shield stack is lost
                 if stacks >= 7 then self.deactivate(); self.activate(_,stacks);
                 else self.deactivate(); 
                 end
@@ -102,11 +96,7 @@ end
 
 
 
-local function registerClass(self)
-
-    if (not rollingThunderHandler.initialized) then
-        rollingThunderHandler:init();
-    end
+local function registerClass(self)    
 
     if self.IsWrath() or self.IsTBC() then
         -- Elemental Focus has 2 charges on TBC and Wrath
@@ -155,7 +145,22 @@ local function registerClass(self)
     end
 
     if self.IsSoD() then
-
+    
+        --Deactivating Rolling Thunder on wrists rune change
+        local RTRuneUpdateTracker = CreateFrame("FRAME");
+            RTRuneUpdateTracker:RegisterEvent("SPELLS_CHANGED");
+            RTRuneUpdateTracker:SetScript("OnEvent", function(self)
+                local RollingThunderEquipped = C_Engraving and IsSpellKnownOrOverridesKnown(432056);
+                if not RollingThunderEquipped then
+                    rollingThunderHandler.deactivate();
+                end
+            end);
+        
+        --Initializing Rollinf Thunder handler
+        if (not rollingThunderHandler.initialized) then
+            rollingThunderHandler:init();
+        end
+        
         local moltenBlastSoD = 425339;
         self:RegisterAura("molten_blast", 0, moltenBlastSoD, "impact", "Top", 0.8, 255, 255, 255, true, { moltenBlastSoD });
         self:RegisterCounter("molten_blast");
