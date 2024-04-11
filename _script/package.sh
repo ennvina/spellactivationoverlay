@@ -63,7 +63,7 @@ cp -R changelog.md LICENSE SpellActivationOverlay.* classes components options t
 cd ./_release/vanilla || bye "Cannot cd to vanilla directory"
 echo -n "Cleaning up vanilla directory... "
 # Change Interface version; to know the version of a specific game client, enter: /dump select(4, GetBuildInfo())
-VANILLA_BUILD_VERSION=11501
+VANILLA_BUILD_VERSION=11502
 sed -i s/'^## Interface:.*'/"## Interface: $VANILLA_BUILD_VERSION"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update version of TOC file"
 # Remove everything related to DK
 sed -i '/deathknight/d' SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot remove deathknight from TOC file"
@@ -85,8 +85,7 @@ backlash
 predatory_swiftness
 sword_and_board
 killing_machine
-rime
-surge_of_light)
+rime)
 for texname in ${WRATH_ONLY_TEXTURES[@]}
 do
     rm -f SpellActivationOverlay/textures/"$texname".* || bye "Cannot cleanup textures from vanilla installation"

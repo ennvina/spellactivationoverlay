@@ -10,7 +10,7 @@ local function registerClass(self)
         local serendipityBuff3 = 63734;
         local ghAndPoh = { (GetSpellInfo(2060)), (GetSpellInfo(596)) };
 
-        -- Add option links during registerClass(), not because loadOptions() which would be loaded only when the options panel is opened
+        -- Add option links during registerClass(), not during loadOptions() which would be loaded only when the options panel is opened
         -- Add option links before RegisterAura() calls, so that options they are used by initial triggers, if any
         self:AddOverlayLink(serendipityBuff3, serendipityBuff1);
         self:AddOverlayLink(serendipityBuff3, serendipityBuff2);
@@ -35,6 +35,12 @@ local function registerClass(self)
         self:RegisterAuraSoulPreserver("soul_preserver_priest", 60514); -- 60514 = Priest buff
 
     elseif self.IsSoD() then
+        local smite = GetSpellInfo(585);
+        local flashHeal = GetSpellInfo(2061);
+
+        -- Surge of Light
+        self:RegisterAura("surge_of_light_sod", 0, 431666, "surge_of_light", "Left + Right (Flipped)", 1, 255, 255, 255, true, { smite, flashHeal });
+
         local serendipityBuff = 413247;
         local lesserHeal = 2050;
         local heal = 2054;
@@ -60,6 +66,8 @@ local function loadOptions(self)
 
     local surgeOfLightBuff = 33151;
     local surgeOfLightTalent = 33150;
+    local surgeOfLightSoDBuff = 431666;
+    local surgeOfLightSoDRune = 431664;
 
     local serendipityBuff3 = 63734;
     local serendipityTalent = 63730;
@@ -79,9 +87,12 @@ local function loadOptions(self)
         self:AddGlowingOption(serendipityTalent, serendipityBuff3, greaterHeal, threeStacks);
         self:AddGlowingOption(serendipityTalent, serendipityBuff3, prayerOfHealing, threeStacks);
     elseif self.IsSoD() then
+        self:AddOverlayOption(surgeOfLightSoDRune, surgeOfLightSoDBuff);
         self:AddOverlayOption(serendipitySoDBuff, serendipitySoDBuff, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks
         self:AddOverlayOption(serendipitySoDBuff, serendipitySoDBuff, 3); -- setup 3 stacks
 
+        self:AddGlowingOption(surgeOfLightSoDRune, surgeOfLightSoDBuff, smite);
+        self:AddGlowingOption(surgeOfLightSoDRune, surgeOfLightSoDBuff, flashHeal);
         self:AddGlowingOption(serendipitySoDBuff, serendipitySoDBuff, lesserHeal, threeStacks);
         self:AddGlowingOption(serendipitySoDBuff, serendipitySoDBuff, heal, threeStacks);
         self:AddGlowingOption(serendipitySoDBuff, serendipitySoDBuff, greaterHeal, threeStacks);
