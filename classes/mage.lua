@@ -706,6 +706,7 @@ local function loadOptions(self)
         self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, deepFreeze);
     elseif self.IsSoD() then
         self:AddGlowingOption(fingersOfFrostSoDTalent, fingersOfFrostSoDBuff, iceLanceSoD);
+        self:AddGlowingOption(fingersOfFrostSoDTalent, fingersOfFrostSoDBuff, deepFreezeSoD);
         self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, iceLanceSoD);
         self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, deepFreezeSoD);
     end
