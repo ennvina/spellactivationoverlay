@@ -52,12 +52,14 @@ function SAO.CheckCounterAction(self, spellID, auraID, talent)
         local rank = select(5, GetTalentInfo(talent[1], talent[2]));
         if (not (rank > 0)) then
             -- 0 points spent in the required Talent
+			if SAO:GetActiveOverlay(spellID) then SAO:DeactivateOverlay(spellID); end
             return;
         end
     end
 
     if (not self:IsSpellLearned(spellID)) then
         -- Spell not learned
+        if SAO:GetActiveOverlay(spellID) then SAO:DeactivateOverlay(spellID); end
         return;
     end
 
