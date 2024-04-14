@@ -82,9 +82,9 @@ function SAO.SPELL_AURA(self, ...)
             self:DeactivateOverlay(spellID);
             self:RemoveGlow(spellID);
             for _, aura in ipairs(auras[count]) do
-                local texture, positions, scale, r, g, b, autoPulse = select(4,unpack(aura));
+                local texture, positions, scale, r, g, b, autoPulse, _, combatOnly = select(4,unpack(aura));
                 local forcePulsePlay = autoPulse;
-                self:ActivateOverlay(count, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay);
+                self:ActivateOverlay(count, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, nil, combatOnly);
                 self:AddGlow(spellID, select(11,unpack(aura)));
             end
         elseif (
