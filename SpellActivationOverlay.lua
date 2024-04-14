@@ -112,7 +112,6 @@ function SpellActivationOverlay_OnEvent(self, event, ...)
 			self.combatAnimOut:Stop();	--In case we're in the process of animating this out.
 			self.combatAnimIn:Play();
 			for _, overlay in ipairs(self.combatOnlyOverlays) do
-print("106 overlay.combat.animOut:Stop() overlay.combat.animIn:Play()");
 				overlay.combat.animOut:Stop();
 --				overlay.combat.animIn:Play();
 			end
@@ -120,7 +119,6 @@ print("106 overlay.combat.animOut:Stop() overlay.combat.animIn:Play()");
 			self.combatAnimIn:Stop();	--In case we're in the process of animating this out.
 			self.combatAnimOut:Play();
 			for _, overlay in ipairs(self.combatOnlyOverlays) do
-print("114 overlay.combat.animIn:Stop() overlay.combat.animOut:Play()");
 --				overlay.combat.animIn:Stop();
 				SpellActivationOverlayFrame_PlayCombatAnimOut(overlay.combat.animOut);
 			end
@@ -275,11 +273,9 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 		tDeleteItem(self.combatOnlyOverlays, overlay); -- In case it was already in the list
 		tinsert(self.combatOnlyOverlays, overlay);
 		if ( InCombatLockdown() ) then
-print("277 overlay.combat.animOut:Stop() overlay.combat.animIn:Play()")
 			overlay.combat.animOut:Stop();
 --			overlay.combat.animIn:Play();
 		else
-print("281 overlay.combat.animIn:Stop() overlay.combat.animOut:Play()")
 --			overlay.combat.animIn:Stop();
 			SpellActivationOverlayFrame_PlayCombatAnimOut(overlay.combat.animOut);
 		end
@@ -292,7 +288,6 @@ print("281 overlay.combat.animIn:Stop() overlay.combat.animOut:Play()")
 		self.combatAnimOut:Stop();
 		self.combatAnimIn:Play();
 		if ( combatOnly ) then
-print("294 overlay.combat.animOut:Stop() overlay.combat.animIn:Play()")
 			overlay.combat.animOut:Stop();
 --			overlay.combat.animIn:Play();
 		end
@@ -479,16 +474,6 @@ function SpellActivationOverlayFrame_PlayCombatAnimOut(animOut)
 	animOut:Play();
 end
 
-function SpellActivationOverlayFrame_OnCombatAnimOutFinished(anim)
-	-- local combat = anim:GetParent();
-	-- -- Move vertex offsets so far that clamping will display a fully transparent texture
-	-- combat:SetVertexOffset(UPPER_LEFT_VERTEX, 512, 512);
-	-- combat:SetVertexOffset(LOWER_LEFT_VERTEX, 512, 512);
-	-- combat:SetVertexOffset(UPPER_RIGHT_VERTEX, 512, 512);
-	-- combat:SetVertexOffset(LOWER_RIGHT_VERTEX, 512, 512);
-	print("OnCombatAnimOutFinished")
-end
-
 function SpellActivationOverlayTexture_OnFadeInPlay(animGroup)
 	animGroup:GetParent():SetAlpha(0);
 end
@@ -515,7 +500,6 @@ function SpellActivationOverlayFrame_OnFadeInFinished(anim)
 		if ( not frame.disableDimOutOfCombat ) then
 			frame.combatAnimOut:Play();
 			for _, overlay in ipairs(frame.combatOnlyOverlays) do
-print("460 overlay.combat.animOut:Play()");
 				SpellActivationOverlayFrame_PlayCombatAnimOut(overlay.combat.animOut);
 			end
 		end
@@ -530,7 +514,6 @@ function SpellActivationOverlayFrame_SetForceAlpha1(enabled)
 			self.combatAnimOut:Stop();	--In case we're in the process of animating this out.
 			self:SetAlpha(1);
 			for _, overlay in ipairs(self.combatOnlyOverlays) do
-print("475 overlay.combat.animOut:Stop() overlay.texture:SetAlpha(1)");
 				overlay.combat.animOut:Stop();
 				overlay.texture:SetAlpha(1);
 			end
@@ -548,7 +531,6 @@ print("475 overlay.combat.animOut:Stop() overlay.texture:SetAlpha(1)");
 				if (not InCombatLockdown()) then
 					self.combatAnimOut:Play();
 					for _, overlay in ipairs(self.combatOnlyOverlays) do
-print("493 overlay.combat.animOut:Play()");
 						SpellActivationOverlayFrame_PlayCombatAnimOut(overlay.combat.animOut);
 					end
 				end
@@ -565,7 +547,6 @@ function SpellActivationOverlayFrame_SetForceAlpha2(enabled)
 			self.combatAnimOut:Stop();	--In case we're in the process of animating this out.
 			self:SetAlpha(1);
 			for _, overlay in ipairs(self.combatOnlyOverlays) do
-print("510 overlay.combat.animOut:Stop() overlay.texture:SetAlpha(1)");
 				overlay.combat.animOut:Stop();
 				overlay.texture:SetAlpha(1);
 			end
@@ -583,7 +564,6 @@ print("510 overlay.combat.animOut:Stop() overlay.texture:SetAlpha(1)");
 				if (not InCombatLockdown()) then
 					self.combatAnimOut:Play();
 					for _, overlay in ipairs(self.combatOnlyOverlays) do
-print("528 overlay.combat.animOut:Play()");
 						SpellActivationOverlayFrame_PlayCombatAnimOut(overlay.combat.animOut);
 					end
 				end
