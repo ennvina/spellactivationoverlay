@@ -155,7 +155,7 @@ local function registerClass(self)
         local RTRuneUpdateTracker = CreateFrame("FRAME");
             RTRuneUpdateTracker:RegisterEvent("SPELLS_CHANGED");
             RTRuneUpdateTracker:SetScript("OnEvent", function(self)
-                local RollingThunderEquipped = C_Engraving and IsSpellKnownOrOverridesKnown(432056);
+                local RollingThunderEquipped = C_Engraving and SAO:IsSpellLearned(432056);
                 if not RollingThunderEquipped then
                     rollingThunderHandler:deactivate();
                 else
