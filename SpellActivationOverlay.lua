@@ -3,6 +3,7 @@ local AddonName, SAO = ...
 local sizeScale = 0.8;
 local longSide = 256 * sizeScale;
 local shortSide = 128 * sizeScale;
+local combatOverlayFactor = 2;
 local useTimer = true;
 
 function SpellActivationOverlay_OnLoad(self)
@@ -14,6 +15,7 @@ function SpellActivationOverlay_OnLoad(self)
 
 	self.overlaysInUse = {};
 	self.unusedOverlays = {};
+	self.combatOnlyOverlays = {};
 
 	self.offset = 0;
 	self.scale = 1;
@@ -66,6 +68,14 @@ function SpellActivationOverlay_OnChangeGeometry(self)
 			overlay:SetGeometry(longSide, shortSide);
 		end
 	end
+
+	-- Resize offsets for overlays that offset a mask when out of combat
+	for _, overlay in ipairs(self.combatOnlyOverlays) do
+		if overlay.combat.animOut:IsPlaying() then
+			-- Calling the 'Play' custom function for animOut will setup its offset
+			SpellActivationOverlayFrame_PlayCombatAnimOut(overlay.combat.animOut);
+		end
+	end
 end
 
 function SpellActivationOverlay_OnChangeTimerVisibility(self)
@@ -101,9 +111,19 @@ function SpellActivationOverlay_OnEvent(self, event, ...)
 		if ( event == "PLAYER_REGEN_DISABLED" ) then
 			self.combatAnimOut:Stop();	--In case we're in the process of animating this out.
 			self.combatAnimIn:Play();
+			for _, overlay in ipairs(self.combatOnlyOverlays) do
+print("106 overlay.combat.animOut:Stop() overlay.combat.animIn:Play()");
+				overlay.combat.animOut:Stop();
+--				overlay.combat.animIn:Play();
+			end
 		elseif ( event == "PLAYER_REGEN_ENABLED" ) then
 			self.combatAnimIn:Stop();	--In case we're in the process of animating this out.
 			self.combatAnimOut:Play();
+			for _, overlay in ipairs(self.combatOnlyOverlays) do
+print("114 overlay.combat.animIn:Stop() overlay.combat.animOut:Play()");
+--				overlay.combat.animIn:Stop();
+				SpellActivationOverlayFrame_PlayCombatAnimOut(overlay.combat.animOut);
+			end
 		end
 	end
 	if ( event ) then
@@ -230,6 +250,8 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 
 		self:SetSize(width * scale, height * scale);
 		self.mask:SetSize(longSide * scale, longSide * scale);
+		self.combat:SetSize(longSide * scale * combatOverlayFactor, longSide * scale * combatOverlayFactor);
+		-- Combat mask texture is bigger, to get an 'eye of the storm' effect at start
 	end
 	overlay:SetGeometry(longSide, shortSide);
 	
@@ -248,10 +270,32 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 
 	SpellActivationOverlay_SetOverlayTimer(self, overlay, endTime);
 
+	overlay.combatOnly = combatOnly;
+	if ( combatOnly ) then
+		tDeleteItem(self.combatOnlyOverlays, overlay); -- In case it was already in the list
+		tinsert(self.combatOnlyOverlays, overlay);
+		if ( InCombatLockdown() ) then
+print("277 overlay.combat.animOut:Stop() overlay.combat.animIn:Play()")
+			overlay.combat.animOut:Stop();
+--			overlay.combat.animIn:Play();
+		else
+print("281 overlay.combat.animIn:Stop() overlay.combat.animOut:Play()")
+--			overlay.combat.animIn:Stop();
+			SpellActivationOverlayFrame_PlayCombatAnimOut(overlay.combat.animOut);
+		end
+	else
+		tDeleteItem(self.combatOnlyOverlays, overlay);
+	end
+
 	if ( not self.disableDimOutOfCombat and not InCombatLockdown() ) then
 		-- Simulate a short, fake in-combat mode, to make the spell alert more visible
 		self.combatAnimOut:Stop();
 		self.combatAnimIn:Play();
+		if ( combatOnly ) then
+print("294 overlay.combat.animOut:Stop() overlay.combat.animIn:Play()")
+			overlay.combat.animOut:Stop();
+--			overlay.combat.animIn:Play();
+		end
 	end
 end
 
@@ -376,12 +420,14 @@ function SpellActivationOverlayTexture_TerminateOverlay(overlay)
 	overlay.mask.timeoutXY:Stop();
 	overlay.mask.timeoutX:Stop();
 	overlay.mask.timeoutY:Stop();
+--	overlay.combat.animIn:Stop();
+	overlay.combat.animOut:Stop();
 
 	-- Hide the overlay and make it available again in the pool for future use
 	overlay.mask:SetScale(1); -- Reset scale, in case a previous animation shrank it to 0.01
 	overlay.endTime = nil; -- Reset endTime, to avoid excessive optimizations when re-using this overlay
 	overlay:Hide();
-	tDeleteItem(overlayParent.overlaysInUse[overlay.spellID], overlay)
+	tDeleteItem(overlayParent.overlaysInUse[overlay.spellID], overlay);
 	tinsert(overlayParent.unusedOverlays, overlay);
 end
 
@@ -391,6 +437,56 @@ function SpellActivationOverlayFrame_OnTimeoutFinished(anim)
 	mask:SetScale(0.01); -- Shrink mask scale to 0.01 to avoid glitches with final animation below
 	-- Start the fade-out animation, which will eventually terminate the overlay
 	overlay.animOut:Play();
+end
+
+function SpellActivationOverlayFrame_PlayCombatAnimOut(animOut)
+	local combat = animOut:GetParent();
+	local overlay = combat:GetParent();
+	local frame = overlay:GetParent();
+	local position = overlay.position;
+
+	local baseLongSide = 256;
+	local baseShortSide = 128;
+	local farAway = ((baseLongSide-baseShortSide) / 2 + baseShortSide) * sizeScale * frame.scale * combatOverlayFactor;
+
+	local offsetX, offsetY;
+	if ( position == "CENTER" ) then
+		offsetX, offsetY = 0, 0;
+	elseif ( position == "LEFT" ) then
+		offsetX, offsetY = farAway, 0;
+	elseif ( position == "RIGHT" ) then
+		offsetX, offsetY = -farAway, 0;
+	elseif ( position == "TOP" ) then
+		offsetX, offsetY = 0, -farAway;
+	elseif ( position == "BOTTOM" ) then
+		offsetX, offsetY = 0, farAway;
+	elseif ( position == "TOPRIGHT" ) then
+		offsetX, offsetY = -farAway, -farAway;
+	elseif ( position == "TOPLEFT" ) then
+		offsetX, offsetY = farAway, -farAway;
+	elseif ( position == "BOTTOMRIGHT" ) then
+		offsetX, offsetY = -farAway, farAway;
+	elseif ( position == "BOTTOMLEFT" ) then
+		offsetX, offsetY = farAway, farAway;
+	else
+		--GMError("Unknown SpellActivationOverlay position: "..tostring(position));
+		return;
+	end
+
+	animOut.path1.final:SetOffset(offsetX, offsetY);
+	animOut.path2.final:SetOffset(offsetX, offsetY);
+
+	animOut:Play();
+end
+
+function SpellActivationOverlayFrame_OnCombatAnimOutFinished(anim)
+	-- local combat = anim:GetParent();
+	-- -- Move vertex offsets so far that clamping will display a fully transparent texture
+	-- combat:SetVertexOffset(UPPER_LEFT_VERTEX, 512, 512);
+	-- combat:SetVertexOffset(LOWER_LEFT_VERTEX, 512, 512);
+	-- combat:SetVertexOffset(UPPER_RIGHT_VERTEX, 512, 512);
+	-- combat:SetVertexOffset(LOWER_RIGHT_VERTEX, 512, 512);
+	print("OnCombatAnimOutFinished")
 end
 
 function SpellActivationOverlayTexture_OnFadeInPlay(animGroup)
@@ -418,6 +514,10 @@ function SpellActivationOverlayFrame_OnFadeInFinished(anim)
 		local frame = anim:GetParent();
 		if ( not frame.disableDimOutOfCombat ) then
 			frame.combatAnimOut:Play();
+			for _, overlay in ipairs(frame.combatOnlyOverlays) do
+print("460 overlay.combat.animOut:Play()");
+				SpellActivationOverlayFrame_PlayCombatAnimOut(overlay.combat.animOut);
+			end
 		end
 	end
 end
@@ -429,6 +529,11 @@ function SpellActivationOverlayFrame_SetForceAlpha1(enabled)
 			self.disableDimOutOfCombat = 1;
 			self.combatAnimOut:Stop();	--In case we're in the process of animating this out.
 			self:SetAlpha(1);
+			for _, overlay in ipairs(self.combatOnlyOverlays) do
+print("475 overlay.combat.animOut:Stop() overlay.texture:SetAlpha(1)");
+				overlay.combat.animOut:Stop();
+				overlay.texture:SetAlpha(1);
+			end
 		else
 			-- Set last digit
 			self.disableDimOutOfCombat = self.disableDimOutOfCombat-self.disableDimOutOfCombat%10+1;
@@ -442,6 +547,10 @@ function SpellActivationOverlayFrame_SetForceAlpha1(enabled)
 				self.disableDimOutOfCombat = nil;
 				if (not InCombatLockdown()) then
 					self.combatAnimOut:Play();
+					for _, overlay in ipairs(self.combatOnlyOverlays) do
+print("493 overlay.combat.animOut:Play()");
+						SpellActivationOverlayFrame_PlayCombatAnimOut(overlay.combat.animOut);
+					end
 				end
 			end
 		end
@@ -455,6 +564,11 @@ function SpellActivationOverlayFrame_SetForceAlpha2(enabled)
 			self.disableDimOutOfCombat = 10;
 			self.combatAnimOut:Stop();	--In case we're in the process of animating this out.
 			self:SetAlpha(1);
+			for _, overlay in ipairs(self.combatOnlyOverlays) do
+print("510 overlay.combat.animOut:Stop() overlay.texture:SetAlpha(1)");
+				overlay.combat.animOut:Stop();
+				overlay.texture:SetAlpha(1);
+			end
 		else
 			-- Set second-to-last digit
 			self.disableDimOutOfCombat = self.disableDimOutOfCombat%10+10;
@@ -468,6 +582,10 @@ function SpellActivationOverlayFrame_SetForceAlpha2(enabled)
 				self.disableDimOutOfCombat = nil;
 				if (not InCombatLockdown()) then
 					self.combatAnimOut:Play();
+					for _, overlay in ipairs(self.combatOnlyOverlays) do
+print("528 overlay.combat.animOut:Play()");
+						SpellActivationOverlayFrame_PlayCombatAnimOut(overlay.combat.animOut);
+					end
 				end
 			end
 		end
