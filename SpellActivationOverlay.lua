@@ -113,13 +113,13 @@ function SpellActivationOverlay_OnEvent(self, event, ...)
 			self.combatAnimIn:Play();
 			for _, overlay in ipairs(self.combatOnlyOverlays) do
 				overlay.combat.animOut:Stop();
---				overlay.combat.animIn:Play();
+				SpellActivationOverlayFrame_PlayCombatAnimIn(overlay.combat.animIn);
 			end
 		elseif ( event == "PLAYER_REGEN_ENABLED" ) then
 			self.combatAnimIn:Stop();	--In case we're in the process of animating this out.
 			self.combatAnimOut:Play();
 			for _, overlay in ipairs(self.combatOnlyOverlays) do
---				overlay.combat.animIn:Stop();
+				overlay.combat.animIn:Stop();
 				SpellActivationOverlayFrame_PlayCombatAnimOut(overlay.combat.animOut);
 			end
 		end
@@ -274,9 +274,9 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 		tinsert(self.combatOnlyOverlays, overlay);
 		if ( InCombatLockdown() ) then
 			overlay.combat.animOut:Stop();
---			overlay.combat.animIn:Play();
+			-- SpellActivationOverlayFrame_PlayCombatAnimIn(overlay.combat.animIn); -- Do not play combat.animIn if already in combat
 		else
---			overlay.combat.animIn:Stop();
+			overlay.combat.animIn:Stop();
 			SpellActivationOverlayFrame_PlayCombatAnimOut(overlay.combat.animOut);
 		end
 	else
@@ -289,7 +289,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 		self.combatAnimIn:Play();
 		if ( combatOnly ) then
 			overlay.combat.animOut:Stop();
---			overlay.combat.animIn:Play();
+			-- SpellActivationOverlayFrame_PlayCombatAnimIn(overlay.combat.animIn); -- Playing combat.animIn would delay the 'more visible' goal
 		end
 	end
 end
@@ -415,7 +415,7 @@ function SpellActivationOverlayTexture_TerminateOverlay(overlay)
 	overlay.mask.timeoutXY:Stop();
 	overlay.mask.timeoutX:Stop();
 	overlay.mask.timeoutY:Stop();
---	overlay.combat.animIn:Stop();
+	overlay.combat.animIn:Stop();
 	overlay.combat.animOut:Stop();
 
 	-- Hide the overlay and make it available again in the pool for future use
@@ -434,8 +434,8 @@ function SpellActivationOverlayFrame_OnTimeoutFinished(anim)
 	overlay.animOut:Play();
 end
 
-function SpellActivationOverlayFrame_PlayCombatAnimOut(animOut)
-	local combat = animOut:GetParent();
+function SpellActivationOverlayFrame_GetCombatAnimOffsetFarAway(anim)
+	local combat = anim:GetParent();
 	local overlay = combat:GetParent();
 	local frame = overlay:GetParent();
 	local position = overlay.position;
@@ -444,32 +444,42 @@ function SpellActivationOverlayFrame_PlayCombatAnimOut(animOut)
 	local baseShortSide = 128;
 	local farAway = ((baseLongSide-baseShortSide) / 2 + baseShortSide) * sizeScale * frame.scale * combatOverlayFactor;
 
-	local offsetX, offsetY;
 	if ( position == "CENTER" ) then
-		offsetX, offsetY = 0, 0;
+		return 0, 0;
 	elseif ( position == "LEFT" ) then
-		offsetX, offsetY = farAway, 0;
+		return farAway, 0;
 	elseif ( position == "RIGHT" ) then
-		offsetX, offsetY = -farAway, 0;
+		return -farAway, 0;
 	elseif ( position == "TOP" ) then
-		offsetX, offsetY = 0, -farAway;
+		return 0, -farAway;
 	elseif ( position == "BOTTOM" ) then
-		offsetX, offsetY = 0, farAway;
+		return 0, farAway;
 	elseif ( position == "TOPRIGHT" ) then
-		offsetX, offsetY = -farAway, -farAway;
+		return -farAway, -farAway;
 	elseif ( position == "TOPLEFT" ) then
-		offsetX, offsetY = farAway, -farAway;
+		return farAway, -farAway;
 	elseif ( position == "BOTTOMRIGHT" ) then
-		offsetX, offsetY = -farAway, farAway;
+		return -farAway, farAway;
 	elseif ( position == "BOTTOMLEFT" ) then
-		offsetX, offsetY = farAway, farAway;
+		return farAway, farAway;
 	else
 		--GMError("Unknown SpellActivationOverlay position: "..tostring(position));
 		return;
 	end
+end
 
-	animOut.path1.final:SetOffset(offsetX, offsetY);
-	animOut.path2.final:SetOffset(offsetX, offsetY);
+function SpellActivationOverlayFrame_PlayCombatAnimIn(animIn)
+	local offsetX, offsetY = SpellActivationOverlayFrame_GetCombatAnimOffsetFarAway(animIn);
+	offsetX, offsetY = 0.75 * offsetX, 0.75 * offsetY -- Attenuate distance to make it visible sooner
+	animIn.path1.point:SetOffset(offsetX, offsetY);
+	animIn.path2.point2:SetOffset(-offsetX, -offsetY);
+
+	animIn:Play();
+end
+
+function SpellActivationOverlayFrame_PlayCombatAnimOut(animOut)
+	local offsetX, offsetY = SpellActivationOverlayFrame_GetCombatAnimOffsetFarAway(animOut);
+	animOut.path1.point2:SetOffset(offsetX, offsetY);
 
 	animOut:Play();
 end

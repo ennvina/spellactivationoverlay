@@ -68,24 +68,29 @@
 						<MaskedTexture childKey="texture"/>
 					</MaskedTextures>
 					<Animations>
-						<!-- <AnimationGroup name="$parentCombatAnimIn" parentKey="animIn">
-							<Path curve="SMOOTH" duration="0.2" parentKey="path">
+						<AnimationGroup name="$parentCombatAnimIn" parentKey="animIn">
+							<Path curve="NONE" duration="0.001" order="1" parentKey="path1">
 								<ControlPoints>
-									<ControlPoint offsetX="0" offsetY="0" parentKey="initial"/>
-									<ControlPoint offsetX="0" offsetY="0" />
+									<ControlPoint offsetX="0" offsetY="0" parentKey="point"/>
 								</ControlPoints>
 							</Path>
-						</AnimationGroup> -->
+							<Path curve="SMOOTH" duration="0.5" order="2" parentKey="path2">
+								<ControlPoints>
+									<ControlPoint offsetX="0" offsetY="0" parentKey="point1"/>
+									<ControlPoint offsetX="0" offsetY="0" parentKey="point2" />
+								</ControlPoints>
+							</Path>
+						</AnimationGroup>
 						<AnimationGroup name="$parentCombatAnimOut" parentKey="animOut">
 							<Path curve="SMOOTH" duration="5" order="1" parentKey="path1">
 								<ControlPoints>
-									<ControlPoint offsetX="0" offsetY="0" />
-									<ControlPoint offsetX="0" offsetY="0" parentKey="final"/>
+									<ControlPoint offsetX="0" offsetY="0" parentKey="point1"/>
+									<ControlPoint offsetX="0" offsetY="0" parentKey="point2"/>
 								</ControlPoints>
 							</Path>
 							<Path curve="SMOOTH" duration="25" order="2" parentKey="path2">
 								<ControlPoints>
-									<ControlPoint offsetX="0" offsetY="0" parentKey="final"/>
+									<ControlPoint offsetX="0" offsetY="0" parentKey="point"/>
 								</ControlPoints>
 							</Path>
 						</AnimationGroup>
