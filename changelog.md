@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v1.2.1 (2024-04-xx)
+#### v1.3.0 (2024-04-xx)
 
 Bump in TOC file for Season of Discovery update (Classic Era)
 
@@ -10,7 +10,7 @@ Bump in TOC file for Season of Discovery update (Classic Era)
 - New GAB: Priest's Smite button glows during Surge of Light (SoD)
 
 Combat-only counters:
-- Hunter's Flanking Strikes now fades out after leaving combat
+- Hunter's Flanking Strike now fades out after leaving combat
 - Mage's Heating Up now fades out after leaving combat
 - Paladin's Exorcism fades out after leaving combat
 - Shaman's Molten Blast now fades out after leaving combat
