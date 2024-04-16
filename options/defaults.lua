@@ -236,6 +236,9 @@ SAO.defaults = {
                 },
             },
             glow = {
+                [879] = { -- Exorcism
+                    [879] = false, -- Exorcism
+                },
                 [24275] = { -- Hammer of Wrath
                     [24275] = true, -- Hammer of Wrath
                 },
