@@ -121,7 +121,8 @@ function SAO.CheckCounterAction(self, spellID, auraID, talent)
     end
 end
 
-function SAO.CheckAllCounterActions(self)
+function SAO.CheckAllCounterActions(self, checkCombatOnly)
+    SAO:TraceThrottled(checkCombatOnly, Module, "CheckAllCounterActions "..tostring(checkCombatOnly));
     for spellID, counter in pairs(self.ActivableCountersBySpellID) do
         self:CheckCounterAction(spellID, unpack(counter));
     end

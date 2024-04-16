@@ -24,6 +24,15 @@ function SAO.Trace(self, prefix, msg, ...)
     end
 end
 
+local timeOfLastTrace = {}
+function SAO.TraceThrottled(self, key, prefix, ...)
+    key = tostring(key)..tostring(prefix);
+    if not timeOfLastTrace[key] or GetTime() > timeOfLastTrace[key]+1 then
+        self:Trace(prefix, ...);
+        timeOfLastTrace[key] = GetTime();
+    end
+end
+
 -- Get the Global Cooldown duration
 function SAO.GetGCD(self)
     if self:IsEra() or self:IsTBC() then

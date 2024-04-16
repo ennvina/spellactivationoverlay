@@ -46,6 +46,7 @@ function SpellActivationOverlay_OnLoad(self)
 --	self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_HIDE");
 --	self:RegisterUnitEvent("UNIT_AURA", "player");
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+	self:RegisterEvent("PLAYER_ENTERING_WORLD");
 	self:RegisterEvent("SPELL_UPDATE_USABLE");
 	self:RegisterEvent("PLAYER_REGEN_ENABLED");
 	self:RegisterEvent("PLAYER_REGEN_DISABLED");
@@ -93,12 +94,8 @@ function SpellActivationOverlay_OnChangeTimerVisibility(self)
 	end
 end
 
-local timeOfLastReportedEvent = {}
 function SpellActivationOverlay_OnEvent(self, event, ...)
-	if not timeOfLastReportedEvent[event] or GetTime() > timeOfLastReportedEvent[event]+1 then
-		SAO:Trace(Module, "SpellActivationOverlay_OnEvent "..tostring(event));
-		timeOfLastReportedEvent[event] = GetTime();
-	end
+	SAO:TraceThrottled(event, Module, "SpellActivationOverlay_OnEvent "..tostring(event));
 
 --[[ 
 	Dead code because these events do not exist in Classic Era, BC Classic, nor Wrath Classic

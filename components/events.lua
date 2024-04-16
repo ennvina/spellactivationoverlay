@@ -124,6 +124,10 @@ function SAO.LOADING_SCREEN_DISABLED(self, ...)
     end
 end
 
+function SAO.PLAYER_ENTERING_WORLD(self, ...)
+    C_Timer.NewTimer(1, function() self:CheckAllCounterActions() end);
+end
+
 function SAO.SPELL_UPDATE_USABLE(self, ...)
     self:CheckAllCounterActions();
 end
