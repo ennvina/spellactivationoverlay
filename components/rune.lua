@@ -1,4 +1,5 @@
 local AddonName, SAO = ...
+local Module = "rune"
 
 -- Optimize frequent calls
 local GetSpellInfo = GetSpellInfo
@@ -9,7 +10,7 @@ local function addRuneMapping(rune)
     local runeID = rune.skillLineAbilityID;
     for _, spellID in pairs(rune.learnedAbilitySpellIDs) do
         if runeMapping[spellID] ~= runeID then
-            SAO:Debug("rune - Spell "..(GetSpellInfo(spellID) or "x").." ("..spellID..") is learned by rune "..runeID);
+            SAO:Debug(Module, "Spell "..(GetSpellInfo(spellID) or "x").." ("..spellID..") is learned by rune "..runeID);
             runeMapping[spellID] = runeID;
         end
     end
@@ -68,20 +69,20 @@ if SAO.IsSoD() then
         if runeMapping.initialized then
             -- Rune found outside of this timer: this timer has no use anymore
             self:Cancel();
-            SAO:Debug("rune - Stopping regular checks because at least one rune was found from another check");
+            SAO:Debug(Module, "Stopping regular checks because at least one rune was found from another check");
         elseif InCombatLockdown() then
-            SAO:Debug("rune - Cannot perform regular checks because you are in combat");
+            SAO:Debug(Module, "Cannot perform regular checks because you are in combat");
         else
             -- Try again
-            SAO:Debug("rune - Performing a regular check");
+            SAO:Debug(Module, "Performing a regular check");
             C_Engraving.RefreshRunesList()
             initRuneMapping();
             if runeMapping.initialized then
                 -- Rune found: yay! No need for this timer anymore
                 self:Cancel();
-                SAO:Debug("rune - Found at least one rune, stopping regular checks now");
+                SAO:Debug(Module, "Found at least one rune, stopping regular checks now");
             else
-                SAO:Debug("rune - No rune was found during regular check");
+                SAO:Debug(Module, "No rune was found during regular check");
             end
         end
     end);

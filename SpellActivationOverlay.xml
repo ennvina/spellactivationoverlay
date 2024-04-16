@@ -9,6 +9,13 @@
 					<OnPlay function="SpellActivationOverlayTexture_OnFadeInPlay"/>
 					<OnFinished function="SpellActivationOverlayTexture_OnFadeInFinished"/>
 				</Scripts>
+				<Translation offsetX="0" offsetY="0" duration="0.1">
+					<!-- Dummy animation, whose goal in to plug in a function to circumvent a bug with pulse animations -->
+					<!-- If this script is not called slightly early (0.1 secs in, instead of 0.2 sec), starting the pulse may cause a weird flash -->
+					<Scripts>
+						<OnFinished function="SpellActivationOverlayTexture_PreStartPulse"/>
+					</Scripts>
+				</Translation>
 			</AnimationGroup>
 			<AnimationGroup name="$parentAnimOut" parentKey="animOut">
 				<Alpha fromAlpha="1" toAlpha="0" duration="0.1">
@@ -26,6 +33,7 @@
 			<Layer level="ARTWORK">
 				<Texture parentKey="texture" setAllPoints="true"/>
 				<MaskTexture parentKey="mask" file="Interface/Addons/SpellActivationOverlay/textures/mask" hWrapMode="CLAMP" vWrapMode="CLAMP">
+					<!-- Mask for shrinking effect -->
 					<Size x="256" y="256"/><!-- Must match, or be quivalent to, overlay size -->
 					<Anchors>
 						<Anchor point="CENTER" relativeKey="$parent.texture" relativePoint="CENTER"/>
@@ -54,6 +62,37 @@
 							<Scripts>
 								<OnFinished function="SpellActivationOverlayFrame_OnTimeoutFinished"/>
 							</Scripts>
+						</AnimationGroup>
+					</Animations>
+				</MaskTexture>
+				<MaskTexture parentKey="combat" file="Interface/Addons/SpellActivationOverlay/textures/maskzero" hWrapMode="CLAMP" vWrapMode="CLAMP">
+					<!-- Mask for out-of-combat fade-out, used by infinite overlays registered as 'combat-only' auras -->
+					<!-- This mask is *not* used for non-combat-only auras, because such auras are intended to be visible out of combat -->
+					<Size x="256" y="256"/><!-- Must match, or be quivalent to, overlay size -->
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.texture" relativePoint="CENTER"/>
+					</Anchors>
+					<MaskedTextures>
+						<MaskedTexture childKey="texture"/>
+					</MaskedTextures>
+					<Animations>
+						<AnimationGroup name="$parentCombatAnimIn" parentKey="animIn">
+							<Translation duration="0.01" order="1" offsetX="0" offsetY="0" parentKey="point1">
+								<Scripts>
+									<OnPlay function="SpellActivationOverlayTexture_OnCombatAnimInPlay"/>
+									<OnFinished function="SpellActivationOverlayTexture_OnCombatAnimInFinished"/>
+									<OnStop function="SpellActivationOverlayTexture_OnCombatAnimInStop"/>
+								</Scripts>
+							</Translation>
+							<Translation duration="0.99" order="2" offsetX="0" offsetY="0" parentKey="point2"/>
+						</AnimationGroup>
+						<AnimationGroup name="$parentCombatAnimOut" parentKey="animOut">
+							<Translation duration="5" order="1" offsetX="0" offsetY="0" parentKey="point1">
+								<Scripts>
+									<OnPlay function="SpellActivationOverlayTexture_OnCombatAnimOutPlay"/>
+								</Scripts>
+							</Translation>
+							<Translation duration="25" order="2" offsetX="0" offsetY="0" parentKey="point2"/>
 						</AnimationGroup>
 					</Animations>
 				</MaskTexture>

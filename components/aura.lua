@@ -18,11 +18,11 @@ SAO.RegisteredAurasBySpellID = {}
 -- If texture is a function, it will be evaluated at runtime when the SAO is triggered
 -- If glowIDs is nil or empty, no Glowing Action Button (GAB) is triggered
 -- All SAO arguments (between spellID and b, included) mimic Retail's SPELL_ACTIVATION_OVERLAY_SHOW event arguments
-function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale, r, g, b, autoPulse, glowIDs)
+function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale, r, g, b, autoPulse, glowIDs, combatOnly)
     if (type(texture) == 'string') then
         texture = self.TexName[texture];
     end
-    local aura = { name, stacks, spellID, texture, positions, scale, r, g, b, autoPulse, glowIDs }
+    local aura = { name, stacks, spellID, texture, positions, scale, r, g, b, autoPulse, glowIDs, nil, combatOnly }
 
     -- Cannot track spell ID on Classic Era, but can track spell name
     local registeredSpellID = spellID;

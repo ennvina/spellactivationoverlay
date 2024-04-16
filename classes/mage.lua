@@ -90,7 +90,7 @@ end
 
 local function activateHeatingUp(self, spellID)
     -- Heating Up uses the Hot Streak texture, but scaled at 50%
-    self:ActivateOverlay(0, spellID, self.TexName["hot_streak"], "Left + Right (Flipped)", 0.5, 255, 255, 255, false);
+    self:ActivateOverlay(0, spellID, self.TexName["hot_streak"], "Left + Right (Flipped)", 0.5, 255, 255, 255, false, nil, nil, true);
 end
 
 local function deactivateHeatingUp(self, spellID)

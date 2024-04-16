@@ -62,8 +62,8 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     testButton.StartTest = function(self)
         if (not self.isTesting) then
             self.isTesting = true;
-            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName[testTextureLeftRight], "Left + Right (Flipped)", 1, 255, 255, 255, false, nil, GetTime()+5);
-            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName[testTextureTop], "Top", 1, 255, 255, 255, false, nil, GetTime()+5);
+            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName[testTextureLeftRight], "Left + Right (Flipped)", 1, 255, 255, 255, false, nil, GetTime()+5, false);
+            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName[testTextureTop], "Top", 1, 255, 255, 255, false, nil, GetTime()+5, false);
             self.testTimerTicker = C_Timer.NewTicker(4.9, -- Ticker must be slightly shorter than overlay duration, to refresh it before losing it
             function()
                 SAO:RefreshOverlayTimer(self.fakeSpellID, GetTime()+5);
