@@ -76,8 +76,8 @@ function SAO.CheckCounterAction(self, spellID, auraID, talent)
 
     local isCounterUsable, notEnoughPower = IsUsableSpell(spellID);
 
-    local _, gcdDuration, _, _ = GetSpellCooldown(61304); -- GCD SpellID
-    local isGCD = duration <= gcdDuration; -- We check against gcdDuration because it's not always 1.5s
+    local gcdDuration = self:GetGCD();
+    local isGCD = duration <= gcdDuration;
     local isCounterOnCD = start > 0 and not isGCD;
 
     -- Non-mana spells should always glow, regardless of player's current resources.
