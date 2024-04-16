@@ -9,6 +9,13 @@
 					<OnPlay function="SpellActivationOverlayTexture_OnFadeInPlay"/>
 					<OnFinished function="SpellActivationOverlayTexture_OnFadeInFinished"/>
 				</Scripts>
+				<Translation offsetX="0" offsetY="0" duration="0.1">
+					<!-- Dummy animation, whose goal in to plug in a function to circumvent a bug with pulse animations -->
+					<!-- If this script is not called slightly early (0.1 secs in, instead of 0.2 sec), starting the pulse may cause a weird flash -->
+					<Scripts>
+						<OnFinished function="SpellActivationOverlayTexture_PreStartPulse"/>
+					</Scripts>
+				</Translation>
 			</AnimationGroup>
 			<AnimationGroup name="$parentAnimOut" parentKey="animOut">
 				<Alpha fromAlpha="1" toAlpha="0" duration="0.1">
@@ -59,7 +66,8 @@
 					</Animations>
 				</MaskTexture>
 				<MaskTexture parentKey="combat" file="Interface/Addons/SpellActivationOverlay/textures/maskzero" hWrapMode="CLAMP" vWrapMode="CLAMP">
-					<!-- Mask for out-of-combat fade-out, only for infinite overlays -->
+					<!-- Mask for out-of-combat fade-out, used by infinite overlays registered as 'combat-only' auras -->
+					<!-- This mask is *not* used for non-combat-only auras, because such auras are intended to be visible out of combat -->
 					<Size x="256" y="256"/><!-- Must match, or be quivalent to, overlay size -->
 					<Anchors>
 						<Anchor point="CENTER" relativeKey="$parent.texture" relativePoint="CENTER"/>
@@ -69,30 +77,22 @@
 					</MaskedTextures>
 					<Animations>
 						<AnimationGroup name="$parentCombatAnimIn" parentKey="animIn">
-							<Path curve="NONE" duration="0.001" order="1" parentKey="path1">
-								<ControlPoints>
-									<ControlPoint offsetX="0" offsetY="0" parentKey="point"/>
-								</ControlPoints>
-							</Path>
-							<Path curve="SMOOTH" duration="0.5" order="2" parentKey="path2">
-								<ControlPoints>
-									<ControlPoint offsetX="0" offsetY="0" parentKey="point1"/>
-									<ControlPoint offsetX="0" offsetY="0" parentKey="point2" />
-								</ControlPoints>
-							</Path>
+							<Translation duration="0.01" order="1" offsetX="0" offsetY="0" parentKey="point1">
+								<Scripts>
+									<OnPlay function="SpellActivationOverlayTexture_OnCombatAnimInPlay"/>
+									<OnFinished function="SpellActivationOverlayTexture_OnCombatAnimInFinished"/>
+									<OnStop function="SpellActivationOverlayTexture_OnCombatAnimInStop"/>
+								</Scripts>
+							</Translation>
+							<Translation duration="0.99" order="2" offsetX="0" offsetY="0" parentKey="point2"/>
 						</AnimationGroup>
 						<AnimationGroup name="$parentCombatAnimOut" parentKey="animOut">
-							<Path curve="SMOOTH" duration="5" order="1" parentKey="path1">
-								<ControlPoints>
-									<ControlPoint offsetX="0" offsetY="0" parentKey="point1"/>
-									<ControlPoint offsetX="0" offsetY="0" parentKey="point2"/>
-								</ControlPoints>
-							</Path>
-							<Path curve="SMOOTH" duration="25" order="2" parentKey="path2">
-								<ControlPoints>
-									<ControlPoint offsetX="0" offsetY="0" parentKey="point"/>
-								</ControlPoints>
-							</Path>
+							<Translation duration="5" order="1" offsetX="0" offsetY="0" parentKey="point1">
+								<Scripts>
+									<OnPlay function="SpellActivationOverlayTexture_OnCombatAnimOutPlay"/>
+								</Scripts>
+							</Translation>
+							<Translation duration="25" order="2" offsetX="0" offsetY="0" parentKey="point2"/>
 						</AnimationGroup>
 					</Animations>
 				</MaskTexture>

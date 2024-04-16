@@ -500,9 +500,9 @@ function SpellActivationOverlayFrame_PlayCombatAnimIn(animIn)
 	SAO:Trace(Module, "SpellActivationOverlayFrame_PlayCombatAnimIn "..tostring(animIn));
 
 	local offsetX, offsetY = SpellActivationOverlayFrame_GetCombatAnimOffsetFarAway(animIn);
-	offsetX, offsetY = 0.75 * offsetX, 0.75 * offsetY -- Attenuate distance to make it visible sooner
-	animIn.path1.point:SetOffset(offsetX, offsetY);
-	animIn.path2.point2:SetOffset(-offsetX, -offsetY);
+	offsetX, offsetY = 0.7 * offsetX, 0.7 * offsetY -- Attenuate distance to make it visible sooner
+	animIn.point1:SetOffset(offsetX, offsetY);
+	animIn.point2:SetOffset(-offsetX, -offsetY);
 
 	animIn:Play();
 end
@@ -511,9 +511,49 @@ function SpellActivationOverlayFrame_PlayCombatAnimOut(animOut)
 	SAO:Trace(Module, "SpellActivationOverlayFrame_PlayCombatAnimOut "..tostring(animOut));
 
 	local offsetX, offsetY = SpellActivationOverlayFrame_GetCombatAnimOffsetFarAway(animOut);
-	animOut.path1.point2:SetOffset(offsetX, offsetY);
+	animOut.point1:SetOffset(offsetX, offsetY);
 
 	animOut:Play();
+end
+
+function SpellActivationOverlayTexture_ShowCombatMask(anim)
+	SAO:Trace(Module, "SpellActivationOverlayTexture_ShowCombatMask "..tostring(anim));
+
+	local combat = anim:GetParent():GetParent();
+	combat:SetTexture("Interface/Addons/SpellActivationOverlay/textures/maskzero");
+
+	local overlay = combat:GetParent();
+	SAO:Debug(Module, "Showing combat mask for Overlay at location "..overlay.position.." for spell ID "..overlay.spellID.." "..(GetSpellInfo(overlay.spellID) or ""));
+end
+
+function SpellActivationOverlayTexture_HideCombatMask(anim)
+	SAO:Trace(Module, "SpellActivationOverlayTexture_HideCombatMask "..tostring(anim));
+
+	local combat = anim:GetParent():GetParent();
+	combat:SetTexture("");
+
+	local overlay = combat:GetParent();
+	SAO:Debug(Module, "Hiding combat mask for Overlay at location "..overlay.position.." for spell ID "..overlay.spellID.." "..(GetSpellInfo(overlay.spellID) or ""));
+end
+
+function SpellActivationOverlayTexture_OnCombatAnimInPlay(animIn)
+	SAO:Trace(Module, "SpellActivationOverlayTexture_OnCombatAnimInPlay "..tostring(animIn));
+	SpellActivationOverlayTexture_HideCombatMask(animIn);
+end
+
+function SpellActivationOverlayTexture_OnCombatAnimInFinished(animIn)
+	SAO:Trace(Module, "SpellActivationOverlayTexture_OnCombatAnimInFinished "..tostring(animIn));
+	SpellActivationOverlayTexture_ShowCombatMask(animIn);
+end
+
+function SpellActivationOverlayTexture_OnCombatAnimInStop(animIn)
+	SAO:Trace(Module, "SpellActivationOverlayTexture_OnCombatAnimInStop "..tostring(animIn));
+	SpellActivationOverlayTexture_ShowCombatMask(animIn);
+end
+
+function SpellActivationOverlayTexture_OnCombatAnimOutPlay(animOut)
+	SAO:Trace(Module, "SpellActivationOverlayTexture_OnCombatAnimOutPlay "..tostring(animOut));
+	SpellActivationOverlayTexture_ShowCombatMask(animOut);
 end
 
 function SpellActivationOverlayTexture_OnFadeInPlay(animGroup)
@@ -526,6 +566,13 @@ function SpellActivationOverlayTexture_OnFadeInFinished(animGroup)
 	SAO:Trace(Module, "SpellActivationOverlayTexture_OnFadeInFinished "..tostring(animGroup));
 	local overlay = animGroup:GetParent();
 	overlay:SetAlpha(1);
+	if ( overlay.pulse.autoPlay ) then
+		overlay.pulse:Play();
+	end
+end
+
+function SpellActivationOverlayTexture_PreStartPulse(anim)
+	local overlay = anim:GetParent():GetParent();
 	if ( overlay.pulse.autoPlay ) then
 		overlay.pulse:Play();
 	end
