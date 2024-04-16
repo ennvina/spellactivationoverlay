@@ -132,6 +132,14 @@ function SAO.SPELL_UPDATE_USABLE(self, ...)
     self:CheckAllCounterActions();
 end
 
+function SAO.PLAYER_REGEN_ENABLED(self, ...)
+    self:CheckAllCounterActions(true);
+end
+
+function SAO.PLAYER_REGEN_DISABLED(self, ...)
+    self:CheckAllCounterActions(true);
+end
+
 -- Specific spellbook update
 function SAO.SPELLS_CHANGED(self, ...)
     for glowID, _ in pairs(self.RegisteredGlowSpellNames) do
