@@ -203,6 +203,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	end
 
 	local overlay = SpellActivationOverlay_GetOverlay(self, spellID, position);
+	SAO_LastShownOverlay = overlay; -- Global variable for debugging purposes
 	overlay.spellID = spellID;
 	overlay.position = position;
 	
