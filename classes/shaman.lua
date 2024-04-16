@@ -51,7 +51,7 @@ local function registerClass(self)
     if self.IsSoD() then
 
         local moltenBlastSoD = 425339;
-        self:RegisterAura("molten_blast", 0, moltenBlastSoD, "impact", "Top", 0.8, 255, 255, 255, true, { moltenBlastSoD });
+        self:RegisterAura("molten_blast", 0, moltenBlastSoD, "impact", "Top", 0.8, 255, 255, 255, true, { moltenBlastSoD }, true);
         self:RegisterCounter("molten_blast");
 
         -- Maelstrom Weapon & Power Surge
