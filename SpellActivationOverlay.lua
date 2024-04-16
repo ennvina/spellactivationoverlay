@@ -290,7 +290,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 		if ( InCombatLockdown() ) then
 			overlay.combat.animOut:Stop();
 			-- SpellActivationOverlayFrame_PlayCombatAnimIn(overlay.combat.animIn); -- Do not play combat.animIn if already in combat
-		else
+		elseif ( self.disableDimOutOfCombat ) then -- Do not start animOut, because animIn will be started about 10 lines below
 			overlay.combat.animIn:Stop();
 			SpellActivationOverlayFrame_PlayCombatAnimOut(overlay.combat.animOut);
 		end
@@ -303,8 +303,10 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 		self.combatAnimOut:Stop();
 		self.combatAnimIn:Play();
 		if ( combatOnly ) then
+			-- Playing combat.animIn to add a smoother fade-in animation when not in combat
+			-- Because the player is not in combat, the 'very quick' popup is overkill
 			overlay.combat.animOut:Stop();
-			-- SpellActivationOverlayFrame_PlayCombatAnimIn(overlay.combat.animIn); -- Playing combat.animIn would delay the 'more visible' goal
+			SpellActivationOverlayFrame_PlayCombatAnimIn(overlay.combat.animIn);
 		end
 	end
 end
