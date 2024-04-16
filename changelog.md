@@ -9,7 +9,13 @@ New runes for Season of Discovery:
 - New GAB: Priest's Flash Heal button glows during Surge of Light
 - New GAB: Priest's Smite button glows during Surge of Light
 
+Combat-only counters:
+- Hunter's Flanking Strikes now fades out after leaving combat
+- Mage's Heating Up now fades out after leaving combat
+- Shaman's Molten Blast now fades out after leaving combat
+
 Bug Fixes
+- Counters are no longer flagged as unavailable during GCD (Classic Era)
 - Druid's Eclipse now refreshes its visual timer when gaining a stack
 
 #### v1.2.0 (2024-03-19)
