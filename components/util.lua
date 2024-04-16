@@ -12,9 +12,15 @@ local GetSpellTabInfo = GetSpellTabInfo
 local GetTalentInfo = GetTalentInfo
 local UnitAura = UnitAura
 
-function SAO.Debug(self, msg, ...)
-    if SpellActivationOverlayDB.debug then
-        print("[SAO@"..GetTime().."] "..msg, ...);
+function SAO.Debug(self, prefix, msg, ...)
+    if SpellActivationOverlayDB and SpellActivationOverlayDB.debug then
+        print("[SAO@"..GetTime().."] -"..prefix.."- "..msg, ...);
+    end
+end
+
+function SAO.Trace(self, prefix, msg, ...)
+    if SpellActivationOverlayDB and SpellActivationOverlayDB.trace and SpellActivationOverlayDB.trace[prefix] then
+        print("{SAO@"..GetTime().."} -"..prefix.."- "..msg, ...);
     end
 end
 

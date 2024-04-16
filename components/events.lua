@@ -1,4 +1,5 @@
 local AddonName, SAO = ...
+local Module = "events"
 
 -- Optimize frequent calls
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
@@ -49,7 +50,7 @@ function SAO.SPELL_AURA(self, ...)
             (auras[count])
         ) then
             -- Activate aura
-            self:Debug("events - Activating aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
+            self:Debug(Module, "Activating aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
             for _, aura in ipairs(auras[count]) do
                 self:ActivateOverlay(count, select(3,unpack(aura)));
                 self:AddGlow(spellID, select(11,unpack(aura)));
@@ -65,7 +66,7 @@ function SAO.SPELL_AURA(self, ...)
             (auras[count])
         ) then
             -- Reactivate aura timer
-            self:Debug("events - Refreshing aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
+            self:Debug(Module, "Refreshing aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
             self:RefreshOverlayTimer(spellID);
         elseif (
             -- Aura is already visible but its number of stack changed
@@ -78,7 +79,7 @@ function SAO.SPELL_AURA(self, ...)
             (auras[count])
         ) then
             -- Deactivate old aura and activate the new one
-            self:Debug("events - Changing number of stacks from "..tostring(currentlyActiveOverlay).." to "..count.." for aura "..spellID.." "..(GetSpellInfo(spellID) or ""));
+            self:Debug(Module, "Changing number of stacks from "..tostring(currentlyActiveOverlay).." to "..count.." for aura "..spellID.." "..(GetSpellInfo(spellID) or ""));
             self:DeactivateOverlay(spellID);
             self:RemoveGlow(spellID);
             for _, aura in ipairs(auras[count]) do
@@ -96,7 +97,7 @@ function SAO.SPELL_AURA(self, ...)
             -- Which means either there is no stacks, or the number of stacks is not supported
         ) then
             -- Aura just disappeared or is not supported for this number of stacks
-            self:Debug("events - Removing aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
+            self:Debug(Module, "Removing aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
             self:DeactivateOverlay(spellID);
             self:RemoveGlow(spellID);
         end
