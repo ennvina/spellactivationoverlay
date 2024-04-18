@@ -42,7 +42,7 @@ local function discardedByOverlayOption(self, auraID, stacks)
 end
 
 -- Add or refresh an overlay
-function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime)
+function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly)
     if (texture) then
         -- Tell the overlay is active, even though the overlay may be discarded below
         -- This "active state" tells the aura is in place, which is used by e.g. the glowing button system
@@ -67,7 +67,7 @@ function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r
         endTime = self:GetSpellEndTime(spellID, endTime);
 
         -- Actually show the overlay(s)
-        self.ShowAllOverlays(self.Frame, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime);
+        self.ShowAllOverlays(self.Frame, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly);
     end
 end
 

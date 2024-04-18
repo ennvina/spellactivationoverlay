@@ -1,15 +1,22 @@
 ## SpellActivationOverlay Changelog
 
-#### v1.2.1 (2024-04-xx)
+#### v1.3.0 (2024-04-17)
 
 Bump in TOC file for Season of Discovery update (Classic Era)
 
-New runes for Season of Discovery:
-- New SAO: Priest's Surge of Light
-- New GAB: Priest's Flash Heal button glows during Surge of Light
-- New GAB: Priest's Smite button glows during Surge of Light
+- New GAB: Paladin's Exorcism
+- New SAO: Priest's Surge of Light (Season of Discovery)
+- New GAB: Priest's Flash Heal button glows during Surge of Light (SoD)
+- New GAB: Priest's Smite button glows during Surge of Light (SoD)
+
+Combat-only counters:
+- Hunter's Flanking Strike now fades out after leaving combat
+- Mage's Heating Up now fades out after leaving combat
+- Paladin's Exorcism fades out after leaving combat
+- Shaman's Molten Blast now fades out after leaving combat
 
 Bug Fixes
+- Counters are no longer flagged as unavailable during GCD (Classic Era)
 - Druid's Eclipse now refreshes its visual timer when gaining a stack
 
 #### v1.2.0 (2024-03-19)

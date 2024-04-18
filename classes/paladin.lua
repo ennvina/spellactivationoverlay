@@ -11,6 +11,9 @@ local function registerClass(self)
     self:RegisterAura("how", 0, how, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(how)) });
     self:RegisterCounter("how");
 
+    self:RegisterAura("exorcism", 0, 879, nil, "", 0, 0, 0, 0, false, { exorcism }, true);
+    self:RegisterCounter("exorcism");
+
     if self.IsWrath() then
         local infusionOfLightBuff1 = 53672;
         local infusionOfLightBuff2 = 54149;
@@ -43,8 +46,10 @@ end
 
 local function loadOptions(self)
     local how = 24275;
+    local exorcism = 879;
 
     self:AddGlowingOption(nil, how, how);
+    self:AddGlowingOption(nil, exorcism, exorcism);
 
     if self.IsWrath() then
         local flashOfLight = 19750;
