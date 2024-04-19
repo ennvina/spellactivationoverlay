@@ -39,12 +39,6 @@ function SAO.GetRuneFromSpell(self, spellID)
     return runeMapping[spellID];
 end
 
-function SAO.IsRuneSpellLearned(self, spellID)
-    local runeID = self:GetRuneFromSpell(spellID);
-    if runeID then
-        return C_Engraving.IsRuneEquipped(runeID);
-    end
-end
 
 -- Track rune updates
 if SAO.IsSoD() then

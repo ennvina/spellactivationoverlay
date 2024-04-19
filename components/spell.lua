@@ -102,13 +102,8 @@ function SAO.IsSpellIdentical(self, spellID, spellName, referenceID)
 end
 
 -- Test if the player is capable of casting a specific spell
--- For most game projects, it checks the IsPlayerSpell function
--- For Season of Discovery, it adds a specific check related to runes
 function SAO.IsSpellLearned(self, spellID)
-    if IsPlayerSpell(spellID) then
-        return true;
-    end
-    if spellID >= 400000 and self.IsSoD() and self:IsRuneSpellLearned(spellID) then
+    if IsSpellKnownOrOverridesKnown(spellID) then
         return true;
     end
     return false;
