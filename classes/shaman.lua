@@ -96,6 +96,10 @@ local RollingThunderHandler = {
 -- Must activate Rolling Thunder after logging or changing runes, if the rune is present on wrists and if there are 7 or more charges or Lightning Shield
 -- This function does not re-activate the effect if already activated
 local function checkRollingThunderRuneAndLightningSieldStacks(self, ...)
+    if not RollingThunderHandler.initialized then
+        return;
+    end
+
     local RollingThunderEquipped = C_Engraving and SAO:IsSpellLearned(432056);
     if not RollingThunderEquipped then
         RollingThunderHandler:deactivate();
