@@ -1,7 +1,7 @@
 local AddonName, SAO = ...
 
 -- Detect Rolling Thunder stacks
-local rollingThunderHandler = {
+local RollingThunderHandler = {
     -- Constants
     lightningShield = {324, 325, 905, 945, 8134, 10431, 10432},
     fakeSpellID = 324+1000000, -- For option testing
@@ -98,20 +98,20 @@ local rollingThunderHandler = {
 local function checkRollingThunderRuneAndLightningSieldStacks(self, ...)
     local RollingThunderEquipped = C_Engraving and SAO:IsSpellLearned(432056);
     if not RollingThunderEquipped then
-        rollingThunderHandler:deactivate();
+        RollingThunderHandler:deactivate();
     else
         -- C_UnitAuras is currently available for Classic Era only
         -- Fortunately, RollingThunderHandler is used only on Season of Discovery
         local aura = C_UnitAuras.GetAuraDataBySpellName("player", GetSpellInfo(324));
         if aura and aura.applications > 6 and not SAO:GetActiveOverlay(324) then
-            rollingThunderHandler:activate(aura.applications);
+            RollingThunderHandler:activate(aura.applications);
         end
     end
 end
 
 local function customCLEU(self, ...)
-    if rollingThunderHandler.initialized then
-        rollingThunderHandler:cleu();
+    if RollingThunderHandler.initialized then
+        RollingThunderHandler:cleu();
     end
 end
 
@@ -166,8 +166,8 @@ local function registerClass(self)
     if self.IsSoD() then
 
         -- Initializing Rolling Thunder handler, only for Season of Discovery
-        if (not rollingThunderHandler.initialized) then
-            rollingThunderHandler:init();
+        if (not RollingThunderHandler.initialized) then
+            RollingThunderHandler:init();
         end
 
         local moltenBlastSoD = 425339;
@@ -238,7 +238,7 @@ local function registerClass(self)
             local auraName = "rolling_thunder_"..lightningShieldStacks;
             local scale = 0.5 + 0.1 * (lightningShieldStacks - 6); -- 60%, 70%, 80%
             local pulse = lightningShieldStacks == 9;
-            self:RegisterAura(auraName, lightningShieldStacks, rollingThunderHandler.fakeSpellID, "fulmination", "Top", scale, 255, 255, 255, pulse, rollingThunderSpells);
+            self:RegisterAura(auraName, lightningShieldStacks, RollingThunderHandler.fakeSpellID, "fulmination", "Top", scale, 255, 255, 255, pulse, rollingThunderSpells);
         end
         -- Tidal Waves SoD
         local tidalSpells = {
@@ -303,9 +303,9 @@ local function loadOptions(self)
         self:AddOverlayOption(moltenBlastSoD, moltenBlastSoD);
         self:AddOverlayOption(maelstromSoD, maelstromSoDBuff, 0, oneToFourStacks, nil, 4); -- setup any stacks, test with 4 stacks
         self:AddOverlayOption(maelstromSoD, maelstromSoDBuff, 5); -- setup 5 stacks
-        self:AddOverlayOption(rollingThunderSoD, lightningShield, 7, nil, nil, nil, rollingThunderHandler.fakeSpellID);
-        self:AddOverlayOption(rollingThunderSoD, lightningShield, 8, nil, nil, nil, rollingThunderHandler.fakeSpellID);
-        self:AddOverlayOption(rollingThunderSoD, lightningShield, 9, nil, nil, nil, rollingThunderHandler.fakeSpellID);
+        self:AddOverlayOption(rollingThunderSoD, lightningShield, 7, nil, nil, nil, RollingThunderHandler.fakeSpellID);
+        self:AddOverlayOption(rollingThunderSoD, lightningShield, 8, nil, nil, nil, RollingThunderHandler.fakeSpellID);
+        self:AddOverlayOption(rollingThunderSoD, lightningShield, 9, nil, nil, nil, RollingThunderHandler.fakeSpellID);
         self:AddOverlayOption(tidalWavesSoDTalent, tidalWavesSoDBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
     end
 
