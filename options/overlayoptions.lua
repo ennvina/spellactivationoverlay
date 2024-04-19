@@ -33,7 +33,7 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, vari
         local spellName, _, spellIcon = GetSpellInfo(talentID);
         text = text.." |T"..spellIcon..":0|t "..spellName;
         if (count and count > 0) then
-            text = text .. " ("..string.format(STACKS, count)..")";
+            text = text .. " ("..SAO:NbStacks(count)..")";
         end
         if (talentSubText) then
             text = text.." ("..talentSubText..")";

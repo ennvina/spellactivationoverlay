@@ -73,8 +73,8 @@ local function loadOptions(self)
     local serendipityTalent = 63730;
     local serendipitySoDBuff = 413247;
 
-    local oneOrTwoStacks = string.format(CALENDAR_TOOLTIP_DATE_RANGE, "1", string.format(STACKS, 2));
-    local threeStacks = string.format(STACKS, 3);
+    local oneOrTwoStacks = self:NbStacks(1, 2);
+    local threeStacks = self:NbStacks(3);
 
     if not self.IsEra() then
         self:AddOverlayOption(surgeOfLightTalent, surgeOfLightBuff);

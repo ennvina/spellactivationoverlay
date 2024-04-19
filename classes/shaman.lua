@@ -275,9 +275,9 @@ local function loadOptions(self)
     local tidalWavesSoDBuff = 432041;
     local tidalWavesSoDTalent = 432233;
 
-    local oneToFourStacks = string.format(CALENDAR_TOOLTIP_DATE_RANGE, "1", string.format(STACKS, 4));
-    local fiveStacks = string.format(STACKS, 5);
-    local sevenToNineStacks = string.format(CALENDAR_TOOLTIP_DATE_RANGE, "7", string.format(STACKS, 9));
+    local oneToFourStacks = self:NbStacks(1, 4);
+    local fiveStacks = self:NbStacks(5);
+    local sevenToNineStacks = self:NbStacks(7, 9);
 
     if self.IsEra() then
         -- Elemental Focus has 1 charge on Classic Era
