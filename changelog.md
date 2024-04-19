@@ -1,5 +1,16 @@
 ## SpellActivationOverlay Changelog
 
+#### v1.3.1 (2024-04-xx)
+
+Shout-out to fellow developer Amanthuul. Thanks!
+
+New runes for Season of Discovery:
+- New SAO: Shaman's Rolling Thunder with 7-9 Lightning Shield stacks
+- New SAO: Shaman's Tidal Waves
+- New GAB: Shaman's Earth Shock, with 7-9 Lightning Shield stacks
+- New GAB: Shaman's Healing Wave, during Tidal Waves
+- New GAB: Shaman's Lesser Healing Wave, during Tidal Waves
+
 #### v1.3.0 (2024-04-17)
 
 Bump in TOC file for Season of Discovery update (Classic Era)
