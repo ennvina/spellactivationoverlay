@@ -87,6 +87,18 @@ local rollingThunderHandler = {
     end,
 }
 
+--Deactivating Rolling Thunder on wrists rune change and activating on login if stack count is right, not refreshing overlay is currently active
+local function RTRuneUpdateTracker(self, ...)
+    local RollingThunderEquipped = C_Engraving and SAO:IsSpellLearned(432056);
+    if not RollingThunderEquipped then
+        rollingThunderHandler:deactivate();
+    else
+        local aura = C_UnitAuras.GetAuraDataBySpellName("player", GetSpellInfo(324))
+        if aura and aura.applications > 6 and not SAO:GetActiveOverlay(324) then
+            rollingThunderHandler:activate(aura.applications);
+        end
+    end
+end
 
 local function customCLEU(self, ...)
     if rollingThunderHandler.initialized then
@@ -150,21 +162,6 @@ local function registerClass(self)
         if (not rollingThunderHandler.initialized) then
             rollingThunderHandler:init();
         end
-        
-        --Deactivating Rolling Thunder on wrists rune change and activating on login if stack count is right, not refreshing overlay is currently active
-        local RTRuneUpdateTracker = CreateFrame("FRAME");
-            RTRuneUpdateTracker:RegisterEvent("SPELLS_CHANGED");
-            RTRuneUpdateTracker:SetScript("OnEvent", function(self)
-                local RollingThunderEquipped = C_Engraving and SAO:IsSpellLearned(432056);
-                if not RollingThunderEquipped then
-                    rollingThunderHandler:deactivate();
-                else
-                    local _, _, stacks = AuraUtil.FindAuraByName(GetSpellInfo(324), "player")
-                    if stacks and stacks > 6 and not SAO:GetActiveOverlay(324) then
-                        rollingThunderHandler:activate(stacks);
-                    end
-                end
-            end);
 
         local moltenBlastSoD = 425339;
         self:RegisterAura("molten_blast", 0, moltenBlastSoD, "impact", "Top", 0.8, 255, 255, 255, true, { moltenBlastSoD }, true);
@@ -230,11 +227,11 @@ local function registerClass(self)
         self:RegisterAura("power_surge_sod", 0, powerSurgeSoDBuff, powerSurgeRightTextureFunc, "Right (Flipped)", 1, 255, 255, 255, true, powerSurgeSpells);
         self:RegisterAura("elemental_focus", 0, elementalFocusBuff, elementalFocusLeftTextureFunc, "Left", 1, 255, 255, 255, true);
         self:RegisterAura("elemental_focus", 0, elementalFocusBuff, "echo_of_the_elements", "Right (Flipped)", 1, 255, 255, 255, true);
-        for lightningShieldStacks=1,3 do
-            local auraName = ({ "rolling_thunder_7", "rolling_thunder_8", "rolling_thunder_9" })[lightningShieldStacks];
-            local scale = 0.5 + 0.1 * lightningShieldStacks; -- 60%, 70%, 80%
-            local pulse = lightningShieldStacks == 3 or nil;
-            self:RegisterAura(auraName, lightningShieldStacks+6, rollingThunderHandler.fakeSpellID, "fulmination", "Top", scale, 255, 255, 255, pulse, rollingThunderSpells);
+        for lightningShieldStacks=7,9 do
+            local auraName = "rolling_thunder_"..lightningShieldStacks;
+            local scale = 0.5 + 0.1 * (lightningShieldStacks - 6); -- 60%, 70%, 80%
+            local pulse = lightningShieldStacks == 9;
+            self:RegisterAura(auraName, lightningShieldStacks, rollingThunderHandler.fakeSpellID, "fulmination", "Top", scale, 255, 255, 255, pulse, rollingThunderSpells);
         end
         -- Tidal Waves SoD
         local tidalSpells = {
@@ -336,4 +333,5 @@ SAO.Class["SHAMAN"] = {
     ["Register"] = registerClass,
     ["LoadOptions"] = loadOptions,
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
+    ["SPELLS_CHANGED"] = RTRuneUpdateTracker,
 }
