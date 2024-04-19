@@ -43,14 +43,19 @@ local rollingThunderHandler = {
         
 
         if (self.allSpellIDs[spellID]) then
-            if (event == "SPELL_AURA_APPLIED_DOSE" ) then
+            if (event == "SPELL_AURA_APPLIED_DOSE") then
                 -- Deactivating old overlays and activating new one when Lightning Shield stack is gained
-                if stacks >= 7 then self:deactivate(); self:activate(stacks)
+                if stacks >= 7 then
+                    self:deactivate();
+                    self:activate(stacks);
                 end
             elseif (event == "SPELL_AURA_REMOVED_DOSE") then
                 -- Deactivating old overlays and activating new one when Lightning Shield stack is lost
-                if stacks >= 7 then self:deactivate(); self:activate(stacks);
-                else self:deactivate(); 
+                if stacks >= 7 then
+                    self:deactivate();
+                    self:activate(stacks);
+                else
+                    self:deactivate();
                 end
             end
         end
@@ -87,13 +92,17 @@ local rollingThunderHandler = {
     end,
 }
 
---Deactivating Rolling Thunder on wrists rune change and activating on login if stack count is right, not refreshing overlay is currently active
-local function RTRuneUpdateTracker(self, ...)
+-- Must deactivate Rolling Thunder if the rune is lost on wrists
+-- Must activate Rolling Thunder after logging or changing runes, if the rune is present on wrists and if there are 7 or more charges or Lightning Shield
+-- This function does not re-activate the effect if already activated
+local function checkRollingThunderRuneAndLightningSieldStacks(self, ...)
     local RollingThunderEquipped = C_Engraving and SAO:IsSpellLearned(432056);
     if not RollingThunderEquipped then
         rollingThunderHandler:deactivate();
     else
-        local aura = C_UnitAuras.GetAuraDataBySpellName("player", GetSpellInfo(324))
+        -- C_UnitAuras is currently available for Classic Era only
+        -- Fortunately, RollingThunderHandler is used only on Season of Discovery
+        local aura = C_UnitAuras.GetAuraDataBySpellName("player", GetSpellInfo(324));
         if aura and aura.applications > 6 and not SAO:GetActiveOverlay(324) then
             rollingThunderHandler:activate(aura.applications);
         end
@@ -106,9 +115,7 @@ local function customCLEU(self, ...)
     end
 end
 
-
-
-local function registerClass(self)    
+local function registerClass(self)
 
     if self.IsWrath() or self.IsTBC() then
         -- Elemental Focus has 2 charges on TBC and Wrath
@@ -158,7 +165,7 @@ local function registerClass(self)
 
     if self.IsSoD() then
 
-        --Initializing Rolling Thunder handler
+        -- Initializing Rolling Thunder handler, only for Season of Discovery
         if (not rollingThunderHandler.initialized) then
             rollingThunderHandler:init();
         end
@@ -260,7 +267,6 @@ local function loadOptions(self)
 
     local tidalWavesBuff = 53390;
     local tidalWavesTalent = 51562;
-    
 
     -- Season of Discovery
     local moltenBlastSoD = 425339;
@@ -269,8 +275,8 @@ local function loadOptions(self)
     local lavaBurstSoD = 408490;
     local powerSurgeSoDBuff = 415105;
     local powerSurgeSoD = 415100;
-    local lightningShield = 324;    
-    local rollingThunderSod = 432056;
+    local lightningShield = 324;
+    local rollingThunderSoD = 432056;
     local earthShock = 8042;
     local tidalWavesSoDBuff = 432041;
     local tidalWavesSoDTalent = 432233;
@@ -297,9 +303,9 @@ local function loadOptions(self)
         self:AddOverlayOption(moltenBlastSoD, moltenBlastSoD);
         self:AddOverlayOption(maelstromSoD, maelstromSoDBuff, 0, oneToFourStacks, nil, 4); -- setup any stacks, test with 4 stacks
         self:AddOverlayOption(maelstromSoD, maelstromSoDBuff, 5); -- setup 5 stacks
-        self:AddOverlayOption(rollingThunderSod, lightningShield, 7, nil, nil, nil, rollingThunderHandler.fakeSpellID);
-        self:AddOverlayOption(rollingThunderSod, lightningShield, 8, nil, nil, nil, rollingThunderHandler.fakeSpellID);
-        self:AddOverlayOption(rollingThunderSod, lightningShield, 9, nil, nil, nil, rollingThunderHandler.fakeSpellID);
+        self:AddOverlayOption(rollingThunderSoD, lightningShield, 7, nil, nil, nil, rollingThunderHandler.fakeSpellID);
+        self:AddOverlayOption(rollingThunderSoD, lightningShield, 8, nil, nil, nil, rollingThunderHandler.fakeSpellID);
+        self:AddOverlayOption(rollingThunderSoD, lightningShield, 9, nil, nil, nil, rollingThunderHandler.fakeSpellID);
         self:AddOverlayOption(tidalWavesSoDTalent, tidalWavesSoDBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
     end
 
@@ -323,7 +329,7 @@ local function loadOptions(self)
         self:AddGlowingOption(maelstromSoD, maelstromSoDBuff, healingWave, fiveStacks);
         self:AddGlowingOption(maelstromSoD, maelstromSoDBuff, chainHeal, fiveStacks);
         self:AddGlowingOption(maelstromSoD, maelstromSoDBuff, lavaBurstSoD, fiveStacks);
-        self:AddGlowingOption(rollingThunderSod, lightningShield, earthShock, sevenToNineStacks);
+        self:AddGlowingOption(rollingThunderSoD, lightningShield, earthShock, sevenToNineStacks);
         self:AddGlowingOption(tidalWavesSoDTalent, tidalWavesSoDBuff, lesserHealingWave);
         self:AddGlowingOption(tidalWavesSoDTalent, tidalWavesSoDBuff, healingWave);
     end
@@ -333,5 +339,5 @@ SAO.Class["SHAMAN"] = {
     ["Register"] = registerClass,
     ["LoadOptions"] = loadOptions,
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
-    ["SPELLS_CHANGED"] = RTRuneUpdateTracker,
+    ["SPELLS_CHANGED"] = checkRollingThunderRuneAndLightningSieldStacks,
 }

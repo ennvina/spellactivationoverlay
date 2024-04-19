@@ -335,7 +335,7 @@ SAO.defaults = {
                     [8] = false,
                     [9] = true,
                 },
-                [432041] = { -- Tidal Waves SoD
+                [432041] = { -- Tidal Waves (Season of Discovery)
                     [0] = false, -- any stacks
                 },
             },
@@ -343,7 +343,7 @@ SAO.defaults = {
                 [53817] = { -- Maelstrom Weapon
                     [403]   = false, -- Lightning Bolt
                     [421]   = false, -- Chain Lightning
-                    [8004]  = false, -- lesser Healing Wave
+                    [8004]  = false, -- Lesser Healing Wave
                     [331]   = false, -- Healing Wave
                     [1064]  = false, -- Chain Heal
                     [51514] = false, -- Hex
@@ -351,7 +351,7 @@ SAO.defaults = {
                 [408505] = { -- Maelstrom Weapon (Season of Discovery)
                     [403]   = false, -- Lightning Bolt
                     [421]   = false, -- Chain Lightning
-                    [8004]  = false, -- lesser Healing Wave
+                    [8004]  = false, -- Lesser Healing Wave
                     [331]   = false, -- Healing Wave
                     [1064]  = false, -- Chain Heal
                     [408490] = false, -- Lava Burst (Season of Discovery)
@@ -362,7 +362,7 @@ SAO.defaults = {
                     [408490] = false, -- Lava Burst (Season of Discovery)
                 },
                 [53390] = { -- Tidal Waves
-                    [8004] = false, -- lesser Healing Wave
+                    [8004] = false, -- Lesser Healing Wave
                     [331]  = false, -- Healing Wave
                 },
                 [425339]= { -- Molten Blast (Season of Discovery)
@@ -371,8 +371,8 @@ SAO.defaults = {
                 [432056]= { -- Rolling Thunder (Season of Discovery)
                     [8042] = true, -- Rolling Thunder (Season of Discovery)
                 },
-                [432041] = { -- Tidal Waves SoD
-                    [8004] = false, -- lesser Healing Wave
+                [432041] = { -- Tidal Waves (Season of Discovery)
+                    [8004] = false, -- Lesser Healing Wave
                     [331]  = false, -- Healing Wave
                 },
             },
