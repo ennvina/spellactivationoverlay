@@ -7,27 +7,30 @@ local RollingThunderHandler = {
     fakeSpellID = 324+1000000, -- For option testing
 
     -- Constants that will be initialized at init()
-    allSpellIDs = {},
-    allSpellNames = {},
-    rollingThunderSpells = { GetSpellInfo(8042) },
+    lightningShieldSpellIDs = {},
+    earthShockSpells = {},
     -- Variables
     initialized = false,
 
     -- Methods
     init = function(self)
+        -- Fetch spell name of Earth Shock
+        -- Instead, we could hardcode the list of spell IDs of all ranks, but the spell name is fine
+        table.insert(self.earthShockSpells, GetSpellInfo(8042));
+
+        -- Keep spell ID of Lightning Shield ranks only for ranks known at the current expansion
+        for _, id in pairs(self.lightningShield) do
+            local name = GetSpellInfo(id);
+            if name then
+                self.lightningShieldSpellIDs[id] = true;
+            end
+        end
         self:addSpellIDCandidates(self.lightningShield);
 
         self.initialized = true;
     end,
 
     addSpellIDCandidates = function(self, ids)
-        for _, id in pairs(ids) do
-            local name = GetSpellInfo(id);
-            if name then
-                self.allSpellIDs[id] = true;
-                self.allSpellNames[name] = true;
-            end
-        end
     end,
 
     cleu = function(self)
@@ -40,9 +43,8 @@ local RollingThunderHandler = {
         if (event:sub(0,11) ~= "SPELL_AURA_") then return end
 
         local spellID, spellName = select(12, CombatLogGetCurrentEventInfo());
-        
 
-        if (self.allSpellIDs[spellID]) then
+        if (self.lightningShieldSpellIDs[spellID]) then
             if (event == "SPELL_AURA_APPLIED_DOSE") then
                 -- Deactivating old overlays and activating new one when Lightning Shield stack is gained
                 if stacks >= 7 then
@@ -72,14 +74,14 @@ local RollingThunderHandler = {
         if (hasSAO) then
             local scale = 0.5 + 0.1 * (lightningShieldStacks - 6);
             local pulse = lightningShieldStacks == 9 or nil;
-            SAO:ActivateOverlay(lightningShieldStacks, 324, SAO.TexName["fulmination"], "Top", scale, 255, 255, 255, pulse, c);
+            SAO:ActivateOverlay(lightningShieldStacks, 324, SAO.TexName["fulmination"], "Top", scale, 255, 255, 255, pulse, nil);
         end
 
         -- GABs
         local gabOption = SAO:GetGlowingOptions(324);
         local hasESGAB = not gabOption or type(gabOption[324]) == "nil" or gabOption[324];
         if (hasESGAB and (hasSAO or lightningShieldStacks == 9)) then
-            SAO:AddGlow(324, rollingThunderSpells); -- First arg is option ID, second arg is spell ID list
+            SAO:AddGlow(324, self.earthShockSpells); -- First arg is option ID, second arg is spell ID list
         end
     end,
 
@@ -200,7 +202,6 @@ local function registerClass(self)
             GetSpellInfo(chainHeal),
             GetSpellInfo(lavaBurstSoD),
         }
-            rollingThunderSpells = { GetSpellInfo(8042) },
         self:RegisterAura("maelstrom_weapon_sod_1", 1, maelstromSoDBuff, "maelstrom_weapon_1", "Top", 0.8, 255, 255, 255, false);
         self:RegisterAura("maelstrom_weapon_sod_2", 2, maelstromSoDBuff, "maelstrom_weapon_2", "Top", 0.8, 255, 255, 255, false);
         self:RegisterAura("maelstrom_weapon_sod_3", 3, maelstromSoDBuff, "maelstrom_weapon_3", "Top", 0.8, 255, 255, 255, false);
@@ -242,7 +243,7 @@ local function registerClass(self)
             local auraName = "rolling_thunder_"..lightningShieldStacks;
             local scale = 0.5 + 0.1 * (lightningShieldStacks - 6); -- 60%, 70%, 80%
             local pulse = lightningShieldStacks == 9;
-            self:RegisterAura(auraName, lightningShieldStacks, RollingThunderHandler.fakeSpellID, "fulmination", "Top", scale, 255, 255, 255, pulse, rollingThunderSpells);
+            self:RegisterAura(auraName, lightningShieldStacks, RollingThunderHandler.fakeSpellID, "fulmination", "Top", scale, 255, 255, 255, pulse, RollingThunderHandler.earthShockSpells);
         end
         -- Tidal Waves SoD
         local tidalSpells = {
