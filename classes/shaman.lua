@@ -74,7 +74,7 @@ local RollingThunderHandler = {
         if (hasSAO) then
             local scale = 0.5 + 0.1 * (lightningShieldStacks - 6);
             local pulse = lightningShieldStacks == 9 or nil;
-            SAO:ActivateOverlay(lightningShieldStacks, 324, SAO.TexName["fulmination"], "Top", scale, 255, 255, 255, pulse, nil);
+            SAO:ActivateOverlay(lightningShieldStacks, 324, SAO.TexName["fulmination"], "Top", scale, 255, 255, 255, pulse, pulse);
         end
 
         -- GABs
