@@ -12,6 +12,10 @@ function SAO.IsWrath()
     return WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC;
 end
 
+function SAO.IsCata()
+    return WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC;
+end
+
 function SAO.IsSoD()
     return WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and C_Engraving and C_Engraving.IsEngravingEnabled()
 end
