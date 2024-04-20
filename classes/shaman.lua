@@ -16,7 +16,7 @@ local RollingThunderHandler = {
     init = function(self)
         -- Fetch spell name of Earth Shock
         -- Instead, we could hardcode the list of spell IDs of all ranks, but the spell name is fine
-        table.insert(self.earthShockSpells, GetSpellInfo(8042));
+        table.insert(self.earthShockSpells, (GetSpellInfo(8042)));
 
         -- Keep spell ID of Lightning Shield ranks only for ranks known at the current expansion
         for _, id in pairs(self.lightningShield) do
