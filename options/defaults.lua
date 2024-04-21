@@ -146,6 +146,9 @@ SAO.defaults = {
                     [4] = true, -- 4 stacks
                     [0] = true, -- any stacks but 4
                 },
+                [57531] = { -- Arcane Potency (2/2) (Cataclysm)
+                    [0] = false,
+                },
                 [48107] = { -- Heating Up (not an actual buff)
                     [0] = true,
                 },

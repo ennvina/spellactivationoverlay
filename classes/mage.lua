@@ -555,6 +555,22 @@ local function registerClass(self)
         -- Smaller, to avoid overlap with Arcane Potency
         self:RegisterAura("arcane_missiles", 0, 79683, "arcane_missiles", "Left + Right (Flipped)", 0.6, 255, 255, 255, true, { (GetSpellInfo(5143)) });
     end
+    if self.IsCata() then
+        local arcanePotency1 = 57529;
+        local arcanePotency2 = 57531;
+
+        -- Add option links during registerClass(), not because loadOptions() which would be loaded only when the options panel is opened
+        -- Add option links before RegisterAura() calls, so that options they are used by initial triggers, if any
+        self:AddOverlayLink(arcanePotency2, arcanePotency1);
+
+        -- Arcane Potency, 1/2 talent points
+        self:RegisterAura("arcane_potency_low", 1, arcanePotency1, "surge_of_light", "Left", 1.1, 255, 255, 255, true, nil, true);
+        self:RegisterAura("arcane_potency_low", 2, arcanePotency1, "surge_of_light", "Left + Right (Flipped)", 1.1, 255, 255, 255, true, nil, true);
+
+        -- Arcane Potency, 2/2 talent points
+        self:RegisterAura("arcane_potency_high", 1, arcanePotency2, "surge_of_light", "Left", 1.1, 255, 255, 255, true, nil, true);
+        self:RegisterAura("arcane_potency_high", 2, arcanePotency2, "surge_of_light", "Left + Right (Flipped)", 1.1, 255, 255, 255, true, nil, true);
+    end
 
     lazyCreateClearcastingVariants(self);
     self:RegisterAura("clearcasting", 0, 12536, clearcastingVariants.textureFunc, "Left + Right (Flipped)", 1.5, 192, 192, 192, false);
@@ -584,6 +600,9 @@ local function loadOptions(self)
 
     local missileBarrageBuff = 44401;
     local missileBarrageTalent = 44404;
+
+    local arcanePotencyBuff2 = 57531;
+    local arcanePotencyTalent = 31572;
 
     local heatingUpBuff = heatingUpSpellID; -- Not really a buff
     local hotStreakBuff = hotStreakSpellID;
@@ -671,6 +690,9 @@ local function loadOptions(self)
     if self.IsSoD() then
         self:AddOverlayOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, 0, oneToThreeStacks, nil, 3); -- setup any stacks, test with 3 stacks
         self:AddOverlayOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, 4); -- setup 4 stacks
+    end
+    if self.IsCata() then
+        self:AddOverlayOption(arcanePotencyTalent, arcanePotencyBuff2, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
     end
     if self.IsSoD() then
         self:AddOverlayOption(hotStreakSoDRune, heatingUpBuff, 0, heatingUpDetails);
