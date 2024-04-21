@@ -29,7 +29,7 @@ mkproject() {
     echo -n "Creating $flavor project..."
     rm -rf ./_release/$flavor || bye "Cannot clean wrath directory"
     mkdir -p ./_release/$flavor/SpellActivationOverlay || bye "Cannot create $flavor directory"
-    cp -R changelog.md LICENSE SpellActivationOverlay.* classes components options textures ./_release/$flavor/SpellActivationOverlay/ || bye "Cannot copy $flavor files"
+    cp -R changelog.md LICENSE SpellActivationOverlay.* classes components options sounds textures ./_release/$flavor/SpellActivationOverlay/ || bye "Cannot copy $flavor files"
     cd ./_release/$flavor || bye "Cannot cd to $flavor directory"
     sed -i s/'^## Interface:.*'/"## Interface: $build_version"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update version of $flavor TOC file"
     echo
@@ -48,6 +48,21 @@ prunetex() {
     do
         rm -f SpellActivationOverlay/textures/"$texname".* || bye "Cannot cleanup textures from installation"
     done
+    echo
+}
+
+# Remove unused sounds to reduce archive size.
+# $@ = array of sounds
+prunesound() {
+    echo -n "Cleaning up sounds..."
+    for soundname in "$@"
+    do
+        rm -f SpellActivationOverlay/sounds/"$soundname".* || bye "Cannot cleanup sounds from installation"
+    done
+    if ! ls -1 SpellActivationOverlay/sounds | grep -q .
+    then
+        rmdir SpellActivationOverlay/sounds || bye "Cannot remove empty 'sounds' directory"
+    fi
     echo
 }
 
@@ -154,6 +169,9 @@ arcane_missiles_2
 arcane_missiles_3
 fulmination)
 prunetex "${TEXTURES_NOT_FOR_CATA[@]}"
+
+SOUNDS_NOT_FOR_CATA=(UI_PowerAura_Generic)
+prunesound "${SOUNDS_NOT_FOR_CATA[@]}"
 
 zipproject cata "$VERSION_TOC_VERSION" alpha
 

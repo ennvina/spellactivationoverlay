@@ -5,6 +5,7 @@ function SAO.ApplyAllVariables(self)
     self:ApplySpellAlertOpacity();
     self:ApplySpellAlertGeometry();
     self:ApplySpellAlertTimer();
+    self:ApplySpellAlertSound();
     self:ApplyGlowingButtonsToggle();
 end
 
@@ -26,6 +27,12 @@ end
 function SAO.ApplySpellAlertTimer(self)
     SpellActivationOverlayFrame.useTimer = SpellActivationOverlayDB.alert.timer ~= 0;
     SpellActivationOverlay_OnChangeTimerVisibility(SpellActivationOverlayFrame);
+end
+
+-- Apply spell alert sound effects toggle
+function SAO.ApplySpellAlertSound(self)
+    SpellActivationOverlayFrame.useSound = SpellActivationOverlayDB.alert.sound ~= 0;
+    SpellActivationOverlay_OnChangeSoundToggle(SpellActivationOverlayFrame);
 end
 
 -- Apply glowing buttons on/off

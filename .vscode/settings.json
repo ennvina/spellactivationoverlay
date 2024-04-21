@@ -80,6 +80,8 @@
         "IsSpellKnownOrOverridesKnown",
         "IsUsableSpell",
         "PlaySound",
+        "PlaySoundFile",
+        "StopSound",
         "UnitAura",
         "UnitCanAttack",
         "UnitClass",

@@ -4,6 +4,13 @@
 
 Shout-out to fellow developer Amanthuul. Thanks!
 
+Options:
+- New option to play a sound effect when triggering a spell alert
+- The option is enabled by default for Cataclysm, which had this sound
+- The option is disabled for Classic Era and Wrath, which did not have it
+- It would be confusing to add sounds overnight to Era and Wrath players
+- To enable or disable it, please open the options panel by entering /sao
+
 New runes for Season of Discovery:
 - New SAO: Shaman's Rolling Thunder with 7-9 Lightning Shield stacks
 - New SAO: Shaman's Tidal Waves
