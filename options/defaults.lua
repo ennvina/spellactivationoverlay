@@ -155,7 +155,7 @@ SAO.defaults = {
                 [400625] = { -- Hot Streak (Season of Discovery)
                     [0] = true,
                 },
-                [64343] = { -- Impact
+                [64343] = { -- Impact (Wrath, Cataclysm)
                     [0] = true,
                 },
                 [54741] = { -- Firestarter (Wrath)
@@ -201,7 +201,7 @@ SAO.defaults = {
                 [400625] = { -- Hot Streak (Season of Discovery)
                     [11366] = true, -- Pyroblast
                 },
-                [64343] = { -- Impact
+                [64343] = { -- Impact (Wrath)
                     [2136] = true, -- Fire Blast
                 },
                 [54741] = { -- Firestarter (Wrath)
