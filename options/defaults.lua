@@ -133,7 +133,10 @@ SAO.defaults = {
                 [12536] = { -- Arcane Concentration
                     [0] = false,
                 },
-                [44401] = { -- Missile Barrage
+                [79683] = { -- Arcane Missiles! (Cataclysm)
+                    [0] = true,
+                },
+                [44401] = { -- Missile Barrage (Wrath)
                     [0] = true,
                 },
                 [400589] = { -- Missile Barrage (Season of Discovery)
@@ -175,10 +178,13 @@ SAO.defaults = {
                 },
                 [5276] = { -- Representative of spells triggering Frozen effect
                     [0] = false,
-                }
+                },
             },
             glow = {
-                [44401] = { -- Missile Barrage
+                [79683] = { -- Arcane Missiles! (Cataclysm)
+                    [5143] = true, -- Arcane Missiles
+                },
+                [44401] = { -- Missile Barrage (Wrath)
                     [5143] = true, -- Arcane Missiles
                 },
                 [400589] = { -- Missile Barrage (Season of Discovery)

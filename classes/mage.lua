@@ -547,8 +547,11 @@ local function registerClass(self)
     if self.IsSoD() then
     	-- Blue-ish, slightly smaller, to avoid confusion and overlap with Arcane Blast
         self:RegisterAura("missile_barrage", 0, 400589, "arcane_missiles", "Left + Right (Flipped)", 0.8, 103, 184, 238, true, { (GetSpellInfo(5143)) });
-    else
+    elseif self.IsWrath() then
         self:RegisterAura("missile_barrage", 0, 44401, "arcane_missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(5143)) });
+    elseif self.IsCata() then
+        -- Smaller, to avoid overlap with Arcane Potency
+        self:RegisterAura("arcane_missiles", 0, 79683, "arcane_missiles", "Left + Right (Flipped)", 0.6, 255, 255, 255, true, { (GetSpellInfo(5143)) });
     end
 
     lazyCreateClearcastingVariants(self);
@@ -574,6 +577,8 @@ local function loadOptions(self)
 --    local clearcastingTalent = 11213; -- Real talent
     local clearcastingTalent = 12536; -- Use buff instead of talent because everyone knows the buff name
     local clearcastingBuff = 12536;
+
+    local arcaneMissilesBuff = 79683; -- Cataclysm requires a buff before casting Arcane Missiles
 
     local missileBarrageBuff = 44401;
     local missileBarrageTalent = 44404;
@@ -653,9 +658,12 @@ local function loadOptions(self)
     lazyCreateClearcastingVariants(self);
 
     self:AddOverlayOption(clearcastingTalent, clearcastingBuff, 0, nil, clearcastingVariants);
+    if self.IsCata() then
+        self:AddOverlayOption(arcaneMissilesBuff, arcaneMissilesBuff);
+    end
     if self.IsSoD() then
         self:AddOverlayOption(missileBarrageSoDRune, missileBarrageSoDBuff);
-    else
+    elseif self.IsWrath() then
         self:AddOverlayOption(missileBarrageTalent, missileBarrageBuff);
     end
     if self.IsSoD() then
@@ -689,9 +697,12 @@ local function loadOptions(self)
         self:AddOverlayOption(brainFreezeTalent, brainFreezeBuff);
     end
 
+    if self.IsCata() then
+        self:AddGlowingOption(arcaneMissilesBuff, arcaneMissilesBuff, arcaneMissiles);
+    end
     if self.IsSoD() then
         self:AddGlowingOption(missileBarrageSoDRune, missileBarrageSoDBuff, arcaneMissiles);
-    else
+    elseif self.IsWrath() then
         self:AddGlowingOption(missileBarrageTalent, missileBarrageBuff, arcaneMissiles);
     end
     if self.IsSoD() then
