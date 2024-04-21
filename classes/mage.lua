@@ -509,7 +509,9 @@ end
 local function registerClass(self)
     -- Fire Procs
     self:RegisterAura("impact", 0, 64343, "lock_and_load", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(2136)) });
-    self:RegisterAura("firestarter", 0, 54741, "impact", "Top", 0.8, 255, 255, 255, true, { (GetSpellInfo(2120)) }); -- May conflict with Impact location
+    if self.IsWrath() then
+        self:RegisterAura("firestarter", 0, 54741, "impact", "Top", 0.8, 255, 255, 255, true, { (GetSpellInfo(2120)) }); -- May conflict with Impact location
+    end
     if self.IsSoD() then
         self:RegisterAura("hot_streak_full", 0, hotStreakSoDSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(pyroblast)) });
     elseif self.IsCata() then
@@ -716,7 +718,9 @@ local function loadOptions(self)
     elseif self.IsCata() then
         self:AddGlowingOption(hotStreakTalent, hotStreakBuff, pyroblastBang);
     end
-    self:AddGlowingOption(firestarterTalent, firestarterBuff, flamestrike);
+    if self.IsWrath() then
+        self:AddGlowingOption(firestarterTalent, firestarterBuff, flamestrike);
+    end
     if not self.IsEra() then -- Must exclude this option specifically for Classic Era, because the talent exists in Era but the proc is passive
         self:AddGlowingOption(impactTalent, impactBuff, fireBlast);
     end

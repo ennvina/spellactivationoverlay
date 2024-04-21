@@ -158,7 +158,7 @@ SAO.defaults = {
                 [64343] = { -- Impact
                     [0] = true,
                 },
-                [54741] = { -- Firestarter
+                [54741] = { -- Firestarter (Wrath)
                     [0] = true,
                 },
                 [74396] = { -- Fingers of Frost
@@ -204,7 +204,7 @@ SAO.defaults = {
                 [64343] = { -- Impact
                     [2136] = true, -- Fire Blast
                 },
-                [54741] = { -- Firestarter
+                [54741] = { -- Firestarter (Wrath)
                     [2120] = true, -- Flamestrike
                 },
                 [57761] = { -- Brain Freeze
