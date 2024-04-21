@@ -5,7 +5,9 @@ local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local GetSpellInfo = GetSpellInfo
 local GetTalentInfo = GetTalentInfo
 local UnitCanAttack = UnitCanAttack
+local UnitDebuff = UnitDebuff
 local UnitExists = UnitExists
+local UnitGUID = UnitGUID
 local UnitHealth = UnitHealth
 
 local clearcastingVariants; -- Lazy init in lazyCreateClearcastingVariants()

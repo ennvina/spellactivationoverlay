@@ -1,6 +1,11 @@
 local AddonName, SAO = ...
 local Module = "main"
 
+-- Optimize frequent calls
+local GetSpellInfo = GetSpellInfo
+local GetTime = GetTime
+local InCombatLockdown = InCombatLockdown
+
 local sizeScale = 0.8;
 local longSide = 256 * sizeScale;
 local shortSide = 128 * sizeScale;

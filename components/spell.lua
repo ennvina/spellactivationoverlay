@@ -2,7 +2,7 @@ local AddonName, SAO = ...
 
 -- Optimize frequent calls
 local GetSpellInfo = GetSpellInfo
-local IsPlayerSpell = IsPlayerSpell
+local IsSpellKnownOrOverridesKnown = IsSpellKnownOrOverridesKnown
 
 -- List of spell IDs sharing the same name
 -- key = spell name, value = list of spell IDs
