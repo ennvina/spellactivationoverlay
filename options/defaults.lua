@@ -146,7 +146,7 @@ SAO.defaults = {
                 [48107] = { -- Heating Up (not an actual buff)
                     [0] = true,
                 },
-                [48108] = { -- Hot Streak
+                [48108] = { -- Hot Streak (Wrath, Cataclysm)
                     [0] = true,
                 },
                 [400625] = { -- Hot Streak (Season of Discovery)
@@ -170,7 +170,7 @@ SAO.defaults = {
                 [400730] = { -- Brain Freeze (Season of Discovery)
                     [0] = true,
                 },
-                [96215] = { -- Hot Streak + Heating Up (not an actual buff)
+                [96215] = { -- Hot Streak + Heating Up (not an actual buff) (Season of Discovery, Wrath)
                     [0] = false,
                 },
                 [5276] = { -- Representative of spells triggering Frozen effect
@@ -188,8 +188,9 @@ SAO.defaults = {
                     [5143] = true,  -- Arcane Missiles
                     [1449] = false, -- Arcane Explosion
                 },
-                [48108] = { -- Hot Streak
+                [48108] = { -- Hot Streak (Wrath, Cataclysm)
                     [11366] = true, -- Pyroblast
+                    [92315] = nil,  -- Pyroblast!, set to nil to simplify DB migration
                 },
                 [400625] = { -- Hot Streak (Season of Discovery)
                     [11366] = true, -- Pyroblast

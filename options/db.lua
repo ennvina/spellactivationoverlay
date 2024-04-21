@@ -38,9 +38,24 @@ local function migrateTo112(db)
     print(WrapTextInColorCode("SAO: Migrated options from pre-1.1.2 to 1.1.2", "FFA2F3FF"));
 end
 
+-- Migrate from pre-131 to 131 or higher
+local function migrateTo131(db)
+
+    -- Cataclysm introduced Pyroblast!, a variant from Pyroblast (notice the bang '!' character in the former spell name)
+    -- We copy options from Pyroblast to Pyroblast!, because we assume mages want to keep the same option$
+    local hotStreak = 48108;
+    local pyro = 11366;
+    local pyroBang = 92315;
+    if type(db.classes["MAGE"]["glow"][hotStreak][pyro]) ~= 'nil' and type(db.classes["MAGE"]["glow"][hotStreak][pyroBang]) == 'nil' then
+        db.classes["MAGE"]["glow"][hotStreak][pyroBang] = db.classes["MAGE"]["glow"][hotStreak][pyro];
+    end
+
+    print(WrapTextInColorCode("SAO: Migrated options from pre-1.3.1 to 1.3.1", "FFA2F3FF"));
+end
+
 -- Load database and use default values if needed
 function SAO.LoadDB(self)
-    local currentversion = 112;
+    local currentversion = 131;
     local db = SpellActivationOverlayDB or {};
 
     if not db.alert then
@@ -111,6 +126,9 @@ function SAO.LoadDB(self)
     end
     if not db.version or db.version < 112 then
         migrateTo112(db);
+    end
+    if not db.version or db.version < 131 then
+        migrateTo131(db);
     end
 
     db.version = currentversion;

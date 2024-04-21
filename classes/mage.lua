@@ -12,9 +12,13 @@ local UnitHealth = UnitHealth
 
 local clearcastingVariants; -- Lazy init in lazyCreateClearcastingVariants()
 
+local pyroblast = 11366; -- Pyroblast, the base Pyro spell
+local pyroblastBang = 92315; -- Pyroblast!, a specific spell for instant Pyro introduced in Cataclysm
+
 local hotStreakSpellID = 48108;
-local heatingUpSpellID = 48107; -- Does not exist in Wrath Classic
+local heatingUpSpellID = 48107; -- Does not exist in WoW Classic yet
 local hotStreakHeatingUpSpellID = hotStreakSpellID+heatingUpSpellID; -- Made up entirely, does not even exist in Retail
+local improvedHotStreakSpellID = 44446; -- Cataclysm talent that trigger Heating Up
 local hotStreakSoDSpellID = 400625;
 -- Do not define a 'heatingUpSoDSpellID' nor a 'hotStreakHeatingUpSoDSpellID'
 -- This would not matter because they are made-up spell IDs
@@ -24,7 +28,7 @@ local hotStreakSoDSpellID = 400625;
 local HotStreakHandler = {}
 
 -- Initialize constants
-HotStreakHandler.init = function(self, spellName)
+HotStreakHandler.init = function(self, talentName)
     local fire_blast = { 2136, 2137, 2138, 8412, 8413, 10197, 10199, 27078, 27079, 42872, 42873 }
     local fireball = { 133, 143, 145, 3140, 8400, 8401, 8402, 10148, 10149, 10150, 10151, 25306, 27070, 38692, 42832, 42833 }
     local frostfire_bolt = { 44614, 47610 }
@@ -34,6 +38,7 @@ HotStreakHandler.init = function(self, spellName)
     -- local living_bomb_sod = { 400613 } this is the DOT effect, which we do NOT want
     local living_bomb_sod = { 401731 }
     local scorch = { 2948, 8444, 8445, 8446, 10205, 10206, 10207, 27073, 27074, 42858, 42859 }
+    local pyroblast_cata = { pyroblast, pyroblastBang }
 
     self.spells = {}
     local function addSpellPack(spellPack)
@@ -45,11 +50,15 @@ HotStreakHandler.init = function(self, spellName)
     addSpellPack(fireball);
     addSpellPack(frostfire_bolt);
     addSpellPack(frostfire_bolt_sod);
-    addSpellPack(living_bomb);
-    addSpellPack(living_bomb_sod);
     addSpellPack(scorch);
+    if SAO.IsCata() then
+        addSpellPack(pyroblast_cata);
+    else
+        addSpellPack(living_bomb);
+        addSpellPack(living_bomb_sod);
+    end
 
-    local _, _, tab, index = SAO:GetTalentByName(spellName);
+    local _, _, tab, index = SAO:GetTalentByName(talentName);
     if (tab and index) then
         self.talent = { tab, index }
     end
@@ -179,9 +188,10 @@ local function hotStreakCLEU(self, ...)
             -- Either way, if the Hot Streak buff is deserved, we'll know soon enough with a "SPELL_AURA_APPLIED"
         end
     elseif (HotStreakHandler.state == 'hot_streak') then
-        if (critical) then
+        if (critical and not SAO.IsCata()) then
             -- If crit during a Hot Streak, store this 'charge' to eventually restore it when Pyroblast is cast
             -- This is called "hot streaking heating up", which means Hot Streak has a pending Heating Up effect
+            -- Starting with Cataclysm, this state is no longer possible (tested during Beta - may change in the future)
             HotStreakHandler.state = 'hot_streak_heating_up';
             activateHeatingUp(self, hotStreakHeatingUpSpellID);
             -- Please note this works only because we are fairly certain that SPELL_AURA_APPLIED of a Hot Streak
@@ -438,7 +448,14 @@ local FrozenHandler = {
 local function customLogin(self, ...)
     -- Must initialize class on PLAYER_LOGIN instead of registerClass
     -- Because we need the talent tree, which is not always available right off the bat
-    local hotStreakSpellName = SAO.IsSoD() and GetSpellInfo(hotStreakSoDSpellID) or GetSpellInfo(hotStreakSpellID);
+    local hotStreakSpellName;
+    if SAO.IsSoD() then
+        hotStreakSpellName = GetSpellInfo(hotStreakSoDSpellID);
+    elseif SAO.IsCata() then
+        hotStreakSpellName = GetSpellInfo(improvedHotStreakSpellID);
+    else
+        hotStreakSpellName = GetSpellInfo(hotStreakSpellID);
+    end
     if (hotStreakSpellName) then
         HotStreakHandler:init(hotStreakSpellName);
     end
@@ -494,13 +511,17 @@ local function registerClass(self)
     self:RegisterAura("impact", 0, 64343, "lock_and_load", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(2136)) });
     self:RegisterAura("firestarter", 0, 54741, "impact", "Top", 0.8, 255, 255, 255, true, { (GetSpellInfo(2120)) }); -- May conflict with Impact location
     if self.IsSoD() then
-        self:RegisterAura("hot_streak_full", 0, hotStreakSoDSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(11366)) });
+        self:RegisterAura("hot_streak_full", 0, hotStreakSoDSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(pyroblast)) });
+    elseif self.IsCata() then
+        self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { pyroblastBang });
     else
-        self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(11366)) });
+        self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(pyroblast)) });
     end
     self:RegisterAura("hot_streak_half", 0, heatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255, false); -- Does not exist, but define it for option testing
-    self:RegisterAura("hot_streak_duo", 0, hotStreakHeatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255, false); -- Does not exist, but define it for option testing
-    self:RegisterAura("hot_streak_duo", 0, hotStreakHeatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true); -- Does not exist, but define it for option testing
+    if not self.IsCata() then
+        self:RegisterAura("hot_streak_duo", 0, hotStreakHeatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255, false); -- Does not exist, but define it for option testing
+        self:RegisterAura("hot_streak_duo", 0, hotStreakHeatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true); -- Does not exist, but define it for option testing
+    end
     -- Heating Up (spellID == 48107) doesn't exist in Wrath Classic, so we can't use the above aura
     -- Instead, we track Fire Blast, Fireball, Living Bomb and Scorch non-periodic critical strikes
     -- Please look at HotStreakHandler and customCLEU for more information
@@ -586,7 +607,6 @@ local function loadOptions(self)
 
     local arcaneMissiles = 5143;
     local arcaneExplosion = 1449;
-    local pyroblast = 11366;
     local flamestrike = 2120;
     local fireBlast = 2136;
     local fireball = 133;
@@ -646,10 +666,14 @@ local function loadOptions(self)
         self:AddOverlayOption(hotStreakSoDRune, heatingUpBuff, 0, heatingUpDetails);
         self:AddOverlayOption(hotStreakSoDRune, hotStreakSoDBuff, 0, hotStreakDetails);
         self:AddOverlayOption(hotStreakSoDRune, hotStreakHeatingUpBuff, 0, hotStreakHeatingUpDetails);
-    else
+    elseif self.IsWrath() then
         self:AddOverlayOption(hotStreakTalent, heatingUpBuff, 0, heatingUpDetails);
         self:AddOverlayOption(hotStreakTalent, hotStreakBuff, 0, hotStreakDetails);
         self:AddOverlayOption(hotStreakTalent, hotStreakHeatingUpBuff, 0, hotStreakHeatingUpDetails);
+    elseif self.IsCata() then
+        self:AddOverlayOption(hotStreakTalent, heatingUpBuff, 0, heatingUpDetails);
+        self:AddOverlayOption(hotStreakTalent, hotStreakBuff, 0, hotStreakDetails);
+        -- Evidence shows that Hot Streak Heating Up is not possible in Cataclysm
     end
     self:AddOverlayOption(firestarterTalent, firestarterBuff);
     self:AddOverlayOption(impactTalent, impactBuff);
@@ -676,8 +700,10 @@ local function loadOptions(self)
     end
     if self.IsSoD() then
         self:AddGlowingOption(hotStreakSoDRune, hotStreakSoDBuff, pyroblast);
-    else
+    elseif self.IsWrath() then
         self:AddGlowingOption(hotStreakTalent, hotStreakBuff, pyroblast);
+    elseif self.IsCata() then
+        self:AddGlowingOption(hotStreakTalent, hotStreakBuff, pyroblastBang);
     end
     self:AddGlowingOption(firestarterTalent, firestarterBuff, flamestrike);
     if not self.IsEra() then -- Must exclude this option specifically for Classic Era, because the talent exists in Era but the proc is passive
