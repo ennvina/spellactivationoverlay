@@ -50,6 +50,16 @@ function SAO.GetGCD(self)
     end
 end
 
+-- Utility function to write a formatted 'number of stacks' text, translated with the client's locale
+-- SAO:NbStacks(4) -- "4 Stacks"
+-- SAO:NbStacks(7,9) -- "7-9 Stacks"
+function SAO.NbStacks(self, minStacks, maxStacks)
+    if maxStacks then
+        return string.format(CALENDAR_TOOLTIP_DATE_RANGE, tostring(minStacks), string.format(STACKS, maxStacks));
+    end
+    return string.format(STACKS, minStacks);
+end
+
 -- Utility function to assume times are identical or almost identical
 function SAO.IsTimeAlmostEqual(self, t1, t2, delta)
 	return t1-delta < t2 and t2 < t1+delta;

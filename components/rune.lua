@@ -26,6 +26,7 @@ local function initRuneMapping()
             foundRune = true;
         end
     end
+    SAO:Trace(Module, "initRuneMapping foundRune == "..tostring(foundRune));
     runeMapping.initialized = foundRune;
 end
 
@@ -38,7 +39,6 @@ function SAO.GetRuneFromSpell(self, spellID)
 
     return runeMapping[spellID];
 end
-
 
 -- Track rune updates
 if SAO.IsSoD() then

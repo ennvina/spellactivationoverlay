@@ -624,8 +624,8 @@ local function loadOptions(self)
     -- local hotStreakHeatingUpDetails = string.format("%s+%s", heatingUpDetails, hotStreakDetails);
     local hotStreakHeatingUpDetails = string.format("%s %s", STATUS_TEXT_BOTH, ACTION_SPELL_AURA_APPLIED_DOSE);
 
-    local oneToThreeStacks = string.format(CALENDAR_TOOLTIP_DATE_RANGE, "1", string.format(STACKS, 3));
-    local fourStacks = string.format(STACKS, 4);
+    local oneToThreeStacks = self:NbStacks(1, 3);
+    local fourStacks = self:NbStacks(4);
 
     -- Clearcasting variants
     lazyCreateClearcastingVariants(self);

@@ -193,7 +193,9 @@
         "C_Engraving",
         "COMBATLOG_HIGHLIGHT_ABILITY",
         "AVAILABLE",
-        "ON_COOLDOWN"
+        "ON_COOLDOWN",
+        "IsSpellKnownOrOverridesKnown",
+        "C_UnitAuras"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",
