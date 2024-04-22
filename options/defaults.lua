@@ -173,7 +173,7 @@ SAO.defaults = {
                 [400670]= { -- Fingers of Frost (Season of Discovery)
                     [0] = true, -- any stacks
                 },
-                [57761] = { -- Brain Freeze
+                [57761] = { -- Brain Freeze (Wrath, Cataclysm)
                     [0] = true,
                 },
                 [400730] = { -- Brain Freeze (Season of Discovery)
@@ -213,7 +213,7 @@ SAO.defaults = {
                 [54741] = { -- Firestarter (Wrath)
                     [2120] = true, -- Flamestrike
                 },
-                [57761] = { -- Brain Freeze
+                [57761] = { -- Brain Freeze (Wrath, Cataclysm)
                     [133]   = true, -- Fireball
                     [44614] = true, -- Frostfire Bolt
                 },
