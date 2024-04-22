@@ -6,6 +6,7 @@ local function registerClass(self)
     local holyLight = GetSpellInfo(635);
 
     local how = 24275;
+    local divineStorm = self.IsSoD() and 407778 or 53385;
 
     -- Hammer of Wrath, Execute-like ability for targets at 20% hp or less
     self:RegisterAura("how", 0, how, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(how)) });
@@ -13,6 +14,11 @@ local function registerClass(self)
 
     self:RegisterAura("exorcism", 0, 879, nil, "", 0, 0, 0, 0, false, { exorcism }, true);
     self:RegisterCounter("exorcism");
+
+    if self.IsSoD() or self.IsWrath() or self.IsCata() then
+        self:RegisterAura("divine_storm", 0, divineStorm, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(divineStorm)) }, true);
+        self:RegisterCounter("divine_storm");
+    end
 
     if self.IsWrath() then
         local infusionOfLightBuff1 = 53672;
@@ -47,9 +53,13 @@ end
 local function loadOptions(self)
     local how = 24275;
     local exorcism = 879;
+    local divineStorm = self.IsSoD() and 407778 or 53385;
 
     self:AddGlowingOption(nil, how, how);
     self:AddGlowingOption(nil, exorcism, exorcism);
+    if self.IsSoD() or self.IsWrath() or self.IsCata() then
+        self:AddGlowingOption(nil, divineStorm, divineStorm);
+    end
 
     if self.IsWrath() then
         local flashOfLight = 19750;
