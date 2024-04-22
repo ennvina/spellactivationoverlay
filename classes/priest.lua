@@ -1,7 +1,7 @@
 local AddonName, SAO = ...
 
 local function registerClass(self)
-    if not self.IsEra() then
+    if not self.IsEra() then -- TBC/Wrath/Cata
         local smite = GetSpellInfo(585);
         local flashHeal = GetSpellInfo(2061);
 
@@ -12,22 +12,33 @@ local function registerClass(self)
 
         -- Add option links during registerClass(), not during loadOptions() which would be loaded only when the options panel is opened
         -- Add option links before RegisterAura() calls, so that options they are used by initial triggers, if any
-        self:AddOverlayLink(serendipityBuff3, serendipityBuff1);
-        self:AddOverlayLink(serendipityBuff3, serendipityBuff2);
-        self:AddGlowingLink(serendipityBuff3, serendipityBuff1);
-        self:AddGlowingLink(serendipityBuff3, serendipityBuff2);
+        if self.IsWrath() then
+            self:AddOverlayLink(serendipityBuff3, serendipityBuff1);
+            self:AddOverlayLink(serendipityBuff3, serendipityBuff2);
+            self:AddGlowingLink(serendipityBuff3, serendipityBuff1);
+            self:AddGlowingLink(serendipityBuff3, serendipityBuff2);
+        end
 
         -- Surge of Light
-        self:RegisterAura("surge_of_light", 0, 33151, "surge_of_light", "Left + Right (Flipped)", 1, 255, 255, 255, true, { smite, flashHeal });
+        local surgeOfLightBuff = self.IsCata() and 88688 or 33151;
+        if self.IsTBC() then
+            self:RegisterAura("surge_of_light", 0, surgeOfLightBuff, "surge_of_light", "Left + Right (Flipped)", 1, 255, 255, 255, true, { smite });
+        elseif self.IsWrath() then
+            self:RegisterAura("surge_of_light", 0, surgeOfLightBuff, "surge_of_light", "Left + Right (Flipped)", 1, 255, 255, 255, true, { smite, flashHeal });
+        elseif self.IsCata() then
+            self:RegisterAura("surge_of_light", 0, surgeOfLightBuff, "surge_of_light", "Left + Right (Flipped)", 1, 255, 255, 255, true, { flashHeal });
+        end
 
-        for talentPoints=1,3 do
-            local auraName = ({ "serendipity_low", "serendipity_medium", "serendipity_high" })[talentPoints];
-            local auraBuff = ({ serendipityBuff1, serendipityBuff2, serendipityBuff3 })[talentPoints];
-            for nbStacks=1,3 do
-                local scale = 0.4 + 0.2 * nbStacks; -- 60%, 80%, 100%
-                local pulse = nbStacks == 3;
-                local glowIDs = nbStacks == 3 and ghAndPoh or nil;
-                self:RegisterAura(auraName, nbStacks, auraBuff, "serendipity", "Top", scale, 255, 255, 255, pulse, glowIDs);
+        if self.IsTBC() or self.IsWrath() then
+            for talentPoints=1,3 do
+                local auraName = ({ "serendipity_low", "serendipity_medium", "serendipity_high" })[talentPoints];
+                local auraBuff = ({ serendipityBuff1, serendipityBuff2, serendipityBuff3 })[talentPoints];
+                for nbStacks=1,3 do
+                    local scale = 0.4 + 0.2 * nbStacks; -- 60%, 80%, 100%
+                    local pulse = nbStacks == 3;
+                    local glowIDs = nbStacks == 3 and ghAndPoh or nil;
+                    self:RegisterAura(auraName, nbStacks, auraBuff, "serendipity", "Top", scale, 255, 255, 255, pulse, glowIDs);
+                end
             end
         end
 
@@ -64,8 +75,8 @@ local function loadOptions(self)
     local greaterHeal = 2060;
     local prayerOfHealing = 596;
 
-    local surgeOfLightBuff = 33151;
-    local surgeOfLightTalent = 33150;
+    local surgeOfLightBuff = self.IsCata() and 88688 or 33151;
+    local surgeOfLightTalent = self.IsCata() and 88687 or 33150;
     local surgeOfLightSoDBuff = 431666;
     local surgeOfLightSoDRune = 431664;
 
@@ -78,14 +89,22 @@ local function loadOptions(self)
 
     if not self.IsEra() then
         self:AddOverlayOption(surgeOfLightTalent, surgeOfLightBuff);
-        self:AddOverlayOption(serendipityTalent, serendipityBuff3, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks
-        self:AddOverlayOption(serendipityTalent, serendipityBuff3, 3); -- setup 3 stacks
+        if self.Wrath() then
+            self:AddOverlayOption(serendipityTalent, serendipityBuff3, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks
+            self:AddOverlayOption(serendipityTalent, serendipityBuff3, 3); -- setup 3 stacks
+        end
         self:AddSoulPreserverOverlayOption(60514); -- 60514 = Priest buff
 
-        self:AddGlowingOption(surgeOfLightTalent, surgeOfLightBuff, smite);
-        self:AddGlowingOption(surgeOfLightTalent, surgeOfLightBuff, flashHeal);
-        self:AddGlowingOption(serendipityTalent, serendipityBuff3, greaterHeal, threeStacks);
-        self:AddGlowingOption(serendipityTalent, serendipityBuff3, prayerOfHealing, threeStacks);
+        if self.TBC() or self.Wrath() then
+            self:AddGlowingOption(surgeOfLightTalent, surgeOfLightBuff, smite);
+        end
+        if self.Wrath() or self.Cata() then
+            self:AddGlowingOption(surgeOfLightTalent, surgeOfLightBuff, flashHeal);
+        end
+        if self.Wrath() then
+            self:AddGlowingOption(serendipityTalent, serendipityBuff3, greaterHeal, threeStacks);
+            self:AddGlowingOption(serendipityTalent, serendipityBuff3, prayerOfHealing, threeStacks);
+        end
     elseif self.IsSoD() then
         self:AddOverlayOption(surgeOfLightSoDRune, surgeOfLightSoDBuff);
         self:AddOverlayOption(serendipitySoDBuff, serendipitySoDBuff, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks

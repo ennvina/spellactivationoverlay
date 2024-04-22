@@ -282,6 +282,9 @@ SAO.defaults = {
                 [33151] = {  -- Surge of Light (TBC - Wrath)
                     [0] = true,
                 },
+                [88688] = {  -- Surge of Light (Cataclysm)
+                    [0] = true,
+                },
                 [63734] = { -- Serendipity (Wrath)
                     [3] = true,  -- 3 stacks
                     [0] = false, -- any stacks but 3
@@ -301,6 +304,9 @@ SAO.defaults = {
                 [33151] = { -- Surge of Light (TBC - Wrath)
                     [585]  = true, -- Smite
                     [2061] = true, -- Flash Heal (does not proc for TBC)
+                },
+                [88688] = { -- Surge of Light (Cataclysm)
+                    [2061] = true, -- Flash Heal
                 },
                 [63734] = { -- Serendipity 3/3 (Wrath)
                     [2060] = true, -- Greater Heal
