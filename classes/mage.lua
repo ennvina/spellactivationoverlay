@@ -243,6 +243,7 @@ local FrozenHandler = {
     ice_lance = { 30455, 42913, 42914 },
     ice_lance_sod = { 400640 }, -- Season of Discovery
     deep_freeze = { 44572 }, -- Deep Freeze is both a debuff for 'Frozen' Spell Alert and its own Glowing Button
+    deep_freeze_sod = { 428739 }, -- Season of Discovery
 
     freezeID = 5276, -- Not really a 'Frozen' spell ID, but the name should help players identify the intent
     freezeTalent = 5276,
@@ -273,6 +274,7 @@ local FrozenHandler = {
         self:addSpellIDCandidates(self.freeze);
         self:addSpellIDCandidates(self.shattered_barrier);
         self:addSpellIDCandidates(self.deep_freeze);
+        self:addSpellIDCandidates(self.deep_freeze_sod);
 
         self.freezable = self:isTargetFreezable();
         if (self.freezable and self:isTargetFrozen()) then
@@ -422,6 +424,11 @@ local FrozenHandler = {
         if (hasDeepFreezeGAB) then
             SAO:AddGlow(deepFreeze, self.deep_freeze); -- First arg is option ID, second arg is spell ID list
         end
+        local deepFreezeSoD = self.deep_freeze_sod[1];
+        local hasDeepFreezeSoDGAB = not gabOption or type(gabOption[deepFreezeSoD]) == "nil" or gabOption[deepFreezeSoD];
+        if (hasDeepFreezeSoDGAB) then
+            SAO:AddGlow(deepFreezeSoD, self.deep_freeze_sod); -- First arg is option ID, second arg is spell ID list
+        end
     end,
 
     deactivate = function(self)
@@ -432,6 +439,7 @@ local FrozenHandler = {
         SAO:RemoveGlow(self.ice_lance[1]);
         SAO:RemoveGlow(self.ice_lance_sod[1]);
         SAO:RemoveGlow(self.deep_freeze[1]);
+        SAO:RemoveGlow(self.deep_freeze_sod[1]);
     end,
 
     reactivate = function(self)
@@ -530,9 +538,9 @@ local function registerClass(self)
 
     -- Frost Procs
     if self.IsSoD() then
-        local iceLanceSoD = { (GetSpellInfo(FrozenHandler.ice_lance_sod[1])) };
-        self:RegisterAura("fingers_of_frost_1_sod", 1, 400670, "frozen_fingers", "Left", 1, 255, 255, 255, true, iceLanceSoD);
-        self:RegisterAura("fingers_of_frost_2_sod", 2, 400670, "frozen_fingers", "Left + Right (Flipped)", 1, 255, 255, 255, true, iceLanceSoD);
+        local iceLanceAndDeepFreezeSoD = { (GetSpellInfo(FrozenHandler.ice_lance_sod[1])), (GetSpellInfo(FrozenHandler.deep_freeze_sod[1])) };
+        self:RegisterAura("fingers_of_frost_1_sod", 1, 400670, "frozen_fingers", "Left", 1, 255, 255, 255, true, iceLanceAndDeepFreezeSoD);
+        self:RegisterAura("fingers_of_frost_2_sod", 2, 400670, "frozen_fingers", "Left + Right (Flipped)", 1, 255, 255, 255, true, iceLanceAndDeepFreezeSoD);
     elseif self.IsWrath() then
         local iceLanceAndDeepFreeze = { (GetSpellInfo(FrozenHandler.ice_lance[1])), (GetSpellInfo(FrozenHandler.deep_freeze[1])) };
         self:RegisterAura("fingers_of_frost_1", 1, 74396, "frozen_fingers", "Left", 1, 255, 255, 255, true, iceLanceAndDeepFreeze);
@@ -648,6 +656,7 @@ local function loadOptions(self)
     local iceLance = FrozenHandler.ice_lance[1];
     local iceLanceSoD = FrozenHandler.ice_lance_sod[1];
     local deepFreeze = FrozenHandler.deep_freeze[1];
+    local deepFreezeSoD = FrozenHandler.deep_freeze_sod[1];
 
     local heatingUpDetails;
     local locale = GetLocale();
@@ -764,7 +773,9 @@ local function loadOptions(self)
     end
     if self.IsSoD() then
         self:AddGlowingOption(fingersOfFrostSoDTalent, fingersOfFrostSoDBuff, iceLanceSoD);
+        self:AddGlowingOption(fingersOfFrostSoDTalent, fingersOfFrostSoDBuff, deepFreezeSoD);
         self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, iceLanceSoD);
+        self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, deepFreezeSoD);
     elseif self.IsWrath() then
         self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuffWrath, iceLance);
         self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuffWrath, deepFreeze);
