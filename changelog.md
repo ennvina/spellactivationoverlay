@@ -21,16 +21,19 @@ New runes for Season of Discovery:
 - New GAB: Shaman's Lesser Healing Wave, during Tidal Waves
 
 Introducing Cataclysm flavor!
-- the addon is in very early stage, currently in alpha
-- support for Mage's Arcane Missiles
-- support for Mage's Arcane Potency
-- support for Mage's Brain Freeze
-- support for Mage's Clearcasting
-- support for Mage's Deep Freeze
-- support for Mage's Fingers of Frost
-- support for Mage's Frozen debuff
-- support for Mage's Heating Up and Hot Streak
-- support for Mage's Impact
+- The addon is in very early stage, currently in alpha
+- Support for Mage's Arcane Missiles
+- Support for Mage's Arcane Potency
+- Support for Mage's Brain Freeze
+- Support for Mage's Clearcasting
+- Support for Mage's Deep Freeze
+- Support for Mage's Fingers of Frost
+- Support for Mage's Frozen debuff
+- Support for Mage's Heating Up and Hot Streak
+- Support for Mage's Impact
+
+Bug Fixes
+- Spell Alerts of counters are instantly hidden when the counter is un-learned
 
 #### v1.3.0 (2024-04-17)
 

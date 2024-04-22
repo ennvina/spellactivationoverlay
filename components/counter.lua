@@ -143,18 +143,21 @@ function SAO.CheckCounterAction(self, spellID, auraID, talent, combatOnly)
         local rank = select(5, GetTalentInfo(talent[1], talent[2]));
         if (not (rank > 0)) then
             -- 0 points spent in the required Talent
+            self:SetCounterStatus(spellID, auraID, 'off');
             return;
         end
     end
 
     if (not self:IsSpellLearned(spellID)) then
         -- Spell not learned
+        self:SetCounterStatus(spellID, auraID, 'off');
         return;
     end
 
     local start, duration, enabled, modRate = GetSpellCooldown(spellID);
     if (type(start) ~= "number") then
         -- Spell not available
+        self:SetCounterStatus(spellID, auraID, 'off');
         return;
     end
 
