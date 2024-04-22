@@ -250,7 +250,7 @@ SAO.defaults = {
                 [59578] = { -- The Art of War (2/2) (Wrath+)
                     [0] = true,
                 },
-                [60513] = { -- Healing Trance / Soul Preserver (Wrath+)
+                [60513] = { -- Healing Trance / Soul Preserver (Wrath)
                     [0] = false,
                 },
             },
@@ -279,14 +279,17 @@ SAO.defaults = {
         },
         ["PRIEST"] = {
             alert = {
-                [33151] = {  -- Surge of Light
+                [33151] = {  -- Surge of Light (TBC - Wrath)
                     [0] = true,
                 },
-                [63734] = { -- Serendipity
+                [88688] = {  -- Surge of Light (Cataclysm)
+                    [0] = true,
+                },
+                [63734] = { -- Serendipity (Wrath)
                     [3] = true,  -- 3 stacks
                     [0] = false, -- any stacks but 3
                 },
-                [60514] = { -- Healing Trance / Soul Preserver
+                [60514] = { -- Healing Trance / Soul Preserver (Wrath)
                     [0] = false,
                 },
                 [413247]= { -- Serendipity (Season of Discovery)
@@ -296,13 +299,20 @@ SAO.defaults = {
                 [431666] = {  -- Surge of Light (Season of Discovery)
                     [0] = true,
                 },
+                [431655] = {  -- Mind Spike (Season of Discovery)
+                    [3] = true,  -- 3 stacks
+                    [0] = false, -- any stacks but 3
+                },
             },
             glow = {
-                [33151] = { -- Surge of Light
+                [33151] = { -- Surge of Light (TBC - Wrath)
                     [585]  = true, -- Smite
+                    [2061] = true, -- Flash Heal (does not proc for TBC)
+                },
+                [88688] = { -- Surge of Light (Cataclysm)
                     [2061] = true, -- Flash Heal
                 },
-                [63734] = { -- Serendipity 3/3
+                [63734] = { -- Serendipity 3/3 (Wrath)
                     [2060] = true, -- Greater Heal
                     [596]  = true, -- Prayer of Healing
                 },
@@ -316,6 +326,9 @@ SAO.defaults = {
                     [585]  = true, -- Smite
                     [2061] = true, -- Flash Heal
                 },
+                [431655] = {  -- Mind Spike (Season of Discovery)
+                    [8092] = true, -- Mind Blast
+                }
             },
         },
         ["ROGUE"] = {
