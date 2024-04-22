@@ -3,6 +3,7 @@ local Module = "rune"
 
 -- Optimize frequent calls
 local GetSpellInfo = GetSpellInfo
+local InCombatLockdown = InCombatLockdown
 
 -- Map between spell ID and rune ID
 local runeMapping = { initialized = false }; -- Use arbitraty spell ID 'initialized' to know if table was init

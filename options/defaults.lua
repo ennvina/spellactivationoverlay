@@ -244,13 +244,13 @@ SAO.defaults = {
         },
         ["PALADIN"] = {
             alert = {
-                [54149] = { -- Infusion of Light (2/2)
+                [54149] = { -- Infusion of Light (2/2) (Wrath+)
                     [0] = true,
                 },
-                [59578] = { -- The Art of War (2/2)
+                [59578] = { -- The Art of War (2/2) (Wrath+)
                     [0] = true,
                 },
-                [60513] = { -- Healing Trance / Soul Preserver
+                [60513] = { -- Healing Trance / Soul Preserver (Wrath+)
                     [0] = false,
                 },
             },
@@ -261,11 +261,17 @@ SAO.defaults = {
                 [24275] = { -- Hammer of Wrath
                     [24275] = true, -- Hammer of Wrath
                 },
-                [54149] = { -- Infusion of Light (2/2)
+                [53385] = { -- Divine Storm (Wrath+)
+                    [53385] = true, -- Divine Storm (Wrath+)
+                },
+                [407778] = { -- Divine Storm (Season of Discovery)
+                    [407778]= true, -- Divine Storm (Season of Discovery)
+                },
+                [54149] = { -- Infusion of Light (2/2) (Wrath+)
                     [19750] = true, -- Flash of Light
                     [635]   = true, -- Holy Light
                 },
-                [59578] = { -- The Art of War (2/2)
+                [59578] = { -- The Art of War (2/2) (Wrath+)
                     [879]   = true, -- Exorcism
                     [19750] = true, -- Flash of Light
                 },

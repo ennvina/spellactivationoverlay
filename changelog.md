@@ -11,11 +11,15 @@ Options:
 - It would be confusing to add sounds overnight to Era and Wrath players
 - To enable or disable it, please open the options panel by entering /sao
 
+New effects for Wrath Classic:
+- New GAB: Paladin's Divine Storm, as combat-only counter
+
 New runes for Season of Discovery:
 - New SAO: Shaman's Rolling Thunder with 7-9 Lightning Shield stacks
 - New SAO: Shaman's Tidal Waves
 - New GAB: Mage's Deep Freeze, during Fingers of Frost
 - New GAB: Mage's Deep Freeze, when the target is Frozen
+- New GAB: Paladin's Divine Storm, as combat-only counter
 - New GAB: Shaman's Earth Shock, with 7-9 Lightning Shield stacks
 - New GAB: Shaman's Healing Wave, during Tidal Waves
 - New GAB: Shaman's Lesser Healing Wave, during Tidal Waves
