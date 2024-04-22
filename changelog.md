@@ -2,7 +2,7 @@
 
 #### v1.3.1 (2024-04-xx)
 
-Shout-out to fellow developer Amanthuul. Thanks!
+Shout-out to fellow developers Amanthuul and steijner. Thanks!
 
 Options:
 - New option to play a sound effect when triggering a spell alert
@@ -14,6 +14,8 @@ Options:
 New runes for Season of Discovery:
 - New SAO: Shaman's Rolling Thunder with 7-9 Lightning Shield stacks
 - New SAO: Shaman's Tidal Waves
+- New GAB: Mage's Deep Freeze, during Fingers of Frost
+- New GAB: Mage's Deep Freeze, when the target is Frozen
 - New GAB: Shaman's Earth Shock, with 7-9 Lightning Shield stacks
 - New GAB: Shaman's Healing Wave, during Tidal Waves
 - New GAB: Shaman's Lesser Healing Wave, during Tidal Waves
