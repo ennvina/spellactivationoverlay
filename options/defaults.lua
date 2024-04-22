@@ -149,16 +149,16 @@ SAO.defaults = {
                 [57531] = { -- Arcane Potency (2/2) (Cataclysm)
                     [0] = false,
                 },
-                [48107] = { -- Heating Up (not an actual buff)
+                [48107] = { -- Heating Up (not an actual buff) (Season of Discovery, Wrath+)
                     [0] = true,
                 },
-                [48108] = { -- Hot Streak (Wrath, Cataclysm)
+                [48108] = { -- Hot Streak (Wrath+)
                     [0] = true,
                 },
                 [400625] = { -- Hot Streak (Season of Discovery)
                     [0] = true,
                 },
-                [64343] = { -- Impact (Wrath, Cataclysm)
+                [64343] = { -- Impact (Wrath+)
                     [0] = true,
                 },
                 [54741] = { -- Firestarter (Wrath)
@@ -173,7 +173,7 @@ SAO.defaults = {
                 [400670]= { -- Fingers of Frost (Season of Discovery)
                     [0] = true, -- any stacks
                 },
-                [57761] = { -- Brain Freeze (Wrath, Cataclysm)
+                [57761] = { -- Brain Freeze (Wrath+)
                     [0] = true,
                 },
                 [400730] = { -- Brain Freeze (Season of Discovery)
@@ -200,9 +200,9 @@ SAO.defaults = {
                     [5143] = true,  -- Arcane Missiles
                     [1449] = false, -- Arcane Explosion
                 },
-                [48108] = { -- Hot Streak (Wrath, Cataclysm)
+                [48108] = { -- Hot Streak (Wrath+)
                     [11366] = true, -- Pyroblast
-                    [92315] = nil,  -- Pyroblast!, set to nil to simplify DB migration
+                    [92315] = nil,  -- Pyroblast! (Cataclysm), set to nil to simplify DB migration
                 },
                 [400625] = { -- Hot Streak (Season of Discovery)
                     [11366] = true, -- Pyroblast
@@ -215,7 +215,7 @@ SAO.defaults = {
                 },
                 [57761] = { -- Brain Freeze (Wrath, Cataclysm)
                     [133]   = true, -- Fireball
-                    [44614] = true, -- Frostfire Bolt
+                    [44614] = true, -- Frostfire Bolt (Wrath+)
                 },
                 [400730] = { -- Brain Freeze (Season of Discovery)
                     [133]   = true, -- Fireball
@@ -223,19 +223,19 @@ SAO.defaults = {
                     [401502]= true, -- Frostfire Bolt (Season of Discovery)
                 },
                 [74396] = { -- Fingers of Frost (Wrath)
-                    [30455] = true, -- Ice Lance
-                    [44572] = true, -- Deep Freeze
+                    [30455] = true, -- Ice Lance (TBC+)
+                    [44572] = true, -- Deep Freeze (Wrath+)
                 },
                 [44544] = { -- Fingers of Frost (Cataclysm)
-                    [30455] = nil,  -- Ice Lance, set to nil to simplify DB migration
-                    [44572] = nil,  -- Deep Freeze, set to nil to simplify DB migration
+                    [30455] = nil,  -- Ice Lance (TBC+), set to nil to simplify DB migration
+                    [44572] = nil,  -- Deep Freeze (Wrath+), set to nil to simplify DB migration
                 },
                 [400670]= { -- Fingers of Frost (Season of Discovery)
                     [400640]= true, -- Ice Lance (Season of Discovery)
                 },
                 [5276] = { -- Representative of spells triggering Frozen effect
-                    [30455] = true, -- Ice Lance
-                    [44572] = true, -- Deep Freeze
+                    [30455] = true, -- Ice Lance (TBC+)
+                    [44572] = true, -- Deep Freeze (Wrath+)
                     [400640]= true, -- Ice Lance (Season of Discovery)
                 },
             },
