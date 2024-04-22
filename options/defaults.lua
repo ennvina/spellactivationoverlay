@@ -232,11 +232,13 @@ SAO.defaults = {
                 },
                 [400670]= { -- Fingers of Frost (Season of Discovery)
                     [400640]= true, -- Ice Lance (Season of Discovery)
+                    [428739]= true, -- Deep Freeze (Season of Discovery)
                 },
                 [5276] = { -- Representative of spells triggering Frozen effect
                     [30455] = true, -- Ice Lance (TBC+)
                     [44572] = true, -- Deep Freeze (Wrath+)
                     [400640]= true, -- Ice Lance (Season of Discovery)
+                    [428739]= true, -- Deep Freeze (Season of Discovery)
                 },
             },
         },
