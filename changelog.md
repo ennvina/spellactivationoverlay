@@ -17,9 +17,11 @@ New effects for Wrath Classic:
 New runes for Season of Discovery:
 - New SAO: Shaman's Rolling Thunder with 7-9 Lightning Shield stacks
 - New SAO: Shaman's Tidal Waves
+- New SAO: Priest's Mind Spike
 - New GAB: Mage's Deep Freeze, during Fingers of Frost
 - New GAB: Mage's Deep Freeze, when the target is Frozen
 - New GAB: Paladin's Divine Storm, as combat-only counter
+- New GAB: Priest's Mind Blast, during Mind Spike at 3 stacks
 - New GAB: Shaman's Earth Shock, with 7-9 Lightning Shield stacks
 - New GAB: Shaman's Healing Wave, during Tidal Waves
 - New GAB: Shaman's Lesser Healing Wave, during Tidal Waves

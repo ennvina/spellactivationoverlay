@@ -64,6 +64,17 @@ local function registerClass(self)
             local glowIDs = nbStacks == 3 and serendipityImprovedSpells or nil;
             self:RegisterAura("serendipity_sod", nbStacks, serendipityBuff, "serendipity", "Top", scale, 255, 255, 255, pulse, glowIDs);
         end
+
+        -- Mind Spike
+        local mindSpikeBuff = 431655;
+        local mindBlast = 8092;
+        local mindSpikeImprovedSpells = { (GetSpellInfo(mindBlast)) };
+        for nbStacks=1,3 do
+            local scale = 0.4 + 0.2 * nbStacks; -- 60%, 80%, 100%
+            local pulse = nbStacks == 3;
+            local glowIDs = nbStacks == 3 and mindSpikeImprovedSpells or nil;
+            self:RegisterAura("mind_spike_sod", nbStacks, mindSpikeBuff, "frozen_fingers", "Left + Right (Flipped)", scale, 160, 60, 220, pulse, glowIDs);
+        end
     end
 end
 
@@ -74,11 +85,15 @@ local function loadOptions(self)
     local heal = 2054;
     local greaterHeal = 2060;
     local prayerOfHealing = 596;
+    local mindBlast = 8092;
 
     local surgeOfLightBuff = self.IsCata() and 88688 or 33151;
     local surgeOfLightTalent = self.IsCata() and 88687 or 33150;
     local surgeOfLightSoDBuff = 431666;
     local surgeOfLightSoDRune = 431664;
+
+    local mindSpikeSoDBuff = 431655;
+    local mindSpikeSoDRune = 431662;
 
     local serendipityBuff3 = 63734;
     local serendipityTalent = 63730;
@@ -109,6 +124,8 @@ local function loadOptions(self)
         self:AddOverlayOption(surgeOfLightSoDRune, surgeOfLightSoDBuff);
         self:AddOverlayOption(serendipitySoDBuff, serendipitySoDBuff, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks
         self:AddOverlayOption(serendipitySoDBuff, serendipitySoDBuff, 3); -- setup 3 stacks
+        self:AddOverlayOption(mindSpikeSoDRune, mindSpikeSoDBuff, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks
+        self:AddOverlayOption(mindSpikeSoDRune, mindSpikeSoDBuff, 3); -- setup 3 stacks
 
         self:AddGlowingOption(surgeOfLightSoDRune, surgeOfLightSoDBuff, smite);
         self:AddGlowingOption(surgeOfLightSoDRune, surgeOfLightSoDBuff, flashHeal);
@@ -116,6 +133,7 @@ local function loadOptions(self)
         self:AddGlowingOption(serendipitySoDBuff, serendipitySoDBuff, heal, threeStacks);
         self:AddGlowingOption(serendipitySoDBuff, serendipitySoDBuff, greaterHeal, threeStacks);
         self:AddGlowingOption(serendipitySoDBuff, serendipitySoDBuff, prayerOfHealing, threeStacks);
+        self:AddGlowingOption(mindSpikeSoDRune, mindSpikeSoDBuff, mindBlast, threeStacks);
     end
 end
 

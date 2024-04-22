@@ -299,6 +299,10 @@ SAO.defaults = {
                 [431666] = {  -- Surge of Light (Season of Discovery)
                     [0] = true,
                 },
+                [431655] = {  -- Mind Spike (Season of Discovery)
+                    [3] = true,  -- 3 stacks
+                    [0] = false, -- any stacks but 3
+                },
             },
             glow = {
                 [33151] = { -- Surge of Light (TBC - Wrath)
@@ -322,6 +326,9 @@ SAO.defaults = {
                     [585]  = true, -- Smite
                     [2061] = true, -- Flash Heal
                 },
+                [431655] = {  -- Mind Spike (Season of Discovery)
+                    [8092] = true, -- Mind Blast
+                }
             },
         },
         ["ROGUE"] = {
