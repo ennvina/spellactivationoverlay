@@ -4,18 +4,64 @@ local AddonName, SAO = ...
 
 -- Optimize frequent calls
 local GetActionInfo = GetActionInfo
+local GetMacroSpell = GetMacroSpell
+local GetNumSpellTabs = GetNumSpellTabs
 local GetNumTalents = GetNumTalents
 local GetNumTalentTabs = GetNumTalentTabs
 local GetSpellBookItemName = GetSpellBookItemName
+local GetSpellCooldown = GetSpellCooldown
 local GetSpellInfo = GetSpellInfo
 local GetSpellTabInfo = GetSpellTabInfo
 local GetTalentInfo = GetTalentInfo
+local GetTime = GetTime
 local UnitAura = UnitAura
 
-function SAO.Debug(self, msg, ...)
-    if SpellActivationOverlayDB.debug then
-        print("[SAO@"..GetTime().."] "..msg, ...);
+function SAO.Debug(self, prefix, msg, ...)
+    if SpellActivationOverlayDB and SpellActivationOverlayDB.debug then
+        print("[SAO@"..GetTime().."] -"..prefix.."- "..msg, ...);
     end
+end
+
+function SAO.Trace(self, prefix, msg, ...)
+    if SpellActivationOverlayDB and SpellActivationOverlayDB.trace and SpellActivationOverlayDB.trace[prefix] then
+        print("{SAO@"..GetTime().."} -"..prefix.."- "..msg, ...);
+    end
+end
+
+local timeOfLastTrace = {}
+function SAO.TraceThrottled(self, key, prefix, ...)
+    key = tostring(key)..tostring(prefix);
+    if not timeOfLastTrace[key] or GetTime() > timeOfLastTrace[key]+1 then
+        self:Trace(prefix, ...);
+        timeOfLastTrace[key] = GetTime();
+    end
+end
+
+-- Get the Global Cooldown duration
+function SAO.GetGCD(self)
+    if self:IsEra() or self:IsTBC() then
+        -- Most spells and abilities incur a 1.5-second Global Cooldown
+        -- Some spells and abilities incur a 1-second cooldown, such as Shaman totems or most Rogue abilities
+        -- But these are very hard to detect, requiring to catch the last spell/ability which triggered the GCD
+        -- Also, it's not so bad to return a 'slightly too high' duration (slightly too low would be problematic)
+        -- All in all, 1.5 shall be a good generic value for everyone
+        return 1.5;
+    else
+        local _, gcdDuration, _, _ = GetSpellCooldown(61304); -- 61304 is GCD SpellID, introduced in Wrath
+        -- gcdDuration will return the GCD duration if on GCD or 0 if not on GCD
+        -- Returning 0 should not be an issue; who needs to compare ability CD with GCD when the player is not on GCD?
+        return gcdDuration;
+    end
+end
+
+-- Utility function to write a formatted 'number of stacks' text, translated with the client's locale
+-- SAO:NbStacks(4) -- "4 Stacks"
+-- SAO:NbStacks(7,9) -- "7-9 Stacks"
+function SAO.NbStacks(self, minStacks, maxStacks)
+    if maxStacks then
+        return string.format(CALENDAR_TOOLTIP_DATE_RANGE, tostring(minStacks), string.format(STACKS, maxStacks));
+    end
+    return string.format(STACKS, minStacks);
 end
 
 -- Utility function to assume times are identical or almost identical

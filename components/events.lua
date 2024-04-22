@@ -1,7 +1,10 @@
 local AddonName, SAO = ...
+local Module = "events"
 
 -- Optimize frequent calls
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
+local GetSpellInfo = GetSpellInfo
+local UnitGUID = UnitGUID
 
 -- Events starting with SPELL_AURA e.g., SPELL_AURA_APPLIED
 -- This should be invoked only if the buff is done on the player i.e., UnitGUID("player") == destGUID
@@ -49,7 +52,7 @@ function SAO.SPELL_AURA(self, ...)
             (auras[count])
         ) then
             -- Activate aura
-            self:Debug("events - Activating aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
+            self:Debug(Module, "Activating aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
             for _, aura in ipairs(auras[count]) do
                 self:ActivateOverlay(count, select(3,unpack(aura)));
                 self:AddGlow(spellID, select(11,unpack(aura)));
@@ -65,7 +68,7 @@ function SAO.SPELL_AURA(self, ...)
             (auras[count])
         ) then
             -- Reactivate aura timer
-            self:Debug("events - Refreshing aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
+            self:Debug(Module, "Refreshing aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
             self:RefreshOverlayTimer(spellID);
         elseif (
             -- Aura is already visible but its number of stack changed
@@ -78,13 +81,13 @@ function SAO.SPELL_AURA(self, ...)
             (auras[count])
         ) then
             -- Deactivate old aura and activate the new one
-            self:Debug("events - Changing number of stacks from "..tostring(currentlyActiveOverlay).." to "..count.." for aura "..spellID.." "..(GetSpellInfo(spellID) or ""));
+            self:Debug(Module, "Changing number of stacks from "..tostring(currentlyActiveOverlay).." to "..count.." for aura "..spellID.." "..(GetSpellInfo(spellID) or ""));
             self:DeactivateOverlay(spellID);
             self:RemoveGlow(spellID);
             for _, aura in ipairs(auras[count]) do
-                local texture, positions, scale, r, g, b, autoPulse = select(4,unpack(aura));
+                local texture, positions, scale, r, g, b, autoPulse, _, combatOnly = select(4,unpack(aura));
                 local forcePulsePlay = autoPulse;
-                self:ActivateOverlay(count, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay);
+                self:ActivateOverlay(count, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, nil, combatOnly);
                 self:AddGlow(spellID, select(11,unpack(aura)));
             end
         elseif (
@@ -96,7 +99,7 @@ function SAO.SPELL_AURA(self, ...)
             -- Which means either there is no stacks, or the number of stacks is not supported
         ) then
             -- Aura just disappeared or is not supported for this number of stacks
-            self:Debug("events - Removing aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
+            self:Debug(Module, "Removing aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
             self:DeactivateOverlay(spellID);
             self:RemoveGlow(spellID);
         end
@@ -123,8 +126,20 @@ function SAO.LOADING_SCREEN_DISABLED(self, ...)
     end
 end
 
+function SAO.PLAYER_ENTERING_WORLD(self, ...)
+    C_Timer.NewTimer(1, function() self:CheckAllCounterActions() end);
+end
+
 function SAO.SPELL_UPDATE_USABLE(self, ...)
     self:CheckAllCounterActions();
+end
+
+function SAO.PLAYER_REGEN_ENABLED(self, ...)
+    self:CheckAllCounterActions(true);
+end
+
+function SAO.PLAYER_REGEN_DISABLED(self, ...)
+    self:CheckAllCounterActions(true);
 end
 
 -- Specific spellbook update

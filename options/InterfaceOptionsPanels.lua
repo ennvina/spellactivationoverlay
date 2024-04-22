@@ -53,6 +53,19 @@ function SpellActivationOverlayOptionsPanel_Init(self)
         SAO:ApplySpellAlertTimer();
     end
 
+    local soundSlider = SpellActivationOverlayOptionsPanelSpellAlertSoundSlider;
+    soundSlider.Text:SetText("Spell Alert Sound Effect");
+    _G[soundSlider:GetName().."Low"]:SetText(DISABLE);
+    _G[soundSlider:GetName().."High"]:SetText(ENABLE);
+    soundSlider:SetMinMaxValues(0, 1);
+    soundSlider:SetValueStep(1);
+    soundSlider.initialValue = SpellActivationOverlayDB.alert.sound;
+    soundSlider:SetValue(soundSlider.initialValue);
+    soundSlider.ApplyValueToEngine = function(self, value)
+        SpellActivationOverlayDB.alert.sound = value;
+        SAO:ApplySpellAlertSound();
+    end
+
     local testButton = SpellActivationOverlayOptionsPanelSpellAlertTestButton;
     testButton:SetText("Toggle Test");
     testButton.fakeSpellID = 42;
@@ -62,8 +75,8 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     testButton.StartTest = function(self)
         if (not self.isTesting) then
             self.isTesting = true;
-            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName[testTextureLeftRight], "Left + Right (Flipped)", 1, 255, 255, 255, false, nil, GetTime()+5);
-            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName[testTextureTop], "Top", 1, 255, 255, 255, false, nil, GetTime()+5);
+            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName[testTextureLeftRight], "Left + Right (Flipped)", 1, 255, 255, 255, false, nil, GetTime()+5, false);
+            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName[testTextureTop], "Top", 1, 255, 255, 255, false, nil, GetTime()+5, false);
             self.testTimerTicker = C_Timer.NewTicker(4.9, -- Ticker must be slightly shorter than overlay duration, to refresh it before losing it
             function()
                 SAO:RefreshOverlayTimer(self.fakeSpellID, GetTime()+5);
@@ -127,6 +140,9 @@ local function okayFunc(self)
     local timerSlider = SpellActivationOverlayOptionsPanelSpellAlertTimerSlider;
     timerSlider.initialValue = timerSlider:GetValue();
 
+    local soundSlider = SpellActivationOverlayOptionsPanelSpellAlertSoundSlider;
+    soundSlider.initialValue = soundSlider:GetValue();
+
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     glowingButtonCheckbox.initialValue = glowingButtonCheckbox:GetChecked();
 
@@ -142,6 +158,7 @@ local function cancelFunc(self)
     local scaleSlider = SpellActivationOverlayOptionsPanelSpellAlertScaleSlider;
     local offsetSlider = SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider;
     local timerSlider = SpellActivationOverlayOptionsPanelSpellAlertTimerSlider;
+    local soundSlider = SpellActivationOverlayOptionsPanelSpellAlertSoundSlider;
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     local classOptions = SpellActivationOverlayOptionsPanel.classOptions;
 
@@ -150,6 +167,7 @@ local function cancelFunc(self)
         scaleSlider.initialValue,
         offsetSlider.initialValue,
         timerSlider.initialValue,
+        soundSlider.initialValue,
         glowingButtonCheckbox.initialValue,
         classOptions.initialValue
     );
@@ -163,12 +181,13 @@ local function defaultFunc(self)
         1, -- scale
         0, -- offset
         1, -- timer
+        SAO.IsCata() and 1 or 0, -- sound
         true, -- glow
         defaultClassOptions -- class options
     );
 end
 
-local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, timerValue, isGlowEnabled, classOptions)
+local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, timerValue, soundValue, isGlowEnabled, classOptions)
     local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
     opacitySlider:SetValue(opacityValue);
     if (SpellActivationOverlayDB.alert.opacity ~= opacityValue) then
@@ -202,6 +221,13 @@ local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, timerVa
     if (SpellActivationOverlayDB.alert.timer ~= timerValue) then
         SpellActivationOverlayDB.alert.timer = timerValue;
         SAO:ApplySpellAlertTimer();
+    end
+
+    local soundSlider = SpellActivationOverlayOptionsPanelSpellAlertSoundSlider;
+    soundSlider:SetValue(soundValue);
+    if (SpellActivationOverlayDB.alert.sound ~= soundValue) then
+        SpellActivationOverlayDB.alert.sound = soundValue;
+        SAO:ApplySpellAlertSound();
     end
 
     local testButton = SpellActivationOverlayOptionsPanelSpellAlertTestButton;

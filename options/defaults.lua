@@ -133,7 +133,10 @@ SAO.defaults = {
                 [12536] = { -- Arcane Concentration
                     [0] = false,
                 },
-                [44401] = { -- Missile Barrage
+                [79683] = { -- Arcane Missiles! (Cataclysm)
+                    [0] = true,
+                },
+                [44401] = { -- Missile Barrage (Wrath)
                     [0] = true,
                 },
                 [400589] = { -- Missile Barrage (Season of Discovery)
@@ -143,42 +146,51 @@ SAO.defaults = {
                     [4] = true, -- 4 stacks
                     [0] = true, -- any stacks but 4
                 },
+                [57531] = { -- Arcane Potency (2/2) (Cataclysm)
+                    [0] = false,
+                },
                 [48107] = { -- Heating Up (not an actual buff)
                     [0] = true,
                 },
-                [48108] = { -- Hot Streak
+                [48108] = { -- Hot Streak (Wrath, Cataclysm)
                     [0] = true,
                 },
                 [400625] = { -- Hot Streak (Season of Discovery)
                     [0] = true,
                 },
-                [64343] = { -- Impact
+                [64343] = { -- Impact (Wrath, Cataclysm)
                     [0] = true,
                 },
-                [54741] = { -- Firestarter
+                [54741] = { -- Firestarter (Wrath)
                     [0] = true,
                 },
-                [74396] = { -- Fingers of Frost
+                [74396] = { -- Fingers of Frost (Wrath)
                     [0] = true, -- any stacks
+                },
+                [44544] = { -- Fingers of Frost (Cataclysm)
+                    [0] = nil,  -- any stacks, set to nil to simplify DB migration
                 },
                 [400670]= { -- Fingers of Frost (Season of Discovery)
                     [0] = true, -- any stacks
                 },
-                [57761] = { -- Brain Freeze
+                [57761] = { -- Brain Freeze (Wrath, Cataclysm)
                     [0] = true,
                 },
                 [400730] = { -- Brain Freeze (Season of Discovery)
                     [0] = true,
                 },
-                [96215] = { -- Hot Streak + Heating Up (not an actual buff)
+                [96215] = { -- Hot Streak + Heating Up (not an actual buff) (Season of Discovery, Wrath)
                     [0] = false,
                 },
                 [5276] = { -- Representative of spells triggering Frozen effect
                     [0] = false,
-                }
+                },
             },
             glow = {
-                [44401] = { -- Missile Barrage
+                [79683] = { -- Arcane Missiles! (Cataclysm)
+                    [5143] = true, -- Arcane Missiles
+                },
+                [44401] = { -- Missile Barrage (Wrath)
                     [5143] = true, -- Arcane Missiles
                 },
                 [400589] = { -- Missile Barrage (Season of Discovery)
@@ -188,19 +200,20 @@ SAO.defaults = {
                     [5143] = true,  -- Arcane Missiles
                     [1449] = false, -- Arcane Explosion
                 },
-                [48108] = { -- Hot Streak
+                [48108] = { -- Hot Streak (Wrath, Cataclysm)
                     [11366] = true, -- Pyroblast
+                    [92315] = nil,  -- Pyroblast!, set to nil to simplify DB migration
                 },
                 [400625] = { -- Hot Streak (Season of Discovery)
                     [11366] = true, -- Pyroblast
                 },
-                [64343] = { -- Impact
+                [64343] = { -- Impact (Wrath)
                     [2136] = true, -- Fire Blast
                 },
-                [54741] = { -- Firestarter
+                [54741] = { -- Firestarter (Wrath)
                     [2120] = true, -- Flamestrike
                 },
-                [57761] = { -- Brain Freeze
+                [57761] = { -- Brain Freeze (Wrath, Cataclysm)
                     [133]   = true, -- Fireball
                     [44614] = true, -- Frostfire Bolt
                 },
@@ -209,9 +222,13 @@ SAO.defaults = {
                     [412532]= true, -- Spellfrost Bolt (Season of Discovery)
                     [401502]= true, -- Frostfire Bolt (Season of Discovery)
                 },
-                [74396] = { -- Fingers of Frost
+                [74396] = { -- Fingers of Frost (Wrath)
                     [30455] = true, -- Ice Lance
                     [44572] = true, -- Deep Freeze
+                },
+                [44544] = { -- Fingers of Frost (Cataclysm)
+                    [30455] = nil,  -- Ice Lance, set to nil to simplify DB migration
+                    [44572] = nil,  -- Deep Freeze, set to nil to simplify DB migration
                 },
                 [400670]= { -- Fingers of Frost (Season of Discovery)
                     [400640]= true, -- Ice Lance (Season of Discovery)
@@ -236,6 +253,9 @@ SAO.defaults = {
                 },
             },
             glow = {
+                [879] = { -- Exorcism
+                    [879] = false, -- Exorcism
+                },
                 [24275] = { -- Hammer of Wrath
                     [24275] = true, -- Hammer of Wrath
                 },
@@ -327,12 +347,20 @@ SAO.defaults = {
                 [425339]= { -- Molten Blast (Season of Discovery)
                     [0] = true,
                 },
+                [324]= { -- Rolling Thunder (Season of Discovery)
+                    [7] = false,
+                    [8] = false,
+                    [9] = true,
+                },
+                [432041] = { -- Tidal Waves (Season of Discovery)
+                    [0] = false, -- any stacks
+                },
             },
             glow = {
                 [53817] = { -- Maelstrom Weapon
                     [403]   = false, -- Lightning Bolt
                     [421]   = false, -- Chain Lightning
-                    [8004]  = false, -- lesser Healing Wave
+                    [8004]  = false, -- Lesser Healing Wave
                     [331]   = false, -- Healing Wave
                     [1064]  = false, -- Chain Heal
                     [51514] = false, -- Hex
@@ -340,7 +368,7 @@ SAO.defaults = {
                 [408505] = { -- Maelstrom Weapon (Season of Discovery)
                     [403]   = false, -- Lightning Bolt
                     [421]   = false, -- Chain Lightning
-                    [8004]  = false, -- lesser Healing Wave
+                    [8004]  = false, -- Lesser Healing Wave
                     [331]   = false, -- Healing Wave
                     [1064]  = false, -- Chain Heal
                     [408490] = false, -- Lava Burst (Season of Discovery)
@@ -351,11 +379,18 @@ SAO.defaults = {
                     [408490] = false, -- Lava Burst (Season of Discovery)
                 },
                 [53390] = { -- Tidal Waves
-                    [8004] = false, -- lesser Healing Wave
+                    [8004] = false, -- Lesser Healing Wave
                     [331]  = false, -- Healing Wave
                 },
                 [425339]= { -- Molten Blast (Season of Discovery)
                     [425339] = true, -- Molten Blast (Season of Discovery)
+                },
+                [432056]= { -- Rolling Thunder (Season of Discovery)
+                    [8042] = true, -- Rolling Thunder (Season of Discovery)
+                },
+                [432041] = { -- Tidal Waves (Season of Discovery)
+                    [8004] = false, -- Lesser Healing Wave
+                    [331]  = false, -- Healing Wave
                 },
             },
         },

@@ -1,10 +1,20 @@
 local AddonName, SAO = ...
+local Module = "counter"
 
 -- Optimize frequent calls
 local GetSpellCooldown = GetSpellCooldown
 local GetSpellPowerCost = GetSpellPowerCost
 local GetTalentInfo = GetTalentInfo
+local GetTime = GetTime
+local InCombatLockdown = InCombatLockdown
 local IsUsableSpell = IsUsableSpell
+
+--[[
+    A counter's activity can be in one of these statuses:
+    - Off
+    - Hard = active, no questions asked
+    - Soft = active internally, but visually softened (e.g. can be hidden temporarily to remove visual clutter)
+]]
 
 -- List of spell names or IDs of actions that can trigger as 'counter'
 -- key = spellName / spellID, value = { auraID, talent }
@@ -12,7 +22,9 @@ SAO.ActivableCountersByName = {};
 SAO.ActivableCountersBySpellID = {};
 
 -- List of spell IDs currently activated
--- key = spellID, value = true
+-- key = spellID, value = { status, softTimer }
+-- status = 'hard' | 'soft'
+-- softTimer = timer object if status == 'soft'
 SAO.ActivatedCounters = {};
 
 -- List of timer objects for checking cooldown of activated counters
@@ -30,7 +42,9 @@ function SAO.RegisterCounter(self, auraID, talent)
         return;
     end
 
-    local counter = { auraID, talent };
+    local combatOnly = select(13,unpack(aura));
+
+    local counter = { auraID, talent, combatOnly };
 
     local glowIDs = select(11,unpack(aura));
     for _, glowID in ipairs(glowIDs or {}) do
@@ -47,7 +61,9 @@ function SAO.RegisterCounter(self, auraID, talent)
 end
 
 -- Check if an action counter became either activated or deactivated
-function SAO.CheckCounterAction(self, spellID, auraID, talent)
+function SAO.CheckCounterAction(self, spellID, auraID, talent, combatOnly)
+    SAO:TraceThrottled(spellID, Module, "CheckCounterAction "..tostring(spellID).." "..tostring(auraID).." "..tostring(talent).." "..tostring(combatOnly));
+
     if (talent) then
         local rank = select(5, GetTalentInfo(talent[1], talent[2]));
         if (not (rank > 0)) then
@@ -76,8 +92,8 @@ function SAO.CheckCounterAction(self, spellID, auraID, talent)
 
     local isCounterUsable, notEnoughPower = IsUsableSpell(spellID);
 
-    local _, gcdDuration, _, _ = GetSpellCooldown(61304); -- GCD SpellID
-    local isGCD = duration <= gcdDuration; -- We check against gcdDuration because it's not always 1.5s
+    local gcdDuration = self:GetGCD();
+    local isGCD = duration <= gcdDuration;
     local isCounterOnCD = start > 0 and not isGCD;
 
     -- Non-mana spells should always glow, regardless of player's current resources.
@@ -89,18 +105,70 @@ function SAO.CheckCounterAction(self, spellID, auraID, talent)
         end
     end
 
-    local counterMustBeActivated = not isCounterOnCD and (isCounterUsable or (notEnoughPower and not costsMana));
+    local oldStatus = 'off';
+    if self.ActivatedCounters[spellID] then
+        oldStatus = self.ActivatedCounters[spellID].status;
+    end
 
-    if (not self.ActivatedCounters[spellID] and counterMustBeActivated) then
-        -- Counter triggered but not shown yet: just do it!
-        self.ActivatedCounters[spellID] = true;
+    local newStatus = 'off';
+    if not isCounterOnCD and (isCounterUsable or (notEnoughPower and not costsMana)) then
+        if InCombatLockdown() or not combatOnly then
+            newStatus = 'hard';
+        else
+            newStatus = 'soft';
+        end
+    end
+
+    local statusChanged = false;
+    if oldStatus == 'off' and newStatus == 'hard' then
         self:ActivateOverlay(select(2, unpack(aura)));
         self:AddGlow(auraSpellID, {spellID});
-    elseif (self.ActivatedCounters[spellID] and not counterMustBeActivated) then
-        -- Counter not triggered but still shown: hide it
-        self.ActivatedCounters[spellID] = nil;
+        self.ActivatedCounters[spellID] = { status=newStatus };
+        statusChanged = true;
+    elseif oldStatus == 'hard' and newStatus == 'off' then
         self:DeactivateOverlay(auraSpellID);
         self:RemoveGlow(auraSpellID);
+        self.ActivatedCounters[spellID] = nil;
+        statusChanged = true;
+    elseif oldStatus == 'off' and newStatus == 'soft' then
+        self:ActivateOverlay(select(2, unpack(aura)));
+        self:AddGlow(auraSpellID, {spellID});
+        local TimetoLingerGlowForSoft = 7.5; -- Buttons glows temporarily for 7.5 secs
+        -- The time is longer from Off to Soft than from Hard to Soft, because starting
+        -- a spell alert out-of-combat combat incurs a 5-second highlight before fading out
+        local timer = C_Timer.NewTimer(
+            TimetoLingerGlowForSoft,
+            function() self:RemoveGlow(auraSpellID) end
+        );
+        self.ActivatedCounters[spellID] = { status=newStatus, softTimer=timer };
+        statusChanged = true;
+    elseif oldStatus == 'soft' and newStatus == 'off' then
+        local timer = self.ActivatedCounters[spellID].softTimer;
+        timer:Cancel();
+        self:DeactivateOverlay(auraSpellID);
+        self:RemoveGlow(auraSpellID);
+        self.ActivatedCounters[spellID] = nil;
+        statusChanged = true;
+    elseif oldStatus == 'soft' and newStatus == 'hard' then
+        local timer = self.ActivatedCounters[spellID].softTimer;
+        timer:Cancel();
+        -- self:ActivateOverlay(select(2, unpack(aura))); -- No need to activate, it is already active, even if hidden
+        self:AddGlow(auraSpellID, {spellID}); -- Re-glow in case the glow was removed after soft timer ended
+        self.ActivatedCounters[spellID] = { status=newStatus };
+        statusChanged = true;
+    elseif oldStatus == 'hard' and newStatus == 'soft' then
+        -- self:ActivateOverlay(select(2, unpack(aura))); -- No need to activate, it is already active
+        -- self:AddGlow(auraSpellID, {spellID}); -- No need to glow, it is already glowing
+        local TimetoLingerGlowForSoft = 2.5; -- Buttons glows temporarily for 2.5 secs
+        local timer = C_Timer.NewTimer(
+            TimetoLingerGlowForSoft,
+            function() self:RemoveGlow(auraSpellID) end
+        );
+        self.ActivatedCounters[spellID] = { status=newStatus, softTimer=timer };
+        statusChanged = true;
+    end
+    if statusChanged then -- Do not compare (oldStatus ~= newStatus) because it does not tell if something was done
+        SAO:Debug(Module, "Status of counter "..tostring(spellID).." changed from '"..oldStatus.."' to '"..newStatus.."'");
     end
 
     if (isCounterUsable and start > 0) then
@@ -114,15 +182,18 @@ function SAO.CheckCounterAction(self, spellID, auraID, talent)
 
             local remainingTime = endTime-GetTime();
             local delta = 0.05; -- Add a small delay to account for lags and whatnot
-            local retryFunc = function() self:CheckCounterAction(spellID, auraID, talent); end;
+            local retryFunc = function() self:CheckCounterAction(spellID, auraID, talent, combatOnly); end;
             self.CounterRetryTimers[spellID] = C_Timer.NewTimer(remainingTime+delta, retryFunc);
             self.CounterRetryTimers[spellID].endTime = endTime;
         end
     end
 end
 
-function SAO.CheckAllCounterActions(self)
+function SAO.CheckAllCounterActions(self, checkCombatOnly)
+    SAO:TraceThrottled(checkCombatOnly, Module, "CheckAllCounterActions "..tostring(checkCombatOnly));
     for spellID, counter in pairs(self.ActivableCountersBySpellID) do
-        self:CheckCounterAction(spellID, unpack(counter));
+        if not checkCombatOnly or counter[3] then
+            self:CheckCounterAction(spellID, unpack(counter));
+        end
     end
 end

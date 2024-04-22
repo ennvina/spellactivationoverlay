@@ -1,5 +1,10 @@
 local AddonName, SAO = ...
+local Module = "rogue"
 
+-- Optimize frequent calls
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
+local GetTime = GetTime
+local UnitGUID = UnitGUID
 
 --[[
     RiposteHandler guesses when Riposte is available,
@@ -41,7 +46,7 @@ local RiposteHandler = {
             -- So, there is a 1-second window where a parry event would trigger a misleading Riposte effect
             -- If we displayed the effect, the player would believe Riposte is available either now or soon, whereas in practice it's never available
             -- We simply ignore parry events in this 1-second window, hence the (GetTime() < self.lastRiposteTime + 1) test
-            SAO:Debug("rogue - Ignoring a parry event because it occurred less than 1 second after last Riposte cast");
+            SAO:Debug(Module, "Ignoring a parry event because it occurred less than 1 second after last Riposte cast");
             return;
         end
         self:glow();

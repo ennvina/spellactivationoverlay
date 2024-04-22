@@ -118,9 +118,12 @@ function SAO.MarkTexture(self, texName)
   end
 end
 
--- List fetched from bash: cd textures && ls -1 *.blp | cut -d. -f1 | tr 'A-Z' 'a-z' | awk 'BEGIN{ print "local availableTextures = {" } {printf "  [\"%s\"] = true,\n", $0} END { print "}" }'
+-- List fetched from bash: cd textures && ls -1 *.blp | cut -d. -f1 | tr 'A-Z' 'a-z' | grep -vE '^(mask|maskzero)$' | awk 'BEGIN{ print "local availableTextures = {" } {printf "  [\"%s\"] = true,\n", $0} END { print "}" }'
 local availableTextures = {
   ["arcane_missiles"] = true,
+  ["arcane_missiles_1"] = true,
+  ["arcane_missiles_2"] = true,
+  ["arcane_missiles_3"] = true,
   ["art_of_war"] = true,
   ["backlash"] = true,
   ["bandits_guile"] = true,
@@ -132,6 +135,7 @@ local availableTextures = {
   ["eclipse_sun"] = true,
   ["feral_omenofclarity"] = true,
   ["frozen_fingers"] = true,
+  ["fulmination"] = true,
   ["fury_of_stormrage"] = true,
   ["genericarc_02"] = true,
   ["genericarc_05"] = true,
@@ -148,15 +152,18 @@ local availableTextures = {
   ["maelstrom_weapon_4"] = true,
   ["master_marksman"] = true,
   ["molten_core"] = true,
+  ["monk_serpent"] = true,
   ["natures_grace"] = true,
   ["nightfall"] = true,
   ["predatory_swiftness"] = true,
+  ["raging_blow"] = true,
   ["rime"] = true,
   ["serendipity"] = true,
   ["shooting_stars"] = true,
   ["sudden_death"] = true,
   ["surge_of_light"] = true,
   ["sword_and_board"] = true,
+  ["tooth_and_claw"] = true,
 }
 
 -- Global functions, helpful for optimizing package

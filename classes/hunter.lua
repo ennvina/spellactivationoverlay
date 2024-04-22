@@ -36,7 +36,7 @@ local function registerClass(self)
     if self.IsSoD() then
         -- Flanking Strike (Season of Discovery)
         local flankingStrike = 415320;
-        self:RegisterAura("flanking_strike", 0, flankingStrike, "tooth_and_claw", "Left + Right (Flipped)", 1, 255, 255, 255, true, { flankingStrike });
+        self:RegisterAura("flanking_strike", 0, flankingStrike, "tooth_and_claw", "Left + Right (Flipped)", 1, 255, 255, 255, true, { flankingStrike }, true);
         self:RegisterCounter("flanking_strike");
 
         -- Cobra Strikes (Season of Discovery)

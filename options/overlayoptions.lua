@@ -33,7 +33,7 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, vari
         local spellName, _, spellIcon = GetSpellInfo(talentID);
         text = text.." |T"..spellIcon..":0|t "..spellName;
         if (count and count > 0) then
-            text = text .. " ("..string.format(STACKS, count)..")";
+            text = text .. " ("..SAO:NbStacks(count)..")";
         end
         if (talentSubText) then
             text = text.." ("..talentSubText..")";
@@ -60,7 +60,7 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, vari
         end
         local auras = self.RegisteredAurasBySpellID[registeredSpellID];
         if (not auras) then
-            SAO:Debug("preview - Trying to preview overlay with spell ID "..tostring(registeredSpellID).." but it is not registered, or its registration failed");
+            SAO:Debug("preview", "Trying to preview overlay with spell ID "..tostring(registeredSpellID).." but it is not registered, or its registration failed");
             return
         end
 
@@ -70,7 +70,7 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, vari
         if (start) then
             local stacks = testStacks or count or 0;
             if (not auras[stacks]) then
-                SAO:Debug("preview - Trying to preview overlay with spell ID "..tostring(registeredSpellID).." with "..tostring(stacks).." stacks but there is no aura with this number of stacks");
+                SAO:Debug("preview", "Trying to preview overlay with spell ID "..tostring(registeredSpellID).." with "..tostring(stacks).." stacks but there is no aura with this number of stacks");
                 return;
             end
 
