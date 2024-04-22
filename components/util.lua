@@ -4,12 +4,16 @@ local AddonName, SAO = ...
 
 -- Optimize frequent calls
 local GetActionInfo = GetActionInfo
+local GetMacroSpell = GetMacroSpell
+local GetNumSpellTabs = GetNumSpellTabs
 local GetNumTalents = GetNumTalents
 local GetNumTalentTabs = GetNumTalentTabs
 local GetSpellBookItemName = GetSpellBookItemName
+local GetSpellCooldown = GetSpellCooldown
 local GetSpellInfo = GetSpellInfo
 local GetSpellTabInfo = GetSpellTabInfo
 local GetTalentInfo = GetTalentInfo
+local GetTime = GetTime
 local UnitAura = UnitAura
 
 function SAO.Debug(self, prefix, msg, ...)

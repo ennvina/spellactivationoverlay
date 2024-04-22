@@ -1,6 +1,8 @@
 #!/bin/bash
 CWD=$(cd -P "$(dirname "$0")" && pwd)
 
+# Exit with specific message. Pause the window if running in a separate window.
+# $1 = message to display before exiting
 bye() {
     echo "$1" >&2
     stat=($(</proc/$$/stat))
@@ -8,9 +10,91 @@ bye() {
     exit 1
 }
 
-cd "$CWD"/.. || bye "Cannot go to parent directory"
+# Utility function to cd back to base directory and exit if error.
+cdup() {
+    cd "$CWD"/.. || bye "Cannot go to parent directory"
+}
+
+# Create a project directory and copy all addon files to it.
+# Remove existing project directory, if any.
+# Current directory (cd) ends up in the new directory.
+# $1 = flavor
+# $2 = build version, fetched from /dump select(4, GetBuildInfo())
+mkproject() {
+    local flavor=$1
+    local build_version=$2
+
+    echo
+    echo "==== ${flavor^^} ===="
+    echo -n "Creating $flavor project..."
+    rm -rf ./_release/$flavor || bye "Cannot clean wrath directory"
+    mkdir -p ./_release/$flavor/SpellActivationOverlay || bye "Cannot create $flavor directory"
+    cp -R changelog.md LICENSE SpellActivationOverlay.* classes components options sounds textures ./_release/$flavor/SpellActivationOverlay/ || bye "Cannot copy $flavor files"
+    cd ./_release/$flavor || bye "Cannot cd to $flavor directory"
+    sed -i s/'^## Interface:.*'/"## Interface: $build_version"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update version of $flavor TOC file"
+    echo
+}
+
+# Remove unused textures to reduce archive size.
+# The list passed as parameter is based on the contents of the array
+# SpellActivationOverlayDB.debug.unmarked after calling the global
+# function SAO_DB_ComputeUnmarkedTextures() on each and every class
+# on characters logged in with the game client of the target flavor.
+# Because these textures are not 'marked', we don't need them.
+# $@ = array of textures
+prunetex() {
+    echo -n "Cleaning up textures..."
+    for texname in "$@"
+    do
+        rm -f SpellActivationOverlay/textures/"$texname".* || bye "Cannot cleanup textures from installation"
+    done
+    echo
+}
+
+# Remove unused sounds to reduce archive size.
+# $@ = array of sounds
+prunesound() {
+    echo -n "Cleaning up sounds..."
+    for soundname in "$@"
+    do
+        rm -f SpellActivationOverlay/sounds/"$soundname".* || bye "Cannot cleanup sounds from installation"
+    done
+    if ! ls -1 SpellActivationOverlay/sounds | grep -q .
+    then
+        rmdir SpellActivationOverlay/sounds || bye "Cannot remove empty 'sounds' directory"
+    fi
+    echo
+}
+
+# Remove everything related to specific classes to reduce archive size.
+# $@ = array of classes
+pruneclass() {
+    echo -n "Cleaning up classes..."
+    for classname in "$@"
+    do
+        sed -i "/$classname/d" SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot remove $classname from TOC filer"
+        rm -f SpellActivationOverlay/classes/$classname.lua || bye "Cannot remove $classname class file"
+    done
+    echo
+}
+
+# Gather all files of the current folder to a single zip.
+# $1 = flavor
+# $2 = addon version
+# $3 = alpha/beta/etc. (optional)
+zipproject() {
+    local flavor=$1
+    local version=$2
+
+    echo -n "Zipping $flavor directory..."
+    local filename=SpellActivationOverlay-"$version"${3:+-}$3-${flavor}.zip
+    "$CWD"/zip -9 -r -q "$filename" SpellActivationOverlay || bye "Cannot zip $flavor directory"
+    echo
+    explorer . # || bye "Cannot open explorer to $flavor directory"
+}
 
 # Retrieve version and check consistency
+cdup
 VERSION_TOC_VERSION=$(grep -i '^##[[:space:]]*version:' ./SpellActivationOverlay.toc | grep -o '[0-9].*')
 VERSION_TOC_TITLE=$(grep -i '^##[[:space:]]*title:' ./SpellActivationOverlay.toc | grep -o '|c........[0-9].*|r' | grep -o '[0-9]*\.[^|]*')
 VERSION_CHANGELOG=$(grep -m1 -o '^#### v[^[:space:]]*' ./changelog.md | grep -o '[0-9].*')
@@ -29,52 +113,32 @@ then
 fi
 
 # Release wrath version
-rm -rf ./_release/wrath || bye "Cannot clean wrath directory"
-mkdir -p ./_release/wrath/SpellActivationOverlay || bye "Cannot create wrath directory"
-cp -R changelog.md LICENSE SpellActivationOverlay.* classes components options textures ./_release/wrath/SpellActivationOverlay/ || bye "Cannot copy wrath files"
-cd ./_release/wrath || bye "Cannot cd to wrath directory"
-echo -n "Cleaning up wrath directory... "
-# Remove unused textures to reduce the archive size.
-# The list below, SOD_ONLY_TEXTURES, is a list of textures added exclusively for Season of Discovery.
-SOD_ONLY_TEXTURES=(tooth_and_claw
+WRATH_BUILD_VERSION=30403
+mkproject wrath $WRATH_BUILD_VERSION
+
+TEXTURES_NOT_FOR_WRATH=(
+tooth_and_claw
 monk_serpent
 raging_blow
 arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
-fulmination
-)
-for texname in ${SOD_ONLY_TEXTURES[@]}
-do
-    rm -f SpellActivationOverlay/textures/"$texname".* || bye "Cannot cleanup textures from wrath installation"
-done
-echo
-echo -n "Zipping wrath directory... "
-"$CWD"/zip -9 -r -q SpellActivationOverlay-"$VERSION_TOC_VERSION"-wrath.zip SpellActivationOverlay || bye "Cannot zip wrath directory"
-echo
-explorer . # || bye "Cannot open explorer to wrath directory"
+fulmination)
+prunetex "${TEXTURES_NOT_FOR_WRATH[@]}"
 
-cd "$CWD"/.. || bye "Cannot go to parent directory"
+zipproject wrath "$VERSION_TOC_VERSION"
+
+cdup
 
 # Release vanilla version
-rm -rf ./_release/vanilla || bye "Cannot clean vanilla directory"
-mkdir -p ./_release/vanilla/SpellActivationOverlay || bye "Cannot create vanilla directory"
-cp -R changelog.md LICENSE SpellActivationOverlay.* classes components options textures ./_release/vanilla/SpellActivationOverlay/ || bye "Cannot copy vanilla files"
-cd ./_release/vanilla || bye "Cannot cd to vanilla directory"
-echo -n "Cleaning up vanilla directory... "
-# Change Interface version; to know the version of a specific game client, enter: /dump select(4, GetBuildInfo())
 VANILLA_BUILD_VERSION=11502
-sed -i s/'^## Interface:.*'/"## Interface: $VANILLA_BUILD_VERSION"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update version of TOC file"
-# Remove everything related to DK
-sed -i '/deathknight/d' SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot remove deathknight from TOC file"
-rm -f SpellActivationOverlay/classes/deathknight.lua || bye "Cannot remove deathknight class file"
-# Remove unused textures to reduce the archive size.
-# The list below, WRATH_ONLY_TEXTURES, is based on the contents of
-# SpellActivationOverlayDB.debug.unmarked after calling the global
-# function SAO_DB_ComputeUnmarkedTextures() on each and every class
-# on characters logged in with the Classic Era game client.
-# Because these textures are not 'marked', we don't need them.
-WRATH_ONLY_TEXTURES=(master_marksman
+mkproject vanilla $VANILLA_BUILD_VERSION
+
+CLASSES_NOT_FOR_VANILLA=(deathknight)
+pruneclass "${CLASSES_NOT_FOR_VANILLA[@]}"
+
+TEXTURES_NOT_FOR_VANILLA=(
+master_marksman
 molten_core
 art_of_war
 lock_and_load
@@ -86,12 +150,29 @@ predatory_swiftness
 sword_and_board
 killing_machine
 rime)
-for texname in ${WRATH_ONLY_TEXTURES[@]}
-do
-    rm -f SpellActivationOverlay/textures/"$texname".* || bye "Cannot cleanup textures from vanilla installation"
-done
-echo
-echo -n "Zipping vanilla directory... "
-"$CWD"/zip -9 -r -q SpellActivationOverlay-"$VERSION_TOC_VERSION"-vanilla.zip SpellActivationOverlay || bye "Cannot zip vanilla directory"
-echo
-explorer . # || bye "Cannot open explorer to vanilla directory"
+prunetex "${TEXTURES_NOT_FOR_VANILLA[@]}"
+
+zipproject vanilla "$VERSION_TOC_VERSION"
+
+cdup
+
+# Release cata version
+CATA_BUILD_VERSION=40400
+mkproject cata $CATA_BUILD_VERSION
+
+TEXTURES_NOT_FOR_CATA=(
+tooth_and_claw
+monk_serpent
+raging_blow
+arcane_missiles_1
+arcane_missiles_2
+arcane_missiles_3
+fulmination)
+prunetex "${TEXTURES_NOT_FOR_CATA[@]}"
+
+SOUNDS_NOT_FOR_CATA=(UI_PowerAura_Generic)
+prunesound "${SOUNDS_NOT_FOR_CATA[@]}"
+
+zipproject cata "$VERSION_TOC_VERSION" alpha
+
+cdup

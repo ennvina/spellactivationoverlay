@@ -1,5 +1,10 @@
 local AddonName, SAO = ...
 
+-- Optimize frequent calls
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
+local GetTalentInfo = GetTalentInfo
+local UnitGUID = UnitGUID
+
 -- Detect Rolling Thunder stacks
 local RollingThunderHandler = {
     -- Constants

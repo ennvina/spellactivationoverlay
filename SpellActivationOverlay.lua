@@ -1,11 +1,17 @@
 local AddonName, SAO = ...
 local Module = "main"
 
+-- Optimize frequent calls
+local GetSpellInfo = GetSpellInfo
+local GetTime = GetTime
+local InCombatLockdown = InCombatLockdown
+
 local sizeScale = 0.8;
 local longSide = 256 * sizeScale;
 local shortSide = 128 * sizeScale;
 local combatOverlayFactor = 2;
 local useTimer = true;
+local useSound = false;
 
 function SpellActivationOverlay_OnLoad(self)
 	SAO.Frame = self;
@@ -25,6 +31,9 @@ function SpellActivationOverlay_OnLoad(self)
 	self.useTimer = true;
 	SpellActivationOverlay_OnChangeTimerVisibility(self);
 
+	self.useSound = false;
+	SpellActivationOverlay_OnChangeSoundToggle(self);
+
 	local className, classFile, classId = UnitClass("player");
 	local class = SAO.Class[classFile];
 	if class then
@@ -41,9 +50,12 @@ function SpellActivationOverlay_OnLoad(self)
 		print(WrapTextInColorCode("Class unknown or not converted yet: ", "FFFF0000")..select(1, UnitClass("player")));
 	end
 
-	-- These events do not exist in Classic Era, BC Classic, nor Wrath Classic
---	self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_SHOW");
---	self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_HIDE");
+	if ( SAO.IsCata() ) then
+		-- These events do not exist in Classic Era, Burning Crusade Classic, nor Wrath Classic
+		-- They have yet to be confirmed for Cataclysm, but they could (should?) exist
+		self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_SHOW");
+		self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_HIDE");
+	end
 --	self:RegisterUnitEvent("UNIT_AURA", "player");
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 	self:RegisterEvent("PLAYER_ENTERING_WORLD");
@@ -85,11 +97,45 @@ end
 function SpellActivationOverlay_OnChangeTimerVisibility(self)
 	SAO:Trace(Module, "SpellActivationOverlay_OnChangeTimerVisibility");
 
+	if useTimer == self.useTimer then
+		return;
+	end
+
 	useTimer = self.useTimer;
+
 	for _, overlayList in pairs(self.overlaysInUse) do
 		for i=1, #overlayList do
 			local overlay = overlayList[i];
 			overlay.mask:SetShown(useTimer);
+		end
+	end
+end
+
+function SpellActivationOverlay_OnChangeSoundToggle(self)
+	SAO:Trace(Module, "SpellActivationOverlay_OnChangeSoundToggle");
+
+	if useSound == self.useSound then
+		return;
+	end
+
+	useSound = self.useSound;
+
+	if useSound then
+		for _, overlayList in pairs(self.overlaysInUse) do
+			if #overlayList > 0 then
+				-- Play generic sound if at least one effect is displayed
+				-- No need to spam players with several effects, because currently there is only one type of sound effect
+				overlayList[1].soundHandle = SAO:PlaySpellAlertSound();
+				break;
+			end
+		end
+	else
+		for _, overlayList in pairs(self.overlaysInUse) do
+			for i=1, #overlayList do
+				local overlay = overlayList[i];
+				SAO:StopSpellAlertSound(overlay.soundHandle);
+				overlay.soundHandle = nil;
+			end
 		end
 	end
 end
@@ -100,21 +146,26 @@ function SpellActivationOverlay_OnEvent(self, event, ...)
 --[[ 
 	Dead code because these events do not exist in Classic Era, BC Classic, nor Wrath Classic
 	Also, the "displaySpellActivationOverlays" console variable does not exist
+	-- Update with upcoming Cataclysm --
+	Must look into it for Cataclysm Classic, because these events should occur once again
+	But we have added a few parameters since then - must add missing parameters if needed
+	For now, we simply write debug information to try to confirm these events are emitted
 ]]
---[[
 	if ( event == "SPELL_ACTIVATION_OVERLAY_SHOW" ) then
 		local spellID, texture, positions, scale, r, g, b = ...;
-		if ( GetCVarBool("displaySpellActivationOverlays") ) then 
-			SpellActivationOverlay_ShowAllOverlays(self, spellID, texture, positions, scale, r, g, b, true)
-		end
+		SAO:Debug("Received native SPELL_ACTIVATION_OVERLAY_SHOW with spell ID "..tostring(spellID)..", texture "..tostring(texture)..", positions '"..tostring(positions).."', scale "..tostring(scale)..", (r g b) = ("..tostring(r).." "..tostring(g).." "..tostring(b)..")");
+		-- if ( GetCVarBool("displaySpellActivationOverlays") ) then 
+		-- 	SpellActivationOverlay_ShowAllOverlays(self, spellID, texture, positions, scale, r, g, b, true)
+		-- end
 	elseif ( event == "SPELL_ACTIVATION_OVERLAY_HIDE" ) then
 		local spellID = ...;
-		if spellID then
-			SpellActivationOverlay_HideOverlays(self, spellID);
-		else
-			SpellActivationOverlay_HideAllOverlays(self);
-		end
-	end]]
+		SAO:Debug("Received native SPELL_ACTIVATION_OVERLAY_HIDE with spell ID "..tostring(spellID));
+		-- if spellID then
+		-- 	SpellActivationOverlay_HideOverlays(self, spellID);
+		-- else
+		-- 	SpellActivationOverlay_HideAllOverlays(self);
+		-- end
+	end
 	if ( not self.disableDimOutOfCombat ) then
 		if ( event == "PLAYER_REGEN_DISABLED" ) then
 			self.combatAnimOut:Stop();	--In case we're in the process of animating this out.
@@ -269,7 +320,9 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	overlay.texture:SetVertexColor(r / 255, g / 255, b / 255);
 	
 	overlay.animOut:Stop();	--In case we're in the process of animating this out.
-	PlaySound(SOUNDKIT.UI_POWER_AURA_GENERIC);
+	if useSound then
+		overlay.soundHandle = SAO:PlaySpellAlertSound();
+	end
 	overlay:Show();
 	if ( forcePulsePlay ) then
 		overlay.pulse:Play();
@@ -441,6 +494,10 @@ function SpellActivationOverlayTexture_TerminateOverlay(overlay)
 	overlay.mask.timeoutY:Stop();
 	overlay.combat.animIn:Stop();
 	overlay.combat.animOut:Stop();
+
+	-- Stop playing sound
+	SAO:StopSpellAlertSound(overlay.soundHandle, 1000);
+	overlay.soundHandle = nil;
 
 	-- Hide the overlay and make it available again in the pool for future use
 	overlay.mask:SetScale(1); -- Reset scale, in case a previous animation shrank it to 0.01

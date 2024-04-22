@@ -5,6 +5,8 @@ local Module = "counter"
 local GetSpellCooldown = GetSpellCooldown
 local GetSpellPowerCost = GetSpellPowerCost
 local GetTalentInfo = GetTalentInfo
+local GetTime = GetTime
+local InCombatLockdown = InCombatLockdown
 local IsUsableSpell = IsUsableSpell
 
 --[[

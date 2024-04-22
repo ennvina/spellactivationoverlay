@@ -38,9 +38,39 @@ local function migrateTo112(db)
     print(WrapTextInColorCode("SAO: Migrated options from pre-1.1.2 to 1.1.2", "FFA2F3FF"));
 end
 
+-- Migrate from pre-131 to 131 or higher
+local function migrateTo131(db)
+
+    -- Cataclysm introduced Pyroblast!, a variant from Pyroblast (notice the bang '!' character in the former spell name)
+    -- We copy options from Pyroblast to Pyroblast!, because we assume mages want to keep the same option$
+    local hotStreak = 48108;
+    local pyro = 11366;
+    local pyroBang = 92315;
+    if type(db.classes["MAGE"]["glow"][hotStreak][pyro]) ~= 'nil' and type(db.classes["MAGE"]["glow"][hotStreak][pyroBang]) == 'nil' then
+        db.classes["MAGE"]["glow"][hotStreak][pyroBang] = db.classes["MAGE"]["glow"][hotStreak][pyro];
+    end
+
+    -- Same for Fingers of Frost, which has a new spell ID, because the effect was reworked
+    local fingersOfFrostWrath = 74396;
+    local fingersOfFrostCata = 44544;
+    local iceLance = 30455;
+    local deepFreeze = 44572;
+    if type(db.classes["MAGE"]["alert"][fingersOfFrostWrath][0]) ~= 'nil' and type(db.classes["MAGE"]["alert"][fingersOfFrostCata][0]) == 'nil' then
+        db.classes["MAGE"]["alert"][fingersOfFrostCata][0] = db.classes["MAGE"]["alert"][fingersOfFrostWrath][0];
+    end
+    if type(db.classes["MAGE"]["glow"][fingersOfFrostWrath][iceLance]) ~= 'nil' and type(db.classes["MAGE"]["glow"][fingersOfFrostCata][iceLance]) == 'nil' then
+        db.classes["MAGE"]["glow"][fingersOfFrostCata][iceLance] = db.classes["MAGE"]["glow"][fingersOfFrostWrath][iceLance];
+    end
+    if type(db.classes["MAGE"]["glow"][fingersOfFrostWrath][deepFreeze]) ~= 'nil' and type(db.classes["MAGE"]["glow"][fingersOfFrostCata][deepFreeze]) == 'nil' then
+        db.classes["MAGE"]["glow"][fingersOfFrostCata][deepFreeze] = db.classes["MAGE"]["glow"][fingersOfFrostWrath][deepFreeze];
+    end
+
+    print(WrapTextInColorCode("SAO: Migrated options from pre-1.3.1 to 1.3.1", "FFA2F3FF"));
+end
+
 -- Load database and use default values if needed
 function SAO.LoadDB(self)
-    local currentversion = 112;
+    local currentversion = 131;
     local db = SpellActivationOverlayDB or {};
 
     if not db.alert then
@@ -62,6 +92,10 @@ function SAO.LoadDB(self)
     end
     if (type(db.alert.timer) == "nil") then
         db.alert.timer = 1;
+    end
+    if (type(db.alert.sound) == "nil") then
+        -- Enable sound by default in Cataclysm, where the "PowerAura" sound effect was added
+        db.alert.sound = self.IsCata() and 1 or 0;
     end
 
     if not db.glow then
@@ -107,6 +141,9 @@ function SAO.LoadDB(self)
     end
     if not db.version or db.version < 112 then
         migrateTo112(db);
+    end
+    if not db.version or db.version < 131 then
+        migrateTo131(db);
     end
 
     db.version = currentversion;

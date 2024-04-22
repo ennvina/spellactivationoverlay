@@ -1,6 +1,11 @@
 local AddonName, SAO = ...
 local Module = "rogue"
 
+-- Optimize frequent calls
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
+local GetTime = GetTime
+local UnitGUID = UnitGUID
+
 --[[
     RiposteHandler guesses when Riposte is available,
     even while the ability is on cooldown

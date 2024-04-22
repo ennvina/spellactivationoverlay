@@ -2,6 +2,9 @@ local AddonName, SAO = ...
 local Module = "glow"
 
 -- Optimize frequent calls
+local ActionButton_HideOverlayGlow = ActionButton_HideOverlayGlow
+local ActionButton_ShowOverlayGlow = ActionButton_ShowOverlayGlow
+local GetSpellInfo = GetSpellInfo
 local HasAction = HasAction
 
 -- List of known ActionButton instances that currently match one of the spell IDs to track

@@ -2,7 +2,7 @@ local AddonName, SAO = ...
 
 -- Optimize frequent calls
 local GetSpellInfo = GetSpellInfo
-local IsPlayerSpell = IsPlayerSpell
+local IsSpellKnownOrOverridesKnown = IsSpellKnownOrOverridesKnown
 
 -- List of spell IDs sharing the same name
 -- key = spell name, value = list of spell IDs
@@ -146,8 +146,8 @@ function SAO.IsFakeSpell(self, spellID)
         return true
     end
 
-    if (self.IsEra() or self.IsTBC() or self.IsWrath()) and spellID == 48107 then
-        -- Mage's Heating Up does not exist in Era/TBC/Wrath
+    if (self.IsEra() or self.IsTBC() or self.IsWrath() or self.IsCata()) and spellID == 48107 then
+        -- Mage's Heating Up does not exist in Era/TBC/Wrath/Cata
         return true
     end
 

@@ -4,12 +4,31 @@
 
 Shout-out to fellow developer Amanthuul. Thanks!
 
+Options:
+- New option to play a sound effect when triggering a spell alert
+- The option is enabled by default for Cataclysm, which had this sound
+- The option is disabled by default for Classic Era and Wrath
+- It would be confusing to add sounds overnight to Era and Wrath players
+- To enable or disable it, please open the options panel by entering /sao
+
 New runes for Season of Discovery:
 - New SAO: Shaman's Rolling Thunder with 7-9 Lightning Shield stacks
 - New SAO: Shaman's Tidal Waves
 - New GAB: Shaman's Earth Shock, with 7-9 Lightning Shield stacks
 - New GAB: Shaman's Healing Wave, during Tidal Waves
 - New GAB: Shaman's Lesser Healing Wave, during Tidal Waves
+
+Introducing Cataclysm flavor!
+- the addon is in very early stage, currently in alpha
+- support for Mage's Arcane Missiles
+- support for Mage's Arcane Potency
+- support for Mage's Brain Freeze
+- support for Mage's Clearcasting
+- support for Mage's Deep Freeze
+- support for Mage's Fingers of Frost
+- support for Mage's Frozen debuff
+- support for Mage's Heating Up and Hot Streak
+- support for Mage's Impact
 
 #### v1.3.0 (2024-04-17)
 
