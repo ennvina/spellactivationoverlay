@@ -60,64 +60,27 @@ function SAO.RegisterCounter(self, auraID, talent)
     end
 end
 
--- Check if an action counter became either activated or deactivated
-function SAO.CheckCounterAction(self, spellID, auraID, talent, combatOnly)
-    SAO:TraceThrottled(spellID, Module, "CheckCounterAction "..tostring(spellID).." "..tostring(auraID).." "..tostring(talent).." "..tostring(combatOnly));
-
-    if (talent) then
-        local rank = select(5, GetTalentInfo(talent[1], talent[2]));
-        if (not (rank > 0)) then
-            -- 0 points spent in the required Talent
-            return;
-        end
-    end
-
-    if (not self:IsSpellLearned(spellID)) then
-        -- Spell not learned
-        return;
-    end
-
-    local start, duration, enabled, modRate = GetSpellCooldown(spellID);
-    if (type(start) ~= "number") then
-        -- Spell not available
-        return;
-    end
-
-    local aura = self.RegisteredAurasByName[auraID];
-    if (not aura) then
-        -- Unknown aura. Should never happen.
-        return;
-    end
-    local auraSpellID = aura[3];
-
-    local isCounterUsable, notEnoughPower = IsUsableSpell(spellID);
-
-    local gcdDuration = self:GetGCD();
-    local isGCD = duration <= gcdDuration;
-    local isCounterOnCD = start > 0 and not isGCD;
-
-    -- Non-mana spells should always glow, regardless of player's current resources.
-    local costsMana = false
-    for _, spellCost in ipairs(GetSpellPowerCost(spellID) or {}) do
-        if spellCost.name == "MANA" then
-            costsMana = true;
-            break;
-        end
-    end
-
+-- Set the counter status of a spell. Do nothing if the status has not changed.
+-- @param spellID spell ID of the counter to update
+-- @param auraID spell ID of the registered aura
+-- @param newStatus new status, either 'off', 'hard' or 'soft'
+function SAO.SetCounterStatus(self, spellID, auraID, newStatus)
     local oldStatus = 'off';
     if self.ActivatedCounters[spellID] then
         oldStatus = self.ActivatedCounters[spellID].status;
     end
 
-    local newStatus = 'off';
-    if not isCounterOnCD and (isCounterUsable or (notEnoughPower and not costsMana)) then
-        if InCombatLockdown() or not combatOnly then
-            newStatus = 'hard';
-        else
-            newStatus = 'soft';
-        end
+    if oldStatus == newStatus then
+        return;
     end
+
+    local aura = self.RegisteredAurasByName[auraID];
+    if not aura then
+        -- Unknown aura. Should never happen.
+        self:Debug("Counter uses unknown auraID "..tostring(auraID));
+        return;
+    end
+    local auraSpellID = aura[3];
 
     local statusChanged = false;
     if oldStatus == 'off' and newStatus == 'hard' then
@@ -170,6 +133,58 @@ function SAO.CheckCounterAction(self, spellID, auraID, talent, combatOnly)
     if statusChanged then -- Do not compare (oldStatus ~= newStatus) because it does not tell if something was done
         SAO:Debug(Module, "Status of counter "..tostring(spellID).." changed from '"..oldStatus.."' to '"..newStatus.."'");
     end
+end
+
+-- Check if an action counter became either activated or deactivated
+function SAO.CheckCounterAction(self, spellID, auraID, talent, combatOnly)
+    SAO:TraceThrottled(spellID, Module, "CheckCounterAction "..tostring(spellID).." "..tostring(auraID).." "..tostring(talent).." "..tostring(combatOnly));
+
+    if (talent) then
+        local rank = select(5, GetTalentInfo(talent[1], talent[2]));
+        if (not (rank > 0)) then
+            -- 0 points spent in the required Talent
+            return;
+        end
+    end
+
+    if (not self:IsSpellLearned(spellID)) then
+        -- Spell not learned
+        return;
+    end
+
+    local start, duration, enabled, modRate = GetSpellCooldown(spellID);
+    if (type(start) ~= "number") then
+        -- Spell not available
+        return;
+    end
+
+    local isCounterUsable, notEnoughPower = IsUsableSpell(spellID);
+
+    local gcdDuration = self:GetGCD();
+    local isGCD = duration <= gcdDuration;
+    local isCounterOnCD = start > 0 and not isGCD;
+
+    -- Non-mana spells should always glow, regardless of player's current resources.
+    local costsMana = false
+    for _, spellCost in ipairs(GetSpellPowerCost(spellID) or {}) do
+        if spellCost.name == "MANA" then
+            costsMana = true;
+            break;
+        end
+    end
+
+    -- Evaluate what is the current status of the counter
+    local status = 'off';
+    if not isCounterOnCD and (isCounterUsable or (notEnoughPower and not costsMana)) then
+        if InCombatLockdown() or not combatOnly then
+            status = 'hard';
+        else
+            status = 'soft';
+        end
+    end
+
+    -- Set the new status and enable/disable spell alerts and glowing buttons accordingly
+    self:SetCounterStatus(spellID, auraID, status);
 
     if (isCounterUsable and start > 0) then
         -- Counter could be usable, but CD prevents us to: try again in a few seconds
