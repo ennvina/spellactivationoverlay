@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v1.3.1 (2024-04-xx)
+#### v1.3.1 (2024-04-22)
 
 Shout-out to fellow developers Amanthuul and steijner. Thanks!
 
@@ -11,10 +11,10 @@ Options:
 - It would be confusing to add sounds overnight to Era and Wrath players
 - To enable or disable it, please open the options panel by entering /sao
 
-New effects for Wrath Classic:
+New effect for Wrath Classic:
 - New GAB: Paladin's Divine Storm, as combat-only counter
 
-New runes for Season of Discovery:
+New effects for Season of Discovery:
 - New SAO: Shaman's Rolling Thunder with 7-9 Lightning Shield stacks
 - New SAO: Shaman's Tidal Waves
 - New SAO: Priest's Mind Spike
