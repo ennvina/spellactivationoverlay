@@ -50,6 +50,21 @@ local function migrateTo131(db)
         db.classes["MAGE"]["glow"][hotStreak][pyroBang] = db.classes["MAGE"]["glow"][hotStreak][pyro];
     end
 
+    -- Same for Fingers of Frost, which has a new spell ID, because the effect was reworked
+    local fingersOfFrostWrath = 74396;
+    local fingersOfFrostCata = 44544;
+    local iceLance = 30455;
+    local deepFreeze = 44572;
+    if type(db.classes["MAGE"]["alert"][fingersOfFrostWrath][0]) ~= 'nil' and type(db.classes["MAGE"]["alert"][fingersOfFrostCata][0]) == 'nil' then
+        db.classes["MAGE"]["alert"][fingersOfFrostCata][0] = db.classes["MAGE"]["alert"][fingersOfFrostWrath][0];
+    end
+    if type(db.classes["MAGE"]["glow"][fingersOfFrostWrath][iceLance]) ~= 'nil' and type(db.classes["MAGE"]["glow"][fingersOfFrostCata][iceLance]) == 'nil' then
+        db.classes["MAGE"]["glow"][fingersOfFrostCata][iceLance] = db.classes["MAGE"]["glow"][fingersOfFrostWrath][iceLance];
+    end
+    if type(db.classes["MAGE"]["glow"][fingersOfFrostWrath][deepFreeze]) ~= 'nil' and type(db.classes["MAGE"]["glow"][fingersOfFrostCata][deepFreeze]) == 'nil' then
+        db.classes["MAGE"]["glow"][fingersOfFrostCata][deepFreeze] = db.classes["MAGE"]["glow"][fingersOfFrostWrath][deepFreeze];
+    end
+
     print(WrapTextInColorCode("SAO: Migrated options from pre-1.3.1 to 1.3.1", "FFA2F3FF"));
 end
 

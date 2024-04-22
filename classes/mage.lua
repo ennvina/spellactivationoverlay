@@ -529,14 +529,19 @@ local function registerClass(self)
     -- Please look at HotStreakHandler and customCLEU for more information
 
     -- Frost Procs
-    if self.IsWrath() then
-        local iceLanceAndDeepFreeze = { (GetSpellInfo(FrozenHandler.ice_lance[1])), (GetSpellInfo(FrozenHandler.deep_freeze[1])) };
-        self:RegisterAura("fingers_of_frost_1", 1, 74396, "frozen_fingers", "Left", 1, 255, 255, 255, true, iceLanceAndDeepFreeze);
-        self:RegisterAura("fingers_of_frost_2", 2, 74396, "frozen_fingers", "Left + Right (Flipped)", 1, 255, 255, 255, true, iceLanceAndDeepFreeze);
-    elseif self.IsSoD() then
+    if self.IsSoD() then
         local iceLanceSoD = { (GetSpellInfo(FrozenHandler.ice_lance_sod[1])) };
         self:RegisterAura("fingers_of_frost_1_sod", 1, 400670, "frozen_fingers", "Left", 1, 255, 255, 255, true, iceLanceSoD);
         self:RegisterAura("fingers_of_frost_2_sod", 2, 400670, "frozen_fingers", "Left + Right (Flipped)", 1, 255, 255, 255, true, iceLanceSoD);
+    elseif self.IsWrath() then
+        local iceLanceAndDeepFreeze = { (GetSpellInfo(FrozenHandler.ice_lance[1])), (GetSpellInfo(FrozenHandler.deep_freeze[1])) };
+        self:RegisterAura("fingers_of_frost_1", 1, 74396, "frozen_fingers", "Left", 1, 255, 255, 255, true, iceLanceAndDeepFreeze);
+        self:RegisterAura("fingers_of_frost_2", 2, 74396, "frozen_fingers", "Left + Right (Flipped)", 1, 255, 255, 255, true, iceLanceAndDeepFreeze);
+    elseif self.IsCata() then
+        local iceLanceAndDeepFreeze = { (GetSpellInfo(FrozenHandler.ice_lance[1])), (GetSpellInfo(FrozenHandler.deep_freeze[1])) };
+         -- Slightly bigger to avoid overlap with Arcane Missiles, and slightly dimmer to compensate
+        self:RegisterAura("fingers_of_frost_1", 1, 44544, "frozen_fingers", "Left", 1.1, 222, 222, 222, true, iceLanceAndDeepFreeze);
+        self:RegisterAura("fingers_of_frost_2", 2, 44544, "frozen_fingers", "Left + Right (Flipped)", 1.1, 222, 222, 222, true, iceLanceAndDeepFreeze);
     end
     self:RegisterAura("freeze", 0, FrozenHandler.fakeSpellID, FrozenHandler.saoTexture, "Top (CW)", FrozenHandler.saoScaleFactor, 255, 255, 255, false);
     if self.IsSoD() then
@@ -622,7 +627,8 @@ local function loadOptions(self)
     local brainFreezeSoDRune = 400731;
     local brainFreezeSoDBuff = 400730;
 
-    local fingersOfFrostBuff = 74396;
+    local fingersOfFrostBuffWrath = 74396;
+    local fingersOfFrostBuffCata = 44544;
     local fingersOfFrostTalent = 44543;
     local fingersOfFrostSoDBuff = 400670;
     local fingersOfFrostSoDTalent = fingersOfFrostSoDBuff; -- Not really a talent
@@ -709,10 +715,12 @@ local function loadOptions(self)
     end
     self:AddOverlayOption(firestarterTalent, firestarterBuff);
     self:AddOverlayOption(impactTalent, impactBuff);
-    if self.IsWrath() then
-        self:AddOverlayOption(fingersOfFrostTalent, fingersOfFrostBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
-    elseif self.IsSoD() then
+    if self.IsSoD() then
         self:AddOverlayOption(fingersOfFrostSoDTalent, fingersOfFrostSoDBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
+    elseif self.IsWrath() then
+        self:AddOverlayOption(fingersOfFrostTalent, fingersOfFrostBuffWrath, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
+    elseif self.IsCata() then
+        self:AddOverlayOption(fingersOfFrostTalent, fingersOfFrostBuffCata, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
     end
     self:AddOverlayOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, 0, nil, nil, nil, FrozenHandler.fakeSpellID);
     if self.IsSoD() then
@@ -754,15 +762,19 @@ local function loadOptions(self)
         self:AddGlowingOption(brainFreezeTalent, brainFreezeBuff, fireball);
         self:AddGlowingOption(brainFreezeTalent, brainFreezeBuff, frostfireBolt);
     end
-    if self.IsWrath() then
-        self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuff, iceLance);
-        self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuff, deepFreeze);
-        -- self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuff, ...); -- Maybe add more spell options for Fingers of Frost
-        self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, iceLance);
-        self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, deepFreeze);
-    elseif self.IsSoD() then
+    if self.IsSoD() then
         self:AddGlowingOption(fingersOfFrostSoDTalent, fingersOfFrostSoDBuff, iceLanceSoD);
         self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, iceLanceSoD);
+    elseif self.IsWrath() then
+        self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuffWrath, iceLance);
+        self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuffWrath, deepFreeze);
+        self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, iceLance);
+        self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, deepFreeze);
+    elseif self.IsCata() then
+        self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuffCata, iceLance);
+        self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuffCata, deepFreeze);
+        self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, iceLance);
+        self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, deepFreeze);
     end
 end
 

@@ -164,8 +164,11 @@ SAO.defaults = {
                 [54741] = { -- Firestarter (Wrath)
                     [0] = true,
                 },
-                [74396] = { -- Fingers of Frost
+                [74396] = { -- Fingers of Frost (Wrath)
                     [0] = true, -- any stacks
+                },
+                [44544] = { -- Fingers of Frost (Cataclysm)
+                    [0] = nil,  -- any stacks, set to nil to simplify DB migration
                 },
                 [400670]= { -- Fingers of Frost (Season of Discovery)
                     [0] = true, -- any stacks
@@ -219,9 +222,13 @@ SAO.defaults = {
                     [412532]= true, -- Spellfrost Bolt (Season of Discovery)
                     [401502]= true, -- Frostfire Bolt (Season of Discovery)
                 },
-                [74396] = { -- Fingers of Frost
+                [74396] = { -- Fingers of Frost (Wrath)
                     [30455] = true, -- Ice Lance
                     [44572] = true, -- Deep Freeze
+                },
+                [44544] = { -- Fingers of Frost (Cataclysm)
+                    [30455] = nil,  -- Ice Lance, set to nil to simplify DB migration
+                    [44572] = nil,  -- Deep Freeze, set to nil to simplify DB migration
                 },
                 [400670]= { -- Fingers of Frost (Season of Discovery)
                     [400640]= true, -- Ice Lance (Season of Discovery)
