@@ -50,9 +50,12 @@ function SpellActivationOverlay_OnLoad(self)
 		print(WrapTextInColorCode("Class unknown or not converted yet: ", "FFFF0000")..select(1, UnitClass("player")));
 	end
 
-	-- These events do not exist in Classic Era, BC Classic, nor Wrath Classic
---	self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_SHOW");
---	self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_HIDE");
+	if ( SAO.IsCata() ) then
+		-- These events do not exist in Classic Era, Burning Crusade Classic, nor Wrath Classic
+		-- They have yet to be confirmed for Cataclysm, but they could (should?) exist
+		self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_SHOW");
+		self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_HIDE");
+	end
 --	self:RegisterUnitEvent("UNIT_AURA", "player");
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 	self:RegisterEvent("PLAYER_ENTERING_WORLD");
@@ -143,21 +146,26 @@ function SpellActivationOverlay_OnEvent(self, event, ...)
 --[[ 
 	Dead code because these events do not exist in Classic Era, BC Classic, nor Wrath Classic
 	Also, the "displaySpellActivationOverlays" console variable does not exist
+	-- Update with upcoming Cataclysm --
+	Must look into it for Cataclysm Classic, because these events should occur once again
+	But we have added a few parameters since then - must add missing parameters if needed
+	For now, we simply write debug information to try to confirm these events are emitted
 ]]
---[[
 	if ( event == "SPELL_ACTIVATION_OVERLAY_SHOW" ) then
 		local spellID, texture, positions, scale, r, g, b = ...;
-		if ( GetCVarBool("displaySpellActivationOverlays") ) then 
-			SpellActivationOverlay_ShowAllOverlays(self, spellID, texture, positions, scale, r, g, b, true)
-		end
+		SAO:Debug("Received native SPELL_ACTIVATION_OVERLAY_SHOW with spell ID "..tostring(spellID)..", texture "..tostring(texture)..", positions '"..tostring(positions).."', scale "..tostring(scale)..", (r g b) = ("..tostring(r).." "..tostring(g).." "..tostring(b)..")");
+		-- if ( GetCVarBool("displaySpellActivationOverlays") ) then 
+		-- 	SpellActivationOverlay_ShowAllOverlays(self, spellID, texture, positions, scale, r, g, b, true)
+		-- end
 	elseif ( event == "SPELL_ACTIVATION_OVERLAY_HIDE" ) then
 		local spellID = ...;
-		if spellID then
-			SpellActivationOverlay_HideOverlays(self, spellID);
-		else
-			SpellActivationOverlay_HideAllOverlays(self);
-		end
-	end]]
+		SAO:Debug("Received native SPELL_ACTIVATION_OVERLAY_HIDE with spell ID "..tostring(spellID));
+		-- if spellID then
+		-- 	SpellActivationOverlay_HideOverlays(self, spellID);
+		-- else
+		-- 	SpellActivationOverlay_HideAllOverlays(self);
+		-- end
+	end
 	if ( not self.disableDimOutOfCombat ) then
 		if ( event == "PLAYER_REGEN_DISABLED" ) then
 			self.combatAnimOut:Stop();	--In case we're in the process of animating this out.
