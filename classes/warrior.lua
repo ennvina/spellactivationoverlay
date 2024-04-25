@@ -378,6 +378,7 @@ local function registerClass(self)
 
     if self.IsSoD() then
         self:RegisterAura("bloodsurge", 0, bloodsurgeSoD, "blood_surge", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(slam)) });
+        self:RegisterAura("sword_and_board", 0, 426979, "sword_and_board", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(shieldSlam)) });
     elseif self.IsWrath() then
         for stacks = 1, 2 do -- Bloodsurge and Sudden Death may have several charges, due to T10 4pc
             self:RegisterAura("bloodsurge_"..stacks, stacks, 46916, "blood_surge", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(slam)) });
@@ -429,6 +430,8 @@ local function loadOptions(self)
 
     local swordAndBoardBuff = 50227;
     local swordAndBoardTalent = 46951;
+    local swordAndBoardBuffSoD = 426979;
+    local swordAndBoardTalentSoD = 426978;
 
     local victoryRushSoD = 402927;
     local ragingBlowSoD = 402911;
@@ -440,6 +443,7 @@ local function loadOptions(self)
     if self.IsSoD() then
         self:AddOverlayOption(ragingBlowSoD, ragingBlowSoD);
         self:AddOverlayOption(bloodsurgeSoD, bloodsurgeSoD);
+        self:AddOverlayOption(swordAndBoardTalentSoD, swordAndBoardBuffSoD);
     end
 
     if OverpowerHandler.initialized then
@@ -460,6 +464,7 @@ local function loadOptions(self)
     self:AddGlowingOption(suddenDeathTalent, suddenDeathBuff, execute);
     self:AddGlowingOption(bloodsurgeTalent, bloodsurgeBuff, slam);
     self:AddGlowingOption(swordAndBoardTalent, swordAndBoardBuff, shieldSlam);
+    self:AddGlowingOption(swordAndBoardTalentSoD, swordAndBoardBuffSoD, shieldSlam);
 end
 
 SAO.Class["WARRIOR"] = {

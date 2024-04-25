@@ -3,7 +3,11 @@
 #### v1.3.2 (2024-04-xx)
 
 New effect for Season of Discovery:
-- Warrior's Overpower button glows during Taste for Blood
+- New SAO: Warrior's Sword and Board
+- New GAB: Warrior's Overpower, during Taste for Blood*
+- New GAB: Warrior's Slam, during Sword and Board
+
+* There is no dedicated Taste for Blood option, it uses Overpower option
 
 Bug fixes
 - Hungering Cold is now tagged as Frozen debuff for Mages
