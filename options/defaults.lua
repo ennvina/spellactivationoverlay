@@ -97,6 +97,9 @@ SAO.defaults = {
                 [56453] = { -- Lock and Load (Wrath+)
                     [0] = true, -- any stacks
                 },
+                [415414]= { -- Lock and Load (Season of Discovery)
+                    [0] = true, -- any stacks
+                },
                 [415320]= { -- Flanking Strike (Season of Discovery)
                     [0] = true,
                 },

@@ -45,6 +45,10 @@ local function registerClass(self)
         local cobraStrikes = 425714;
         self:RegisterAura("cobra_strikes_1", 1, cobraStrikes, "monk_serpent", "Left", 0.7, 255, 255, 255, true);
         self:RegisterAura("cobra_strikes_2", 2, cobraStrikes, "monk_serpent", "Left + Right (Flipped)", 0.7, 255, 255, 255, true);
+
+        -- Lock and Load (Season of Discovery)
+        -- Unlike Wrath, we do not suggest to glow buttons, because there are too many (all 'shots')
+        self:RegisterAura("lock_and_load", 0, 415414, "lock_and_load", "Top", 1, 255, 255, 255, true);
     end
 end
 
@@ -62,6 +66,8 @@ local function loadOptions(self)
 
     local lockAndLoadBuff = 56453;
     local lockAndLoadTalent = 56342;
+    local lockAndLoadBuffSoD = 415414;
+    local lockAndLoadTalentSoD = 415413;
 
     local flankingStrike = 415320;
     local cobraStrikes = 425714;
@@ -73,6 +79,7 @@ local function loadOptions(self)
     if self.IsSoD() then
         self:AddOverlayOption(flankingStrike, flankingStrike);
         self:AddOverlayOption(cobraStrikes, cobraStrikes, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
+        self:AddOverlayOption(lockAndLoadTalentSoD, lockAndLoadBuffSoD);
     end
 
     if self.IsWrath() or self.IsCata() then
