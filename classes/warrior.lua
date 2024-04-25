@@ -123,12 +123,12 @@ local OPTFBHandler = {
 
     -- Variables
 
-    buffID = 60503,
+    buffID = nil,
     hasBuff = nil,
 
     -- Methods
 
-    init = function(self, id, name)
+    init = function(self, id, name, buffID)
         SAO.GlowInterface:bind(self);
         self:initVars(id, name, 2, nil, {
             -- Must be the same variant values as OverpowerHandler
@@ -140,6 +140,7 @@ local OPTFBHandler = {
             return option == "stance:1/2/3" or GetShapeshiftForm() == 1
         end);
 
+        self.buffID = buffID;
         self.hasBuff = SAO:FindPlayerAuraByID(self.buffID);
         if self.hasBuff then
             self:glow();
@@ -308,8 +309,17 @@ local function customLogin(self, ...)
     local overpower = 7384;
     local overpowerName = GetSpellInfo(overpower);
     if (overpowerName) then
+        -- Overpower is used for OverpowerHandler, detecting when the target dodges
         OverpowerHandler:init(overpower, overpowerName);
-        OPTFBHandler:init(overpower, overpowerName);
+
+        -- Overpower is also used for OPTFBHandler, looking for Taste for Blood buff
+        if self.IsSoD() then
+            local tasteForBloodBuff = 426969;
+            OPTFBHandler:init(overpower, overpowerName, tasteForBloodBuff);
+        elseif self.IsWrath() or self.IsCata() then
+            local tasteForBloodBuffSoD = 60503;
+            OPTFBHandler:init(overpower, overpowerName, tasteForBloodBuffSoD);
+        end
     end
 
     local revenge = 6572;
@@ -419,9 +429,6 @@ local function loadOptions(self)
 
     local swordAndBoardBuff = 50227;
     local swordAndBoardTalent = 46951;
-
-    local tasteForBloodBuff = 60503;
-    local tasteForBloodTalent = 56636;
 
     local victoryRushSoD = 402927;
     local ragingBlowSoD = 402911;
