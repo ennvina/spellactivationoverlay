@@ -2,12 +2,14 @@
 
 #### v1.3.2 (2024-04-xx)
 
-New effect for Season of Discovery:
-- New SAO: Warrior's Sword and Board
-- New GAB: Warrior's Overpower, during Taste for Blood*
-- New GAB: Warrior's Slam, during Sword and Board
+New effects:
+- New SAO: Warrior's Sword and Board (Season of Discovery)
+- New GAB: Paladin's Holy Shock, as combat-only counter
+- New GAB: Warrior's Overpower, during Taste for Blood* (SoD) 
+- New GAB: Warrior's Slam, during Sword and Board (SoD)
 
-* There is no dedicated Taste for Blood option, it uses Overpower option
+* As in Wrath, there is no dedicated Taste for Blood option
+Taste for Blood shares its option with Overpower
 
 Bug fixes
 - Hungering Cold is now tagged as Frozen debuff for Mages
