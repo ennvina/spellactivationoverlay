@@ -464,6 +464,9 @@ SAO.defaults = {
                 [50227] = { -- Sword and Board
                     [0] = true,
                 },
+                [426979] = { -- Sword and Board (Season of Discovery)
+                    [0] = true,
+                },
                 [402911]= { -- Raging Blow (Season of Discovery)
                     [0] = true,
                 },
@@ -494,6 +497,9 @@ SAO.defaults = {
                     [1464] = true, -- Slam
                 },
                 [50227] = { -- Sword and Board
+                    [23922] = true, -- Shield Slam
+                },
+                [426979] = { -- Sword and Board (Season of Discovery)
                     [23922] = true, -- Shield Slam
                 },
             },
