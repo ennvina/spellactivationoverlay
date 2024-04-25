@@ -237,13 +237,14 @@ local FrozenHandler = {
     -- Constants
     frostbite = { 12494 },
     frost_nova = { 122, 865, 6131, 10230, 27088, 42917 },
-    freezing_trap = { 3355, 14308, 14309 }, -- from hunters
+    freezing_trap = { 3355, 14308, 14309 }, -- from Hunters
     freeze = { 33395 }, -- from Frost Elemental
     shattered_barrier = { 55080 },
     ice_lance = { 30455, 42913, 42914 },
     ice_lance_sod = { 400640 }, -- Season of Discovery
     deep_freeze = { 44572 }, -- Deep Freeze is both a debuff for 'Frozen' Spell Alert and its own Glowing Button
     deep_freeze_sod = { 428739 }, -- Season of Discovery
+    hungering_cold = { 49203 }, -- from Death Knights
 
     freezeID = 5276, -- Not really a 'Frozen' spell ID, but the name should help players identify the intent
     freezeTalent = 5276,
@@ -275,6 +276,7 @@ local FrozenHandler = {
         self:addSpellIDCandidates(self.shattered_barrier);
         self:addSpellIDCandidates(self.deep_freeze);
         self:addSpellIDCandidates(self.deep_freeze_sod);
+        self:addSpellIDCandidates(self.hungering_cold);
 
         self.freezable = self:isTargetFreezable();
         if (self.freezable and self:isTargetFrozen()) then
