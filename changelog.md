@@ -3,6 +3,7 @@
 #### v1.3.2 (2024-04-xx)
 
 New effects:
+- New SAO: Hunter's Lock and Load (Season of Discovery)
 - New SAO: Warrior's Sword and Board (Season of Discovery)
 - New GAB: Paladin's Holy Shock, as combat-only counter
 - New GAB: Warrior's Overpower, during Taste for Blood* (SoD) 

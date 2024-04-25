@@ -141,7 +141,6 @@ TEXTURES_NOT_FOR_VANILLA=(
 master_marksman
 molten_core
 art_of_war
-lock_and_load
 sudden_death
 shooting_stars
 daybreak

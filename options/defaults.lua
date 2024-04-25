@@ -91,10 +91,13 @@ SAO.defaults = {
         },
         ["HUNTER"] = {
             alert = {
-                [53220] = { -- Improved Steady Shot
+                [53220] = { -- Improved Steady Shot (Wrath+)
                     [0] = true,
                 },
-                [56453] = { -- Lock and Load
+                [56453] = { -- Lock and Load (Wrath+)
+                    [0] = true, -- any stacks
+                },
+                [415414]= { -- Lock and Load (Season of Discovery)
                     [0] = true, -- any stacks
                 },
                 [415320]= { -- Flanking Strike (Season of Discovery)
@@ -105,22 +108,22 @@ SAO.defaults = {
                 },
             },
             glow = {
-                [53351] = { -- Kill Shot
+                [53351] = { -- Kill Shot (Wrath+)
                     [53351] = true, -- Kill Shot
                 },
                 [19306] = { -- Counterattack
                     [19306] = true, -- Counterattack
                 },
-                [53220] = { -- Improved Steady Shot
+                [53220] = { -- Improved Steady Shot (Wrath+)
                     [19434] = true, --  Aimed Shot
                     [3044]  = true, --  Arcane Shot
                     [53209] = true, --  Chimera Shot
                 },
-                [56453] = { -- Lock and Load
+                [56453] = { -- Lock and Load (Wrath+)
                     [3044]  = true, --  Arcane Shot
                     [53301] = true, --  Explosive Shot
                 },
-                [1495] = { -- Mongoose Bite
+                [1495] = { -- Mongoose Bite (Era, TBC)
                     [1495]  = true, -- Mongoose Bite
                 },
                 [415320]= { -- Flanking Strike (Season of Discovery)
