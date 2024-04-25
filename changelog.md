@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v1.3.2 (2024-04-xx)
+
+New effect for Season of Discovery:
+- Warrior's Overpower button glows during Taste for Blood
+
 #### v1.3.1 (2024-04-22)
 
 Shout-out to fellow developers Amanthuul and steijner. Thanks!
