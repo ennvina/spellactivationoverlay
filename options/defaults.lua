@@ -258,6 +258,9 @@ SAO.defaults = {
                 [879] = { -- Exorcism
                     [879] = false, -- Exorcism
                 },
+                [20473] = { -- Holy Shock
+                    [20473] = false, -- Holy Shock
+                },
                 [24275] = { -- Hammer of Wrath
                     [24275] = true, -- Hammer of Wrath
                 },
