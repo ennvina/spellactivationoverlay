@@ -5,6 +5,9 @@
 New effect for Season of Discovery:
 - Warrior's Overpower button glows during Taste for Blood
 
+Bug fixes
+- Hungering Cold is now tagged as Frozen debuff for Mages
+
 #### v1.3.1 (2024-04-22)
 
 Shout-out to fellow developers Amanthuul and steijner. Thanks!
