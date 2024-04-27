@@ -4,6 +4,7 @@
     },
     "Lua.diagnostics.globals": [
         // Lua global functions
+        "bit",
         "ceil",
         "hooksecurefunc",
         "strfind",
