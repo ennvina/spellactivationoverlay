@@ -1,36 +1,81 @@
 local AddonName, SAO = ...
 
-local function registerClass(self)
-    local icyTouch = GetSpellInfo(45477);
-    local frostStrike = GetSpellInfo(49143);
-    local howlingBlast = GetSpellInfo(49184);
-    self:RegisterAura("rime", 0, 59052, "rime", "Top", 1, 255, 255, 255, true, { howlingBlast });
-    self:RegisterAura("killing_machine", 0, 51124, "killing_machine", "Left + Right (Flipped)", 1, 255, 255, 255, true, { icyTouch, frostStrike, howlingBlast });
+local runeStrike = {
+    name = "rune_strike",
+    project = SAO.WRATH + SAO.CATA,
+    spellID = 56815; -- Rune Strike (ability)
 
-    local runeStrike = 56815;
-    self:RegisterAura("rune_strike", 0, runeStrike, nil, "", 0, 0, 0, 0, false, { runeStrike });
-    self:RegisterCounter("rune_strike"); -- Must match name from above call
+    counter = true,
+
+    buttons = {{
+        spellID = nil, -- Inherits from effect
+        useName = false,
+    }}
+}
+
+local rime = {
+    name = "rime",
+    project = SAO.WRATH + SAO.CATA,
+    spellID = 59052; -- Freezing Fog (buff)
+    talent = 49188; -- Rime (talent)
+
+    overlays = {{
+        texture = "rime",
+        location = "Top",
+        scale = 1,
+        color = {255, 255, 255},
+        pulse = true,
+    }},
+
+    buttons = {{
+        project = SAO.WRATH + SAO.CATA,
+        spellID = 49184, -- Howling Blast
+        useName = true,
+    }, {
+        project = SAO.CATA,
+        spellID = 45477, -- Icy Touch
+        useName = true,
+    }},
+}
+
+local killingMachine = {
+    name = "killing_machine",
+    project = SAO.WRATH + SAO.CATA,
+    spellID = 51124; -- Killing Machine (buff)
+    talent = 51123; -- Killing Machine (talent)
+
+    overlays = {{
+        texture = "killing_machine",
+        location = "Left + Right (Flipped)",
+    }},
+
+    buttons = {{
+        project = SAO.WRATH,
+        spellID = 45477, -- Icy Touch
+        useName = true,
+    }, {
+        project = SAO.WRATH + SAO.CATA,
+        spellID = 49143, -- Frost Strike
+        useName = true,
+    }, {
+        project = SAO.WRATH,
+        spellID = 49184, -- Howling Blast
+        useName = true,
+    }, {
+        project = SAO.CATA,
+        spellID = 49020, -- Obliterate
+        useName = true,
+    }},
+}
+
+local function registerClass(self)
+    self:RegisterEffect(runeStrike);
+    self:RegisterEffect(rime);
+    self:RegisterEffect(killingMachine);
 end
 
 local function loadOptions(self)
-    local runeStrike = 56815;
-    self:AddGlowingOption(nil, runeStrike, runeStrike);
-
-    local rimeBuff = 59052;
-    local rimeTalent = 49188;
-    local killingMachineBuff = 51124;
-    local killingMachineTalent = 51130;
-    local icyTouch = 45477;
-    local frostStrike = 49143;
-    local howlingBlast = 49184;
-
-    self:AddOverlayOption(rimeTalent, rimeBuff);
-    self:AddOverlayOption(killingMachineTalent, killingMachineBuff);
-
-    self:AddGlowingOption(rimeTalent, rimeBuff, howlingBlast);
-    self:AddGlowingOption(killingMachineTalent, killingMachineBuff, howlingBlast);
-    self:AddGlowingOption(killingMachineTalent, killingMachineBuff, icyTouch);
-    self:AddGlowingOption(killingMachineTalent, killingMachineBuff, frostStrike);
+    self:AddEffectOptions();
 end
 
 SAO.Class["DEATHKNIGHT"] = {

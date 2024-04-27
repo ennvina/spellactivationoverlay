@@ -2,6 +2,9 @@
 
 #### v1.3.2 (2024-04-xx)
 
+The Death Knight class experiments the upcoming rework for Cataclysm.
+Make sure to report issues you would encounter, thank you :)
+
 New effects:
 - New SAO: Hunter's Lock and Load (Season of Discovery)
 - New SAO: Warrior's Sword and Board (Season of Discovery)

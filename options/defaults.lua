@@ -2,7 +2,7 @@ local AddonName, SAO = ...
 
 SAO.defaults = {
     classes = {
-        ["DEATHKNIGHT"] = {
+        ["DEATHKNIGHT"] = { -- (Wrath+)
             alert = {
                 [59052] = { -- Rime
                     [0] = true,
@@ -17,11 +17,13 @@ SAO.defaults = {
                 },
                 [59052] = { -- Rime
                     [49184] = true, --  Howling Blast
+                    [45477] = true, --  Icy Touch (not for Wrath)
                 },
                 [51124] = { -- Killing Machine
-                    [45477] = true, -- Icy Touch
+                    [49020] = true, -- Obliterate (not for Wrath)
+                    [45477] = true, -- Icy Touch (not for Cata)
                     [49143] = true, -- Frost Strike
-                    [49184] = true, -- Howling Blast
+                    [49184] = true, -- Howling Blast (not for Cata)
                 },
             }
         },
@@ -313,7 +315,7 @@ SAO.defaults = {
             glow = {
                 [33151] = { -- Surge of Light (TBC - Wrath)
                     [585]  = true, -- Smite
-                    [2061] = true, -- Flash Heal (does not proc for TBC)
+                    [2061] = true, -- Flash Heal (not for TBC)
                 },
                 [88688] = { -- Surge of Light (Cataclysm)
                     [2061] = true, -- Flash Heal
