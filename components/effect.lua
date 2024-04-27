@@ -18,7 +18,7 @@ local AddonName, SAO = ...
         location = "Top", -- Mandatory
         scale = 1, -- Default is 1
         color = {255, 255, 255}, -- Default is {255, 255, 255}
-        pulse = true, -- Default is false
+        pulse = true, -- Default is true
         option = true, -- Default is true
     }}, -- Although rare, multiple overlays are possible
 
@@ -143,7 +143,7 @@ function SAO:RegisterEffect(effect)
             local scale = overlay.scale or 1;
             local r, g, b = 255, 255, 255
             if overlay.color then r, g, b = overlay.color[1], overlay.color[2], overlay.color[3] end
-            local autoPulse = overlay.pulse == true;
+            local autoPulse = overlay.pulse ~= false;
             local combatOnly = overlay.combatOnly == true or effect.combatOnly == true;
             self:RegisterAura(name, stacks, spellID, texture, location, scale, r, g, b, autoPulse, glowIDs, combatOnly);
             glowIDs = nil; -- Immediately clear the glow ID list to avoid re-registering the same list on next overlay

@@ -22,7 +22,6 @@ local rime = {
     overlays = {{
         texture = "rime",
         location = "Top",
-        pulse = true,
     }},
 
     buttons = {{
@@ -45,7 +44,6 @@ local killingMachine = {
     overlays = {{
         texture = "killing_machine",
         location = "Left + Right (Flipped)",
-        pulse = true,
     }},
 
     buttons = {{
@@ -76,7 +74,6 @@ local suddenDoom = {
     overlays = {{
         texture = "sudden_doom",
         location = "Left + Right (Flipped)",
-        pulse = true,
     }},
 
     buttons = {{
