@@ -22,8 +22,6 @@ local rime = {
     overlays = {{
         texture = "rime",
         location = "Top",
-        scale = 1,
-        color = {255, 255, 255},
         pulse = true,
     }},
 
@@ -47,6 +45,7 @@ local killingMachine = {
     overlays = {{
         texture = "killing_machine",
         location = "Left + Right (Flipped)",
+        pulse = true,
     }},
 
     buttons = {{
