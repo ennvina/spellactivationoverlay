@@ -123,7 +123,8 @@ raging_blow
 arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
-fulmination)
+fulmination
+sudden_doom)
 prunetex "${TEXTURES_NOT_FOR_WRATH[@]}"
 
 zipproject wrath "$VERSION_TOC_VERSION"
@@ -148,7 +149,8 @@ backlash
 predatory_swiftness
 sword_and_board
 killing_machine
-rime)
+rime
+sudden_doom)
 prunetex "${TEXTURES_NOT_FOR_VANILLA[@]}"
 
 zipproject vanilla "$VERSION_TOC_VERSION"

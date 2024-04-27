@@ -67,10 +67,28 @@ local killingMachine = {
     }},
 }
 
+local suddenDoom = {
+    name = "sudden_doom",
+    project = SAO.CATA,
+    spellID = 81340; -- Sudden Doom (buff)
+    talent = 49018; -- Sudden Doom (talent)
+
+    overlays = {{
+        texture = "sudden_doom",
+        location = "Left + Right (Flipped)",
+        pulse = true,
+    }},
+
+    buttons = {{
+        spellID = 47541, -- Death Coil
+    }},
+}
+
 local function registerClass(self)
     self:RegisterEffect(runeStrike);
     self:RegisterEffect(rime);
     self:RegisterEffect(killingMachine);
+    self:RegisterEffect(suddenDoom);
 end
 
 local function loadOptions(self)

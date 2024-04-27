@@ -10,6 +10,9 @@ SAO.defaults = {
                 [51124] = { -- Killing Machine
                     [0] = true,
                 },
+                [81340] = { -- Sudden Doom (Cataclysm)
+                    [0] = true,
+                },
             },
             glow = {
                 [56815] = { -- Rune Strike
@@ -24,6 +27,9 @@ SAO.defaults = {
                     [45477] = true, -- Icy Touch (not for Cata)
                     [49143] = true, -- Frost Strike
                     [49184] = true, -- Howling Blast (not for Cata)
+                },
+                [81340] = { -- Sudden Doom (Cataclysm)
+                    [47541] = true, -- Death Coil
                 },
             }
         },
