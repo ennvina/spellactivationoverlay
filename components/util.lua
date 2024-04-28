@@ -16,15 +16,27 @@ local GetTalentInfo = GetTalentInfo
 local GetTime = GetTime
 local UnitAura = UnitAura
 
+function SAO.Error(self, prefix, msg, ...)
+    print(WrapTextInColorCode("**SAO** -"..prefix.."- "..msg, "FFFF0000"), ...);
+end
+
+function SAO.Warn(self, prefix, msg, ...)
+    print(WrapTextInColorCode("!SAO!  -"..prefix.."- "..msg, "FFEE7711"), ...);
+end
+
+function SAO.Info(self, prefix, msg, ...)
+    print(WrapTextInColorCode("SAO -"..prefix.."- "..msg, "FFA2F3FF"), ...);
+end
+
 function SAO.Debug(self, prefix, msg, ...)
     if SpellActivationOverlayDB and SpellActivationOverlayDB.debug then
-        print("[SAO@"..GetTime().."] -"..prefix.."- "..msg, ...);
+        print(WrapTextInColorCode("[SAO@"..GetTime().."] -"..prefix.."- "..msg, "FFFFFFAA"), ...);
     end
 end
 
 function SAO.Trace(self, prefix, msg, ...)
     if SpellActivationOverlayDB and SpellActivationOverlayDB.trace and SpellActivationOverlayDB.trace[prefix] then
-        print("{SAO@"..GetTime().."} -"..prefix.."- "..msg, ...);
+        print(WrapTextInColorCode("{SAO@"..GetTime().."} -"..prefix.."- "..msg, "FFAAFFCC"), ...);
     end
 end
 

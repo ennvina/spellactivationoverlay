@@ -47,7 +47,8 @@ function SpellActivationOverlay_OnLoad(self)
 			end
 		end
 	else
-		print(WrapTextInColorCode("Class unknown or not converted yet: ", "FFFF0000")..select(1, UnitClass("player")));
+		local currentClass = tostring(select(1, UnitClass("player")));
+		SAO:Error(Module, "Class unknown or not converted yet:", currentClass);
 	end
 
 	if ( SAO.IsCata() ) then
@@ -153,13 +154,13 @@ function SpellActivationOverlay_OnEvent(self, event, ...)
 ]]
 	if ( event == "SPELL_ACTIVATION_OVERLAY_SHOW" ) then
 		local spellID, texture, positions, scale, r, g, b = ...;
-		SAO:Debug("Received native SPELL_ACTIVATION_OVERLAY_SHOW with spell ID "..tostring(spellID)..", texture "..tostring(texture)..", positions '"..tostring(positions).."', scale "..tostring(scale)..", (r g b) = ("..tostring(r).." "..tostring(g).." "..tostring(b)..")");
+		SAO:Debug(Module, "Received native SPELL_ACTIVATION_OVERLAY_SHOW with spell ID "..tostring(spellID)..", texture "..tostring(texture)..", positions '"..tostring(positions).."', scale "..tostring(scale)..", (r g b) = ("..tostring(r).." "..tostring(g).." "..tostring(b)..")");
 		-- if ( GetCVarBool("displaySpellActivationOverlays") ) then 
 		-- 	SpellActivationOverlay_ShowAllOverlays(self, spellID, texture, positions, scale, r, g, b, true)
 		-- end
 	elseif ( event == "SPELL_ACTIVATION_OVERLAY_HIDE" ) then
 		local spellID = ...;
-		SAO:Debug("Received native SPELL_ACTIVATION_OVERLAY_HIDE with spell ID "..tostring(spellID));
+		SAO:Debug(Module, "Received native SPELL_ACTIVATION_OVERLAY_HIDE with spell ID "..tostring(spellID));
 		-- if spellID then
 		-- 	SpellActivationOverlay_HideOverlays(self, spellID);
 		-- else

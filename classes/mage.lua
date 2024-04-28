@@ -1,4 +1,5 @@
 local AddonName, SAO = ...
+local Module = "mage"
 
 -- Optimize frequent calls
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
@@ -206,7 +207,7 @@ local function hotStreakCLEU(self, ...)
             deactivateHeatingUp(self, hotStreakHeatingUpSpellID);
         end
     else
-        print("Unknown HotStreakHandler state");
+        SAO:Debug(Module, "Unknown HotStreakHandler state");
     end
 end
 

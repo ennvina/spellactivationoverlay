@@ -77,7 +77,7 @@ function SAO.SetCounterStatus(self, spellID, auraID, newStatus)
     local aura = self.RegisteredAurasByName[auraID];
     if not aura then
         -- Unknown aura. Should never happen.
-        self:Debug("Counter uses unknown auraID "..tostring(auraID));
+        self:Debug(Module, "Counter uses unknown auraID "..tostring(auraID));
         return;
     end
     local auraSpellID = aura[3];

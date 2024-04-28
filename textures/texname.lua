@@ -1,4 +1,5 @@
 local AddonName, SAO = ...
+local Module = "texture"
 
 -- Credits to WeakAuras for listing these textures https://github.com/WeakAuras
 local mapping =
@@ -110,11 +111,11 @@ function SAO.MarkTexture(self, texName)
     self.MarkedTextures[texName] = true;
     fullTextureName = texName;
   else
-    print(WrapTextInColorCode("SAO: Error: Unknown texture "..texName, "FFFF0000"));
+    self:Error(Module, "Unknown texture "..texName);
   end
 
   if fullTextureName and not GetFileIDFromPath(fullTextureName) then
-    print(WrapTextInColorCode("SAO: Error: Missing file for texture "..texName, "FFFF0000"));
+    self:Error(Module, "Missing file for texture "..texName);
   end
 end
 

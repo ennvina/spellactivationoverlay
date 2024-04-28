@@ -1,4 +1,5 @@
 local AddonName, SAO = ...
+local Module = "db"
 
 -- Migrate from pre-091 to 091 or higher
 local function migrateTo091(db)
@@ -20,7 +21,7 @@ local function migrateTo091(db)
         db.classes["MAGE"]["alert"][12536][0] = SAO.defaults.classes["MAGE"]["alert"][12536][0];
     end
 
-    print(WrapTextInColorCode("SAO: Migrated options from pre-0.9.1 to 0.9.1", "FFA2F3FF"));
+    SAO:Info(Module, "Migrated options from pre-0.9.1 to 0.9.1");
 end
 
 -- Migrate from pre-091 to 091 or higher
@@ -35,7 +36,7 @@ local function migrateTo112(db)
         db.classes["ROGUE"]["glow"][riposte][riposte] = SAO.defaults.classes["ROGUE"]["glow"][riposte][riposte];
     end
 
-    print(WrapTextInColorCode("SAO: Migrated options from pre-1.1.2 to 1.1.2", "FFA2F3FF"));
+    SAO:Info(Module, "Migrated options from pre-1.1.2 to 1.1.2");
 end
 
 -- Migrate from pre-131 to 131 or higher
@@ -65,7 +66,7 @@ local function migrateTo131(db)
         db.classes["MAGE"]["glow"][fingersOfFrostCata][deepFreeze] = db.classes["MAGE"]["glow"][fingersOfFrostWrath][deepFreeze];
     end
 
-    print(WrapTextInColorCode("SAO: Migrated options from pre-1.3.1 to 1.3.1", "FFA2F3FF"));
+    SAO:Info(Module, "Migrated options from pre-1.3.1 to 1.3.1");
 end
 
 -- Load database and use default values if needed
