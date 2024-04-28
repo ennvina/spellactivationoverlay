@@ -215,3 +215,57 @@ function SAO_DB_ComputeUnmarkedTextures(output)
     print("SAO_DB_ComputeUnmarkedTextures() "..WrapTextInColorCode("OK", "FF00FF00"));
   end
 end
+
+function SAO_DB_LookForTexture(fileDataID, output, saveToDev)
+  local f = CreateFrame("Frame", nil);
+  local tex = f:CreateTexture();
+  tex:SetPoint('CENTER', WorldFrame);
+
+  f:SetAllPoints(tex);
+  if saveToDev and SpellActivationOverlayDB.dev then
+    SpellActivationOverlayDB.dev.existing[fileDataID] = nil;
+  end
+  f:SetScript('OnSizeChanged', function(self, width, height)
+      local isLoaded = width > 15 and height > 15
+      if saveToDev and SpellActivationOverlayDB.dev then
+        SpellActivationOverlayDB.dev.existing.id[fileDataID] = isLoaded;
+
+        SpellActivationOverlayDB.dev.existing.remaining = SpellActivationOverlayDB.dev.existing.remaining-1;
+        if SpellActivationOverlayDB.dev.existing.remaining == 0 and (type(output) ~= 'boolean' or output) then
+          print("SAO_DB_DetectExistingMarkedTextures() "..WrapTextInColorCode("Complete", "FF00FF00"));
+        end
+      end
+      if not saveToDev and (type(output) ~= 'boolean' or output) then
+        if isLoaded then
+          SAO:Info(Module, "Texture "..tostring(fileDataID).." has been found in game files.");
+        else
+          SAO:Warn(Module, "Texture "..tostring(fileDataID).." has *not* been found in game files.");
+        end
+      end
+      f:Hide();
+  end);
+
+  tex:SetTexture(fileDataID);
+
+  tex:SetSize(0, 0); -- Reset size to make sure OnSizeChanged will be triggered
+end
+
+function SAO_DB_LookForAllTextures(output)
+  SAO_DB_AddMarkedTextures(false); -- Not needed in theory, but it avoids confusion
+  SpellActivationOverlayDB.dev.existing = { remaining = 0, id = {} };
+
+  local fileDataIDs = {};
+
+  for retailTexture in pairs(mapping) do
+    table.insert(fileDataIDs, tonumber(retailTexture, 10));
+  end
+
+  SpellActivationOverlayDB.dev.existing.remaining = #fileDataIDs;
+  for _, fileDataID in ipairs(fileDataIDs) do
+    SAO_DB_LookForTexture(fileDataID, output, true);
+  end
+
+  if type(output) ~= 'boolean' or output then
+    print("SAO_DB_DetectExistingMarkedTextures() "..WrapTextInColorCode("Pending ("..#fileDataIDs..")...", "FFFFFF00"));
+  end
+end

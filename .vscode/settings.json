@@ -3,7 +3,7 @@
         "**/libs/**": true
     },
     "Lua.diagnostics.globals": [
-        // Lua global functions
+        // Lua global functions and objects
         "bit",
         "ceil",
         "hooksecurefunc",
@@ -13,6 +13,7 @@
         "tDeleteItem",
         "tinsert",
         "tremove",
+        "WorldFrame",
         // Objects from this addon
         "SpellActivationOverlayContainerFrame",
         "SpellActivationOverlayDB",
