@@ -26,7 +26,7 @@ local Module = "effect"
     buttons = {{
         project = SAO.WRATH, -- Default is project from effect
         spellID = 1111, -- Default is spellID from effect
-        useName = true, -- Default is false
+        useName = true, -- Default is false from Era to Wrath, default is true starting from Cataclysm
         option = true, -- Default is true
     }, { -- Multiple buttons if needed
         project = SAO.CATA,
@@ -39,6 +39,13 @@ local Module = "effect"
 ]]
 local allEffects = {}
 
+local function doesUseName(useNameProp)
+    if useNameProp == nil then
+        return SAO.IsCata() == true;
+    else
+        return useNameProp == true;
+    end
+end
 
 local function checkEffect(effect)
     if type(effect) ~= 'table' then
@@ -134,7 +141,8 @@ function SAO:RegisterEffect(effect)
         for i, button in ipairs(effect.buttons) do
             if not button.project or self.IsProject(button.project) then
                 local spellID = button.spellID or effect.spellID;
-                if button.useName == true then
+                local useName = doesUseName(button.useName);
+                if useName then
                     local spellName = GetSpellInfo(spellID);
                     if not spellName then
                         SAO:Error(Module, "Registering effect "..effect.name.." for button "..i.." with unknown spellID "..tostring(spellID));
