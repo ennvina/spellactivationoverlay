@@ -7,8 +7,8 @@ local GetSpellInfo = GetSpellInfo
 local UnitGUID = UnitGUID
 
 local omenSpellID = 16870;
-local lunarSpellID = SAO:IsSoD() and 408255 or 48518;
-local solarSpellID = SAO:IsSoD() and 408250 or 48517;
+local lunarSpellID = SAO.IsSoD() and 408255 or 48518;
+local solarSpellID = SAO.IsSoD() and 408250 or 48517;
 
 local feralCache = false;
 local clarityCache = false;
