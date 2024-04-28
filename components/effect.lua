@@ -1,4 +1,5 @@
 local AddonName, SAO = ...
+local Module = "effect"
 
 --[[
     List of registered effect objects.
@@ -38,67 +39,80 @@ local AddonName, SAO = ...
 ]]
 local allEffects = {}
 
-local function error(msg)
-    print(WrapTextInColorCode("SAO: "..msg, "FFFF0000"));
-    return false;
-end
 
 local function checkEffect(effect)
     if type(effect) ~= 'table' then
-        return error("Registering invalid effect "..tostring(effect));
+        SAO:Error(Module, "Registering invalid effect "..tostring(effect));
+        return false;
     end
-    if type(effect.name) ~= 'string' then
-        return error("Registering effect with invalid name "..tostring(effect.name));
+    if type(effect.name) ~= 'string' or effect.name == '' then
+        SAO:Error(Module, "Registering effect with invalid name "..tostring(effect.name));
+        return false;
     end
-    if type(effect.project) ~= 'number' then
-        return error("Registering effect "..effect.name.." with invalid project flags "..tostring(effect.project));
+    if type(effect.project) ~= 'number' or bit.band(effect.project, SAO.ALL_PROJECTS) == 0 then
+        SAO:Error(Module, "Registering effect "..effect.name.." with invalid project flags "..tostring(effect.project));
+        return false;
     end
-    if type(effect.spellID) ~= 'number' then
-        return error("Registering effect "..effect.name.." with invalid spellID "..tostring(effect.spellID));
+    if type(effect.spellID) ~= 'number' or effect.spellID <= 0 then
+        SAO:Error(Module, "Registering effect "..effect.name.." with invalid spellID "..tostring(effect.spellID));
+        return false;
     end
     if effect.talent and type(effect.talent) ~= 'number' then
-        return error("Registering effect "..effect.name.." with invalid talent "..tostring(effect.talent));
+        SAO:Error(Module, "Registering effect "..effect.name.." with invalid talent "..tostring(effect.talent));
+        return false;
     end
     if effect.counter ~= true and type(effect.overlays) ~= "table" then
-        return error("Registering effect "..effect.name.." with no overlays and not as counter");
+        SAO:Error(Module, "Registering effect "..effect.name.." with no overlays and not as counter");
+        return false;
     end
     if effect.counter == true and (type(effect.buttons) ~= "table" or #effect.buttons == 0) then
-        return error("Registering effect "..effect.name.." with no buttons despite being a counter");
+        SAO:Error(Module, "Registering effect "..effect.name.." with no buttons despite being a counter");
+        return false;
     end
     if effect.overlays and type(effect.overlays) ~= 'table' then
-        return error("Registering effect "..effect.name.." with invalid overlay list");
+        SAO:Error(Module, "Registering effect "..effect.name.." with invalid overlay list");
+        return false;
     end
     if effect.buttons and type(effect.buttons) ~= 'table' then
-        return error("Registering effect "..effect.name.." with invalid button list");
+        SAO:Error(Module, "Registering effect "..effect.name.." with invalid button list");
+        return false;
     end
 
     for i, overlay in ipairs(effect.overlays or {}) do
         if overlay.project and type(overlay.project) ~= 'number' then
-            return error("Registering effect "..effect.name.." for overlay "..i.." with invalid project flags "..tostring(overlay.project));
+            SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid project flags "..tostring(overlay.project));
+            return false;
         end
         if overlay.spellID and type(overlay.spellID) ~= 'number' then
-            return error("Registering effect "..effect.name.." for overlay "..i.." with invalid spellID "..tostring(overlay.spellID));
+            SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid spellID "..tostring(overlay.spellID));
+            return false;
         end
         if type(overlay.texture) ~= 'string' then -- @todo check the texture even exists
-            return error("Registering effect "..effect.name.." for overlay "..i.." with invalid texture name "..tostring(overlay.texture));
+            SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid texture name "..tostring(overlay.texture));
+            return false;
         end
         if type(overlay.location) ~= 'string' then -- @todo check the location is one of the allowed values
-            return error("Registering effect "..effect.name.." for overlay "..i.." with invalid location "..tostring(overlay.location));
+            SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid location "..tostring(overlay.location));
+            return false;
         end
         if overlay.scale and (type(overlay.scale) ~= 'number' or overlay.scale <= 0) then
-            return error("Registering effect "..effect.name.." for overlay "..i.." with invalid scale factor "..tostring(overlay.scale));
+            SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid scale factor "..tostring(overlay.scale));
+            return false;
         end
         if overlay.color and (type(overlay.color) ~= 'table' or type(overlay.color[1]) ~= 'number' or type(overlay.color[2]) ~= 'number' or type(overlay.color[3]) ~= 'number') then
-            return error("Registering effect "..effect.name.." for overlay "..i.." with invalid color");
+            SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid color");
+            return false;
         end
     end
 
     for i, button in ipairs(effect.buttons or {}) do
         if button.project and type(button.project) ~= 'number' then
-            return error("Registering effect "..effect.name.." for button "..i.." with invalid project flags "..tostring(button.project));
+            SAO:Error(Module, "Registering effect "..effect.name.." for button "..i.." with invalid project flags "..tostring(button.project));
+            return false;
         end
         if button.spellID and type(button.spellID) ~= 'number' then
-            return error("Registering effect "..effect.name.." for button "..i.." with invalid spellID "..tostring(button.spellID));
+            SAO:Error(Module, "Registering effect "..effect.name.." for button "..i.." with invalid spellID "..tostring(button.spellID));
+            return false;
         end
     end
 
@@ -123,7 +137,8 @@ function SAO:RegisterEffect(effect)
                 if button.useName == true then
                     local spellName = GetSpellInfo(spellID);
                     if not spellName then
-                        return error("Registering effect "..effect.name.." for button "..i.." with unknown spellID "..tostring(spellID));
+                        SAO:Error(Module, "Registering effect "..effect.name.." for button "..i.." with unknown spellID "..tostring(spellID));
+                        return false;
                     end
                     table.insert(glowIDs, spellName);
                 else
