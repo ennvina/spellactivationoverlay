@@ -104,19 +104,19 @@ local function loadOptions(self)
 
     if not self.IsEra() then
         self:AddOverlayOption(surgeOfLightTalent, surgeOfLightBuff);
-        if self.Wrath() then
+        if self.IsWrath() then
             self:AddOverlayOption(serendipityTalent, serendipityBuff3, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks
             self:AddOverlayOption(serendipityTalent, serendipityBuff3, 3); -- setup 3 stacks
         end
         self:AddSoulPreserverOverlayOption(60514); -- 60514 = Priest buff
 
-        if self.TBC() or self.Wrath() then
+        if self.IsTBC() or self.IsWrath() then
             self:AddGlowingOption(surgeOfLightTalent, surgeOfLightBuff, smite);
         end
-        if self.Wrath() or self.Cata() then
+        if self.IsWrath() or self.IsCata() then
             self:AddGlowingOption(surgeOfLightTalent, surgeOfLightBuff, flashHeal);
         end
-        if self.Wrath() then
+        if self.IsWrath() then
             self:AddGlowingOption(serendipityTalent, serendipityBuff3, greaterHeal, threeStacks);
             self:AddGlowingOption(serendipityTalent, serendipityBuff3, prayerOfHealing, threeStacks);
         end
