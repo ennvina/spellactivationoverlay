@@ -35,6 +35,20 @@ mkproject() {
     echo
 }
 
+# Find texture names which file data ID is lesser or equal to a specific threshold
+# Such textures are supposed to be already embedded in the game files
+# $1 = threshold up until textures are supposed to be embedded, and can be pruned
+texbelow() {
+    local threshold=$1
+    awk '/^local mapping/{flag=1;next;next} /^}/{flag=0} flag' SpellActivationOverlay/textures/texname.lua |
+        tr " \t" "_" | tr -d "'" |
+        awk -F'"' "{ if (\$2 <= $threshold) print \$4 }" |
+        while read name
+        do
+            [ -e "SpellActivationOverlay/textures/${name,,}.blp" ] && printf '%s\n' "${name,,}"
+        done
+}
+
 # Remove unused textures to reduce archive size.
 # The list passed as parameter is based on the contents of the array
 # SpellActivationOverlayDB.dev.unmarked after calling the global
@@ -168,7 +182,9 @@ raging_blow
 arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
-fulmination)
+fulmination
+$(texbelow 511469)
+)
 prunetex "${TEXTURES_NOT_FOR_CATA[@]}"
 
 SOUNDS_NOT_FOR_CATA=(UI_PowerAura_Generic)

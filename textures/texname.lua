@@ -91,8 +91,13 @@ for retailTexture, classicTexture in pairs(mapping) do
   -- For now, all textures are copied locally in the addon's texture folder
   local filename = classicTexture:gsub(" ", "_"):gsub("'", "");
   local fullTextureName = "Interface\\Addons\\SpellActivationOverlay\\textures\\"..filename;
+  local retailNumber = tonumber(retailTexture, 10);
+  if SAO.IsCata() and retailNumber <= 511469 then -- Cataclysm game files embed textures up to (at least) 511469
+    -- In this case, use texture embedded in game using its FileDataID, not from addon folder using a file path
+    fullTextureName = retailTexture;
+  end
   SAO.TexName[retailTexture] = fullTextureName;
-  SAO.TexName[tonumber(retailTexture,10)] = fullTextureName;
+  SAO.TexName[retailNumber] = fullTextureName;
   SAO.TexName[strlower(classicTexture)] = fullTextureName;
   SAO.TexName[strlower(classicTexture):gsub(" ", "_"):gsub("'", "")] = fullTextureName;
   SAO.TextureFilenameFromFullname[fullTextureName] = strlower(filename);
@@ -114,7 +119,10 @@ function SAO.MarkTexture(self, texName)
     self:Error(Module, "Unknown texture "..texName);
   end
 
-  if fullTextureName and not GetFileIDFromPath(fullTextureName) then
+  if fullTextureName and -- Has texture
+    tostring(tonumber(fullTextureName,10)) ~= fullTextureName and -- Texture is not embedded (in theory we could test it, but not easily, cf. SAO_DB_LookForTexture)
+    not GetFileIDFromPath(fullTextureName) -- File path is missing
+  then
     self:Error(Module, "Missing file for texture "..texName);
   end
 end
