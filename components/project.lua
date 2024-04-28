@@ -1,10 +1,13 @@
 local AddonName, SAO = ...
+local Module = "project"
 
-SAO.ERA = 1
-SAO.SOD = 2
-SAO.TBC = 4
-SAO.WRATH = 8
-SAO.CATA = 16
+-- List of project flags, as bit field
+-- Start high enough to be able to index project flag to a list, and avoid confusion with traditional lists
+SAO.ERA = 256
+SAO.SOD = 512
+SAO.TBC = 1024
+SAO.WRATH = 2048
+SAO.CATA = 4096
 SAO.ALL_PROJECTS = SAO.ERA+SAO.TBC+SAO.WRATH+SAO.CATA
 
 function SAO.IsEra()
@@ -28,6 +31,10 @@ function SAO.IsSoD()
 end
 
 function SAO.IsProject(projectFlags)
+    if type(projectFlags) ~= 'number' then
+        SAO:Debug(Module, "Checking project against invalid flags "..tostring(projectFlags));
+        return false;
+    end
     return (
         bit.band(projectFlags, SAO.ERA) ~= 0 and SAO.IsEra() or
         bit.band(projectFlags, SAO.SOD) ~= 0 and SAO.IsSoD() or
