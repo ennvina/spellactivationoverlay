@@ -37,7 +37,7 @@ mkproject() {
 
 # Remove unused textures to reduce archive size.
 # The list passed as parameter is based on the contents of the array
-# SpellActivationOverlayDB.debug.unmarked after calling the global
+# SpellActivationOverlayDB.dev.unmarked after calling the global
 # function SAO_DB_ComputeUnmarkedTextures() on each and every class
 # on characters logged in with the game client of the target flavor.
 # Because these textures are not 'marked', we don't need them.

@@ -171,10 +171,10 @@ local availableTextures = {
 -- Global functions, helpful for optimizing package
 
 function SAO_DB_ResetMarkedTextures(output)
-  if not SpellActivationOverlayDB.debug then
-    SpellActivationOverlayDB.debug = { marked = {} };
+  if not SpellActivationOverlayDB.dev then
+    SpellActivationOverlayDB.dev = { marked = {} };
   else
-    SpellActivationOverlayDB.debug.marked = {};
+    SpellActivationOverlayDB.dev.marked = {};
   end
   if type(output) ~= 'boolean' or output then
     print("SAO_DB_ResetMarkedTextures() "..WrapTextInColorCode("OK", "FF00FF00"));
@@ -182,13 +182,13 @@ function SAO_DB_ResetMarkedTextures(output)
 end
 
 function SAO_DB_AddMarkedTextures(output)
-  if not SpellActivationOverlayDB.debug or not SpellActivationOverlayDB.debug.marked then
+  if not SpellActivationOverlayDB.dev or not SpellActivationOverlayDB.dev.marked then
     SAO_DB_ResetMarkedTextures(false);
   end
 
   for fullTextureName, filename in pairs(SAO.TextureFilenameFromFullname) do
     if SAO.MarkedTextures[fullTextureName] then
-      SpellActivationOverlayDB.debug.marked[filename] = true;
+      SpellActivationOverlayDB.dev.marked[filename] = true;
     end
   end
 
@@ -199,14 +199,14 @@ end
 
 function SAO_DB_ComputeUnmarkedTextures(output)
   SAO_DB_AddMarkedTextures(false); -- Not needed in theory, but it avoids confusion
-  SpellActivationOverlayDB.debug.unmarked = {};
+  SpellActivationOverlayDB.dev.unmarked = {};
 
   for fullTextureName, filename in pairs(SAO.TextureFilenameFromFullname) do
     if availableTextures[filename] then
       if     not SAO.MarkedTextures[fullTextureName] -- Not marked by current class
-        and (not SpellActivationOverlayDB.debug.marked or not SpellActivationOverlayDB.debug.marked[filename]) -- Mark not stored in database
+        and (not SpellActivationOverlayDB.dev.marked or not SpellActivationOverlayDB.dev.marked[filename]) -- Mark not stored in database
       then
-        SpellActivationOverlayDB.debug.unmarked[filename] = true;
+        SpellActivationOverlayDB.dev.unmarked[filename] = true;
       end
     end
   end
