@@ -47,6 +47,112 @@ local function doesUseName(useNameProp)
     end
 end
 
+local function createCounter(effect, props)
+    effect.counter = true;
+
+    effect.buttons = {{
+        useName = doesUseName(props.useName),
+    }}
+
+    return effect;
+end
+
+local function addAuraOverlay(overlays, overlayConfig, project)
+    if type(overlayConfig.texture) ~= 'string' then
+        SAO:Error(Module, "Adding Overlay with invalid texture "..tostring(overlayConfig.texture));
+    end
+    if type(overlayConfig.location) ~= 'string' then
+        SAO:Error(Module, "Adding Overlay with invalid location "..tostring(overlayConfig.location));
+    end
+
+    local overlay = {
+        project = project or overlayConfig.project;
+        texture = overlayConfig.texture;
+        location = overlayConfig.location;
+        scale = overlayConfig.scale;
+        color = overlayConfig.color and { overlayConfig.color[1], overlayConfig.color[2], overlayConfig.color[3] } or nil,
+        pulse = overlayConfig.pulse,
+        option = overlayConfig.pulse,
+    }
+
+    if type(overlay.project) == 'number' and not SAO.IsProject(overlay.project) then
+        return;
+    end
+
+    table.insert(overlays, overlay);
+end
+
+local function addAuraButton(buttons, buttonConfig, project)
+    if type(buttonConfig) == 'table' then
+        if buttonConfig.spellID ~= nil and type(buttonConfig.spellID) ~= 'number' then
+            SAO:Error(Module, "Adding Button with invalid spellID "..tostring(buttonConfig.spellID));
+        end
+    end
+
+    local button = {}
+
+    if type(buttonConfig) == 'number' then
+        button.project = project;
+        button.spellID = buttonConfig;
+    elseif type(buttonConfig) == 'table' then
+        button.project = project or buttonConfig.project;
+        button.spellID = buttonConfig.spellID;
+        button.useName = buttonConfig.useName;
+        button.option = buttonConfig.useName;
+    else
+        SAO:Error(Module, "Adding Button with invalid value "..tostring(buttonConfig));
+    end
+
+    if type(button.project) == 'number' and not SAO.IsProject(button.project) then
+        return;
+    end
+
+    table.insert(buttons, button);
+end
+
+local function createAura(effect, props)
+    effect.talent = props.talent;
+    effect.combatOnly = effect.combatOnly;
+
+    effect.overlays = {}
+    if props.overlay then
+        addAuraOverlay(effect.overlays, props.overlay);
+    end
+    for key, overlayConfig in pairs(props.overlays or {}) do
+        if type(key) == 'number' and key >= SAO.ERA then
+            if type(overlayConfig) == 'table' and overlayConfig[1] then
+                for _, subOverlayConfig in ipairs(overlayConfig) do
+                    addAuraOverlay(effect.overlays, subOverlayConfig, key);
+                end
+            else
+                addAuraOverlay(effect.overlays, overlayConfig, key);
+            end
+        else
+            addAuraOverlay(effect.overlays, overlayConfig);
+        end
+    end
+
+    effect.buttons = {}
+    if props.button then
+        addAuraButton(effect.buttons, props.button);
+    end
+    for key, buttonConfig in pairs(props.buttons or {}) do
+        if type(key) == 'number' and key >= SAO.ERA then
+            if type(buttonConfig) == 'table' and buttonConfig[1] then
+                for _, subButtonConfig in ipairs(buttonConfig) do
+                    addAuraButton(effect.buttons, subButtonConfig, key);
+                end
+            else
+                addAuraButton(effect.buttons, buttonConfig, key);
+            end
+        else
+            addAuraButton(effect.buttons, buttonConfig);
+        end
+    end
+
+    return effect;
+end
+
 local function checkEffect(effect)
     if type(effect) ~= 'table' then
         SAO:Error(Module, "Registering invalid effect "..tostring(effect));
@@ -203,4 +309,56 @@ function SAO:AddEffectOptions()
             end
         end
     end
+end
+
+--[[
+    Create an effect based on a specific class.
+    @param name Effect name, must be unique
+    @param project Project flags where the effect is used e.g. SAO.WRATH+SAO.CATA
+    @param class Class name e.g., "counter"
+    @param props (optional) Properties to initialize the effect
+    @param register (optional) Register the effect immediately after creation; default is true
+]]
+function SAO:CreateEffect(name, project, spellID, class, props, register)
+    if type(name) ~= 'string' or name == '' then
+        self:Error(Module, "Creating effect with invalid name "..tostring(name));
+        return nil;
+    end
+    if type(project) ~= 'number' or bit.band(project, SAO.ALL_PROJECTS) == 0 then
+        self:Error(Module, "Creating effect "..name.." with invalid project flags "..tostring(project));
+        return nil;
+    end
+    if type(spellID) ~= 'number' or spellID <= 0 then
+        self:Error(Module, "Creating effect "..name.." with invalid spellID "..tostring(spellID));
+        return nil;
+    end
+    if type(class) ~= 'string' then
+        self:Error(Module, "Creating effect "..name.." with invalid class "..tostring(spellID));
+        return nil;
+    end
+    if props and type(props) ~= 'table' then
+        self:Error(Module, "Creating effect "..name.." with invalid props "..tostring(props));
+        return nil;
+    end
+
+    local effect = {
+        name = name,
+        project = project,
+        spellID = spellID,
+    }
+
+    if strlower(class) == "counter" then
+        createCounter(effect, props);
+    elseif strlower(class) == "aura" then
+        createAura(effect, props);
+    else
+        self:Error(Module, "Creating effect "..name.." with unknown class "..tostring(class));
+        return nil;
+    end
+
+    if register == nil or register == true then
+        self:RegisterEffect(effect);
+    end
+
+    return effect;
 end
