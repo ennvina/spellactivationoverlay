@@ -6,6 +6,7 @@ local howlingBlast = 49184;
 local icyTouch = 45477;
 local obliterate = 49020;
 local runeStrike = 56815;
+local runeTap = 48982;
 
 local function useRuneStrike()
     SAO:CreateEffect(
@@ -65,11 +66,26 @@ local function useSuddenDoom()
     );
 end
 
+local function useWotn()
+    SAO:CreateEffect(
+        "wotn",
+        SAO.CATA,
+        96171, -- Will of the Necropolis (buff)
+        "aura",
+        {
+            talent = 52284, -- Will of the Necropolis (talent)
+            overlay = { texture = "necropolis", location = "Top" },
+            button = runeTap,
+        }
+    );
+end
+
 local function registerClass(self)
     useRuneStrike();
     useRime();
     useKillingMachine();
     useSuddenDoom();
+    useWotn();
 end
 
 SAO.Class["DEATHKNIGHT"] = {
