@@ -13,6 +13,9 @@ SAO.defaults = {
                 [81340] = { -- Sudden Doom (Cataclysm)
                     [0] = true,
                 },
+                [96171] = { -- Will of the Necropolis (Cataclysm)
+                    [0] = true,
+                },
             },
             glow = {
                 [56815] = { -- Rune Strike
@@ -30,6 +33,9 @@ SAO.defaults = {
                 },
                 [81340] = { -- Sudden Doom (Cataclysm)
                     [47541] = true, -- Death Coil
+                },
+                [96171] = { -- Will of the Necropolis (Cataclysm)
+                    [48982] = true, -- Rune Tap
                 },
             }
         },
