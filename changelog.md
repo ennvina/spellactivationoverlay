@@ -6,10 +6,12 @@ The Death Knight class experiments the upcoming rework for Cataclysm.
 Make sure to report issues you would encounter, thank you :)
 
 New effects:
+- New SAO: Death Knight's Crimson Scourge (Cataclysm)
 - New SAO: Death Knight's Sudden Doom (Cataclysm)
 - New SAO: Death Knight's Will of the Necropolis (Cataclysm)
 - New SAO: Hunter's Lock and Load (Season of Discovery)
 - New SAO: Warrior's Sword and Board (Season of Discovery)
+- New GAB: Death Knight's Blood Boil, during Crimson Scourge (Cataclysm)
 - New GAB: Death Knight's Death Coil, during Sudden Doom (Cataclysm)
 - New GAB: Death Knight's Icy Touch, during Rime (Cataclysm)
 - New GAB: Death Knight's Obliterate, during Killing Machine (Cataclysm)

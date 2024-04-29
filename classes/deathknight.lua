@@ -1,5 +1,6 @@
 local AddonName, SAO = ...
 
+local bloodBoil = 48721;
 local deathCoil = 47541;
 local frostStrike = 49143;
 local howlingBlast = 49184;
@@ -52,6 +53,20 @@ local function useKillingMachine()
     );
 end
 
+local function useCrimsonScourge()
+    SAO:CreateEffect(
+        "crimson_scourge",
+        SAO.CATA,
+        81141, -- Crimson Scourge (buff)
+        "aura",
+        {
+            talent = 81135, -- Crimson Scourge (talent)
+            overlay = { texture = "blood_boil", location = "Left + Right (Flipped)" },
+            button = bloodBoil,
+        }
+    );
+end
+
 local function useSuddenDoom()
     SAO:CreateEffect(
         "sudden_doom",
@@ -84,6 +99,7 @@ local function registerClass(self)
     useRuneStrike();
     useRime();
     useKillingMachine();
+    useCrimsonScourge();
     useSuddenDoom();
     useWotn();
 end
