@@ -27,7 +27,7 @@ local function useRime()
         "aura",
         {
             talent = 49188, -- Rime (talent)
-            overlay = { texture = "rime", location = "Top" },
+            overlay = { texture = "rime", position = "Top" },
             buttons = {
                 [SAO.WRATH] = howlingBlast,
                 [SAO.CATA] = { howlingBlast, icyTouch },
@@ -44,7 +44,7 @@ local function useKillingMachine()
         "aura",
         {
             talent = 51123, -- Killing Machine (talent)
-            overlay = { texture = "killing_machine", location = "Left + Right (Flipped)" },
+            overlay = { texture = "killing_machine", position = "Left + Right (Flipped)" },
             buttons = {
                 [SAO.WRATH] = { icyTouch, frostStrike, howlingBlast },
                 [SAO.CATA] = { frostStrike, obliterate },
@@ -61,7 +61,7 @@ local function useCrimsonScourge()
         "aura",
         {
             talent = 81135, -- Crimson Scourge (talent)
-            overlay = { texture = "blood_boil", location = "Left + Right (Flipped)" },
+            overlay = { texture = "blood_boil", position = "Left + Right (Flipped)" },
             button = bloodBoil,
         }
     );
@@ -75,7 +75,7 @@ local function useSuddenDoom()
         "aura",
         {
             talent = 49018, -- Sudden Doom (talent)
-            overlay = { texture = "sudden_doom", location = "Left + Right (Flipped)" },
+            overlay = { texture = "sudden_doom", position = "Left + Right (Flipped)" },
             button = deathCoil,
         }
     );
@@ -89,7 +89,7 @@ local function useWotn()
         "aura",
         {
             talent = 52284, -- Will of the Necropolis (talent)
-            overlay = { texture = "necropolis", location = "Top" },
+            overlay = { texture = "necropolis", position = "Top" },
             button = runeTap,
         }
     );

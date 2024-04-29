@@ -8,15 +8,15 @@ local Module = "effect"
 {
     name = "my_effect", -- Mandatory
     project = SAO.WRATH + SAO.CATA, -- Mandatory
-    spellID = 12345; -- Mandatory; usually a buff to track, for counters this is the counter ability
-    talent = 49188; -- Talent or rune or nil (for counters)
+    spellID = 12345, -- Mandatory; usually a buff to track, for counters this is the counter ability
+    talent = 49188, -- Talent or rune or nil (for counters)
 
     counter = false, -- Default is false
     combatOnly = false, -- Default is false
 
     overlays = {{
         texture = "genericarc_05", -- Mandatory
-        location = "Top", -- Mandatory
+        position = "Top", -- Mandatory
         scale = 1, -- Default is 1
         color = {255, 255, 255}, -- Default is {255, 255, 255}
         pulse = true, -- Default is true
@@ -61,14 +61,14 @@ local function addAuraOverlay(overlays, overlayConfig, project)
     if type(overlayConfig.texture) ~= 'string' then
         SAO:Error(Module, "Adding Overlay with invalid texture "..tostring(overlayConfig.texture));
     end
-    if type(overlayConfig.location) ~= 'string' then
-        SAO:Error(Module, "Adding Overlay with invalid location "..tostring(overlayConfig.location));
+    if type(overlayConfig.position) ~= 'string' then
+        SAO:Error(Module, "Adding Overlay with invalid position "..tostring(overlayConfig.position));
     end
 
     local overlay = {
         project = project or overlayConfig.project;
         texture = overlayConfig.texture;
-        location = overlayConfig.location;
+        position = overlayConfig.position;
         scale = overlayConfig.scale;
         color = overlayConfig.color and { overlayConfig.color[1], overlayConfig.color[2], overlayConfig.color[3] } or nil,
         pulse = overlayConfig.pulse,
@@ -204,8 +204,8 @@ local function checkEffect(effect)
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid texture name "..tostring(overlay.texture));
             return false;
         end
-        if type(overlay.location) ~= 'string' then -- @todo check the location is one of the allowed values
-            SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid location "..tostring(overlay.location));
+        if type(overlay.position) ~= 'string' then -- @todo check the position is one of the allowed values
+            SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid position "..tostring(overlay.position));
             return false;
         end
         if overlay.scale and (type(overlay.scale) ~= 'number' or overlay.scale <= 0) then
@@ -268,13 +268,13 @@ function SAO:RegisterEffect(effect)
             local stacks = overlay.stacks or 0;
             local spellID = overlay.spellID or effect.spellID;
             local texture = overlay.texture;
-            local location = overlay.location;
+            local position = overlay.position;
             local scale = overlay.scale or 1;
             local r, g, b = 255, 255, 255
             if overlay.color then r, g, b = overlay.color[1], overlay.color[2], overlay.color[3] end
             local autoPulse = overlay.pulse ~= false;
             local combatOnly = overlay.combatOnly == true or effect.combatOnly == true;
-            self:RegisterAura(name, stacks, spellID, texture, location, scale, r, g, b, autoPulse, glowIDs, combatOnly);
+            self:RegisterAura(name, stacks, spellID, texture, position, scale, r, g, b, autoPulse, glowIDs, combatOnly);
             glowIDs = nil; -- Immediately clear the glow ID list to avoid re-registering the same list on next overlay
         end
     end
