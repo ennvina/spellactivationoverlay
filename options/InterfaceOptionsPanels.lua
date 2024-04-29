@@ -301,13 +301,19 @@ function SpellActivationOverlayOptionsPanel_OnLoad(self)
     SAO.OptionsPanel = self;
 end
 
+local optionsLoaded = false; -- Make sure we do not load the options panel twice
 function SpellActivationOverlayOptionsPanel_OnShow(self)
-    if (SAO.CurrentClass) then
-        if (SAO.CurrentClass.LoadOptions) then
-            SAO.CurrentClass.LoadOptions(SAO);
-            SAO.CurrentClass.LoadOptions = nil; -- Reset callback so that it is not called again on next show
-        end
+    if optionsLoaded then
+        return;
     end
+
+    SAO:AddEffectOptions();
+
+    if SAO.CurrentClass and type(SAO.CurrentClass.LoadOptions) == 'function' then
+        SAO.CurrentClass.LoadOptions(SAO);
+    end
+
+    optionsLoaded = true;
 end
 
 SLASH_SAO1 = "/sao"

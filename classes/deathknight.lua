@@ -72,11 +72,6 @@ local function registerClass(self)
     useSuddenDoom();
 end
 
-local function loadOptions(self)
-    self:AddEffectOptions();
-end
-
 SAO.Class["DEATHKNIGHT"] = {
     ["Register"] = registerClass,
-    ["LoadOptions"] = loadOptions,
 }
