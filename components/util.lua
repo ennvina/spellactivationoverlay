@@ -17,15 +17,15 @@ local GetTime = GetTime
 local UnitAura = UnitAura
 
 function SAO.Error(self, prefix, msg, ...)
-    print(WrapTextInColorCode("**SAO** -"..prefix.."- "..msg, "FFFF0000"), ...);
+    print(WrapTextInColor("**SAO** -"..prefix.."- "..msg, RED_FONT_COLOR), ...);
 end
 
 function SAO.Warn(self, prefix, msg, ...)
-    print(WrapTextInColorCode("!SAO!  -"..prefix.."- "..msg, "FFEE7711"), ...);
+    print(WrapTextInColor("!SAO!  -"..prefix.."- "..msg, WARNING_FONT_COLOR), ...);
 end
 
 function SAO.Info(self, prefix, msg, ...)
-    print(WrapTextInColorCode("SAO -"..prefix.."- "..msg, "FFA2F3FF"), ...);
+    print(WrapTextInColor("SAO -"..prefix.."- "..msg, LIGHTBLUE_FONT_COLOR), ...);
 end
 
 function SAO.Debug(self, prefix, msg, ...)
