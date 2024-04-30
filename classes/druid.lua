@@ -20,6 +20,7 @@ local rightTexture = '';
 
 local glowingWrath = false;
 local glowingStarfire = false;
+--local glowingStarsurge = false;
 
 -- Assign fake spell IDs for left and right textures, and make sure they are different
 -- If we used the 'real' spell IDs instead of fake IDs, we would see weird transitions
@@ -221,6 +222,17 @@ local function updateGABs(self)
             glowingWrath = false;
         end
     end
+
+    -- if ((lunarCache or solarCache) ~= glowingStarsurge) then
+    --     local starsurgeSpellID = 78674;
+    --     if (lunarCache or solarCache) then
+    --         self:AddGlow(starsurgeSpellID, { (GetSpellInfo(starsurgeSpellID)) });
+    --         glowingStarsurge = true;
+    --     else
+    --         self:RemoveGlow(starsurgeSpellID);
+    --         glowingStarsurge = false;
+    --     end
+    -- end
 end
 
 local function customLoad(self)
@@ -313,7 +325,7 @@ local function registerClass(self)
     -- Track Eclipses with a custom CLEU function, so that eclipses can coexist with Omen of Clarity
     -- self:RegisterAura("eclipse_lunar", 0, lunarSpellID, "eclipse_moon", "Left", 1, 255, 255, 255, true);
     -- self:RegisterAura("eclipse_solar", 0, solarSpellID, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true);
-    if self.IsWrath() or self.IsSoD() then -- Must exclude Eclipses for expansions which have no Eclipses, because the fake spell IDs would be accepted
+    if self.IsSoD() or self.IsWrath() or self.IsCata() then -- Must exclude Eclipses for expansions which have no Eclipses, because the fake spell IDs would be accepted
         self:RegisterAura("eclipse_lunar", 0, lunarSpellID+1000000, "eclipse_moon", "Left", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
         self:RegisterAura("eclipse_solar", 0, solarSpellID+1000000, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
     end
@@ -322,10 +334,14 @@ local function registerClass(self)
     -- self:RegisterAura("omen_of_clarity", 0, 16870, "natures_grace", "Left + Right (Flipped)", 1, 255, 255, 255, true);
     self:RegisterAura("omen_of_clarity", 0, 16870+1000000, "natures_grace", "Left + Right (Flipped)", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
 
-    -- Register glow IDs for glowing buttons, namely Starfire and Wrath
+    -- Register glow IDs for glowing buttons, namely Starfire, Wrath and Starsurge
     local starfire = GetSpellInfo(2912);
     local wrath = GetSpellInfo(5176);
     self:RegisterGlowIDs({ starfire, wrath });
+    -- if self.IsCata() then
+    --     local starsurge = GetSpellInfo(78674);
+    --     self:RegisterGlowIDs({ starsurge });
+    -- end
 
     -- Predatory Strikes, inspired by Predatory Swiftness
     local regrowth = GetSpellInfo(8936);

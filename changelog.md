@@ -9,6 +9,7 @@ New effects:
 - New SAO: Death Knight's Crimson Scourge (Cataclysm)
 - New SAO: Death Knight's Sudden Doom (Cataclysm)
 - New SAO: Death Knight's Will of the Necropolis (Cataclysm)
+- New SAO: Druid's Lunar and Solar Eclipse (Cataclysm)
 - New SAO: Hunter's Lock and Load (Season of Discovery)
 - New SAO: Warrior's Sword and Board (Season of Discovery)
 - New GAB: Death Knight's Blood Boil, during Crimson Scourge (Cataclysm)
@@ -16,6 +17,8 @@ New effects:
 - New GAB: Death Knight's Icy Touch, during Rime (Cataclysm)
 - New GAB: Death Knight's Obliterate, during Killing Machine (Cataclysm)
 - New GAB: Death Knight's Rune Tap, during Will of the Necropolis (Cataclysm)
+- New GAB: Druid's Starfire, during Lunar Eclipse (Cataclysm)
+- New GAB: Druid's Wrath, during Solar Eclipse (Cataclysm)
 - New GAB: Paladin's Holy Shock, as combat-only counter
 - New GAB: Paladin's Flash of Light, during Infusion of Light (Cataclysm)
 - New GAB: Paladin's Holy Light, during Infusion of Light (Cataclysm)

@@ -92,7 +92,8 @@ for retailTexture, classicTexture in pairs(mapping) do
   local filename = classicTexture:gsub(" ", "_"):gsub("'", "");
   local fullTextureName = "Interface\\Addons\\SpellActivationOverlay\\textures\\"..filename;
   local retailNumber = tonumber(retailTexture, 10);
-  if SAO.IsCata() and retailNumber <= 511469 then -- Cataclysm game files embed textures up to (at least) 511469
+  if SAO.IsCata() and retailNumber <= 511469 and -- Cataclysm game files embed textures up to (at least) 511469
+    retailNumber ~= 450914 and retailNumber ~= 450915 then -- Eclipse textures in Cataclysm were different
     -- In this case, use texture embedded in game using its FileDataID, not from addon folder using a file path
     fullTextureName = retailTexture;
   end

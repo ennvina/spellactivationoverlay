@@ -38,10 +38,13 @@ mkproject() {
 # Find texture names which file data ID is lesser or equal to a specific threshold
 # Such textures are supposed to be already embedded in the game files
 # $1 = threshold up until textures are supposed to be embedded, and can be pruned
+# $2+ = IDs to avoid even if they are below the threshold
 texbelow() {
     local threshold=$1
+    shift
     awk '/^local mapping/{flag=1;next;next} /^}/{flag=0} flag' SpellActivationOverlay/textures/texname.lua |
         tr " \t" "_" | tr -d "'" |
+        awk -F'"' "1${*/#/ \&\& \$2!=}" |
         awk -F'"' "{ if (\$2 <= $threshold) print \$4 }" |
         while read name
         do
@@ -183,7 +186,7 @@ arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
 fulmination
-$(texbelow 511469)
+$(texbelow 511469 450914 450915)
 )
 prunetex "${TEXTURES_NOT_FOR_CATA[@]}"
 
