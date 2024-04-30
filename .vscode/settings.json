@@ -53,6 +53,7 @@
         "UIDropDownMenu_Initialize",
         "UIDropDownMenu_SetText",
         "UIDropDownMenu_SetWidth",
+        "WrapTextInColor",
         "WrapTextInColorCode",
         // WoW game API
         "C_Engraving",
@@ -101,7 +102,9 @@
         "DISABLE",
         "ENABLE",
         "FAR",
+        "GREEN_FONT_COLOR",
         "HEALTH_COST_PCT",
+        "KBASE_RECENTLY_UPDATED",
         "LARGE",
         "NEAR",
         "OFF",

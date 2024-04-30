@@ -76,6 +76,11 @@ function SAO.NbStacks(self, minStacks, maxStacks)
     return string.format(STACKS, minStacks);
 end
 
+-- Simple function telling something was updated recently
+function SAO.RecentlyUpdated(self)
+    return WrapTextInColor(KBASE_RECENTLY_UPDATED, GREEN_FONT_COLOR);
+end
+
 -- Utility function to assume times are identical or almost identical
 function SAO.IsTimeAlmostEqual(self, t1, t2, delta)
 	return t1-delta < t2 and t2 < t1+delta;
