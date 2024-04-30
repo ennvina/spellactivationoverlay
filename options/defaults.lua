@@ -301,7 +301,7 @@ SAO.defaults = {
                 },
                 [59578] = { -- The Art of War (2/2) (Wrath+)
                     [879]   = true, -- Exorcism
-                    [19750] = true, -- Flash of Light
+                    [19750] = true, -- Flash of Light (not for Cata)
                 },
             },
         },

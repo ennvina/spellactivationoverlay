@@ -56,6 +56,7 @@ local function registerClass(self)
     elseif self.IsCata() then
         local infusionOfLightBuff1 = 53672;
         local infusionOfLightBuff2 = 54149;
+        local artOfWarBuff = 59578;
 
         local divineLight = 82326;
         local holyRadiance = 82327;
@@ -65,6 +66,9 @@ local function registerClass(self)
         -- Add option links before RegisterAura() calls, so that options they are used by initial triggers, if any
         self:AddOverlayLink(infusionOfLightBuff2, infusionOfLightBuff1);
         self:AddGlowingLink(infusionOfLightBuff2, infusionOfLightBuff1);
+
+        -- Art of War
+        self:RegisterAura("art_of_war", 0, artOfWarBuff, "art_of_war", "Left + Right (Flipped)", 1, 255, 255, 255, true, { exorcism });
 
         -- Infusion of Light, 1/2 talent points
         self:RegisterAura("infusion_of_light_low", 0, infusionOfLightBuff1, "surge_of_light", "Top (CW)", 1, 255, 255, 255, true, infusionOfLightButtons);
@@ -89,7 +93,6 @@ local function loadOptions(self)
 
     if self.IsWrath() then
         local flashOfLight = 19750;
-        local exorcism = 879;
         local holyLight = 635;
 
 --        local infusionOfLightBuff1 = 53672;
@@ -118,12 +121,17 @@ local function loadOptions(self)
         local infusionOfLightBuff2 = 54149;
         local infusionOfLightTalent = 53569;
 
-        self:AddOverlayOption(infusionOfLightTalent, infusionOfLightBuff2);
+        local artOfWarBuff = 59578;
+        local artOfWarTalent = 53486;
+
+        self:AddOverlayOption(infusionOfLightTalent, infusionOfLightBuff2, 0, WrapTextInColorCode("Changed", "FFFF0000"));
+        self:AddOverlayOption(artOfWarTalent, artOfWarBuff);
 
         self:AddGlowingOption(infusionOfLightTalent, infusionOfLightBuff2, flashOfLight);
         self:AddGlowingOption(infusionOfLightTalent, infusionOfLightBuff2, holyLight);
         self:AddGlowingOption(infusionOfLightTalent, infusionOfLightBuff2, divineLight);
         self:AddGlowingOption(infusionOfLightTalent, infusionOfLightBuff2, holyRadiance);
+        self:AddGlowingOption(artOfWarTalent, artOfWarBuff, exorcism);
     end
 end
 
