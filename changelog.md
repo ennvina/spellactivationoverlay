@@ -17,13 +17,20 @@ New effects:
 - New GAB: Death Knight's Obliterate, during Killing Machine (Cataclysm)
 - New GAB: Death Knight's Rune Tap, during Will of the Necropolis (Cataclysm)
 - New GAB: Paladin's Holy Shock, as combat-only counter
-- New GAB: Warrior's Overpower, during Taste for Blood* (SoD) 
-- New GAB: Warrior's Slam, during Sword and Board (SoD)
+- New GAB: Paladin's Flash of Light, during Infusion of Light (Cataclysm)
+- New GAB: Paladin's Holy Light, during Infusion of Light (Cataclysm)
+- New GAB: Paladin's Divine Light, during Infusion of Light (Cataclysm)
+- New GAB: Paladin's Holy Radiance, during Infusion of Light (Cataclysm)
+- New GAB: Paladin's Exorcism, during The Art of War (Cataclysm)
+- New GAB: Warrior's Overpower, during Taste for Blood* (Season of Discovery)
+- New GAB: Warrior's Slam, during Sword and Board (Season of Discovery)
 
 * As in Wrath, there is no dedicated Taste for Blood option
 Taste for Blood shares its option with Overpower
 
 Bug fixes
+- Death Knight's Killing Machine (Cataclysm) no longer glows Icy Touch
+- Death Knight's Killing Machine (Cataclysm) no longer glows Howling Blast
 - Hungering Cold is now tagged as Frozen debuff for Mages
 
 #### v1.3.1 (2024-04-22)
