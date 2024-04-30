@@ -31,6 +31,10 @@ New effects:
 * As in Wrath, there is no dedicated Taste for Blood option
 Taste for Blood shares its option with Overpower
 
+Removed effects:
+- Druid's Wrath of Elune has been removed (Cataclysm)
+- Druid's Elune Wrath has been removed (Cataclysm)
+
 Bug fixes
 - Death Knight's Killing Machine (Cataclysm) no longer glows Icy Touch
 - Death Knight's Killing Machine (Cataclysm) no longer glows Howling Blast

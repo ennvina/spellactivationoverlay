@@ -376,8 +376,10 @@ local function registerClass(self)
     end
 
     -- Balance 4p set bonuses
-    self:RegisterAura("wrath_of_elune", 0, 46833, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvP season 5-6-7-8
-    self:RegisterAura("elunes_wrath", 0, 64823, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvE tier 8
+    if self.IsWrath() then
+        self:RegisterAura("wrath_of_elune", 0, 46833, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvP season 5-6-7-8
+        self:RegisterAura("elunes_wrath", 0, 64823, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvE tier 8
+    end
 
     -- Fury of Stormrage (Season of Discovery)
     if self.IsSoD() then
@@ -440,8 +442,10 @@ local function loadOptions(self)
     self:AddOverlayOption(omenOfClarityTalent, omenSpellID, 0, nil, nil, nil,  omenSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(lunarEclipseTalent, lunarSpellID, 0, nil, nil, nil, lunarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(solarEclipseTalent, solarSpellID, 0, nil, nil, nil, solarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
-    self:AddOverlayOption(wrathOfEluneTalent, wrathOfEluneBuff);
-    self:AddOverlayOption(elunesWrathTalent, elunesWrathBuff);
+    if self.IsWrath() then
+        self:AddOverlayOption(wrathOfEluneTalent, wrathOfEluneBuff);
+        self:AddOverlayOption(elunesWrathTalent, elunesWrathBuff);
+    end
     if self.IsSoD() then
         self:AddOverlayOption(furyOfStormrageTalent, furyOfStormrageBuff);
     end
@@ -459,8 +463,10 @@ local function loadOptions(self)
 
     self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
     self:AddGlowingOption(solarEclipseTalent, wrath, wrath);
-    self:AddGlowingOption(wrathOfEluneTalent, wrathOfEluneBuff, starfire);
-    self:AddGlowingOption(elunesWrathTalent, elunesWrathBuff, starfire);
+    if self.IsWrath() then
+        self:AddGlowingOption(wrathOfEluneTalent, wrathOfEluneBuff, starfire);
+        self:AddGlowingOption(elunesWrathTalent, elunesWrathBuff, starfire);
+    end
     if self.IsSoD() then
         self:AddGlowingOption(furyOfStormrageTalent, furyOfStormrageBuff, healingTouch);
     end
