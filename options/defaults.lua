@@ -62,7 +62,7 @@ SAO.defaults = {
                 [408250] = { -- Eclipse (Solar, Season of Discovery)
                     [0] = true,
                 },
-                [16886] = { -- Nature's Grace
+                [16886] = { -- Nature's Grace (Era - Wrath)
                     [0] = false,
                 },
                 [46833] = { -- Wrath of Elune

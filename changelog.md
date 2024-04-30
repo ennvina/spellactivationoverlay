@@ -31,6 +31,10 @@ New effects:
 * As in Wrath, there is no dedicated Taste for Blood option
 Taste for Blood shares its option with Overpower
 
+Updated effects:
+- Druid's Nature's Grace now has a fixed texture
+- Druid's Nature's Grace texture has been scaled to 70% (down from 100%)
+
 Removed effects:
 - Druid's Wrath of Elune has been removed (Cataclysm)
 - Druid's Elune Wrath has been removed (Cataclysm)

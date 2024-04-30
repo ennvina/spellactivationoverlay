@@ -29,8 +29,6 @@ local glowingStarfire = false;
 local leftFakeSpellID  = 0x0D00001D;
 local rightFakeSpellID = 0x0D00002D;
 
-local naturesGraceVariants; -- Lazy init in lazyCreateNaturesGraceVariants()
-
 local function isFeral(self)
     local shapeshift = GetShapeshiftForm()
     return (shapeshift == 1) or (shapeshift == 3);
@@ -300,27 +298,6 @@ local function customCLEU(self, ...)
     end
 end
 
-local function lazyCreateNaturesGraceVariants(self)
-    if (naturesGraceVariants) then
-        return;
-    end
-
-    local spellID = 16886;
-
-    local textureVariant1 = "serendipity";
-    local textureVariant2 = "fury_of_stormrage";
-
-    if not SAO.IsEra() or GetSpellInfo(spellID) then
-        self:MarkTexture(textureVariant1);
-        self:MarkTexture(textureVariant2);
-    end
-
-    naturesGraceVariants = self:CreateTextureVariants(spellID, 0, {
-        self:TextureVariantValue(textureVariant1, true),
-        self:TextureVariantValue(textureVariant2, true),
-    });
-end
-
 local function registerClass(self)
     -- Track Eclipses with a custom CLEU function, so that eclipses can coexist with Omen of Clarity
     -- self:RegisterAura("eclipse_lunar", 0, lunarSpellID, "eclipse_moon", "Left", 1, 255, 255, 255, true);
@@ -365,15 +342,7 @@ local function registerClass(self)
     self:RegisterAura("predatory_strikes", 0, 69369, "predatory_swiftness", "Top", 1, 255, 255, 255, true, predatoryStrikesSpells);
 
     -- Nature's Grace
-    if self.IsEra() then
-        -- Texture of Nature's Grace is always "serendipity" to avoid confusion with SoD's Fury of Stormrage which, obvisouly, uses "fury_of_stormrage"
-        -- This limitation is necessary for Season of Discovery only, but because SoD and non-SoD Era share the same config file, we have to dumb down
-        self:RegisterAura("natures_grace", 0, 16886, "serendipity", "Top", 1, 255, 255, 255, true);
-    else
-        -- Let the player select between "serendipity" and "fury_of_stormrage"
-        lazyCreateNaturesGraceVariants(self);
-        self:RegisterAura("natures_grace", 0, 16886, naturesGraceVariants.textureFunc, "Top", 1, 255, 255, 255, true);
-    end
+    self:RegisterAura("natures_grace", 0, 16886, "serendipity", "Top", 0.7, 255, 255, 255, true);
 
     -- Balance 4p set bonuses
     if self.IsWrath() then
@@ -449,14 +418,10 @@ local function loadOptions(self)
     if self.IsSoD() then
         self:AddOverlayOption(furyOfStormrageTalent, furyOfStormrageBuff);
     end
-    if self.IsEra() then
+    if self.IsEra() or self.IsTBC() then
         self:AddOverlayOption(naturesGraceEraTalent, naturesGraceBuff);
-    elseif self.IsTBC() then
-        lazyCreateNaturesGraceVariants(self);
-        self:AddOverlayOption(naturesGraceEraTalent, naturesGraceBuff, 0, nil, naturesGraceVariants); -- Same talent as Era
     else
-        lazyCreateNaturesGraceVariants(self);
-        self:AddOverlayOption(naturesGraceWrathTalent, naturesGraceBuff, 0, nil, naturesGraceVariants);
+        self:AddOverlayOption(naturesGraceWrathTalent, naturesGraceBuff);
     end
     self:AddOverlayOption(predatoryStrikesTalent, predatoryStrikesBuff);
     self:AddSoulPreserverOverlayOption(60512); -- 60512 = Druid buff
