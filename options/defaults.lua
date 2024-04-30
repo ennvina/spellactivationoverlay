@@ -296,6 +296,8 @@ SAO.defaults = {
                 [54149] = { -- Infusion of Light (2/2) (Wrath+)
                     [19750] = true, -- Flash of Light
                     [635]   = true, -- Holy Light
+                    [82326] = true, -- Divine Light (Cataclysm)
+                    [82327] = true, -- Holy Radiance (Cataclysm)
                 },
                 [59578] = { -- The Art of War (2/2) (Wrath+)
                     [879]   = true, -- Exorcism
