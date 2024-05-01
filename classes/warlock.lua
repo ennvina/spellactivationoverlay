@@ -30,7 +30,7 @@ local DrainSoulHandler = {
             return true;
         elseif option == "spec:1" then
             -- If 'affliction only' option is chosen, check if Affliction is the majority spec
-            local selector = SAO.IsCata() and 5 or 2;
+            local selector = SAO.IsCata() and 5 or 3;
             local afflictionPoints = select(selector, GetTalentTabInfo(1));
             local demonologyPoints = select(selector, GetTalentTabInfo(2));
             local destructionPoints = select(selector, GetTalentTabInfo(3));
