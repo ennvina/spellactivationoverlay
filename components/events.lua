@@ -119,7 +119,7 @@ end
 -- This circumvents a limitation of the CLEU which may not trigger during a loading screen
 function SAO.LOADING_SCREEN_DISABLED(self, ...)
     for spellID, stacks in pairs(self.ActiveOverlays) do
-        if (not self:FindPlayerAuraByID(spellID)) then
+        if not self:IsFakeSpell(spellID) and not self:FindPlayerAuraByID(spellID) then
             self:DeactivateOverlay(spellID);
             self:RemoveGlow(spellID);
         end

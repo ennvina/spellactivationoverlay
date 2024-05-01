@@ -44,6 +44,7 @@ Removed effects:
 Bug fixes
 - Death Knight's Killing Machine (Cataclysm) no longer glows Icy Touch
 - Death Knight's Killing Machine (Cataclysm) no longer glows Howling Blast
+- Druid's Lunar or Solar Eclipse spell alert is displayed upon login if needed
 - Hungering Cold is now tagged as Frozen debuff for Mages
 
 #### v1.3.1 (2024-04-22)
