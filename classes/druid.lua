@@ -40,6 +40,19 @@ local starfire = 2912;
 local starsurge = 78674;
 local wrath = 5176;
 
+local function useNaturesGrace()
+    SAO:CreateEffect(
+        "natures_grace",
+        SAO.ERA + SAO.TBC + SAO.WRATH,
+        16886, -- Nature's Grace (buff)
+        "aura",
+        {
+            talent = (SAO.IsEra() or SAO.IsTBC()) and 16880 or 61346, -- Nature's Grace (Era and TBC talent) or Nature's Grace (Wrath talent)
+            overlay = { texture = "serendipity", position = "Top", scale = 0.7 },
+        }
+    );
+end
+
 local function usePredatoryStrikes()
     SAO:CreateEffect(
         "predatory_strikes",
@@ -356,7 +369,7 @@ local function registerClass(self)
     usePredatoryStrikes();
 
     -- Nature's Grace
-    self:RegisterAura("natures_grace", 0, 16886, "serendipity", "Top", 0.7, 255, 255, 255, true);
+    useNaturesGrace();
 
     -- Shooting Stars
     if self.IsCata() then
@@ -412,10 +425,6 @@ local function loadOptions(self)
     local furyOfStormrageBuff = 414800;
     local furyOfStormrageTalent = furyOfStormrageBuff; -- Not really a talent
 
-    local naturesGraceEraTalent = 16880;
-    local naturesGraceWrathTalent = 61346;
-    local naturesGraceBuff = 16886;
-
     self:AddOverlayOption(omenOfClarityTalent, omenSpellID, 0, nil, nil, nil,  omenSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(lunarEclipseTalent, lunarSpellID, 0, nil, nil, nil, lunarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(solarEclipseTalent, solarSpellID, 0, nil, nil, nil, solarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
@@ -428,11 +437,6 @@ local function loadOptions(self)
     end
     if self.IsSoD() then
         self:AddOverlayOption(furyOfStormrageTalent, furyOfStormrageBuff);
-    end
-    if self.IsEra() or self.IsTBC() then
-        self:AddOverlayOption(naturesGraceEraTalent, naturesGraceBuff);
-    else
-        self:AddOverlayOption(naturesGraceWrathTalent, naturesGraceBuff);
     end
     self:AddSoulPreserverOverlayOption(60512); -- 60512 = Druid buff
 
