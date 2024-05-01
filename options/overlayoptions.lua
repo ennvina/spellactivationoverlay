@@ -1,5 +1,7 @@
 local AddonName, SAO = ...
 
+local Module = "option"
+
 -- Add a checkbox for an overlay
 -- talentID is the spell ID of the associated talent
 -- auraID is the spell ID that triggers the overlay; it must match a spell ID of an aura registered with RegisterAura
@@ -10,6 +12,12 @@ local AddonName, SAO = ...
 -- testAuraID optional spell ID used to test the aura in lieu of auraID
 function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, variants, testStacks, testAuraID)
     if not GetSpellInfo(talentID) or (not self:IsFakeSpell(auraID) and not GetSpellInfo(auraID)) then
+        if not GetSpellInfo(talentID) then
+            self:Debug(Module, "Skipping overlay option of talentID "..tostring(talentID).." because the spell does not exist");
+        end
+        if not self:IsFakeSpell(auraID) and not GetSpellInfo(auraID) then
+            self:Debug(Module, "Skipping overlay option of auraID "..tostring(auraID).." because the spell does not exist (and is not a fake spell)");
+        end
         return;
     end
 

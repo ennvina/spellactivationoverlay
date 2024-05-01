@@ -1,7 +1,15 @@
 local AddonName, SAO = ...
 
+local Module = "option"
+
 function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText, variants)
     if (talentID and not GetSpellInfo(talentID)) or (not self:IsFakeSpell(glowID) and not GetSpellInfo(glowID)) then
+        if talentID and not GetSpellInfo(talentID) then
+            self:Debug(Module, "Skipping glowing option of talentID "..tostring(talentID).." because the spell does not exist");
+        end
+        if not self:IsFakeSpell(glowID) and not GetSpellInfo(glowID) then
+            self:Debug(Module, "Skipping glowing option of glowID "..tostring(glowID).." because the spell does not exist (and is not a fake spell)");
+        end
         return;
     end
 
