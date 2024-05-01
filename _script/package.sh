@@ -164,7 +164,6 @@ shooting_stars
 daybreak
 backlash
 predatory_swiftness
-sword_and_board
 killing_machine
 rime
 sudden_doom)

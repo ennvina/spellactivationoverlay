@@ -155,6 +155,9 @@ SAO.defaults = {
                 [415320]= { -- Flanking Strike (Season of Discovery)
                     [415320]= true, -- Flanking Strike (Season of Discovery)
                 },
+                [415401]= { -- Sniper Training (Season of Discovery)
+                    [19434] = true, -- Aimed Shot
+                },
             }
         },
         ["MAGE"] = {
@@ -489,13 +492,16 @@ SAO.defaults = {
         },
         ["WARRIOR"] = {
             alert = {
-                [52437] = { -- Sudden Death
+                [52437] = { -- Sudden Death (Wrath+)
                     [0] = true, -- any stacks (up to 2 stacks with tier 10)
                 },
-                [46916] = { -- Bloodsurge
+                [46916] = { -- Bloodsurge (Wrath+)
                     [0] = true, -- any stacks (up to 2 stacks with tier 10)
                 },
-                [50227] = { -- Sword and Board
+                [413399] = { -- Bloodsurge (Season of Discovery)
+                    [0] = true,
+                },
+                [50227] = { -- Sword and Board (Wrath+)
                     [0] = true,
                 },
                 [426979] = { -- Sword and Board (Season of Discovery)
@@ -515,7 +521,7 @@ SAO.defaults = {
                 [5308] = { -- Execute
                     [5308] = "stance:1/3", -- Execute
                 },
-                [34428] = { -- Victory Rush
+                [34428] = { -- Victory Rush (TBC+)
                     [34428] = true, -- Victory Rush
                 },
                 [402927]= { -- Victory Rush (Season of Discovery)
@@ -524,13 +530,17 @@ SAO.defaults = {
                 [402911]= { -- Raging Blow (Season of Discovery)
                     [402911]= true, -- Raging Blow (Season of Discovery)
                 },
-                [52437] = { -- Sudden Death
-                    [5308] = true, -- Execute
+                [52437] = { -- Sudden Death (Wrath+)
+                    [5308] = true, -- Execute (not for Cata)
+                    [86346]= true, -- Colossus Smash (Cataclysm)
                 },
-                [46916] = { -- Bloodsurge
+                [46916] = { -- Bloodsurge (Wrath+)
                     [1464] = true, -- Slam
                 },
-                [50227] = { -- Sword and Board
+                [413399] = { -- Bloodsurge (Season of Discovery)
+                    [1464] = true, -- Slam
+                },
+                [50227] = { -- Sword and Board (Wrath+)
                     [23922] = true, -- Shield Slam
                 },
                 [426979] = { -- Sword and Board (Season of Discovery)
