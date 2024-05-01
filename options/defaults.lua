@@ -80,6 +80,9 @@ SAO.defaults = {
                 [60512] = { -- Healing Trance / Soul Preserver (Wrath)
                     [0] = false,
                 },
+                [81093] = { -- Fury of Stormrage (Cataclysm)
+                    [0] = true,
+                },
                 [414800]= { -- Fury of Stormrage (Season of Discovery)
                     [0] = true,
                 },
@@ -109,6 +112,9 @@ SAO.defaults = {
                     [339]   = false, -- Entangling Roots
                     [33786] = true,  -- Cyclone
                     [2637]  = false, -- Hibernate
+                },
+                [81093] = { -- Fury of Stormrage (Cataclysm)
+                    [2912] = true, -- Starfire
                 },
                 [414800]= { -- Fury of Stormrage (Season of Discovery)
                     [5185] = true, -- Healing Touch

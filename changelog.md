@@ -3,6 +3,8 @@
 #### v1.4.0 (2024-05-xx)
 
 New effects:
+- New SAO: Druid's Fury of Stormrage (Cataclysm)
+- New GAB: Druid's Starfire, during Fury of Stormrage (Cataclysm)
 - New GAB: Warlock's Drain Soul when the enemy has low HP (Cataclysm)
 
 #### v1.3.2 (2024-04-30)
