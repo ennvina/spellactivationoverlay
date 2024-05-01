@@ -54,6 +54,19 @@ local function useShootingStars()
     );
 end
 
+local function useElunesWrathOfElune(name, spellID)
+    SAO:CreateEffect(
+        name,
+        SAO.WRATH,
+        spellID,
+        "aura",
+        {
+            overlay = { texture = "shooting_stars", position = "Top" },
+            button = starfire,
+        }
+    );
+end
+
 local function useNaturesGrace()
     SAO:CreateEffect(
         "natures_grace",
@@ -389,10 +402,8 @@ local function registerClass(self)
     useShootingStars();
 
     -- Balance 4p set bonuses
-    if self.IsWrath() then
-        self:RegisterAura("wrath_of_elune", 0, 46833, "shooting_stars", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(starfire)) }); -- PvP season 5-6-7-8
-        self:RegisterAura("elunes_wrath", 0, 64823, "shooting_stars", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(starfire)) }); -- PvE tier 8
-    end
+    useElunesWrathOfElune("wrath_of_elune", 46833); -- PvP season 5-6-7-8
+    useElunesWrathOfElune("elunes_wrath", 64823); -- PvE tier 8
 
     -- Fury of Stormrage (Season of Discovery)
     if self.IsSoD() then
@@ -424,21 +435,12 @@ local function loadOptions(self)
     local lunarEclipseTalent = lunarSpellID; -- Not really a talent
     local solarEclipseTalent = solarSpellID; -- Not really a talent
 
-    local wrathOfEluneBuff = 46833;
-    local elunesWrathBuff = 64823;
-    local wrathOfEluneTalent = wrathOfEluneBuff; -- Not really a talent
-    local elunesWrathTalent = elunesWrathBuff; -- Not really a talent
-
     local furyOfStormrageBuff = 414800;
     local furyOfStormrageTalent = furyOfStormrageBuff; -- Not really a talent
 
     self:AddOverlayOption(omenOfClarityTalent, omenSpellID, 0, nil, nil, nil,  omenSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(lunarEclipseTalent, lunarSpellID, 0, nil, nil, nil, lunarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(solarEclipseTalent, solarSpellID, 0, nil, nil, nil, solarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
-    if self.IsWrath() then
-        self:AddOverlayOption(wrathOfEluneTalent, wrathOfEluneBuff);
-        self:AddOverlayOption(elunesWrathTalent, elunesWrathBuff);
-    end
     if self.IsSoD() then
         self:AddOverlayOption(furyOfStormrageTalent, furyOfStormrageBuff);
     end
@@ -446,10 +448,6 @@ local function loadOptions(self)
 
     self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
     self:AddGlowingOption(solarEclipseTalent, wrath, wrath);
-    if self.IsWrath() then
-        self:AddGlowingOption(wrathOfEluneTalent, wrathOfEluneBuff, starfire);
-        self:AddGlowingOption(elunesWrathTalent, elunesWrathBuff, starfire);
-    end
     if self.IsSoD() then
         self:AddGlowingOption(furyOfStormrageTalent, furyOfStormrageBuff, healingTouch);
     end
