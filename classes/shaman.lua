@@ -128,7 +128,7 @@ local function checkRollingThunderRuneAndLightningSieldStacks(self, ...)
         return;
     end
 
-    local RollingThunderEquipped = (C_Engraving and SAO:IsSpellLearned(432056)) or SAO:GetTalentByName((GetSpellInfo(88766)));
+    local RollingThunderEquipped = (C_Engraving and SAO:IsSpellLearned(432056)) or (SAO:GetTalentByName((GetSpellInfo(88766)))) ~= 0;
     if not RollingThunderEquipped then
         RollingThunderHandler:deactivate();
     else
