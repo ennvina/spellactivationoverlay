@@ -192,6 +192,6 @@ prunetex "${TEXTURES_NOT_FOR_CATA[@]}"
 SOUNDS_NOT_FOR_CATA=(UI_PowerAura_Generic)
 prunesound "${SOUNDS_NOT_FOR_CATA[@]}"
 
-zipproject cata "$VERSION_TOC_VERSION" alpha
+zipproject cata "$VERSION_TOC_VERSION" beta
 
 cdup
