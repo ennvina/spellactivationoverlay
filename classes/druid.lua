@@ -411,9 +411,6 @@ local function registerClass(self)
     --     self:RegisterGlowIDs({ starsurge });
     -- end
 
-    -- Predatory Strikes, inspired by Predatory Swiftness
-    usePredatoryStrikes();
-
     -- Nature's Grace
     useNaturesGrace();
 
@@ -423,6 +420,9 @@ local function registerClass(self)
     -- Balance 4p set bonuses
     useElunesWrathOfElune("wrath_of_elune", 46833); -- PvP season 5-6-7-8
     useElunesWrathOfElune("elunes_wrath", 64823); -- PvE tier 8
+
+    -- Predatory Strikes, inspired by Predatory Swiftness
+    usePredatoryStrikes();
 
     -- Fury of Stormrage
     useFuryOfStormrage();
