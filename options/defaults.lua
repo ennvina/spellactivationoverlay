@@ -485,7 +485,7 @@ SAO.defaults = {
                 [63167] = { -- Decimation
                     [6353] = true, -- Soul Fire
                 },
-                [1120] = { -- Drain Soul
+                [1120] = { -- Drain Soul (Wrath+)
                     [1120] = "spec:1", -- Drain Soul
                 },
             },

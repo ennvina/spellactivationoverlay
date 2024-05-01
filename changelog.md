@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v1.4.0 (2024-05-xx)
+
+New effects:
+- New GAB: Warlock's Drain Soul when the enemy has low HP (Cataclysm)
+
 #### v1.3.2 (2024-04-30)
 
 The Death Knight class experiments the upcoming rework for Cataclysm.
