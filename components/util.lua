@@ -16,15 +16,27 @@ local GetTalentInfo = GetTalentInfo
 local GetTime = GetTime
 local UnitAura = UnitAura
 
+function SAO.Error(self, prefix, msg, ...)
+    print(WrapTextInColor("**SAO** -"..prefix.."- "..msg, RED_FONT_COLOR), ...);
+end
+
+function SAO.Warn(self, prefix, msg, ...)
+    print(WrapTextInColor("!SAO!  -"..prefix.."- "..msg, WARNING_FONT_COLOR), ...);
+end
+
+function SAO.Info(self, prefix, msg, ...)
+    print(WrapTextInColor("SAO -"..prefix.."- "..msg, LIGHTBLUE_FONT_COLOR), ...);
+end
+
 function SAO.Debug(self, prefix, msg, ...)
     if SpellActivationOverlayDB and SpellActivationOverlayDB.debug then
-        print("[SAO@"..GetTime().."] -"..prefix.."- "..msg, ...);
+        print(WrapTextInColorCode("[SAO@"..GetTime().."] -"..prefix.."- "..msg, "FFFFFFAA"), ...);
     end
 end
 
 function SAO.Trace(self, prefix, msg, ...)
     if SpellActivationOverlayDB and SpellActivationOverlayDB.trace and SpellActivationOverlayDB.trace[prefix] then
-        print("{SAO@"..GetTime().."} -"..prefix.."- "..msg, ...);
+        print(WrapTextInColorCode("{SAO@"..GetTime().."} -"..prefix.."- "..msg, "FFAAFFCC"), ...);
     end
 end
 
@@ -62,6 +74,11 @@ function SAO.NbStacks(self, minStacks, maxStacks)
         return string.format(CALENDAR_TOOLTIP_DATE_RANGE, tostring(minStacks), string.format(STACKS, maxStacks));
     end
     return string.format(STACKS, minStacks);
+end
+
+-- Simple function telling something was updated recently
+function SAO.RecentlyUpdated(self)
+    return WrapTextInColor(KBASE_RECENTLY_UPDATED, GREEN_FONT_COLOR);
 end
 
 -- Utility function to assume times are identical or almost identical

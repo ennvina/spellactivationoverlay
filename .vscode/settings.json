@@ -3,7 +3,8 @@
         "**/libs/**": true
     },
     "Lua.diagnostics.globals": [
-        // Lua global functions
+        // Lua global functions and objects
+        "bit",
         "ceil",
         "hooksecurefunc",
         "strfind",
@@ -12,6 +13,7 @@
         "tDeleteItem",
         "tinsert",
         "tremove",
+        "WorldFrame",
         // Objects from this addon
         "SpellActivationOverlayContainerFrame",
         "SpellActivationOverlayDB",
@@ -51,6 +53,7 @@
         "UIDropDownMenu_Initialize",
         "UIDropDownMenu_SetText",
         "UIDropDownMenu_SetWidth",
+        "WrapTextInColor",
         "WrapTextInColorCode",
         // WoW game API
         "C_Engraving",
@@ -99,8 +102,11 @@
         "DISABLE",
         "ENABLE",
         "FAR",
+        "GREEN_FONT_COLOR",
         "HEALTH_COST_PCT",
+        "KBASE_RECENTLY_UPDATED",
         "LARGE",
+        "LIGHTBLUE_FONT_COLOR",
         "NEAR",
         "OFF",
         "ON_COOLDOWN",
@@ -108,12 +114,14 @@
         "PET_BATTLE_COMBAT_LOG_DAMAGE_WEAK",
         "RACE_CLASS_ONLY",
         "RAID_CLASS_COLORS",
+        "RED_FONT_COLOR",
         "SMALL",
         "SOUNDKIT",
         "SPELL_ALERT_OPACITY",
         "STACKS",
         "STATUS_TEXT_BOTH",
         "UNKNOWN",
+        "WARNING_FONT_COLOR",
         "WOW_PROJECT_ID",
         "WOW_PROJECT_CLASSIC",
         "WOW_PROJECT_BURNING_CRUSADE_CLASSIC",

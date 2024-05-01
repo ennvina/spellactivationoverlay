@@ -2,18 +2,59 @@
 
 #### v1.3.2 (2024-04-xx)
 
+The Death Knight class experiments the upcoming rework for Cataclysm.
+Make sure to report issues you would encounter, thank you :)
+
 New effects:
+- New SAO: Death Knight's Crimson Scourge (Cataclysm)
+- New SAO: Death Knight's Sudden Doom (Cataclysm)
+- New SAO: Death Knight's Will of the Necropolis (Cataclysm)
+- New SAO: Druid's Lunar and Solar Eclipse (Cataclysm)
+- New SAO: Druid's Shooting Stars (Cataclysm)
 - New SAO: Hunter's Lock and Load (Season of Discovery)
+- New SAO: Warrior's Bloodsurge (Cataclysm)
+- New SAO: Warrior's Sudden Death (Cataclysm)
+- New SAO: Warrior's Sword and Board (Cataclysm)
 - New SAO: Warrior's Sword and Board (Season of Discovery)
+- New GAB: Death Knight's Blood Boil, during Crimson Scourge (Cataclysm)
+- New GAB: Death Knight's Death Coil, during Sudden Doom (Cataclysm)
+- New GAB: Death Knight's Icy Touch, during Rime (Cataclysm)
+- New GAB: Death Knight's Obliterate, during Killing Machine (Cataclysm)
+- New GAB: Death Knight's Rune Tap, during Will of the Necropolis (Cataclysm)
+- New GAB: Druid's Starfire, during Lunar Eclipse (Cataclysm)
+- New GAB: Druid's Wrath, during Solar Eclipse (Cataclysm)
+- New GAB: Druid's Starsurge, during Shooting Stars (Cataclysm)
 - New GAB: Paladin's Holy Shock, as combat-only counter
-- New GAB: Warrior's Overpower, during Taste for Blood* (SoD) 
-- New GAB: Warrior's Slam, during Sword and Board (SoD)
+- New GAB: Paladin's Flash of Light, during Infusion of Light (Cataclysm)
+- New GAB: Paladin's Holy Light, during Infusion of Light (Cataclysm)
+- New GAB: Paladin's Divine Light, during Infusion of Light (Cataclysm)
+- New GAB: Paladin's Holy Radiance, during Infusion of Light (Cataclysm)
+- New GAB: Paladin's Exorcism, during The Art of War (Cataclysm)
+- New GAB: Warrior's Slam, during Bloodsurge (Cataclysm)
+- New GAB: Warrior's Colossus Smash, during Sudden Death (Cataclysm)
+- New GAB: Warrior's Shield Slam, during Sword and Board (Cataclysm)
+- New GAB: Warrior's Shield Slam, during Sword and Board (Season of Discovery)
+- New GAB: Warrior's Overpower, during Taste for Blood* (Season of Discovery)
 
 * As in Wrath, there is no dedicated Taste for Blood option
 Taste for Blood shares its option with Overpower
 
+Updated effects:
+- Druid's Nature's Grace now has a fixed texture
+- Druid's Nature's Grace texture has been scaled to 70% (down from 100%)
+
+Removed effects:
+- Druid's Wrath of Elune has been removed (Cataclysm)
+- Druid's Elune Wrath has been removed (Cataclysm)
+
 Bug fixes
+- Death Knight's Killing Machine (Cataclysm) no longer glows Icy Touch
+- Death Knight's Killing Machine (Cataclysm) no longer glows Howling Blast
+- Druid's Lunar or Solar Eclipse spell alert is displayed upon login if needed
 - Hungering Cold is now tagged as Frozen debuff for Mages
+- Warrior's Blood Surge (Season of Discovery) did not trigger correctly
+- Warrior's Bloodsurge (Wrath) did not preview from the options panel
+- Warrior's Sudden Death (Wrath) did not preview from the options panel
 
 #### v1.3.1 (2024-04-22)
 

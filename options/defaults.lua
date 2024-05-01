@@ -2,12 +2,21 @@ local AddonName, SAO = ...
 
 SAO.defaults = {
     classes = {
-        ["DEATHKNIGHT"] = {
+        ["DEATHKNIGHT"] = { -- (Wrath+)
             alert = {
                 [59052] = { -- Rime
                     [0] = true,
                 },
                 [51124] = { -- Killing Machine
+                    [0] = true,
+                },
+                [81141] = { -- Crimson Scourge (Cataclysm)
+                    [0] = true,
+                },
+                [81340] = { -- Sudden Doom (Cataclysm)
+                    [0] = true,
+                },
+                [96171] = { -- Will of the Necropolis (Cataclysm)
                     [0] = true,
                 },
             },
@@ -17,11 +26,22 @@ SAO.defaults = {
                 },
                 [59052] = { -- Rime
                     [49184] = true, --  Howling Blast
+                    [45477] = true, --  Icy Touch (not for Wrath)
                 },
                 [51124] = { -- Killing Machine
-                    [45477] = true, -- Icy Touch
+                    [49020] = true, -- Obliterate (not for Wrath)
+                    [45477] = true, -- Icy Touch (not for Cata)
                     [49143] = true, -- Frost Strike
-                    [49184] = true, -- Howling Blast
+                    [49184] = true, -- Howling Blast (not for Cata)
+                },
+                [81141] = { -- Crimson Scourge (Cataclysm)
+                    [48721] = true, -- Blood Boil
+                },
+                [81340] = { -- Sudden Doom (Cataclysm)
+                    [47541] = true, -- Death Coil
+                },
+                [96171] = { -- Will of the Necropolis (Cataclysm)
+                    [48982] = true, -- Rune Tap
                 },
             }
         },
@@ -42,7 +62,10 @@ SAO.defaults = {
                 [408250] = { -- Eclipse (Solar, Season of Discovery)
                     [0] = true,
                 },
-                [16886] = { -- Nature's Grace
+                [93400] = { -- Shooting Stars (Cataclysm)
+                    [0] = true,
+                },
+                [16886] = { -- Nature's Grace (Era - Wrath)
                     [0] = false,
                 },
                 [46833] = { -- Wrath of Elune
@@ -67,6 +90,9 @@ SAO.defaults = {
                 },
                 [5176] = { -- Wrath
                     [5176] = true, -- Wrath
+                },
+                [93400] = { -- Shooting Stars (Cataclysm)
+                    [78674] = true, -- Starsurge
                 },
                 [46833] = { -- Wrath of Elune
                     [2912] = true, -- Starfire
@@ -129,6 +155,9 @@ SAO.defaults = {
                 [415320]= { -- Flanking Strike (Season of Discovery)
                     [415320]= true, -- Flanking Strike (Season of Discovery)
                 },
+                -- [415401]= { -- Sniper Training (Season of Discovery)
+                --     [19434] = true, -- Aimed Shot
+                -- },
             }
         },
         ["MAGE"] = {
@@ -276,10 +305,12 @@ SAO.defaults = {
                 [54149] = { -- Infusion of Light (2/2) (Wrath+)
                     [19750] = true, -- Flash of Light
                     [635]   = true, -- Holy Light
+                    [82326] = true, -- Divine Light (Cataclysm)
+                    [82327] = true, -- Holy Radiance (Cataclysm)
                 },
                 [59578] = { -- The Art of War (2/2) (Wrath+)
                     [879]   = true, -- Exorcism
-                    [19750] = true, -- Flash of Light
+                    [19750] = true, -- Flash of Light (not for Cata)
                 },
             },
         },
@@ -313,7 +344,7 @@ SAO.defaults = {
             glow = {
                 [33151] = { -- Surge of Light (TBC - Wrath)
                     [585]  = true, -- Smite
-                    [2061] = true, -- Flash Heal (does not proc for TBC)
+                    [2061] = true, -- Flash Heal (not for TBC)
                 },
                 [88688] = { -- Surge of Light (Cataclysm)
                     [2061] = true, -- Flash Heal
@@ -461,13 +492,16 @@ SAO.defaults = {
         },
         ["WARRIOR"] = {
             alert = {
-                [52437] = { -- Sudden Death
+                [52437] = { -- Sudden Death (Wrath+)
                     [0] = true, -- any stacks (up to 2 stacks with tier 10)
                 },
-                [46916] = { -- Bloodsurge
+                [46916] = { -- Bloodsurge (Wrath+)
                     [0] = true, -- any stacks (up to 2 stacks with tier 10)
                 },
-                [50227] = { -- Sword and Board
+                [413399] = { -- Bloodsurge (Season of Discovery)
+                    [0] = true,
+                },
+                [50227] = { -- Sword and Board (Wrath+)
                     [0] = true,
                 },
                 [426979] = { -- Sword and Board (Season of Discovery)
@@ -487,7 +521,7 @@ SAO.defaults = {
                 [5308] = { -- Execute
                     [5308] = "stance:1/3", -- Execute
                 },
-                [34428] = { -- Victory Rush
+                [34428] = { -- Victory Rush (TBC+)
                     [34428] = true, -- Victory Rush
                 },
                 [402927]= { -- Victory Rush (Season of Discovery)
@@ -496,13 +530,17 @@ SAO.defaults = {
                 [402911]= { -- Raging Blow (Season of Discovery)
                     [402911]= true, -- Raging Blow (Season of Discovery)
                 },
-                [52437] = { -- Sudden Death
-                    [5308] = true, -- Execute
+                [52437] = { -- Sudden Death (Wrath+)
+                    [5308] = true, -- Execute (not for Cata)
+                    [86346]= true, -- Colossus Smash (Cataclysm)
                 },
-                [46916] = { -- Bloodsurge
+                [46916] = { -- Bloodsurge (Wrath+)
                     [1464] = true, -- Slam
                 },
-                [50227] = { -- Sword and Board
+                [413399] = { -- Bloodsurge (Season of Discovery)
+                    [1464] = true, -- Slam
+                },
+                [50227] = { -- Sword and Board (Wrath+)
                     [23922] = true, -- Shield Slam
                 },
                 [426979] = { -- Sword and Board (Season of Discovery)

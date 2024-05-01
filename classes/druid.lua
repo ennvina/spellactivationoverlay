@@ -7,8 +7,8 @@ local GetSpellInfo = GetSpellInfo
 local UnitGUID = UnitGUID
 
 local omenSpellID = 16870;
-local lunarSpellID = SAO:IsSoD() and 408255 or 48518;
-local solarSpellID = SAO:IsSoD() and 408250 or 48517;
+local lunarSpellID = SAO.IsSoD() and 408255 or 48518;
+local solarSpellID = SAO.IsSoD() and 408250 or 48517;
 
 local feralCache = false;
 local clarityCache = false;
@@ -20,6 +20,7 @@ local rightTexture = '';
 
 local glowingWrath = false;
 local glowingStarfire = false;
+--local glowingStarsurge = false;
 
 -- Assign fake spell IDs for left and right textures, and make sure they are different
 -- If we used the 'real' spell IDs instead of fake IDs, we would see weird transitions
@@ -27,8 +28,6 @@ local glowingStarfire = false;
 -- (the latter is a limitation, some would say a feature, of Blizzard's original code)
 local leftFakeSpellID  = 0x0D00001D;
 local rightFakeSpellID = 0x0D00002D;
-
-local naturesGraceVariants; -- Lazy init in lazyCreateNaturesGraceVariants()
 
 local function isFeral(self)
     local shapeshift = GetShapeshiftForm()
@@ -221,6 +220,17 @@ local function updateGABs(self)
             glowingWrath = false;
         end
     end
+
+    -- if ((lunarCache or solarCache) ~= glowingStarsurge) then
+    --     local starsurgeSpellID = 78674;
+    --     if (lunarCache or solarCache) then
+    --         self:AddGlow(starsurgeSpellID, { (GetSpellInfo(starsurgeSpellID)) });
+    --         glowingStarsurge = true;
+    --     else
+    --         self:RemoveGlow(starsurgeSpellID);
+    --         glowingStarsurge = false;
+    --     end
+    -- end
 end
 
 local function customLoad(self)
@@ -288,32 +298,11 @@ local function customCLEU(self, ...)
     end
 end
 
-local function lazyCreateNaturesGraceVariants(self)
-    if (naturesGraceVariants) then
-        return;
-    end
-
-    local spellID = 16886;
-
-    local textureVariant1 = "serendipity";
-    local textureVariant2 = "fury_of_stormrage";
-
-    if not SAO.IsEra() or GetSpellInfo(spellID) then
-        self:MarkTexture(textureVariant1);
-        self:MarkTexture(textureVariant2);
-    end
-
-    naturesGraceVariants = self:CreateTextureVariants(spellID, 0, {
-        self:TextureVariantValue(textureVariant1, true),
-        self:TextureVariantValue(textureVariant2, true),
-    });
-end
-
 local function registerClass(self)
     -- Track Eclipses with a custom CLEU function, so that eclipses can coexist with Omen of Clarity
     -- self:RegisterAura("eclipse_lunar", 0, lunarSpellID, "eclipse_moon", "Left", 1, 255, 255, 255, true);
     -- self:RegisterAura("eclipse_solar", 0, solarSpellID, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true);
-    if self.IsWrath() or self.IsSoD() then -- Must exclude Eclipses for expansions which have no Eclipses, because the fake spell IDs would be accepted
+    if self.IsSoD() or self.IsWrath() or self.IsCata() then -- Must exclude Eclipses for expansions which have no Eclipses, because the fake spell IDs would be accepted
         self:RegisterAura("eclipse_lunar", 0, lunarSpellID+1000000, "eclipse_moon", "Left", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
         self:RegisterAura("eclipse_solar", 0, solarSpellID+1000000, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
     end
@@ -322,10 +311,14 @@ local function registerClass(self)
     -- self:RegisterAura("omen_of_clarity", 0, 16870, "natures_grace", "Left + Right (Flipped)", 1, 255, 255, 255, true);
     self:RegisterAura("omen_of_clarity", 0, 16870+1000000, "natures_grace", "Left + Right (Flipped)", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
 
-    -- Register glow IDs for glowing buttons, namely Starfire and Wrath
+    -- Register glow IDs for glowing buttons, namely Starfire, Wrath and Starsurge
     local starfire = GetSpellInfo(2912);
     local wrath = GetSpellInfo(5176);
     self:RegisterGlowIDs({ starfire, wrath });
+    -- if self.IsCata() then
+    --     local starsurge = GetSpellInfo(78674);
+    --     self:RegisterGlowIDs({ starsurge });
+    -- end
 
     -- Predatory Strikes, inspired by Predatory Swiftness
     local regrowth = GetSpellInfo(8936);
@@ -349,19 +342,20 @@ local function registerClass(self)
     self:RegisterAura("predatory_strikes", 0, 69369, "predatory_swiftness", "Top", 1, 255, 255, 255, true, predatoryStrikesSpells);
 
     -- Nature's Grace
-    if self.IsEra() then
-        -- Texture of Nature's Grace is always "serendipity" to avoid confusion with SoD's Fury of Stormrage which, obvisouly, uses "fury_of_stormrage"
-        -- This limitation is necessary for Season of Discovery only, but because SoD and non-SoD Era share the same config file, we have to dumb down
-        self:RegisterAura("natures_grace", 0, 16886, "serendipity", "Top", 1, 255, 255, 255, true);
-    else
-        -- Let the player select between "serendipity" and "fury_of_stormrage"
-        lazyCreateNaturesGraceVariants(self);
-        self:RegisterAura("natures_grace", 0, 16886, naturesGraceVariants.textureFunc, "Top", 1, 255, 255, 255, true);
+    self:RegisterAura("natures_grace", 0, 16886, "serendipity", "Top", 0.7, 255, 255, 255, true);
+
+    -- Shooting Stars
+    if self.IsCata() then
+        local starsurge = 78674;
+        local shootingStarsBuff = 93400;
+        self:RegisterAura("shooting_stars", 0, shootingStarsBuff, "shooting_stars", "Top", 1, 255, 255, 255, true, { starsurge });
     end
 
     -- Balance 4p set bonuses
-    self:RegisterAura("wrath_of_elune", 0, 46833, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvP season 5-6-7-8
-    self:RegisterAura("elunes_wrath", 0, 64823, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvE tier 8
+    if self.IsWrath() then
+        self:RegisterAura("wrath_of_elune", 0, 46833, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvP season 5-6-7-8
+        self:RegisterAura("elunes_wrath", 0, 64823, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvE tier 8
+    end
 
     -- Fury of Stormrage (Season of Discovery)
     if self.IsSoD() then
@@ -388,6 +382,7 @@ end
 local function loadOptions(self)
     local starfire = 2912;
     local wrath = 5176;
+    local starsurge = 78674;
 
     -- Predatory Strikes candidates
     local regrowth = 8936;
@@ -405,6 +400,9 @@ local function loadOptions(self)
     -- Otherwise the player would always see a generic "Eclipse" text
     local lunarEclipseTalent = lunarSpellID; -- Not really a talent
     local solarEclipseTalent = solarSpellID; -- Not really a talent
+
+    local shootingStarsBuff = 93400;
+    local shootingStarsTalent = 93398;
 
     local wrathOfEluneBuff = 46833;
     local elunesWrathBuff = 64823;
@@ -424,27 +422,33 @@ local function loadOptions(self)
     self:AddOverlayOption(omenOfClarityTalent, omenSpellID, 0, nil, nil, nil,  omenSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(lunarEclipseTalent, lunarSpellID, 0, nil, nil, nil, lunarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(solarEclipseTalent, solarSpellID, 0, nil, nil, nil, solarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
-    self:AddOverlayOption(wrathOfEluneTalent, wrathOfEluneBuff);
-    self:AddOverlayOption(elunesWrathTalent, elunesWrathBuff);
+    if self.IsCata() then
+        self:AddOverlayOption(shootingStarsTalent, shootingStarsBuff);
+    end
+    if self.IsWrath() then
+        self:AddOverlayOption(wrathOfEluneTalent, wrathOfEluneBuff);
+        self:AddOverlayOption(elunesWrathTalent, elunesWrathBuff);
+    end
     if self.IsSoD() then
         self:AddOverlayOption(furyOfStormrageTalent, furyOfStormrageBuff);
     end
-    if self.IsEra() then
+    if self.IsEra() or self.IsTBC() then
         self:AddOverlayOption(naturesGraceEraTalent, naturesGraceBuff);
-    elseif self.IsTBC() then
-        lazyCreateNaturesGraceVariants(self);
-        self:AddOverlayOption(naturesGraceEraTalent, naturesGraceBuff, 0, nil, naturesGraceVariants); -- Same talent as Era
     else
-        lazyCreateNaturesGraceVariants(self);
-        self:AddOverlayOption(naturesGraceWrathTalent, naturesGraceBuff, 0, nil, naturesGraceVariants);
+        self:AddOverlayOption(naturesGraceWrathTalent, naturesGraceBuff);
     end
     self:AddOverlayOption(predatoryStrikesTalent, predatoryStrikesBuff);
     self:AddSoulPreserverOverlayOption(60512); -- 60512 = Druid buff
 
     self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
     self:AddGlowingOption(solarEclipseTalent, wrath, wrath);
-    self:AddGlowingOption(wrathOfEluneTalent, wrathOfEluneBuff, starfire);
-    self:AddGlowingOption(elunesWrathTalent, elunesWrathBuff, starfire);
+    if self.IsCata() then
+        self:AddGlowingOption(shootingStarsTalent, shootingStarsBuff, starsurge);
+    end
+    if self.IsWrath() then
+        self:AddGlowingOption(wrathOfEluneTalent, wrathOfEluneBuff, starfire);
+        self:AddGlowingOption(elunesWrathTalent, elunesWrathBuff, starfire);
+    end
     if self.IsSoD() then
         self:AddGlowingOption(furyOfStormrageTalent, furyOfStormrageBuff, healingTouch);
     end

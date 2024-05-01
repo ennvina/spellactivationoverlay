@@ -18,6 +18,7 @@
 
 components\aura.lua
 components\counter.lua
+components\effect.lua
 components\events.lua
 components\glow.lua
 components\item.lua
