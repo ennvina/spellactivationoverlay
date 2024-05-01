@@ -40,6 +40,20 @@ local starfire = 2912;
 local starsurge = 78674;
 local wrath = 5176;
 
+local function useShootingStars()
+    SAO:CreateEffect(
+        "shooting_stars",
+        SAO.CATA,
+        93400, -- Shooting Stars (buff)
+        "aura",
+        {
+            talent = 93398, -- Shooting Stars (talent)
+            overlay = { texture = "shooting_stars", position = "Top" },
+            button = starsurge,
+        }
+    );
+end
+
 local function useNaturesGrace()
     SAO:CreateEffect(
         "natures_grace",
@@ -372,11 +386,7 @@ local function registerClass(self)
     useNaturesGrace();
 
     -- Shooting Stars
-    if self.IsCata() then
-        local starsurge = 78674;
-        local shootingStarsBuff = 93400;
-        self:RegisterAura("shooting_stars", 0, shootingStarsBuff, "shooting_stars", "Top", 1, 255, 255, 255, true, { starsurge });
-    end
+    useShootingStars();
 
     -- Balance 4p set bonuses
     if self.IsWrath() then
@@ -414,9 +424,6 @@ local function loadOptions(self)
     local lunarEclipseTalent = lunarSpellID; -- Not really a talent
     local solarEclipseTalent = solarSpellID; -- Not really a talent
 
-    local shootingStarsBuff = 93400;
-    local shootingStarsTalent = 93398;
-
     local wrathOfEluneBuff = 46833;
     local elunesWrathBuff = 64823;
     local wrathOfEluneTalent = wrathOfEluneBuff; -- Not really a talent
@@ -428,9 +435,6 @@ local function loadOptions(self)
     self:AddOverlayOption(omenOfClarityTalent, omenSpellID, 0, nil, nil, nil,  omenSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(lunarEclipseTalent, lunarSpellID, 0, nil, nil, nil, lunarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(solarEclipseTalent, solarSpellID, 0, nil, nil, nil, solarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
-    if self.IsCata() then
-        self:AddOverlayOption(shootingStarsTalent, shootingStarsBuff);
-    end
     if self.IsWrath() then
         self:AddOverlayOption(wrathOfEluneTalent, wrathOfEluneBuff);
         self:AddOverlayOption(elunesWrathTalent, elunesWrathBuff);
@@ -442,9 +446,6 @@ local function loadOptions(self)
 
     self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
     self:AddGlowingOption(solarEclipseTalent, wrath, wrath);
-    if self.IsCata() then
-        self:AddGlowingOption(shootingStarsTalent, shootingStarsBuff, starsurge);
-    end
     if self.IsWrath() then
         self:AddGlowingOption(wrathOfEluneTalent, wrathOfEluneBuff, starfire);
         self:AddGlowingOption(elunesWrathTalent, elunesWrathBuff, starfire);
