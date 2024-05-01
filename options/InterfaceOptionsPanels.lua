@@ -307,11 +307,11 @@ function SpellActivationOverlayOptionsPanel_OnShow(self)
         return;
     end
 
-    SAO:AddEffectOptions();
-
     if SAO.CurrentClass and type(SAO.CurrentClass.LoadOptions) == 'function' then
         SAO.CurrentClass.LoadOptions(SAO);
     end
+
+    SAO:AddEffectOptions();
 
     optionsLoaded = true;
 end

@@ -29,6 +29,99 @@ local glowingStarfire = false;
 local leftFakeSpellID  = 0x0D00001D;
 local rightFakeSpellID = 0x0D00002D;
 
+local cyclone = 33786;
+local entanglingRoots = 339;
+local healingTouch = 5185;
+local hibernate = 2637;
+local nourish = 50464;
+local rebirth = 20484;
+local regrowth = 8936;
+local starfire = 2912;
+local starsurge = 78674;
+local wrath = 5176;
+
+local function useShootingStars()
+    SAO:CreateEffect(
+        "shooting_stars",
+        SAO.CATA,
+        93400, -- Shooting Stars (buff)
+        "aura",
+        {
+            talent = 93398, -- Shooting Stars (talent)
+            overlay = { texture = "shooting_stars", position = "Top" },
+            button = starsurge,
+        }
+    );
+end
+
+local function useElunesWrathOfElune(name, spellID)
+    SAO:CreateEffect(
+        name,
+        SAO.WRATH,
+        spellID,
+        "aura",
+        {
+            overlay = { texture = "shooting_stars", position = "Top" },
+            button = starfire,
+        }
+    );
+end
+
+local function useNaturesGrace()
+    SAO:CreateEffect(
+        "natures_grace",
+        SAO.ERA + SAO.TBC + SAO.WRATH,
+        16886, -- Nature's Grace (buff)
+        "aura",
+        {
+            talent = (SAO.IsEra() or SAO.IsTBC()) and 16880 or 61346, -- Nature's Grace (Era and TBC talent) or Nature's Grace (Wrath talent)
+            overlay = { texture = "serendipity", position = "Top", scale = 0.7 },
+        }
+    );
+end
+
+local function useFuryOfStormrage()
+    local buff = SAO.IsSoD() and 414800 or 81093; -- Fury of Stormrage (buff)
+    local talent = SAO.IsSoD() and 414799 or 17104; -- Fury of Stormrage (rune) or Fury of Stormrage (talent)
+    SAO:CreateEffect(
+        "natures_grace",
+        SAO.SOD + SAO.CATA,
+        buff,
+        "aura",
+        {
+            talent = talent,
+            overlay = { texture = "fury_of_stormrage", position = "Top" },
+            buttons = {
+                [SAO.SOD] = healingTouch,
+                [SAO.CATA] = starfire,
+            },
+        }
+    );
+end
+
+local function usePredatoryStrikes()
+    SAO:CreateEffect(
+        "predatory_strikes",
+        SAO.WRATH + SAO.CATA,
+        69369, -- Predator's Swiftness (buff)
+        "aura",
+        {
+            talent = 16972, -- Predatory Strikes (talent)
+            overlay = { texture = "predatory_swiftness", position = "Top" },
+            buttons = {
+                regrowth,
+                healingTouch,
+                nourish,
+                rebirth,
+                wrath,
+                entanglingRoots,
+                cyclone,
+                hibernate,
+            },
+        }
+    );
+end
+
 local function isFeral(self)
     local shapeshift = GetShapeshiftForm()
     return (shapeshift == 1) or (shapeshift == 3);
@@ -312,56 +405,27 @@ local function registerClass(self)
     self:RegisterAura("omen_of_clarity", 0, 16870+1000000, "natures_grace", "Left + Right (Flipped)", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
 
     -- Register glow IDs for glowing buttons, namely Starfire, Wrath and Starsurge
-    local starfire = GetSpellInfo(2912);
-    local wrath = GetSpellInfo(5176);
-    self:RegisterGlowIDs({ starfire, wrath });
+    self:RegisterGlowIDs({ (GetSpellInfo(starfire)), (GetSpellInfo(wrath)) });
     -- if self.IsCata() then
     --     local starsurge = GetSpellInfo(78674);
     --     self:RegisterGlowIDs({ starsurge });
     -- end
 
-    -- Predatory Strikes, inspired by Predatory Swiftness
-    local regrowth = GetSpellInfo(8936);
-    local healingTouch = GetSpellInfo(5185);
-    local nourish = GetSpellInfo(50464);
-    local rebirth = GetSpellInfo(20484);
-    -- local wrath = GetSpellInfo(5176);
-    local entanglingRoots = GetSpellInfo(339);
-    local cyclone = GetSpellInfo(33786);
-    local hibernate = GetSpellInfo(2637);
-    local predatoryStrikesSpells = {
-        regrowth,
-        healingTouch,
-        nourish,
-        rebirth,
-        wrath,
-        entanglingRoots,
-        cyclone,
-        hibernate,
-    }
-    self:RegisterAura("predatory_strikes", 0, 69369, "predatory_swiftness", "Top", 1, 255, 255, 255, true, predatoryStrikesSpells);
-
     -- Nature's Grace
-    self:RegisterAura("natures_grace", 0, 16886, "serendipity", "Top", 0.7, 255, 255, 255, true);
+    useNaturesGrace();
 
     -- Shooting Stars
-    if self.IsCata() then
-        local starsurge = 78674;
-        local shootingStarsBuff = 93400;
-        self:RegisterAura("shooting_stars", 0, shootingStarsBuff, "shooting_stars", "Top", 1, 255, 255, 255, true, { starsurge });
-    end
+    useShootingStars();
 
     -- Balance 4p set bonuses
-    if self.IsWrath() then
-        self:RegisterAura("wrath_of_elune", 0, 46833, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvP season 5-6-7-8
-        self:RegisterAura("elunes_wrath", 0, 64823, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvE tier 8
-    end
+    useElunesWrathOfElune("wrath_of_elune", 46833); -- PvP season 5-6-7-8
+    useElunesWrathOfElune("elunes_wrath", 64823); -- PvE tier 8
 
-    -- Fury of Stormrage (Season of Discovery)
-    if self.IsSoD() then
-        local furyOfStormrage = 414800;
-        self:RegisterAura("fury_of_stormrage", 0, furyOfStormrage, "fury_of_stormrage", "Top", 1, 255, 255, 255, true, { healingTouch });
-    end
+    -- Predatory Strikes, inspired by Predatory Swiftness
+    usePredatoryStrikes();
+
+    -- Fury of Stormrage
+    useFuryOfStormrage();
 
     -- Healing Trance / Soul Preserver
     self:RegisterAuraSoulPreserver("soul_preserver_druid", 60512); -- 60512 = Druid buff
@@ -380,20 +444,6 @@ local function registerClass(self)
 end
 
 local function loadOptions(self)
-    local starfire = 2912;
-    local wrath = 5176;
-    local starsurge = 78674;
-
-    -- Predatory Strikes candidates
-    local regrowth = 8936;
-    local healingTouch = 5185;
-    local nourish = 50464;
-    local rebirth = 20484;
-    -- local wrath = 5176;
-    local entanglingRoots = 339;
-    local cyclone = 33786;
-    local hibernate = 2637;
-
     local omenOfClarityTalent = 16864;
 --    local eclipseTalent = 48516;
     -- Cheat with fake talents, to tell explicitly which type of eclipse is involved
@@ -401,67 +451,13 @@ local function loadOptions(self)
     local lunarEclipseTalent = lunarSpellID; -- Not really a talent
     local solarEclipseTalent = solarSpellID; -- Not really a talent
 
-    local shootingStarsBuff = 93400;
-    local shootingStarsTalent = 93398;
-
-    local wrathOfEluneBuff = 46833;
-    local elunesWrathBuff = 64823;
-    local wrathOfEluneTalent = wrathOfEluneBuff; -- Not really a talent
-    local elunesWrathTalent = elunesWrathBuff; -- Not really a talent
-
-    local furyOfStormrageBuff = 414800;
-    local furyOfStormrageTalent = furyOfStormrageBuff; -- Not really a talent
-
-    local predatoryStrikesTalent = 16972;
-    local predatoryStrikesBuff = 69369;
-
-    local naturesGraceEraTalent = 16880;
-    local naturesGraceWrathTalent = 61346;
-    local naturesGraceBuff = 16886;
-
     self:AddOverlayOption(omenOfClarityTalent, omenSpellID, 0, nil, nil, nil,  omenSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(lunarEclipseTalent, lunarSpellID, 0, nil, nil, nil, lunarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(solarEclipseTalent, solarSpellID, 0, nil, nil, nil, solarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
-    if self.IsCata() then
-        self:AddOverlayOption(shootingStarsTalent, shootingStarsBuff);
-    end
-    if self.IsWrath() then
-        self:AddOverlayOption(wrathOfEluneTalent, wrathOfEluneBuff);
-        self:AddOverlayOption(elunesWrathTalent, elunesWrathBuff);
-    end
-    if self.IsSoD() then
-        self:AddOverlayOption(furyOfStormrageTalent, furyOfStormrageBuff);
-    end
-    if self.IsEra() or self.IsTBC() then
-        self:AddOverlayOption(naturesGraceEraTalent, naturesGraceBuff);
-    else
-        self:AddOverlayOption(naturesGraceWrathTalent, naturesGraceBuff);
-    end
-    self:AddOverlayOption(predatoryStrikesTalent, predatoryStrikesBuff);
     self:AddSoulPreserverOverlayOption(60512); -- 60512 = Druid buff
 
     self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
     self:AddGlowingOption(solarEclipseTalent, wrath, wrath);
-    if self.IsCata() then
-        self:AddGlowingOption(shootingStarsTalent, shootingStarsBuff, starsurge);
-    end
-    if self.IsWrath() then
-        self:AddGlowingOption(wrathOfEluneTalent, wrathOfEluneBuff, starfire);
-        self:AddGlowingOption(elunesWrathTalent, elunesWrathBuff, starfire);
-    end
-    if self.IsSoD() then
-        self:AddGlowingOption(furyOfStormrageTalent, furyOfStormrageBuff, healingTouch);
-    end
-    if not self.IsEra() then -- Must exclude this option specifically for Classic Era, because the talent exists in Era but it has no proc
-        self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, regrowth);
-        self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, healingTouch);
-        self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, nourish);
-        self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, rebirth);
-        self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, wrath);
-        self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, entanglingRoots);
-        self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, cyclone);
-        self:AddGlowingOption(predatoryStrikesTalent, predatoryStrikesBuff, hibernate);
-    end
 end
 
 SAO.Class["DRUID"] = {
