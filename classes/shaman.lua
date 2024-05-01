@@ -185,6 +185,8 @@ local function registerClass(self)
     end
     
     if self.IsCata() then
+        self:RegisterAura("elemental_focus_1", 1, 16246, "genericarc_05", "Left", 1.5, 255, 255, 255, true);
+        self:RegisterAura("elemental_focus_2", 2, 16246, "genericarc_05", "Left + Right (Flipped)", 1.5, 255, 255, 255, true);
         local lavaBurstCata = 51505;
         self:RegisterAura("lava_surge", 0, lavaBurstCata, "imp_empowerment", "Left + Right (Flipped)", 1, 255, 255, 255, true, {lavaBurstCata}, true);
         self:RegisterCounter("lava_surge");
@@ -407,8 +409,8 @@ local function loadOptions(self)
     if self.IsEra() then
         -- Elemental Focus has 1 charge on Classic Era
         self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff);
-    elseif self.IsWrath() then
-        -- Elemental Focus has 2 charges on TBC and Wrath
+    elseif self.IsWrath() or self.IsCata() then
+        -- Elemental Focus has 2 charges on TBC, Wrath and Cata
         self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
     end
 
