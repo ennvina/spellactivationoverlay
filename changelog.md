@@ -5,10 +5,13 @@
 New effects:
 - New SAO: Druid's Fury of Stormrage (Cataclysm)
 - New GAB: Druid's Starfire, during Fury of Stormrage (Cataclysm)
-- New GAB: Warlock's Drain Soul when the enemy has low HP (Cataclysm)
+- New GAB: Warlock's Drain Soul, when the enemy has low HP (Cataclysm)
 
 Removed effects:
 - Druid's Nature's Grace has been removed (Cataclysm)
+
+Bug Fixes
+- Warlock's Drain Soul spec names in options displayed numbers (Cataclysm)
 
 #### v1.3.2 (2024-04-30)
 
