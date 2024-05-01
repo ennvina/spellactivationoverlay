@@ -155,9 +155,9 @@ SAO.defaults = {
                 [415320]= { -- Flanking Strike (Season of Discovery)
                     [415320]= true, -- Flanking Strike (Season of Discovery)
                 },
-                [415401]= { -- Sniper Training (Season of Discovery)
-                    [19434] = true, -- Aimed Shot
-                },
+                -- [415401]= { -- Sniper Training (Season of Discovery)
+                --     [19434] = true, -- Aimed Shot
+                -- },
             }
         },
         ["MAGE"] = {
