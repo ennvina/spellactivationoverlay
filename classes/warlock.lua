@@ -65,8 +65,8 @@ local DrainSoulHandler = {
 }
 
 local function customLogin(self, ...)
-    if self.IsWrath() then
-        -- Drain Soul is empowered on low health enemies only in Wrath Classic
+    if self.IsWrath() or self.IsCata() then
+        -- Drain Soul is empowered on low health enemies only in Wrath Classic and Cataclysm Classic
         local spellID = 1120;
         local spellName = GetSpellInfo(spellID);
         if (spellName) then
