@@ -344,6 +344,13 @@ local function registerClass(self)
     -- Nature's Grace
     self:RegisterAura("natures_grace", 0, 16886, "serendipity", "Top", 0.7, 255, 255, 255, true);
 
+    -- Shooting Stars
+    if self.IsCata() then
+        local starsurge = 78674;
+        local shootingStarsBuff = 93400;
+        self:RegisterAura("shooting_stars", 0, shootingStarsBuff, "shooting_stars", "Top", 1, 255, 255, 255, true, { starsurge });
+    end
+
     -- Balance 4p set bonuses
     if self.IsWrath() then
         self:RegisterAura("wrath_of_elune", 0, 46833, "shooting_stars", "Top", 1, 255, 255, 255, true, { starfire }); -- PvP season 5-6-7-8
@@ -375,6 +382,7 @@ end
 local function loadOptions(self)
     local starfire = 2912;
     local wrath = 5176;
+    local starsurge = 78674;
 
     -- Predatory Strikes candidates
     local regrowth = 8936;
@@ -392,6 +400,9 @@ local function loadOptions(self)
     -- Otherwise the player would always see a generic "Eclipse" text
     local lunarEclipseTalent = lunarSpellID; -- Not really a talent
     local solarEclipseTalent = solarSpellID; -- Not really a talent
+
+    local shootingStarsBuff = 93400;
+    local shootingStarsTalent = 93398;
 
     local wrathOfEluneBuff = 46833;
     local elunesWrathBuff = 64823;
@@ -411,6 +422,9 @@ local function loadOptions(self)
     self:AddOverlayOption(omenOfClarityTalent, omenSpellID, 0, nil, nil, nil,  omenSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(lunarEclipseTalent, lunarSpellID, 0, nil, nil, nil, lunarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(solarEclipseTalent, solarSpellID, 0, nil, nil, nil, solarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
+    if self.IsCata() then
+        self:AddOverlayOption(shootingStarsTalent, shootingStarsBuff);
+    end
     if self.IsWrath() then
         self:AddOverlayOption(wrathOfEluneTalent, wrathOfEluneBuff);
         self:AddOverlayOption(elunesWrathTalent, elunesWrathBuff);
@@ -428,6 +442,9 @@ local function loadOptions(self)
 
     self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
     self:AddGlowingOption(solarEclipseTalent, wrath, wrath);
+    if self.IsCata() then
+        self:AddGlowingOption(shootingStarsTalent, shootingStarsBuff, starsurge);
+    end
     if self.IsWrath() then
         self:AddGlowingOption(wrathOfEluneTalent, wrathOfEluneBuff, starfire);
         self:AddGlowingOption(elunesWrathTalent, elunesWrathBuff, starfire);

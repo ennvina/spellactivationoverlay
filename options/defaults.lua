@@ -62,6 +62,9 @@ SAO.defaults = {
                 [408250] = { -- Eclipse (Solar, Season of Discovery)
                     [0] = true,
                 },
+                [93400] = { -- Shooting Stars (Cataclysm)
+                    [0] = true,
+                },
                 [16886] = { -- Nature's Grace (Era - Wrath)
                     [0] = false,
                 },
@@ -87,6 +90,9 @@ SAO.defaults = {
                 },
                 [5176] = { -- Wrath
                     [5176] = true, -- Wrath
+                },
+                [93400] = { -- Shooting Stars (Cataclysm)
+                    [78674] = true, -- Starsurge
                 },
                 [46833] = { -- Wrath of Elune
                     [2912] = true, -- Starfire
