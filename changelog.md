@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v1.3.2 (2024-04-xx)
+#### v1.3.2 (2024-04-30)
 
 The Death Knight class experiments the upcoming rework for Cataclysm.
 Make sure to report issues you would encounter, thank you :)
