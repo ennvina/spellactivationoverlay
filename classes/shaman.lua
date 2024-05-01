@@ -16,6 +16,7 @@ local RollingThunderHandler = {
     earthShockSpells = {},
     -- Variables
     initialized = false,
+    glowtimer,
 
     -- Methods
     init = function(self)
@@ -48,21 +49,40 @@ local RollingThunderHandler = {
         if (event:sub(0,11) ~= "SPELL_AURA_") then return end
 
         local spellID, spellName = select(12, CombatLogGetCurrentEventInfo());
-
-        if (self.lightningShieldSpellIDs[spellID]) then
-            if (event == "SPELL_AURA_APPLIED_DOSE") then
-                -- Deactivating old overlays and activating new one when Lightning Shield stack is gained
-                if stacks >= 7 then
-                    self:deactivate();
-                    self:activate(stacks);
+        if SAO:IsCata() then
+            if (self.lightningShieldSpellIDs[spellID]) then
+                if (event == "SPELL_AURA_APPLIED_DOSE") then
+                    -- Deactivating old overlays and activating new one when Lightning Shield stack is gained
+                    if stacks >= 6 then
+                        self:deactivate();
+                        self:activate(stacks);
+                    end
+                elseif (event == "SPELL_AURA_REMOVED_DOSE") then
+                    -- Deactivating old overlays and activating new one when Lightning Shield stack is lost
+                    if stacks >= 6 then
+                        self:deactivate();
+                        self:activate(stacks);
+                    else
+                        self:deactivate();
+                    end
                 end
-            elseif (event == "SPELL_AURA_REMOVED_DOSE") then
-                -- Deactivating old overlays and activating new one when Lightning Shield stack is lost
-                if stacks >= 7 then
-                    self:deactivate();
-                    self:activate(stacks);
-                else
-                    self:deactivate();
+            end
+            else
+                if (self.lightningShieldSpellIDs[spellID]) then
+                    if (event == "SPELL_AURA_APPLIED_DOSE") then
+                        -- Deactivating old overlays and activating new one when Lightning Shield stack is gained
+                        if stacks >= 7 then
+                            self:deactivate();
+                            self:activate(stacks);
+                        end
+                    elseif (event == "SPELL_AURA_REMOVED_DOSE") then
+                        -- Deactivating old overlays and activating new one when Lightning Shield stack is lost
+                        if stacks >= 7 then
+                            self:deactivate();
+                            self:activate(stacks);
+                        else
+                            self:deactivate();
+                    end
                 end
             end
         end
@@ -78,6 +98,7 @@ local RollingThunderHandler = {
         local hasSAO = not saoOption or type(saoOption[lightningShieldStacks]) == "nil" or saoOption[lightningShieldStacks];
         if (hasSAO) then
             local scale = 0.5 + 0.1 * (lightningShieldStacks - 6);
+            if SAO:IsCata() then local scale = 0.5 + 0.1 * (lightningShieldStacks - 5); end
             local pulse = lightningShieldStacks == 9 or nil;
             SAO:ActivateOverlay(lightningShieldStacks, 324, SAO.TexName["fulmination"], "Top", scale, 255, 255, 255, pulse, pulse);
         end
@@ -107,17 +128,46 @@ local function checkRollingThunderRuneAndLightningSieldStacks(self, ...)
         return;
     end
 
-    local RollingThunderEquipped = C_Engraving and SAO:IsSpellLearned(432056);
+    local RollingThunderEquipped = (C_Engraving and SAO:IsSpellLearned(432056)) or SAO:GetTalentByName((GetSpellInfo(88766)));
     if not RollingThunderEquipped then
         RollingThunderHandler:deactivate();
     else
-        -- C_UnitAuras is currently available for Classic Era only
-        -- Fortunately, RollingThunderHandler is used only on Season of Discovery
+        -- C_UnitAuras is currently available for Classic Era and Cataclysm only
+        -- Fortunately, RollingThunderHandler is used only on Season of Discovery and Cataclysm
         local aura = C_UnitAuras.GetAuraDataBySpellName("player", GetSpellInfo(324));
-        if aura and aura.applications > 6 and not SAO:GetActiveOverlay(324) then
-            RollingThunderHandler:activate(aura.applications);
+        if SAO:IsCata() then
+            if aura and aura.applications > 5 and not SAO:GetActiveOverlay(324) then
+                RollingThunderHandler:activate(aura.applications);
+            end
+        else
+            if aura and aura.applications > 6 and not SAO:GetActiveOverlay(324) then
+                RollingThunderHandler:activate(aura.applications);
+            end
         end
     end
+end
+
+local function rollingThunderCombatCheck(combat)
+    local TimetoLingerGlow = 2.5; -- Buttons glows temporarily for 2.5 secs
+    if not combat then RollingThunderHandler.glowtimer = C_Timer.NewTimer(
+        TimetoLingerGlow,
+        function() RollingThunderHandler:deactivate(); end
+    )
+    end
+    if combat then
+        if RollingThunderHandler.glowtimer then
+            RollingThunderHandler.glowtimer:Cancel();
+            end
+        checkRollingThunderRuneAndLightningSieldStacks();
+    end
+end
+
+local function deactivateRollingThunderGlow(self, ...)
+    rollingThunderCombatCheck(false);
+end
+
+local function activateRollingThunderGlow(self, ...)
+    rollingThunderCombatCheck(true);
 end
 
 local function customCLEU(self, ...)
@@ -133,6 +183,56 @@ local function registerClass(self)
         self:RegisterAura("elemental_focus_1", 1, 16246, "echo_of_the_elements", "Left", 1, 255, 255, 255, true);
         self:RegisterAura("elemental_focus_2", 2, 16246, "echo_of_the_elements", "Left + Right (Flipped)", 1, 255, 255, 255, true);
     end
+    
+    if self.IsCata() then
+        local lavaBurstCata = 51505;
+        self:RegisterAura("lava_surge", 0, lavaBurstCata, "imp_empowerment", "Left + Right (Flipped)", 1, 255, 255, 255, true, {lavaBurstCata}, true);
+        self:RegisterCounter("lava_surge");
+        if (not RollingThunderHandler.initialized) then
+            RollingThunderHandler:init();
+        end
+        for lightningShieldStacks=6,9 do
+            local auraName = "fulmination_"..lightningShieldStacks;
+            local scale = 0.5 + 0.1 * (lightningShieldStacks - 5); -- 60%, 70%, 80%
+            local pulse = lightningShieldStacks == 9;
+            self:RegisterAura(auraName, lightningShieldStacks, RollingThunderHandler.fakeSpellID, "fulmination", "Top", scale, 255, 255, 255, pulse, RollingThunderHandler.earthShockSpells);
+        end
+        -- Maelstrom Weapon
+        local lightningBolt = 403;
+        local chainLightning = 421;
+        local healingSurge = 8004;
+        local healingWave = 331;
+        local chainHeal = 1064;
+        local greaterHealingWave = 77472;
+        local healingRain = 73920;
+        local hex = 51514;
+        local maelstromSpells = {
+            GetSpellInfo(lightningBolt),
+            GetSpellInfo(chainLightning),
+            GetSpellInfo(healingSurge),
+            GetSpellInfo(greaterHealingWave),
+            GetSpellInfo(healingWave),
+            GetSpellInfo(chainHeal),
+            GetSpellInfo(healingRain),
+            GetSpellInfo(hex),
+        }
+        self:RegisterAura("maelstrom_weapon_1", 1, 53817, "maelstrom_weapon_1", "Top", 1, 255, 255, 255, false);
+        self:RegisterAura("maelstrom_weapon_2", 2, 53817, "maelstrom_weapon_2", "Top", 1, 255, 255, 255, false);
+        self:RegisterAura("maelstrom_weapon_3", 3, 53817, "maelstrom_weapon_3", "Top", 1, 255, 255, 255, false);
+        self:RegisterAura("maelstrom_weapon_4", 4, 53817, "maelstrom_weapon_4", "Top", 1, 255, 255, 255, false);
+        self:RegisterAura("maelstrom_weapon_5", 5, 53817, "maelstrom_weapon", "Top", 1, 255, 255, 255, true, maelstromSpells);
+
+        -- Tidal Waves
+        local tidalSpells = {
+            GetSpellInfo(greaterHealingWave),
+            GetSpellInfo(healingWave),
+            GetSpellInfo(healingSurge),
+        }
+        self:RegisterAura("tidal_waves_1", 1, 53390, "high_tide", "Left (CCW)", 0.8, 255, 255, 255, true, tidalSpells);
+        self:RegisterAura("tidal_waves_2", 2, 53390, "high_tide", "Left (CCW)", 0.8, 255, 255, 255, true, tidalSpells);
+        self:RegisterAura("tidal_waves_2", 2, 53390, "high_tide", "Right (CW)", 0.8, 255, 255, 255, true); -- no need to re-glow tidalSpells for right texture
+    end
+
 
     if self.IsWrath() then
         -- Maelstrom Weapon
@@ -291,18 +391,37 @@ local function loadOptions(self)
     local tidalWavesSoDBuff = 432041;
     local tidalWavesSoDTalent = 432233;
 
+    --Cataclysm
+    local lavaBurstCata = 51505;
+    local lavaSurgeTalentCata = 77756;
+    local fulminationTalentCata = 88766;
+    local greaterHealingWave = 77472;
+    local healingSurge = 8004;
+    local healingRain = 73920;
+
     local oneToFourStacks = self:NbStacks(1, 4);
     local fiveStacks = self:NbStacks(5);
     local sevenToNineStacks = self:NbStacks(7, 9);
+    local sixToNineStacks = self:NbStacks(6, 9);
 
     if self.IsEra() then
         -- Elemental Focus has 1 charge on Classic Era
         self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff);
-    else
+    elseif self.IsWrath() then
         -- Elemental Focus has 2 charges on TBC and Wrath
         self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
     end
 
+    if self.IsCata() then
+        self:AddOverlayOption(lavaBurstCata, lavaBurstCata);
+        self:AddOverlayOption(fulminationTalentCata, lightningShield, 6, nil, nil, nil, RollingThunderHandler.fakeSpellID);
+        self:AddOverlayOption(fulminationTalentCata, lightningShield, 7, nil, nil, nil, RollingThunderHandler.fakeSpellID);
+        self:AddOverlayOption(fulminationTalentCata, lightningShield, 8, nil, nil, nil, RollingThunderHandler.fakeSpellID);
+        self:AddOverlayOption(fulminationTalentCata, lightningShield, 9, nil, nil, nil, RollingThunderHandler.fakeSpellID);
+        self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 0, oneToFourStacks, nil, 4); -- setup any stacks, test with 4 stacks
+        self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 5); -- setup 5 stacks
+        self:AddOverlayOption(tidalWavesTalent, tidalWavesBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
+    end 
     if self.IsWrath() then
         self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 0, oneToFourStacks, nil, 4); -- setup any stacks, test with 4 stacks
         self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 5); -- setup 5 stacks
@@ -319,6 +438,21 @@ local function loadOptions(self)
         self:AddOverlayOption(tidalWavesSoDTalent, tidalWavesSoDBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
     end
 
+    if self.IsCata() then
+        self:AddGlowingOption(lavaSurgeTalentCata, lavaBurstCata, lavaBurstCata);
+        self:AddGlowingOption(fulminationTalentCata, lightningShield, earthShock, sixToNineStacks);
+        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, lightningBolt, fiveStacks);
+        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, chainLightning, fiveStacks);
+        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, healingSurge, fiveStacks);
+        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, greaterHealingWave, fiveStacks);
+        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, healingWave, fiveStacks);
+        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, chainHeal, fiveStacks);
+        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, healingRain, fiveStacks);
+        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, hex, fiveStacks);
+        self:AddGlowingOption(tidalWavesTalent, tidalWavesBuff, greaterHealingWave);
+        self:AddGlowingOption(tidalWavesTalent, tidalWavesBuff, healingWave);
+        self:AddGlowingOption(tidalWavesTalent, tidalWavesBuff, healingSurge);
+    end 
     if self.IsWrath() then
         self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, lightningBolt, fiveStacks);
         self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, chainLightning, fiveStacks);
@@ -350,4 +484,7 @@ SAO.Class["SHAMAN"] = {
     ["LoadOptions"] = loadOptions,
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
     ["SPELLS_CHANGED"] = checkRollingThunderRuneAndLightningSieldStacks,
+    ["PLAYER_REGEN_ENABLED"] = deactivateRollingThunderGlow,
+    ["PLAYER_REGEN_DISABLED"] = activateRollingThunderGlow,
+    ["PLAYER_LOGIN"] = deactivateRollingThunderGlow,
 }

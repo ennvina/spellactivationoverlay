@@ -394,6 +394,9 @@ SAO.defaults = {
                 [415105] = {  -- Power Surge (Season of Discovery)
                     [0] = true,
                 },
+                [51505] = {  -- Lava Surge (Cataclysm)
+                    [0] = true,
+                },
                 [53817] = { -- Maelstrom Weapon
                     [5] = true, -- 5 stacks
                     [0] = true, -- any stacks but 5
@@ -411,7 +414,8 @@ SAO.defaults = {
                 [425339]= { -- Molten Blast (Season of Discovery)
                     [0] = true,
                 },
-                [324]= { -- Rolling Thunder (Season of Discovery)
+                [324]= { -- Rolling Thunder (Season of Discovery, Cataclysm)
+                    [6] = false,
                     [7] = false,
                     [8] = false,
                     [9] = true,
@@ -424,10 +428,12 @@ SAO.defaults = {
                 [53817] = { -- Maelstrom Weapon
                     [403]   = false, -- Lightning Bolt
                     [421]   = false, -- Chain Lightning
-                    [8004]  = false, -- Lesser Healing Wave
+                    [8004]  = false, -- Lesser Healing Wave / Healing Surge (Cataclysm)
                     [331]   = false, -- Healing Wave
                     [1064]  = false, -- Chain Heal
                     [51514] = false, -- Hex
+                    [77472] = false, -- Greater Healing Wave (Cataclysm)
+                    [73920] = false, -- Healing Rain (Cataclysm)
                 },
                 [408505] = { -- Maelstrom Weapon (Season of Discovery)
                     [403]   = false, -- Lightning Bolt
@@ -442,14 +448,21 @@ SAO.defaults = {
                     [1064]  = false, -- Chain Heal
                     [408490] = false, -- Lava Burst (Season of Discovery)
                 },
+                [51505] = {  -- Lava Surge (Cataclysm)
+                    [51505] = true,
+                },
                 [53390] = { -- Tidal Waves
-                    [8004] = false, -- Lesser Healing Wave
+                    [8004] = false, -- Lesser Healing Wave / Healing Surge (Cataclysm)
                     [331]  = false, -- Healing Wave
+                    [77472] = false, -- Greater Healing Wave (Cataclysm)
                 },
                 [425339]= { -- Molten Blast (Season of Discovery)
                     [425339] = true, -- Molten Blast (Season of Discovery)
                 },
                 [432056]= { -- Rolling Thunder (Season of Discovery)
+                    [8042] = true, -- Rolling Thunder (Season of Discovery)
+                },
+                [324]= { -- Fulmination (Cataclysm)
                     [8042] = true, -- Rolling Thunder (Season of Discovery)
                 },
                 [432041] = { -- Tidal Waves (Season of Discovery)
