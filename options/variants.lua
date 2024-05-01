@@ -105,7 +105,8 @@ end
 function SAO.SpecVariantValue(self, specs)
     return self:StringVariantValue(specs, "spec:",
     function(spec)
-        return select(1, GetTalentTabInfo(spec));
+        local selector = self.IsCata() and 2 or 1;
+        return select(selector, GetTalentTabInfo(spec));
     end);
 end
 
