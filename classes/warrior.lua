@@ -387,7 +387,8 @@ local function registerClass(self)
         end
         self:RegisterAura("sword_and_board", 0, 50227, "sword_and_board", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(shieldSlam)) });
     elseif self.IsCata() then
-        self:RegisterAura("bloodsurge", 0, 46916, "blood_surge", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(slam)) });
+--        self:RegisterAura("bloodsurge", 0, 46916, "blood_surge", "Top (CW)", 1, 255, 255, 255, true, { (GetSpellInfo(slam)) }); -- Clockwise because texture is different
+        self:RegisterAura("bloodsurge", 0, 46916, "blood_surge", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(slam)) });
         self:RegisterAura("sudden_death", 0, 52437, "sudden_death", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(colossusSmash)) });
         self:RegisterAura("sword_and_board", 0, 50227, "sword_and_board", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(shieldSlam)) });
     end
