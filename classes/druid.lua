@@ -80,6 +80,20 @@ local function useNaturesGrace()
     );
 end
 
+local function useFuryOfStormrage()
+    SAO:CreateEffect(
+        "natures_grace",
+        SAO.SOD,
+        414800, -- Fury of Stormrage (buff)
+        "aura",
+        {
+            talent = 414799, -- Fury of Stormrage (rune)
+            overlay = { texture = "fury_of_stormrage", position = "Top" },
+            button = healingTouch,
+        }
+    );
+end
+
 local function usePredatoryStrikes()
     SAO:CreateEffect(
         "predatory_strikes",
@@ -405,11 +419,8 @@ local function registerClass(self)
     useElunesWrathOfElune("wrath_of_elune", 46833); -- PvP season 5-6-7-8
     useElunesWrathOfElune("elunes_wrath", 64823); -- PvE tier 8
 
-    -- Fury of Stormrage (Season of Discovery)
-    if self.IsSoD() then
-        local furyOfStormrage = 414800;
-        self:RegisterAura("fury_of_stormrage", 0, furyOfStormrage, "fury_of_stormrage", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(healingTouch)) });
-    end
+    -- Fury of Stormrage
+    useFuryOfStormrage();
 
     -- Healing Trance / Soul Preserver
     self:RegisterAuraSoulPreserver("soul_preserver_druid", 60512); -- 60512 = Druid buff
@@ -435,22 +446,13 @@ local function loadOptions(self)
     local lunarEclipseTalent = lunarSpellID; -- Not really a talent
     local solarEclipseTalent = solarSpellID; -- Not really a talent
 
-    local furyOfStormrageBuff = 414800;
-    local furyOfStormrageTalent = furyOfStormrageBuff; -- Not really a talent
-
     self:AddOverlayOption(omenOfClarityTalent, omenSpellID, 0, nil, nil, nil,  omenSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(lunarEclipseTalent, lunarSpellID, 0, nil, nil, nil, lunarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
     self:AddOverlayOption(solarEclipseTalent, solarSpellID, 0, nil, nil, nil, solarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
-    if self.IsSoD() then
-        self:AddOverlayOption(furyOfStormrageTalent, furyOfStormrageBuff);
-    end
     self:AddSoulPreserverOverlayOption(60512); -- 60512 = Druid buff
 
     self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
     self:AddGlowingOption(solarEclipseTalent, wrath, wrath);
-    if self.IsSoD() then
-        self:AddGlowingOption(furyOfStormrageTalent, furyOfStormrageBuff, healingTouch);
-    end
 end
 
 SAO.Class["DRUID"] = {
