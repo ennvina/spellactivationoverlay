@@ -454,7 +454,7 @@ local function loadOptions(self)
         self:AddOverlayOption(suddenDeathTalent, suddenDeathBuff, 0, nil, nil, 1); -- setup any stacks, test with 1 stack
         self:AddOverlayOption(swordAndBoardTalent, swordAndBoardBuff);
     elseif self.IsCata() then
-        self:AddOverlayOption(bloodsurgeTalent, bloodsurgeBuff);
+        self:AddOverlayOption(bloodsurgeTalent, bloodsurgeBuff, 0, self:RecentlyUpdated()); -- Updated 2024-04-30
         self:AddOverlayOption(suddenDeathTalent, suddenDeathBuff);
         self:AddOverlayOption(swordAndBoardTalent, swordAndBoardBuff);
     end

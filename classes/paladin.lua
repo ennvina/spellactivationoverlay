@@ -124,7 +124,7 @@ local function loadOptions(self)
         local artOfWarBuff = 59578;
         local artOfWarTalent = 53486;
 
-        self:AddOverlayOption(infusionOfLightTalent, infusionOfLightBuff2, 0, self:RecentlyUpdated());
+        self:AddOverlayOption(infusionOfLightTalent, infusionOfLightBuff2, 0, self:RecentlyUpdated()); -- Updated 2024-04-30
         self:AddOverlayOption(artOfWarTalent, artOfWarBuff);
 
         self:AddGlowingOption(infusionOfLightTalent, infusionOfLightBuff2, flashOfLight);
