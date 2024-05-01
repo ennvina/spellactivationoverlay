@@ -50,10 +50,10 @@ SAO.defaults = {
                 [16870] = { -- Omen of Clarity
                     [0] = true,
                 },
-                [48518] = { -- Eclipse (Lunar)
+                [48518] = { -- Eclipse (Lunar) (Wrath+)
                     [0] = true,
                 },
-                [48517] = { -- Eclipse (Solar)
+                [48517] = { -- Eclipse (Solar) (Wrath+)
                     [0] = true,
                 },
                 [408255] = { -- Eclipse (Lunar, Season of Discovery)
@@ -68,16 +68,16 @@ SAO.defaults = {
                 [16886] = { -- Nature's Grace (Era - Wrath)
                     [0] = false,
                 },
-                [46833] = { -- Wrath of Elune
+                [46833] = { -- Wrath of Elune (Wrath)
                     [0] = false,
                 },
-                [64823] = { -- Elune's Wrath
+                [64823] = { -- Elune's Wrath (Wrath)
                     [0] = false,
                 },
-                [69369] = { -- Predatory Strikes
+                [69369] = { -- Predatory Strikes (Wrath+)
                     [0] = true,
                 },
-                [60512] = { -- Healing Trance / Soul Preserver
+                [60512] = { -- Healing Trance / Soul Preserver (Wrath)
                     [0] = false,
                 },
                 [414800]= { -- Fury of Stormrage (Season of Discovery)
@@ -85,22 +85,22 @@ SAO.defaults = {
                 },
             },
             glow = {
-                [2912] = { -- Starfire
+                [2912] = { -- Starfire (Season of Discovery, Wrath+)
                     [2912] = true, -- Starfire
                 },
-                [5176] = { -- Wrath
+                [5176] = { -- Wrath (Season of Discovery, Wrath+)
                     [5176] = true, -- Wrath
                 },
                 [93400] = { -- Shooting Stars (Cataclysm)
                     [78674] = true, -- Starsurge
                 },
-                [46833] = { -- Wrath of Elune
+                [46833] = { -- Wrath of Elune (Wrath)
                     [2912] = true, -- Starfire
                 },
-                [64823] = { -- Elune's Wrath
+                [64823] = { -- Elune's Wrath (Wrath)
                     [2912] = true, -- Starfire
                 },
-                [69369] = { -- Predatory Strikes
+                [69369] = { -- Predatory Strikes (Wrath+)
                     [8936]  = false, -- Regrowth
                     [5185]  = true,  -- Healing Touch
                     [50464] = false, -- Nourish
