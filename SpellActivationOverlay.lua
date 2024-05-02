@@ -127,6 +127,9 @@ function SpellActivationOverlay_OnChangeSoundToggle(self)
 				-- Play generic sound if at least one effect is displayed
 				-- No need to spam players with several effects, because currently there is only one type of sound effect
 				overlayList[1].soundHandle = SAO:PlaySpellAlertSound();
+				-- Please note, we might play a sound for a non-pulsing alert (which should not play sounds),
+				-- but that's a minor issue, and we might even argue that it's for the better,
+				-- because it gives feedback that the player actually changed the sound option
 				break;
 			end
 		end
@@ -321,7 +324,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	overlay.texture:SetVertexColor(r / 255, g / 255, b / 255);
 	
 	overlay.animOut:Stop();	--In case we're in the process of animating this out.
-	if useSound then
+	if useSound and (autoPulse or forcePulsePlay) then
 		overlay.soundHandle = SAO:PlaySpellAlertSound();
 	end
 	overlay:Show();

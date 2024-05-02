@@ -10,6 +10,9 @@ New effects:
 Removed effects:
 - Druid's Nature's Grace has been removed (Cataclysm)
 
+Improvements
+- Sounds are not played for minor alerts, such as Mage's Heating Up
+
 Bug Fixes
 - Warlock's Drain Soul spec names in options displayed numbers (Cataclysm)
 
