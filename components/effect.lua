@@ -34,6 +34,11 @@ local Module = "effect"
         spellID = 1111, -- Default is spellID from effect
         useName = true, -- Default is false from Era to Wrath, default is true starting from Cataclysm
         option = true, -- Default is true
+        option = { -- Default is true
+            talentSubText = "no stacks", -- Default is nil
+            spellSubText = nil, -- Default is nil
+            variants = nil, -- Default is nil
+        },
     }, { -- Multiple buttons if needed
         project = SAO.CATA,
         spellID = 2222,
@@ -383,7 +388,14 @@ function SAO:AddEffectOptions()
             if button.option ~= false and (not button.project or self.IsProject(button.project)) then
                 local buff = effect.spellID;
                 local spellID = button.spellID or effect.spellID;
-                self:AddGlowingOption(buttonTalent, buff, spellID);
+                if type(button.option) == 'table' then
+                    local talentSubText = button.option.talentSubText;
+                    local spellSubText = button.option.spellSubText;
+                    local variants = button.option.variants;
+                    self:AddGlowingOption(buttonTalent, buff, spellID, talentSubText, spellSubText, variants);
+                else
+                    self:AddGlowingOption(buttonTalent, buff, spellID);
+                end
             end
         end
     end
