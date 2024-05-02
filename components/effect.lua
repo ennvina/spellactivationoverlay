@@ -10,7 +10,6 @@ local Module = "effect"
     project = SAO.WRATH + SAO.CATA, -- Mandatory
     spellID = 12345, -- Mandatory; usually a buff to track, for counters this is the counter ability
     talent = 49188, -- Talent or rune or nil (for counters)
-
     counter = false, -- Default is false
     combatOnly = false, -- Default is false
 
@@ -66,16 +65,6 @@ local function copyOption(option)
     end
 end
 
-local function createCounter(effect, props)
-    effect.counter = true;
-
-    effect.buttons = {{
-        useName = doesUseName(props and props.useName),
-    }}
-
-    return effect;
-end
-
 local function addAuraOverlay(overlays, overlayConfig, project)
     if type(overlayConfig.stacks) ~= 'nil' and (type(overlayConfig.stacks) ~= 'number' or overlayConfig.stacks < 0) then
         SAO:Error(Module, "Adding Overlay with invalid number of stacks "..tostring(overlayConfig.stacks));
@@ -86,7 +75,7 @@ local function addAuraOverlay(overlays, overlayConfig, project)
     if type(overlayConfig.position) ~= 'string' then
         SAO:Error(Module, "Adding Overlay with invalid position "..tostring(overlayConfig.position));
     end
-    if overlayConfig.option ~= nil and type(overlayConfig.option) ~= 'table' then
+    if overlayConfig.option ~= nil and type(overlayConfig.option) ~= 'boolean' and type(overlayConfig.option) ~= 'table' then
         SAO:Error(Module, "Adding Overlay with invalid option "..tostring(overlayConfig.option));
     end
 
@@ -139,10 +128,7 @@ local function addAuraButton(buttons, buttonConfig, project)
     table.insert(buttons, button);
 end
 
-local function createAura(effect, props)
-    effect.talent = props.talent;
-    effect.combatOnly = effect.combatOnly;
-
+local function importOverlays(effect, props)
     effect.overlays = {}
     if props.overlay then
         addAuraOverlay(effect.overlays, props.overlay);
@@ -160,7 +146,9 @@ local function createAura(effect, props)
             addAuraOverlay(effect.overlays, overlayConfig);
         end
     end
+end
 
+local function importButtons(effect, props)
     effect.buttons = {}
     if props.button then
         addAuraButton(effect.buttons, props.button);
@@ -178,6 +166,50 @@ local function createAura(effect, props)
             addAuraButton(effect.buttons, buttonConfig);
         end
     end
+end
+
+local function createCounter(effect, props)
+    effect.counter = true;
+
+    if type(props) == 'table' then
+        effect.combatOnly = props.combatOnly;
+        effect.buttons = {{
+            useName = doesUseName(props.useName),
+        }}
+    else
+        effect.buttons = {{
+            useName = doesUseName(),
+        }}
+    end
+
+    return effect;
+end
+
+local function createAura(effect, props)
+    if type(props) == 'table' then
+        effect.talent = props.talent;
+        effect.combatOnly = props.combatOnly;
+    else
+        SAO:Error(Module, "Creating an aura for "..tostring(effect.name).." requires a 'props' table");
+    end
+
+    importOverlays(effect, props);
+
+    importButtons(effect, props);
+
+    return effect;
+end
+
+local function createCounterWithOverlay(effect, props)
+    if type(props) ~= 'table' or (not props.overlay and not props.overlays) then
+        SAO:Error(Module, "Creating a counter with overlay for "..tostring(effect.name).." requires a 'props' table that contains either 'overlay' or 'overlays' or both");
+    end
+
+    effect.talent = props.talent or effect.spellID;
+
+    createCounter(effect, props);
+
+    importOverlays(effect, props);
 
     return effect;
 end
@@ -328,7 +360,8 @@ end
 
 function SAO:AddEffectOptions()
     for _, effect in ipairs(allEffects) do
-        local talent = effect.talent;
+        local overlayTalent = effect.talent;
+        local buttonTalent = (not effect.counter) and effect.talent or nil;
 
         for _, overlay in ipairs(effect.overlays or {}) do
             if overlay.option ~= false and (not overlay.project or self.IsProject(overlay.project)) then
@@ -338,10 +371,10 @@ function SAO:AddEffectOptions()
                     local testStacks = type(overlay.option.testStacks) == 'number' and overlay.option.testStacks or setupStacks;
                     local subText = overlay.option.subText;
                     local variants = overlay.option.variants;
-                    self:AddOverlayOption(talent, buff, setupStacks, subText, variants, testStacks);
+                    self:AddOverlayOption(overlayTalent, buff, setupStacks, subText, variants, testStacks);
                 else
                     local setupStacks = overlay.stacks;
-                    self:AddOverlayOption(talent, buff, setupStacks);
+                    self:AddOverlayOption(overlayTalent, buff, setupStacks);
                 end
             end
         end
@@ -350,7 +383,7 @@ function SAO:AddEffectOptions()
             if button.option ~= false and (not button.project or self.IsProject(button.project)) then
                 local buff = effect.spellID;
                 local spellID = button.spellID or effect.spellID;
-                self:AddGlowingOption(talent, buff, spellID);
+                self:AddGlowingOption(buttonTalent, buff, spellID);
             end
         end
     end
@@ -396,6 +429,8 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
         createCounter(effect, props);
     elseif strlower(class) == "aura" then
         createAura(effect, props);
+    elseif strlower(class) == "counter_with_overlay" then
+        createCounterWithOverlay(effect, props);
     else
         self:Error(Module, "Creating effect "..name.." with unknown class "..tostring(class));
         return nil;
