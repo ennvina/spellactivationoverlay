@@ -9,10 +9,12 @@ local killShot = 53351;
 local mongooseBite = 1495;
 
 local function useKillShot()
-    if SAO.IsWrath() or SAO.IsCata() then
-        SAO:RegisterAura("kill_shot", 0, killShot, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(killShot)) });
-        SAO:RegisterCounter("kill_shot");
-    end
+    SAO:CreateEffect(
+        "kill_shot",
+        SAO.WRATH + SAO.CATA,
+        killShot,
+        "counter"
+    );
 end
 
 local function useCounterattack()
@@ -116,9 +118,6 @@ local function loadOptions(self)
         self:AddOverlayOption(lockAndLoadTalentSoD, lockAndLoadBuffSoD);
     end
 
-    if self.IsWrath() or self.IsCata() then
-        self:AddGlowingOption(nil, killShot, killShot);
-    end
     self:AddGlowingOption(nil, counterattack, counterattack);
     if self.IsEra() or self.IsTBC() then
         self:AddGlowingOption(nil, mongooseBite, mongooseBite);
