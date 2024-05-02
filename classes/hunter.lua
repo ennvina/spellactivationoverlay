@@ -66,16 +66,39 @@ local function useFlankingStrike()
 end
 
 local function useCobraStrikes()
-    local cobraStrikes = 425714;
+    local cobraStrikesBuff = 425714;
+    local cobraStrikesTalent = 425713;
     SAO:CreateEffect(
         "cobra_strikes",
         SAO.SOD,
-        cobraStrikes,
+        cobraStrikesBuff,
         "aura",
         {
+            talent = cobraStrikesTalent,
             overlays = {
                 { stacks = 1, texture = "monk_serpent", position = "Left", scale = 0.7, option = false },
                 { stacks = 2, texture = "monk_serpent", position = "Left + Right (Flipped)", scale = 0.7, option = { setupStacks = 0, testStacks = 2 } },
+            },
+        }
+    );
+end
+
+local function useSniperTraining()
+    local sniperTrainingBuff = 415401;
+    local sniperTrainingRune = 415399;
+    SAO:CreateEffect(
+        "sniper_training",
+        SAO.SOD,
+        sniperTrainingBuff,
+        "aura",
+        {
+            talent = sniperTrainingRune,
+            combatOnly = true,
+            button = {
+                stacks = 5,
+                spellID = aimedShot,
+                useName = false,
+                option = { subText = SAO:NbStacks(5) },
             },
         }
     );
@@ -121,27 +144,15 @@ local function registerClass(self)
     -- Improved Steady Shot, formerly Master Marksman
     useImprovedSteadyShot();
 
-    -- Flanking Strike (Season of Discovery)
+    -- Flanking Strike, Cobra Strikes, Sniper Training (Season of Discovery)
     useFlankingStrike();
-
-    -- Cobra Strikes (Season of Discovery)
     useCobraStrikes();
+    -- useSniperTraining();
 
     -- Lock and Load: display something on top if there is at least one charge
     useLockAndLoad();
-
-    -- Sniper Training, 5 stacks only (Season of Discovery)
-    -- SAO:RegisterAura("sniper_training", 5, 415401, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(aimedShot)) }, true);
-end
-
-local function loadOptions(self)
-    -- local sniperTrainingBuff = 415401;
-    -- local sniperTrainingRune = 415399;
-
-    -- self:AddGlowingOption(sniperTrainingRune, sniperTrainingBuff, aimedShot, self:NbStacks(5));
 end
 
 SAO.Class["HUNTER"] = {
     ["Register"] = registerClass,
-    ["LoadOptions"] = loadOptions,
 }
