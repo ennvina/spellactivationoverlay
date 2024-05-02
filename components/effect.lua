@@ -33,7 +33,7 @@ local Module = "effect"
         project = SAO.WRATH, -- Default is project from effect
         spellID = 1111, -- Default is spellID from effect
         useName = true, -- Default is false from Era to Wrath, default is true starting from Cataclysm
-        option = true, -- Default is true
+        stacks = 0, -- Default is nil to apply to all overlays (if any); may target one of the stacks from overlays
         option = { -- Default is true
             talentSubText = "no stacks", -- Default is nil
             spellSubText = nil, -- Default is nil
@@ -121,6 +121,7 @@ local function addOneButton(buttons, buttonConfig, project)
         button.project = project or buttonConfig.project;
         button.spellID = buttonConfig.spellID;
         button.useName = buttonConfig.useName;
+        button.stacks = buttonConfig.stacks;
         button.option = copyOption(buttonConfig.option);
     else
         SAO:Error(Module, "Adding Button with invalid value "..tostring(buttonConfig));
@@ -311,22 +312,62 @@ function SAO:RegisterEffect(effect)
         return;
     end
 
-    local glowIDs = nil
+    -- Buckets of glow IDs, sorted by their number of stacks
+    -- Key = Nb of stacks, Value = List of glow IDs
+    -- Stack index is guided by available overlays; if there are no overlays, index from button stacks instead
+    -- A button that has not defined its stacks will be added to all buckets
+    -- Please note, having no stacks defined is not the same as having stacks == 0
+    local glowIDsByStack = {};
     if type(effect.buttons) == 'table' then
-        glowIDs = {}
+        -- First, identify the list of stacks claimed by overlays
+        local hasExplicitStacks = false
+        for _, overlay in ipairs(effect.overlays or {}) do
+            local stacks = overlay.stacks or 0; -- Overlays with no stacks set is equivalent to explicitly having stacks == 0
+            glowIDsByStack[stacks] = {};
+            hasExplicitStacks = true;
+        end
+        -- If there are no overlays, look for buttons instead
+        if not hasExplicitStacks then
+            for _, button in ipairs(effect.buttons) do
+                local stacks = button.stacks;
+                if stacks then -- Unlike overlays, buttons with no stacks set are *not* equivalent to explicitly having stacks
+                    glowIDsByStack[stacks] = {};
+                    hasExplicitStacks = true;
+                end
+            end
+            if not hasExplicitStacks then
+                -- If there are no explicit stacks in buttons either, the implicit value is 0
+                glowIDsByStack[0] = {};
+            end
+        end
+
+        -- Then for each button, add them to their corresponding stack bucket
         for i, button in ipairs(effect.buttons) do
             if not button.project or self.IsProject(button.project) then
                 local spellID = button.spellID or effect.spellID;
                 local useName = doesUseName(button.useName);
+                local spellToAdd;
                 if useName then
                     local spellName = GetSpellInfo(spellID);
                     if not spellName then
                         SAO:Error(Module, "Registering effect "..effect.name.." for button "..i.." with unknown spellID "..tostring(spellID));
                         return false;
                     end
-                    table.insert(glowIDs, spellName);
+                    spellToAdd = spellName;
                 else
-                    table.insert(glowIDs, spellID);
+                    spellToAdd = spellID;
+                end
+
+                local stacks = button.stacks;
+                if stacks then
+                    if not glowIDsByStack[stacks] then
+                        SAO:Error(Module, "A button of "..tostring(effect.name).." has a 'stacks' number unbeknownst to overlays");
+                    end
+                    table.insert(glowIDsByStack[stacks], spellToAdd);
+                else
+                    for _, glowBucket in pairs(glowIDsByStack) do
+                        table.insert(glowBucket, spellToAdd);
+                    end
                 end
             end
         end
@@ -347,13 +388,22 @@ function SAO:RegisterEffect(effect)
             if overlay.color then r, g, b = overlay.color[1], overlay.color[2], overlay.color[3] end
             local autoPulse = overlay.pulse ~= false;
             local combatOnly = overlay.combatOnly == true or effect.combatOnly == true;
-            self:RegisterAura(name, stacks, spellID, texture, position, scale, r, g, b, autoPulse, glowIDs, combatOnly);
-            glowIDs = nil; -- Immediately clear the glow ID list to avoid re-registering the same list on next overlay
+            self:RegisterAura(name, stacks, spellID, texture, position, scale, r, g, b, autoPulse, glowIDsByStack[stacks], combatOnly);
+            glowIDsByStack[stacks] = nil; -- Immediately clear the glow ID list to avoid re-registering the same list on next overlay with same number of stacks
         end
     end
 
-    if not effect.overlays and effect.counter == true then
-        self:RegisterAura(effect.name, 0, effect.spellID, nil, "", 0, 0, 0, 0, false, glowIDs);
+    if not effect.overlays or #effect.overlays == 0 then
+        -- If there are no overlays, assume each button expects to have a trigger for their number of stacks
+        local combatOnly = effect.combatOnly == true;
+        for stacks, glowBucket in pairs(glowIDsByStack) do
+            self:RegisterAura(effect.name, stacks, effect.spellID, nil, "", 0, 0, 0, 0, false, glowBucket, combatOnly);
+        end
+        glowIDsByStack = {};
+    end
+
+    for stacks, glowBucket in pairs(glowIDsByStack) do
+        SAO:Error(Module, "Effect "..tostring(effect.name).." has defined "..#glowBucket.." button(s) for stacks == "..tostring(stacks)..", but these buttons are unused");
     end
 
     if effect.counter == true then
