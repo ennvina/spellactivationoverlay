@@ -9,6 +9,7 @@ New effects:
 
 Removed effects:
 - Druid's Nature's Grace has been removed (Cataclysm)
+- Hunter's Improved Steady Shot has been removed (Cataclysm)
 
 Improvements
 - Sounds are not played for minor alerts, such as Mage's Heating Up

@@ -40,7 +40,7 @@ local function useImprovedSteadyShot()
     local improvedSteadyShotTalent = 53221;
     SAO:CreateEffect(
         "improved_steady_shot",
-        SAO.WRATH + SAO.CATA,
+        SAO.WRATH,
         improvedSteadyShotBuff,
         "aura",
         {
