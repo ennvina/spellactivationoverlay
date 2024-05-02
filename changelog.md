@@ -16,6 +16,7 @@ Improvements
 - Sounds are not played for minor alerts, such as Mage's Heating Up
 
 Bug Fixes
+- Spell Alert during Toggle Test had incorrect texture orientation (Cataclysm)
 - Mage's Fringers of Frost had incorrect texture orientation (Cataclysm)
 - Mage's Frozen debuff had incorrect texture orientation (Cataclysm)
 - Mage's Brain Freeze had incorrect texture orientation (Cataclysm)
