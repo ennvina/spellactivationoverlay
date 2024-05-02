@@ -1,4 +1,5 @@
 local AddonName, SAO = ...
+local Module = "aura"
 
 --[[
     Lists of auras that must be tracked
@@ -28,6 +29,7 @@ function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale
     local registeredSpellID = spellID;
     if self.IsEra() and not self:IsFakeSpell(spellID) then
         registeredSpellID = GetSpellInfo(spellID);
+        SAO:Debug(Module, "Skipping aura registration of "..tostring(name).." because os unknown spell "..tostring(spellID));
         if not registeredSpellID then return end
     end
 
