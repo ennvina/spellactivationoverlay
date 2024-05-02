@@ -15,6 +15,8 @@ local Module = "effect"
     combatOnly = false, -- Default is false
 
     overlays = {{
+        stacks = 0, -- Default is 0
+        spellID = nil, -- Default is spellID from effect
         texture = "genericarc_05", -- Mandatory
         position = "Top", -- Mandatory
         scale = 1, -- Default is 1
@@ -58,6 +60,9 @@ local function createCounter(effect, props)
 end
 
 local function addAuraOverlay(overlays, overlayConfig, project)
+    if type(overlayConfig.stacks) ~= 'nil' and (type(overlayConfig.stacks) ~= 'number' or overlayConfig.stacks < 0) then
+        SAO:Error(Module, "Adding Overlay with invalid number of stacks "..tostring(overlayConfig.stacks));
+    end
     if type(overlayConfig.texture) ~= 'string' then
         SAO:Error(Module, "Adding Overlay with invalid texture "..tostring(overlayConfig.texture));
     end
@@ -66,10 +71,11 @@ local function addAuraOverlay(overlays, overlayConfig, project)
     end
 
     local overlay = {
-        project = project or overlayConfig.project;
-        texture = overlayConfig.texture;
-        position = overlayConfig.position;
-        scale = overlayConfig.scale;
+        project = project or overlayConfig.project,
+        stacks = overlayConfig.stacks,
+        texture = overlayConfig.texture,
+        position = overlayConfig.position,
+        scale = overlayConfig.scale,
         color = overlayConfig.color and { overlayConfig.color[1], overlayConfig.color[2], overlayConfig.color[3] } or nil,
         pulse = overlayConfig.pulse,
         option = overlayConfig.pulse,
@@ -200,6 +206,10 @@ local function checkEffect(effect)
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid spellID "..tostring(overlay.spellID));
             return false;
         end
+        if type(overlay.stacks) ~= 'nil' and (type(overlay.stacks) ~= 'number' or overlay.stacks < 0) then
+            SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid number of stacks "..tostring(overlay.stacks));
+            return false;
+        end
         if type(overlay.texture) ~= 'string' then -- @todo check the texture even exists
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid texture name "..tostring(overlay.texture));
             return false;
@@ -266,6 +276,9 @@ function SAO:RegisterEffect(effect)
         if not overlay.project or self.IsProject(overlay.project) then
             local name = effect.name;
             local stacks = overlay.stacks or 0;
+            if stacks > 0 then
+                name = name.." "..stacks;
+            end
             local spellID = overlay.spellID or effect.spellID;
             local texture = overlay.texture;
             local position = overlay.position;
