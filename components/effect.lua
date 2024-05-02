@@ -70,7 +70,7 @@ local function copyOption(option)
     end
 end
 
-local function addAuraOverlay(overlays, overlayConfig, project)
+local function addOneOverlay(overlays, overlayConfig, project)
     if type(overlayConfig.stacks) ~= 'nil' and (type(overlayConfig.stacks) ~= 'number' or overlayConfig.stacks < 0) then
         SAO:Error(Module, "Adding Overlay with invalid number of stacks "..tostring(overlayConfig.stacks));
     end
@@ -102,7 +102,7 @@ local function addAuraOverlay(overlays, overlayConfig, project)
     table.insert(overlays, overlay);
 end
 
-local function addAuraButton(buttons, buttonConfig, project)
+local function addOneButton(buttons, buttonConfig, project)
     if type(buttonConfig) == 'table' then
         if buttonConfig.spellID ~= nil and type(buttonConfig.spellID) ~= 'number' then
             SAO:Error(Module, "Adding Button with invalid spellID "..tostring(buttonConfig.spellID));
@@ -136,19 +136,19 @@ end
 local function importOverlays(effect, props)
     effect.overlays = {}
     if props.overlay then
-        addAuraOverlay(effect.overlays, props.overlay);
+        addOneOverlay(effect.overlays, props.overlay);
     end
     for key, overlayConfig in pairs(props.overlays or {}) do
         if type(key) == 'number' and key >= SAO.ERA then
             if type(overlayConfig) == 'table' and overlayConfig[1] then
                 for _, subOverlayConfig in ipairs(overlayConfig) do
-                    addAuraOverlay(effect.overlays, subOverlayConfig, key);
+                    addOneOverlay(effect.overlays, subOverlayConfig, key);
                 end
             else
-                addAuraOverlay(effect.overlays, overlayConfig, key);
+                addOneOverlay(effect.overlays, overlayConfig, key);
             end
         else
-            addAuraOverlay(effect.overlays, overlayConfig);
+            addOneOverlay(effect.overlays, overlayConfig);
         end
     end
 end
@@ -156,19 +156,19 @@ end
 local function importButtons(effect, props)
     effect.buttons = {}
     if props.button then
-        addAuraButton(effect.buttons, props.button);
+        addOneButton(effect.buttons, props.button);
     end
     for key, buttonConfig in pairs(props.buttons or {}) do
         if type(key) == 'number' and key >= SAO.ERA then
             if type(buttonConfig) == 'table' and buttonConfig[1] then
                 for _, subButtonConfig in ipairs(buttonConfig) do
-                    addAuraButton(effect.buttons, subButtonConfig, key);
+                    addOneButton(effect.buttons, subButtonConfig, key);
                 end
             else
-                addAuraButton(effect.buttons, buttonConfig, key);
+                addOneButton(effect.buttons, buttonConfig, key);
             end
         else
-            addAuraButton(effect.buttons, buttonConfig);
+            addOneButton(effect.buttons, buttonConfig);
         end
     end
 end
