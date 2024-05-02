@@ -51,7 +51,7 @@ local function createCounter(effect, props)
     effect.counter = true;
 
     effect.buttons = {{
-        useName = doesUseName(props.useName),
+        useName = doesUseName(props and props.useName),
     }}
 
     return effect;
