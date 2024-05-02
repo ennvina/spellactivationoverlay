@@ -14,6 +14,9 @@ Improvements
 - Sounds are not played for minor alerts, such as Mage's Heating Up
 
 Bug Fixes
+- Mage's Fringers of Frost had incorrect texture orientation (Cataclysm)
+- Mage's Frozen debuff had incorrect texture orientation (Cataclysm)
+- Mage's Brain Freeze had incorrect texture orientation (Cataclysm)
 - Warlock's Drain Soul spec names in options displayed numbers (Cataclysm)
 
 #### v1.3.2 (2024-04-30)
