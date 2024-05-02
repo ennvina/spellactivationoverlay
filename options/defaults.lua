@@ -123,7 +123,7 @@ SAO.defaults = {
         },
         ["HUNTER"] = {
             alert = {
-                [53220] = { -- Improved Steady Shot (Wrath+)
+                [53220] = { -- Improved Steady Shot (Wrath)
                     [0] = true,
                 },
                 [56453] = { -- Lock and Load (Wrath+)
@@ -152,7 +152,7 @@ SAO.defaults = {
                     [53209] = true, --  Chimera Shot
                 },
                 [56453] = { -- Lock and Load (Wrath+)
-                    [3044]  = true, --  Arcane Shot
+                    [3044]  = true, --  Arcane Shot (not for Cata)
                     [53301] = true, --  Explosive Shot
                 },
                 [1495] = { -- Mongoose Bite (Era, TBC)

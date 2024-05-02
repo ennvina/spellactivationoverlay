@@ -85,8 +85,9 @@ local function useLockAndLoad()
                 },
             },
             buttons = {
-                -- [SAO.SOD] = {}, -- Don't glow buttons for Season of Discovery, there would be too many to suggest
-                [SAO.WRATH+SAO.CATA] = { arcaneShot, explosiveShot },
+                [SAO.SOD] = nil, -- Don't glow buttons for Season of Discovery, there would be too many to suggest
+                [SAO.WRATH] = { arcaneShot, explosiveShot },
+                [SAO.CATA] = explosiveShot,
             },
         }
     );

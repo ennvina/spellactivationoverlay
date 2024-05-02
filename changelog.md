@@ -9,6 +9,7 @@ New effects:
 
 Removed effects:
 - Druid's Nature's Grace has been removed (Cataclysm)
+- Hunter's Arcane Shot no longer glows during Lock and Load (Cataclysm)
 - Hunter's Improved Steady Shot has been removed (Cataclysm)
 
 Improvements
