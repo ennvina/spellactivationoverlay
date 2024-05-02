@@ -118,7 +118,7 @@ local function addOneButton(buttons, buttonConfig, project)
         button.project = project;
         button.spellID = buttonConfig;
     elseif type(buttonConfig) == 'table' then
-        button.project = project or buttonConfig.project;
+        button.project = buttonConfig.project or project;
         button.spellID = buttonConfig.spellID;
         button.useName = buttonConfig.useName;
         button.stacks = buttonConfig.stacks;
