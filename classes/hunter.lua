@@ -27,12 +27,12 @@ local function useCounterattack()
 end
 
 local function useMongooseBite()
-    if SAO.IsEra() or SAO.IsTBC() then
-        -- Mongoose Bite, before Wrath because there is no longer a proc since Wrath
-        local mongooseBite = 1495;
-        SAO:RegisterAura("mongoose_bite", 0, mongooseBite, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(mongooseBite)) });
-        SAO:RegisterCounter("mongoose_bite");
-    end
+    SAO:CreateEffect(
+        "mongoose_bite",
+        SAO.ERA + SAO.TBC,
+        mongooseBite,
+        "counter"
+    );
 end
 
 local function useImprovedSteadyShot()
@@ -122,9 +122,6 @@ local function loadOptions(self)
         self:AddOverlayOption(lockAndLoadTalentSoD, lockAndLoadBuffSoD);
     end
 
-    if self.IsEra() or self.IsTBC() then
-        self:AddGlowingOption(nil, mongooseBite, mongooseBite);
-    end
     if self.IsSoD() then
         self:AddGlowingOption(nil, flankingStrike, flankingStrike);
         -- self:AddGlowingOption(sniperTrainingRune, sniperTrainingBuff, aimedShot, self:NbStacks(5));
