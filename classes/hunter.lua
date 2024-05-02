@@ -36,11 +36,19 @@ local function useMongooseBite()
 end
 
 local function useImprovedSteadyShot()
-    local issGlowNames = { (GetSpellInfo(aimedShot)), (GetSpellInfo(arcaneShot)), (GetSpellInfo(chimeraShot)) };
-    if SAO.IsWrath() or SAO.IsCata() then
-        -- Improved Steady Shot, formerly Master Marksman
-        SAO:RegisterAura("improved_steady_shot", 0, 53220, "master_marksman", "Top", 1, 255, 255, 255, true, issGlowNames);
-    end
+    local improvedSteadyShotBuff = 53220;
+    local improvedSteadyShotTalent = 53221;
+    SAO:CreateEffect(
+        "improved_steady_shot",
+        SAO.WRATH + SAO.CATA,
+        improvedSteadyShotBuff,
+        "aura",
+        {
+            talent = improvedSteadyShotTalent,
+            overlay = { texture = "master_marksman", position = "Top" },
+            buttons = { aimedShot, arcaneShot, chimeraShot },
+        }
+    );
 end
 
 local function useFlankingStrike()
@@ -99,9 +107,6 @@ local function registerClass(self)
 end
 
 local function loadOptions(self)
-    local improvedSteadyShotBuff = 53220;
-    local improvedSteadyShotTalent = 53221;
-
     local lockAndLoadBuff = 56453;
     local lockAndLoadTalent = 56342;
     local lockAndLoadBuffSoD = 415414;
@@ -113,7 +118,6 @@ local function loadOptions(self)
     -- local sniperTrainingRune = 415399;
 
     if self.IsWrath() or self.IsCata() then
-        self:AddOverlayOption(improvedSteadyShotTalent, improvedSteadyShotBuff);
         self:AddOverlayOption(lockAndLoadTalent, lockAndLoadBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
     end
     if self.IsSoD() then
@@ -127,9 +131,6 @@ local function loadOptions(self)
         -- self:AddGlowingOption(sniperTrainingRune, sniperTrainingBuff, aimedShot, self:NbStacks(5));
     end
     if self.IsWrath() or self.IsCata() then
-        self:AddGlowingOption(improvedSteadyShotTalent, improvedSteadyShotBuff, aimedShot);
-        self:AddGlowingOption(improvedSteadyShotTalent, improvedSteadyShotBuff, arcaneShot);
-        self:AddGlowingOption(improvedSteadyShotTalent, improvedSteadyShotBuff, chimeraShot);
         self:AddGlowingOption(lockAndLoadTalent, lockAndLoadBuff, arcaneShot);
         self:AddGlowingOption(lockAndLoadTalent, lockAndLoadBuff, explosiveShot);
     end
