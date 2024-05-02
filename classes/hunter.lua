@@ -5,6 +5,7 @@ local arcaneShot = 3044;
 local chimeraShot = 53209;
 local counterattack = 19306;
 local explosiveShot = 53301;
+local flankingStrike = 415320;
 local killShot = 53351;
 local mongooseBite = 1495;
 
@@ -52,11 +53,16 @@ local function useImprovedSteadyShot()
 end
 
 local function useFlankingStrike()
-    if SAO.IsSoD() then
-        local flankingStrike = 415320;
-        SAO:RegisterAura("flanking_strike", 0, flankingStrike, "tooth_and_claw", "Left + Right (Flipped)", 1, 255, 255, 255, true, { flankingStrike }, true);
-        SAO:RegisterCounter("flanking_strike");
-    end
+    SAO:CreateEffect(
+        "flanking_strike",
+        SAO.SOD,
+        flankingStrike,
+        "counter_with_overlay",
+        {
+            combatOnly = true,
+            overlay = { texture = "tooth_and_claw", position = "Left + Right (Flipped)" },
+        }
+    );
 end
 
 local function useCobraStrikes()
@@ -129,18 +135,10 @@ local function registerClass(self)
 end
 
 local function loadOptions(self)
-    local flankingStrike = 415320;
     -- local sniperTrainingBuff = 415401;
     -- local sniperTrainingRune = 415399;
 
-    if self.IsSoD() then
-        self:AddOverlayOption(flankingStrike, flankingStrike);
-    end
-
-    if self.IsSoD() then
-        self:AddGlowingOption(nil, flankingStrike, flankingStrike);
-        -- self:AddGlowingOption(sniperTrainingRune, sniperTrainingBuff, aimedShot, self:NbStacks(5));
-    end
+    -- self:AddGlowingOption(sniperTrainingRune, sniperTrainingBuff, aimedShot, self:NbStacks(5));
 end
 
 SAO.Class["HUNTER"] = {
