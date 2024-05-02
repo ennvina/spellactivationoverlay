@@ -18,8 +18,12 @@ local function useKillShot()
 end
 
 local function useCounterattack()
-    SAO:RegisterAura("counterattack", 0, counterattack, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(counterattack)) });
-    SAO:RegisterCounter("counterattack"); -- Must match name from above call
+    SAO:CreateEffect(
+        "counterattack",
+        SAO.ALL_PROJECTS,
+        counterattack,
+        "counter"
+    );
 end
 
 local function useMongooseBite()
@@ -118,7 +122,6 @@ local function loadOptions(self)
         self:AddOverlayOption(lockAndLoadTalentSoD, lockAndLoadBuffSoD);
     end
 
-    self:AddGlowingOption(nil, counterattack, counterattack);
     if self.IsEra() or self.IsTBC() then
         self:AddGlowingOption(nil, mongooseBite, mongooseBite);
     end
