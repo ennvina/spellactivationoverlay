@@ -60,11 +60,19 @@ local function useFlankingStrike()
 end
 
 local function useCobraStrikes()
-    if SAO.IsSoD() then
-        local cobraStrikes = 425714;
-        SAO:RegisterAura("cobra_strikes_1", 1, cobraStrikes, "monk_serpent", "Left", 0.7, 255, 255, 255, true);
-        SAO:RegisterAura("cobra_strikes_2", 2, cobraStrikes, "monk_serpent", "Left + Right (Flipped)", 0.7, 255, 255, 255, true);
-    end
+    local cobraStrikes = 425714;
+    SAO:CreateEffect(
+        "cobra_strikes",
+        SAO.SOD,
+        cobraStrikes,
+        "aura",
+        {
+            overlays = {
+                { stacks = 1, texture = "monk_serpent", position = "Left", scale = 0.7, option = false },
+                { stacks = 2, texture = "monk_serpent", position = "Left + Right (Flipped)", scale = 0.7, option = { setupStacks = 0, testStacks = 2 } },
+            },
+        }
+    );
 end
 
 local function useLockAndLoad()
@@ -122,13 +130,11 @@ end
 
 local function loadOptions(self)
     local flankingStrike = 415320;
-    local cobraStrikes = 425714;
     -- local sniperTrainingBuff = 415401;
     -- local sniperTrainingRune = 415399;
 
     if self.IsSoD() then
         self:AddOverlayOption(flankingStrike, flankingStrike);
-        self:AddOverlayOption(cobraStrikes, cobraStrikes, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
     end
 
     if self.IsSoD() then
