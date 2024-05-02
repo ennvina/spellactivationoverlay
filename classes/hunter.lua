@@ -68,15 +68,28 @@ local function useCobraStrikes()
 end
 
 local function useLockAndLoad()
-    local lalGlowNames = { (GetSpellInfo(arcaneShot)), (GetSpellInfo(explosiveShot)) };
-    if SAO.IsWrath() or SAO.IsCata() then
-        SAO:RegisterAura("lock_and_load_1", 1, 56453, "lock_and_load", "Top", 1, 255, 255, 255, true, lalGlowNames);
-        SAO:RegisterAura("lock_and_load_2", 2, 56453, "lock_and_load", "Top", 1, 255, 255, 255, true, lalGlowNames);
-    end
-    if SAO.IsSoD() then
-        -- Unlike Wrath, we do not suggest to glow buttons, because there are too many (all 'shots')
-        SAO:RegisterAura("lock_and_load", 0, 415414, "lock_and_load", "Top", 1, 255, 255, 255, true);
-    end
+    local lockAndLoadBuff = SAO.IsSoD() and 415414 or 56453;
+    local lockAndLoadTalent = SAO.IsSoD() and 415413 or 56342;
+    SAO:CreateEffect(
+        "lock_and_load",
+        SAO.SOD + SAO.WRATH + SAO.CATA,
+        lockAndLoadBuff,
+        "aura",
+        {
+            talent = lockAndLoadTalent,
+            overlays = {
+                [SAO.SOD] = { texture = "lock_and_load", position = "Top" },
+                [SAO.WRATH+SAO.CATA] = {
+                    { stacks = 1, texture = "lock_and_load", position = "Top", option = false },
+                    { stacks = 2, texture = "lock_and_load", position = "Top", option = { setupStacks = 0, testStacks = 2 } },
+                },
+            },
+            buttons = {
+                -- [SAO.SOD] = {}, -- Don't glow buttons for Season of Discovery, there would be too many to suggest
+                [SAO.WRATH+SAO.CATA] = { arcaneShot, explosiveShot },
+            },
+        }
+    );
 end
 
 local function registerClass(self)
@@ -107,32 +120,19 @@ local function registerClass(self)
 end
 
 local function loadOptions(self)
-    local lockAndLoadBuff = 56453;
-    local lockAndLoadTalent = 56342;
-    local lockAndLoadBuffSoD = 415414;
-    local lockAndLoadTalentSoD = 415413;
-
     local flankingStrike = 415320;
     local cobraStrikes = 425714;
     -- local sniperTrainingBuff = 415401;
     -- local sniperTrainingRune = 415399;
 
-    if self.IsWrath() or self.IsCata() then
-        self:AddOverlayOption(lockAndLoadTalent, lockAndLoadBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
-    end
     if self.IsSoD() then
         self:AddOverlayOption(flankingStrike, flankingStrike);
         self:AddOverlayOption(cobraStrikes, cobraStrikes, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
-        self:AddOverlayOption(lockAndLoadTalentSoD, lockAndLoadBuffSoD);
     end
 
     if self.IsSoD() then
         self:AddGlowingOption(nil, flankingStrike, flankingStrike);
         -- self:AddGlowingOption(sniperTrainingRune, sniperTrainingBuff, aimedShot, self:NbStacks(5));
-    end
-    if self.IsWrath() or self.IsCata() then
-        self:AddGlowingOption(lockAndLoadTalent, lockAndLoadBuff, arcaneShot);
-        self:AddGlowingOption(lockAndLoadTalent, lockAndLoadBuff, explosiveShot);
     end
 end
 
