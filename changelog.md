@@ -12,8 +12,16 @@ Removed effects:
 - Hunter's Arcane Shot no longer glows during Lock and Load (Cataclysm)
 - Hunter's Improved Steady Shot has been removed (Cataclysm)
 
-Improvements
-- Sounds are not played for minor alerts, such as Mage's Heating Up
+Sounds are not played for minor alerts, including:
+- Mage's Clearcasting
+- Mage's Frozen debuff
+- Mage's Heating Up (Season of Discovery, Wrath, Cataclysm)
+- Mage's Arcane Blast at 1-3 stacks (Season of Discovery)
+- Paladin's The Art of War with only 1 talent point (Wrath)
+- Priest's Serendipity at 1-2 stacks (Season of Discovery, TBC, Wrath)
+- Priest's Mind Spike at 1-2 stacks (Season of Discovery)
+- Shaman's Maelstrom Weapon at 1-4 stacks (Season of Discovery, Wrath)
+- Shaman's Elemental Focus at 7-9 Lightning Shield stacks (Season of Discovery)
 
 Bug Fixes
 - Spell Alert during Toggle Test had incorrect texture orientation (Cataclysm)
