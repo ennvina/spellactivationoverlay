@@ -5,9 +5,12 @@
 New effects:
 - New SAO: Druid's Fury of Stormrage (Cataclysm)
 - New SAO: Hunter's Master Marksman (Cataclysm)
+- New SAO: Priest's Serendipity (Cataclysm)
 - New GAB: Druid's Starfire, during Fury of Stormrage (Cataclysm)
 - New GAB: Hunter's Aimed Shot!, during Master Marksman (Cataclysm)
 - New GAB: Warlock's Drain Soul, when the enemy has low HP (Cataclysm)
+- New SAO: Greater Heal, during Priest's Serendipity (Cataclysm)
+- New SAO: Prayer of Healing, during Priest's Serendipity (Cataclysm)
 
 Removed effects:
 - Druid's Nature's Grace has been removed (Cataclysm)
@@ -26,6 +29,7 @@ Sounds are not played for minor alerts, including:
 - Shaman's Elemental Focus at 7-9 Lightning Shield stacks (Season of Discovery)
 
 Bug Fixes
+- Spell Alerts could sometimes not pulse when previewing in the options panel
 - Spell Alert during Toggle Test had incorrect texture orientation (Cataclysm)
 - Mage's Fringers of Frost had incorrect texture orientation (Cataclysm)
 - Mage's Frozen debuff had incorrect texture orientation (Cataclysm)

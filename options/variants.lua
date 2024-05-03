@@ -6,10 +6,10 @@ function SAO.CreateTextureVariants(self, auraID, stacks, values)
         return self.TexName[self:GetOverlayOptions(auraID)[stacks]];
     end
 
-    local transformer = function(cb, sb, texture, positions, scale, r, g, b, autoPulse, glowIDs)
+    local transformer = function(cb, sb, texture, positions, scale, r, g, b, autoPulse, forcePulse, endTime, combatOnly)
         if (cb:GetChecked()) then
             -- Checkbox is checked, preview will work well
-            return texture, positions, scale, r, g, b, autoPulse, glowIDs;
+            return texture, positions, scale, r, g, b, autoPulse, forcePulse, endTime, combatOnly;
         else
             -- Checkbox is not checked, must force texture otherwise preview will not display anything
             local sbText = sb and UIDropDownMenu_GetText(sb);
@@ -19,7 +19,7 @@ function SAO.CreateTextureVariants(self, auraID, stacks, values)
                     break
                 end
             end
-            return texture, positions, scale, r, g, b, autoPulse, glowIDs;
+            return texture, positions, scale, r, g, b, autoPulse, forcePulse, endTime, combatOnly;
         end
     end
 
