@@ -59,6 +59,7 @@ local function useFlankingStrike()
         flankingStrike,
         "counter_with_overlay",
         {
+            useName = false,
             combatOnly = true,
             overlay = { texture = "tooth_and_claw", position = "Left + Right (Flipped)" },
         }
