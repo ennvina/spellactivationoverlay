@@ -16,6 +16,7 @@ Removed effects:
 - Druid's Nature's Grace has been removed (Cataclysm)
 - Hunter's Arcane Shot no longer glows during Lock and Load (Cataclysm)
 - Hunter's Improved Steady Shot has been removed (Cataclysm)
+- Rogue's Riposte has been removed (Cataclysm)
 
 Sounds are not played for minor alerts, including:
 - Mage's Clearcasting

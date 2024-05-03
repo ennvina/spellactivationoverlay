@@ -390,12 +390,12 @@ SAO.defaults = {
         },
         ["ROGUE"] = {
             alert = {
-                [14251] = { -- Riposte
+                [14251] = { -- Riposte (Era - Wrath)
                     [0] = "cd:off",
                 },
             },
             glow = {
-                [14251] = { -- Riposte
+                [14251] = { -- Riposte (Era - Wrath)
                     [14251] = "cd:off", -- Riposte
                 },
             },
