@@ -29,7 +29,7 @@ local function registerClass(self)
             self:RegisterAura("surge_of_light", 0, surgeOfLightBuff, "surge_of_light", "Left + Right (Flipped)", 1, 255, 255, 255, true, { flashHeal });
         end
 
-        if self.IsTBC() or self.IsWrath() then
+        if self.IsWrath() then
             for talentPoints=1,3 do
                 local auraName = ({ "serendipity_low", "serendipity_medium", "serendipity_high" })[talentPoints];
                 local auraBuff = ({ serendipityBuff1, serendipityBuff2, serendipityBuff3 })[talentPoints];
