@@ -114,7 +114,7 @@ local function loadOptions(self)
             self:AddGlowingOption(surgeOfLightTalent, surgeOfLightBuff, smite);
         end
         if self.IsWrath() or self.IsCata() then
-            self:AddGlowingOption(surgeOfLightTalent, surgeOfLightBuff, flashHeal);
+            self:AddGlowingOption(surgeOfLightTalent, surgeOfLightBuff, flashHeal); -- Note to Effect morph: must useName, because of spell 101062
         end
         if self.IsWrath() then
             self:AddGlowingOption(serendipityTalent, serendipityBuff3, greaterHeal, threeStacks);

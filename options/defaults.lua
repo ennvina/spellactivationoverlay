@@ -359,7 +359,7 @@ SAO.defaults = {
                     [2061] = true, -- Flash Heal (not for TBC)
                 },
                 [88688] = { -- Surge of Light (Cataclysm)
-                    [2061] = true, -- Flash Heal
+                    [2061] = true, -- Flash Heal, also 101062: must use name
                 },
                 [63734] = { -- Serendipity 3/3 (Wrath)
                     [2060] = true, -- Greater Heal
