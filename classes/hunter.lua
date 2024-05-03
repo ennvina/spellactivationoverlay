@@ -1,6 +1,7 @@
 local AddonName, SAO = ...
 
 local aimedShot = 19434;
+local aimedShotBang = 82928;
 local arcaneShot = 3044;
 local chimeraShot = 53209;
 local counterattack = 19306;
@@ -48,6 +49,23 @@ local function useImprovedSteadyShot()
             talent = improvedSteadyShotTalent,
             overlay = { texture = "master_marksman", position = "Top" },
             buttons = { aimedShot, arcaneShot, chimeraShot },
+        }
+    );
+end
+
+local function useMasterMarksman()
+    -- local masterMarksmanBuff1to4 = 82925;
+    local masterMarksmanBuff5 = 82926;
+    local masterMarksmanTalent = 34485;
+    SAO:CreateEffect(
+        "master_marksman",
+        SAO.CATA,
+        masterMarksmanBuff5,
+        "aura",
+        {
+            talent = masterMarksmanTalent,
+            overlay = { stacks = 5, texture = "master_marksman", position = "Top" },
+            button = aimedShotBang,
         }
     );
 end
@@ -143,6 +161,9 @@ local function registerClass(self)
 
     -- Improved Steady Shot, formerly Master Marksman
     useImprovedSteadyShot();
+
+    -- Master Marksman, from Cataclysm
+    useMasterMarksman();
 
     -- Flanking Strike, Cobra Strikes, Sniper Training (Season of Discovery)
     useFlankingStrike();

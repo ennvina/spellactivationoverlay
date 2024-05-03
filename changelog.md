@@ -4,7 +4,9 @@
 
 New effects:
 - New SAO: Druid's Fury of Stormrage (Cataclysm)
+- New SAO: Hunter's Master Marksman (Cataclysm)
 - New GAB: Druid's Starfire, during Fury of Stormrage (Cataclysm)
+- New GAB: Hunter's Aimed Shot!, during Master Marksman (Cataclysm)
 - New GAB: Warlock's Drain Soul, when the enemy has low HP (Cataclysm)
 
 Removed effects:

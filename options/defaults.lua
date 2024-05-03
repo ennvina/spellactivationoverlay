@@ -129,6 +129,9 @@ SAO.defaults = {
                 [56453] = { -- Lock and Load (Wrath+)
                     [0] = true, -- any stacks
                 },
+                [82926] = { -- Master Marksman (Cataclysm)
+                    [0] = true,
+                },
                 [415414]= { -- Lock and Load (Season of Discovery)
                     [0] = true, -- any stacks
                 },
@@ -154,6 +157,9 @@ SAO.defaults = {
                 [56453] = { -- Lock and Load (Wrath+)
                     [3044]  = true, --  Arcane Shot (not for Cata)
                     [53301] = true, --  Explosive Shot
+                },
+                [82926] = { -- Master Marksman (Cataclysm)
+                    [82928] = true, -- Aimed Shot!
                 },
                 [1495] = { -- Mongoose Bite (Era, TBC)
                     [1495]  = true, -- Mongoose Bite
