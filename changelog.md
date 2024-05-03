@@ -4,11 +4,33 @@
 
 New effects:
 - New SAO: Druid's Fury of Stormrage (Cataclysm)
+- New SAO: Hunter's Master Marksman (Cataclysm)
 - New GAB: Druid's Starfire, during Fury of Stormrage (Cataclysm)
-- New GAB: Warlock's Drain Soul when the enemy has low HP (Cataclysm)
+- New GAB: Hunter's Aimed Shot!, during Master Marksman (Cataclysm)
+- New GAB: Warlock's Drain Soul, when the enemy has low HP (Cataclysm)
 
 Removed effects:
 - Druid's Nature's Grace has been removed (Cataclysm)
+- Hunter's Arcane Shot no longer glows during Lock and Load (Cataclysm)
+- Hunter's Improved Steady Shot has been removed (Cataclysm)
+
+Sounds are not played for minor alerts, including:
+- Mage's Clearcasting
+- Mage's Frozen debuff
+- Mage's Heating Up (Season of Discovery, Wrath, Cataclysm)
+- Mage's Arcane Blast at 1-3 stacks (Season of Discovery)
+- Paladin's The Art of War with only 1 talent point (Wrath)
+- Priest's Serendipity at 1-2 stacks (Season of Discovery, TBC, Wrath)
+- Priest's Mind Spike at 1-2 stacks (Season of Discovery)
+- Shaman's Maelstrom Weapon at 1-4 stacks (Season of Discovery, Wrath)
+- Shaman's Elemental Focus at 7-9 Lightning Shield stacks (Season of Discovery)
+
+Bug Fixes
+- Spell Alert during Toggle Test had incorrect texture orientation (Cataclysm)
+- Mage's Fringers of Frost had incorrect texture orientation (Cataclysm)
+- Mage's Frozen debuff had incorrect texture orientation (Cataclysm)
+- Mage's Brain Freeze had incorrect texture orientation (Cataclysm)
+- Warlock's Drain Soul spec names in options displayed numbers (Cataclysm)
 
 #### v1.3.2 (2024-04-30)
 
