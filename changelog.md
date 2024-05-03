@@ -26,6 +26,7 @@ Sounds are not played for minor alerts, including:
 - Shaman's Elemental Focus at 7-9 Lightning Shield stacks (Season of Discovery)
 
 Bug Fixes
+- Spell Alerts could sometimes not pulse when previewing in the options panel
 - Spell Alert during Toggle Test had incorrect texture orientation (Cataclysm)
 - Mage's Fringers of Frost had incorrect texture orientation (Cataclysm)
 - Mage's Frozen debuff had incorrect texture orientation (Cataclysm)
