@@ -127,6 +127,11 @@ local RiposteHandler = {
 local function customLogin(self, ...)
     -- Initialization on PLAYER_LOGIN event because the talent tree may not be available before
 
+    if self.IsCata() then
+        -- Riposte not available for Cataclysm
+        return;
+    end
+
     local riposteSpellID = 14251;
     local riposteSpellName = GetSpellInfo(riposteSpellID);
 
@@ -155,8 +160,10 @@ local function registerClass(self)
 
     -- The aura must be registered as soon as possible, because it registers the glowID before parsing action buttons
     -- The counter must be registered as late as possible, because it requires the talent tree, which is not available now
-    local riposteSpellID = 14251;
-    self:RegisterAura("riposte", 0, riposteSpellID, "bandits_guile", "Top (CW)", 1, 255, 255, 255, true, { riposteSpellID });
+    if not self.IsCata() then
+        local riposteSpellID = 14251;
+        self:RegisterAura("riposte", 0, riposteSpellID, "bandits_guile", "Top (CW)", 1, 255, 255, 255, true, { riposteSpellID });
+    end
 end
 
 local function loadOptions(self)

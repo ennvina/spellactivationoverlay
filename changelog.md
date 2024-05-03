@@ -16,8 +16,9 @@ Removed effects:
 - Druid's Nature's Grace has been removed (Cataclysm)
 - Hunter's Arcane Shot no longer glows during Lock and Load (Cataclysm)
 - Hunter's Improved Steady Shot has been removed (Cataclysm)
+- Rogue's Riposte has been removed (Cataclysm)
 
-Sounds are not played for minor alerts, including:
+Sounds are no longer played for minor alerts, including:
 - Mage's Clearcasting
 - Mage's Frozen debuff
 - Mage's Heating Up (Season of Discovery, Wrath, Cataclysm)
@@ -27,6 +28,10 @@ Sounds are not played for minor alerts, including:
 - Priest's Mind Spike at 1-2 stacks (Season of Discovery)
 - Shaman's Maelstrom Weapon at 1-4 stacks (Season of Discovery, Wrath)
 - Shaman's Elemental Focus at 7-9 Lightning Shield stacks (Season of Discovery)
+
+UI Improvements
+- Classes with no Spell Alerts now have a "None" text in their options panel
+- Classes with no Glowing Buttons now have a "None" text in their options panel
 
 Bug Fixes
 - Spell Alerts could sometimes not pulse when previewing in the options panel
