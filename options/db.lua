@@ -43,7 +43,7 @@ end
 local function migrateTo131(db)
 
     -- Cataclysm introduced Pyroblast!, a variant from Pyroblast (notice the bang '!' character in the former spell name)
-    -- We copy options from Pyroblast to Pyroblast!, because we assume mages want to keep the same option$
+    -- We copy options from Pyroblast to Pyroblast!, because we assume mages want to keep the same option
     local hotStreak = 48108;
     local pyro = 11366;
     local pyroBang = 92315;
@@ -69,9 +69,34 @@ local function migrateTo131(db)
     SAO:Info(Module, "Migrated options from pre-1.3.1 to 1.3.1");
 end
 
+-- Migrate from pre-140 to 140 or higher
+local function migrateTo140(db)
+
+    -- Priest's Serendipity in Cataclysm has 2 stacks at most (down from 3 in Wrath)
+    -- We copy options from Wrath:0/3 to Cataclysm:1/2, because we assume priests want to transfer these settings
+    local serendipityWrath = 63734;
+    local serendipityCata = 63735;
+    local greaterHeal = 2060;
+    local prayerOfHealing = 596;
+    if type(db.classes["PRIEST"]["alert"][serendipityWrath][0]) ~= 'nil' and type(db.classes["PRIEST"]["alert"][serendipityCata][1]) == 'nil' then
+        db.classes["PRIEST"]["alert"][serendipityCata][1] = db.classes["PRIEST"]["alert"][serendipityWrath][0];
+    end
+    if type(db.classes["PRIEST"]["alert"][serendipityWrath][3]) ~= 'nil' and type(db.classes["PRIEST"]["alert"][serendipityCata][2]) == 'nil' then
+        db.classes["PRIEST"]["alert"][serendipityCata][2] = db.classes["PRIEST"]["alert"][serendipityWrath][3];
+    end
+    if type(db.classes["PRIEST"]["glow"][serendipityWrath][greaterHeal]) ~= 'nil' and type(db.classes["PRIEST"]["glow"][serendipityCata][greaterHeal]) == 'nil' then
+        db.classes["PRIEST"]["glow"][serendipityCata][greaterHeal] = db.classes["PRIEST"]["glow"][serendipityWrath][greaterHeal];
+    end
+    if type(db.classes["PRIEST"]["glow"][serendipityWrath][prayerOfHealing]) ~= 'nil' and type(db.classes["PRIEST"]["glow"][serendipityCata][prayerOfHealing]) == 'nil' then
+        db.classes["PRIEST"]["glow"][serendipityCata][prayerOfHealing] = db.classes["PRIEST"]["glow"][serendipityWrath][prayerOfHealing];
+    end
+
+    SAO:Info(Module, "Migrated options from pre-1.4.0 to 1.4.0");
+end
+
 -- Load database and use default values if needed
 function SAO.LoadDB(self)
-    local currentversion = 131;
+    local currentversion = 140;
     local db = SpellActivationOverlayDB or {};
 
     if not db.alert then
@@ -145,6 +170,9 @@ function SAO.LoadDB(self)
     end
     if not db.version or db.version < 131 then
         migrateTo131(db);
+    end
+    if not db.version or db.version < 140 then
+        migrateTo140(db);
     end
 
     db.version = currentversion;

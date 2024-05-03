@@ -5,9 +5,12 @@
 New effects:
 - New SAO: Druid's Fury of Stormrage (Cataclysm)
 - New SAO: Hunter's Master Marksman (Cataclysm)
+- New SAO: Priest's Serendipity (Cataclysm)
 - New GAB: Druid's Starfire, during Fury of Stormrage (Cataclysm)
 - New GAB: Hunter's Aimed Shot!, during Master Marksman (Cataclysm)
 - New GAB: Warlock's Drain Soul, when the enemy has low HP (Cataclysm)
+- New SAO: Greater Heal, during Priest's Serendipity (Cataclysm)
+- New SAO: Prayer of Healing, during Priest's Serendipity (Cataclysm)
 
 Removed effects:
 - Druid's Nature's Grace has been removed (Cataclysm)
