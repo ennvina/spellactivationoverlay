@@ -98,7 +98,6 @@ local function useSniperTraining()
                 stacks = 5,
                 spellID = aimedShot,
                 useName = false,
-                option = { subText = SAO:NbStacks(5) },
             },
         }
     );

@@ -35,7 +35,7 @@ local Module = "effect"
         useName = true, -- Default is false from Era to Wrath, default is true starting from Cataclysm
         stacks = 0, -- Default is nil to apply to all overlays (if any); may target one of the stacks from overlays
         option = { -- Default is true
-            talentSubText = "no stacks", -- Default is nil
+            talentSubText = "no stacks", -- Default is nil; if option is not set at all, try to guess a good stack count for SAO:NbStacks
             spellSubText = nil, -- Default is nil
             variants = nil, -- Default is nil
         },
@@ -418,6 +418,7 @@ function SAO:AddEffectOptions()
         local overlayTalent = effect.talent;
         local buttonTalent = (not effect.counter) and effect.talent or nil;
 
+        local uniqueOverlayStack = { latest = nil, unique = true };
         for _, overlay in ipairs(effect.overlays or {}) do
             if overlay.option ~= false and (not overlay.project or self.IsProject(overlay.project)) then
                 local buff = overlay.spellID or effect.spellID;
@@ -431,6 +432,13 @@ function SAO:AddEffectOptions()
                     local setupStacks = overlay.stacks;
                     self:AddOverlayOption(overlayTalent, buff, setupStacks);
                 end
+
+                -- Bonus: detect if all overlays are based on a unique stack count; it will help write sub-text for glowing option
+                local stacks = overlay.stacks or 0;
+                if uniqueOverlayStack.latest and uniqueOverlayStack.latest ~= stacks and uniqueOverlayStack.unique then
+                    uniqueOverlayStack.unique = false;
+                end
+                uniqueOverlayStack.latest = stacks;
             end
         end
 
@@ -444,7 +452,9 @@ function SAO:AddEffectOptions()
                     local variants = button.option.variants;
                     self:AddGlowingOption(buttonTalent, buff, spellID, talentSubText, spellSubText, variants);
                 else
-                    self:AddGlowingOption(buttonTalent, buff, spellID);
+                    local stacks = button.stacks or (uniqueOverlayStack.unique and uniqueOverlayStack.latest) or nil;
+                    local talentSubText = stacks and stacks > 0 and self:NbStacks(stacks) or nil;
+                    self:AddGlowingOption(buttonTalent, buff, spellID, talentSubText);
                 end
             end
         end
