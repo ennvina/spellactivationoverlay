@@ -408,7 +408,7 @@ SAO.defaults = {
                 [415105] = {  -- Power Surge (Season of Discovery)
                     [0] = true,
                 },
-                [51505] = {  -- Lava Surge (Cataclysm)
+                [51505] = {  -- Lava Burst, for Lava Surge (Cataclysm)
                     [0] = true,
                 },
                 [53817] = { -- Maelstrom Weapon
@@ -428,7 +428,7 @@ SAO.defaults = {
                 [425339]= { -- Molten Blast (Season of Discovery)
                     [0] = true,
                 },
-                [324]= { -- Rolling Thunder (Season of Discovery, Cataclysm)
+                [324]= { -- Lightning Shield, for Rolling Thunder (Season of Discovery) / Fulmination (Cataclysm)
                     [6] = false,
                     [7] = false,
                     [8] = false,
@@ -462,7 +462,7 @@ SAO.defaults = {
                     [1064]  = false, -- Chain Heal
                     [408490] = false, -- Lava Burst (Season of Discovery)
                 },
-                [51505] = {  -- Lava Surge (Cataclysm)
+                [51505] = {  -- Lava Burst, for Lava Surge (Cataclysm)
                     [51505] = true,
                 },
                 [53390] = { -- Tidal Waves
@@ -474,10 +474,10 @@ SAO.defaults = {
                     [425339] = true, -- Molten Blast (Season of Discovery)
                 },
                 [432056]= { -- Rolling Thunder (Season of Discovery)
-                    [8042] = true, -- Rolling Thunder (Season of Discovery)
+                    [8042] = true, -- Earth Shock, for Rolling Thunder (Season of Discovery)
                 },
-                [324]= { -- Fulmination (Cataclysm)
-                    [8042] = true, -- Rolling Thunder (Season of Discovery)
+                [324]= {  -- Lightning Shield, for Fulmination (Cataclysm)
+                    [8042] = true, -- Earth Shock, for Fulmination (Cataclysm)
                 },
                 [432041] = { -- Tidal Waves (Season of Discovery)
                     [8004] = false, -- Lesser Healing Wave
