@@ -17,6 +17,9 @@ local function registerClass(self)
             self:AddOverlayLink(serendipityBuff3, serendipityBuff2);
             self:AddGlowingLink(serendipityBuff3, serendipityBuff1);
             self:AddGlowingLink(serendipityBuff3, serendipityBuff2);
+        elseif self.IsCata() then
+            self:AddOverlayLink(serendipityBuff2, serendipityBuff1);
+            self:AddGlowingLink(serendipityBuff2, serendipityBuff1);
         end
 
         -- Surge of Light
@@ -29,7 +32,7 @@ local function registerClass(self)
             self:RegisterAura("surge_of_light", 0, surgeOfLightBuff, "surge_of_light", "Left + Right (Flipped)", 1, 255, 255, 255, true, { flashHeal });
         end
 
-        if self.IsTBC() or self.IsWrath() then
+        if self.IsWrath() then
             for talentPoints=1,3 do
                 local auraName = ({ "serendipity_low", "serendipity_medium", "serendipity_high" })[talentPoints];
                 local auraBuff = ({ serendipityBuff1, serendipityBuff2, serendipityBuff3 })[talentPoints];
@@ -37,6 +40,17 @@ local function registerClass(self)
                     local scale = 0.4 + 0.2 * nbStacks; -- 60%, 80%, 100%
                     local pulse = nbStacks == 3;
                     local glowIDs = nbStacks == 3 and ghAndPoh or nil;
+                    self:RegisterAura(auraName, nbStacks, auraBuff, "serendipity", "Top", scale, 255, 255, 255, pulse, glowIDs);
+                end
+            end
+        elseif self.IsCata() then
+            for talentPoints=1,2 do
+                local auraName = ({ "serendipity_low", "serendipity_high" })[talentPoints];
+                local auraBuff = ({ serendipityBuff1, serendipityBuff2 })[talentPoints];
+                for nbStacks=1,2 do
+                    local scale = 0.7 + 0.3 * nbStacks; -- 70%, 100%
+                    local pulse = nbStacks == 2;
+                    local glowIDs = nbStacks == 2 and ghAndPoh or nil;
                     self:RegisterAura(auraName, nbStacks, auraBuff, "serendipity", "Top", scale, 255, 255, 255, pulse, glowIDs);
                 end
             end
@@ -95,11 +109,13 @@ local function loadOptions(self)
     local mindSpikeSoDBuff = 431655;
     local mindSpikeSoDRune = 431662;
 
+    local serendipityBuff2 = 63735;
     local serendipityBuff3 = 63734;
     local serendipityTalent = 63730;
     local serendipitySoDBuff = 413247;
 
     local oneOrTwoStacks = self:NbStacks(1, 2);
+    local twoStacks = self:NbStacks(2);
     local threeStacks = self:NbStacks(3);
 
     if not self.IsEra() then
@@ -107,6 +123,9 @@ local function loadOptions(self)
         if self.IsWrath() then
             self:AddOverlayOption(serendipityTalent, serendipityBuff3, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks
             self:AddOverlayOption(serendipityTalent, serendipityBuff3, 3); -- setup 3 stacks
+        elseif self.IsCata() then
+            self:AddOverlayOption(serendipityTalent, serendipityBuff2, 1);
+            self:AddOverlayOption(serendipityTalent, serendipityBuff2, 2);
         end
         self:AddSoulPreserverOverlayOption(60514); -- 60514 = Priest buff
 
@@ -114,11 +133,14 @@ local function loadOptions(self)
             self:AddGlowingOption(surgeOfLightTalent, surgeOfLightBuff, smite);
         end
         if self.IsWrath() or self.IsCata() then
-            self:AddGlowingOption(surgeOfLightTalent, surgeOfLightBuff, flashHeal);
+            self:AddGlowingOption(surgeOfLightTalent, surgeOfLightBuff, flashHeal); -- Note to Effect morph: must useName, because of spell 101062
         end
         if self.IsWrath() then
             self:AddGlowingOption(serendipityTalent, serendipityBuff3, greaterHeal, threeStacks);
             self:AddGlowingOption(serendipityTalent, serendipityBuff3, prayerOfHealing, threeStacks);
+        elseif self.IsCata() then
+            self:AddGlowingOption(serendipityTalent, serendipityBuff2, greaterHeal, twoStacks);
+            self:AddGlowingOption(serendipityTalent, serendipityBuff2, prayerOfHealing, twoStacks);
         end
     elseif self.IsSoD() then
         self:AddOverlayOption(surgeOfLightSoDRune, surgeOfLightSoDBuff);

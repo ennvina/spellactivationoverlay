@@ -5,16 +5,20 @@
 New effects:
 - New SAO: Druid's Fury of Stormrage (Cataclysm)
 - New SAO: Hunter's Master Marksman (Cataclysm)
+- New SAO: Priest's Serendipity (Cataclysm)
 - New GAB: Druid's Starfire, during Fury of Stormrage (Cataclysm)
 - New GAB: Hunter's Aimed Shot!, during Master Marksman (Cataclysm)
 - New GAB: Warlock's Drain Soul, when the enemy has low HP (Cataclysm)
+- New SAO: Greater Heal, during Priest's Serendipity (Cataclysm)
+- New SAO: Prayer of Healing, during Priest's Serendipity (Cataclysm)
 
 Removed effects:
 - Druid's Nature's Grace has been removed (Cataclysm)
 - Hunter's Arcane Shot no longer glows during Lock and Load (Cataclysm)
 - Hunter's Improved Steady Shot has been removed (Cataclysm)
+- Rogue's Riposte has been removed (Cataclysm)
 
-Sounds are not played for minor alerts, including:
+Sounds are no longer played for minor alerts, including:
 - Mage's Clearcasting
 - Mage's Frozen debuff
 - Mage's Heating Up (Season of Discovery, Wrath, Cataclysm)
@@ -25,7 +29,12 @@ Sounds are not played for minor alerts, including:
 - Shaman's Maelstrom Weapon at 1-4 stacks (Season of Discovery, Wrath)
 - Shaman's Elemental Focus at 7-9 Lightning Shield stacks (Season of Discovery)
 
+UI Improvements
+- Classes with no Spell Alerts now have a "None" text in their options panel
+- Classes with no Glowing Buttons now have a "None" text in their options panel
+
 Bug Fixes
+- Spell Alerts could sometimes not pulse when previewing in the options panel
 - Spell Alert during Toggle Test had incorrect texture orientation (Cataclysm)
 - Mage's Fringers of Frost had incorrect texture orientation (Cataclysm)
 - Mage's Frozen debuff had incorrect texture orientation (Cataclysm)

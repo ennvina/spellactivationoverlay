@@ -338,6 +338,10 @@ SAO.defaults = {
                     [3] = true,  -- 3 stacks
                     [0] = false, -- any stacks but 3
                 },
+                [63735] = { -- Serendipity (Cataclysm)
+                    [1] = nil, -- set to nil to simplify DB migration, from Serendipity at 0 stacks
+                    [2] = nil, -- set to nil to simplify DB migration, from Serendipity at 3 stacks
+                },
                 [60514] = { -- Healing Trance / Soul Preserver (Wrath)
                     [0] = false,
                 },
@@ -359,11 +363,15 @@ SAO.defaults = {
                     [2061] = true, -- Flash Heal (not for TBC)
                 },
                 [88688] = { -- Surge of Light (Cataclysm)
-                    [2061] = true, -- Flash Heal
+                    [2061] = true, -- Flash Heal, also 101062: must use name
                 },
                 [63734] = { -- Serendipity 3/3 (Wrath)
                     [2060] = true, -- Greater Heal
                     [596]  = true, -- Prayer of Healing
+                },
+                [63735] = { -- Serendipity 2/2 (Cataclysm)
+                    [2060] = nil, -- Greater Heal, set to nil to simplify DB migration
+                    [596]  = nil, -- Prayer of Healing, set to nil to simplify DB migration
                 },
                 [413247]= { -- Serendipity 3/3 (Season of Discovery)
                     [2050] = true, -- Lesser Heal
@@ -382,12 +390,12 @@ SAO.defaults = {
         },
         ["ROGUE"] = {
             alert = {
-                [14251] = { -- Riposte
+                [14251] = { -- Riposte (Era - Wrath)
                     [0] = "cd:off",
                 },
             },
             glow = {
-                [14251] = { -- Riposte
+                [14251] = { -- Riposte (Era - Wrath)
                     [14251] = "cd:off", -- Riposte
                 },
             },

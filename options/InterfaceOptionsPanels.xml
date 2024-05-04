@@ -181,6 +181,28 @@
           </Anchors>
         </FontString>
       </Layer>
+      <Layer level="ARTWORK">
+        <FontString name="$parentSpellAlertNone" text="" inherits="GameFontHighlight" justifyH="LEFT" justifyV="TOP" parentKey="alertNone">
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertLabel" relativePoint="BOTTOMLEFT">
+              <Offset>
+                <AbsDimension x="6" y="-6"/> <!-- +2 -2 more pixels than offset for checkboxes, defined at the end of SAO.AddOverlayOption -->
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+      <Layer level="ARTWORK">
+        <FontString name="$parentSpellAlertNone" text="" inherits="GameFontHighlight" justifyH="LEFT" justifyV="TOP" parentKey="glowNone">
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parentGlowingButtons" relativePoint="BOTTOMLEFT">
+              <Offset>
+                <AbsDimension x="18" y="0"/> <!-- +2 -2 more pixels than offset for checkboxes, defined at the end of SAO.AddGlowingOption -->
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
     </Layers>
     <Scripts>
       <OnShow function="SpellActivationOverlayOptionsPanel_OnShow"/>

@@ -314,6 +314,18 @@ function SpellActivationOverlayOptionsPanel_OnShow(self)
 
     SAO:AddEffectOptions();
 
+    for _, optionType in ipairs({ "alert", "glow" }) do
+        if (type(SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType]) == "nil") then
+            local className = SAO.CurrentClass.Intrinsics[1];
+            local classFile = SAO.CurrentClass.Intrinsics[2];
+            local dimFactor = 0.7;
+            local dimmedTextColor = CreateColor(dimFactor, dimFactor, dimFactor);
+            local dimmedClassColor = CreateColor(dimFactor*RAID_CLASS_COLORS[classFile].r, dimFactor*RAID_CLASS_COLORS[classFile].g, dimFactor*RAID_CLASS_COLORS[classFile].b);
+            local text = WrapTextInColor(string.format("%s (%s)", NONE, WrapTextInColor(className, dimmedClassColor)), dimmedTextColor);
+            SpellActivationOverlayOptionsPanel[optionType.."None"]:SetText(text);
+        end
+    end
+
     optionsLoaded = true;
 end
 

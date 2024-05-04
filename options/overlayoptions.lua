@@ -83,10 +83,12 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, vari
             end
 
             for _, aura in ipairs(auras[stacks]) do
+                local texture, positions, scale, r, g, b, autoPulse, _, endTime, combatOnly = select(4,unpack(aura));
+                local forcePulse = autoPulse;
                 if (type(variants) == 'table' and type(variants.transformer) == 'function') then
-                    self:ActivateOverlay(stacks, fakeOffset+(testAuraID or auraID), variants.transformer(cb, sb, select(4,unpack(aura))));
+                    self:ActivateOverlay(stacks, fakeOffset+(testAuraID or auraID), variants.transformer(cb, sb, texture, positions, scale, r, g, b, autoPulse, forcePulse, endTime, combatOnly));
                 else
-                    self:ActivateOverlay(stacks, fakeOffset+(testAuraID or auraID), select(4,unpack(aura)));
+                    self:ActivateOverlay(stacks, fakeOffset+(testAuraID or auraID), texture, positions, scale, r, g, b, autoPulse, forcePulse, endTime, combatOnly);
                 end
                 fakeOffset = fakeOffset + 1000000; -- Add offset so that different sub-auras may share the same 'location' for testing purposes
             end
