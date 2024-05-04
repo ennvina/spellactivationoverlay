@@ -52,9 +52,9 @@ local RollingThunderHandler = {
         local stackThreshold = SAO:IsCata() and 6 or 7; -- 6 or more for Cata, 7 or more for SoD
         if (self.lightningShieldSpellIDs[spellID]) then
             if (event == "SPELL_AURA_APPLIED_DOSE") or (event == "SPELL_AURA_REMOVED_DOSE") then
-                -- Deactivating old overlays and activating new one when Lightning Shield stack is gained or lost
+            -- Deactivating old overlays and activating new one when Lightning Shield stack is gained or lost
+                self:deactivate();
                 if stacks >= stackThreshold then
-                    self:deactivate();
                     self:activate(stacks);
                 end
             end
