@@ -1,4 +1,5 @@
 local AddonName, SAO = ...
+local Module = "shaman"
 
 -- Optimize frequent calls
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
@@ -16,7 +17,7 @@ local RollingThunderHandler = {
     earthShockSpells = {},
     -- Variables
     initialized = false,
-    glowtimer,
+    glowtimer = nil,
 
     -- Methods
     init = function(self)
@@ -73,8 +74,7 @@ local RollingThunderHandler = {
         local saoOption = SAO:GetOverlayOptions(324);
         local hasSAO = not saoOption or type(saoOption[lightningShieldStacks]) == "nil" or saoOption[lightningShieldStacks];
         if (hasSAO) then
-            local scale = 0.5 + 0.1 * (lightningShieldStacks - 6); -- 60%, 70%, 80% for Season of Discovery
-            if SAO:IsCata() then local scale = 0.4 + 0.1 * (lightningShieldStacks - 5); end -- 50%, 60%, 70%, 80% for Cataclysm
+            local scale = 0.5 + 0.1 * (lightningShieldStacks - 6); -- 50%, 60%, 70%, 80% for Cataclysm or 60%, 70%, 80% for Season of Discovery
             local pulse = lightningShieldStacks == 9 or nil;
             SAO:ActivateOverlay(lightningShieldStacks, 324, SAO.TexName["fulmination"], "Top", scale, 255, 255, 255, pulse, pulse);
         end
@@ -150,32 +150,25 @@ end
 
 local function registerClass(self)
 
-    -- Elemental Focus has 2 charges on TBC and Wrath, with echo_of_the_elements texture
+   -- Elemental Focus has 2 charges on TBC, Wrath and Cataclysm
+-- TBC/Wrath use echo_of_the_elements texture, with scale of 100%
+-- Cataclysm uses cleaner texture, with scale of 150%
     self:CreateEffect(
         "elemental_focus",
-        SAO.TBC + SAO.WRATH,
+        SAO.TBC + SAO.WRATH + SAO.CATA,
         16246, -- Clearcasting (buff)
         "aura",
         {
             talent = 16164, -- Elemental Focus (talent)
             overlays = {
-                { stacks = 1, texture = "echo_of_the_elements", position = "Left", scale = 1, option = false },
-                { stacks = 2, texture = "echo_of_the_elements", position = "Left + Right (Flipped)", scale = 1, option = { setupStacks = 0, testStacks = 2 } },
-            },
-        }
-    );
-
-    -- Elemental Focus for Cataclysm with cleaner texture
-    self:CreateEffect(
-        "elemental_focus",
-        SAO.CATA,
-        16246, -- Clearcasting (buff)
-        "aura",
-        {
-            talent = 16164, -- Elemental Focus (talent)
-            overlays = {
-                { stacks = 1, texture = "genericarc_05", position = "Left", scale = 1.5, option = false },
-                { stacks = 2, texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.5, option = { setupStacks = 0, testStacks = 2 } },
+                [SAO.TBC+SAO.WRATH] = {
+                    { stacks = 1, texture = "echo_of_the_elements", position = "Left", scale = 1, option = false },
+                    { stacks = 2, texture = "echo_of_the_elements", position = "Left + Right (Flipped)", scale = 1, option = { setupStacks = 0, testStacks = 2 } },
+                },
+                [SAO.CATA] = {
+                    { stacks = 1, texture = "genericarc_05", position = "Left", scale = 1.5, option = false },
+                    { stacks = 2, texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.5, option = { setupStacks = 0, testStacks = 2 } },
+                }
             },
         }
     );
@@ -201,7 +194,7 @@ local function registerClass(self)
         end
         for lightningShieldStacks=6,9 do
             local auraName = "fulmination_"..lightningShieldStacks;
-            local scale = 0.4 + 0.1 * (lightningShieldStacks - 5); -- 50%, 60%, 70%, 80% for Cataclysm
+            local scale = 0.5 + 0.1 * (lightningShieldStacks - 6); -- 50%, 60%, 70%, 80% for Cataclysm
             local pulse = lightningShieldStacks == 9;
             self:RegisterAura(auraName, lightningShieldStacks, RollingThunderHandler.fakeSpellID, "fulmination", "Top", scale, 255, 255, 255, pulse, RollingThunderHandler.earthShockSpells);
         end
@@ -400,8 +393,6 @@ local function loadOptions(self)
     local tidalWavesSoDTalent = 432233;
 
     --Cataclysm
-    local lavaBurstCata = 51505;
-    local lavaSurgeTalentCata = 77756;
     local fulminationTalentCata = 88766;
     local greaterHealingWave = 77472;
     local healingSurge = 8004;
