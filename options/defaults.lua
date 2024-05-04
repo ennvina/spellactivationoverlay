@@ -473,11 +473,8 @@ SAO.defaults = {
                 [425339]= { -- Molten Blast (Season of Discovery)
                     [425339] = true, -- Molten Blast (Season of Discovery)
                 },
-                [432056]= { -- Rolling Thunder (Season of Discovery)
-                    [8042] = true, -- Earth Shock, for Rolling Thunder (Season of Discovery)
-                },
-                [324]= {  -- Lightning Shield, for Fulmination (Cataclysm)
-                    [8042] = true, -- Earth Shock, for Fulmination (Cataclysm)
+                [324]= {  -- Lightning Shield, for Rolling Thunder (Season of Discovery) / Fulmination (Cataclysm)
+                    [8042] = true, -- Earth Shock, for for Rolling Thunder (Season of Discovery) / Fulmination (Cataclysm)
                 },
                 [432041] = { -- Tidal Waves (Season of Discovery)
                     [8004] = false, -- Lesser Healing Wave
