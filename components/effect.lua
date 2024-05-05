@@ -9,7 +9,7 @@ local Module = "effect"
     name = "my_effect", -- Mandatory
     project = SAO.WRATH + SAO.CATA, -- Mandatory
     spellID = 12345, -- Mandatory; usually a buff to track, for counters this is the counter ability
-    talent = 49188, -- Talent or rune or nil (for counters)
+    talent = 49188, -- Talent or rune or nil (for counters that don't rely on other talent)
     counter = false, -- Default is false
     combatOnly = false, -- Default is false
 
@@ -406,7 +406,14 @@ local function registerEffectNow(self, effect)
     end
 
     if effect.counter == true then
-        self:RegisterCounter(effect.name);
+        local talent;
+        if effect.talent then
+            local _, _, tab, index = self:GetTalentByName(GetSpellInfo(effect.talent));
+            if type(tab) == 'number' and type(index) == 'number' then
+                talent = { tab, index };
+            end
+        end
+        self:RegisterCounter(effect.name, talent);
     end
 
     table.insert(allEffects, effect);
@@ -442,8 +449,7 @@ end
 
 function SAO:AddEffectOptions()
     for _, effect in ipairs(allEffects) do
-        local overlayTalent = effect.talent;
-        local buttonTalent = (not effect.counter) and effect.talent or nil;
+        local talent = effect.talent;
 
         local uniqueOverlayStack = { latest = nil, unique = true };
         for _, overlay in ipairs(effect.overlays or {}) do
@@ -454,10 +460,10 @@ function SAO:AddEffectOptions()
                     local testStacks = type(overlay.option.testStacks) == 'number' and overlay.option.testStacks or setupStacks;
                     local subText = overlay.option.subText;
                     local variants = overlay.option.variants;
-                    self:AddOverlayOption(overlayTalent, buff, setupStacks, subText, variants, testStacks);
+                    self:AddOverlayOption(talent, buff, setupStacks, subText, variants, testStacks);
                 else
                     local setupStacks = overlay.stacks;
-                    self:AddOverlayOption(overlayTalent, buff, setupStacks);
+                    self:AddOverlayOption(talent, buff, setupStacks);
                 end
 
                 -- Bonus: detect if all overlays are based on a unique stack count; it will help write sub-text for glowing option
@@ -477,11 +483,11 @@ function SAO:AddEffectOptions()
                     local talentSubText = button.option.talentSubText;
                     local spellSubText = button.option.spellSubText;
                     local variants = button.option.variants;
-                    self:AddGlowingOption(buttonTalent, buff, spellID, talentSubText, spellSubText, variants);
+                    self:AddGlowingOption(talent, buff, spellID, talentSubText, spellSubText, variants);
                 else
                     local stacks = button.stacks or (uniqueOverlayStack.unique and uniqueOverlayStack.latest) or nil;
                     local talentSubText = stacks and stacks > 0 and self:NbStacks(stacks) or nil;
-                    self:AddGlowingOption(buttonTalent, buff, spellID, talentSubText);
+                    self:AddGlowingOption(talent, buff, spellID, talentSubText);
                 end
             end
         end
