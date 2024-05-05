@@ -162,12 +162,12 @@ local function registerClass(self)
             talent = 16164, -- Elemental Focus (talent)
             overlays = {
                 [SAO.TBC+SAO.WRATH] = {
-                    { stacks = 1, texture = "echo_of_the_elements", position = "Left", scale = 1, option = false },
-                    { stacks = 2, texture = "echo_of_the_elements", position = "Left + Right (Flipped)", scale = 1, option = { setupStacks = 0, testStacks = 2 } },
+                    { stacks = 1, texture = "echo_of_the_elements", position = "Left", scale = 1, pulse = false, option = false },
+                    { stacks = 2, texture = "echo_of_the_elements", position = "Left + Right (Flipped)", scale = 1, pulse = false, option = { setupStacks = 0, testStacks = 2 } },
                 },
                 [SAO.CATA] = {
-                    { stacks = 1, texture = "genericarc_05", position = "Left", scale = 1.5, option = false },
-                    { stacks = 2, texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.5, option = { setupStacks = 0, testStacks = 2 } },
+                    { stacks = 1, texture = "genericarc_05", position = "Left", scale = 1.5, pulse = false, option = false },
+                    { stacks = 2, texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.5, pulse = false, option = { setupStacks = 0, testStacks = 2 } },
                 }
             },
         }
@@ -273,7 +273,7 @@ local function registerClass(self)
 
     if self.IsEra() and not self.IsSoD() then
         -- On non-SoD Era, Elemental Focus is simply displayed Left and Right
-        self:RegisterAura("elemental_focus", 0, 16246, "echo_of_the_elements", "Left + Right (Flipped)", 1, 255, 255, 255, true);
+        self:RegisterAura("elemental_focus", 0, 16246, "echo_of_the_elements", "Left + Right (Flipped)", 1, 255, 255, 255, false);
     end
 
     if self.IsSoD() then
@@ -344,8 +344,8 @@ local function registerClass(self)
 
         self:RegisterAura("power_surge_sod", 0, powerSurgeSoDBuff, "imp_empowerment", "Left", 1, 255, 255, 255, true, powerSurgeSpells);
         self:RegisterAura("power_surge_sod", 0, powerSurgeSoDBuff, powerSurgeRightTextureFunc, "Right (Flipped)", 1, 255, 255, 255, true, powerSurgeSpells);
-        self:RegisterAura("elemental_focus", 0, elementalFocusBuff, elementalFocusLeftTextureFunc, "Left", 1, 255, 255, 255, true);
-        self:RegisterAura("elemental_focus", 0, elementalFocusBuff, "echo_of_the_elements", "Right (Flipped)", 1, 255, 255, 255, true);
+        self:RegisterAura("elemental_focus", 0, elementalFocusBuff, elementalFocusLeftTextureFunc, "Left", 1, 255, 255, 255, false);
+        self:RegisterAura("elemental_focus", 0, elementalFocusBuff, "echo_of_the_elements", "Right (Flipped)", 1, 255, 255, 255, false);
         for lightningShieldStacks=7,9 do
             local auraName = "rolling_thunder_"..lightningShieldStacks;
             local scale = 0.5 + 0.1 * (lightningShieldStacks - 6); -- 60%, 70%, 80% for Season of Discovery

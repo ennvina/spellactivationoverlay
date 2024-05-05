@@ -26,8 +26,9 @@ Sounds are no longer played for minor alerts, including:
 - Paladin's The Art of War with only 1 talent point (Wrath)
 - Priest's Serendipity at 1-2 stacks (Season of Discovery, TBC, Wrath)
 - Priest's Mind Spike at 1-2 stacks (Season of Discovery)
+- Shaman's Elemental Focus
 - Shaman's Maelstrom Weapon at 1-4 stacks (Season of Discovery, Wrath)
-- Shaman's Elemental Focus at 7-9 Lightning Shield stacks (Season of Discovery)
+- Shaman's Rolling Thunder at 7-9 Lightning Shield stacks (Season of Discovery)
 
 UI Improvements
 - Classes with no Spell Alerts now have a "None" text in their options panel
