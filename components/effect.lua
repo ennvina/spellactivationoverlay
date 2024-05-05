@@ -64,6 +64,7 @@ local function doesUseName(useNameProp)
     end
 end
 
+-- Copy option's value, deep-copy if option is a table
 local function copyOption(option)
     if type(option) == 'table' then
         local optionCopy = {}; -- Copy table to avoid issues when re-using options between effects
@@ -77,29 +78,89 @@ local function copyOption(option)
     end
 end
 
-local function addOneOverlay(overlays, overlayConfig, project)
-    if type(overlayConfig.stacks) ~= 'nil' and (type(overlayConfig.stacks) ~= 'number' or overlayConfig.stacks < 0) then
-        SAO:Error(Module, "Adding Overlay with invalid number of stacks "..tostring(overlayConfig.stacks));
-    end
-    if type(overlayConfig.texture) ~= 'string' then
-        SAO:Error(Module, "Adding Overlay with invalid texture "..tostring(overlayConfig.texture));
-    end
-    if type(overlayConfig.position) ~= 'string' then
-        SAO:Error(Module, "Adding Overlay with invalid position "..tostring(overlayConfig.position));
-    end
-    if overlayConfig.option ~= nil and type(overlayConfig.option) ~= 'boolean' and type(overlayConfig.option) ~= 'table' then
-        SAO:Error(Module, "Adding Overlay with invalid option "..tostring(overlayConfig.option));
+-- Merge option1 and option2, with priority to option2
+local function mergeOption(option1, option2)
+    if option2 == nil then -- nil means "unspecified"
+        return copyOption(option1);
     end
 
+    if option2 == false then -- false means "no options, please"
+        return false;
+    end
+
+    if option2 == true then -- true means "I specify that yes I want an option, but not specifying which params exactly"
+        if type(option1) == 'table' then
+            return copyOption(option1);
+        end
+        return true;
+    end
+
+    -- At this point, option2 should be a table
+    if type(option2) ~= 'table' then
+        SAO:Error(Module, "Merging options with invalid values "..tostring(option1).." vs. "..tostring(option2));
+        return copyOption(option2);
+    end
+
+    if type(option1) ~= 'table' then
+        return copyOption(option2);
+    end
+
+    -- Merge both tables, with priority to option2
+    local combined = {}
+    for k, v in pairs(option1) do
+        combined[k] = v; -- write option1 first
+    end
+    for k, v in pairs(option2) do
+        combined[k] = v; -- option2 overwrites option1, if sharing same keys
+    end
+    return combined;
+end
+
+local function getValueOrDefault(value, default)
+    if value ~= nil then
+        return value;
+    else
+        return default;
+    end
+end
+
+local function addOneOverlay(overlays, overlayConfig, project, default)
+    if not default then
+        default = {}
+    end
+
+    local stacks = overlayConfig.stacks or default.stacks;
+    if type(stacks) ~= 'nil' and (type(stacks) ~= 'number' or stacks < 0) then
+        SAO:Error(Module, "Adding Overlay with invalid number of stacks "..tostring(stacks));
+    end
+
+    local texture = overlayConfig.texture or default.texture;
+    if type(texture) ~= 'string' then
+        SAO:Error(Module, "Adding Overlay with invalid texture "..tostring(texture));
+    end
+
+    local position = overlayConfig.position or default.position;
+    if type(position) ~= 'string' then
+        SAO:Error(Module, "Adding Overlay with invalid position "..tostring(position));
+    end
+
+    local option = overlayConfig.option;
+    if option == nil then option = default.option; end
+    if option ~= nil and type(option) ~= 'boolean' and type(option) ~= 'table' then
+        SAO:Error(Module, "Adding Overlay with invalid option "..tostring(option));
+    end
+
+    local color = overlayConfig.color or default.color;
+
     local overlay = {
-        project = project or overlayConfig.project,
-        stacks = overlayConfig.stacks,
-        texture = overlayConfig.texture,
-        position = overlayConfig.position,
-        scale = overlayConfig.scale,
-        color = overlayConfig.color and { overlayConfig.color[1], overlayConfig.color[2], overlayConfig.color[3] } or nil,
-        pulse = overlayConfig.pulse,
-        option = copyOption(overlayConfig.option),
+        project = overlayConfig.project or project, -- Note: cannot have a 'default.project'
+        stacks = stacks,
+        texture = texture,
+        position = position,
+        scale = overlayConfig.scale or default.scale,
+        color = color and { color[1], color[2], color[3] } or nil,
+        pulse = getValueOrDefault(overlayConfig.pulse, default.pulse),
+        option = mergeOption(default.option, overlayConfig.option),
     }
 
     if type(overlay.project) == 'number' and not SAO.IsProject(overlay.project) then
@@ -109,27 +170,37 @@ local function addOneOverlay(overlays, overlayConfig, project)
     table.insert(overlays, overlay);
 end
 
-local function addOneButton(buttons, buttonConfig, project)
+local function addOneButton(buttons, buttonConfig, project, default)
+    if not default then
+        default = {}
+    end
+
     if type(buttonConfig) == 'table' then
-        if buttonConfig.spellID ~= nil and type(buttonConfig.spellID) ~= 'number' then
-            SAO:Error(Module, "Adding Button with invalid spellID "..tostring(buttonConfig.spellID));
+        local spellID = buttonConfig.spellID or default.spellID;
+        if spellID ~= nil and type(spellID) ~= 'number' then
+            SAO:Error(Module, "Adding Button with invalid spellID "..tostring(spellID));
         end
-        if buttonConfig.option ~= nil and type(buttonConfig.option) ~= 'table' then
-            SAO:Error(Module, "Adding Overlay with invalid option "..tostring(buttonConfig.option));
+        local option = buttonConfig.option;
+        if option == nil then option = default.option; end
+        if option ~= nil and type(option) ~= 'boolean' and type(option) ~= 'table' then
+            SAO:Error(Module, "Adding Button with invalid option "..tostring(option));
         end
     end
 
     local button = {};
 
     if type(buttonConfig) == 'number' then
-        button.project = project;
+        button.project = project; -- Note: cannot have a 'default.project'
         button.spellID = buttonConfig;
+        button.useName = default.useName;
+        button.stacks = default.stacks;
+        button.option = copyOption(default.option);
     elseif type(buttonConfig) == 'table' then
-        button.project = buttonConfig.project or project;
-        button.spellID = buttonConfig.spellID;
-        button.useName = buttonConfig.useName;
-        button.stacks = buttonConfig.stacks;
-        button.option = copyOption(buttonConfig.option);
+        button.project = buttonConfig.project or project; -- Note: cannot have a 'default.project'
+        button.spellID = buttonConfig.spellID or default.spellID;
+        button.useName = getValueOrDefault(buttonConfig.useName, default.useName);
+        button.stacks = buttonConfig.stacks or default.stacks;
+        button.option = mergeOption(default.option, buttonConfig.option);
     else
         SAO:Error(Module, "Adding Button with invalid value "..tostring(buttonConfig));
     end
@@ -146,17 +217,19 @@ local function importOverlays(effect, props)
     if props.overlay then
         addOneOverlay(effect.overlays, props.overlay);
     end
+    local default = props.buttons and props.buttons.default or nil;
     for key, overlayConfig in pairs(props.overlays or {}) do
+        if key == "default" then break end
         if type(key) == 'number' and key >= SAO.ERA then
             if type(overlayConfig) == 'table' and overlayConfig[1] then
                 for _, subOverlayConfig in ipairs(overlayConfig) do
-                    addOneOverlay(effect.overlays, subOverlayConfig, key);
+                    addOneOverlay(effect.overlays, subOverlayConfig, key, overlayConfig.default or default);
                 end
             else
-                addOneOverlay(effect.overlays, overlayConfig, key);
+                addOneOverlay(effect.overlays, overlayConfig, key, default);
             end
         else
-            addOneOverlay(effect.overlays, overlayConfig);
+            addOneOverlay(effect.overlays, overlayConfig, nil, default);
         end
     end
 end
@@ -166,17 +239,19 @@ local function importButtons(effect, props)
     if props.button then
         addOneButton(effect.buttons, props.button);
     end
+    local default = props.buttons and props.buttons.default or nil;
     for key, buttonConfig in pairs(props.buttons or {}) do
+        if key == "default" then break end
         if type(key) == 'number' and key >= SAO.ERA then
             if type(buttonConfig) == 'table' and buttonConfig[1] then
                 for _, subButtonConfig in ipairs(buttonConfig) do
-                    addOneButton(effect.buttons, subButtonConfig, key);
+                    addOneButton(effect.buttons, subButtonConfig, key, buttonConfig.default or default);
                 end
             else
-                addOneButton(effect.buttons, buttonConfig, key);
+                addOneButton(effect.buttons, buttonConfig, key, default);
             end
         else
-            addOneButton(effect.buttons, buttonConfig);
+            addOneButton(effect.buttons, buttonConfig, nil, default);
         end
     end
 end
