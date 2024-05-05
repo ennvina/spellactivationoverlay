@@ -49,6 +49,13 @@ local Module = "effect"
 ]]
 local allEffects = {}
 
+-- List of effects waiting to be added to allEffects
+-- Cannot add them immediately to allEffects because the game is in need of other initialization, such as talent tree
+local pendingEffects = {}
+
+-- Flag to know when the player has logged in, detected by PLAYER_LOGIN event
+local hasPlayerLoggedIn = false;
+
 local function doesUseName(useNameProp)
     if useNameProp == nil then
         return SAO.IsCata() == true;
@@ -303,15 +310,7 @@ local function checkEffect(effect)
     return true;
 end
 
-function SAO:RegisterEffect(effect)
-    if not checkEffect(effect) then
-        return;
-    end
-
-    if not self.IsProject(effect.project) then
-        return;
-    end
-
+local function registerEffectNow(self, effect)
     -- Buckets of glow IDs, sorted by their number of stacks
     -- Key = Nb of stacks, Value = List of glow IDs
     -- Stack index is guided by available overlays; if there are no overlays, index from button stacks instead
@@ -413,6 +412,34 @@ function SAO:RegisterEffect(effect)
     table.insert(allEffects, effect);
 end
 
+function SAO:RegisterEffect(effect)
+    if not checkEffect(effect) then
+        return;
+    end
+
+    if not self.IsProject(effect.project) then
+        return;
+    end
+
+    if hasPlayerLoggedIn then
+        registerEffectNow(self, effect);
+    else
+        table.insert(pendingEffects, effect);
+    end
+end
+
+function SAO:RegisterPendingEffectsAfterPlayerLoggedIn()
+    if hasPlayerLoggedIn then
+        self:Debug(Module, "Received PLAYER_LOGIN twice in the same session");
+    end
+    hasPlayerLoggedIn = true;
+
+    for _, effect in ipairs(pendingEffects) do
+        registerEffectNow(self, effect);
+    end
+    pendingEffects = {};
+end
+
 function SAO:AddEffectOptions()
     for _, effect in ipairs(allEffects) do
         local overlayTalent = effect.talent;
@@ -467,7 +494,7 @@ end
     @param project Project flags where the effect is used e.g. SAO.WRATH+SAO.CATA
     @param class Class name e.g., "counter"
     @param props (optional) Properties to initialize the effect
-    @param register (optional) Register the effect immediately after creation; default is true
+    @param register (optional) Register the effect automatically after creation; default is true
 ]]
 function SAO:CreateEffect(name, project, spellID, class, props, register)
     if type(name) ~= 'string' or name == '' then

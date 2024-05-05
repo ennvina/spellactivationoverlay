@@ -66,6 +66,7 @@ function SpellActivationOverlay_OnLoad(self)
 	self:RegisterEvent("SPELLS_CHANGED");
 	self:RegisterEvent("LEARNED_SPELL_IN_TAB");
 	self:RegisterEvent("LOADING_SCREEN_DISABLED");
+	self:RegisterEvent("PLAYER_LOGIN");
 end
 
 function SpellActivationOverlay_OnChangeGeometry(self)
