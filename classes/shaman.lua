@@ -187,6 +187,32 @@ local function registerClass(self)
         }
     );
 
+    -- Tidal Waves
+    local greaterHealingWave = 77472;
+    local healingSurge = 8004;
+    local healingWave = 331;
+    local lesserHealingWave = 8004; -- Renamed Healing Surge in Cataclysm; keep the former name to make the effect easier to design
+    local tidalWavesBuff = self.IsSoD() and 432041 or 53390;
+    local tidalWavesTalent = self.IsSoD() and 432233 or 51562;
+    self:CreateEffect(
+        "tidal_waves",
+        SAO.SOD + SAO.WRATH + SAO.CATA,
+        tidalWavesBuff,
+        "aura",
+        {
+            talent = tidalWavesTalent,
+            overlays = {
+                { stacks = 1, texture = "high_tide", position = "Left (CCW)", scale = 0.8, option = false },
+                { stacks = 2, texture = "high_tide", position = "Left (CCW)", scale = 0.8, option = false },
+                { stacks = 2, texture = "high_tide", position = "Right (CW)", scale = 0.8, option = { setupStacks = 0, testStacks = 2 } },
+            },
+            buttons = {
+                [SAO.SOD+SAO.WRATH] = { lesserHealingWave, healingWave },
+                [SAO.CATA] = { greaterHealingWave, healingWave, healingSurge },
+            },
+        }
+    );
+
     if self.IsCata() then
         -- Initializing Rolling Thunder handler for Fulmination in Cataclysm
         if (not RollingThunderHandler.initialized) then
@@ -201,10 +227,7 @@ local function registerClass(self)
         -- Maelstrom Weapon
         local lightningBolt = 403;
         local chainLightning = 421;
-        local healingSurge = 8004;
-        local healingWave = 331;
         local chainHeal = 1064;
-        local greaterHealingWave = 77472;
         local healingRain = 73920;
         local hex = 51514;
         local maelstromSpells = {
@@ -222,25 +245,12 @@ local function registerClass(self)
         self:RegisterAura("maelstrom_weapon_3", 3, 53817, "maelstrom_weapon_3", "Top", 1, 255, 255, 255, false);
         self:RegisterAura("maelstrom_weapon_4", 4, 53817, "maelstrom_weapon_4", "Top", 1, 255, 255, 255, false);
         self:RegisterAura("maelstrom_weapon_5", 5, 53817, "maelstrom_weapon", "Top", 1, 255, 255, 255, true, maelstromSpells);
-
-        -- Tidal Waves
-        local tidalSpells = {
-            (GetSpellInfo(greaterHealingWave)),
-            (GetSpellInfo(healingWave)),
-            (GetSpellInfo(healingSurge)),
-        }
-        self:RegisterAura("tidal_waves_1", 1, 53390, "high_tide", "Left (CCW)", 0.8, 255, 255, 255, true, tidalSpells);
-        self:RegisterAura("tidal_waves_2", 2, 53390, "high_tide", "Left (CCW)", 0.8, 255, 255, 255, true, tidalSpells);
-        self:RegisterAura("tidal_waves_2", 2, 53390, "high_tide", "Right (CW)", 0.8, 255, 255, 255, true); -- no need to re-glow tidalSpells for right texture
     end
-
 
     if self.IsWrath() then
         -- Maelstrom Weapon
         local lightningBolt = 403;
         local chainLightning = 421;
-        local lesserHealingWave = 8004;
-        local healingWave = 331;
         local chainHeal = 1064;
         local hex = 51514;
         local maelstromSpells = {
@@ -256,15 +266,6 @@ local function registerClass(self)
         self:RegisterAura("maelstrom_weapon_3", 3, 53817, "maelstrom_weapon_3", "Top", 1, 255, 255, 255, false);
         self:RegisterAura("maelstrom_weapon_4", 4, 53817, "maelstrom_weapon_4", "Top", 1, 255, 255, 255, false);
         self:RegisterAura("maelstrom_weapon_5", 5, 53817, "maelstrom_weapon", "Top", 1, 255, 255, 255, true, maelstromSpells);
-
-        -- Tidal Waves
-        local tidalSpells = {
-            (GetSpellInfo(lesserHealingWave)),
-            (GetSpellInfo(healingWave)),
-        }
-        self:RegisterAura("tidal_waves_1", 1, 53390, "high_tide", "Left (CCW)", 0.8, 255, 255, 255, true, tidalSpells);
-        self:RegisterAura("tidal_waves_2", 2, 53390, "high_tide", "Left (CCW)", 0.8, 255, 255, 255, true, tidalSpells);
-        self:RegisterAura("tidal_waves_2", 2, 53390, "high_tide", "Right (CW)", 0.8, 255, 255, 255, true); -- no need to re-glow tidalSpells for right texture
 
         -- Healing Trance / Soul Preserver
         self:RegisterAuraSoulPreserver("soul_preserver_shaman", 60515); -- 60515 = Shaman buff
@@ -351,14 +352,6 @@ local function registerClass(self)
             local pulse = lightningShieldStacks == 9;
             self:RegisterAura(auraName, lightningShieldStacks, RollingThunderHandler.fakeSpellID, "fulmination", "Top", scale, 255, 255, 255, pulse, RollingThunderHandler.earthShockSpells);
         end
-        -- Tidal Waves SoD
-        local tidalSpells = {
-            GetSpellInfo(lesserHealingWave),
-            GetSpellInfo(healingWave),
-        }
-        self:RegisterAura("tidal_waves_1_sod", 1, 432041, "high_tide", "Left (CCW)", 0.8, 255, 255, 255, true, tidalSpells);
-        self:RegisterAura("tidal_waves_2_sod", 2, 432041, "high_tide", "Left (CCW)", 0.8, 255, 255, 255, true, tidalSpells);
-        self:RegisterAura("tidal_waves_2_sod", 2, 432041, "high_tide", "Right (CW)", 0.8, 255, 255, 255, true); -- no need to re-glow tidalSpells for right texture
     end
 end
 
@@ -376,9 +369,6 @@ local function loadOptions(self)
     local elementalFocusBuff = 16246;
     local elementalFocusTalent = 16164;
 
-    local tidalWavesBuff = 53390;
-    local tidalWavesTalent = 51562;
-
     -- Season of Discovery
     local moltenBlastSoD = 425339;
     local maelstromSoDBuff = 408505;
@@ -389,8 +379,6 @@ local function loadOptions(self)
     local lightningShield = 324;
     local rollingThunderSoD = 432056;
     local earthShock = 8042;
-    local tidalWavesSoDBuff = 432041;
-    local tidalWavesSoDTalent = 432233;
 
     --Cataclysm
     local fulminationTalentCata = 88766;
@@ -415,12 +403,10 @@ local function loadOptions(self)
         self:AddOverlayOption(fulminationTalentCata, lightningShield, 9, nil, nil, nil, RollingThunderHandler.fakeSpellID);
         self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 0, oneToFourStacks, nil, 4); -- setup any stacks, test with 4 stacks
         self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 5); -- setup 5 stacks
-        self:AddOverlayOption(tidalWavesTalent, tidalWavesBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
     end
     if self.IsWrath() then
         self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 0, oneToFourStacks, nil, 4); -- setup any stacks, test with 4 stacks
         self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 5); -- setup 5 stacks
-        self:AddOverlayOption(tidalWavesTalent, tidalWavesBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
         self:AddSoulPreserverOverlayOption(60515); -- 60515 = Shaman buff
     elseif self.IsSoD() then
         self:AddOverlayOption(powerSurgeSoD, powerSurgeSoDBuff);
@@ -430,7 +416,6 @@ local function loadOptions(self)
         self:AddOverlayOption(rollingThunderSoD, lightningShield, 7, nil, nil, nil, RollingThunderHandler.fakeSpellID);
         self:AddOverlayOption(rollingThunderSoD, lightningShield, 8, nil, nil, nil, RollingThunderHandler.fakeSpellID);
         self:AddOverlayOption(rollingThunderSoD, lightningShield, 9, nil, nil, nil, RollingThunderHandler.fakeSpellID);
-        self:AddOverlayOption(tidalWavesSoDTalent, tidalWavesSoDBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
     end
 
     if self.IsCata() then
@@ -443,9 +428,6 @@ local function loadOptions(self)
         self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, chainHeal, fiveStacks);
         self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, healingRain, fiveStacks);
         self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, hex, fiveStacks);
-        self:AddGlowingOption(tidalWavesTalent, tidalWavesBuff, greaterHealingWave);
-        self:AddGlowingOption(tidalWavesTalent, tidalWavesBuff, healingWave);
-        self:AddGlowingOption(tidalWavesTalent, tidalWavesBuff, healingSurge);
     end
     if self.IsWrath() then
         self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, lightningBolt, fiveStacks);
@@ -454,8 +436,6 @@ local function loadOptions(self)
         self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, healingWave, fiveStacks);
         self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, chainHeal, fiveStacks);
         self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, hex, fiveStacks);
-        self:AddGlowingOption(tidalWavesTalent, tidalWavesBuff, lesserHealingWave);
-        self:AddGlowingOption(tidalWavesTalent, tidalWavesBuff, healingWave);
     elseif self.IsSoD() then
         self:AddGlowingOption(nil, moltenBlastSoD, moltenBlastSoD);
         self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, chainLightning);
@@ -468,8 +448,6 @@ local function loadOptions(self)
         self:AddGlowingOption(maelstromSoD, maelstromSoDBuff, chainHeal, fiveStacks);
         self:AddGlowingOption(maelstromSoD, maelstromSoDBuff, lavaBurstSoD, fiveStacks);
         self:AddGlowingOption(rollingThunderSoD, lightningShield, earthShock, sevenToNineStacks);
-        self:AddGlowingOption(tidalWavesSoDTalent, tidalWavesSoDBuff, lesserHealingWave);
-        self:AddGlowingOption(tidalWavesSoDTalent, tidalWavesSoDBuff, healingWave);
     end
 end
 
