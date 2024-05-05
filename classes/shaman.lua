@@ -129,7 +129,7 @@ local function rollingThunderCombatCheck(combat)
         if RollingThunderHandler.glowtimer then
             RollingThunderHandler.glowtimer:Cancel();
             RollingThunderHandler.glowtimer = nil;
-            end
+        end
         checkRollingThunderRuneAndLightningSieldStacks();
     end
 end
@@ -416,7 +416,7 @@ local function loadOptions(self)
         self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 0, oneToFourStacks, nil, 4); -- setup any stacks, test with 4 stacks
         self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 5); -- setup 5 stacks
         self:AddOverlayOption(tidalWavesTalent, tidalWavesBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
-    end 
+    end
     if self.IsWrath() then
         self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 0, oneToFourStacks, nil, 4); -- setup any stacks, test with 4 stacks
         self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 5); -- setup 5 stacks
@@ -446,7 +446,7 @@ local function loadOptions(self)
         self:AddGlowingOption(tidalWavesTalent, tidalWavesBuff, greaterHealingWave);
         self:AddGlowingOption(tidalWavesTalent, tidalWavesBuff, healingWave);
         self:AddGlowingOption(tidalWavesTalent, tidalWavesBuff, healingSurge);
-    end 
+    end
     if self.IsWrath() then
         self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, lightningBolt, fiveStacks);
         self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, chainLightning, fiveStacks);
