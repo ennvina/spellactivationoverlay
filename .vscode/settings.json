@@ -93,6 +93,8 @@
         "UnitGUID",
         "UnitHealth",
         "UnitHealthMax",
+        "UnitRace",
+        "UnitSex",
         // WoW constants
         "ACTION_SPELL_AURA_APPLIED_DOSE",
         "AVAILABLE",

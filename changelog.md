@@ -70,6 +70,7 @@ Bug Fixes
 Known issues
 - Some classes have too many options to fit in the options panel
 - Spell Alerts with distinct stack effects may display a short visual timer
+- Bladestorm textures may flip horizontally after changing race or body type
 
 #### v1.3.2 (2024-04-30)
 

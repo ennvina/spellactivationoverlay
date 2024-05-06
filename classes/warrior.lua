@@ -1,4 +1,5 @@
 local AddonName, SAO = ...
+local Module = "warrior"
 
 -- Optimize frequent calls
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
@@ -365,6 +366,57 @@ local function unitHealth(self, ...)
     end
 end
 
+local function useBladestorm()
+    local bladestorm = 46924;
+
+    -- Bladestorm texture orientation depends on race and gender
+    -- Known limitation: orientation may be incorrect if the player changes race or gender
+    -- It can be solved in theory, but it would probably require writing unhealthy code
+    local race = select(3, UnitRace("player"));
+    local gender = UnitSex("player");
+    local ccw = { "Left (vFlipped)", "Right (Flipped)" };
+    local cw  = { "Left", "Right (180)" };
+    -- Table of positions
+    -- Each row has the following structure:
+    -- [race] = { unknown, male, female }
+    local positions = {
+        [1]  = { nil, ccw, ccw }, -- Human
+        [2]  = { nil, ccw, ccw }, -- Orc
+        [3]  = { nil, ccw, ccw }, -- Dwarf
+        [4]  = { nil, ccw, ccw }, -- Night Elf
+        [5]  = { nil, ccw, ccw }, -- Undead
+        [6]  = { nil, ccw, ccw }, -- Tauren
+        [7]  = { nil, ccw, ccw }, -- Gnome
+        [8]  = { nil, ccw, cw  }, -- Troll
+        [9]  = { nil, cw , cw  }, -- Goblin
+        [10] = { nil, ccw, cw  }, -- Blood Elf
+        [11] = { nil, ccw, ccw }, -- Draenei
+        [22] = { nil, ccw, ccw }, -- Worgen
+    };
+    if not positions[race] then
+        SAO:Error(Module, "Unknown race "..tostring((UnitRace("player"))));
+        race = 2; -- Orc
+    end
+    if not positions[race][gender] then
+        SAO:Error(Module, "Unknown gender "..tostring(gender));
+        gender = 2; -- Male
+    end
+
+    SAO:CreateEffect(
+        "bladestorm",
+        SAO.WRATH + SAO.CATA,
+        bladestorm, -- Bladestorm (ability)
+        "aura",
+        {
+            overlays = {
+                default = { texture = "bandits_guile", scale = 1.25, color = { 200, 200, 200 } },
+                { position = positions[race][gender][1], option = false },
+                { position = positions[race][gender][2], option = true },
+            },
+        }
+    );
+end
+
 local function registerClass(self)
     local overpower = 7384;
     local execute = 5308;
@@ -376,7 +428,6 @@ local function registerClass(self)
     local victoryRushSoD = 402927;
     local ragingBlowSoD = 402911;
     local bloodSurgeSoD = 413399;
-    local bladestorm = 46924;
 
     if self.IsSoD() then
         self:RegisterAura("bloodsurge", 0, bloodSurgeSoD, "blood_surge", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(slam)) });
@@ -423,19 +474,7 @@ local function registerClass(self)
     end
 
     -- Bladestorm
-    self:CreateEffect(
-        "bladestorm",
-        SAO.WRATH + SAO.CATA,
-        bladestorm, -- Bladestorm (ability)
-        "aura",
-        {
-            overlays = {
-                default = { texture = "bandits_guile", scale = 1.25, color = { 200, 200, 200 } },
-                { position = "Left (vFlipped)", option = false },
-                { position = "Right (Flipped)", option = true },
-            },
-        }
-    );
+    useBladestorm();
 end
 
 local function loadOptions(self)
