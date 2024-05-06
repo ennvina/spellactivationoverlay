@@ -277,7 +277,7 @@ end
 
 local function createAura(effect, props)
     if type(props) == 'table' then
-        effect.talent = props.talent;
+        effect.talent = props.talent or effect.spellID;
         effect.combatOnly = props.combatOnly;
     else
         SAO:Error(Module, "Creating an aura for "..tostring(effect.name).." requires a 'props' table");
