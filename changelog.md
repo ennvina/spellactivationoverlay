@@ -27,6 +27,9 @@ New effects:
 - New GAB: Shaman's Healing Surge, during Tidal Waves (Cataclysm)
 - New GAB: Shaman's Healing Wave, during Tidal Waves (Cataclysm)
 - New GAB: Shaman's Greater Healing Wave, during Tidal Waves (Cataclysm)
+- New GAB: Warlock's Chaos Bolt, during Backdraft (Cataclysm)
+- New GAB: Warlock's Incinerate, during Backdraft (Cataclysm)
+- New GAB: Warlock's Shadow Bolt, during Backdraft (Cataclysm)
 - New GAB: Warlock's Soul Fire, during Empowered Imp (Cataclysm)
 
 Updated Effects:

@@ -6,12 +6,14 @@ local UnitCanAttack = UnitCanAttack
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
+local chaosBolt = 50796;
 local incinerate = 29722;
 local shadowBolt = 686;
 local soulFire = 6353;
 
 local moltenCoreBuff = { 47383, 71162, 71165 };
 local decimationBuff = { 63165, 63167 };
+local backdraftBuff = { 54274, 54276, 54277 };
 
 --[[
     DrainSoulHandler evaluates when the Drain Soul button should glow
@@ -181,6 +183,37 @@ local function useDecimation(self)
     end
 end
 
+local function registerBackdraft(self, rank)
+    local backdraftName = { "backdraft_low", "backdraft_medium", "backdraft_high" };
+
+    self:CreateEffect(
+        backdraftName[rank],
+        SAO.CATA,
+        backdraftBuff[rank], -- Backdraft (buff) rank 1, 2 or 3
+        "aura",
+        {
+            talent = 47258, -- Backdraft (talent)
+            buttons = {
+                default = { option = (rank == 3) },
+                [SAO.CATA] = { shadowBolt, incinerate, chaosBolt },
+            },
+        }
+    );
+end
+
+local function useBackdraft(self)
+    if self.IsCata() then
+        self:AddOverlayLink(backdraftBuff[3], backdraftBuff[1]);
+        self:AddOverlayLink(backdraftBuff[3], backdraftBuff[2]);
+        self:AddGlowingLink(backdraftBuff[3], backdraftBuff[1]);
+        self:AddGlowingLink(backdraftBuff[3], backdraftBuff[2]);
+
+        registerBackdraft(self, 1); -- 1/3 talent point
+        registerBackdraft(self, 2); -- 2/3 talent points
+        registerBackdraft(self, 3); -- 3/3 talent points
+    end
+end
+
 local function useBacklash(self)
     self:CreateEffect(
         "backlash",
@@ -220,6 +253,7 @@ local function registerClass(self)
     useDecimation(self);
 
     -- Destruction
+    useBackdraft(self);
     useBacklash(self);
     useEmpoweredImp(self);
 end

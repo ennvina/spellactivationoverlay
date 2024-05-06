@@ -501,12 +501,11 @@ SAO.defaults = {
                 },
             },
             glow = {
+                [1120] = { -- Drain Soul (Wrath+)
+                    [1120] = "spec:1", -- Drain Soul
+                },
                 [17941] = { -- Nightfall
                     [686] = true, -- Shadow Bolt
-                },
-                [34936] = { -- Backlash (TBC+)
-                    [686]   = true, -- Shadow Bolt
-                    [29722] = true, -- Incinerate
                 },
                 [71165] = { -- Molten Core (Wrath+)
                     [29722] = true, -- Incinerate
@@ -515,8 +514,14 @@ SAO.defaults = {
                 [63167] = { -- Decimation (Wrath+)
                     [6353] = true, -- Soul Fire
                 },
-                [1120] = { -- Drain Soul (Wrath+)
-                    [1120] = "spec:1", -- Drain Soul
+                [54277] = { -- Backdraft (Cataclysm)
+                    [686]   = false, -- Shadow Bolt
+                    [29722] = false, -- Incinerate
+                    [50796] = false, -- Chaos Bolt
+                },
+                [34936] = { -- Backlash (TBC+)
+                    [686]   = true, -- Shadow Bolt
+                    [29722] = true, -- Incinerate
                 },
                 [47283] = { -- Empowered Imp (Cataclysm)
                     [6353]  = true, -- Soul Fire
