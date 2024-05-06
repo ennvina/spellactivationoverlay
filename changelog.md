@@ -63,8 +63,8 @@ Bug Fixes
 - Warlock's Drain Soul spec names in options displayed numbers (Cataclysm)
 
 Known issues
+- Some classes have too many options to fit in the options panel
 - Spell Alerts with distinct stack effects may display a short visual timer
-- The issue was already there, please do not blame this release, thank you :)
 
 #### v1.3.2 (2024-04-30)
 
