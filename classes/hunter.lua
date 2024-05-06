@@ -140,6 +140,7 @@ local function useLockAndLoad()
                 },
             },
             buttons = {
+                default = { stacks = 0 },
                 [SAO.SOD] = nil, -- Don't glow buttons for Season of Discovery, there would be too many to suggest
                 [SAO.WRATH] = { arcaneShot, explosiveShot },
                 [SAO.CATA] = explosiveShot,
