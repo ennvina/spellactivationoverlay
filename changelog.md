@@ -37,6 +37,7 @@ Updated Effects:
 - Shaman's Elemental Focus spell alert uses a more discreet texture (Cataclysm)
 
 Removed effects:
+- Death Knight's Rune Strike no longer glows (Cataclysm)
 - Druid's Nature's Grace has been removed (Cataclysm)
 - Hunter's Arcane Shot no longer glows during Lock and Load (Cataclysm)
 - Hunter's Improved Steady Shot has been removed (Cataclysm)

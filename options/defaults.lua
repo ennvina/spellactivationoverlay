@@ -21,7 +21,7 @@ SAO.defaults = {
                 },
             },
             glow = {
-                [56815] = { -- Rune Strike
+                [56815] = { -- Rune Strike (Wrath)
                     [56815] = true, -- Rune Strike
                 },
                 [59052] = { -- Rime
