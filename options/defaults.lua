@@ -493,7 +493,7 @@ SAO.defaults = {
                 [71165] = { -- Molten Core (Wrath+)
                     [0] = true, -- any stacks
                 },
-                [63167] = { -- Decimation
+                [63167] = { -- Decimation (Wrath+)
                     [0] = true,
                 },
                 [47283] = { -- Empowered Imp
@@ -512,7 +512,7 @@ SAO.defaults = {
                     [29722] = true, -- Incinerate
                     [6353]  = true, -- Soul Fire (not for Cata)
                 },
-                [63167] = { -- Decimation
+                [63167] = { -- Decimation (Wrath+)
                     [6353] = true, -- Soul Fire
                 },
                 [1120] = { -- Drain Soul (Wrath+)

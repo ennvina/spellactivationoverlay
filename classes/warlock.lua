@@ -6,6 +6,10 @@ local UnitCanAttack = UnitCanAttack
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
+local incinerate = 29722;
+local shadowBolt = 686;
+local soulFire = 6353;
+
 --[[
     DrainSoulHandler evaluates when the Drain Soul button should glow
     because the target has 25% health or less. Only in Wrath Classic.
@@ -96,12 +100,11 @@ local function unitHealth(self, unitID)
 end
 
 local function registerMoltenCore(self, rank)
-    local incinerate = 29722;
-    local soulFire = 6353;
     local moltenCoreName = { "molten_core_low", "molten_core_medium", "molten_core_high" };
     local moltenCoreBuff = { 47383, 71162, 71165 };
     local overlayOption = (rank == 3) and { setupStacks = 0, testStacks = 3 };
     local buttonOption = rank == 3;
+
     self:CreateEffect(
         moltenCoreName[rank],
         SAO.WRATH + SAO.CATA,
@@ -123,10 +126,24 @@ local function registerMoltenCore(self, rank)
     );
 end
 
+local function registerDecimation(self, rank)
+    local decimationName = { "decimation_low", "decimation_high" };
+    local decimationBuff = { 63165, 63167 };
+
+    self:CreateEffect(
+        decimationName[rank],
+        SAO.WRATH + SAO.CATA,
+        decimationBuff[rank], -- Decimation (buff) rank 1 or 2
+        "aura",
+        {
+            talent = 63156, -- Decimation (talent)
+            overlay = { texture = "impact", position = "Top", scale = 0.8, option = (rank == 2) },
+            button = { spellID = soulFire, option = (rank == 2) },
+        }
+    );
+end
+
 local function registerClass(self)
-    local shadowBolt = 686;
-    local incinerate = 29722;
-    local soulFire = 6353;
 
     local moltenCoreBuff1 = 47383;
     local moltenCoreBuff2 = 71162;
@@ -168,16 +185,16 @@ local function registerClass(self)
     end
 
     -- Decimation
-    self:RegisterAura("decimation_low", 0, decimationBuff1, "impact", "Top", 0.8, 255, 255, 255, true, { (GetSpellInfo(soulFire)) }); -- 1/2 talent point
-    self:RegisterAura("decimation_high", 0, decimationBuff2, "impact", "Top", 0.8, 255, 255, 255, true, { (GetSpellInfo(soulFire)) }); -- 2/2 talent point
+    if self.IsWrath() or self.IsCata() then
+        registerDecimation(self, 1); -- 1/2 talent point
+        registerDecimation(self, 2); -- 2/2 talent points
+    end
 
     -- Nightfall / Shadow Trance
     self:RegisterAura("nightfall", 0, 17941, "nightfall", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(shadowBolt)) });
 end
 
 local function loadOptions(self)
-    local shadowBolt = 686;
-    local soulFire = 6353;
     local drainSoul = 1120;
 
     local nightfallBuff = 17941;
@@ -186,20 +203,15 @@ local function loadOptions(self)
     local empoweredImpBuff = 47283;
     local empoweredImpTalent = 47220;
 
-    local decimationBuff2 = 63167;
-    local decimationTalent = 63156;
-
 --    local akaShadowTrance = GetSpellInfo(nightfallBuff);
 
     self:AddOverlayOption(nightfallTalent, nightfallBuff --[[, 0, akaShadowTrance]]);
-    self:AddOverlayOption(decimationTalent, decimationBuff2);
     self:AddOverlayOption(empoweredImpTalent, empoweredImpBuff);
 
     if DrainSoulHandler.initialized then
         self:AddGlowingOption(nil, DrainSoulHandler.optionID, drainSoul, nil, string.format(string.format(HEALTH_COST_PCT, "<%s%"), 25), DrainSoulHandler.variants);
     end
     self:AddGlowingOption(nightfallTalent, nightfallBuff, shadowBolt --[[, akaShadowTrance]]);
-    self:AddGlowingOption(decimationTalent, decimationBuff2, soulFire);
     -- self:AddGlowingOption(empoweredImpTalent, empoweredImpBuff, ...); -- Maybe add spell options for Empowered Imp
 end
 
