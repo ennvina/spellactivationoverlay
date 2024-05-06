@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v1.4.0 (2024-05-xx)
+#### v1.4.0 (2024-05-06)
 
 Shout-out to fellow developers Amanthuul and espionn. Thanks!
 
