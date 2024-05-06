@@ -487,7 +487,7 @@ SAO.defaults = {
                 [17941] = { -- Nightfall
                     [0] = true,
                 },
-                [34936] = { -- Backlash
+                [34936] = { -- Backlash (TBC+)
                     [0] = true,
                 },
                 [71165] = { -- Molten Core
@@ -504,7 +504,7 @@ SAO.defaults = {
                 [17941] = { -- Nightfall
                     [686] = true, -- Shadow Bolt
                 },
-                [34936] = { -- Backlash
+                [34936] = { -- Backlash (TBC+)
                     [686]   = true, -- Shadow Bolt
                     [29722] = true, -- Incinerate
                 },

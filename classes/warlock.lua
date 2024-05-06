@@ -124,7 +124,17 @@ local function registerClass(self)
     self:AddGlowingLink(decimationBuff2, decimationBuff1);
 
     -- Backlash
-    self:RegisterAura("backlash", 0, 34936, "backlash", "Top", 1, 255, 255, 255, true, { shadowBolt, incinerate });
+    self:CreateEffect(
+        "backlash",
+        SAO.TBC + SAO.WRATH + SAO.CATA,
+        34936, -- Backlash (buff)
+        "aura",
+        {
+            talent = 34935, -- Backlash (talent)
+            overlay = { texture = "backlash", position = "Top" },
+            buttons = { shadowBolt, incinerate },
+        }
+    );
 
     -- Empowered Imp
     self:RegisterAura("empowered_imp", 0, 47283, "imp_empowerment", "Left + Right (Flipped)", 1, 255, 255, 255, true);
@@ -151,9 +161,6 @@ local function loadOptions(self)
     local nightfallBuff = 17941;
     local nightfallTalent = 18094;
 
-    local backlashBuff = 34936;
-    local backlashTalent = 34935;
-
     local empoweredImpBuff = 47283;
     local empoweredImpTalent = 47220;
 
@@ -166,7 +173,6 @@ local function loadOptions(self)
 --    local akaShadowTrance = GetSpellInfo(nightfallBuff);
 
     self:AddOverlayOption(nightfallTalent, nightfallBuff --[[, 0, akaShadowTrance]]);
-    self:AddOverlayOption(backlashTalent, backlashBuff);
     self:AddOverlayOption(moltenCoreTalent, moltenCoreBuff3, 0, nil, nil, 3); -- setup any stacks, test with 3 stacks
     self:AddOverlayOption(decimationTalent, decimationBuff2);
     self:AddOverlayOption(empoweredImpTalent, empoweredImpBuff);
@@ -175,8 +181,6 @@ local function loadOptions(self)
         self:AddGlowingOption(nil, DrainSoulHandler.optionID, drainSoul, nil, string.format(string.format(HEALTH_COST_PCT, "<%s%"), 25), DrainSoulHandler.variants);
     end
     self:AddGlowingOption(nightfallTalent, nightfallBuff, shadowBolt --[[, akaShadowTrance]]);
-    self:AddGlowingOption(backlashTalent, backlashBuff, shadowBolt);
-    self:AddGlowingOption(backlashTalent, backlashBuff, incinerate);
     self:AddGlowingOption(moltenCoreTalent, moltenCoreBuff3, incinerate);
     self:AddGlowingOption(moltenCoreTalent, moltenCoreBuff3, soulFire);
     self:AddGlowingOption(decimationTalent, decimationBuff2, soulFire);
