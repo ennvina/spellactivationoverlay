@@ -95,17 +95,38 @@ local function unitHealth(self, unitID)
     end
 end
 
-local function registerMolenCore(self, baseName, spellID, glowIDs)
-    self:RegisterAura(baseName.."_1", 1, spellID, "molten_core", "Left", 1, 255, 255, 255, true, glowIDs);
-    self:RegisterAura(baseName.."_2", 2, spellID, "molten_core", "Left + Right (Flipped)", 1, 255, 255, 255, true, glowIDs);
-    self:RegisterAura(baseName.."_3", 3, spellID, "molten_core", "Left + Right (Flipped)", 1, 255, 255, 255, true, glowIDs); -- Same as 2 charges
+local function registerMoltenCore(self, rank)
+    local incinerate = 29722;
+    local soulFire = 6353;
+    local moltenCoreName = { "molten_core_low", "molten_core_medium", "molten_core_high" };
+    local moltenCoreBuff = { 47383, 71162, 71165 };
+    local overlayOption = (rank == 3) and { setupStacks = 0, testStacks = 3 };
+    local buttonOption = rank == 3;
+    self:CreateEffect(
+        moltenCoreName[rank],
+        SAO.WRATH + SAO.CATA,
+        moltenCoreBuff[rank], -- Molten Core (buff) rank 1, 2 or 3
+        "aura",
+        {
+            talent = 47245, -- Molten Core (talent)
+            overlays = {
+                { stacks = 1, texture = "molten_core", position = "Left", option = false },
+                { stacks = 2, texture = "molten_core", position = "Left + Right (Flipped)", option = false },
+                { stacks = 3, texture = "molten_core", position = "Left + Right (Flipped)", option = overlayOption }, -- Same visuals as 2 charges
+            },
+            buttons = {
+                default = { option = buttonOption },
+                [SAO.WRATH] = { incinerate, soulFire },
+                [SAO.CATA] = { incinerate },
+            },
+        }
+    );
 end
 
 local function registerClass(self)
-    local shadowBolt = GetSpellInfo(686);
-    local incinerate = GetSpellInfo(29722);
-    local soulFire = GetSpellInfo(6353);
-    local incinerateAndSoulFire = { incinerate, soulFire };
+    local shadowBolt = 686;
+    local incinerate = 29722;
+    local soulFire = 6353;
 
     local moltenCoreBuff1 = 47383;
     local moltenCoreBuff2 = 71162;
@@ -140,21 +161,22 @@ local function registerClass(self)
     self:RegisterAura("empowered_imp", 0, 47283, "imp_empowerment", "Left + Right (Flipped)", 1, 255, 255, 255, true);
 
     -- Molten Core
-    registerMolenCore(self, "molten_core_low", moltenCoreBuff1, incinerateAndSoulFire); -- 1/3 talent point
-    registerMolenCore(self, "molten_core_medium", moltenCoreBuff2, incinerateAndSoulFire); -- 2/3 talent points
-    registerMolenCore(self, "molten_core_high", moltenCoreBuff3, incinerateAndSoulFire); -- 3/3 talent points
+    if self.IsWrath() or self.IsCata() then
+        registerMoltenCore(self, 1); -- 1/3 talent point
+        registerMoltenCore(self, 2); -- 2/3 talent points
+        registerMoltenCore(self, 3); -- 3/3 talent points
+    end
 
     -- Decimation
-    self:RegisterAura("decimation_low", 0, decimationBuff1, "impact", "Top", 0.8, 255, 255, 255, true, { soulFire }); -- 1/2 talent point
-    self:RegisterAura("decimation_high", 0, decimationBuff2, "impact", "Top", 0.8, 255, 255, 255, true, { soulFire }); -- 2/2 talent point
+    self:RegisterAura("decimation_low", 0, decimationBuff1, "impact", "Top", 0.8, 255, 255, 255, true, { (GetSpellInfo(soulFire)) }); -- 1/2 talent point
+    self:RegisterAura("decimation_high", 0, decimationBuff2, "impact", "Top", 0.8, 255, 255, 255, true, { (GetSpellInfo(soulFire)) }); -- 2/2 talent point
 
     -- Nightfall / Shadow Trance
-    self:RegisterAura("nightfall", 0, 17941, "nightfall", "Left + Right (Flipped)", 1, 255, 255, 255, true, { shadowBolt });
+    self:RegisterAura("nightfall", 0, 17941, "nightfall", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(shadowBolt)) });
 end
 
 local function loadOptions(self)
     local shadowBolt = 686;
-    local incinerate = 29722;
     local soulFire = 6353;
     local drainSoul = 1120;
 
@@ -164,16 +186,12 @@ local function loadOptions(self)
     local empoweredImpBuff = 47283;
     local empoweredImpTalent = 47220;
 
-    local moltenCoreBuff3 = 71165;
-    local moltenCoreTalent = 47245;
-
     local decimationBuff2 = 63167;
     local decimationTalent = 63156;
 
 --    local akaShadowTrance = GetSpellInfo(nightfallBuff);
 
     self:AddOverlayOption(nightfallTalent, nightfallBuff --[[, 0, akaShadowTrance]]);
-    self:AddOverlayOption(moltenCoreTalent, moltenCoreBuff3, 0, nil, nil, 3); -- setup any stacks, test with 3 stacks
     self:AddOverlayOption(decimationTalent, decimationBuff2);
     self:AddOverlayOption(empoweredImpTalent, empoweredImpBuff);
 
@@ -181,8 +199,6 @@ local function loadOptions(self)
         self:AddGlowingOption(nil, DrainSoulHandler.optionID, drainSoul, nil, string.format(string.format(HEALTH_COST_PCT, "<%s%"), 25), DrainSoulHandler.variants);
     end
     self:AddGlowingOption(nightfallTalent, nightfallBuff, shadowBolt --[[, akaShadowTrance]]);
-    self:AddGlowingOption(moltenCoreTalent, moltenCoreBuff3, incinerate);
-    self:AddGlowingOption(moltenCoreTalent, moltenCoreBuff3, soulFire);
     self:AddGlowingOption(decimationTalent, decimationBuff2, soulFire);
     -- self:AddGlowingOption(empoweredImpTalent, empoweredImpBuff, ...); -- Maybe add spell options for Empowered Imp
 end

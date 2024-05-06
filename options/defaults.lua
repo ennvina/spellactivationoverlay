@@ -490,7 +490,7 @@ SAO.defaults = {
                 [34936] = { -- Backlash (TBC+)
                     [0] = true,
                 },
-                [71165] = { -- Molten Core
+                [71165] = { -- Molten Core (Wrath+)
                     [0] = true, -- any stacks
                 },
                 [63167] = { -- Decimation
@@ -508,9 +508,9 @@ SAO.defaults = {
                     [686]   = true, -- Shadow Bolt
                     [29722] = true, -- Incinerate
                 },
-                [71165] = { -- Molten Core
+                [71165] = { -- Molten Core (Wrath+)
                     [29722] = true, -- Incinerate
-                    [6353]  = true, -- Soul Fire
+                    [6353]  = true, -- Soul Fire (not for Cata)
                 },
                 [63167] = { -- Decimation
                     [6353] = true, -- Soul Fire
