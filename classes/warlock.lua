@@ -175,7 +175,19 @@ local function registerClass(self)
     );
 
     -- Empowered Imp
-    self:RegisterAura("empowered_imp", 0, 47283, "imp_empowerment", "Left + Right (Flipped)", 1, 255, 255, 255, true);
+    self:CreateEffect(
+        "empowered_imp",
+        SAO.WRATH + SAO.CATA,
+        47283, -- Empowered Imp (buff)
+        "aura",
+        {
+            talent = 47220, -- Empowered Imp (talent)
+            overlay = { texture = "imp_empowerment", position = "Left + Right (Flipped)" },
+            buttons = {
+                [SAO.CATA] = soulFire,
+            }
+        }
+    );
 
     -- Molten Core
     if self.IsWrath() or self.IsCata() then
@@ -206,11 +218,6 @@ end
 
 local function loadOptions(self)
     local drainSoul = 1120;
-
-    local empoweredImpBuff = 47283;
-    local empoweredImpTalent = 47220;
-
-    self:AddOverlayOption(empoweredImpTalent, empoweredImpBuff);
 
     if DrainSoulHandler.initialized then
         self:AddGlowingOption(nil, DrainSoulHandler.optionID, drainSoul, nil, string.format(string.format(HEALTH_COST_PCT, "<%s%"), 25), DrainSoulHandler.variants);

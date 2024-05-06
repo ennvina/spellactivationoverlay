@@ -496,7 +496,7 @@ SAO.defaults = {
                 [63167] = { -- Decimation (Wrath+)
                     [0] = true,
                 },
-                [47283] = { -- Empowered Imp
+                [47283] = { -- Empowered Imp (Wrath+)
                     [0] = true,
                 },
             },
@@ -517,6 +517,9 @@ SAO.defaults = {
                 },
                 [1120] = { -- Drain Soul (Wrath+)
                     [1120] = "spec:1", -- Drain Soul
+                },
+                [47283] = { -- Empowered Imp (Cataclysm)
+                    [6353]  = true, -- Soul Fire
                 },
             },
         },

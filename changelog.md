@@ -27,6 +27,7 @@ New effects:
 - New GAB: Shaman's Healing Surge, during Tidal Waves (Cataclysm)
 - New GAB: Shaman's Healing Wave, during Tidal Waves (Cataclysm)
 - New GAB: Shaman's Greater Healing Wave, during Tidal Waves (Cataclysm)
+- New GAB: Warlock's Soul Fire, during Empowered Imp (Cataclysm)
 
 Updated Effects:
 - Shaman's Elemental Focus spell alert uses a more discreet texture (Cataclysm)
