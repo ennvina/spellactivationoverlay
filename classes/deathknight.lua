@@ -12,7 +12,7 @@ local runeTap = 48982;
 local function useRuneStrike()
     SAO:CreateEffect(
         "rune_strike",
-        SAO.WRATH + SAO.CATA,
+        SAO.WRATH,
         runeStrike, -- Rune Strike (ability)
         "counter",
         { useName = false }
