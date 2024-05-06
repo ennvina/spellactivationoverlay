@@ -155,6 +155,10 @@ function SAO.LEARNED_SPELL_IN_TAB(self, ...)
     self:LearnNewSpell(spellID);
 end
 
+function SAO.PLAYER_LOGIN(self, ...)
+    self:RegisterPendingEffectsAfterPlayerLoggedIn();
+end
+
 -- Event receiver
 function SAO.OnEvent(self, event, ...)
     if self[event] then
