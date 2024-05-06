@@ -217,6 +217,9 @@ local complexLocationTable = {
 	["LEFT (180)"] = {
 		LEFT = { hFlip = true, vFlip = true },
 	},
+	["LEFT (VFLIPPED)"] = {
+		LEFT = { vFlip = true },
+	},
 	["RIGHT (CW)"] = {
 		RIGHT = { cw = 1 },
 	},
@@ -225,6 +228,9 @@ local complexLocationTable = {
 	},
 	["RIGHT (180)"] = {
 		RIGHT = { hFlip = true, vFlip = true },
+	},
+	["RIGHT (VFLIPPED)"] = {
+		RIGHT = { vFlip = true },
 	},
 	["TOP (CW)"] = {
 		TOP = { cw = 1 },
@@ -235,6 +241,9 @@ local complexLocationTable = {
 	["TOP (180)"] = {
 		TOP = { hFlip = true, vFlip = true },
 	},
+	["TOP (HFLIPPED)"] = {
+		TOP = { hFlip = true },
+	},
 	["BOTTOM (CW)"] = {
 		BOTTOM = { cw = 1 },
 	},
@@ -243,6 +252,9 @@ local complexLocationTable = {
 	},
 	["BOTTOM (180)"] = {
 		BOTTOM = { hFlip = true, vFlip = true },
+	},
+	["BOTTOM (HFLIPPED)"] = {
+		BOTTOM = { hFlip = true },
 	},
 }
 
