@@ -219,17 +219,18 @@ local function importOverlays(effect, props)
     end
     local default = props.buttons and props.buttons.default or nil;
     for key, overlayConfig in pairs(props.overlays or {}) do
-        if key == "default" then break end
-        if type(key) == 'number' and key >= SAO.ERA then
-            if type(overlayConfig) == 'table' and overlayConfig[1] then
-                for _, subOverlayConfig in ipairs(overlayConfig) do
-                    addOneOverlay(effect.overlays, subOverlayConfig, key, overlayConfig.default or default);
+        if key ~= "default" then
+            if type(key) == 'number' and key >= SAO.ERA then
+                if type(overlayConfig) == 'table' and overlayConfig[1] then
+                    for _, subOverlayConfig in ipairs(overlayConfig) do
+                        addOneOverlay(effect.overlays, subOverlayConfig, key, overlayConfig.default or default);
+                    end
+                else
+                    addOneOverlay(effect.overlays, overlayConfig, key, default);
                 end
             else
-                addOneOverlay(effect.overlays, overlayConfig, key, default);
+                addOneOverlay(effect.overlays, overlayConfig, nil, default);
             end
-        else
-            addOneOverlay(effect.overlays, overlayConfig, nil, default);
         end
     end
 end
@@ -241,17 +242,18 @@ local function importButtons(effect, props)
     end
     local default = props.buttons and props.buttons.default or nil;
     for key, buttonConfig in pairs(props.buttons or {}) do
-        if key == "default" then break end
-        if type(key) == 'number' and key >= SAO.ERA then
-            if type(buttonConfig) == 'table' and buttonConfig[1] then
-                for _, subButtonConfig in ipairs(buttonConfig) do
-                    addOneButton(effect.buttons, subButtonConfig, key, buttonConfig.default or default);
+        if key ~= "default" then
+            if type(key) == 'number' and key >= SAO.ERA then
+                if type(buttonConfig) == 'table' and buttonConfig[1] then
+                    for _, subButtonConfig in ipairs(buttonConfig) do
+                        addOneButton(effect.buttons, subButtonConfig, key, buttonConfig.default or default);
+                    end
+                else
+                    addOneButton(effect.buttons, buttonConfig, key, default);
                 end
             else
-                addOneButton(effect.buttons, buttonConfig, key, default);
+                addOneButton(effect.buttons, buttonConfig, nil, default);
             end
-        else
-            addOneButton(effect.buttons, buttonConfig, nil, default);
         end
     end
 end
@@ -433,12 +435,19 @@ local function registerEffectNow(self, effect)
                 end
 
                 local stacks = button.stacks;
-                if stacks then
+                if stacks == 0 and not glowIDsByStack[0] then
+                    -- Button with stacks explicitly set to 0, but with no overlays at stacks == 0, will go to every bucket
+                    for _, glowBucket in pairs(glowIDsByStack) do
+                        table.insert(glowBucket, spellToAdd);
+                    end
+                elseif stacks then
+                    -- An explicit number of stacks will go directly to the target bucket
                     if not glowIDsByStack[stacks] then
                         SAO:Error(Module, "A button of "..tostring(effect.name).." has a 'stacks' number unbeknownst to overlays");
                     end
                     table.insert(glowIDsByStack[stacks], spellToAdd);
                 else
+                    -- A button without explicit number of stacks will go to every bucket
                     for _, glowBucket in pairs(glowIDsByStack) do
                         table.insert(glowBucket, spellToAdd);
                     end
@@ -597,6 +606,10 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
     if props and type(props) ~= 'table' then
         self:Error(Module, "Creating effect "..name.." with invalid props "..tostring(props));
         return nil;
+    end
+
+    if not self.IsProject(project) then
+        return;
     end
 
     local effect = {

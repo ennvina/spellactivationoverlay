@@ -10,6 +10,8 @@ local Module = "option"
 -- variants optional variant object that tells which are sub-options and how to use them
 -- testStacks if defined, forces the number of stacks for the test function
 -- testAuraID optional spell ID used to test the aura in lieu of auraID
+-- @note Options must be linked asap, not during loadOptions() which would be loaded only when the options panel is opened
+-- By linking options as soon as possible, before their respective RegisterAura() calls, options can be used by initial triggers, if any
 function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, variants, testStacks, testAuraID)
     if not GetSpellInfo(talentID) or (not self:IsFakeSpell(auraID) and not GetSpellInfo(auraID)) then
         if not GetSpellInfo(talentID) then

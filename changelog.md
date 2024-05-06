@@ -27,6 +27,10 @@ New effects:
 - New GAB: Shaman's Healing Surge, during Tidal Waves (Cataclysm)
 - New GAB: Shaman's Healing Wave, during Tidal Waves (Cataclysm)
 - New GAB: Shaman's Greater Healing Wave, during Tidal Waves (Cataclysm)
+- New GAB: Warlock's Chaos Bolt, during Backdraft (Cataclysm)
+- New GAB: Warlock's Incinerate, during Backdraft (Cataclysm)
+- New GAB: Warlock's Shadow Bolt, during Backdraft (Cataclysm)
+- New GAB: Warlock's Soul Fire, during Empowered Imp (Cataclysm)
 
 Updated Effects:
 - Shaman's Elemental Focus spell alert uses a more discreet texture (Cataclysm)
@@ -36,6 +40,7 @@ Removed effects:
 - Hunter's Arcane Shot no longer glows during Lock and Load (Cataclysm)
 - Hunter's Improved Steady Shot has been removed (Cataclysm)
 - Rogue's Riposte has been removed (Cataclysm)
+- Warlock's Soul Fire no longer glows during Molten Core (Cataclysm)
 
 Sounds are no longer played for minor alerts, including:
 - Mage's Clearcasting
@@ -62,8 +67,8 @@ Bug Fixes
 - Warlock's Drain Soul spec names in options displayed numbers (Cataclysm)
 
 Known issues
+- Some classes have too many options to fit in the options panel
 - Spell Alerts with distinct stack effects may display a short visual timer
-- The issue was already there, please do not blame this release, thank you :)
 
 #### v1.3.2 (2024-04-30)
 

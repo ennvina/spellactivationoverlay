@@ -6,6 +6,15 @@ local UnitCanAttack = UnitCanAttack
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
+local chaosBolt = 50796;
+local incinerate = 29722;
+local shadowBolt = 686;
+local soulFire = 6353;
+
+local moltenCoreBuff = { 47383, 71162, 71165 };
+local decimationBuff = { 63165, 63167 };
+local backdraftBuff = { 54274, 54276, 54277 };
+
 --[[
     DrainSoulHandler evaluates when the Drain Soul button should glow
     because the target has 25% health or less. Only in Wrath Classic.
@@ -95,92 +104,166 @@ local function unitHealth(self, unitID)
     end
 end
 
-local function registerMolenCore(self, baseName, spellID, glowIDs)
-    self:RegisterAura(baseName.."_1", 1, spellID, "molten_core", "Left", 1, 255, 255, 255, true, glowIDs);
-    self:RegisterAura(baseName.."_2", 2, spellID, "molten_core", "Left + Right (Flipped)", 1, 255, 255, 255, true, glowIDs);
-    self:RegisterAura(baseName.."_3", 3, spellID, "molten_core", "Left + Right (Flipped)", 1, 255, 255, 255, true, glowIDs); -- Same as 2 charges
+local function useNightfall(self)
+    self:CreateEffect(
+        "nightfall",
+        SAO.ALL_PROJECTS,
+        17941, -- Shadow Trance (buff)
+        "aura",
+        {
+            talent = 18094, -- Nightfall (talent)
+            overlay = { texture = "nightfall", position = "Left + Right (Flipped)" },
+            button = shadowBolt,
+        }
+    );
+end
+
+local function registerMoltenCore(self, rank)
+    local moltenCoreName = { "molten_core_low", "molten_core_medium", "molten_core_high" };
+    local overlayOption = (rank == 3) and { setupStacks = 0, testStacks = 3 };
+    local buttonOption = rank == 3;
+
+    self:CreateEffect(
+        moltenCoreName[rank],
+        SAO.WRATH + SAO.CATA,
+        moltenCoreBuff[rank], -- Molten Core (buff) rank 1, 2 or 3
+        "aura",
+        {
+            talent = 47245, -- Molten Core (talent)
+            overlays = {
+                { stacks = 1, texture = "molten_core", position = "Left", option = false },
+                { stacks = 2, texture = "molten_core", position = "Left + Right (Flipped)", option = false },
+                { stacks = 3, texture = "molten_core", position = "Left + Right (Flipped)", option = overlayOption }, -- Same visuals as 2 charges
+            },
+            buttons = {
+                default = { stacks = 0, option = buttonOption },
+                [SAO.WRATH] = { incinerate, soulFire },
+                [SAO.CATA] = { incinerate },
+            },
+        }
+    );
+end
+
+local function useMoltenCore(self)
+    if self.IsWrath() or self.IsCata() then
+        self:AddOverlayLink(moltenCoreBuff[3], moltenCoreBuff[1]);
+        self:AddOverlayLink(moltenCoreBuff[3], moltenCoreBuff[2]);
+        self:AddGlowingLink(moltenCoreBuff[3], moltenCoreBuff[1]);
+        self:AddGlowingLink(moltenCoreBuff[3], moltenCoreBuff[2]);
+
+        registerMoltenCore(self, 1); -- 1/3 talent point
+        registerMoltenCore(self, 2); -- 2/3 talent points
+        registerMoltenCore(self, 3); -- 3/3 talent points
+    end
+end
+
+local function registerDecimation(self, rank)
+    local decimationName = { "decimation_low", "decimation_high" };
+
+    self:CreateEffect(
+        decimationName[rank],
+        SAO.WRATH + SAO.CATA,
+        decimationBuff[rank], -- Decimation (buff) rank 1 or 2
+        "aura",
+        {
+            talent = 63156, -- Decimation (talent)
+            overlay = { texture = "impact", position = "Top", scale = 0.8, option = (rank == 2) },
+            button = { spellID = soulFire, option = (rank == 2) },
+        }
+    );
+end
+
+local function useDecimation(self)
+    if self.IsWrath() or self.IsCata() then
+        self:AddOverlayLink(decimationBuff[2], decimationBuff[1]);
+        self:AddGlowingLink(decimationBuff[2], decimationBuff[1]);
+
+        registerDecimation(self, 1); -- 1/2 talent point
+        registerDecimation(self, 2); -- 2/2 talent points
+    end
+end
+
+local function registerBackdraft(self, rank)
+    local backdraftName = { "backdraft_low", "backdraft_medium", "backdraft_high" };
+
+    self:CreateEffect(
+        backdraftName[rank],
+        SAO.CATA,
+        backdraftBuff[rank], -- Backdraft (buff) rank 1, 2 or 3
+        "aura",
+        {
+            talent = 47258, -- Backdraft (talent)
+            buttons = {
+                default = { option = (rank == 3) },
+                [SAO.CATA] = { shadowBolt, incinerate, chaosBolt },
+            },
+        }
+    );
+end
+
+local function useBackdraft(self)
+    if self.IsCata() then
+        self:AddOverlayLink(backdraftBuff[3], backdraftBuff[1]);
+        self:AddOverlayLink(backdraftBuff[3], backdraftBuff[2]);
+        self:AddGlowingLink(backdraftBuff[3], backdraftBuff[1]);
+        self:AddGlowingLink(backdraftBuff[3], backdraftBuff[2]);
+
+        registerBackdraft(self, 1); -- 1/3 talent point
+        registerBackdraft(self, 2); -- 2/3 talent points
+        registerBackdraft(self, 3); -- 3/3 talent points
+    end
+end
+
+local function useBacklash(self)
+    self:CreateEffect(
+        "backlash",
+        SAO.TBC + SAO.WRATH + SAO.CATA,
+        34936, -- Backlash (buff)
+        "aura",
+        {
+            talent = 34935, -- Backlash (talent)
+            overlay = { texture = "backlash", position = "Top" },
+            buttons = { shadowBolt, incinerate },
+        }
+    );
+end
+
+local function useEmpoweredImp(self)
+    self:CreateEffect(
+        "empowered_imp",
+        SAO.WRATH + SAO.CATA,
+        47283, -- Empowered Imp (buff)
+        "aura",
+        {
+            talent = 47220, -- Empowered Imp (talent)
+            overlay = { texture = "imp_empowerment", position = "Left + Right (Flipped)" },
+            buttons = {
+                [SAO.CATA] = soulFire,
+            }
+        }
+    );
 end
 
 local function registerClass(self)
-    local shadowBolt = GetSpellInfo(686);
-    local incinerate = GetSpellInfo(29722);
-    local soulFire = GetSpellInfo(6353);
-    local incinerateAndSoulFire = { incinerate, soulFire };
+    -- Affliction
+    useNightfall(self); -- a.k.a. Shadow Trance
 
-    local moltenCoreBuff1 = 47383;
-    local moltenCoreBuff2 = 71162;
-    local moltenCoreBuff3 = 71165;
+    -- Demonology
+    useMoltenCore(self);
+    useDecimation(self);
 
-    local decimationBuff1 = 63165;
-    local decimationBuff2 = 63167;
-
-    -- Add option links during registerClass(), not because loadOptions() which would be loaded only when the options panel is opened
-    -- Add option links before RegisterAura() calls, so that options they are used by initial triggers, if any
-    self:AddOverlayLink(moltenCoreBuff3, moltenCoreBuff1);
-    self:AddOverlayLink(moltenCoreBuff3, moltenCoreBuff2);
-    self:AddOverlayLink(decimationBuff2, decimationBuff1);
-    self:AddGlowingLink(moltenCoreBuff3, moltenCoreBuff1);
-    self:AddGlowingLink(moltenCoreBuff3, moltenCoreBuff2);
-    self:AddGlowingLink(decimationBuff2, decimationBuff1);
-
-    -- Backlash
-    self:RegisterAura("backlash", 0, 34936, "backlash", "Top", 1, 255, 255, 255, true, { shadowBolt, incinerate });
-
-    -- Empowered Imp
-    self:RegisterAura("empowered_imp", 0, 47283, "imp_empowerment", "Left + Right (Flipped)", 1, 255, 255, 255, true);
-
-    -- Molten Core
-    registerMolenCore(self, "molten_core_low", moltenCoreBuff1, incinerateAndSoulFire); -- 1/3 talent point
-    registerMolenCore(self, "molten_core_medium", moltenCoreBuff2, incinerateAndSoulFire); -- 2/3 talent points
-    registerMolenCore(self, "molten_core_high", moltenCoreBuff3, incinerateAndSoulFire); -- 3/3 talent points
-
-    -- Decimation
-    self:RegisterAura("decimation_low", 0, decimationBuff1, "impact", "Top", 0.8, 255, 255, 255, true, { soulFire }); -- 1/2 talent point
-    self:RegisterAura("decimation_high", 0, decimationBuff2, "impact", "Top", 0.8, 255, 255, 255, true, { soulFire }); -- 2/2 talent point
-
-    -- Nightfall / Shadow Trance
-    self:RegisterAura("nightfall", 0, 17941, "nightfall", "Left + Right (Flipped)", 1, 255, 255, 255, true, { shadowBolt });
+    -- Destruction
+    useBackdraft(self);
+    useBacklash(self);
+    useEmpoweredImp(self);
 end
 
 local function loadOptions(self)
-    local shadowBolt = 686;
-    local incinerate = 29722;
-    local soulFire = 6353;
     local drainSoul = 1120;
-
-    local nightfallBuff = 17941;
-    local nightfallTalent = 18094;
-
-    local backlashBuff = 34936;
-    local backlashTalent = 34935;
-
-    local empoweredImpBuff = 47283;
-    local empoweredImpTalent = 47220;
-
-    local moltenCoreBuff3 = 71165;
-    local moltenCoreTalent = 47245;
-
-    local decimationBuff2 = 63167;
-    local decimationTalent = 63156;
-
---    local akaShadowTrance = GetSpellInfo(nightfallBuff);
-
-    self:AddOverlayOption(nightfallTalent, nightfallBuff --[[, 0, akaShadowTrance]]);
-    self:AddOverlayOption(backlashTalent, backlashBuff);
-    self:AddOverlayOption(moltenCoreTalent, moltenCoreBuff3, 0, nil, nil, 3); -- setup any stacks, test with 3 stacks
-    self:AddOverlayOption(decimationTalent, decimationBuff2);
-    self:AddOverlayOption(empoweredImpTalent, empoweredImpBuff);
 
     if DrainSoulHandler.initialized then
         self:AddGlowingOption(nil, DrainSoulHandler.optionID, drainSoul, nil, string.format(string.format(HEALTH_COST_PCT, "<%s%"), 25), DrainSoulHandler.variants);
     end
-    self:AddGlowingOption(nightfallTalent, nightfallBuff, shadowBolt --[[, akaShadowTrance]]);
-    self:AddGlowingOption(backlashTalent, backlashBuff, shadowBolt);
-    self:AddGlowingOption(backlashTalent, backlashBuff, incinerate);
-    self:AddGlowingOption(moltenCoreTalent, moltenCoreBuff3, incinerate);
-    self:AddGlowingOption(moltenCoreTalent, moltenCoreBuff3, soulFire);
-    self:AddGlowingOption(decimationTalent, decimationBuff2, soulFire);
-    -- self:AddGlowingOption(empoweredImpTalent, empoweredImpBuff, ...); -- Maybe add spell options for Empowered Imp
 end
 
 SAO.Class["WARLOCK"] = {
