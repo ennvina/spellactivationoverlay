@@ -191,28 +191,30 @@ local function registerClass(self)
     end
 
     -- Nightfall / Shadow Trance
-    self:RegisterAura("nightfall", 0, 17941, "nightfall", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(shadowBolt)) });
+    self:CreateEffect(
+        "nightfall",
+        SAO.ALL_PROJECTS,
+        17941, -- Shadow Trance (buff)
+        "aura",
+        {
+            talent = 18094, -- Nightfall (talent)
+            overlay = { texture = "nightfall", position = "Left + Right (Flipped)" },
+            button = shadowBolt,
+        }
+    );
 end
 
 local function loadOptions(self)
     local drainSoul = 1120;
 
-    local nightfallBuff = 17941;
-    local nightfallTalent = 18094;
-
     local empoweredImpBuff = 47283;
     local empoweredImpTalent = 47220;
 
---    local akaShadowTrance = GetSpellInfo(nightfallBuff);
-
-    self:AddOverlayOption(nightfallTalent, nightfallBuff --[[, 0, akaShadowTrance]]);
     self:AddOverlayOption(empoweredImpTalent, empoweredImpBuff);
 
     if DrainSoulHandler.initialized then
         self:AddGlowingOption(nil, DrainSoulHandler.optionID, drainSoul, nil, string.format(string.format(HEALTH_COST_PCT, "<%s%"), 25), DrainSoulHandler.variants);
     end
-    self:AddGlowingOption(nightfallTalent, nightfallBuff, shadowBolt --[[, akaShadowTrance]]);
-    -- self:AddGlowingOption(empoweredImpTalent, empoweredImpBuff, ...); -- Maybe add spell options for Empowered Imp
 end
 
 SAO.Class["WARLOCK"] = {
