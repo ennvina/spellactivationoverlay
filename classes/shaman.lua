@@ -1,5 +1,4 @@
 local AddonName, SAO = ...
-local Module = "shaman"
 
 -- Optimize frequent calls
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
@@ -213,6 +212,39 @@ local function registerClass(self)
         }
     );
 
+    -- Maelstrom Weapon
+    local lightningBolt = 403;
+    local chainLightning = 421;
+    local chainHeal = 1064;
+    local healingRain = 73920;
+    local hex = 51514;
+    local lavaBurstSoD = 408490;
+    local maelstromWeaponBuff = self.IsSoD() and 408505 or 53817;
+    local maelstromWeaponTalent = self.IsSoD() and 408498 or 51528;
+    local maelstromWeaponScale = self.IsSoD() and 0.8 or 1;
+    self:CreateEffect(
+        "maelstrom_weapon",
+        SAO.SOD + SAO.WRATH + SAO.CATA,
+        maelstromWeaponBuff,
+        "aura",
+        {
+            talent = maelstromWeaponTalent,
+            overlays = {
+                { stacks = 1, texture = "maelstrom_weapon_1", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
+                { stacks = 2, texture = "maelstrom_weapon_2", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
+                { stacks = 3, texture = "maelstrom_weapon_3", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
+                { stacks = 4, texture = "maelstrom_weapon_4", position = "Top", scale = maelstromWeaponScale, pulse = false, option = { setupStacks = 0, testStacks = 4, subText = self:NbStacks(1,4) } },
+                { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = true , option = true },
+            },
+            buttons = {
+                default = { stacks = 5 },
+                [SAO.SOD] =   { lightningBolt, chainLightning, lesserHealingWave,                     healingWave, chainHeal,                   lavaBurstSoD },
+                [SAO.WRATH] = { lightningBolt, chainLightning, lesserHealingWave,                     healingWave, chainHeal,              hex },
+                [SAO.CATA] =  { lightningBolt, chainLightning, healingSurge,      greaterHealingWave, healingWave, chainHeal, healingRain, hex },
+            },
+        }
+    );
+
     if self.IsCata() then
         -- Initializing Rolling Thunder handler for Fulmination in Cataclysm
         if (not RollingThunderHandler.initialized) then
@@ -224,49 +256,9 @@ local function registerClass(self)
             local pulse = lightningShieldStacks == 9;
             self:RegisterAura(auraName, lightningShieldStacks, RollingThunderHandler.fakeSpellID, "fulmination", "Top", scale, 255, 255, 255, pulse, RollingThunderHandler.earthShockSpells);
         end
-        -- Maelstrom Weapon
-        local lightningBolt = 403;
-        local chainLightning = 421;
-        local chainHeal = 1064;
-        local healingRain = 73920;
-        local hex = 51514;
-        local maelstromSpells = {
-            (GetSpellInfo(lightningBolt)),
-            (GetSpellInfo(chainLightning)),
-            (GetSpellInfo(healingSurge)),
-            (GetSpellInfo(greaterHealingWave)),
-            (GetSpellInfo(healingWave)),
-            (GetSpellInfo(chainHeal)),
-            (GetSpellInfo(healingRain)),
-            (GetSpellInfo(hex)),
-        }
-        self:RegisterAura("maelstrom_weapon_1", 1, 53817, "maelstrom_weapon_1", "Top", 1, 255, 255, 255, false);
-        self:RegisterAura("maelstrom_weapon_2", 2, 53817, "maelstrom_weapon_2", "Top", 1, 255, 255, 255, false);
-        self:RegisterAura("maelstrom_weapon_3", 3, 53817, "maelstrom_weapon_3", "Top", 1, 255, 255, 255, false);
-        self:RegisterAura("maelstrom_weapon_4", 4, 53817, "maelstrom_weapon_4", "Top", 1, 255, 255, 255, false);
-        self:RegisterAura("maelstrom_weapon_5", 5, 53817, "maelstrom_weapon", "Top", 1, 255, 255, 255, true, maelstromSpells);
     end
 
     if self.IsWrath() then
-        -- Maelstrom Weapon
-        local lightningBolt = 403;
-        local chainLightning = 421;
-        local chainHeal = 1064;
-        local hex = 51514;
-        local maelstromSpells = {
-            (GetSpellInfo(lightningBolt)),
-            (GetSpellInfo(chainLightning)),
-            (GetSpellInfo(lesserHealingWave)),
-            (GetSpellInfo(healingWave)),
-            (GetSpellInfo(chainHeal)),
-            (GetSpellInfo(hex)),
-        }
-        self:RegisterAura("maelstrom_weapon_1", 1, 53817, "maelstrom_weapon_1", "Top", 1, 255, 255, 255, false);
-        self:RegisterAura("maelstrom_weapon_2", 2, 53817, "maelstrom_weapon_2", "Top", 1, 255, 255, 255, false);
-        self:RegisterAura("maelstrom_weapon_3", 3, 53817, "maelstrom_weapon_3", "Top", 1, 255, 255, 255, false);
-        self:RegisterAura("maelstrom_weapon_4", 4, 53817, "maelstrom_weapon_4", "Top", 1, 255, 255, 255, false);
-        self:RegisterAura("maelstrom_weapon_5", 5, 53817, "maelstrom_weapon", "Top", 1, 255, 255, 255, true, maelstromSpells);
-
         -- Healing Trance / Soul Preserver
         self:RegisterAuraSoulPreserver("soul_preserver_shaman", 60515); -- 60515 = Shaman buff
     end
@@ -287,33 +279,13 @@ local function registerClass(self)
         self:RegisterAura("molten_blast", 0, moltenBlastSoD, "impact", "Top", 0.8, 255, 255, 255, true, { moltenBlastSoD }, true);
         self:RegisterCounter("molten_blast");
 
-        -- Maelstrom Weapon & Power Surge
-        local maelstromSoDBuff = 408505;
-        local lightningBolt = 403;
-        local chainLightning = 421;
-        local lesserHealingWave = 8004;
-        local healingWave = 331;
-        local chainHeal = 1064;
-        local lavaBurstSoD = 408490;
+        -- Power Surge
         local powerSurgeSoDBuff = 415105;
-        local maelstromSpells = {
-            (GetSpellInfo(lightningBolt)),
-            (GetSpellInfo(chainLightning)),
-            (GetSpellInfo(lesserHealingWave)),
-            (GetSpellInfo(healingWave)),
-            (GetSpellInfo(chainHeal)),
-            (GetSpellInfo(lavaBurstSoD)),
-        }
         local powerSurgeSpells = {
             (GetSpellInfo(chainLightning)),
             (GetSpellInfo(chainHeal)),
             (GetSpellInfo(lavaBurstSoD)),
         }
-        self:RegisterAura("maelstrom_weapon_sod_1", 1, maelstromSoDBuff, "maelstrom_weapon_1", "Top", 0.8, 255, 255, 255, false);
-        self:RegisterAura("maelstrom_weapon_sod_2", 2, maelstromSoDBuff, "maelstrom_weapon_2", "Top", 0.8, 255, 255, 255, false);
-        self:RegisterAura("maelstrom_weapon_sod_3", 3, maelstromSoDBuff, "maelstrom_weapon_3", "Top", 0.8, 255, 255, 255, false);
-        self:RegisterAura("maelstrom_weapon_sod_4", 4, maelstromSoDBuff, "maelstrom_weapon_4", "Top", 0.8, 255, 255, 255, false);
-        self:RegisterAura("maelstrom_weapon_sod_5", 5, maelstromSoDBuff, "maelstrom_weapon", "Top", 0.8, 255, 255, 255, true, maelstromSpells);
 
         -- If Power Surge is enabled but not Elemental Focus, display Power Surge Left and Right
         -- If Elemental Focus is enabled but not Power Surge, display Elemental Focus Left and Right
@@ -356,23 +328,14 @@ local function registerClass(self)
 end
 
 local function loadOptions(self)
-    local lightningBolt = 403;
     local chainLightning = 421;
-    local lesserHealingWave = 8004;
-    local healingWave = 331;
     local chainHeal = 1064;
-    local hex = 51514;
-
-    local maelstromWeaponBuff = 53817;
-    local maelstromWeaponTalent = 51528;
 
     local elementalFocusBuff = 16246;
     local elementalFocusTalent = 16164;
 
     -- Season of Discovery
     local moltenBlastSoD = 425339;
-    local maelstromSoDBuff = 408505;
-    local maelstromSoD = 408498;
     local lavaBurstSoD = 408490;
     local powerSurgeSoDBuff = 415105;
     local powerSurgeSoD = 415100;
@@ -382,12 +345,7 @@ local function loadOptions(self)
 
     --Cataclysm
     local fulminationTalentCata = 88766;
-    local greaterHealingWave = 77472;
-    local healingSurge = 8004;
-    local healingRain = 73920;
 
-    local oneToFourStacks = self:NbStacks(1, 4);
-    local fiveStacks = self:NbStacks(5);
     local sevenToNineStacks = self:NbStacks(7, 9);
     local sixToNineStacks = self:NbStacks(6, 9);
 
@@ -401,18 +359,12 @@ local function loadOptions(self)
         self:AddOverlayOption(fulminationTalentCata, lightningShield, 7, nil, nil, nil, RollingThunderHandler.fakeSpellID);
         self:AddOverlayOption(fulminationTalentCata, lightningShield, 8, nil, nil, nil, RollingThunderHandler.fakeSpellID);
         self:AddOverlayOption(fulminationTalentCata, lightningShield, 9, nil, nil, nil, RollingThunderHandler.fakeSpellID);
-        self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 0, oneToFourStacks, nil, 4); -- setup any stacks, test with 4 stacks
-        self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 5); -- setup 5 stacks
     end
     if self.IsWrath() then
-        self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 0, oneToFourStacks, nil, 4); -- setup any stacks, test with 4 stacks
-        self:AddOverlayOption(maelstromWeaponTalent, maelstromWeaponBuff, 5); -- setup 5 stacks
         self:AddSoulPreserverOverlayOption(60515); -- 60515 = Shaman buff
     elseif self.IsSoD() then
         self:AddOverlayOption(powerSurgeSoD, powerSurgeSoDBuff);
         self:AddOverlayOption(moltenBlastSoD, moltenBlastSoD);
-        self:AddOverlayOption(maelstromSoD, maelstromSoDBuff, 0, oneToFourStacks, nil, 4); -- setup any stacks, test with 4 stacks
-        self:AddOverlayOption(maelstromSoD, maelstromSoDBuff, 5); -- setup 5 stacks
         self:AddOverlayOption(rollingThunderSoD, lightningShield, 7, nil, nil, nil, RollingThunderHandler.fakeSpellID);
         self:AddOverlayOption(rollingThunderSoD, lightningShield, 8, nil, nil, nil, RollingThunderHandler.fakeSpellID);
         self:AddOverlayOption(rollingThunderSoD, lightningShield, 9, nil, nil, nil, RollingThunderHandler.fakeSpellID);
@@ -420,33 +372,11 @@ local function loadOptions(self)
 
     if self.IsCata() then
         self:AddGlowingOption(fulminationTalentCata, lightningShield, earthShock, sixToNineStacks);
-        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, lightningBolt, fiveStacks);
-        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, chainLightning, fiveStacks);
-        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, healingSurge, fiveStacks);
-        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, greaterHealingWave, fiveStacks);
-        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, healingWave, fiveStacks);
-        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, chainHeal, fiveStacks);
-        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, healingRain, fiveStacks);
-        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, hex, fiveStacks);
-    end
-    if self.IsWrath() then
-        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, lightningBolt, fiveStacks);
-        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, chainLightning, fiveStacks);
-        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, lesserHealingWave, fiveStacks);
-        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, healingWave, fiveStacks);
-        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, chainHeal, fiveStacks);
-        self:AddGlowingOption(maelstromWeaponTalent, maelstromWeaponBuff, hex, fiveStacks);
     elseif self.IsSoD() then
         self:AddGlowingOption(nil, moltenBlastSoD, moltenBlastSoD);
         self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, chainLightning);
         self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, chainHeal);
         self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, lavaBurstSoD);
-        self:AddGlowingOption(maelstromSoD, maelstromSoDBuff, lightningBolt, fiveStacks);
-        self:AddGlowingOption(maelstromSoD, maelstromSoDBuff, chainLightning, fiveStacks);
-        self:AddGlowingOption(maelstromSoD, maelstromSoDBuff, lesserHealingWave, fiveStacks);
-        self:AddGlowingOption(maelstromSoD, maelstromSoDBuff, healingWave, fiveStacks);
-        self:AddGlowingOption(maelstromSoD, maelstromSoDBuff, chainHeal, fiveStacks);
-        self:AddGlowingOption(maelstromSoD, maelstromSoDBuff, lavaBurstSoD, fiveStacks);
         self:AddGlowingOption(rollingThunderSoD, lightningShield, earthShock, sevenToNineStacks);
     end
 end
