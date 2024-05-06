@@ -435,12 +435,19 @@ local function registerEffectNow(self, effect)
                 end
 
                 local stacks = button.stacks;
-                if stacks then
+                if stacks == 0 and not glowIDsByStack[0] then
+                    -- Button with stacks explicitly set to 0, but with no overlays at stacks == 0, will go to every bucket
+                    for _, glowBucket in pairs(glowIDsByStack) do
+                        table.insert(glowBucket, spellToAdd);
+                    end
+                elseif stacks then
+                    -- An explicit number of stacks will go directly to the target bucket
                     if not glowIDsByStack[stacks] then
                         SAO:Error(Module, "A button of "..tostring(effect.name).." has a 'stacks' number unbeknownst to overlays");
                     end
                     table.insert(glowIDsByStack[stacks], spellToAdd);
                 else
+                    -- A button without explicit number of stacks will go to every bucket
                     for _, glowBucket in pairs(glowIDsByStack) do
                         table.insert(glowBucket, spellToAdd);
                     end
