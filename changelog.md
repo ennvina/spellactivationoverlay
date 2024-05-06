@@ -2,6 +2,8 @@
 
 #### v1.4.0 (2024-05-xx)
 
+Shout-out to fellow developers Amanthuul and espionn. Thanks!
+
 New effects:
 - New SAO: Druid's Fury of Stormrage (Cataclysm)
 - New SAO: Hunter's Master Marksman (Cataclysm)
@@ -66,6 +68,7 @@ Bug Fixes
 - Mage's Fringers of Frost had incorrect texture orientation (Cataclysm)
 - Mage's Frozen debuff had incorrect texture orientation (Cataclysm)
 - Mage's Brain Freeze had incorrect texture orientation (Cataclysm)
+- Mage's Pyroblast! is no longer counted for triggering Heating Up (Cataclysm)
 - Warlock's Drain Soul spec names in options displayed numbers (Cataclysm)
 
 Known issues

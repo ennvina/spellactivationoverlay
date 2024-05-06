@@ -39,7 +39,7 @@ HotStreakHandler.init = function(self, talentName)
     -- local living_bomb_sod = { 400613 } this is the DOT effect, which we do NOT want
     local living_bomb_sod = { 401731 }
     local scorch = { 2948, 8444, 8445, 8446, 10205, 10206, 10207, 27073, 27074, 42858, 42859 }
-    local pyroblast_cata = { pyroblast, pyroblastBang }
+    local pyroblast_cata = { pyroblast }
 
     self.spells = {}
     local function addSpellPack(spellPack)
