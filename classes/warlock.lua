@@ -10,6 +10,9 @@ local incinerate = 29722;
 local shadowBolt = 686;
 local soulFire = 6353;
 
+local moltenCoreBuff = { 47383, 71162, 71165 };
+local decimationBuff = { 63165, 63167 };
+
 --[[
     DrainSoulHandler evaluates when the Drain Soul button should glow
     because the target has 25% health or less. Only in Wrath Classic.
@@ -99,9 +102,22 @@ local function unitHealth(self, unitID)
     end
 end
 
+local function useNightfall(self)
+    self:CreateEffect(
+        "nightfall",
+        SAO.ALL_PROJECTS,
+        17941, -- Shadow Trance (buff)
+        "aura",
+        {
+            talent = 18094, -- Nightfall (talent)
+            overlay = { texture = "nightfall", position = "Left + Right (Flipped)" },
+            button = shadowBolt,
+        }
+    );
+end
+
 local function registerMoltenCore(self, rank)
     local moltenCoreName = { "molten_core_low", "molten_core_medium", "molten_core_high" };
-    local moltenCoreBuff = { 47383, 71162, 71165 };
     local overlayOption = (rank == 3) and { setupStacks = 0, testStacks = 3 };
     local buttonOption = rank == 3;
 
@@ -126,9 +142,21 @@ local function registerMoltenCore(self, rank)
     );
 end
 
+local function useMoltenCore(self)
+    if self.IsWrath() or self.IsCata() then
+        self:AddOverlayLink(moltenCoreBuff[3], moltenCoreBuff[1]);
+        self:AddOverlayLink(moltenCoreBuff[3], moltenCoreBuff[2]);
+        self:AddGlowingLink(moltenCoreBuff[3], moltenCoreBuff[1]);
+        self:AddGlowingLink(moltenCoreBuff[3], moltenCoreBuff[2]);
+
+        registerMoltenCore(self, 1); -- 1/3 talent point
+        registerMoltenCore(self, 2); -- 2/3 talent points
+        registerMoltenCore(self, 3); -- 3/3 talent points
+    end
+end
+
 local function registerDecimation(self, rank)
     local decimationName = { "decimation_low", "decimation_high" };
-    local decimationBuff = { 63165, 63167 };
 
     self:CreateEffect(
         decimationName[rank],
@@ -143,51 +171,17 @@ local function registerDecimation(self, rank)
     );
 end
 
-local function registerClass(self)
-
-    local moltenCoreBuff1 = 47383;
-    local moltenCoreBuff2 = 71162;
-    local moltenCoreBuff3 = 71165;
-
-    local decimationBuff1 = 63165;
-    local decimationBuff2 = 63167;
-
-    -- Add option links during registerClass(), not because loadOptions() which would be loaded only when the options panel is opened
-    -- Add option links before RegisterAura() calls, so that options they are used by initial triggers, if any
-    self:AddOverlayLink(moltenCoreBuff3, moltenCoreBuff1);
-    self:AddOverlayLink(moltenCoreBuff3, moltenCoreBuff2);
-    self:AddOverlayLink(decimationBuff2, decimationBuff1);
-    self:AddGlowingLink(moltenCoreBuff3, moltenCoreBuff1);
-    self:AddGlowingLink(moltenCoreBuff3, moltenCoreBuff2);
-    self:AddGlowingLink(decimationBuff2, decimationBuff1);
-
-    -- Nightfall / Shadow Trance
-    self:CreateEffect(
-        "nightfall",
-        SAO.ALL_PROJECTS,
-        17941, -- Shadow Trance (buff)
-        "aura",
-        {
-            talent = 18094, -- Nightfall (talent)
-            overlay = { texture = "nightfall", position = "Left + Right (Flipped)" },
-            button = shadowBolt,
-        }
-    );
-
-    -- Molten Core
+local function useDecimation(self)
     if self.IsWrath() or self.IsCata() then
-        registerMoltenCore(self, 1); -- 1/3 talent point
-        registerMoltenCore(self, 2); -- 2/3 talent points
-        registerMoltenCore(self, 3); -- 3/3 talent points
-    end
+        self:AddOverlayLink(decimationBuff[2], decimationBuff[1]);
+        self:AddGlowingLink(decimationBuff[2], decimationBuff[1]);
 
-    -- Decimation
-    if self.IsWrath() or self.IsCata() then
         registerDecimation(self, 1); -- 1/2 talent point
         registerDecimation(self, 2); -- 2/2 talent points
     end
+end
 
-    -- Backlash
+local function useBacklash(self)
     self:CreateEffect(
         "backlash",
         SAO.TBC + SAO.WRATH + SAO.CATA,
@@ -199,8 +193,9 @@ local function registerClass(self)
             buttons = { shadowBolt, incinerate },
         }
     );
+end
 
-    -- Empowered Imp
+local function useEmpoweredImp(self)
     self:CreateEffect(
         "empowered_imp",
         SAO.WRATH + SAO.CATA,
@@ -214,6 +209,19 @@ local function registerClass(self)
             }
         }
     );
+end
+
+local function registerClass(self)
+    -- Affliction
+    useNightfall(self); -- a.k.a. Shadow Trance
+
+    -- Demonology
+    useMoltenCore(self);
+    useDecimation(self);
+
+    -- Destruction
+    useBacklash(self);
+    useEmpoweredImp(self);
 end
 
 local function loadOptions(self)
