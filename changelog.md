@@ -6,11 +6,30 @@ New effects:
 - New SAO: Druid's Fury of Stormrage (Cataclysm)
 - New SAO: Hunter's Master Marksman (Cataclysm)
 - New SAO: Priest's Serendipity (Cataclysm)
+- New SAO: Shaman's Fulmination, with 6-9 Lightning Shield stacks (Cataclysm)
+- New SAO: Shaman's Maelstrom Weapon (Cataclysm)
+- New SAO: Shaman's Tidal Waves (Cataclysm)
 - New GAB: Druid's Starfire, during Fury of Stormrage (Cataclysm)
 - New GAB: Hunter's Aimed Shot!, during Master Marksman (Cataclysm)
 - New GAB: Warlock's Drain Soul, when the enemy has low HP (Cataclysm)
-- New SAO: Greater Heal, during Priest's Serendipity (Cataclysm)
-- New SAO: Prayer of Healing, during Priest's Serendipity (Cataclysm)
+- New GAB: Priest's Greater Heal, during Serendipity (Cataclysm)
+- New GAB: Priest's Prayer of Healing, during Serendipity (Cataclysm)
+- New GAB: Shaman's Lava Burst, with Lava Surge talent (Cataclysm)
+- New GAB: Shaman's Earth Shock, with 6-9 Lightning Shield stacks (Cataclysm)
+- New GAB: Shaman's Chain Heal, during Maelstrom Weapon (Cataclysm)
+- New GAB: Shaman's Chain Lightning, during Maelstrom Weapon (Cataclysm)
+- New GAB: Shaman's Greater Healing Wave, during Maelstrom Weapon (Cataclysm)
+- New GAB: Shaman's Healing Rain, during Maelstrom Weapon (Cataclysm)
+- New GAB: Shaman's Healing Surge, during Maelstrom Weapon (Cataclysm)
+- New GAB: Shaman's Healing Wave, during Maelstrom Weapon (Cataclysm)
+- New GAB: Shaman's Hex, during Maelstrom Weapon (Cataclysm)
+- New GAB: Shaman's Lightning Bolt, during Maelstrom Weapon (Cataclysm)
+- New GAB: Shaman's Healing Surge, during Tidal Waves (Cataclysm)
+- New GAB: Shaman's Healing Wave, during Tidal Waves (Cataclysm)
+- New GAB: Shaman's Greater Healing Wave, during Tidal Waves (Cataclysm)
+
+Updated Effects:
+- Shaman's Elemental Focus spell alert uses a more discreet texture (Cataclysm)
 
 Removed effects:
 - Druid's Nature's Grace has been removed (Cataclysm)
@@ -41,6 +60,10 @@ Bug Fixes
 - Mage's Frozen debuff had incorrect texture orientation (Cataclysm)
 - Mage's Brain Freeze had incorrect texture orientation (Cataclysm)
 - Warlock's Drain Soul spec names in options displayed numbers (Cataclysm)
+
+Known issues
+- Spell Alerts with distinct stack effects may display a short visual timer
+- The issue was already there, please do not blame this release, thank you :)
 
 #### v1.3.2 (2024-04-30)
 
