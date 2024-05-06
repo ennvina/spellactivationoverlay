@@ -599,6 +599,10 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
         return nil;
     end
 
+    if not self.IsProject(project) then
+        return;
+    end
+
     local effect = {
         name = name,
         project = project,
