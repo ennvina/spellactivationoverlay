@@ -161,6 +161,32 @@ local function registerClass(self)
     self:AddGlowingLink(moltenCoreBuff3, moltenCoreBuff2);
     self:AddGlowingLink(decimationBuff2, decimationBuff1);
 
+    -- Nightfall / Shadow Trance
+    self:CreateEffect(
+        "nightfall",
+        SAO.ALL_PROJECTS,
+        17941, -- Shadow Trance (buff)
+        "aura",
+        {
+            talent = 18094, -- Nightfall (talent)
+            overlay = { texture = "nightfall", position = "Left + Right (Flipped)" },
+            button = shadowBolt,
+        }
+    );
+
+    -- Molten Core
+    if self.IsWrath() or self.IsCata() then
+        registerMoltenCore(self, 1); -- 1/3 talent point
+        registerMoltenCore(self, 2); -- 2/3 talent points
+        registerMoltenCore(self, 3); -- 3/3 talent points
+    end
+
+    -- Decimation
+    if self.IsWrath() or self.IsCata() then
+        registerDecimation(self, 1); -- 1/2 talent point
+        registerDecimation(self, 2); -- 2/2 talent points
+    end
+
     -- Backlash
     self:CreateEffect(
         "backlash",
@@ -186,32 +212,6 @@ local function registerClass(self)
             buttons = {
                 [SAO.CATA] = soulFire,
             }
-        }
-    );
-
-    -- Molten Core
-    if self.IsWrath() or self.IsCata() then
-        registerMoltenCore(self, 1); -- 1/3 talent point
-        registerMoltenCore(self, 2); -- 2/3 talent points
-        registerMoltenCore(self, 3); -- 3/3 talent points
-    end
-
-    -- Decimation
-    if self.IsWrath() or self.IsCata() then
-        registerDecimation(self, 1); -- 1/2 talent point
-        registerDecimation(self, 2); -- 2/2 talent points
-    end
-
-    -- Nightfall / Shadow Trance
-    self:CreateEffect(
-        "nightfall",
-        SAO.ALL_PROJECTS,
-        17941, -- Shadow Trance (buff)
-        "aura",
-        {
-            talent = 18094, -- Nightfall (talent)
-            overlay = { texture = "nightfall", position = "Left + Right (Flipped)" },
-            button = shadowBolt,
         }
     );
 end
