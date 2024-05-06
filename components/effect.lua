@@ -217,7 +217,7 @@ local function importOverlays(effect, props)
     if props.overlay then
         addOneOverlay(effect.overlays, props.overlay);
     end
-    local default = props.buttons and props.buttons.default or nil;
+    local default = props.overlays and props.overlays.default or nil;
     for key, overlayConfig in pairs(props.overlays or {}) do
         if key ~= "default" then
             if type(key) == 'number' and key >= SAO.ERA then
