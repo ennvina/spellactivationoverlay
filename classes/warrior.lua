@@ -376,6 +376,7 @@ local function registerClass(self)
     local victoryRushSoD = 402927;
     local ragingBlowSoD = 402911;
     local bloodSurgeSoD = 413399;
+    local bladestorm = 46924;
 
     if self.IsSoD() then
         self:RegisterAura("bloodsurge", 0, bloodSurgeSoD, "blood_surge", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(slam)) });
@@ -420,6 +421,21 @@ local function registerClass(self)
         self:RegisterAura("raging_blow", 0, ragingBlowSoD, "raging_blow", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(ragingBlowSoD)) });
         self:RegisterCounter("raging_blow"); -- Must match name from above call
     end
+
+    -- Bladestorm
+    self:CreateEffect(
+        "bladestorm",
+        SAO.WRATH + SAO.CATA,
+        bladestorm, -- Bladestorm (ability)
+        "aura",
+        {
+            overlays = {
+                default = { texture = "bandits_guile", scale = 1.25, color = { 200, 200, 200 } },
+                { position = "Left (vFlipped)", option = false },
+                { position = "Right (Flipped)", option = true },
+            },
+        }
+    );
 end
 
 local function loadOptions(self)

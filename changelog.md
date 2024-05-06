@@ -9,6 +9,7 @@ New effects:
 - New SAO: Shaman's Fulmination, with 6-9 Lightning Shield stacks (Cataclysm)
 - New SAO: Shaman's Maelstrom Weapon (Cataclysm)
 - New SAO: Shaman's Tidal Waves (Cataclysm)
+- New SAO: Warrior's Bladestorm (Wrath, Cataclysm)
 - New GAB: Druid's Starfire, during Fury of Stormrage (Cataclysm)
 - New GAB: Hunter's Aimed Shot!, during Master Marksman (Cataclysm)
 - New GAB: Warlock's Drain Soul, when the enemy has low HP (Cataclysm)

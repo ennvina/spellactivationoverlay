@@ -533,6 +533,9 @@ SAO.defaults = {
                 [52437] = { -- Sudden Death (Wrath+)
                     [0] = true, -- any stacks (up to 2 stacks with tier 10)
                 },
+                [46924] = { -- Bladestorm (Wrath+)
+                    [0] = true,
+                },
                 [46916] = { -- Bloodsurge (Wrath+)
                     [0] = true, -- any stacks (up to 2 stacks with tier 10)
                 },
