@@ -219,17 +219,18 @@ local function importOverlays(effect, props)
     end
     local default = props.buttons and props.buttons.default or nil;
     for key, overlayConfig in pairs(props.overlays or {}) do
-        if key == "default" then break end
-        if type(key) == 'number' and key >= SAO.ERA then
-            if type(overlayConfig) == 'table' and overlayConfig[1] then
-                for _, subOverlayConfig in ipairs(overlayConfig) do
-                    addOneOverlay(effect.overlays, subOverlayConfig, key, overlayConfig.default or default);
+        if key ~= "default" then
+            if type(key) == 'number' and key >= SAO.ERA then
+                if type(overlayConfig) == 'table' and overlayConfig[1] then
+                    for _, subOverlayConfig in ipairs(overlayConfig) do
+                        addOneOverlay(effect.overlays, subOverlayConfig, key, overlayConfig.default or default);
+                    end
+                else
+                    addOneOverlay(effect.overlays, overlayConfig, key, default);
                 end
             else
-                addOneOverlay(effect.overlays, overlayConfig, key, default);
+                addOneOverlay(effect.overlays, overlayConfig, nil, default);
             end
-        else
-            addOneOverlay(effect.overlays, overlayConfig, nil, default);
         end
     end
 end
@@ -241,17 +242,18 @@ local function importButtons(effect, props)
     end
     local default = props.buttons and props.buttons.default or nil;
     for key, buttonConfig in pairs(props.buttons or {}) do
-        if key == "default" then break end
-        if type(key) == 'number' and key >= SAO.ERA then
-            if type(buttonConfig) == 'table' and buttonConfig[1] then
-                for _, subButtonConfig in ipairs(buttonConfig) do
-                    addOneButton(effect.buttons, subButtonConfig, key, buttonConfig.default or default);
+        if key ~= "default" then
+            if type(key) == 'number' and key >= SAO.ERA then
+                if type(buttonConfig) == 'table' and buttonConfig[1] then
+                    for _, subButtonConfig in ipairs(buttonConfig) do
+                        addOneButton(effect.buttons, subButtonConfig, key, buttonConfig.default or default);
+                    end
+                else
+                    addOneButton(effect.buttons, buttonConfig, key, default);
                 end
             else
-                addOneButton(effect.buttons, buttonConfig, key, default);
+                addOneButton(effect.buttons, buttonConfig, nil, default);
             end
-        else
-            addOneButton(effect.buttons, buttonConfig, nil, default);
         end
     end
 end
