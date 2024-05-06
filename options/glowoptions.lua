@@ -2,6 +2,15 @@ local AddonName, SAO = ...
 
 local Module = "option"
 
+-- Add a checkbox for a glowing button
+-- talentID is the spell ID of the associated talent; can be nil, meaning the button does not glow depending on a talent
+-- spellID is the spell ID of the buff or action that triggers the button; if the button is a counter, spellID should match glowID
+-- glowID is the spell ID of the button(s) that will glow
+-- talentSubText is a string describing the specificity of this option, appended to talent text
+-- spellSubText is a string describing the specificity of this option, appended to spell text
+-- variants optional variant object that tells which are sub-options and how to use them
+-- @note Options must be linked asap, not during loadOptions() which would be loaded only when the options panel is opened
+-- By linking options as soon as possible, before their respective RegisterAura() calls, options can be used by initial triggers, if any
 function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText, variants)
     if (talentID and not GetSpellInfo(talentID)) or (not self:IsFakeSpell(glowID) and not GetSpellInfo(glowID)) then
         if talentID and not GetSpellInfo(talentID) then
