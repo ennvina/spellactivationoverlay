@@ -214,11 +214,23 @@ local complexLocationTable = {
 	["LEFT (CCW)"] = {
 		LEFT = { cw = -1 },
 	},
+	["LEFT (180)"] = {
+		LEFT = { hFlip = true, vFlip = true },
+	},
+	["LEFT (VFLIPPED)"] = {
+		LEFT = { vFlip = true },
+	},
 	["RIGHT (CW)"] = {
 		RIGHT = { cw = 1 },
 	},
 	["RIGHT (CCW)"] = {
 		RIGHT = { cw = -1 },
+	},
+	["RIGHT (180)"] = {
+		RIGHT = { hFlip = true, vFlip = true },
+	},
+	["RIGHT (VFLIPPED)"] = {
+		RIGHT = { vFlip = true },
 	},
 	["TOP (CW)"] = {
 		TOP = { cw = 1 },
@@ -226,11 +238,23 @@ local complexLocationTable = {
 	["TOP (CCW)"] = {
 		TOP = { cw = -1 },
 	},
+	["TOP (180)"] = {
+		TOP = { hFlip = true, vFlip = true },
+	},
+	["TOP (HFLIPPED)"] = {
+		TOP = { hFlip = true },
+	},
 	["BOTTOM (CW)"] = {
 		BOTTOM = { cw = 1 },
 	},
 	["BOTTOM (CCW)"] = {
 		BOTTOM = { cw = -1 },
+	},
+	["BOTTOM (180)"] = {
+		BOTTOM = { hFlip = true, vFlip = true },
+	},
+	["BOTTOM (HFLIPPED)"] = {
+		BOTTOM = { hFlip = true },
 	},
 }
 
