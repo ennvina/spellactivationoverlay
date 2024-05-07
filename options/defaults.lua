@@ -303,6 +303,9 @@ SAO.defaults = {
                 [85416] = { -- Grand Crusader (Cataclysm)
                     [0] = true,
                 },
+                [90174] = { -- Divine Purpose (Cataclysm)
+                    [0] = true,
+                },
             },
             glow = {
                 [879] = { -- Exorcism
@@ -335,6 +338,11 @@ SAO.defaults = {
                 },
                 [85416] = { -- Grand Crusader (Cataclysm)
                     [31935] = true, -- Avenger's Shield
+                },
+                [90174] = { -- Divine Purpose (Cataclysm)
+                    [85673] = true, -- Word of Glory
+                    [85256] = true, -- Templar's Verdict
+                    [84963] = true, -- Inquisition
                 },
                 [94686] = { -- Crusade (Cataclysm)
                     [635]   = true, -- Holy Light
