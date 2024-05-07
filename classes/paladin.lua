@@ -46,11 +46,27 @@ local function useDivineStorm()
     );
 end
 
+local function registerArtOfWar(name, project, buff, glowingButtons, defaultOverlay, defaultButton)
+    SAO:CreateEffect(
+        name,
+        project,
+        buff,
+        "aura",
+        {
+            talent = 53486, -- The Art of War (talent)
+            overlays = {
+                default = defaultOverlay,
+                [project] = { texture = "art_of_war", position = "Left + Right (Flipped)" },
+            },
+            buttons = {
+                default = defaultButton,
+                [project] = glowingButtons,
+            },
+        }
+    );
+end
 
 local function useArtOfWar()
-    local artOfWarTalent = 53486;
-    local overlay = { texture = "art_of_war", position = "Left + Right (Flipped)" };
-
     if SAO.IsWrath() then
         local artOfWarBuff1 = 53489;
         local artOfWarBuff2 = 59578;
@@ -58,43 +74,15 @@ local function useArtOfWar()
         SAO:AddOverlayLink(artOfWarBuff2, artOfWarBuff1);
         SAO:AddGlowingLink(artOfWarBuff2, artOfWarBuff1);
 
-        SAO:CreateEffect(
-            "art_of_war_low",
-            SAO.WRATH,
-            artOfWarBuff1, -- 1/2 talent point
-            "aura",
-            {
-                talent = artOfWarTalent,
-                overlays = { overlay, default = { scale = 0.6, pulse = false, option = false } }, -- Smaller, does not pulse
-                buttons = { flashOfLight, exorcism, default = { option = false } },
-            }
-        );
+        -- 1/2 talent point: smaller, does not pulse, no options (because linked to higher rank)
+        registerArtOfWar("art_of_war_low", SAO.WRATH, artOfWarBuff1, { flashOfLight, exorcism }, { scale = 0.6, pulse = false, option = false }, { option = false });
 
-        SAO:CreateEffect(
-            "art_of_war_high",
-            SAO.WRATH,
-            artOfWarBuff2, -- 2/2 talent points
-            "aura",
-            {
-                talent = artOfWarTalent,
-                overlay = overlay,
-                buttons = { flashOfLight, exorcism },
-            }
-        );
+        -- 2/2 talent points
+        registerArtOfWar("art_of_war_high", SAO.WRATH, artOfWarBuff2, { flashOfLight, exorcism });
     elseif SAO.IsCata() then
         local artOfWarBuff = 59578;
 
-        SAO:CreateEffect(
-            "art_of_war",
-            SAO.CATA,
-            artOfWarBuff,
-            "aura",
-            {
-                talent = artOfWarTalent,
-                overlay = overlay,
-                button = exorcism,
-            }
-        );
+        registerArtOfWar("art_of_war", SAO.CATA, artOfWarBuff, { exorcism });
     end
 end
 
