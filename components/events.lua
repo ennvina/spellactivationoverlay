@@ -115,9 +115,18 @@ function SAO.COMBAT_LOG_EVENT_UNFILTERED(self, ...)
     end
 end
 
--- Check if auras are still there after a loading screen
--- This circumvents a limitation of the CLEU which may not trigger during a loading screen
+local arePendingEffectsRegistered = false;
 function SAO.LOADING_SCREEN_DISABLED(self, ...)
+    -- Register effects right after the loading screen ends
+    -- Initially, this was called after PLAYER_LOGIN
+    -- But in some situations, PLAYER_LOGIN is "too soon" to be able to use the game's glow engine
+    if not arePendingEffectsRegistered then
+        arePendingEffectsRegistered = true;
+        self:RegisterPendingEffectsAfterPlayerLoggedIn();
+    end
+
+    -- Check if auras are still there after a loading screen
+    -- This circumvents a limitation of the CLEU which may not trigger during a loading screen
     for spellID, stacks in pairs(self.ActiveOverlays) do
         if not self:IsFakeSpell(spellID) and not self:FindPlayerAuraByID(spellID) then
             self:DeactivateOverlay(spellID);
@@ -153,10 +162,6 @@ end
 function SAO.LEARNED_SPELL_IN_TAB(self, ...)
     local spellID, skillInfoIndex, isGuildPerkSpell = ...;
     self:LearnNewSpell(spellID);
-end
-
-function SAO.PLAYER_LOGIN(self, ...)
-    self:RegisterPendingEffectsAfterPlayerLoggedIn();
 end
 
 -- Event receiver
