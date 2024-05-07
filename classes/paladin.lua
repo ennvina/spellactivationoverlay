@@ -1,5 +1,6 @@
 local AddonName, SAO = ...
 
+local avengersShield = 31935;
 local divineLight = 82326;
 local divineStorm = SAO.IsSoD() and 407778 or 53385;
 local exorcism = 879;
@@ -126,6 +127,20 @@ local function useDaybreak()
     );
 end
 
+local function useGrandCrusader()
+    SAO:CreateEffect(
+        "grand_crusader",
+        SAO.CATA,
+        85416, -- Grand Crusader (buff)
+        "aura",
+        {
+            talent = 75806, -- Grand Crusader (talent)
+            overlay = { texture = "grand_crusader", position = "Left + Right (Flipped)" },
+            button = avengersShield,
+        }
+    );
+end
+
 local function registerClass(self)
     -- Counters
     useHammerOfWrath();
@@ -139,6 +154,9 @@ local function registerClass(self)
     -- Holy
     useInfusionOfLight();
     useDaybreak();
+
+    -- Protection
+    useGrandCrusader();
 
     -- Retribution
     useArtOfWar();

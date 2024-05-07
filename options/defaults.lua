@@ -300,6 +300,9 @@ SAO.defaults = {
                 [88819] = { -- Daybreak (Cataclysm)
                     [0] = true,
                 },
+                [85416] = { -- Grand Crusader (Cataclysm)
+                    [0] = true,
+                },
             },
             glow = {
                 [879] = { -- Exorcism
@@ -329,6 +332,9 @@ SAO.defaults = {
                 },
                 [88819] = { -- Daybreak (Cataclysm)
                     [20473] = true, -- Holy Shock
+                },
+                [85416] = { -- Grand Crusader (Cataclysm)
+                    [31935] = true, -- Avenger's Shield
                 },
             },
         },
