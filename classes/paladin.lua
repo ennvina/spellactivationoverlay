@@ -1,17 +1,26 @@
 local AddonName, SAO = ...
 
+local how = 24275;
+
+local function useHammerOfWrath()
+    SAO:CreateEffect(
+        "how",
+        SAO.ALL_PROJECTS,
+        how,
+        "counter"
+    );
+end
+
 local function registerClass(self)
     local flashOfLight = GetSpellInfo(19750);
     local exorcism = GetSpellInfo(879);
     local holyLight = GetSpellInfo(635);
 
-    local how = 24275;
     local holyShock = 20473;
     local divineStorm = self.IsSoD() and 407778 or 53385;
 
-    -- Hammer of Wrath, Execute-like ability for targets at 20% hp or less
-    self:RegisterAura("how", 0, how, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(how)) });
-    self:RegisterCounter("how");
+    -- Counters
+    useHammerOfWrath();
 
     -- Holy Shock, as combat-only counter
     self:RegisterAura("holy_shock", 0, holyShock, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(holyShock)) }, true);
@@ -79,12 +88,10 @@ local function registerClass(self)
 end
 
 local function loadOptions(self)
-    local how = 24275;
     local holyShock = 20473;
     local exorcism = 879;
     local divineStorm = self.IsSoD() and 407778 or 53385;
 
-    self:AddGlowingOption(nil, how, how);
     self:AddGlowingOption(nil, holyShock, holyShock);
     self:AddGlowingOption(nil, exorcism, exorcism);
     if self.IsSoD() or self.IsWrath() or self.IsCata() then
