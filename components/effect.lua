@@ -646,3 +646,72 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
 
     return effect;
 end
+
+--[[
+    Create multiple, linked effects.
+    Parameters are almost identical to CreateEffect, the main difference is that there are multiple spellIDs instead of one.
+    The last spellID is the 'master' while all others are linked to it.
+    Options are set to false for all overlays/buttons, except the last one.
+    The minor flag, if set, will be ignored because overriden to disable all options.
+]]
+function SAO:CreateLinkedEffects(name, project, spellIDs, class, props, register)
+    if not self.IsProject(project) then
+        return nil;
+    end
+
+    local wasMinor;
+    local minorProps;
+    if type(props) == 'table' then
+        wasMinor = props.minor;
+        minorProps = props;
+        if type(wasMinor) == 'boolean' then
+            self:Error(Module, "Effect link group "..tostring(name).." uses a minor flag; it will be overriden");
+        end
+    else
+        minorProps = {};
+    end
+
+    -- Start by creating the last effect, because it is the most important one
+    -- If it fails, don't even bother creating the rest
+    local lastSpell = spellIDs[#spellIDs];
+    minorProps.minor = false; -- Last spell is *not* minor
+    local lastEffect = self:CreateEffect(name.."_link_max", project, lastSpell, class, minorProps, false);
+    if not lastEffect then
+        self:Error(Module, "Failed to create main effect for an effect link group of "..tostring(name));
+        minorProps.minor = wasMinor;
+        return nil;
+    end
+    minorProps.minor = true; -- All other spells will be minor
+
+    local hasOverlay = type(props) == 'table' and (props.overlay or props.overlays);
+    local hasButton = type(props) == 'table' and (props.button or props.buttons);
+
+    local effects = {};
+
+    for i, spell in ipairs(spellIDs) do
+        if spell ~= lastSpell then
+            if hasOverlay then
+                self:AddOverlayLink(lastSpell, spell);
+            end
+            if hasButton then
+                self:AddGlowingLink(lastSpell, spell);
+            end
+
+            local effect = self:CreateEffect(name.."_link_"..i, project, spell, class, minorProps, false);
+            if effect then
+                table.insert(effects, effect);
+            end
+        end
+    end
+
+    table.insert(effects, lastEffect);
+
+    if register == nil or register == true then
+        for _, effect in ipairs(effects) do
+            self:RegisterEffect(effect);
+        end
+    end
+
+    minorProps.minor = wasMinor;
+    return effects;
+end
