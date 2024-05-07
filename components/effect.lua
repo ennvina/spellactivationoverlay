@@ -12,6 +12,7 @@ local Module = "effect"
     talent = 49188, -- Talent or rune or nil (for counters that don't rely on other talent)
     counter = false, -- Default is false
     combatOnly = false, -- Default is false
+    minor = false, -- Default is false; tells the effect is minor, and should not have any option
 
     overlays = {{
         stacks = 0, -- Default is 0
@@ -325,6 +326,10 @@ local function checkEffect(effect)
         SAO:Error(Module, "Registering effect "..effect.name.." with invalid talent "..tostring(effect.talent));
         return false;
     end
+    if effect.minor ~= nil and type(effect.minor) ~= 'boolean' then
+        SAO:Error(Module, "Registering effect "..effect.name.." with invalid minor flag "..tostring(effect.minor));
+        return nil;
+    end
     if effect.counter ~= true and type(effect.overlays) ~= "table" then
         SAO:Error(Module, "Registering effect "..effect.name.." with no overlays and not as counter");
         return false;
@@ -534,9 +539,10 @@ end
 function SAO:AddEffectOptions()
     for _, effect in ipairs(allEffects) do
         local talent = effect.talent;
+        local skipOptions = effect.minor == false;
 
         local uniqueOverlayStack = { latest = nil, unique = true };
-        for _, overlay in ipairs(effect.overlays or {}) do
+        for _, overlay in ipairs(not skipOptions and effect.overlays or {}) do
             if overlay.option ~= false and (not overlay.project or self.IsProject(overlay.project)) then
                 local buff = overlay.spellID or effect.spellID;
                 if type(overlay.option) == 'table' then
@@ -559,7 +565,7 @@ function SAO:AddEffectOptions()
             end
         end
 
-        for _, button in ipairs(effect.buttons or {}) do
+        for _, button in ipairs(not skipOptions and effect.buttons or {}) do
             if button.option ~= false and (not button.project or self.IsProject(button.project)) then
                 local buff = effect.spellID;
                 local spellID = button.spellID or effect.spellID;
@@ -607,6 +613,10 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
         self:Error(Module, "Creating effect "..name.." with invalid props "..tostring(props));
         return nil;
     end
+    if props and props.minor ~= nil and type(props.minor) ~= 'boolean' then
+        self:Error(Module, "Creating effect "..name.." with invalid minor flag "..tostring(props.minor));
+        return nil;
+    end
 
     if not self.IsProject(project) then
         return;
@@ -616,6 +626,7 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
         name = name,
         project = project,
         spellID = spellID,
+        minor = type(props) == 'table' and props.minor,
     }
 
     if strlower(class) == "counter" then
