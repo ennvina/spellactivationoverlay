@@ -1,5 +1,6 @@
 local AddonName, SAO = ...
 
+local divineStorm = SAO.IsSoD() and 407778 or 53385;
 local exorcism = 879;
 local holyShock = 20473;
 local how = 24275;
@@ -33,21 +34,25 @@ local function useExorcism()
     );
 end
 
+local function useDivineStorm()
+    SAO:CreateEffect(
+        "divine_storm",
+        SAO.SOD + SAO.WRATH + SAO.CATA,
+        divineStorm,
+        "counter",
+        { combatOnly = true }
+    );
+end
+
 local function registerClass(self)
     local flashOfLight = GetSpellInfo(19750);
     local holyLight = GetSpellInfo(635);
-
-    local divineStorm = self.IsSoD() and 407778 or 53385;
 
     -- Counters
     useHammerOfWrath();
     useHolyShock();
     useExorcism();
-
-    if self.IsSoD() or self.IsWrath() or self.IsCata() then
-        self:RegisterAura("divine_storm", 0, divineStorm, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(divineStorm)) }, true);
-        self:RegisterCounter("divine_storm");
-    end
+    useDivineStorm();
 
     if self.IsWrath() then
         local infusionOfLightBuff1 = 53672;
@@ -102,12 +107,6 @@ local function registerClass(self)
 end
 
 local function loadOptions(self)
-    local divineStorm = self.IsSoD() and 407778 or 53385;
-
-    if self.IsSoD() or self.IsWrath() or self.IsCata() then
-        self:AddGlowingOption(nil, divineStorm, divineStorm);
-    end
-
     if self.IsWrath() then
         local flashOfLight = 19750;
         local holyLight = 635;
