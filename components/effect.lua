@@ -59,7 +59,7 @@ local hasPlayerLoggedIn = false;
 
 local function doesUseName(useNameProp)
     if useNameProp == nil then
-        return SAO.IsCata() == true;
+        return SAO.IsCata() == false;
     else
         return useNameProp == true;
     end
