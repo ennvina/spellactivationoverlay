@@ -1,9 +1,11 @@
 local AddonName, SAO = ...
 
+local divineLight = 82326;
 local divineStorm = SAO.IsSoD() and 407778 or 53385;
 local exorcism = 879;
 local flashOfLight = 19750;
 local holyLight = 635;
+local holyRadiance = 82327;
 local holyShock = 20473;
 local how = 24275;
 
@@ -86,6 +88,43 @@ local function useArtOfWar()
     end
 end
 
+local function useInfusionOfLight()
+    if not SAO.IsWrath() and not SAO.IsCata() then
+        return;
+    end
+
+    local infusionOfLightBuff1 = 53672;
+    local infusionOfLightBuff2 = 54149;
+    local infusionOfLightTalent = 53569;
+
+    SAO:AddOverlayLink(infusionOfLightBuff2, infusionOfLightBuff1);
+    SAO:AddGlowingLink(infusionOfLightBuff2, infusionOfLightBuff1);
+
+    for rank=1,2 do
+        local name = ({ "infusion_of_light_low", "infusion_of_light_high" })[rank];
+        local buff = ({ infusionOfLightBuff1, infusionOfLightBuff2 })[rank];
+        local option = rank == 2;
+        SAO:CreateEffect(
+            name,
+            SAO.WRATH + SAO.CATA,
+            buff,
+            "aura",
+            {
+                talent = infusionOfLightTalent,
+                overlays = {
+                    [SAO.WRATH] = { texture = "daybreak", position = "Left + Right (Flipped)", option = option },
+                    [SAO.CATA] = { texture = "surge_of_light", position = "Top (CW)", option = option and { subText = SAO:RecentlyUpdated() } }, -- Updated 2024-04-30
+                },
+                buttons = {
+                    default = { option = option },
+                    [SAO.WRATH] = { flashOfLight, holyLight },
+                    [SAO.CATA] = { flashOfLight, holyLight, divineLight, holyRadiance },
+                },
+            }
+        );
+    end
+end
+
 local function registerClass(self)
     -- Counters
     useHammerOfWrath();
@@ -93,73 +132,18 @@ local function registerClass(self)
     useExorcism();
     useDivineStorm();
 
-    if self.IsWrath() then
-        local infusionOfLightBuff1 = 53672;
-        local infusionOfLightBuff2 = 54149;
+    -- Items
+    self:RegisterAuraSoulPreserver("soul_preserver_paladin", 60513); -- 60513 = Paladin buff
 
-        -- Add option links during registerClass(), not because loadOptions() which would be loaded only when the options panel is opened
-        -- Add option links before RegisterAura() calls, so that options they are used by initial triggers, if any
-        self:AddOverlayLink(infusionOfLightBuff2, infusionOfLightBuff1);
-        self:AddGlowingLink(infusionOfLightBuff2, infusionOfLightBuff1);
-
-        -- Infusion of Light, 1/2 talent points
-        self:RegisterAura("infusion_of_light_low", 0, infusionOfLightBuff1, "daybreak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(flashOfLight)), (GetSpellInfo(holyLight)) });
-
-        -- Infusion of Light, 2/2 talent points
-        self:RegisterAura("infusion_of_light_high", 0, infusionOfLightBuff2, "daybreak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(flashOfLight)), (GetSpellInfo(holyLight)) });
-
-        -- Healing Trance / Soul Preserver
-        self:RegisterAuraSoulPreserver("soul_preserver_paladin", 60513); -- 60513 = Paladin buff
-    elseif self.IsCata() then
-        local infusionOfLightBuff1 = 53672;
-        local infusionOfLightBuff2 = 54149;
-
-        local divineLight = 82326;
-        local holyRadiance = 82327;
-        local infusionOfLightButtons = { flashOfLight, holyLight, divineLight, holyRadiance };
-
-        -- Add option links during registerClass(), not because loadOptions() which would be loaded only when the options panel is opened
-        -- Add option links before RegisterAura() calls, so that options they are used by initial triggers, if any
-        self:AddOverlayLink(infusionOfLightBuff2, infusionOfLightBuff1);
-        self:AddGlowingLink(infusionOfLightBuff2, infusionOfLightBuff1);
-
-        -- Infusion of Light, 1/2 talent points
-        self:RegisterAura("infusion_of_light_low", 0, infusionOfLightBuff1, "surge_of_light", "Top (CW)", 1, 255, 255, 255, true, infusionOfLightButtons);
-
-        -- Infusion of Light, 2/2 talent points
-        self:RegisterAura("infusion_of_light_high", 0, infusionOfLightBuff2, "surge_of_light", "Top (CW)", 1, 255, 255, 255, true, infusionOfLightButtons);
-    end
+    -- Holy
+    useInfusionOfLight();
 
     -- Retribution
     useArtOfWar();
 end
 
 local function loadOptions(self)
-    if self.IsWrath() then
---        local infusionOfLightBuff1 = 53672;
-        local infusionOfLightBuff2 = 54149;
-        local infusionOfLightTalent = 53569;
-
-        self:AddOverlayOption(infusionOfLightTalent, infusionOfLightBuff2);
-        self:AddSoulPreserverOverlayOption(60513); -- 60513 = Paladin buff
-
-        self:AddGlowingOption(infusionOfLightTalent, infusionOfLightBuff2, flashOfLight);
-        self:AddGlowingOption(infusionOfLightTalent, infusionOfLightBuff2, holyLight);
-    elseif self.IsCata() then
-        local divineLight = 82326;
-        local holyRadiance = 82327;
-
---        local infusionOfLightBuff1 = 53672;
-        local infusionOfLightBuff2 = 54149;
-        local infusionOfLightTalent = 53569;
-
-        self:AddOverlayOption(infusionOfLightTalent, infusionOfLightBuff2, 0, self:RecentlyUpdated()); -- Updated 2024-04-30
-
-        self:AddGlowingOption(infusionOfLightTalent, infusionOfLightBuff2, flashOfLight);
-        self:AddGlowingOption(infusionOfLightTalent, infusionOfLightBuff2, holyLight);
-        self:AddGlowingOption(infusionOfLightTalent, infusionOfLightBuff2, divineLight);
-        self:AddGlowingOption(infusionOfLightTalent, infusionOfLightBuff2, holyRadiance);
-    end
+    self:AddSoulPreserverOverlayOption(60513); -- 60513 = Paladin buff
 end
 
 SAO.Class["PALADIN"] = {
