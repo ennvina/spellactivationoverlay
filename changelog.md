@@ -5,6 +5,7 @@
 New effects:
 - New SAO: Paladin's Daybreak (Cataclysm)
 - New SAO: Paladin's Grand Crusader (Cataclysm)
+- New GAB: Paladin's Holy Light, during Crusade (Cataclysm)
 - New GAB: Paladin's Holy Shock, during Daybreak (Cataclysm)
 - New GAB: Paladin's Avenger's Shield, during Grand Crusader (Cataclysm)
 

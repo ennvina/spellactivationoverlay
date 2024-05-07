@@ -336,6 +336,9 @@ SAO.defaults = {
                 [85416] = { -- Grand Crusader (Cataclysm)
                     [31935] = true, -- Avenger's Shield
                 },
+                [94686] = { -- Crusade (Cataclysm)
+                    [635]   = true, -- Holy Light
+                },
             },
         },
         ["PRIEST"] = {

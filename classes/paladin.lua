@@ -101,6 +101,19 @@ local function useGrandCrusader()
     );
 end
 
+local function useCrusade()
+    SAO:CreateEffect(
+        "crusade",
+        SAO.CATA,
+        94686, -- Crusader (buff)
+        "aura",
+        {
+            talent = 31866, -- Crusade (talent),
+            button = holyLight
+        }
+    );
+end
+
 local function registerArtOfWar(name, project, buff, glowingButtons, defaultOverlay, defaultButton)
     SAO:CreateEffect(
         name,
@@ -159,6 +172,7 @@ local function registerClass(self)
     useGrandCrusader();
 
     -- Retribution
+    useCrusade();
     useArtOfWar();
 end
 
