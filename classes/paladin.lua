@@ -89,40 +89,27 @@ local function useArtOfWar()
 end
 
 local function useInfusionOfLight()
-    if not SAO.IsWrath() and not SAO.IsCata() then
-        return;
-    end
-
     local infusionOfLightBuff1 = 53672;
     local infusionOfLightBuff2 = 54149;
     local infusionOfLightTalent = 53569;
 
-    SAO:AddOverlayLink(infusionOfLightBuff2, infusionOfLightBuff1);
-    SAO:AddGlowingLink(infusionOfLightBuff2, infusionOfLightBuff1);
-
-    for rank=1,2 do
-        local name = ({ "infusion_of_light_low", "infusion_of_light_high" })[rank];
-        local buff = ({ infusionOfLightBuff1, infusionOfLightBuff2 })[rank];
-        local option = rank == 2;
-        SAO:CreateEffect(
-            name,
-            SAO.WRATH + SAO.CATA,
-            buff,
-            "aura",
-            {
-                talent = infusionOfLightTalent,
-                overlays = {
-                    [SAO.WRATH] = { texture = "daybreak", position = "Left + Right (Flipped)", option = option },
-                    [SAO.CATA] = { texture = "surge_of_light", position = "Top (CW)", option = option and { subText = SAO:RecentlyUpdated() } }, -- Updated 2024-04-30
-                },
-                buttons = {
-                    default = { option = option },
-                    [SAO.WRATH] = { flashOfLight, holyLight },
-                    [SAO.CATA] = { flashOfLight, holyLight, divineLight, holyRadiance },
-                },
-            }
-        );
-    end
+    SAO:CreateLinkedEffects(
+        "infusion_of_light",
+        SAO.WRATH + SAO.CATA,
+        { infusionOfLightBuff1, infusionOfLightBuff2 },
+        "aura",
+        {
+            talent = infusionOfLightTalent,
+            overlays = {
+                [SAO.WRATH] = { texture = "daybreak", position = "Left + Right (Flipped)" },
+                [SAO.CATA] = { texture = "surge_of_light", position = "Top (CW)", option = { subText = SAO:RecentlyUpdated() } }, -- Updated 2024-04-30
+            },
+            buttons = {
+                [SAO.WRATH] = { flashOfLight, holyLight },
+                [SAO.CATA] = { flashOfLight, holyLight, divineLight, holyRadiance },
+            },
+        }
+    );
 end
 
 local function registerClass(self)
