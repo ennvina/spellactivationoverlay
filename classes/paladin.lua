@@ -1,5 +1,6 @@
 local AddonName, SAO = ...
 
+local exorcism = 879;
 local holyShock = 20473;
 local how = 24275;
 
@@ -22,9 +23,18 @@ local function useHolyShock()
     );
 end
 
+local function useExorcism()
+    SAO:CreateEffect(
+        "exorcism",
+        SAO.ALL_PROJECTS,
+        exorcism,
+        "counter",
+        { combatOnly = true }
+    );
+end
+
 local function registerClass(self)
     local flashOfLight = GetSpellInfo(19750);
-    local exorcism = GetSpellInfo(879);
     local holyLight = GetSpellInfo(635);
 
     local divineStorm = self.IsSoD() and 407778 or 53385;
@@ -32,10 +42,7 @@ local function registerClass(self)
     -- Counters
     useHammerOfWrath();
     useHolyShock();
-
-    -- Exorcism, as combat-only counter
-    self:RegisterAura("exorcism", 0, 879, nil, "", 0, 0, 0, 0, false, { exorcism }, true);
-    self:RegisterCounter("exorcism");
+    useExorcism();
 
     if self.IsSoD() or self.IsWrath() or self.IsCata() then
         self:RegisterAura("divine_storm", 0, divineStorm, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(divineStorm)) }, true);
@@ -56,10 +63,10 @@ local function registerClass(self)
         self:AddGlowingLink(artOfWarBuff2, artOfWarBuff1);
 
         -- Art of War, 1/2 talent points
-        self:RegisterAura("art_of_war_low", 0, artOfWarBuff1, "art_of_war", "Left + Right (Flipped)", 0.6, 255, 255, 255, false, { flashOfLight, exorcism }); -- Smaller, does not pulse
+        self:RegisterAura("art_of_war_low", 0, artOfWarBuff1, "art_of_war", "Left + Right (Flipped)", 0.6, 255, 255, 255, false, { flashOfLight, (GetSpellInfo(exorcism)) }); -- Smaller, does not pulse
 
         -- Art of War, 2/2 talent points
-        self:RegisterAura("art_of_war_high", 0, artOfWarBuff2, "art_of_war", "Left + Right (Flipped)", 1, 255, 255, 255, true, { flashOfLight, exorcism });
+        self:RegisterAura("art_of_war_high", 0, artOfWarBuff2, "art_of_war", "Left + Right (Flipped)", 1, 255, 255, 255, true, { flashOfLight, (GetSpellInfo(exorcism)) });
 
         -- Infusion of Light, 1/2 talent points
         self:RegisterAura("infusion_of_light_low", 0, infusionOfLightBuff1, "daybreak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { flashOfLight, holyLight });
@@ -84,7 +91,7 @@ local function registerClass(self)
         self:AddGlowingLink(infusionOfLightBuff2, infusionOfLightBuff1);
 
         -- Art of War
-        self:RegisterAura("art_of_war", 0, artOfWarBuff, "art_of_war", "Left + Right (Flipped)", 1, 255, 255, 255, true, { exorcism });
+        self:RegisterAura("art_of_war", 0, artOfWarBuff, "art_of_war", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(exorcism)) });
 
         -- Infusion of Light, 1/2 talent points
         self:RegisterAura("infusion_of_light_low", 0, infusionOfLightBuff1, "surge_of_light", "Top (CW)", 1, 255, 255, 255, true, infusionOfLightButtons);
@@ -95,10 +102,8 @@ local function registerClass(self)
 end
 
 local function loadOptions(self)
-    local exorcism = 879;
     local divineStorm = self.IsSoD() and 407778 or 53385;
 
-    self:AddGlowingOption(nil, exorcism, exorcism);
     if self.IsSoD() or self.IsWrath() or self.IsCata() then
         self:AddGlowingOption(nil, divineStorm, divineStorm);
     end
