@@ -539,10 +539,10 @@ end
 function SAO:AddEffectOptions()
     for _, effect in ipairs(allEffects) do
         local talent = effect.talent;
-        local skipOptions = effect.minor == false;
+        local skipOptions = effect.minor == true;
 
         local uniqueOverlayStack = { latest = nil, unique = true };
-        for _, overlay in ipairs(not skipOptions and effect.overlays or {}) do
+        for _, overlay in ipairs((not skipOptions) and effect.overlays or {}) do
             if overlay.option ~= false and (not overlay.project or self.IsProject(overlay.project)) then
                 local buff = overlay.spellID or effect.spellID;
                 if type(overlay.option) == 'table' then
@@ -565,7 +565,7 @@ function SAO:AddEffectOptions()
             end
         end
 
-        for _, button in ipairs(not skipOptions and effect.buttons or {}) do
+        for _, button in ipairs((not skipOptions) and effect.buttons or {}) do
             if button.option ~= false and (not button.project or self.IsProject(button.project)) then
                 local buff = effect.spellID;
                 local spellID = button.spellID or effect.spellID;
