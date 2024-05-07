@@ -112,6 +112,20 @@ local function useInfusionOfLight()
     );
 end
 
+local function useDaybreak()
+    SAO:CreateEffect(
+        "daybreak",
+        SAO.CATA,
+        88819, -- Daybreak (buff)
+        "aura",
+        {
+            talent = 88820, -- Daybreak (talent)
+            overlay = { texture = "daybreak", position ="Left + Right (Flipped)" },
+            button = holyShock,
+        }
+    );
+end
+
 local function registerClass(self)
     -- Counters
     useHammerOfWrath();
@@ -124,6 +138,7 @@ local function registerClass(self)
 
     -- Holy
     useInfusionOfLight();
+    useDaybreak();
 
     -- Retribution
     useArtOfWar();

@@ -1,5 +1,11 @@
 ## SpellActivationOverlay Changelog
 
+#### v1.4.1 (2024-05-xx)
+
+New effects:
+- New SAO: Paladin's Daybreak (Cataclysm)
+- New GAB: Paladin's Holy Shock, during Daybreak (Cataclysm)
+
 #### v1.4.0 (2024-05-06)
 
 Shout-out to fellow developers Amanthuul and espionn. Thanks!
