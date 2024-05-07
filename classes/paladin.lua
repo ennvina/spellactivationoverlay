@@ -49,46 +49,6 @@ local function useDivineStorm()
     );
 end
 
-local function registerArtOfWar(name, project, buff, glowingButtons, defaultOverlay, defaultButton)
-    SAO:CreateEffect(
-        name,
-        project,
-        buff,
-        "aura",
-        {
-            talent = 53486, -- The Art of War (talent)
-            overlays = {
-                default = defaultOverlay,
-                [project] = { texture = "art_of_war", position = "Left + Right (Flipped)" },
-            },
-            buttons = {
-                default = defaultButton,
-                [project] = glowingButtons,
-            },
-        }
-    );
-end
-
-local function useArtOfWar()
-    if SAO.IsWrath() then
-        local artOfWarBuff1 = 53489;
-        local artOfWarBuff2 = 59578;
-
-        SAO:AddOverlayLink(artOfWarBuff2, artOfWarBuff1);
-        SAO:AddGlowingLink(artOfWarBuff2, artOfWarBuff1);
-
-        -- 1/2 talent point: smaller, does not pulse, no options (because linked to higher rank)
-        registerArtOfWar("art_of_war_low", SAO.WRATH, artOfWarBuff1, { flashOfLight, exorcism }, { scale = 0.6, pulse = false, option = false }, { option = false });
-
-        -- 2/2 talent points
-        registerArtOfWar("art_of_war_high", SAO.WRATH, artOfWarBuff2, { flashOfLight, exorcism });
-    elseif SAO.IsCata() then
-        local artOfWarBuff = 59578;
-
-        registerArtOfWar("art_of_war", SAO.CATA, artOfWarBuff, { exorcism });
-    end
-end
-
 local function useInfusionOfLight()
     local infusionOfLightBuff1 = 53672;
     local infusionOfLightBuff2 = 54149;
@@ -139,6 +99,46 @@ local function useGrandCrusader()
             button = avengersShield,
         }
     );
+end
+
+local function registerArtOfWar(name, project, buff, glowingButtons, defaultOverlay, defaultButton)
+    SAO:CreateEffect(
+        name,
+        project,
+        buff,
+        "aura",
+        {
+            talent = 53486, -- The Art of War (talent)
+            overlays = {
+                default = defaultOverlay,
+                [project] = { texture = "art_of_war", position = "Left + Right (Flipped)" },
+            },
+            buttons = {
+                default = defaultButton,
+                [project] = glowingButtons,
+            },
+        }
+    );
+end
+
+local function useArtOfWar()
+    if SAO.IsWrath() then
+        local artOfWarBuff1 = 53489;
+        local artOfWarBuff2 = 59578;
+
+        SAO:AddOverlayLink(artOfWarBuff2, artOfWarBuff1);
+        SAO:AddGlowingLink(artOfWarBuff2, artOfWarBuff1);
+
+        -- 1/2 talent point: smaller, does not pulse, no options (because linked to higher rank)
+        registerArtOfWar("art_of_war_low", SAO.WRATH, artOfWarBuff1, { flashOfLight, exorcism }, { scale = 0.6, pulse = false, option = false }, { option = false });
+
+        -- 2/2 talent points
+        registerArtOfWar("art_of_war_high", SAO.WRATH, artOfWarBuff2, { flashOfLight, exorcism });
+    elseif SAO.IsCata() then
+        local artOfWarBuff = 59578;
+
+        registerArtOfWar("art_of_war", SAO.CATA, artOfWarBuff, { exorcism });
+    end
 end
 
 local function registerClass(self)
