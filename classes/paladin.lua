@@ -12,6 +12,7 @@ local how = 24275;
 local inquisition = 84963;
 local templarsVerdict = 85256;
 local wordOfGlory = 85673;
+local zealotry = 85696;
 
 local function useHammerOfWrath()
     SAO:CreateEffect(
@@ -146,7 +147,7 @@ local function useDivinePurpose()
         {
             talent = 85117, -- Divine Purpose (talent)
             overlay = { texture = "hand_of_light", position = "Top" },
-            buttons = { wordOfGlory, templarsVerdict, inquisition },
+            buttons = { wordOfGlory, templarsVerdict, inquisition, zealotry },
         }
     );
 end

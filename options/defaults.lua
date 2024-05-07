@@ -343,6 +343,7 @@ SAO.defaults = {
                     [85673] = true, -- Word of Glory
                     [85256] = true, -- Templar's Verdict
                     [84963] = true, -- Inquisition
+                    [85696] = true, -- Zealotry
                 },
                 [94686] = { -- Crusade (Cataclysm)
                     [635]   = true, -- Holy Light
