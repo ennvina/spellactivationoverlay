@@ -347,6 +347,7 @@ local function checkEffect(effect)
         return false;
     end
 
+    local hasStacksZero, hasStacksNonZero = false, false;
     for i, overlay in ipairs(effect.overlays or {}) do
         if overlay.project and type(overlay.project) ~= 'number' then
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid project flags "..tostring(overlay.project));
@@ -359,6 +360,20 @@ local function checkEffect(effect)
         if type(overlay.stacks) ~= 'nil' and (type(overlay.stacks) ~= 'number' or overlay.stacks < 0) then
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid number of stacks "..tostring(overlay.stacks));
             return false;
+        end
+        local stacks = overlay.stacks or 0;
+        if stacks == 0 then
+            if hasStacksNonZero then
+                SAO:Error(Module, "Registering effect "..effect.name.." with mixed stacks of zero and non-zero");
+                return false;
+            end
+            hasStacksZero = true;
+        else
+            if hasStacksZero then
+                SAO:Error(Module, "Registering effect "..effect.name.." with mixed stacks of zero and non-zero");
+                return false;
+            end
+            hasStacksNonZero = true;
         end
         if type(overlay.texture) ~= 'string' then -- @todo check the texture even exists
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid texture name "..tostring(overlay.texture));
