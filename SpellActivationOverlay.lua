@@ -164,7 +164,9 @@ function SpellActivationOverlay_OnEvent(self, event, ...)
 		-- end
 	elseif ( event == "SPELL_ACTIVATION_OVERLAY_HIDE" ) then
 		local spellID = ...;
-		SAO:Debug(Module, "Received native SPELL_ACTIVATION_OVERLAY_HIDE with spell ID "..tostring(spellID));
+		if spellID then
+			SAO:Debug(Module, "Received native SPELL_ACTIVATION_OVERLAY_HIDE with spell ID "..tostring(spellID));
+		end
 		-- if spellID then
 		-- 	SpellActivationOverlay_HideOverlays(self, spellID);
 		-- else
