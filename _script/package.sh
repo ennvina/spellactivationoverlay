@@ -35,6 +35,17 @@ mkproject() {
     echo
 }
 
+# Remove copyright of given expansions because the addon does not embed texture for these expansions
+# Expansion anmes are case sensitive, and must match one of the copyrights includes in TOC file
+# $1+ = expansions
+prunecopyright() {
+    for expansion in "$@"
+    do
+        grep -q "${expansion}" SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot find copyright of expansion ${expansion} in TOC file"
+        sed -i "/${expansion}/,+2d" SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot remove copyright of expansion ${expansion} from TOC file"
+    done
+}
+
 # Find texture names which file data ID is lesser or equal to a specific threshold
 # Such textures are supposed to be already embedded in the game files
 # $1 = threshold up until textures are supposed to be embedded, and can be pruned
@@ -176,6 +187,8 @@ cdup
 # Release cata version
 CATA_BUILD_VERSION=40400
 mkproject cata $CATA_BUILD_VERSION
+
+prunecopyright Cataclysm
 
 TEXTURES_NOT_FOR_CATA=(
 tooth_and_claw
