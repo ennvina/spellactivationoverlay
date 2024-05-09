@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v1.4.1 (2024-05-xx)
+#### v1.4.1 (2024-05-10)
 
 New effects:
 - New SAO: Paladin's Daybreak (Cataclysm)
@@ -13,6 +13,9 @@ New effects:
 - New GAB: Paladin's Holy Light, during Crusade (Cataclysm)
 - New GAB: Paladin's Holy Shock, during Daybreak (Cataclysm)
 - New GAB: Paladin's Avenger's Shield, during Grand Crusader (Cataclysm)
+
+Bug Fixes
+- Some effects triggered immediately upon login would not glow their buttons
 
 Glowing Buttons would only glow rank 1 of the following spells and abilities:
 - Death Knight's Frost Strike (Wrath)
