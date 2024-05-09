@@ -54,6 +54,7 @@ function SAO.SPELL_AURA(self, ...)
             -- Activate aura
             self:Debug(Module, "Activating aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
             for _, aura in ipairs(auras[count]) do
+                self:MarkAura(spellID, count);
                 self:ActivateOverlay(count, select(3,unpack(aura)));
                 self:AddGlow(spellID, select(11,unpack(aura)));
             end
@@ -84,6 +85,7 @@ function SAO.SPELL_AURA(self, ...)
             self:Debug(Module, "Changing number of stacks from "..tostring(currentlyActiveOverlay).." to "..count.." for aura "..spellID.." "..(GetSpellInfo(spellID) or ""));
             self:DeactivateOverlay(spellID);
             self:RemoveGlow(spellID);
+            self:MarkAura(spellID, count); -- Call MarkAura after DeactivateOverlay, because DeactivateOverlay may reset its aura marker
             for _, aura in ipairs(auras[count]) do
                 local texture, positions, scale, r, g, b, autoPulse, _, combatOnly = select(4,unpack(aura));
                 local forcePulsePlay = autoPulse;
@@ -100,6 +102,7 @@ function SAO.SPELL_AURA(self, ...)
         ) then
             -- Aura just disappeared or is not supported for this number of stacks
             self:Debug(Module, "Removing aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
+            -- self:UnmarkAura(spellID); -- No need to unmark explicitly, because DeactivateOverlay does it automatically
             self:DeactivateOverlay(spellID);
             self:RemoveGlow(spellID);
         end
@@ -115,9 +118,18 @@ function SAO.COMBAT_LOG_EVENT_UNFILTERED(self, ...)
     end
 end
 
--- Check if auras are still there after a loading screen
--- This circumvents a limitation of the CLEU which may not trigger during a loading screen
+local arePendingEffectsRegistered = false;
 function SAO.LOADING_SCREEN_DISABLED(self, ...)
+    -- Register effects right after the loading screen ends
+    -- Initially, this was called after PLAYER_LOGIN
+    -- But in some situations, PLAYER_LOGIN is "too soon" to be able to use the game's glow engine
+    if not arePendingEffectsRegistered then
+        arePendingEffectsRegistered = true;
+        self:RegisterPendingEffectsAfterPlayerLoggedIn();
+    end
+
+    -- Check if auras are still there after a loading screen
+    -- This circumvents a limitation of the CLEU which may not trigger during a loading screen
     for spellID, stacks in pairs(self.ActiveOverlays) do
         if not self:IsFakeSpell(spellID) and not self:FindPlayerAuraByID(spellID) then
             self:DeactivateOverlay(spellID);
@@ -153,10 +165,6 @@ end
 function SAO.LEARNED_SPELL_IN_TAB(self, ...)
     local spellID, skillInfoIndex, isGuildPerkSpell = ...;
     self:LearnNewSpell(spellID);
-end
-
-function SAO.PLAYER_LOGIN(self, ...)
-    self:RegisterPendingEffectsAfterPlayerLoggedIn();
 end
 
 -- Event receiver

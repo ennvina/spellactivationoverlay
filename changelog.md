@@ -1,5 +1,50 @@
 ## SpellActivationOverlay Changelog
 
+#### v1.4.1 (2024-05-10)
+
+New effects:
+- New SAO: Paladin's Daybreak (Cataclysm)
+- New SAO: Paladin's Divine Purpose (Cataclysm)
+- New SAO: Paladin's Grand Crusader (Cataclysm)
+- New GAB: Paladin's Inquisition, during Divine Purpose (Cataclysm)
+- New GAB: Paladin's Templar's Verdict, during Divine Purpose (Cataclysm)
+- New GAB: Paladin's Word of Glory, during Divine Purpose (Cataclysm)
+- New GAB: Paladin's Zealotry, during Divine Purpose (Cataclysm)
+- New GAB: Paladin's Holy Light, during Crusade (Cataclysm)
+- New GAB: Paladin's Holy Shock, during Daybreak (Cataclysm)
+- New GAB: Paladin's Avenger's Shield, during Grand Crusader (Cataclysm)
+
+Bug Fixes
+- Some effects triggered immediately upon login would not glow their buttons
+
+Glowing Buttons would only glow rank 1 of the following spells and abilities:
+- Death Knight's Frost Strike (Wrath)
+- Death Knight's Howling Blast (Wrath)
+- Death Knight's Icy Touch (Wrath)
+- Druid's Cyclone (Wrath)
+- Druid's Entangling Roots (Wrath)
+- Druid's Healing Touch (Season of Discovery, Wrath)
+- Druid's Hibernate (Wrath)
+- Druid's Nourish (Wrath)
+- Druid's Rebirth (Wrath)
+- Druid's Regrowth (Wrath)
+- Druid's Starfire (Wrath)
+- Druid's Wrath (Wrath)
+- Hunter's Aimed Shot (Wrath)
+- Hunter's Arcane Shot (Wrath)
+- Hunter's Counterattack (Era, TBC, Wrath)
+- Hunter's Explosive Shot (Wrath)
+- Hunter's Kill Shot (Wrath)
+- Hunter's Mongoose Bite (Era, TBC)
+- Shaman's Chain Heal (Season of Discovery, Wrath)
+- Shaman's Chain Lightning (Season of Discovery, Wrath)
+- Shaman's Lesser Healing Wave (Season of Discovery, Wrath)
+- Shaman's Lightning Bolt (Season of Discovery, Wrath)
+- Shaman's Healing Wave (Season of Discovery, Wrath)
+- Warlock's Incinerate (TBC, Wrath)
+- Warlock's Shadow Bolt (Era, TBC, Wrath)
+- Warlock's Soul Fire (Wrath)
+
 #### v1.4.0 (2024-05-06)
 
 Shout-out to fellow developers Amanthuul and espionn. Thanks!

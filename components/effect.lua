@@ -12,6 +12,7 @@ local Module = "effect"
     talent = 49188, -- Talent or rune or nil (for counters that don't rely on other talent)
     counter = false, -- Default is false
     combatOnly = false, -- Default is false
+    minor = false, -- Default is false; tells the effect is minor, and should not have any option
 
     overlays = {{
         stacks = 0, -- Default is 0
@@ -58,7 +59,7 @@ local hasPlayerLoggedIn = false;
 
 local function doesUseName(useNameProp)
     if useNameProp == nil then
-        return SAO.IsCata() == true;
+        return SAO.IsCata() == false;
     else
         return useNameProp == true;
     end
@@ -325,6 +326,10 @@ local function checkEffect(effect)
         SAO:Error(Module, "Registering effect "..effect.name.." with invalid talent "..tostring(effect.talent));
         return false;
     end
+    if effect.minor ~= nil and type(effect.minor) ~= 'boolean' then
+        SAO:Error(Module, "Registering effect "..effect.name.." with invalid minor flag "..tostring(effect.minor));
+        return nil;
+    end
     if effect.counter ~= true and type(effect.overlays) ~= "table" then
         SAO:Error(Module, "Registering effect "..effect.name.." with no overlays and not as counter");
         return false;
@@ -342,6 +347,7 @@ local function checkEffect(effect)
         return false;
     end
 
+    local hasStacksZero, hasStacksNonZero = false, false;
     for i, overlay in ipairs(effect.overlays or {}) do
         if overlay.project and type(overlay.project) ~= 'number' then
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid project flags "..tostring(overlay.project));
@@ -354,6 +360,20 @@ local function checkEffect(effect)
         if type(overlay.stacks) ~= 'nil' and (type(overlay.stacks) ~= 'number' or overlay.stacks < 0) then
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid number of stacks "..tostring(overlay.stacks));
             return false;
+        end
+        local stacks = overlay.stacks or 0;
+        if stacks == 0 then
+            if hasStacksNonZero then
+                SAO:Error(Module, "Registering effect "..effect.name.." with mixed stacks of zero and non-zero");
+                return false;
+            end
+            hasStacksZero = true;
+        else
+            if hasStacksZero then
+                SAO:Error(Module, "Registering effect "..effect.name.." with mixed stacks of zero and non-zero");
+                return false;
+            end
+            hasStacksNonZero = true;
         end
         if type(overlay.texture) ~= 'string' then -- @todo check the texture even exists
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid texture name "..tostring(overlay.texture));
@@ -534,9 +554,10 @@ end
 function SAO:AddEffectOptions()
     for _, effect in ipairs(allEffects) do
         local talent = effect.talent;
+        local skipOptions = effect.minor == true;
 
         local uniqueOverlayStack = { latest = nil, unique = true };
-        for _, overlay in ipairs(effect.overlays or {}) do
+        for _, overlay in ipairs((not skipOptions) and effect.overlays or {}) do
             if overlay.option ~= false and (not overlay.project or self.IsProject(overlay.project)) then
                 local buff = overlay.spellID or effect.spellID;
                 if type(overlay.option) == 'table' then
@@ -559,7 +580,7 @@ function SAO:AddEffectOptions()
             end
         end
 
-        for _, button in ipairs(effect.buttons or {}) do
+        for _, button in ipairs((not skipOptions) and effect.buttons or {}) do
             if button.option ~= false and (not button.project or self.IsProject(button.project)) then
                 local buff = effect.spellID;
                 local spellID = button.spellID or effect.spellID;
@@ -607,6 +628,10 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
         self:Error(Module, "Creating effect "..name.." with invalid props "..tostring(props));
         return nil;
     end
+    if props and props.minor ~= nil and type(props.minor) ~= 'boolean' then
+        self:Error(Module, "Creating effect "..name.." with invalid minor flag "..tostring(props.minor));
+        return nil;
+    end
 
     if not self.IsProject(project) then
         return;
@@ -616,6 +641,7 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
         name = name,
         project = project,
         spellID = spellID,
+        minor = type(props) == 'table' and props.minor,
     }
 
     if strlower(class) == "counter" then
@@ -634,4 +660,73 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
     end
 
     return effect;
+end
+
+--[[
+    Create multiple, linked effects.
+    Parameters are almost identical to CreateEffect, the main difference is that there are multiple spellIDs instead of one.
+    The last spellID is the 'master' while all others are linked to it.
+    Options are set to false for all overlays/buttons, except the last one.
+    The minor flag, if set, will be ignored because overriden to disable all options.
+]]
+function SAO:CreateLinkedEffects(name, project, spellIDs, class, props, register)
+    if not self.IsProject(project) then
+        return nil;
+    end
+
+    local wasMinor;
+    local minorProps;
+    if type(props) == 'table' then
+        wasMinor = props.minor;
+        minorProps = props;
+        if type(wasMinor) == 'boolean' then
+            self:Error(Module, "Effect link group "..tostring(name).." uses a minor flag; it will be overriden");
+        end
+    else
+        minorProps = {};
+    end
+
+    -- Start by creating the last effect, because it is the most important one
+    -- If it fails, don't even bother creating the rest
+    local lastSpell = spellIDs[#spellIDs];
+    minorProps.minor = false; -- Last spell is *not* minor
+    local lastEffect = self:CreateEffect(name.."_link_max", project, lastSpell, class, minorProps, false);
+    if not lastEffect then
+        self:Error(Module, "Failed to create main effect for an effect link group of "..tostring(name));
+        minorProps.minor = wasMinor;
+        return nil;
+    end
+    minorProps.minor = true; -- All other spells will be minor
+
+    local hasOverlay = type(props) == 'table' and (props.overlay or props.overlays);
+    local hasButton = type(props) == 'table' and (props.button or props.buttons);
+
+    local effects = {};
+
+    for i, spell in ipairs(spellIDs) do
+        if spell ~= lastSpell then
+            if hasOverlay then
+                self:AddOverlayLink(lastSpell, spell);
+            end
+            if hasButton then
+                self:AddGlowingLink(lastSpell, spell);
+            end
+
+            local effect = self:CreateEffect(name.."_link_"..i, project, spell, class, minorProps, false);
+            if effect then
+                table.insert(effects, effect);
+            end
+        end
+    end
+
+    table.insert(effects, lastEffect);
+
+    if register == nil or register == true then
+        for _, effect in ipairs(effects) do
+            self:RegisterEffect(effect);
+        end
+    end
+
+    minorProps.minor = wasMinor;
+    return effects;
 end

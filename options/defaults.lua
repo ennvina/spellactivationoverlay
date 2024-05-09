@@ -297,6 +297,15 @@ SAO.defaults = {
                 [60513] = { -- Healing Trance / Soul Preserver (Wrath)
                     [0] = false,
                 },
+                [88819] = { -- Daybreak (Cataclysm)
+                    [0] = true,
+                },
+                [85416] = { -- Grand Crusader (Cataclysm)
+                    [0] = true,
+                },
+                [90174] = { -- Divine Purpose (Cataclysm)
+                    [0] = true,
+                },
             },
             glow = {
                 [879] = { -- Exorcism
@@ -323,6 +332,21 @@ SAO.defaults = {
                 [59578] = { -- The Art of War (2/2) (Wrath+)
                     [879]   = true, -- Exorcism
                     [19750] = true, -- Flash of Light (not for Cata)
+                },
+                [88819] = { -- Daybreak (Cataclysm)
+                    [20473] = true, -- Holy Shock
+                },
+                [85416] = { -- Grand Crusader (Cataclysm)
+                    [31935] = true, -- Avenger's Shield
+                },
+                [90174] = { -- Divine Purpose (Cataclysm)
+                    [85673] = true, -- Word of Glory
+                    [85256] = true, -- Templar's Verdict
+                    [84963] = true, -- Inquisition
+                    [85696] = true, -- Zealotry
+                },
+                [94686] = { -- Crusade (Cataclysm)
+                    [635]   = true, -- Holy Light
                 },
             },
         },
