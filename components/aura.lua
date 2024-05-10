@@ -66,9 +66,7 @@ function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale
     -- Apply aura immediately, if found
     local exists, _, count = self:FindPlayerAuraByID(spellID);
     if (exists and (stacks == 0 or stacks == count)) then
-        self:MarkAura(spellID, count);
-        self:ActivateOverlay(count, select(3,unpack(aura)));
-        self:AddGlow(spellID, select(11,unpack(aura)));
+        self:DisplayAura(spellID, count, aura);
     end
 end
 
@@ -88,4 +86,48 @@ end
 
 function SAO:GetAuraMarker(spellID)
     return self.AuraMarkers[spellID];
+end
+
+-- Display a single aura
+function SAO:DisplayAura(spellID, count, aura)
+    self:Debug(Module, "Activating aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
+    self:MarkAura(spellID, count);
+    self:ActivateOverlay(count, select(3,unpack(aura)));
+    self:AddGlow(spellID, select(11,unpack(aura)));
+end
+
+-- Display all sub-auras of an aura group
+function SAO:DisplayAllAuras(spellID, count, auras)
+    self:Debug(Module, "Activating aura(s) of "..spellID.." "..(GetSpellInfo(spellID) or ""));
+    for _, aura in ipairs(auras) do
+        self:DisplayAura(spellID, count, aura);
+    end
+end
+
+-- Hide an already displayed aura
+function SAO:UndisplayAura(spellID)
+    self:Debug(Module, "Removing aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
+    -- self:UnmarkAura(spellID); -- No need to unmark explicitly, because DeactivateOverlay does it automatically
+    self:DeactivateOverlay(spellID);
+    self:RemoveGlow(spellID);
+end
+
+-- Change count of already displayed aura
+function SAO:ChangeAuraCount(spellID, oldCount, newCount, auras)
+    self:Debug(Module, "Changing number of stacks from "..tostring(oldCount).." to "..newCount.." for aura "..spellID.." "..(GetSpellInfo(spellID) or ""));
+    self:DeactivateOverlay(spellID);
+    self:RemoveGlow(spellID);
+    self:MarkAura(spellID, newCount); -- Call MarkAura after DeactivateOverlay, because DeactivateOverlay may reset its aura marker
+    for _, aura in ipairs(auras) do
+        local texture, positions, scale, r, g, b, autoPulse, _, combatOnly = select(4,unpack(aura));
+        local forcePulsePlay = autoPulse;
+        self:ActivateOverlay(newCount, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, nil, combatOnly);
+        self:AddGlow(spellID, select(11,unpack(aura)));
+    end
+end
+
+-- Reactivate aura timer
+function SAO:RefreshAura(spellID)
+    self:Debug(Module, "Refreshing aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
+    self:RefreshOverlayTimer(spellID);
 end

@@ -80,12 +80,7 @@ function SAO.SPELL_AURA(self, ...)
         (auras[count])
     ) then
         -- Activate aura
-        self:Debug(Module, "Activating aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
-        for _, aura in ipairs(auras[count]) do
-            self:MarkAura(spellID, count);
-            self:ActivateOverlay(count, select(3,unpack(aura)));
-            self:AddGlow(spellID, select(11,unpack(aura)));
-        end
+        self:DisplayAllAuras(spellID, count, auras[count]);
     elseif (
         -- Aura is already visible
         (isDisplayed)
@@ -97,8 +92,7 @@ function SAO.SPELL_AURA(self, ...)
         (auras[count])
     ) then
         -- Reactivate aura timer
-        self:Debug(Module, "Refreshing aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
-        self:RefreshOverlayTimer(spellID);
+        self:RefreshAura(spellID);
     elseif (
         -- Aura is already visible
         (isDisplayed)
@@ -116,16 +110,7 @@ function SAO.SPELL_AURA(self, ...)
         (auras[count])
     ) then
         -- Deactivate old aura and activate the new one
-        self:Debug(Module, "Changing number of stacks from "..tostring(displayedCount).." to "..count.." for aura "..spellID.." "..(GetSpellInfo(spellID) or ""));
-        self:DeactivateOverlay(spellID);
-        self:RemoveGlow(spellID);
-        self:MarkAura(spellID, count); -- Call MarkAura after DeactivateOverlay, because DeactivateOverlay may reset its aura marker
-        for _, aura in ipairs(auras[count]) do
-            local texture, positions, scale, r, g, b, autoPulse, _, combatOnly = select(4,unpack(aura));
-            local forcePulsePlay = autoPulse;
-            self:ActivateOverlay(count, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, nil, combatOnly);
-            self:AddGlow(spellID, select(11,unpack(aura)));
-        end
+        self:ChangeAuraCount(spellID, displayedCount, count, auras[count]);
     elseif (
         -- Aura is already visible
         (isDisplayed)
@@ -141,10 +126,7 @@ function SAO.SPELL_AURA(self, ...)
         (auraRemovedLast or ((auraAppliedDose or auraRemovedDose) and displayedCount ~= count and not auras[count]))
     ) then
         -- Aura just disappeared or is not supported for this number of stacks
-        self:Debug(Module, "Removing aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
-        -- self:UnmarkAura(spellID); -- No need to unmark explicitly, because DeactivateOverlay does it automatically
-        self:DeactivateOverlay(spellID);
-        self:RemoveGlow(spellID);
+        self:UndisplayAura(spellID);
     end
 end
 
