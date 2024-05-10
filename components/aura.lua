@@ -73,7 +73,6 @@ function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale
 end
 
 function SAO:MarkAura(spellID, count)
-print("maring aura "..spellID.." with count "..count);
     if type(count) ~= 'number' then
         self:Debug(Module, "Marking aura of "..tostring(spellID).." with invalid count "..tostring(count));
     end
@@ -84,7 +83,6 @@ print("maring aura "..spellID.." with count "..count);
 end
 
 function SAO:UnmarkAura(spellID)
-print("un-maring aura "..spellID.." which had count of "..tostring(self.AuraMarkers[spellID]));
     self.AuraMarkers[spellID] = nil;
 end
 
