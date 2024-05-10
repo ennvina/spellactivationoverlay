@@ -254,7 +254,8 @@ local FrozenHandler = {
     fakeSpellID = 5276+1000000, -- For option testing
 
     saoTexture = "frozen_fingers",
-    saoScaleFactor = (SAO.IsEra() or SAO.IsTBC()) and 1 or 0.75, -- Scaling down on Wrath because of conflict
+    saoPosition = SAO.IsCata() and "Top" or "Top (CW)"; -- Re-orient in Cataclysm because former effect had different orientation
+    saoScaleFactor = (SAO.IsEra() or SAO.IsTBC()) and 1 or 0.75, -- Scaling down on Wrath and Cataclysm because of conflict
 
     -- Constants that will be initialized at init()
     allSpellIDs = {},
@@ -411,7 +412,7 @@ local FrozenHandler = {
         local hasSAO = not saoOption or type(saoOption[0]) == "nil" or saoOption[0];
         if (hasSAO) then
             local endTime = self:getEndTime();
-            SAO:ActivateOverlay(0, self.freezeID, SAO.TexName[self.saoTexture], "Top (CW)", self.saoScaleFactor, 255, 255, 255, false, nil, endTime);
+            SAO:ActivateOverlay(0, self.freezeID, SAO.TexName[self.saoTexture], self.saoPosition, self.saoScaleFactor, 255, 255, 255, false, nil, endTime);
         end
 
         -- GABs

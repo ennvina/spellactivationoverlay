@@ -3,6 +3,7 @@
 #### v1.4.3 (2024-05-xx)
 
 Bug Fixes
+- Mage's Frozen debuff had incorrect texture orientation (Cataclysm)
 - Mage's Improved Cone of Cold did not trigger Frozen debuff (Cataclysm)
 - Mage's Ring of Frost did not trigger Frozen debuff (Cataclysm)
 
