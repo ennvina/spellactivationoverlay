@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v1.4.3 (2024-05-xx)
+
+Bug Fixes
+- Mage's Ring of Frost did not trigger Frozen debuff (Cataclysm)
+
 #### v1.4.2 (2024-05-11)
 
 Bug Fixes

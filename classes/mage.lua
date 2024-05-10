@@ -246,6 +246,7 @@ local FrozenHandler = {
     deep_freeze = { 44572 }, -- Deep Freeze is both a debuff for 'Frozen' Spell Alert and its own Glowing Button
     deep_freeze_sod = { 428739 }, -- Season of Discovery
     hungering_cold = { 49203 }, -- from Death Knights
+    ring_of_frost = { 82691 },
 
     freezeID = 5276, -- Not really a 'Frozen' spell ID, but the name should help players identify the intent
     freezeTalent = 5276,
@@ -278,6 +279,7 @@ local FrozenHandler = {
         self:addSpellIDCandidates(self.deep_freeze);
         self:addSpellIDCandidates(self.deep_freeze_sod);
         self:addSpellIDCandidates(self.hungering_cold);
+        self:addSpellIDCandidates(self.ring_of_frost);
 
         self.freezable = self:isTargetFreezable();
         if (self.freezable and self:isTargetFrozen()) then
