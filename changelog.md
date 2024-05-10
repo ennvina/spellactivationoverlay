@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v1.4.3 (2024-05-11)
+#### v1.4.2 (2024-05-11)
 
 Bug Fixes
 - Unnecessary information was written to the game chat
