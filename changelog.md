@@ -8,6 +8,7 @@ Bug Fixes
 - Mage's Frozen debuff had incorrect texture orientation (Cataclysm)
 - Mage's Improved Cone of Cold did not trigger Frozen debuff (Cataclysm)
 - Mage's Ring of Frost did not trigger Frozen debuff (Cataclysm)
+- Mage's Arcane Potency at 1 stack did not fade out after combat (Cataclysm)
 - Warlock's Backdraft was not triggered correctly (Cataclysm)
 
 #### v1.4.2 (2024-05-11)

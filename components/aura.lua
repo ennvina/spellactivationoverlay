@@ -119,7 +119,7 @@ function SAO:ChangeAuraCount(spellID, oldCount, newCount, auras)
     self:RemoveGlow(spellID);
     self:MarkAura(spellID, newCount); -- Call MarkAura after DeactivateOverlay, because DeactivateOverlay may reset its aura marker
     for _, aura in ipairs(auras) do
-        local texture, positions, scale, r, g, b, autoPulse, _, combatOnly = select(4,unpack(aura));
+        local texture, positions, scale, r, g, b, autoPulse, _, _, combatOnly = select(4,unpack(aura));
         local forcePulsePlay = autoPulse;
         self:ActivateOverlay(newCount, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, nil, combatOnly);
         self:AddGlow(spellID, select(11,unpack(aura)));

@@ -544,6 +544,7 @@ function SpellActivationOverlayTexture_TerminateOverlay(overlay)
 	overlay:Hide();
 	tDeleteItem(overlayParent.overlaysInUse[overlay.spellID], overlay);
 	tinsert(overlayParent.unusedOverlays, overlay);
+	tDeleteItem(overlayParent.combatOnlyOverlays, overlay);
 end
 
 function SpellActivationOverlayFrame_OnTimeoutFinished(anim)
