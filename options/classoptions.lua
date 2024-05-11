@@ -157,8 +157,17 @@ function SAO.AddOption(self, optionType, auraID, id, subValues, applyTextFunc, t
         SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType] = { cb };
     else
         -- Each subsequent checkbox is anchored to the previous one
-        local lastCheckBox = SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType][#SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType]];
-        cb:SetPoint("TOPLEFT", lastCheckBox, "BOTTOMLEFT", 0, 0);
+        local nbCheckboxes = #SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType];
+        local lastCheckBox = SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType][nbCheckboxes];
+        if optionType ~= "glow" or nbCheckboxes ~= 14 then
+            cb:SetPoint("TOPLEFT", lastCheckBox, "BOTTOMLEFT", 0, 0);
+        else
+            -- Glowing buttons may be too numerous (more than 14)
+            -- When this happens, a second column is used, and the first column is offset to the left
+            local firstCb = SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType][1];
+            firstCb:SetPoint("TOPLEFT", firstAnchor.frame, "BOTTOMLEFT", (firstAnchor.xOffset or 0) - 32, firstAnchor.yOffset or 0);
+            cb:SetPoint("TOPLEFT", firstAnchor.frame, "BOTTOMLEFT", (firstAnchor.xOffset or 0) + 320, firstAnchor.yOffset or 0);
+        end
         table.insert(SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType], cb);
     end
 

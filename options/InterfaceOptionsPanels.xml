@@ -3,25 +3,12 @@
   <Script file="InterfaceOptionsPanels.lua"/>
 
   <Frame name="SpellActivationOverlayOptionsPanel" hidden="true" parent="InterfaceOptionsFramePanelContainer">
-    <Layers>
-      <Layer level="ARTWORK">
-        <FontString name="$parentTitle" text="DISPLAY_LABEL" inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP">
-          <Anchors>
-            <Anchor point="TOPLEFT">
-              <Offset>
-                <AbsDimension x="16" y="-16"/>
-              </Offset>
-            </Anchor>
-          </Anchors>
-        </FontString>
-      </Layer>
-    </Layers>
     <Frames>
       <Slider name="$parentSpellAlertOpacitySlider" inherits="OptionsSliderTemplate">
         <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT">
+          <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="24" y="-32"/>
+              <AbsDimension x="40" y="-32"/>
             </Offset>
           </Anchor>
         </Anchors>
@@ -142,7 +129,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertSoundSlider" relativePoint="BOTTOMLEFT">
             <Offset>
-              <AbsDimension x="-24" y="-32"/>
+              <AbsDimension x="-24" y="-24"/>
             </Offset>
           </Anchor>
         </Anchors>

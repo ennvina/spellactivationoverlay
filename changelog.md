@@ -4,6 +4,7 @@
 
 Bug Fixes
 - Spell Alerts should no longer display a visual timer shorter than intended
+- Glowing button settings are more visible when there are more than 12 buttons
 - Mage's Frozen debuff had incorrect texture orientation (Cataclysm)
 - Mage's Improved Cone of Cold did not trigger Frozen debuff (Cataclysm)
 - Mage's Ring of Frost did not trigger Frozen debuff (Cataclysm)
