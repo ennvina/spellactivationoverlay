@@ -14,6 +14,7 @@ local useTimer = true;
 local useSound = false;
 
 function SpellActivationOverlay_OnLoad(self)
+	SAO_Frame = self;
 	SAO.Frame = self;
 	SAO.ShowAllOverlays = SpellActivationOverlay_ShowAllOverlays;
 	SAO.HideOverlays = SpellActivationOverlay_HideOverlays;
