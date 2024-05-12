@@ -355,8 +355,19 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	if useSound and (autoPulse or forcePulsePlay) then
 		overlay.soundHandle = SAO:PlaySpellAlertSound();
 	end
+	-- Circumvent a bug with pulse animations
+	-- First, hide the overlay temporarily
+	-- Then, very quickly (but not too quickly) start the pulse animation sooner, which kind of fixes the animation issue
+	-- If we do not do this, we might see a weird flash for a brief moment at the very beginning of overlay:Show()
+	if ( combatOnly ) then
+		overlay.animIn.alpha1:SetToAlpha(0.01);
+		overlay.animIn.alpha2:SetFromAlpha(0.01);
+	else
+		overlay.animIn.alpha1:SetToAlpha(0.5);
+		overlay.animIn.alpha2:SetFromAlpha(0.5);
+	end
 	overlay:Show();
-	if ( forcePulsePlay ) then
+	if ( forcePulsePlay and not overlay.pulse:IsPlaying() ) then
 		overlay.pulse:Play();
 	end
 	overlay.pulse.autoPlay = autoPulse;
@@ -539,6 +550,7 @@ function SpellActivationOverlayTexture_TerminateOverlay(overlay)
 	overlay.soundHandle = nil;
 
 	-- Hide the overlay and make it available again in the pool for future use
+	overlay.mask:SetAlpha(0); -- Set alpha to zero, because next time we want to start unnoticed
 	overlay.mask:SetScale(1); -- Reset scale, in case a previous animation shrank it to 0.01
 	overlay.endTime = nil; -- Reset endTime, to avoid excessive optimizations when re-using this overlay
 	overlay:Hide();
@@ -660,14 +672,15 @@ function SpellActivationOverlayTexture_OnFadeInFinished(animGroup)
 	SAO:Trace(Module, "SpellActivationOverlayTexture_OnFadeInFinished "..tostring(animGroup));
 	local overlay = animGroup:GetParent();
 	overlay:SetAlpha(1);
-	if ( overlay.pulse.autoPlay ) then
+	if ( overlay.pulse.autoPlay and not overlay.pulse:IsPlaying() ) then
 		overlay.pulse:Play();
 	end
 end
 
 function SpellActivationOverlayTexture_PreStartPulse(anim)
+	SAO:Trace(Module, "SpellActivationOverlayTexture_PreStartPulse "..tostring(anim));
 	local overlay = anim:GetParent():GetParent();
-	if ( overlay.pulse.autoPlay ) then
+	if ( overlay.combatOnly and overlay.pulse.autoPlay and not overlay.pulse:IsPlaying() ) then
 		overlay.pulse:Play();
 	end
 end
