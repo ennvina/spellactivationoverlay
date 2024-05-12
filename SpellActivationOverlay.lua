@@ -175,14 +175,14 @@ function SpellActivationOverlay_OnEvent(self, event, ...)
 		-- end
 	end
 	if ( not self.disableDimOutOfCombat ) then
-		if ( event == "PLAYER_REGEN_DISABLED" ) then
+		if ( event == "PLAYER_REGEN_DISABLED" and self.inPseudoCombat ~= true ) then
 			self.combatAnimOut:Stop();	--In case we're in the process of animating this out.
 			self.combatAnimIn:Play();
 			for _, overlay in ipairs(self.combatOnlyOverlays) do
 				overlay.combat.animOut:Stop();
 				SpellActivationOverlayFrame_PlayCombatAnimIn(overlay.combat.animIn);
 			end
-		elseif ( event == "PLAYER_REGEN_ENABLED" ) then
+		elseif ( event == "PLAYER_REGEN_ENABLED" and self.inPseudoCombat ~= false ) then
 			self.combatAnimIn:Stop();	--In case we're in the process of animating this out.
 			self.combatAnimOut:Play();
 			for _, overlay in ipairs(self.combatOnlyOverlays) do
@@ -706,6 +706,22 @@ function SpellActivationOverlayFrame_OnFadeInFinished(anim)
 			end
 		end
 	end
+end
+
+function SpellActivationOverlayFrame_OnEnterCombat(anim)
+	SAO:Trace(Module, "SpellActivationOverlayFrame_OnEnterCombat "..tostring(anim));
+	-- Combat has started, or pseudo-started
+	-- A pseudo-start happens when a proc was just triggered and the effect is visible shortly
+	-- In this case, the player may or may not be in combat, but overlays will be visible as if in combat
+	local frame = anim:GetParent();
+	frame.inPseudoCombat = true;
+end
+
+function SpellActivationOverlayFrame_OnLeaveCombat(anim)
+	SAO:Trace(Module, "SpellActivationOverlayFrame_OnLeaveCombat "..tostring(anim));
+	-- Combat has finished, or pseudo-finished (see SpellActivationOverlayFrame_OnEnterCombat)
+	local frame = anim:GetParent();
+	frame.inPseudoCombat = false;
 end
 
 function SpellActivationOverlayFrame_SetForceAlpha1(enabled)
