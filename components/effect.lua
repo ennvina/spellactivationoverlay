@@ -213,6 +213,21 @@ local function addOneButton(buttons, buttonConfig, project, default)
     table.insert(buttons, button);
 end
 
+local function importTalent(effect, props)
+    if type(props.talent) == 'number' then
+        effect.talent = props.talent;
+    elseif type(props.talent) == 'table' then
+        for project, talent in pairs(props.talent) do
+            if SAO.IsProject(project) then
+                effect.talent = talent;
+                break;
+            end
+        end
+    else
+        effect.talent = effect.spellID;
+    end
+end
+
 local function importOverlays(effect, props)
     effect.overlays = {}
     if props.overlay then
@@ -278,11 +293,12 @@ end
 
 local function createAura(effect, props)
     if type(props) == 'table' then
-        effect.talent = props.talent or effect.spellID;
         effect.combatOnly = props.combatOnly;
     else
         SAO:Error(Module, "Creating an aura for "..tostring(effect.name).." requires a 'props' table");
     end
+
+    importTalent(effect, props);
 
     importOverlays(effect, props);
 
@@ -296,16 +312,16 @@ local function createCounterWithOverlay(effect, props)
         SAO:Error(Module, "Creating a counter with overlay for "..tostring(effect.name).." requires a 'props' table that contains either 'overlay' or 'overlays' or both");
     end
 
-    effect.talent = props.talent or effect.spellID;
-
     createCounter(effect, props);
+
+    importTalent(effect, props);
 
     importOverlays(effect, props);
 
     return effect;
 end
 
-local function checkEffect(effect)
+local function checkNativeEffect(effect)
     if type(effect) ~= 'table' then
         SAO:Error(Module, "Registering invalid effect "..tostring(effect));
         return false;
@@ -407,7 +423,7 @@ local function checkEffect(effect)
     return true;
 end
 
-local function registerEffectNow(self, effect)
+local function RegisterNativeEffectNow(self, effect)
     -- Buckets of glow IDs, sorted by their number of stacks
     -- Key = Nb of stacks, Value = List of glow IDs
     -- Stack index is guided by available overlays; if there are no overlays, index from button stacks instead
@@ -523,8 +539,8 @@ local function registerEffectNow(self, effect)
     table.insert(allEffects, effect);
 end
 
-function SAO:RegisterEffect(effect)
-    if not checkEffect(effect) then
+function SAO:RegisterNativeEffect(effect)
+    if not checkNativeEffect(effect) then
         return;
     end
 
@@ -533,7 +549,7 @@ function SAO:RegisterEffect(effect)
     end
 
     if hasPlayerLoggedIn then
-        registerEffectNow(self, effect);
+        RegisterNativeEffectNow(self, effect);
     else
         table.insert(pendingEffects, effect);
     end
@@ -546,7 +562,7 @@ function SAO:RegisterPendingEffectsAfterPlayerLoggedIn()
     hasPlayerLoggedIn = true;
 
     for _, effect in ipairs(pendingEffects) do
-        registerEffectNow(self, effect);
+        RegisterNativeEffectNow(self, effect);
     end
     pendingEffects = {};
 end
@@ -616,7 +632,7 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
         self:Error(Module, "Creating effect "..name.." with invalid project flags "..tostring(project));
         return nil;
     end
-    if type(spellID) ~= 'number' or spellID <= 0 then
+    if (type(spellID) ~= 'number' and type(spellID) ~= 'table') or (type(spellID) == 'number' and spellID <= 0) then
         self:Error(Module, "Creating effect "..name.." with invalid spellID "..tostring(spellID));
         return nil;
     end
@@ -635,6 +651,19 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
 
     if not self.IsProject(project) then
         return;
+    end
+
+    if type(spellID) == 'table' then
+        for spellProject, projectedSpellID in pairs(spellID) do
+            if type(spellProject) ~= 'number' or spellProject < SAO.ERA or type(projectedSpellID) ~= 'number' or projectedSpellID <= 0 then
+                self:Error(Module, "Creating effect "..name.." with invalid spellProject "..tostring(spellProject).." or spellID "..tostring(projectedSpellID).." or both");
+                return nil;
+            end
+            if self.IsProject(spellProject) then
+                spellID = projectedSpellID;
+                break;
+            end
+        end
     end
 
     local effect = {
@@ -656,7 +685,7 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
     end
 
     if register == nil or register == true then
-        self:RegisterEffect(effect);
+        self:RegisterNativeEffect(effect);
     end
 
     return effect;
@@ -723,7 +752,7 @@ function SAO:CreateLinkedEffects(name, project, spellIDs, class, props, register
 
     if register == nil or register == true then
         for _, effect in ipairs(effects) do
-            self:RegisterEffect(effect);
+            self:RegisterNativeEffect(effect);
         end
     end
 
