@@ -18,6 +18,10 @@ Bug Fixes
 - Mage's Arcane Potency at 1 stack did not fade out after combat (Cataclysm)
 - Warlock's Backdraft was not triggered correctly (Cataclysm)
 
+Known Issues
+- Mage's Pyroblast! glow is not previewed when hovering the mouse in options
+- Priest's Flash Heal glow is not previewed when hovering the mouse in options
+
 #### v1.4.2 (2024-05-11)
 
 Bug Fixes
