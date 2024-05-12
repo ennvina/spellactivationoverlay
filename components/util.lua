@@ -16,6 +16,10 @@ local GetTalentInfo = GetTalentInfo
 local GetTime = GetTime
 local UnitAura = UnitAura
 
+--[[
+    Logging functions
+]]
+
 function SAO.Error(self, prefix, msg, ...)
     print(WrapTextInColor("**SAO** -"..prefix.."- "..msg, RED_FONT_COLOR), ...);
 end
@@ -49,6 +53,10 @@ function SAO.TraceThrottled(self, key, prefix, ...)
     end
 end
 
+--[[
+    Global Cooldown
+]]
+
 -- Get the Global Cooldown duration
 function SAO.GetGCD(self)
     if self:IsEra() or self:IsTBC() then
@@ -66,10 +74,14 @@ function SAO.GetGCD(self)
     end
 end
 
+--[[
+    Label builders
+]]
+
 -- Utility function to write a formatted 'number of stacks' text, translated with the client's locale
 -- SAO:NbStacks(4) -- "4 Stacks"
 -- SAO:NbStacks(7,9) -- "7-9 Stacks"
-function SAO.NbStacks(self, minStacks, maxStacks)
+function SAO:NbStacks(minStacks, maxStacks)
     if maxStacks then
         return string.format(CALENDAR_TOOLTIP_DATE_RANGE, tostring(minStacks), string.format(STACKS, maxStacks));
     end
@@ -77,9 +89,51 @@ function SAO.NbStacks(self, minStacks, maxStacks)
 end
 
 -- Simple function telling something was updated recently
-function SAO.RecentlyUpdated(self)
+function SAO:RecentlyUpdated()
     return WrapTextInColor(KBASE_RECENTLY_UPDATED, GREEN_FONT_COLOR);
 end
+
+local function tr(translations)
+    local locale = GetLocale();
+    return translations[locale] or translations[locale:sub(1,2)] or translations["en"];
+end
+
+-- Get the "Heating Up" localized buff name
+function SAO:translateHeatingUp()
+    local heatingUpTranslations = {
+        ["en"] = "Heating Up",
+        ["de"] = "Aufwärmen",
+        ["fr"] = "Réchauffement",
+        ["es"] = "Calentamiento",
+        ["ru"] = "Разогрев",
+        ["it"] = "Riscaldamento",
+        ["pt"] = "Aquecendo",
+        ["ko"] = "열기",
+        ["zh"] = "热力迸发",
+    };
+    return tr(heatingUpTranslations);
+end
+
+-- Get the "Debuff" localized text
+function SAO:translateDebuff()
+    local debuffTranslations = {
+        ["en"] = "Debuff",
+        ["de"] = "Schwächung",
+        ["fr"] = "Affaiblissement",
+        ["es"] = "Perjuicio",
+        ["ru"] = "Отрицательный эффект",
+        ["it"] = "Penalità",
+        ["pt"] = "Penalidade",
+        ["ko"] = "약화",
+        ["zh"] = "负面",
+        ["zhTW"] = "減益",
+    };
+    return tr(debuffTranslations);
+end
+
+--[[
+    Time utility functions
+]]
 
 -- Utility function to assume times are identical or almost identical
 function SAO.IsTimeAlmostEqual(self, t1, t2, delta)

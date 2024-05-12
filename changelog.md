@@ -1,5 +1,17 @@
 ## SpellActivationOverlay Changelog
 
+#### v1.4.3 (2024-05-xx)
+
+Bug Fixes
+- Spell Alerts should no longer display a visual timer shorter than intended
+- Combat-only Spell Alerts should no longer flicker when entering combat
+- Glowing button settings are more visible when there are more than 12 buttons
+- Mage's Frozen debuff had incorrect texture orientation (Cataclysm)
+- Mage's Improved Cone of Cold did not trigger Frozen debuff (Cataclysm)
+- Mage's Ring of Frost did not trigger Frozen debuff (Cataclysm)
+- Mage's Arcane Potency at 1 stack did not fade out after combat (Cataclysm)
+- Warlock's Backdraft was not triggered correctly (Cataclysm)
+
 #### v1.4.2 (2024-05-11)
 
 Bug Fixes

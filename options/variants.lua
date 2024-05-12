@@ -47,7 +47,7 @@ function SAO.TextureVariantValue(self, texture, horizontal, suffix)
 
     local width = horizontal and 6 or 3;
     if (suffix) then
-        width = width+1+#suffix;
+        width = width+1+strlenutf8(suffix);
     end
 
     return {
@@ -92,7 +92,7 @@ function SAO.StringVariantValue(self, items, valuePrefix, getTextFunc)
         text = text:sub(3);
     end
 
-    local width = ceil(#text*0.4);
+    local width = ceil(strlenutf8(text)*0.4);
 
     return {
         value = valuePrefix..value,

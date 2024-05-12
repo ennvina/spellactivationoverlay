@@ -246,13 +246,16 @@ local FrozenHandler = {
     deep_freeze = { 44572 }, -- Deep Freeze is both a debuff for 'Frozen' Spell Alert and its own Glowing Button
     deep_freeze_sod = { 428739 }, -- Season of Discovery
     hungering_cold = { 49203 }, -- from Death Knights
+    improved_cone_of_cold = { 83301, 83302 },
+    ring_of_frost = { 82691 },
 
     freezeID = 5276, -- Not really a 'Frozen' spell ID, but the name should help players identify the intent
     freezeTalent = 5276,
     fakeSpellID = 5276+1000000, -- For option testing
 
     saoTexture = "frozen_fingers",
-    saoScaleFactor = (SAO.IsEra() or SAO.IsTBC()) and 1 or 0.75, -- Scaling down on Wrath because of conflict
+    saoPosition = SAO.IsCata() and "Top" or "Top (CW)"; -- Re-orient in Cataclysm because former effect had different orientation
+    saoScaleFactor = (SAO.IsEra() or SAO.IsTBC()) and 1 or 0.75, -- Scaling down on Wrath and Cataclysm because of conflict
 
     -- Constants that will be initialized at init()
     allSpellIDs = {},
@@ -278,6 +281,8 @@ local FrozenHandler = {
         self:addSpellIDCandidates(self.deep_freeze);
         self:addSpellIDCandidates(self.deep_freeze_sod);
         self:addSpellIDCandidates(self.hungering_cold);
+        self:addSpellIDCandidates(self.improved_cone_of_cold);
+        self:addSpellIDCandidates(self.ring_of_frost);
 
         self.freezable = self:isTargetFreezable();
         if (self.freezable and self:isTargetFrozen()) then
@@ -407,7 +412,7 @@ local FrozenHandler = {
         local hasSAO = not saoOption or type(saoOption[0]) == "nil" or saoOption[0];
         if (hasSAO) then
             local endTime = self:getEndTime();
-            SAO:ActivateOverlay(0, self.freezeID, SAO.TexName[self.saoTexture], "Top (CW)", self.saoScaleFactor, 255, 255, 255, false, nil, endTime);
+            SAO:ActivateOverlay(0, self.freezeID, SAO.TexName[self.saoTexture], self.saoPosition, self.saoScaleFactor, 255, 255, 255, false, nil, endTime);
         end
 
         -- GABs
@@ -668,27 +673,7 @@ local function loadOptions(self)
     local deepFreeze = FrozenHandler.deep_freeze[1];
     local deepFreezeSoD = FrozenHandler.deep_freeze_sod[1];
 
-    local heatingUpDetails;
-    local locale = GetLocale();
-    if (locale == "deDE") then
-        heatingUpDetails = "Aufwärmen";
-    elseif (locale == "frFR") then
-        heatingUpDetails = "Réchauffement";
-    elseif (locale == "esES" or locale == "esMX") then
-        heatingUpDetails = "Calentamiento"; -- Always use esES because esMX isn't on Wowhead
-    elseif (locale == "ruRU") then
-        heatingUpDetails = "Разогрев";
-    elseif (locale == "itIT") then
-        heatingUpDetails = "Riscaldamento";
-    elseif (locale == "ptBR") then
-        heatingUpDetails = "Aquecendo";
-    elseif (locale == "koKR") then
-        heatingUpDetails = "열기";
-    elseif (locale == "zhCN" or locale == "zhTW") then
-        heatingUpDetails = "热力迸发"; -- Always use zhCN because zhTW isn't on Wowhead
-    else
-        heatingUpDetails = "Heating Up";
-    end
+    local heatingUpDetails = self:translateHeatingUp();
 
     -- local spellName, _, spellIcon = GetSpellInfo(pyroblast);
     -- local hotStreakDetails = string.format(LFG_READY_CHECK_PLAYER_IS_READY, "|T"..spellIcon..":0|t "..spellName):gsub("%.", "");
@@ -741,7 +726,7 @@ local function loadOptions(self)
     elseif self.IsCata() then
         self:AddOverlayOption(fingersOfFrostTalent, fingersOfFrostBuffCata, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
     end
-    self:AddOverlayOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, 0, nil, nil, nil, FrozenHandler.fakeSpellID);
+    self:AddOverlayOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, 0, self:translateDebuff(), nil, nil, FrozenHandler.fakeSpellID);
     if self.IsSoD() then
         self:AddOverlayOption(brainFreezeSoDRune, brainFreezeSoDBuff);
     else

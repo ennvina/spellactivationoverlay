@@ -4,18 +4,18 @@
 	<Frame name="SpellActivationOverlayTemplate" virtual="true">
 		<Animations>
 			<AnimationGroup name="$parentAnimIn" parentKey="animIn">
-				<Alpha fromAlpha="0" toAlpha="1" duration="0.2"/>
-				<Scripts>
-					<OnPlay function="SpellActivationOverlayTexture_OnFadeInPlay"/>
-					<OnFinished function="SpellActivationOverlayTexture_OnFadeInFinished"/>
-				</Scripts>
-				<Translation offsetX="0" offsetY="0" duration="0.1">
-					<!-- Dummy animation, whose goal in to plug in a function to circumvent a bug with pulse animations -->
+				<Alpha fromAlpha="0" toAlpha="0.5" duration="0.1" order="1" parentKey="alpha1">
+					<!-- Split alpha animation in 2 steps , whose goal in to plug in a function to circumvent a bug with pulse animations -->
 					<!-- If this script is not called slightly early (0.1 secs in, instead of 0.2 sec), starting the pulse may cause a weird flash -->
 					<Scripts>
 						<OnFinished function="SpellActivationOverlayTexture_PreStartPulse"/>
 					</Scripts>
-				</Translation>
+				</Alpha>
+				<Alpha fromAlpha="0.5" toAlpha="1" duration="0.1" order="2" parentKey="alpha2"/>
+				<Scripts>
+					<OnPlay function="SpellActivationOverlayTexture_OnFadeInPlay"/>
+					<OnFinished function="SpellActivationOverlayTexture_OnFadeInFinished"/>
+				</Scripts>
 			</AnimationGroup>
 			<AnimationGroup name="$parentAnimOut" parentKey="animOut">
 				<Alpha fromAlpha="1" toAlpha="0" duration="0.1">
@@ -118,6 +118,7 @@
 						<Alpha order="1" duration="0.1" fromAlpha="0.5" toAlpha="1"/>
 						<Alpha order="2" duration="4.9" fromAlpha="1" toAlpha="1"/>
 						<Scripts>
+							<OnPlay function="SpellActivationOverlayFrame_OnEnterCombat"/>
 							<OnFinished function="SpellActivationOverlayFrame_OnFadeInFinished"/>
 						</Scripts>
 					</AnimationGroup>
@@ -125,6 +126,9 @@
 						<Alpha order="1" duration="0.2"  fromAlpha="1"   toAlpha="0.5"/>
 						<Alpha order="2" duration="27.8" fromAlpha="0.5" toAlpha="0.5"/>
 						<Alpha order="3" duration="2"    fromAlpha="0.5" toAlpha="0"/>
+						<Scripts>
+							<OnPlay function="SpellActivationOverlayFrame_OnLeaveCombat"/>
+						</Scripts>
 					</AnimationGroup>
 				</Animations>
 				<Scripts>

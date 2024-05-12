@@ -8,6 +8,7 @@
         "ceil",
         "hooksecurefunc",
         "strfind",
+        "strlenutf8",
         "strlower",
         "strupper",
         "tDeleteItem",
