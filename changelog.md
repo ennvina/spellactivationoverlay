@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v1.4.3 (2024-05-xx)
+#### v1.4.3 (2024-05-12)
 
 New Spell Alerts:
 - New GAB: Priest's Mind Blast, with 2 stacks of Mind Melt (Cataclysm)
@@ -22,12 +22,12 @@ Known Issues
 - Mage's Pyroblast! glow is not previewed when hovering the mouse in options
 - Priest's Flash Heal glow is not previewed when hovering the mouse in options
 
-#### v1.4.2 (2024-05-11)
+#### v1.4.2 (2024-05-10)
 
 Bug Fixes
 - Unnecessary information was written to the game chat
 
-#### v1.4.1 (2024-05-10)
+#### v1.4.1 (2024-05-09)
 
 New effects:
 - New SAO: Paladin's Daybreak (Cataclysm)
