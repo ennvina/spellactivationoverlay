@@ -1,5 +1,24 @@
 local AddonName, SAO = ...
 
+local mindBlast = 8092;
+
+local function useMindMelt()
+--  local mindMeltBuff1 = 81292; -- Not used, only the second buff is interesting
+    local mindMeltBuff2 = 87160;
+    local mindMeltTalent = 14910;
+
+    SAO:CreateEffect(
+        "mind_melt",
+        SAO.CATA,
+        mindMeltBuff2,
+        "aura",
+        {
+            talent = mindMeltTalent,
+            button = mindBlast,
+        }
+    );
+end
+
 local function registerClass(self)
     if not self.IsEra() then -- TBC/Wrath/Cata
         local smite = GetSpellInfo(585);
@@ -81,7 +100,6 @@ local function registerClass(self)
 
         -- Mind Spike
         local mindSpikeBuff = 431655;
-        local mindBlast = 8092;
         local mindSpikeImprovedSpells = { (GetSpellInfo(mindBlast)) };
         for nbStacks=1,3 do
             local scale = 0.4 + 0.2 * nbStacks; -- 60%, 80%, 100%
@@ -90,6 +108,9 @@ local function registerClass(self)
             self:RegisterAura("mind_spike_sod", nbStacks, mindSpikeBuff, "frozen_fingers", "Left + Right (Flipped)", scale, 160, 60, 220, pulse, glowIDs);
         end
     end
+
+    -- Shadow
+    useMindMelt();
 end
 
 local function loadOptions(self)
@@ -99,7 +120,6 @@ local function loadOptions(self)
     local heal = 2054;
     local greaterHeal = 2060;
     local prayerOfHealing = 596;
-    local mindBlast = 8092;
 
     local surgeOfLightBuff = self.IsCata() and 88688 or 33151;
     local surgeOfLightTalent = self.IsCata() and 88687 or 33150;

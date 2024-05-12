@@ -400,6 +400,9 @@ SAO.defaults = {
                     [2060] = nil, -- Greater Heal, set to nil to simplify DB migration
                     [596]  = nil, -- Prayer of Healing, set to nil to simplify DB migration
                 },
+                [87160] = {  -- Mind Melt (Cataclysm)
+                    [8092] = true, -- Mind Blast
+                },
                 [413247]= { -- Serendipity 3/3 (Season of Discovery)
                     [2050] = true, -- Lesser Heal
                     [2054] = true, -- Heal
@@ -412,7 +415,7 @@ SAO.defaults = {
                 },
                 [431655] = {  -- Mind Spike (Season of Discovery)
                     [8092] = true, -- Mind Blast
-                }
+                },
             },
         },
         ["ROGUE"] = {
