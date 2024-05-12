@@ -39,6 +39,12 @@ local function migrateTo112(db)
     SAO:Info(Module, "Migrated options from pre-1.1.2 to 1.1.2");
 end
 
+local function transferOption(db, classFile, optionType, oldAuraID, oldNodeID, newAuraID, newNodeID)
+    if type(db.classes[classFile][optionType][oldAuraID][oldNodeID]) ~= 'nil' and type(db.classes[classFile][optionType][newAuraID][newNodeID]) == 'nil' then
+        db.classes[classFile][optionType][newAuraID][newNodeID] = db.classes[classFile][optionType][oldAuraID][oldNodeID];
+    end
+end
+
 -- Migrate from pre-131 to 131 or higher
 local function migrateTo131(db)
 
@@ -47,24 +53,16 @@ local function migrateTo131(db)
     local hotStreak = 48108;
     local pyro = 11366;
     local pyroBang = 92315;
-    if type(db.classes["MAGE"]["glow"][hotStreak][pyro]) ~= 'nil' and type(db.classes["MAGE"]["glow"][hotStreak][pyroBang]) == 'nil' then
-        db.classes["MAGE"]["glow"][hotStreak][pyroBang] = db.classes["MAGE"]["glow"][hotStreak][pyro];
-    end
+    transferOption(db, "MAGE", "glow", hotStreak, pyro, hotStreak, pyroBang);
 
     -- Same for Fingers of Frost, which has a new spell ID, because the effect was reworked
     local fingersOfFrostWrath = 74396;
     local fingersOfFrostCata = 44544;
     local iceLance = 30455;
     local deepFreeze = 44572;
-    if type(db.classes["MAGE"]["alert"][fingersOfFrostWrath][0]) ~= 'nil' and type(db.classes["MAGE"]["alert"][fingersOfFrostCata][0]) == 'nil' then
-        db.classes["MAGE"]["alert"][fingersOfFrostCata][0] = db.classes["MAGE"]["alert"][fingersOfFrostWrath][0];
-    end
-    if type(db.classes["MAGE"]["glow"][fingersOfFrostWrath][iceLance]) ~= 'nil' and type(db.classes["MAGE"]["glow"][fingersOfFrostCata][iceLance]) == 'nil' then
-        db.classes["MAGE"]["glow"][fingersOfFrostCata][iceLance] = db.classes["MAGE"]["glow"][fingersOfFrostWrath][iceLance];
-    end
-    if type(db.classes["MAGE"]["glow"][fingersOfFrostWrath][deepFreeze]) ~= 'nil' and type(db.classes["MAGE"]["glow"][fingersOfFrostCata][deepFreeze]) == 'nil' then
-        db.classes["MAGE"]["glow"][fingersOfFrostCata][deepFreeze] = db.classes["MAGE"]["glow"][fingersOfFrostWrath][deepFreeze];
-    end
+    transferOption(db, "MAGE", "alert", fingersOfFrostWrath, 0, fingersOfFrostCata, 0);
+    transferOption(db, "MAGE", "glow", fingersOfFrostWrath, iceLance, fingersOfFrostCata, iceLance);
+    transferOption(db, "MAGE", "glow", fingersOfFrostWrath, deepFreeze, fingersOfFrostCata, deepFreeze);
 
     SAO:Info(Module, "Migrated options from pre-1.3.1 to 1.3.1");
 end
@@ -78,25 +76,30 @@ local function migrateTo140(db)
     local serendipityCata = 63735;
     local greaterHeal = 2060;
     local prayerOfHealing = 596;
-    if type(db.classes["PRIEST"]["alert"][serendipityWrath][0]) ~= 'nil' and type(db.classes["PRIEST"]["alert"][serendipityCata][1]) == 'nil' then
-        db.classes["PRIEST"]["alert"][serendipityCata][1] = db.classes["PRIEST"]["alert"][serendipityWrath][0];
-    end
-    if type(db.classes["PRIEST"]["alert"][serendipityWrath][3]) ~= 'nil' and type(db.classes["PRIEST"]["alert"][serendipityCata][2]) == 'nil' then
-        db.classes["PRIEST"]["alert"][serendipityCata][2] = db.classes["PRIEST"]["alert"][serendipityWrath][3];
-    end
-    if type(db.classes["PRIEST"]["glow"][serendipityWrath][greaterHeal]) ~= 'nil' and type(db.classes["PRIEST"]["glow"][serendipityCata][greaterHeal]) == 'nil' then
-        db.classes["PRIEST"]["glow"][serendipityCata][greaterHeal] = db.classes["PRIEST"]["glow"][serendipityWrath][greaterHeal];
-    end
-    if type(db.classes["PRIEST"]["glow"][serendipityWrath][prayerOfHealing]) ~= 'nil' and type(db.classes["PRIEST"]["glow"][serendipityCata][prayerOfHealing]) == 'nil' then
-        db.classes["PRIEST"]["glow"][serendipityCata][prayerOfHealing] = db.classes["PRIEST"]["glow"][serendipityWrath][prayerOfHealing];
-    end
+    transferOption(db, "PRIEST", "alert", serendipityWrath, 0, serendipityCata, 1);
+    transferOption(db, "PRIEST", "alert", serendipityWrath, 3, serendipityCata, 2);
+    transferOption(db, "PRIEST", "glow", serendipityWrath, greaterHeal, serendipityCata, greaterHeal);
+    transferOption(db, "PRIEST", "glow", serendipityWrath, prayerOfHealing, serendipityCata, prayerOfHealing);
 
     SAO:Info(Module, "Migrated options from pre-1.4.0 to 1.4.0");
 end
 
+-- Migrate from pre-143 to 143 or higher
+local function migrateTo143(db)
+
+    -- Priest's Surge of Lightning in Cataclysm triggers a new version of Flash Heal
+    local surgeOfLightWrath = 33151;
+    local surgeOfLightCata = 88688;
+    local flashHeal = 2061;
+    local flashHealNoMana = 101062;
+    transferOption(db, "PRIEST", "glow", surgeOfLightWrath, flashHeal, surgeOfLightCata, flashHealNoMana);
+
+    SAO:Info(Module, "Migrated options from pre-1.4.3 to 1.4.3");
+end
+
 -- Load database and use default values if needed
 function SAO.LoadDB(self)
-    local currentversion = 140;
+    local currentversion = 143;
     local db = SpellActivationOverlayDB or {};
 
     if not db.alert then
@@ -173,6 +176,9 @@ function SAO.LoadDB(self)
     end
     if not db.version or db.version < 140 then
         migrateTo140(db);
+    end
+    if not db.version or db.version < 143 then
+        migrateTo143(db);
     end
 
     db.version = currentversion;
