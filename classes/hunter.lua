@@ -7,6 +7,7 @@ local chimeraShot = 53209;
 local counterattack = 19306;
 local explosiveShot = 53301;
 local flankingStrike = 415320;
+local killCommand = 34026;
 local killShot = 53351;
 local mongooseBite = 1495;
 
@@ -34,6 +35,23 @@ local function useMongooseBite()
         SAO.ERA + SAO.TBC,
         mongooseBite,
         "counter"
+    );
+end
+
+local function useKillingStreak()
+    local killingStreakBuff1 = 94006;
+    local killingStreakBuff2 = 94007;
+    local killingStreakTalent = 82748;
+
+    SAO:CreateLinkedEffects(
+        "killing_streak",
+        SAO.CATA,
+        { killingStreakBuff1, killingStreakBuff2 },
+        "aura",
+        {
+            talent = killingStreakTalent,
+            button = killCommand,
+        }
     );
 end
 
@@ -66,6 +84,33 @@ local function useMasterMarksman()
             talent = masterMarksmanTalent,
             overlay = { stacks = 5, texture = "master_marksman", position = "Top" },
             button = aimedShotBang,
+        }
+    );
+end
+
+local function useLockAndLoad()
+    local lockAndLoadBuff = SAO.IsSoD() and 415414 or 56453;
+    local lockAndLoadTalent = SAO.IsSoD() and 415413 or 56342;
+    SAO:CreateEffect(
+        "lock_and_load",
+        SAO.SOD + SAO.WRATH + SAO.CATA,
+        lockAndLoadBuff,
+        "aura",
+        {
+            talent = lockAndLoadTalent,
+            overlays = {
+                [SAO.SOD] = { texture = "lock_and_load", position = "Top" },
+                [SAO.WRATH+SAO.CATA] = {
+                    { stacks = 1, texture = "lock_and_load", position = "Top", option = false },
+                    { stacks = 2, texture = "lock_and_load", position = "Top", option = { setupStacks = 0, testStacks = 2 } },
+                },
+            },
+            buttons = {
+                default = { stacks = 0 },
+                [SAO.SOD] = nil, -- Don't glow buttons for Season of Discovery, there would be too many to suggest
+                [SAO.WRATH] = { arcaneShot, explosiveShot },
+                [SAO.CATA] = explosiveShot,
+            },
         }
     );
 end
@@ -122,33 +167,6 @@ local function useSniperTraining()
     );
 end
 
-local function useLockAndLoad()
-    local lockAndLoadBuff = SAO.IsSoD() and 415414 or 56453;
-    local lockAndLoadTalent = SAO.IsSoD() and 415413 or 56342;
-    SAO:CreateEffect(
-        "lock_and_load",
-        SAO.SOD + SAO.WRATH + SAO.CATA,
-        lockAndLoadBuff,
-        "aura",
-        {
-            talent = lockAndLoadTalent,
-            overlays = {
-                [SAO.SOD] = { texture = "lock_and_load", position = "Top" },
-                [SAO.WRATH+SAO.CATA] = {
-                    { stacks = 1, texture = "lock_and_load", position = "Top", option = false },
-                    { stacks = 2, texture = "lock_and_load", position = "Top", option = { setupStacks = 0, testStacks = 2 } },
-                },
-            },
-            buttons = {
-                default = { stacks = 0 },
-                [SAO.SOD] = nil, -- Don't glow buttons for Season of Discovery, there would be too many to suggest
-                [SAO.WRATH] = { arcaneShot, explosiveShot },
-                [SAO.CATA] = explosiveShot,
-            },
-        }
-    );
-end
-
 local function registerClass(self)
 
     -- Kill Shot, Execute-like ability for targets at 20% hp or less
@@ -160,19 +178,20 @@ local function registerClass(self)
     -- Mongoose Bite, before Wrath because there is no longer a proc since Wrath
     useMongooseBite();
 
-    -- Improved Steady Shot, formerly Master Marksman
-    useImprovedSteadyShot();
+    -- Beast Mastery
+    useKillingStreak();
 
-    -- Master Marksman, from Cataclysm
-    useMasterMarksman();
+    -- Marksmanship
+    useImprovedSteadyShot(); -- Improved Steady Shot, formerly Master Marksman
+    useMasterMarksman(); -- Master Marksman, from Cataclysm
 
-    -- Flanking Strike, Cobra Strikes, Sniper Training (Season of Discovery)
+    -- Survival
+    useLockAndLoad();
+
+    -- Season of Discovery runes
     useFlankingStrike();
     useCobraStrikes();
     -- useSniperTraining();
-
-    -- Lock and Load: display something on top if there is at least one charge
-    useLockAndLoad();
 end
 
 SAO.Class["HUNTER"] = {

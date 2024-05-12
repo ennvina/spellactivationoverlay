@@ -3,6 +3,7 @@
 #### v1.4.3 (2024-05-xx)
 
 New Spell Alerts:
+- New GAB: Hunter's Kill Command, during Killing Streak (Cataclysm)
 - New GAB: Warrior's Cleave, during Battle Trance (Cataclysm)
 - New GAB: Warrior's Heroic Strike, during Battle Trance (Cataclysm)
 
