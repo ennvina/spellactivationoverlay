@@ -9,6 +9,9 @@ local UnitGUID = UnitGUID
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
+local heroicStrike = 78;
+local cleave = 845;
+
 local function easyAs123(option)
     return option == "stance:1/2/3";
 end
@@ -417,6 +420,21 @@ local function useBladestorm()
     );
 end
 
+local function useBattleTrance()
+    local battleTranceBuff = 12964;
+    local battleTranceTalent = 12322;
+    SAO:CreateEffect(
+        "battle_trance",
+        SAO.CATA,
+        battleTranceBuff,
+        "aura",
+        {
+            talent = battleTranceTalent,
+            buttons = { heroicStrike, cleave },
+        }
+    );
+end
+
 local function registerClass(self)
     local overpower = 7384;
     local execute = 5308;
@@ -473,8 +491,11 @@ local function registerClass(self)
         self:RegisterCounter("raging_blow"); -- Must match name from above call
     end
 
-    -- Bladestorm
+    -- Bladestorm (Arms)
     useBladestorm();
+
+    -- Battle Trance (Fury)
+    useBattleTrance();
 end
 
 local function loadOptions(self)
