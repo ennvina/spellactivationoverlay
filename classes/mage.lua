@@ -673,27 +673,7 @@ local function loadOptions(self)
     local deepFreeze = FrozenHandler.deep_freeze[1];
     local deepFreezeSoD = FrozenHandler.deep_freeze_sod[1];
 
-    local heatingUpDetails;
-    local locale = GetLocale();
-    if (locale == "deDE") then
-        heatingUpDetails = "Aufwärmen";
-    elseif (locale == "frFR") then
-        heatingUpDetails = "Réchauffement";
-    elseif (locale == "esES" or locale == "esMX") then
-        heatingUpDetails = "Calentamiento"; -- Always use esES because esMX isn't on Wowhead
-    elseif (locale == "ruRU") then
-        heatingUpDetails = "Разогрев";
-    elseif (locale == "itIT") then
-        heatingUpDetails = "Riscaldamento";
-    elseif (locale == "ptBR") then
-        heatingUpDetails = "Aquecendo";
-    elseif (locale == "koKR") then
-        heatingUpDetails = "열기";
-    elseif (locale == "zhCN" or locale == "zhTW") then
-        heatingUpDetails = "热力迸发"; -- Always use zhCN because zhTW isn't on Wowhead
-    else
-        heatingUpDetails = "Heating Up";
-    end
+    local heatingUpDetails = self:translateHeatingUp();
 
     -- local spellName, _, spellIcon = GetSpellInfo(pyroblast);
     -- local hotStreakDetails = string.format(LFG_READY_CHECK_PLAYER_IS_READY, "|T"..spellIcon..":0|t "..spellName):gsub("%.", "");
