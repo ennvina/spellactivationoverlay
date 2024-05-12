@@ -114,6 +114,23 @@ function SAO:translateHeatingUp()
     return tr(heatingUpTranslations);
 end
 
+-- Get the "Debuff" localized text
+function SAO:translateDebuff()
+    local debuffTranslations = {
+        ["en"] = "Debuff",
+        ["de"] = "Schwächung",
+        ["fr"] = "Affaiblissement",
+        ["es"] = "Perjuicio",
+        ["ru"] = "Отрицательный эффект",
+        ["it"] = "Penalità",
+        ["pt"] = "Penalidade",
+        ["ko"] = "약화",
+        ["zh"] = "负面",
+        ["zhTW"] = "減益",
+    };
+    return tr(debuffTranslations);
+end
+
 --[[
     Time utility functions
 ]]
