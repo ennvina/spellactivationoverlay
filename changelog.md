@@ -2,6 +2,10 @@
 
 #### v1.4.3 (2024-05-xx)
 
+New Spell Alerts:
+- New GAB: Warrior's Cleave, during Battle Trance (Cataclysm)
+- New GAB: Warrior's Heroic Strike, during Battle Trance (Cataclysm)
+
 Bug Fixes
 - Spell Alerts should no longer display a visual timer shorter than intended
 - Combat-only Spell Alerts should no longer flicker when entering combat

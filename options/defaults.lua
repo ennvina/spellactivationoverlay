@@ -595,6 +595,10 @@ SAO.defaults = {
                 [402911]= { -- Raging Blow (Season of Discovery)
                     [402911]= true, -- Raging Blow (Season of Discovery)
                 },
+                [12964] = { -- Battle Trance (Cataclysm)
+                    [78]  = true, -- Heroic Strike
+                    [845] = true, -- Cleave
+                },
                 [52437] = { -- Sudden Death (Wrath+)
                     [5308] = true, -- Execute (not for Cata)
                     [86346]= true, -- Colossus Smash (Cataclysm)
