@@ -164,6 +164,9 @@ SAO.defaults = {
                 [1495] = { -- Mongoose Bite (Era, TBC)
                     [1495]  = true, -- Mongoose Bite
                 },
+                [94007] = { -- Killing Streak (2/2) (Cataclysm)
+                    [34026] = true, -- Kill Command
+                },
                 [415320]= { -- Flanking Strike (Season of Discovery)
                     [415320]= true, -- Flanking Strike (Season of Discovery)
                 },

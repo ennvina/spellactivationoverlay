@@ -7,6 +7,7 @@ local chimeraShot = 53209;
 local counterattack = 19306;
 local explosiveShot = 53301;
 local flankingStrike = 415320;
+local killCommand = 34026;
 local killShot = 53351;
 local mongooseBite = 1495;
 
@@ -34,6 +35,23 @@ local function useMongooseBite()
         SAO.ERA + SAO.TBC,
         mongooseBite,
         "counter"
+    );
+end
+
+local function useKillingStreak()
+    local killingStreakBuff1 = 94006;
+    local killingStreakBuff2 = 94007;
+    local killingStreakTalent = 82748;
+
+    SAO:CreateLinkedEffects(
+        "killing_streak",
+        SAO.CATA,
+        { killingStreakBuff1, killingStreakBuff2 },
+        "aura",
+        {
+            talent = killingStreakTalent,
+            button = killCommand,
+        }
     );
 end
 
@@ -159,6 +177,9 @@ local function registerClass(self)
 
     -- Mongoose Bite, before Wrath because there is no longer a proc since Wrath
     useMongooseBite();
+
+    -- Beast Mastery
+    useKillingStreak();
 
     -- Marksmanship
     useImprovedSteadyShot(); -- Improved Steady Shot, formerly Master Marksman
