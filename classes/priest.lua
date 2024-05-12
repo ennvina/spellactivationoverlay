@@ -6,27 +6,21 @@ local mindBlast = 8092;
 local smite = 585;
 
 local function useSurgeOfLight()
-    local surgeOfLightBuff = 33151;
-    if SAO.IsCata() then
-        surgeOfLightBuff = 88688;
-    elseif SAO.IsSoD() then
-        surgeOfLightBuff = 431666;
-    end
-
-    local surgeOfLightTalent = 33150;
-    if SAO.IsCata() then
-        surgeOfLightTalent = 88687;
-    elseif SAO.IsSoD() then
-        surgeOfLightTalent = 431664;
-    end
-
     SAO:CreateEffect(
         "surge_of_light",
         SAO.SOD + SAO.TBC + SAO.WRATH + SAO.CATA,
-        surgeOfLightBuff,
+        {
+            [SAO.SOD] = 431666,
+            [SAO.TBC+SAO.WRATH] = 33151,
+            [SAO.CATA] = 88688,
+        },
         "aura",
         {
-            talent = surgeOfLightTalent,
+            talent = {
+                [SAO.SOD] = 431664,
+                [SAO.TBC+SAO.WRATH] = 33150,
+                [SAO.CATA] = 88687,
+            },
             overlay = { texture = "surge_of_light", position = "Left + Right (Flipped)" },
             buttons = {
                 [SAO.SOD] = { smite, flashHeal },
