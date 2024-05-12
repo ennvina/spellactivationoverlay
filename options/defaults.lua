@@ -390,7 +390,7 @@ SAO.defaults = {
                     [2061] = true, -- Flash Heal (not for TBC)
                 },
                 [88688] = { -- Surge of Light (Cataclysm)
-                    [2061] = true, -- Flash Heal, also 101062: must use name
+                    [101062] = nil, -- Flash Heal (no mana), set to nil to simplify DB migration
                 },
                 [63734] = { -- Serendipity 3/3 (Wrath)
                     [2060] = true, -- Greater Heal
@@ -399,6 +399,9 @@ SAO.defaults = {
                 [63735] = { -- Serendipity 2/2 (Cataclysm)
                     [2060] = nil, -- Greater Heal, set to nil to simplify DB migration
                     [596]  = nil, -- Prayer of Healing, set to nil to simplify DB migration
+                },
+                [87160] = {  -- Mind Melt (Cataclysm)
+                    [8092] = true, -- Mind Blast
                 },
                 [413247]= { -- Serendipity 3/3 (Season of Discovery)
                     [2050] = true, -- Lesser Heal
@@ -412,7 +415,7 @@ SAO.defaults = {
                 },
                 [431655] = {  -- Mind Spike (Season of Discovery)
                     [8092] = true, -- Mind Blast
-                }
+                },
             },
         },
         ["ROGUE"] = {

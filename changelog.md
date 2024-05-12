@@ -3,6 +3,7 @@
 #### v1.4.3 (2024-05-xx)
 
 New Spell Alerts:
+- New GAB: Priest's Mind Blast, with 2 stacks of Mind Melt (Cataclysm)
 - New GAB: Hunter's Kill Command, during Killing Streak (Cataclysm)
 - New GAB: Warrior's Cleave, during Battle Trance (Cataclysm)
 - New GAB: Warrior's Heroic Strike, during Battle Trance (Cataclysm)
@@ -16,6 +17,10 @@ Bug Fixes
 - Mage's Ring of Frost did not trigger Frozen debuff (Cataclysm)
 - Mage's Arcane Potency at 1 stack did not fade out after combat (Cataclysm)
 - Warlock's Backdraft was not triggered correctly (Cataclysm)
+
+Known Issues
+- Mage's Pyroblast! glow is not previewed when hovering the mouse in options
+- Priest's Flash Heal glow is not previewed when hovering the mouse in options
 
 #### v1.4.2 (2024-05-11)
 
