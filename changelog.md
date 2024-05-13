@@ -2,6 +2,11 @@
 
 #### v1.4.4 (2024-05-xx)
 
+Shout-out to fellow developer stako. Thanks!
+
+Bug Fixes
+- Hunter's Master Marksman should now trigger correctly (Cataclysm)
+
 #### v1.4.3 (2024-05-12)
 
 New Spell Alerts:

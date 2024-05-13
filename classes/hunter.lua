@@ -82,7 +82,7 @@ local function useMasterMarksman()
         "aura",
         {
             talent = masterMarksmanTalent,
-            overlay = { stacks = 1, texture = "master_marksman", position = "Top" },
+            overlay = { texture = "master_marksman", position = "Top" },
             button = aimedShotBang,
         }
     );
