@@ -1,5 +1,7 @@
 ## SpellActivationOverlay Changelog
 
+#### v1.4.4 (2024-05-xx)
+
 #### v1.4.3 (2024-05-12)
 
 New Spell Alerts:
