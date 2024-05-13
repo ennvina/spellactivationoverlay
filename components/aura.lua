@@ -153,7 +153,30 @@ local AuraBucket = {
         if not self[aura.stacks] then
             self[aura.stacks] = AuraArray:create(aura.spellID, aura.stacks);
         end
+        if not self.spellID then
+            self.spellID = aura.spellID;
+        elseif self.spellID ~= aura.spellID then
+            SAO:Warn(Module, "Aura Bucket is getting distinct spell IDs "..tostring(self.spellID).." vs. "..tostring(aura.spellID));
+        end
         self[aura.stacks]:add(aura);
+    end,
+
+    changeStacks = function(self, oldStacks, newStacks)
+        -- Change count of already displayed aura
+        local spellID = self.spellID;
+        SAO:Debug(Module, "Changing number of stacks from "..tostring(oldStacks).." to "..newStacks.." for aura "..spellID.." "..(GetSpellInfo(spellID) or ""));
+
+        self[oldStacks]:hide();
+
+        -- self[newStacks]:show(); -- Cannot simply show, because we may need to force pulse play
+        SAO:MarkAura(spellID, newStacks);
+        for _, aura in ipairs(self[newStacks]) do
+            local o = aura.overlays;
+            local texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly = o.texture, o.position, o.scale, o.r, o.g, o.b, o.autoPulse, o.autoPulse, nil, o.combatOnly;
+            -- Note: forcePulsePlay is assigned to o.autoPulse, endTime is assigned to nil
+            SAO:ActivateOverlay(newStacks, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly);
+            aura.buttons:show();
+        end
     end,
 }
 
@@ -233,18 +256,4 @@ end
 
 function SAO:GetAuraMarker(spellID)
     return self.AuraMarkers[spellID];
-end
-
--- Change count of already displayed aura
-function SAO:ChangeAuraCount(spellID, oldCount, newCount, auras)
-    self:Debug(Module, "Changing number of stacks from "..tostring(oldCount).." to "..newCount.." for aura "..spellID.." "..(GetSpellInfo(spellID) or ""));
-    self:DeactivateOverlay(spellID);
-    self:RemoveGlow(spellID);
-    self:MarkAura(spellID, newCount); -- Call MarkAura after DeactivateOverlay, because DeactivateOverlay may reset its aura marker
-    for _, aura in ipairs(auras) do
-        local texture, positions, scale, r, g, b, autoPulse, _, _, combatOnly = select(4,unpack(aura));
-        local forcePulsePlay = autoPulse;
-        self:ActivateOverlay(newCount, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, nil, combatOnly);
-        aura.buttons:show();
-    end
 end

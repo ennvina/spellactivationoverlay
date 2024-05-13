@@ -141,7 +141,7 @@ function SAO.SPELL_AURA(self, ...)
         (bucket[count])
     ) then
         -- Deactivate old aura and activate the new one
-        self:ChangeAuraCount(spellID, displayedCount, count, bucket[count]);
+        bucket:changeStacks(displayedCount, count);
         return;
     end
 
