@@ -3,7 +3,6 @@ local Module = "events"
 
 -- Optimize frequent calls
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
-local GetSpellInfo = GetSpellInfo
 local UnitGUID = UnitGUID
 
 -- Events starting with SPELL_AURA e.g., SPELL_AURA_APPLIED
@@ -35,38 +34,25 @@ function SAO.SPELL_AURA(self, ...)
     end
 
     -- Use the game's aura from CLEU to find its corresponding aura item in SAO, if any
-    local auras;
-    if not self.IsEra() then
-        auras = self.RegisteredAurasBySpellID[spellID];
-    else
-        -- Due to Classic Era limitation, aura is registered by its spell name
-        auras = self.RegisteredAurasBySpellID[spellName];
-        if (auras) then
-            -- Must fetch spellID from aura, because spellID from CLEU is most likely 0 at this point
-            -- We can fetch any aura from auras because all auras store the same spellID
-            for _, auraStacks in pairs(auras) do
-                spellID = auraStacks[1][3]; -- [1] for first aura in auraStacks, [3] because spellID is the third item
-                break;
-            end
-        end
-    end
-    if not auras then
+    local bucket;
+    bucket, spellID = self:GetBucketBySpellIDOrSpellName(spellID, spellName);
+    if not bucket then
         -- This spell is not tracked by SAO
         return;
     end
 
     local count = 0; -- Number of stacks of the aura, unless the aura is count-agnostic (see below)
     local countAgnostic; -- Flag to tell that we don't care what is the exact stack count
-    if auras[0] then
-        -- An aura which defined stacks == 0 means the aura is count-agnostic
+    if bucket[0] then
+        -- A bucket which defined stacks == 0 means the effect is count-agnostic
         -- What matters is whether or not the buff is found, independently of its number of stacks
-        -- Please note, count-agnostic auras may or may not be stackable, they just don't care about the number of stacks, if any
+        -- Please note, count-agnostic effects may or may not be stackable, they just don't care about the number of stacks, if any
         countAgnostic = true;
     else
         -- If there is no aura with stacks == 0, this must mean that this aura is stackable
-        -- Unlike count-agnostic auras, non-count-agnostic auras are *always* stackable
+        -- Unlike count-agnostic effects, non-count-agnostic effects are *always* stackable
         countAgnostic = false;
-        -- To handle stackable auras, we must find the aura (ugh!) to get its number of stacks
+        -- To handle stackable effects, we must find the aura (ugh!) to get its number of stacks
         -- In an ideal world, we'd use a stack count from the combat log which, unfortunately, is unavailable
         if event ~= "SPELL_AURA_REMOVED" then -- No need to find aura with complete removal: the buff is not there anymore
             count = select(3, self:FindPlayerAuraByID(spellID)) or 0;
@@ -90,7 +76,7 @@ function SAO.SPELL_AURA(self, ...)
             (isDisplayed)
         and
             -- The number of stacks is supported
-            (auras[count])
+            (bucket[count])
         ) then
             -- Reactivate aura timer
             self:RefreshAura(spellID);
@@ -113,10 +99,10 @@ function SAO.SPELL_AURA(self, ...)
             (auraApplied or auraRemovedDose)
         and
             -- The number of stacks is supported
-            (auras[count])
+            (bucket[count])
         ) then
             -- Activate aura
-            self:DisplayAllAuras(spellID, count, auras[count]);
+            bucket[count]:show();
         end
 
         -- Can return now, because a non-displayed is either displayed now, or nothing can be done with it
@@ -126,7 +112,7 @@ function SAO.SPELL_AURA(self, ...)
     --[[ At this point:
     - isDisplayed == true, meaning the aura is currently displayed on screen
     - displayedCount equals to either:
-      - 0 for count-agnostic auras
+      - 0 for count-agnostic effects
       - otherwise, the number of currently displayed stacks
     ]]
 
@@ -137,10 +123,10 @@ function SAO.SPELL_AURA(self, ...)
         ) then
             -- Aura just disappeared completely
             -- For count-agnostic aura, it does not matter which count it came from, if the aura is missing: hide it
-            self:UndisplayAura(spellID);
+            bucket[0]:hide(); -- Use bucket[0] because count == 0 when countAgnostic == true
         end
 
-        -- Can return now: count-agnostic auras of displayed auras are either un-displayed, or nothing can be done with it
+        -- Can return now: count-agnostic effects of displayed effects are either un-displayed, or nothing can be done with it
         return;
     end
 
@@ -152,10 +138,10 @@ function SAO.SPELL_AURA(self, ...)
         (auraApplied or auraRemovedDose)
     and
         -- The number of stacks is supported
-        (auras[count])
+        (bucket[count])
     ) then
         -- Deactivate old aura and activate the new one
-        self:ChangeAuraCount(spellID, displayedCount, count, auras[count]);
+        self:ChangeAuraCount(spellID, displayedCount, count, bucket[count]);
         return;
     end
 
@@ -164,10 +150,10 @@ function SAO.SPELL_AURA(self, ...)
         - the aura is completely removed (SPELL_AURA_REMOVED)
         - or the aura has changed stacks to an unsupported stack count
         ]]
-        (auraRemovedLast or ((auraApplied or auraRemovedDose) and displayedCount ~= count and not auras[count]))
+        (auraRemovedLast or ((auraApplied or auraRemovedDose) and displayedCount ~= count and not bucket[count]))
     ) then
         -- Aura just disappeared or is not supported for this number of stacks
-        self:UndisplayAura(spellID);
+        bucket[displayedCount]:hide();
     end
 end
 
@@ -194,8 +180,8 @@ function SAO.LOADING_SCREEN_DISABLED(self, ...)
     -- This circumvents a limitation of the CLEU which may not trigger during a loading screen
     for spellID, stacks in pairs(self.ActiveOverlays) do
         if not self:IsFakeSpell(spellID) and not self:FindPlayerAuraByID(spellID) then
-            self:DeactivateOverlay(spellID);
-            self:RemoveGlow(spellID);
+            local bucket = self:GetBucketBySpellID(spellID);
+            bucket:hide(); -- @todo hide only if bucket is triggerable by player aura
         end
     end
 end

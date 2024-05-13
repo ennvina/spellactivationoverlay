@@ -68,10 +68,10 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, vari
         else
             registeredSpellID = auraID;
         end
-        local auras = self.RegisteredAurasBySpellID[registeredSpellID];
-        if (not auras) then
+        local bucket = self:GetBucketBySpellID(registeredSpellID);
+        if (not bucket) then
             SAO:Debug("preview", "Trying to preview overlay with spell ID "..tostring(registeredSpellID).." but it is not registered, or its registration failed");
-            return
+            return;
         end
 
         SpellActivationOverlayFrame_SetForceAlpha2(start);
@@ -79,24 +79,25 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, vari
         local fakeOffset = 42000000;
         if (start) then
             local stacks = testStacks or count or 0;
-            if (not auras[stacks]) then
+            if (not bucket[stacks]) then
                 SAO:Debug("preview", "Trying to preview overlay with spell ID "..tostring(registeredSpellID).." with "..tostring(stacks).." stacks but there is no aura with this number of stacks");
                 return;
             end
 
-            for _, aura in ipairs(auras[stacks]) do
-                local texture, positions, scale, r, g, b, autoPulse, _, endTime, combatOnly = select(4,unpack(aura));
-                local forcePulse = autoPulse;
+            for _, aura in ipairs(bucket[stacks]) do
+                local o = aura.overlays;
+                local texture, positions, scale, r, g, b, autoPulse, forcePulse, endTime, combatOnly = o.texture, o.position, o.scale, o.r, o.g, o.b, o.autoPulse, o.autoPulse, nil, o.combatOnly;
+                -- Note: forcePulse is assigned to o.autoPulse, endTime is assigned to nil
                 if (type(variants) == 'table' and type(variants.transformer) == 'function') then
                     self:ActivateOverlay(stacks, fakeOffset+(testAuraID or auraID), variants.transformer(cb, sb, texture, positions, scale, r, g, b, autoPulse, forcePulse, endTime, combatOnly));
                 else
                     self:ActivateOverlay(stacks, fakeOffset+(testAuraID or auraID), texture, positions, scale, r, g, b, autoPulse, forcePulse, endTime, combatOnly);
                 end
-                fakeOffset = fakeOffset + 1000000; -- Add offset so that different sub-auras may share the same 'location' for testing purposes
+                fakeOffset = fakeOffset + 1000000; -- Add offset so that different sub-effects in the same bucket may share the same 'location' for testing purposes
             end
         else
             local stacks = testStacks or count or 0;
-            for _, _ in ipairs(auras[stacks] or {42}) do -- list size is the only thing that matters, {42} is just a random thing to have a list with 1 element
+            for _, _ in ipairs(bucket[stacks] or {42}) do -- list size is the only thing that matters, {42} is just a random thing to have a list with 1 element
                 self:DeactivateOverlay(fakeOffset+(testAuraID or auraID));
                 fakeOffset = fakeOffset + 1000000;
             end

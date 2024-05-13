@@ -6,6 +6,7 @@ Shout-out to fellow developer stako. Thanks!
 
 Bug Fixes
 - Hunter's Master Marksman should now trigger correctly (Cataclysm)
+- Buffs should not be detected a bit more efficiently (Season of Discovery)
 
 #### v1.4.3 (2024-05-12)
 
