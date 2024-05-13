@@ -132,6 +132,11 @@ AuraArray = {
             SAO:RemoveGlow(self.spellID);
         end
     end,
+
+    refresh = function(self)
+        SAO:Debug(Module, "Refreshing aura of "..self.spellID.." "..(GetSpellInfo(self.spellID) or ""));
+        SAO:RefreshOverlayTimer(self.spellID);
+    end,
 }
 
 -- List of aura arrays, indexed by stack count
@@ -242,10 +247,4 @@ function SAO:ChangeAuraCount(spellID, oldCount, newCount, auras)
         self:ActivateOverlay(newCount, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, nil, combatOnly);
         aura.buttons:show();
     end
-end
-
--- Reactivate aura timer
-function SAO:RefreshAura(spellID)
-    self:Debug(Module, "Refreshing aura of "..spellID.." "..(GetSpellInfo(spellID) or ""));
-    self:RefreshOverlayTimer(spellID);
 end

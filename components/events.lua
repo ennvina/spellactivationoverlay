@@ -79,7 +79,7 @@ function SAO.SPELL_AURA(self, ...)
             (bucket[count])
         ) then
             -- Reactivate aura timer
-            self:RefreshAura(spellID);
+            bucket[count]:refresh();
         end
 
         -- Can return now, because SPELL_AURA_REFRESH is used only to refresh timer
