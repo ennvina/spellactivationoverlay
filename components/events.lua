@@ -79,7 +79,7 @@ function SAO.SPELL_AURA(self, ...)
             (bucket[count])
         ) then
             -- Reactivate aura timer
-            bucket[count]:refresh();
+            bucket:refresh(count);
         end
 
         -- Can return now, because SPELL_AURA_REFRESH is used only to refresh timer
@@ -102,7 +102,7 @@ function SAO.SPELL_AURA(self, ...)
             (bucket[count])
         ) then
             -- Activate aura
-            bucket[count]:show();
+            bucket:show(count);
         end
 
         -- Can return now, because a non-displayed is either displayed now, or nothing can be done with it
@@ -123,7 +123,7 @@ function SAO.SPELL_AURA(self, ...)
         ) then
             -- Aura just disappeared completely
             -- For count-agnostic aura, it does not matter which count it came from, if the aura is missing: hide it
-            bucket[0]:hide(); -- Use bucket[0] because count == 0 when countAgnostic == true
+            bucket:hide(0); -- Use 0 because count == 0 when countAgnostic == true
         end
 
         -- Can return now: count-agnostic nodes of displayed nodes are either un-displayed, or nothing can be done with it
@@ -153,7 +153,7 @@ function SAO.SPELL_AURA(self, ...)
         (auraRemovedLast or ((auraApplied or auraRemovedDose) and displayedCount ~= count and not bucket[count]))
     ) then
         -- Aura just disappeared or is not supported for this number of stacks
-        bucket[displayedCount]:hide();
+        bucket:hide(displayedCount);
     end
 end
 
@@ -181,7 +181,7 @@ function SAO.LOADING_SCREEN_DISABLED(self, ...)
     for spellID, stacks in pairs(self.ActiveOverlays) do
         if not self:IsFakeSpell(spellID) and not self:FindPlayerAuraByID(spellID) then
             local bucket = self:GetBucketBySpellID(spellID);
-            bucket:hide(); -- @todo hide only if bucket is triggerable by player aura
+            bucket:hide(stacks); -- @todo hide only if bucket is triggerable by player aura
         end
     end
 end

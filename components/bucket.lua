@@ -45,6 +45,18 @@ SAO.AuraBucket = {
         self[aura.stacks]:add(aura);
     end,
 
+    show = function(self, stacks)
+        self[stacks]:show();
+    end,
+
+    hide = function(self, stacks)
+        self[stacks]:hide();
+    end,
+
+    refresh = function(self, stacks)
+        self[stacks]:refresh();
+    end,
+
     changeStacks = function(self, oldStacks, newStacks)
         -- Change count of already displayed aura
         local spellID = self.spellID;
