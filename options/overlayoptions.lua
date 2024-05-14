@@ -84,8 +84,8 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, vari
                 return;
             end
 
-            for _, aura in ipairs(bucket[stacks]) do
-                local o = aura.overlays;
+            for _, node in ipairs(bucket[stacks]) do
+                local o = node.overlays;
                 local texture, positions, scale, r, g, b, autoPulse, forcePulse, endTime, combatOnly = o.texture, o.position, o.scale, o.r, o.g, o.b, o.autoPulse, o.autoPulse, nil, o.combatOnly;
                 -- Note: forcePulse is assigned to o.autoPulse, endTime is assigned to nil
                 if (type(variants) == 'table' and type(variants.transformer) == 'function') then
@@ -93,7 +93,7 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, vari
                 else
                     self:ActivateOverlay(stacks, fakeOffset+(testAuraID or auraID), texture, positions, scale, r, g, b, autoPulse, forcePulse, endTime, combatOnly);
                 end
-                fakeOffset = fakeOffset + 1000000; -- Add offset so that different sub-effects in the same bucket may share the same 'location' for testing purposes
+                fakeOffset = fakeOffset + 1000000; -- Add offset so that different nodes in the same bucket may share the same 'location' for testing purposes
             end
         else
             local stacks = testStacks or count or 0;

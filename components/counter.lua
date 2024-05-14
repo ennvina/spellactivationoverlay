@@ -17,7 +17,7 @@ local IsUsableSpell = IsUsableSpell
 ]]
 
 -- List of spell names or IDs of actions that can trigger as 'counter'
--- key = spellName / spellID, value = { effectName, talent, combatOnly }
+-- key = spellName / spellID, value = { nodeName, talent, combatOnly }
 SAO.ActivableCountersByName = {};
 SAO.ActivableCountersBySpellID = {};
 
@@ -34,28 +34,28 @@ SAO.CounterRetryTimers = {};
 -- Track an action that becomes usable by itself, without knowing it with an aura
 -- If the action is triggered by an aura, it will already activate during buff
 -- The spellID is taken from the aura's table
--- @param effectName name of the registered effect/aura
+-- @param nodeName name of the registered node
 -- @param talent talent object { tab, index } to check when counter triggers; may be nil
-function SAO:RegisterCounter(effectName, talent)
-    local bucket = self:GetBucketByName(effectName);
+function SAO:RegisterCounter(nodeName, talent)
+    local bucket = self:GetBucketByName(nodeName);
     if not bucket then
-        self:Error(Module, "Cannot find a bucket for counter "..tostring(effectName));
+        self:Error(Module, "Cannot find a bucket for counter "..tostring(nodeName));
         return;
     elseif not bucket[0] then
-        self:Error(Module, "Cannot find a stackless bucket for counter "..tostring(effectName));
+        self:Error(Module, "Cannot find a stackless bucket for counter "..tostring(nodeName));
         return;
     elseif #bucket[0] ~= 1 then
-        self:Error(Module, "Non-unique bucket for counter "..tostring(effectName));
+        self:Error(Module, "Non-unique bucket for counter "..tostring(nodeName));
         return;
     end
 
-    local effect = bucket[0][1];
+    local node = bucket[0][1];
 
-    local combatOnly = effect.combatOnly;
+    local combatOnly = node.combatOnly;
 
-    local counter = { effectName, talent, combatOnly };
+    local counter = { nodeName, talent, combatOnly };
 
-    local glowIDs = effect.buttons;
+    local glowIDs = node.buttons;
     for _, glowID in ipairs(glowIDs or {}) do
         if (type(glowID) == "number") then
             self.ActivableCountersBySpellID[glowID] = counter;
@@ -71,9 +71,9 @@ end
 
 -- Set the counter status of a spell. Do nothing if the status has not changed.
 -- @param spellID spell ID of the counter to update
--- @param effectName name of the registered effect/aura
+-- @param nodeName name of the registered node
 -- @param newStatus new status, either 'off', 'hard' or 'soft'
-function SAO.SetCounterStatus(self, spellID, effectName, newStatus)
+function SAO.SetCounterStatus(self, spellID, nodeName, newStatus)
     local oldStatus = 'off';
     if self.ActivatedCounters[spellID] then
         oldStatus = self.ActivatedCounters[spellID].status;
@@ -83,59 +83,59 @@ function SAO.SetCounterStatus(self, spellID, effectName, newStatus)
         return;
     end
 
-    local bucket = self:GetBucketByName(effectName);
-    local effect = bucket[0][1]; -- We know it has stacks == 0, which has exactly one item in it, thanks to RegisterCounter checks
-    if not effect then
-        -- Unknown effect. Should never happen.
-        self:Error(Module, "Counter uses unknown effectName "..tostring(effectName));
+    local bucket = self:GetBucketByName(nodeName);
+    local node = bucket[0][1]; -- We know it has stacks == 0, which has exactly one item in it, thanks to RegisterCounter checks
+    if not node then
+        -- Unknown node. Should never happen.
+        self:Error(Module, "Counter uses unknown nodeName "..tostring(nodeName));
         return;
     end
-    local effectSpellID = effect.spellID;
+    local nodeSpellID = node.spellID;
 
     local statusChanged = false;
     if oldStatus == 'off' and newStatus == 'hard' then
-        effect.overlays:show();
-        self:AddGlow(effectSpellID, {spellID});
+        node.overlays:show();
+        self:AddGlow(nodeSpellID, {spellID});
         self.ActivatedCounters[spellID] = { status=newStatus };
         statusChanged = true;
     elseif oldStatus == 'hard' and newStatus == 'off' then
-        effect.overlays:hide();
-        self:RemoveGlow(effectSpellID);
+        node.overlays:hide();
+        self:RemoveGlow(nodeSpellID);
         self.ActivatedCounters[spellID] = nil;
         statusChanged = true;
     elseif oldStatus == 'off' and newStatus == 'soft' then
-        effect:show();
-        self:AddGlow(effectSpellID, {spellID});
+        node:show();
+        self:AddGlow(nodeSpellID, {spellID});
         local TimetoLingerGlowForSoft = 7.5; -- Buttons glows temporarily for 7.5 secs
         -- The time is longer from Off to Soft than from Hard to Soft, because starting
         -- a spell alert out-of-combat combat incurs a 5-second highlight before fading out
         local timer = C_Timer.NewTimer(
             TimetoLingerGlowForSoft,
-            function() self:RemoveGlow(effectSpellID) end
+            function() self:RemoveGlow(nodeSpellID) end
         );
         self.ActivatedCounters[spellID] = { status=newStatus, softTimer=timer };
         statusChanged = true;
     elseif oldStatus == 'soft' and newStatus == 'off' then
         local timer = self.ActivatedCounters[spellID].softTimer;
         timer:Cancel();
-        effect.overlays:hide();
-        self:RemoveGlow(effectSpellID);
+        node.overlays:hide();
+        self:RemoveGlow(nodeSpellID);
         self.ActivatedCounters[spellID] = nil;
         statusChanged = true;
     elseif oldStatus == 'soft' and newStatus == 'hard' then
         local timer = self.ActivatedCounters[spellID].softTimer;
         timer:Cancel();
-        -- effect:show(); -- No need to activate, it is already active, even if hidden
-        self:AddGlow(effectSpellID, {spellID}); -- Re-glow in case the glow was removed after soft timer ended
+        -- node:show(); -- No need to activate, it is already active, even if hidden
+        self:AddGlow(nodeSpellID, {spellID}); -- Re-glow in case the glow was removed after soft timer ended
         self.ActivatedCounters[spellID] = { status=newStatus };
         statusChanged = true;
     elseif oldStatus == 'hard' and newStatus == 'soft' then
-        -- effect:show(); -- No need to activate, it is already active
-        -- self:AddGlow(effectSpellID, {spellID}); -- No need to glow, it is already glowing
+        -- node:show(); -- No need to activate, it is already active
+        -- self:AddGlow(nodeSpellID, {spellID}); -- No need to glow, it is already glowing
         local TimetoLingerGlowForSoft = 2.5; -- Buttons glows temporarily for 2.5 secs
         local timer = C_Timer.NewTimer(
             TimetoLingerGlowForSoft,
-            function() self:RemoveGlow(effectSpellID) end
+            function() self:RemoveGlow(nodeSpellID) end
         );
         self.ActivatedCounters[spellID] = { status=newStatus, softTimer=timer };
         statusChanged = true;
@@ -146,28 +146,28 @@ function SAO.SetCounterStatus(self, spellID, effectName, newStatus)
 end
 
 -- Check if an action counter became either activated or deactivated
-function SAO.CheckCounterAction(self, spellID, effectName, talent, combatOnly)
-    SAO:TraceThrottled(spellID, Module, "CheckCounterAction "..tostring(spellID).." "..tostring(effectName).." "..tostring(talent).." "..tostring(combatOnly));
+function SAO.CheckCounterAction(self, spellID, nodeName, talent, combatOnly)
+    SAO:TraceThrottled(spellID, Module, "CheckCounterAction "..tostring(spellID).." "..tostring(nodeName).." "..tostring(talent).." "..tostring(combatOnly));
 
     if (talent) then
         local rank = select(5, GetTalentInfo(talent[1], talent[2]));
         if (not (rank > 0)) then
             -- 0 points spent in the required Talent
-            self:SetCounterStatus(spellID, effectName, 'off');
+            self:SetCounterStatus(spellID, nodeName, 'off');
             return;
         end
     end
 
     if (not self:IsSpellLearned(spellID)) then
         -- Spell not learned
-        self:SetCounterStatus(spellID, effectName, 'off');
+        self:SetCounterStatus(spellID, nodeName, 'off');
         return;
     end
 
     local start, duration, enabled, modRate = GetSpellCooldown(spellID);
     if (type(start) ~= "number") then
         -- Spell not available
-        self:SetCounterStatus(spellID, effectName, 'off');
+        self:SetCounterStatus(spellID, nodeName, 'off');
         return;
     end
 
@@ -197,7 +197,7 @@ function SAO.CheckCounterAction(self, spellID, effectName, talent, combatOnly)
     end
 
     -- Set the new status and enable/disable spell alerts and glowing buttons accordingly
-    self:SetCounterStatus(spellID, effectName, status);
+    self:SetCounterStatus(spellID, nodeName, status);
 
     if (isCounterUsable and start > 0) then
         -- Counter could be usable, but CD prevents us to: try again in a few seconds
@@ -210,7 +210,7 @@ function SAO.CheckCounterAction(self, spellID, effectName, talent, combatOnly)
 
             local remainingTime = endTime-GetTime();
             local delta = 0.05; -- Add a small delay to account for lags and whatnot
-            local retryFunc = function() self:CheckCounterAction(spellID, effectName, talent, combatOnly); end;
+            local retryFunc = function() self:CheckCounterAction(spellID, nodeName, talent, combatOnly); end;
             self.CounterRetryTimers[spellID] = C_Timer.NewTimer(remainingTime+delta, retryFunc);
             self.CounterRetryTimers[spellID].endTime = endTime;
         end

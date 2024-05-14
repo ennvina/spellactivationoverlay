@@ -2,19 +2,6 @@ local AddonName, SAO = ...
 local Module = "aura"
 
 --[[
-    Lists of auras that must be tracked
-    These lists should be setup at start, based on the player class
-
-    The name should be unique
-    For stackable buffs, the stack count should be appended e.g., maelstrom_weapon_4
-
-    Spell IDs may not be unique, especially for stackable buffs
-    Because of that, RegisteredAuraBucketsBySpellID is a multimap instead of a map
-]]
-SAO.RegisteredAuraBucketsByName = {}
-SAO.RegisteredAuraBucketsBySpellID = {}
-
---[[
     List of markers for each aura activated excplicitly by an aura event, usually from CLEU.
     Key = spellID, Value = number of stacks, or nil if marker is reset
 
@@ -25,7 +12,7 @@ SAO.RegisteredAuraBucketsBySpellID = {}
 SAO.AuraMarkers = {}
 
 -- Basic Aura object, promoted with show/hide functions and easy access to variables
-local Aura = {
+SAO.Aura = {
 
     bind = function(self, obj)
         self.__index = nil;
@@ -89,7 +76,7 @@ local Aura = {
 }
 
 -- List of Aura objects
-AuraArray = {
+SAO.AuraArray = {
     create = function(self, spellID, stacks)
         local obj = {};
         self.__index = nil;
@@ -139,77 +126,6 @@ AuraArray = {
     end,
 }
 
--- List of aura arrays, indexed by stack count
-local AuraBucket = {
-    create = function(self)
-        local obj = {};
-        self.__index = nil;
-        setmetatable(obj, self);
-        self.__index = self;
-        return obj;
-    end,
-
-    addAura = function(self, aura)
-        if not self[aura.stacks] then
-            self[aura.stacks] = AuraArray:create(aura.spellID, aura.stacks);
-        end
-        if not self.spellID then
-            self.spellID = aura.spellID;
-        elseif self.spellID ~= aura.spellID then
-            SAO:Warn(Module, "Aura Bucket is getting distinct spell IDs "..tostring(self.spellID).." vs. "..tostring(aura.spellID));
-        end
-        self[aura.stacks]:add(aura);
-    end,
-
-    changeStacks = function(self, oldStacks, newStacks)
-        -- Change count of already displayed aura
-        local spellID = self.spellID;
-        SAO:Debug(Module, "Changing number of stacks from "..tostring(oldStacks).." to "..newStacks.." for aura "..spellID.." "..(GetSpellInfo(spellID) or ""));
-
-        self[oldStacks]:hide();
-
-        -- self[newStacks]:show(); -- Cannot simply show, because we may need to force pulse play
-        SAO:MarkAura(spellID, newStacks);
-        for _, aura in ipairs(self[newStacks]) do
-            local o = aura.overlays;
-            local texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly = o.texture, o.position, o.scale, o.r, o.g, o.b, o.autoPulse, o.autoPulse, nil, o.combatOnly;
-            -- Note: forcePulsePlay is assigned to o.autoPulse, endTime is assigned to nil
-            SAO:ActivateOverlay(newStacks, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly);
-            aura.buttons:show();
-        end
-    end,
-}
-
-local AuraBucketManager = {
-    addAura = function(self, spellID, aura)
-        local auraBucket = self:getOrCreateBucket(spellID);
-        auraBucket:addAura(aura);
-
-        SAO.RegisteredAuraBucketsByName[aura.name] = auraBucket;
-    end,
-
-    getOrCreateBucket = function(self, spellID)
-        local bucket = SAO.RegisteredAuraBucketsBySpellID[spellID];
-
-        if not bucket then
-            bucket = AuraBucket:create();
-            SAO.RegisteredAuraBucketsBySpellID[spellID] = bucket;
-
-            -- Cannot guarantee we can track spell ID on Classic Era, but can always track spell name
-            if SAO.IsEra() and not SAO:IsFakeSpell(spellID) then
-                local registeredSpellID = GetSpellInfo(spellID);
-                if registeredSpellID then
-                    SAO.RegisteredAuraBucketsBySpellID[registeredSpellID] = bucket; -- Share pointer
-                else
-                    SAO:Debug(Module, "Registering aura with unknown spell "..tostring(spellID));
-                end
-            end
-        end
-
-        return bucket;
-    end
-}
-
 -- Register a new aura
 -- If texture is nil, no Spell Activation Overlay (SAO) is triggered; subsequent params are ignored until glowIDs
 -- If texture is a function, it will be evaluated at runtime when the SAO is triggered
@@ -220,24 +136,19 @@ function SAO.RegisterAura(self, name, stacks, spellID, texture, positions, scale
         texture = self.TexName[texture];
     end
     local aura = { name, stacks, spellID, texture, positions, scale, r, g, b, autoPulse, glowIDs, nil, combatOnly }
-    Aura:bind(aura);
+    SAO.Aura:bind(aura);
 
     if (type(texture) == 'string') then
         self:MarkTexture(texture);
     end
 
-    -- Register aura in the spell list, sorted by spell ID and by stack count
-    AuraBucketManager:addAura(spellID, aura);
-
     -- Register the glow IDs
     -- The same glow ID may be registered by different auras, but it's okay
     self:RegisterGlowIDs(glowIDs);
 
-    -- Apply aura immediately, if found
-    local exists, _, count = self:FindPlayerAuraByID(spellID);
-    if (exists and (stacks == 0 or stacks == count)) then
-        aura:show();
-    end
+    -- Register aura in the spell list, sorted by spell ID and by stack count
+    -- Visuals are displayed is shown if the player currently has the aura with the required stack count
+    SAO.AuraBucketManager:addNode(aura);
 end
 
 function SAO:MarkAura(spellID, count)

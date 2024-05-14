@@ -325,33 +325,3 @@ SAO.GlowInterface = {
         end
     end,
 }
-
---[[
-    Aura Bucket and Effect Bucket
-]]
-
-function SAO:GetBucketByName(name)
-    return self.RegisteredAuraBucketsByName[name];
-end
-
-function SAO:GetBucketBySpellID(spellID)
-    return SAO.RegisteredAuraBucketsBySpellID[spellID];
-end
-
-function SAO:GetBucketBySpellIDOrSpellName(spellID, fallbackSpellName)
-    if not SAO.IsEra() or (type(spellID) == 'number' and spellID ~= 0) then
-        return SAO.RegisteredAuraBucketsBySpellID[spellID], spellID;
-    else
-        -- Due to Classic Era limitation, aura is registered by its spell name
-        local bucket = SAO.RegisteredAuraBucketsBySpellID[fallbackSpellName];
-        if bucket then
-            -- Must fetch spellID from aura, because spellID from CLEU is most likely 0 at this point
-            -- We can fetch any aura from auras because all auras store the same spellID
-            for stack, effects in pairs(bucket) do
-                spellID = effects[1].spellID; -- [1] for first effect in effects, .spellID to get its spell ID
-                break;
-            end
-        end
-        return bucket, spellID;
-    end
-end

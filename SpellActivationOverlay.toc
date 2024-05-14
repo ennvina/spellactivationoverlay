@@ -17,6 +17,7 @@
 # ©2014 Blizzard Entertainment, Inc. All rights reserved. Warlords of Draenor is a trademark, and World of Warcraft, Warcraft and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc. in the U.S. and/or other countries.
 
 components\aura.lua
+components\bucket.lua
 components\counter.lua
 components\effect.lua
 components\events.lua

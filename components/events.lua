@@ -44,15 +44,15 @@ function SAO.SPELL_AURA(self, ...)
     local count = 0; -- Number of stacks of the aura, unless the aura is count-agnostic (see below)
     local countAgnostic; -- Flag to tell that we don't care what is the exact stack count
     if bucket[0] then
-        -- A bucket which defined stacks == 0 means the effect is count-agnostic
+        -- A bucket which defined stacks == 0 means the node is count-agnostic
         -- What matters is whether or not the buff is found, independently of its number of stacks
-        -- Please note, count-agnostic effects may or may not be stackable, they just don't care about the number of stacks, if any
+        -- Please note, count-agnostic nodes may or may not be stackable, they just don't care about the number of stacks, if any
         countAgnostic = true;
     else
         -- If there is no aura with stacks == 0, this must mean that this aura is stackable
-        -- Unlike count-agnostic effects, non-count-agnostic effects are *always* stackable
+        -- Unlike count-agnostic nodes, non-count-agnostic nodes are *always* stackable
         countAgnostic = false;
-        -- To handle stackable effects, we must find the aura (ugh!) to get its number of stacks
+        -- To handle stackable nodes, we must find the aura (ugh!) to get its number of stacks
         -- In an ideal world, we'd use a stack count from the combat log which, unfortunately, is unavailable
         if event ~= "SPELL_AURA_REMOVED" then -- No need to find aura with complete removal: the buff is not there anymore
             count = select(3, self:FindPlayerAuraByID(spellID)) or 0;
@@ -63,7 +63,7 @@ function SAO.SPELL_AURA(self, ...)
     Reminder: returned count will always be zero if tracking a count-agnostic aura
     Possible values:
     - 1 or more, if the aura is displayed and it is a stackable aura, in which case the value indicates the number of stacks
-    - 0, if the aura is displayed and either the aura is not stackable or the effect is count-agnostic
+    - 0, if the aura is displayed and either the aura is not stackable or the node is count-agnostic
     - nil, if the aura is not displayed
     ]]
     local displayedCount = self:GetAuraMarker(spellID);
@@ -88,7 +88,7 @@ function SAO.SPELL_AURA(self, ...)
 
     -- Now, we are in a situation where either we got a buff (SPELL_AURA_APPLIED*) or lost it (SPELL_AURA_REMOVED*)
 
-    -- Check if we should activate the aura effect
+    -- Check if we should activate the node
     if (not isDisplayed) then
         if (
         --[[ Aura is enabled, either because:
@@ -112,7 +112,7 @@ function SAO.SPELL_AURA(self, ...)
     --[[ At this point:
     - isDisplayed == true, meaning the aura is currently displayed on screen
     - displayedCount equals to either:
-      - 0 for count-agnostic effects
+      - 0 for count-agnostic nodes
       - otherwise, the number of currently displayed stacks
     ]]
 
@@ -126,7 +126,7 @@ function SAO.SPELL_AURA(self, ...)
             bucket[0]:hide(); -- Use bucket[0] because count == 0 when countAgnostic == true
         end
 
-        -- Can return now: count-agnostic effects of displayed effects are either un-displayed, or nothing can be done with it
+        -- Can return now: count-agnostic nodes of displayed nodes are either un-displayed, or nothing can be done with it
         return;
     end
 
