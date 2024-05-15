@@ -18,82 +18,106 @@ SAO.RegisteredBucketsBySpellID = {}
 -- List of aura arrays, indexed by stack count
 -- A stack count of zero means "for everyone"
 -- A stack count of non-zero means "for a specific number of stacks"
-SAO.AuraBucket = {
-    create = function(self, spellID)
-        local obj = {
+SAO.Bucket = {
+    create = function(self, name, spellID)
+        local bucket = {
+            name = name, -- Name should be unique amongst buckets
+
             -- Spell ID is the main identifier to activate/deactivate visuals
             spellID = spellID,
 
-            -- Count-agnostic means the bucket does not care about its number of stacks
-            countAgnostic = true,
+            -- Stack-agnostic means the bucket does not care about its number of stacks
+            stackAgnostic = true, -- @todo revisit code which used countAgnostic
+            currentStacks = 0, -- currentStacks is 0 for everyone, except buckets triggered by auras
+            displayedStacks = nil,
+
+            -- Constant for more efficient debugging
+            description = "bucket "..spellID.." "..(GetSpellInfo(spellID) or ""),
         };
+        bucket.trigger = SAO.Trigger:new(bucket);
 
         self.__index = nil;
-        setmetatable(obj, self);
+        setmetatable(bucket, self);
         self.__index = self;
 
-        return obj;
+        return bucket;
     end,
 
     getOrCreateDisplay = function(self, stacks)
         if not self[stacks] then
-            self[stacks] = SAO.Display:new(self.spellID, stacks);
+            self[stacks] = SAO.Display:new(self, stacks);
             if stacks ~= 0 then
                 -- Having at least one non-zero display is enough to know the bucket cares about number of stacks
-                self.countAgnostic = false;
+                self.stackAgnostic = false;
             end
         end
         return self[stacks];
     end,
 
-    show = function(self, stacks, options)
+    show = function(self, options) -- @todo change existing code which called show(stacks) to now show()
+        if not self.trigger:isFullyActivated() then
+            SAO:Warn(Module, "Showing display of un-triggered "..self.description);
+        end
+
         if self[0] then
             self[0]:show(options);
         end
-        if stacks ~= 0 then
-            self[stacks]:show(options);
+        if self.currentStacks ~= 0 and self[self.currentStacks] then
+            self[self.currentStacks]:show(options);
         end
     end,
 
-    hide = function(self, stacks)
-        if self[0] then
-            self[0]:hide();
-        end
-        if stacks ~= 0 then
-            self[stacks]:hide();
+    hide = function(self) -- @todo change existing code which called hide(stacks) to now hide()
+        if self.displayedStacks then
+            self[self.displayedStacks]:hide(); -- Due to how hiding works, hiding any display will hide all displays in the bucket
         end
     end,
 
-    refresh = function(self, stacks)
+    refresh = function(self) -- @todo change existing code which called refresh(stacks) to now refresh()
+        if not self.displayedStacks then
+            -- Nothing to refresh if nothing is displayed
+            return;
+        end
+
         if self[0] then
             self[0]:refresh();
         end
-        if stacks ~= 0 then
-            self[stacks]:refresh();
+        if self.displayedStacks ~= 0 then
+            self[self.displayedStacks]:refresh();
         end
     end,
 
-    changeStacks = function(self, oldStacks, newStacks)
-        local spellID = self.spellID;
-        SAO:Debug(Module, "Changing number of stacks from "..tostring(oldStacks).." to "..newStacks.." for bucket "..spellID.." "..(GetSpellInfo(spellID) or ""));
+    setStacks = function(self, stacks)
+        -- Store stack counts for easier access, and to backup state known when entering the method
+        local oldStacks, newStacks, displayedStacks = self.currentStacks, stacks, self.displayedStacks;
         if oldStacks == newStacks then
-            SAO:Warn(Module, "Changing number of stacks with same number");
             return;
-        elseif oldStacks == 0 then
-            SAO:Warn(Module, "Changing number of stacks from 0 to "..tostring(newStacks));
-        elseif newStacks == 0 then
-            SAO:Warn(Module, "Changing number of stacks from "..tostring(oldStacks).." to 0");
         end
 
-        self[oldStacks]:hide();
-        self[newStacks]:show({ mimicPulse = true });
+        self.currentStacks = stacks;
+
+        if self.trigger:isFullyActivated() then
+            SAO:Debug(Module, "Changing number of stacks from "..tostring(oldStacks).." to "..newStacks.." for "..self.description);
+
+            if displayedStacks == oldStacks and displayedStacks ~= nil then
+                self[oldStacks]:hide();
+                if self[newStacks] then
+                    self[newStacks]:show({ mimicPulse = true });
+                end
+            elseif displayedStacks ~= newStacks and self[newStacks] then
+                self[newStacks]:show();
+            end
+        end
     end,
 }
 
 SAO.BucketManager = {
     addAura = function(self, aura)
-        local bucket = self:getOrCreateBucket(aura.spellID);
-        SAO.RegisteredBucketsByName[aura.name] = bucket; -- May overwrite, but will overwrite with itself
+        local bucket, created = self:getOrCreateBucket(aura.name, aura.spellID);
+
+        if created and not SAO:IsFakeSpell(aura.spellID) then
+            bucket.trigger:add(SAO.TRIGGER_AURA, { bucket = bucket });
+        end
 
         local display = bucket:getOrCreateDisplay(aura.stacks);
         if aura.overlay then
@@ -105,21 +129,16 @@ SAO.BucketManager = {
         if type(aura.combatOnly) == 'boolean' then
             display:setCombatOnly(aura.combatOnly);
         end
-
-        -- Display aura immediately, if found
-        local count = SAO:GetPlayerAuraCountBySpellID(aura.spellID);
-        if count ~= nil and (aura.stacks == 0 or aura.stacks == count) then
-            -- @todo must MarkDisplay in the process. Might require something more complex (because other auras with same spellID may be triggered at start)
-            display:show();
-        end
     end,
 
-    getOrCreateBucket = function(self, spellID)
+    getOrCreateBucket = function(self, name, spellID)
         local bucket = SAO.RegisteredBucketsBySpellID[spellID];
+        local created = false;
 
         if not bucket then
-            bucket = SAO.AuraBucket:create(spellID);
+            bucket = SAO.Bucket:create(name, spellID);
             SAO.RegisteredBucketsBySpellID[spellID] = bucket;
+            SAO.RegisteredBucketsByName[name] = bucket;
 
             -- Cannot guarantee we can track spell ID on Classic Era, but can always track spell name
             if SAO.IsEra() and not SAO:IsFakeSpell(spellID) then
@@ -130,9 +149,11 @@ SAO.BucketManager = {
                     SAO:Debug(Module, "Registering aura with unknown spell "..tostring(spellID));
                 end
             end
+
+            created = true;
         end
 
-        return bucket;
+        return bucket, created;
     end
 }
 
@@ -159,5 +180,22 @@ function SAO:GetBucketBySpellIDOrSpellName(spellID, fallbackSpellName)
             end
         end
         return bucket, spellID;
+    end
+end
+
+function SpellActivationOverlay_DumpBuckets()
+    local nbBuckets = 0;
+    for _, _ in pairs(SAO.RegisteredBucketsBySpellID) do
+        nbBuckets = nbBuckets + 1;
+    end
+    SAO:Info(Module, "Listing buckets ("..nbBuckets.." item"..(nbBuckets == 1 and "" or "s")..")");
+
+    for spellID, bucket in pairs(SAO.RegisteredBucketsBySpellID) do
+        local str = bucket.name.." "..
+            "nbStacks == "..tostring(bucket.currentStacks)..", "..
+            "dispStacks == "..tostring(bucket.displayedStacks)..", "..
+            "triggerReq == "..tostring(bucket.trigger.required)..", "..
+            "triggerNow == "..tostring(bucket.trigger.activated);
+        SAO:Info(Module, str);
     end
 end

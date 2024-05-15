@@ -190,7 +190,7 @@ function SAO:HasPlayerAuraBySpellID(id)
     end
 end
 
-function SAO:GetPlayerAuraCountBySpellID(id)
+function SAO:GetPlayerAuraStacksBySpellID(id)
     if GetPlayerAuraBySpellID then
         local aura = GetPlayerAuraBySpellID(id);
         if aura then

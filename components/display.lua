@@ -7,9 +7,11 @@ local Module = "display"
     Has functions to show/hide them
 ]]
 SAO.Display = {
-    new = function(self, spellID, stacks)
+    new = function(self, parent, stacks) -- parent is the bucket attached to the new trigger
         local display = {
-            spellID = spellID,
+            parent = parent,
+
+            spellID = parent.spellID,
             stacks = stacks,
             overlays = {},
             buttons = {},
@@ -98,19 +100,19 @@ SAO.Display = {
     end,
 
     -- Display overlays and buttons
-    -- @note unlike individual showOverlays() and showButtons(), this main show() will mark the display
+    -- @note unlike individual showOverlays() and showButtons(), this main show() will set the bucket's displayedStacks
     show = function(self, options)
-        SAO:Debug(Module, "Showing aura of "..self.spellID.." "..(GetSpellInfo(self.spellID) or ""));
-        SAO:MarkDisplay(self.spellID, self.stacks);
+        SAO:Debug(Module, "Showing stack "..self.stacks.." of "..self.parent.description);
+        self.parent.displayedStacks = self.stacks;
         self:showOverlays(options);
         self:showButtons(options);
     end,
 
     -- Hide overlays and buttons
-    -- @note unlike individual hideOverlays() and hideButtons(), this main hide() will un-mark the display
+    -- @note unlike individual hideOverlays() and hideButtons(), this main hide() will unset the bucket's displayedStacks
     hide = function(self)
-        SAO:Debug(Module, "Removing aura of "..self.spellID.." "..(GetSpellInfo(self.spellID) or ""));
-        SAO:UnmarkDisplay(self.spellID);
+        SAO:Debug(Module, "Hiding stack "..self.stacks.." of "..self.parent.description);
+        self.parent.displayedStacks = nil;
         self:hideOverlays();
         self:hideButtons();
     end,
@@ -120,31 +122,3 @@ SAO.Display = {
         SAO:RefreshOverlayTimer(self.spellID);
     end,
 }
-
---[[
-    List of markers for each display activated excplicitly and completely with, usually from Display:show()
-    Key = spellID, Value = number of stacks, or nil if marker is reset
-
-    This list looks redundant with SAO.ActiveOverlays, but there are significant differences:
-    - ActiveOverlays tracks absolutely every overlay, while DisplayMarkers is focused on "displays from CLEU"
-    - ActiveOverlays is limited to effects that have an overlay, while DisplayMarkers tracks effects with or without overlays
-]]
-SAO.DisplayMarkers = {}
-
-function SAO:MarkDisplay(spellID, count)
-    if type(count) ~= 'number' then
-        self:Debug(Module, "Marking display of "..tostring(spellID).." with invalid count "..tostring(count));
-    end
-    if type(self.DisplayMarkers[spellID]) == 'number' then
-        self:Debug(Module, "Marking display of "..tostring(spellID).." with count "..tostring(count).." but it already has a count of "..self.DisplayMarkers[spellID]);
-    end
-    self.DisplayMarkers[spellID] = count;
-end
-
-function SAO:UnmarkDisplay(spellID)
-    self.DisplayMarkers[spellID] = nil;
-end
-
-function SAO:GetDisplayMarker(spellID)
-    return self.DisplayMarkers[spellID];
-end

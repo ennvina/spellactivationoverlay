@@ -40,115 +40,51 @@ function SAO.SPELL_AURA(self, ...)
         -- This spell is not tracked by SAO
         return;
     end
-
-    local count = 0; -- Number of stacks of the aura, unless the aura is count-agnostic (see below)
-    local countAgnostic = bucket.countAgnostic; -- Flag to tell that we don't care what is the exact stack count
-    if not countAgnostic then
-        -- To handle stackable auras, we must find the aura (ugh!) to get its number of stacks
-        -- In an ideal world, we'd use a stack count from the combat log which, unfortunately, is unavailable
-        if event ~= "SPELL_AURA_REMOVED" then -- No need to find aura with complete removal: the buff is not there anymore
-            count = self:GetPlayerAuraCountBySpellID(spellID) or 0;
-        end
-        -- For the record, count will always be 0 for count-agnostic auras, even if the aura actually has stacks
-        -- This is an optimization that prevents the above call of GetPlayerAuraCountBySpellID, which has a significant cost
+    if not bucket.trigger:reactsWith(SAO.TRIGGER_AURA) then
+        -- This spell ignores aura-based triggers
+        return;
     end
-
-    --[[ Check if the spell is currently displayed, and if yes, with which count
-    Reminder: returned count will always be zero if tracking a count-agnostic aura
-    Possible values:
-    - 1 or more, if the aura is displayed and it is a stackable aura, in which case the value indicates the number of stacks
-    - 0, if the aura is displayed and either the aura is not stackable or the node is count-agnostic
-    - nil, if the aura is not displayed
-    ]]
-    local displayedCount = self:GetDisplayMarker(spellID);
-    local isDisplayed = displayedCount ~= nil;
 
     -- Handle unique case first: aura refresh
     if (auraRefresh) then
-        if (
-            -- Aura is already visible
-            (isDisplayed)
-        and
-            -- The number of stacks is supported
-            (bucket[count])
-        ) then
-            -- Reactivate aura timer
-            bucket:refresh(count);
-        end
-
+        bucket:refresh();
         -- Can return now, because SPELL_AURA_REFRESH is used only to refresh timer
         return;
     end
 
-    -- Now, we are in a situation where either we got a buff (SPELL_AURA_APPLIED*) or lost it (SPELL_AURA_REMOVED*)
+    -- Now, we are in a situation where we either got a buff (SPELL_AURA_APPLIED*) or lost it (SPELL_AURA_REMOVED*)
 
-    -- Check if we should activate the node
-    if (not isDisplayed) then
-        if (
-        --[[ Aura is enabled, either because:
+    if (auraRemovedLast) then
+        bucket.trigger:deactivate(SAO.TRIGGER_AURA);
+        bucket:setStacks(nil); -- nil means "not currently holding any stacks"
+        -- Can return now, because SPELL_AURA_REMOVED resets everything
+        return;
+    end
+
+    --[[ Now, we are in a situation where either:
+        - we got a buff (SPELL_AURA_APPLIED*)
+        - or we lost a stack but still have the buff (SPELL_AURA_REMOVED_DOSE)
+        Either way, the player currently has the buff or debuff
+    ]]
+
+    local stacks = 0; -- Number of stacks of the aura, unless the aura is stack-agnostic (see below)
+    if not bucket.stackAgnostic then
+        -- To handle stackable auras, we must find the aura (ugh!) to get its number of stacks
+        -- In an ideal world, we would use a stack count from the combat log which, unfortunately, is unavailable
+        if event ~= "SPELL_AURA_REMOVED" then -- No need to find aura with complete removal: the buff is not there anymore
+            stacks = self:GetPlayerAuraStacksBySpellID(spellID) or 0;
+        end
+        -- For the record, stacks will always be 0 for stack-agnostic auras, even if the aura actually has stacks
+        -- This is an optimization that prevents the above call of GetPlayerAuraStacksBySpellID, which has a significant cost
+    end
+
+    --[[ Aura is enabled, either because:
         - it was added now (SPELL_AURA_APPLIED)
         - or was upgraded (SPELL_AURA_APPLIED_DOSE)
         - or was downgraded but still visible (SPELL_AURA_REMOVED_DOSE)
-        ]]
-            (auraApplied or auraRemovedDose)
-        and
-            -- The number of stacks is supported
-            (bucket[count])
-        ) then
-            -- Activate aura
-            bucket:show(count);
-        end
-
-        -- Can return now, because a non-displayed is either displayed now, or nothing can be done with it
-        return;
-    end
-
-    --[[ At this point:
-    - isDisplayed == true, meaning the aura is currently displayed on screen
-    - displayedCount equals to either:
-      - 0 for count-agnostic nodes
-      - otherwise, the number of currently displayed stacks
     ]]
-
-    if (countAgnostic) then
-        if (
-            -- The aura is completely removed (SPELL_AURA_REMOVED)
-            (auraRemovedLast)
-        ) then
-            -- Aura just disappeared completely
-            -- For count-agnostic aura, it does not matter which count it came from, if the aura is missing: hide it
-            bucket:hide(0); -- Use 0 because count == 0 when countAgnostic == true
-        end
-
-        -- Can return now: count-agnostic nodes of displayed nodes are either un-displayed, or nothing can be done with it
-        return;
-    end
-
-    if (
-        -- Number of stacks changed
-        (displayedCount ~= count)
-    and
-        -- The new stack count allows it to be visible
-        (auraApplied or auraRemovedDose)
-    and
-        -- The number of stacks is supported
-        (bucket[count])
-    ) then
-        -- Deactivate old aura and activate the new one
-        bucket:changeStacks(displayedCount, count);
-        return;
-    end
-
-    if (
-        --[[ The aura should not be visible, either because:
-        - the aura is completely removed (SPELL_AURA_REMOVED)
-        - or the aura has changed stacks to an unsupported stack count
-        ]]
-        (auraRemovedLast or ((auraApplied or auraRemovedDose) and displayedCount ~= count and not bucket[count]))
-    ) then
-        -- Aura just disappeared or is not supported for this number of stacks
-        bucket:hide(displayedCount);
-    end
+    bucket:setStacks(stacks);
+    bucket.trigger:activate(SAO.TRIGGER_AURA);
 end
 
 -- The (in)famous CLEU event
@@ -170,14 +106,26 @@ function SAO.LOADING_SCREEN_DISABLED(self, ...)
         self:RegisterPendingEffectsAfterPlayerLoggedIn();
     end
 
-    -- Check if auras are still there after a loading screen
-    -- This circumvents a limitation of the CLEU which may not trigger during a loading screen
-    for spellID, stacks in pairs(self.ActiveOverlays) do
-        if not self:IsFakeSpell(spellID) and not self:HasPlayerAuraBySpellID(spellID) then
-            local bucket = self:GetBucketBySpellID(spellID);
-            bucket:hide(stacks); -- @todo hide only if bucket is triggerable by player aura
+    -- Check manually if buckets are triggered immediately after their creation (see above code)
+    -- Or after a loading screen in-between zones, because CLEU may not trigger everything during a loading screen
+    -- If it is possible to create effects after this point, this kind of manual checks should be called there too
+    for _, bucket in pairs(self.RegisteredBucketsBySpellID) do
+        if bucket.trigger.required ~= 0 then
+            bucket.trigger:manualCheck();
         end
     end
+
+    -- Check if auras are still there after a loading screen
+    -- This circumvents a limitation of the CLEU which may not trigger during a loading screen
+    -- Commented, because not needed in theory, thanks to explicit manual check (see above)
+    -- for spellID, stacks in pairs(self.ActiveOverlays) do
+    --     if not self:IsFakeSpell(spellID) and not self:HasPlayerAuraBySpellID(spellID) then
+    --         local bucket = self:GetBucketBySpellID(spellID);
+    --         if bucket.trigger:reactsWith(SAO.TRIGGER_AURA) then
+    --             bucket.trigger:deactivate(SAO.TRIGGER_AURA);
+    --         end
+    --     end
+    -- end
 end
 
 function SAO.PLAYER_ENTERING_WORLD(self, ...)
