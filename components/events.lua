@@ -47,10 +47,10 @@ function SAO.SPELL_AURA(self, ...)
         -- To handle stackable auras, we must find the aura (ugh!) to get its number of stacks
         -- In an ideal world, we'd use a stack count from the combat log which, unfortunately, is unavailable
         if event ~= "SPELL_AURA_REMOVED" then -- No need to find aura with complete removal: the buff is not there anymore
-            count = select(3, self:FindPlayerAuraByID(spellID)) or 0;
+            count = self:GetPlayerAuraCountBySpellID(spellID) or 0;
         end
         -- For the record, count will always be 0 for count-agnostic auras, even if the aura actually has stacks
-        -- This is an optimization that prevents the above call of FindPlayerAuraByID, which has a significant cost
+        -- This is an optimization that prevents the above call of GetPlayerAuraCountBySpellID, which has a significant cost
     end
 
     --[[ Check if the spell is currently displayed, and if yes, with which count
@@ -173,7 +173,7 @@ function SAO.LOADING_SCREEN_DISABLED(self, ...)
     -- Check if auras are still there after a loading screen
     -- This circumvents a limitation of the CLEU which may not trigger during a loading screen
     for spellID, stacks in pairs(self.ActiveOverlays) do
-        if not self:IsFakeSpell(spellID) and not self:FindPlayerAuraByID(spellID) then
+        if not self:IsFakeSpell(spellID) and not self:HasPlayerAuraBySpellID(spellID) then
             local bucket = self:GetBucketBySpellID(spellID);
             bucket:hide(stacks); -- @todo hide only if bucket is triggerable by player aura
         end

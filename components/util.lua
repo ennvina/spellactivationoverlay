@@ -16,6 +16,9 @@ local GetTalentInfo = GetTalentInfo
 local GetTime = GetTime
 local UnitAura = UnitAura
 
+local GetAuraDataBySpellName = C_UnitAuras and C_UnitAuras.GetAuraDataBySpellName
+local GetPlayerAuraBySpellID = C_UnitAuras and C_UnitAuras.GetPlayerAuraBySpellID
+
 --[[
     Logging functions
 ]]
@@ -164,7 +167,7 @@ local function FindPlayerAuraBy(condition)
 end
 
 -- Utility aura function, one of the many that Blizzard could've done better years ago...
-function SAO.FindPlayerAuraByID(self, id)
+local function FindPlayerAuraByID(self, id)
     local index, filter = FindPlayerAuraBy(function(_id, _name) return _id == id end);
     if index then
         return PlayerAura(index, filter);
@@ -172,11 +175,66 @@ function SAO.FindPlayerAuraByID(self, id)
 end
 
 -- Utility aura function, similar to AuraUtil.FindAuraByName
-function SAO.FindPlayerAuraByName(self, name)
+local function FindPlayerAuraByName(self, name)
     local index, filter = FindPlayerAuraBy(function(_id, _name) return _name == name end);
     if index then
         return PlayerAura(index, filter);
     end
+end
+
+function SAO:HasPlayerAuraBySpellID(id)
+    if GetPlayerAuraBySpellID then
+        return GetPlayerAuraBySpellID(id) ~= nil;
+    else
+        return FindPlayerAuraByID(id) ~= nil;
+    end
+end
+
+function SAO:GetPlayerAuraCountBySpellID(id)
+    if GetPlayerAuraBySpellID then
+        local aura = GetPlayerAuraBySpellID(id);
+        if aura then
+            return aura.applications;
+        end
+    else
+        local exists, _, count = FindPlayerAuraByID(id);
+        if exists then
+            return count;
+        end
+    end
+    return nil;
+end
+
+function SAO:GetPlayerAuraDurationExpirationTimBySpellIdOrName(spellIdOrName)
+    if type(spellIdOrName) == 'string' then
+        if GetAuraDataBySpellName then
+            local aura = GetAuraDataBySpellName("player", spellIdOrName, "HELPFUL");
+            if not aura then
+                aura = GetAuraDataBySpellName("player", spellIdOrName, "HARMFUL");
+            end
+            if aura then
+                return aura.duration, aura.expirationTime;
+            end
+        else
+            local exists, _, _, _, duration, expirationTime = FindPlayerAuraByName(spellIdOrName);
+            if exists then
+                return duration, expirationTime;
+            end
+        end
+    elseif type(spellIdOrName) == 'number' and not self:IsFakeSpell(spellIdOrName) then -- Don't look for fake spells
+        if GetPlayerAuraBySpellID then
+            local aura = GetPlayerAuraBySpellID(spellIdOrName);
+            if aura then
+                return aura.duration, aura.expirationTime;
+            end
+        else
+            local exists, _, _, _, duration, expirationTime = FindPlayerAuraByID(spellIdOrName);
+            if exists then
+                return duration, expirationTime;
+            end
+        end
+    end
+    return nil, nil;
 end
 
 --[[

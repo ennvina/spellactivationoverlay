@@ -145,7 +145,7 @@ local OPTFBHandler = {
         end);
 
         self.buffID = buffID;
-        self.hasBuff = SAO:FindPlayerAuraByID(self.buffID);
+        self.hasBuff = SAO:HasPlayerAuraBySpellID(self.buffID);
         if self.hasBuff then
             self:glow();
         end

@@ -107,10 +107,10 @@ SAO.BucketManager = {
         end
 
         -- Display aura immediately, if found
-        local exists, _, count = SAO:FindPlayerAuraByID(aura.spellID);
-        if (exists and (aura.stacks == 0 or aura.stacks == count)) then
+        local count = SAO:GetPlayerAuraCountBySpellID(aura.spellID);
+        if count ~= nil and (aura.stacks == 0 or aura.stacks == count) then
             -- @todo must MarkDisplay in the process. Might require something more complex (because other auras with same spellID may be triggered at start)
-            aura:show();
+            display:show();
         end
     end,
 

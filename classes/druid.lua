@@ -128,15 +128,15 @@ local function isFeral(self)
 end
 
 local function hasClarity(self)
-    return self:FindPlayerAuraByID(omenSpellID) ~= nil;
+    return self:HasPlayerAuraBySpellID(omenSpellID);
 end
 
 local function hasLunar(self)
-    return self:FindPlayerAuraByID(lunarSpellID) ~= nil;
+    return self:HasPlayerAuraBySpellID(lunarSpellID);
 end
 
 local function hasSolar(self)
-    return self:FindPlayerAuraByID(solarSpellID) ~= nil;
+    return self:HasPlayerAuraBySpellID(solarSpellID);
 end
 
 local function updateOneSAO(self, position, fakeSpellID, realSpellID, texture)
