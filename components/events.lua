@@ -42,21 +42,15 @@ function SAO.SPELL_AURA(self, ...)
     end
 
     local count = 0; -- Number of stacks of the aura, unless the aura is count-agnostic (see below)
-    local countAgnostic; -- Flag to tell that we don't care what is the exact stack count
-    if bucket[0] then
-        -- A bucket which defined stacks == 0 means the node is count-agnostic
-        -- What matters is whether or not the buff is found, independently of its number of stacks
-        -- Please note, count-agnostic nodes may or may not be stackable, they just don't care about the number of stacks, if any
-        countAgnostic = true;
-    else
-        -- If there is no aura with stacks == 0, this must mean that this aura is stackable
-        -- Unlike count-agnostic nodes, non-count-agnostic nodes are *always* stackable
-        countAgnostic = false;
-        -- To handle stackable nodes, we must find the aura (ugh!) to get its number of stacks
+    local countAgnostic = bucket.countAgnostic; -- Flag to tell that we don't care what is the exact stack count
+    if not countAgnostic then
+        -- To handle stackable auras, we must find the aura (ugh!) to get its number of stacks
         -- In an ideal world, we'd use a stack count from the combat log which, unfortunately, is unavailable
         if event ~= "SPELL_AURA_REMOVED" then -- No need to find aura with complete removal: the buff is not there anymore
             count = select(3, self:FindPlayerAuraByID(spellID)) or 0;
         end
+        -- For the record, count will always be 0 for count-agnostic auras, even if the aura actually has stacks
+        -- This is an optimization that prevents the above call of FindPlayerAuraByID, which has a significant cost
     end
 
     --[[ Check if the spell is currently displayed, and if yes, with which count

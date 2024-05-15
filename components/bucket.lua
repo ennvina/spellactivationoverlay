@@ -16,9 +16,17 @@ SAO.RegisteredBucketsByName = {}
 SAO.RegisteredBucketsBySpellID = {}
 
 -- List of aura arrays, indexed by stack count
+-- A stack count of zero means "for everyone"
+-- A stack count of non-zero means "for a specific number of stacks"
 SAO.AuraBucket = {
     create = function(self, spellID)
-        local obj = { spellID = spellID };
+        local obj = {
+            -- Spell ID is the main identifier to activate/deactivate visuals
+            spellID = spellID,
+
+            -- Count-agnostic means the bucket does not care about its number of stacks
+            countAgnostic = true,
+        };
 
         self.__index = nil;
         setmetatable(obj, self);
@@ -30,6 +38,10 @@ SAO.AuraBucket = {
     getOrCreateDisplay = function(self, stacks)
         if not self[stacks] then
             self[stacks] = SAO.Display:new(self.spellID, stacks);
+            if stacks ~= 0 then
+                -- Having at least one non-zero display is enough to know the bucket cares about number of stacks
+                self.countAgnostic = false;
+            end
         end
         return self[stacks];
     end,
