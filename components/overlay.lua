@@ -75,7 +75,7 @@ end
 function SAO.DeactivateOverlay(self, spellID)
     self.ActiveOverlays[spellID] = nil;
     self.HideOverlays(self.Frame, spellID);
-    self:UnmarkAura(spellID); -- Remove aura marker automatically
+    self:UnmarkDisplay(spellID); -- Remove display marker automatically - @todo Think twice about it
 end
 
 -- Refresh the duration of an overlay

@@ -66,7 +66,7 @@ function SAO.SPELL_AURA(self, ...)
     - 0, if the aura is displayed and either the aura is not stackable or the node is count-agnostic
     - nil, if the aura is not displayed
     ]]
-    local displayedCount = self:GetAuraMarker(spellID);
+    local displayedCount = self:GetDisplayMarker(spellID);
     local isDisplayed = displayedCount ~= nil;
 
     -- Handle unique case first: aura refresh

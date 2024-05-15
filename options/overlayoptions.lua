@@ -84,20 +84,16 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, vari
                 return;
             end
 
-            for _, node in ipairs(bucket[stacks]) do
-                local o = node.overlays;
-                local texture, positions, scale, r, g, b, autoPulse, forcePulse, endTime, combatOnly = o.texture, o.position, o.scale, o.r, o.g, o.b, o.autoPulse, o.autoPulse, nil, o.combatOnly;
-                -- Note: forcePulse is assigned to o.autoPulse, endTime is assigned to nil
-                if (type(variants) == 'table' and type(variants.transformer) == 'function') then
-                    self:ActivateOverlay(stacks, fakeOffset+(testAuraID or auraID), variants.transformer(cb, sb, texture, positions, scale, r, g, b, autoPulse, forcePulse, endTime, combatOnly));
-                else
-                    self:ActivateOverlay(stacks, fakeOffset+(testAuraID or auraID), texture, positions, scale, r, g, b, autoPulse, forcePulse, endTime, combatOnly);
-                end
+            local testTexture = type(variants) == 'table' and type(variants.textureTestFunc) == 'function' and variants.textureTestFunc(cb, sb) or nil;
+            for _, o in ipairs(bucket[stacks].overlays) do
+                local texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly = testTexture or o.texture, o.position, o.scale, o.r, o.g, o.b, o.autoPulse, o.autoPulse, nil, o.combatOnly;
+                -- Note: texture is assigned to testTexture or o.texture, forcePulsePlay is assigned to o.autoPulse, endTime is assigned to nil
+                self:ActivateOverlay(stacks, fakeOffset+(testAuraID or auraID), texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly);
                 fakeOffset = fakeOffset + 1000000; -- Add offset so that different nodes in the same bucket may share the same 'location' for testing purposes
             end
         else
             local stacks = testStacks or count or 0;
-            for _, _ in ipairs(bucket[stacks] or {42}) do -- list size is the only thing that matters, {42} is just a random thing to have a list with 1 element
+            for _, _ in ipairs(bucket[stacks].overlays or {42}) do -- list size is the only thing that matters, {42} is just a random thing to have a list with 1 element
                 self:DeactivateOverlay(fakeOffset+(testAuraID or auraID));
                 fakeOffset = fakeOffset + 1000000;
             end

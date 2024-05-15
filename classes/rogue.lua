@@ -87,11 +87,11 @@ local RiposteHandler = {
     alert = function(self)
         if self.optionTestFunc(self.alertVariants.getOption()) then
             if not self.alerting then
-                local bucket = SAO.GetBucketByName("riposte");
+                local bucket = SAO:GetBucketByName("riposte");
                 if bucket then
                     -- It might conflict with 'default' counter effect
                     -- But tests showed no significant issues so far
-                    bucket[0][1].overlays:show();
+                    bucket[0]:showOverlays();
                 end
                 self.alerting = true;
             end
@@ -114,7 +114,7 @@ local RiposteHandler = {
             self.alerting = false;
             local bucket = SAO:GetBucketByName("riposte");
             if bucket then
-                bucket[0][1].overlays:hide();
+                bucket[0]:hideOverlays();
             end
 
             -- Tell the timer that there is no need to remove alert after timeout, because alert is already removed
