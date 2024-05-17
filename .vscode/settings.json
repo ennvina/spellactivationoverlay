@@ -35,6 +35,7 @@
         "LibStub",
         // Utility functions
         "CopyTable",
+        "DevTools_Dump",
         "SlashCmdList",
         // WoW UI helpers
         "ActionButton_HideOverlayGlow",

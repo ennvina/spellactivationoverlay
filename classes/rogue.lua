@@ -91,7 +91,7 @@ local RiposteHandler = {
                 if bucket then
                     -- It might conflict with 'default' counter effect
                     -- But tests showed no significant issues so far
-                    bucket[0]:showOverlays();
+                    bucket[2]:showOverlays(); -- 2 is the hash for 'any stacks'
                 end
                 self.alerting = true;
             end
@@ -114,7 +114,7 @@ local RiposteHandler = {
             self.alerting = false;
             local bucket = SAO:GetBucketByName("riposte");
             if bucket then
-                bucket[0]:hideOverlays();
+                bucket[2]:hideOverlays(); -- 2 is the hash for 'any stacks'
             end
 
             -- Tell the timer that there is no need to remove alert after timeout, because alert is already removed

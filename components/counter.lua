@@ -41,12 +41,12 @@ function SAO:RegisterCounter(bucketName, talent)
     if not bucket then
         self:Error(Module, "Cannot find a bucket for counter "..tostring(bucketName));
         return;
-    elseif not bucket[0] then
-        self:Error(Module, "Cannot find a stackless bucket for counter "..tostring(bucketName));
+    elseif not bucket[2] and not bucket[1] then -- 2 is for 'stackless bucket'; 1 is for 'missing aura bucket'
+        self:Error(Module, "Cannot find a stackless bucket nor mising aura bucket for counter "..tostring(bucketName));
         return;
     end
 
-    local display = bucket[0];
+    local display = bucket[2] or bucket[1];
 
     local combatOnly = display.combatOnly;
 
@@ -81,7 +81,7 @@ function SAO.SetCounterStatus(self, spellID, bucketName, newStatus)
     end
 
     local bucket = self:GetBucketByName(bucketName);
-    local display = bucket[0]; -- We know it has stacks == 0, thanks to RegisterCounter checks
+    local display = bucket[2] or bucket[1]; -- We know it has a hash for at least 2 or 1, thanks to RegisterCounter checks
     if not display then
         -- Unknown display. Should never happen.
         self:Error(Module, "Counter uses unknown bucketName "..tostring(bucketName));

@@ -77,23 +77,25 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, vari
         SpellActivationOverlayFrame_SetForceAlpha2(start);
 
         local fakeOffset = 42000000;
+        local stacks = testStacks or count or 0;
+        local hash = SAO.Hash:new()
+        hash:setAuraStacks(stacks);
+        local display = bucket[hash.hash];
         if (start) then
-            local stacks = testStacks or count or 0;
-            if (not bucket[stacks]) then
+            if (not display) then
                 SAO:Debug("preview", "Trying to preview overlay with spell ID "..tostring(registeredSpellID).." with "..tostring(stacks).." stacks but there is no aura with this number of stacks");
                 return;
             end
 
             local testTexture = type(variants) == 'table' and type(variants.textureTestFunc) == 'function' and variants.textureTestFunc(cb, sb) or nil;
-            for _, o in ipairs(bucket[stacks].overlays) do
+            for _, o in ipairs(display.overlays) do
                 local texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly = testTexture or o.texture, o.position, o.scale, o.r, o.g, o.b, o.autoPulse, o.autoPulse, nil, o.combatOnly;
                 -- Note: texture is assigned to testTexture or o.texture, forcePulsePlay is assigned to o.autoPulse, endTime is assigned to nil
                 self:ActivateOverlay(stacks, fakeOffset+(testAuraID or auraID), texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly);
                 fakeOffset = fakeOffset + 1000000; -- Add offset so that different nodes in the same bucket may share the same 'location' for testing purposes
             end
         else
-            local stacks = testStacks or count or 0;
-            for _, _ in ipairs(bucket[stacks].overlays or {42}) do -- list size is the only thing that matters, {42} is just a random thing to have a list with 1 element
+            for _, _ in ipairs(display.overlays or {42}) do -- list size is the only thing that matters, {42} is just a random thing to have a list with 1 element
                 self:DeactivateOverlay(fakeOffset+(testAuraID or auraID));
                 fakeOffset = fakeOffset + 1000000;
             end

@@ -23,6 +23,7 @@ components\display.lua
 components\effect.lua
 components\events.lua
 components\glow.lua
+components\hash.lua
 components\item.lua
 components\overlay.lua
 components\project.lua

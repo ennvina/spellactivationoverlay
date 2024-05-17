@@ -3,33 +3,33 @@ local Module = "trigger"
 
 -- List of trigger flags, as bit field
 -- Start high enough to be able to index trigger flag to a list, and avoid confusion with stack counts
-SAO.TRIGGER_AURA     = 1
-SAO.TRIGGER_COUNTER  = 2
-SAO.TRIGGER_RESOURCE = 4
+SAO.TRIGGER_AURA       = 1
+SAO.TRIGGER_COUNTER    = 2
+SAO.TRIGGER_HOLY_POWER = 4
 
 local TriggerNames = {
-    [SAO.TRIGGER_AURA    ] = "aura",
-    [SAO.TRIGGER_COUNTER ] = "counter",
-    [SAO.TRIGGER_RESOURCE] = "resource",
+    [SAO.TRIGGER_AURA      ] = "aura",
+    [SAO.TRIGGER_COUNTER   ] = "counter",
+    [SAO.TRIGGER_HOLY_POWER] = "resource",
 }
 
 local TriggerManualChecks = {
-    [SAO.TRIGGER_AURA] = function(props)
-        local auraStacks = SAO:GetPlayerAuraStacksBySpellID(props.bucket.spellID);
+    [SAO.TRIGGER_AURA] = function(bucket)
+        local auraStacks = SAO:GetPlayerAuraStacksBySpellID(bucket.spellID);
         if auraStacks ~= nil then
-            if props.bucket.stackAgnostic then
-                return 0;
+            if bucket.stackAgnostic then
+                bucket:setStacks(0);
             else
-                return auraStacks;
+                bucket:setStacks(auraStacks);
             end
         else
-            return nil;
+            bucket:setStacks(nil);
         end
     end,
-    [SAO.TRIGGER_COUNTER] = function(props)
+    [SAO.TRIGGER_COUNTER] = function(bucket)
         return false; -- @todo
     end,
-    [SAO.TRIGGER_RESOURCE] = function(props)
+    [SAO.TRIGGER_HOLY_POWER] = function(bucket)
         return false; -- @todo
     end,
 }
@@ -39,9 +39,8 @@ SAO.Trigger = {
         local trigger = {
             parent = parent,
 
-            required = 0, -- Bit field of required triggers to activate before 'showing' the bucket
-            activated = 0, -- Bit field of currently activated triggers
-            props = {},
+            required = 0, -- Bit field of required triggers to get information before pretending to activate the trigger
+            informed = 0, -- Bit field of currently known informations required by the trigger
         }
 
         self.__index = nil;
@@ -51,7 +50,7 @@ SAO.Trigger = {
         return trigger;
     end,
 
-    add = function(self, flag, props)
+    add = function(self, flag)
         local name = TriggerNames[flag];
         if not name then
             SAO:Error(Module, "Unknown trigger "..tostring(flag));
@@ -62,60 +61,42 @@ SAO.Trigger = {
         end
 
         self.required = bit.bor(self.required, flag);
-        self.props[flag] = props;
-        -- Special case for auras: the initial stack count becomes nil
-        -- We cannot leave initial count to 0, because 0 has a special meaning for aura-based buckets
-        if bit.band(flag, SAO.TRIGGER_AURA) ~= 0 then
-            self.parent.currentStacks = nil;
-        end
     end,
 
     reactsWith = function(self, flag)
         return bit.band(self.required, flag) ~= 0;
     end,
 
-    isActivated = function(self, flag)
-        return bit.band(self.activated, flag) ~= 0;
+    isFullyInformed = function(self)
+        return self.required ~= 0 and self.informed == self.required;
     end,
 
-    isFullyActivated = function(self)
-        return self.required ~= 0 and self.activated == self.required;
-    end,
-
-    activate = function(self, flag)
+    inform = function(self, flag)
         local name = tostring(TriggerNames[flag] or flag);
         if bit.band(self.required, flag) ~= self.required then
-            SAO:Error(Module, "Activating unsupported trigger "..name.." for "..self.parent.description);
+            SAO:Error(Module, "Informing unsupported trigger "..name.." for "..self.parent.description);
             return;
         end
-        if bit.band(self.activated, flag) == flag then
-            SAO:Debug(Module, "Re-activating already activated trigger "..name.." for "..self.parent.description);
+        if bit.band(self.informed, flag) == flag then
             return;
         end
-        SAO:Debug(Module, "Activating trigger "..name.." for "..self.parent.description);
+        SAO:Debug(Module, "Informing trigger "..name.." for "..self.parent.description);
 
-        self.activated = bit.bor(self.activated, flag);
-        if self.activated == self.required then
-            self.parent:show();
-        end
+        self.informed = bit.bor(self.informed, flag);
     end,
 
-    deactivate = function(self, flag)
+    uninform = function(self, flag) -- @todo remove code maybe, probably dead code. Who needs to un-inform?
         local name = tostring(TriggerNames[flag] or flag);
         if bit.band(self.required, flag) ~= self.required then
-            SAO:Error(Module, "De-activating unsupported trigger "..name.." for "..self.parent.description);
             return;
         end
-        if bit.band(self.activated, flag) == 0 then
-            SAO:Debug(Module, "De-activating unactive trigger "..name.." for "..self.parent.description);
+        if bit.band(self.informed, flag) == 0 then
+            SAO:Debug(Module, "De-informing unactive trigger "..name.." for "..self.parent.description);
             return;
         end
-        SAO:Debug(Module, "De-activating trigger "..name.." for "..self.parent.description);
+        SAO:Debug(Module, "De-informing trigger "..name.." for "..self.parent.description);
 
-        if self.activated == self.required then
-            self.parent:hide();
-        end
-        self.activated = bit.band(self.activated, bit.bnot(flag));
+        self.informed = bit.band(self.informed, bit.bnot(flag));
     end,
 
     manualCheck = function(self)
@@ -124,39 +105,12 @@ SAO.Trigger = {
             return;
         end
 
-        local checked = 0;
-        local stacks = 0;
-        for _, flag in ipairs({ SAO.TRIGGER_AURA, SAO.TRIGGER_COUNTER, SAO.TRIGGER_RESOURCE }) do
-            if self:reactsWith(flag) then
-                local result = TriggerManualChecks[flag](self.props[flag]);
-                if result then
-                    checked = checked + flag;
-                end
-                if flag == SAO.TRIGGER_AURA then
-                    stacks = result;
-                end
-            end
-        end
+        self.informed = 0; -- Reset informed flags to avoid premature show/hide when parsing all trigger functions
 
-        if self.activated == checked and self.parent.currentStacks == stacks then
-            -- Did not change: nothing to do
-            return;
-        elseif self.required == self.activated then
-            -- Was fully activated
-            SAO:Debug(Module, "De-activating the formerly fully activated "..self.parent.description);
-            self.parent:hide();
-            self.parent:setStacks(stacks);
-            self.activated = checked;
-        elseif self.required == checked then
-            -- Now fully activated
-            SAO:Debug(Module, "Activating the newly fully activated "..self.parent.description);
-            self.activated = checked;
-            self.parent:setStacks(stacks);
-            self.parent:show();
-        else
-            -- Simply overwrite with new knowledge
-            self.activated = checked;
-            self.parent:setStacks(stacks);
+        for _, flag in ipairs({ SAO.TRIGGER_AURA, SAO.TRIGGER_COUNTER, SAO.TRIGGER_HOLY_POWER }) do
+            if self:reactsWith(flag) then
+                TriggerManualChecks[flag](self.parent);
+            end
         end
     end,
 }

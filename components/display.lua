@@ -7,12 +7,12 @@ local Module = "display"
     Has functions to show/hide them
 ]]
 SAO.Display = {
-    new = function(self, parent, stacks) -- parent is the bucket attached to the new trigger
+    new = function(self, parent, hash) -- parent is the bucket attached to the new trigger
         local display = {
             parent = parent,
 
             spellID = parent.spellID,
-            stacks = stacks,
+            hash = hash,
             overlays = {},
             buttons = {},
             combatOnly = false,
@@ -49,9 +49,6 @@ SAO.Display = {
             combatOnly = overlay.combatOnly == true, -- false by default
         }
 
-        if _overlay.stacks ~= self.stacks then
-            SAO:Warn(Module, "Inconsistent stacks between display and overlay: "..tostring(self.stacks).." vs. "..tostring(_overlay.stacks));
-        end
         if _overlay.spellID ~= self.spellID then
             SAO:Warn(Module, "Inconsistent spellID between display and overlay: "..tostring(self.spellID).." vs. "..tostring(_overlay.spellID));
         end
@@ -100,19 +97,19 @@ SAO.Display = {
     end,
 
     -- Display overlays and buttons
-    -- @note unlike individual showOverlays() and showButtons(), this main show() will set the bucket's displayedStacks
+    -- @note unlike individual showOverlays() and showButtons(), this main show() will set the bucket's displayedHash
     show = function(self, options)
-        SAO:Debug(Module, "Showing stack "..self.stacks.." of "..self.parent.description);
-        self.parent.displayedStacks = self.stacks;
+        SAO:Debug(Module, "Showing hash "..self.hash.." of "..self.parent.description);
+        self.parent.displayedHash = self.hash;
         self:showOverlays(options);
         self:showButtons(options);
     end,
 
     -- Hide overlays and buttons
-    -- @note unlike individual hideOverlays() and hideButtons(), this main hide() will unset the bucket's displayedStacks
+    -- @note unlike individual hideOverlays() and hideButtons(), this main hide() will unset the bucket's displayedHash
     hide = function(self)
-        SAO:Debug(Module, "Hiding stack "..self.stacks.." of "..self.parent.description);
-        self.parent.displayedStacks = nil;
+        SAO:Debug(Module, "Hiding hash "..self.hash.." of "..self.parent.description);
+        self.parent.displayedHash = nil;
         self:hideOverlays();
         self:hideButtons();
     end,

@@ -55,7 +55,6 @@ function SAO.SPELL_AURA(self, ...)
     -- Now, we are in a situation where we either got a buff (SPELL_AURA_APPLIED*) or lost it (SPELL_AURA_REMOVED*)
 
     if (auraRemovedLast) then
-        bucket.trigger:deactivate(SAO.TRIGGER_AURA);
         bucket:setStacks(nil); -- nil means "not currently holding any stacks"
         -- Can return now, because SPELL_AURA_REMOVED resets everything
         return;
@@ -84,7 +83,6 @@ function SAO.SPELL_AURA(self, ...)
         - or was downgraded but still visible (SPELL_AURA_REMOVED_DOSE)
     ]]
     bucket:setStacks(stacks);
-    bucket.trigger:activate(SAO.TRIGGER_AURA);
 end
 
 -- The (in)famous CLEU event
@@ -121,8 +119,8 @@ function SAO.LOADING_SCREEN_DISABLED(self, ...)
     -- for spellID, stacks in pairs(self.ActiveOverlays) do
     --     if not self:IsFakeSpell(spellID) and not self:HasPlayerAuraBySpellID(spellID) then
     --         local bucket = self:GetBucketBySpellID(spellID);
-    --         if bucket.trigger:reactsWith(SAO.TRIGGER_AURA) then
-    --             bucket.trigger:deactivate(SAO.TRIGGER_AURA);
+    --         if bucket.trigger.required ~= 0 then
+    --             bucket.trigger:manualCheck();
     --         end
     --     end
     -- end
