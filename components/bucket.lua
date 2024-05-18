@@ -265,11 +265,11 @@ function SpellActivationOverlay_DumpBuckets(devDump)
         if devDump then
             DevTools_Dump({ [spellID] = bucket });
         else
-            local str = bucket.name.." "..
-                "hash == "..tostring(bucket.currentHash)..", "..
-                "dispHash == "..tostring(bucket.displayedHash)..", "..
-                "triggerReq == "..tostring(bucket.trigger.required)..", "..
-                "triggerInfo == "..tostring(bucket.trigger.informed);
+            local str = bucket.name..", "..
+                "currentHash == "..tostring(bucket.currentHash).." == "..SAO.Hash:new(bucket.currentHash):toString()..", "..
+                "displayedHash == "..tostring(bucket.displayedHash).." == "..SAO.Hash:new(bucket.displayedHash):toString()..", "..
+                "triggerRequired == "..tostring(bucket.trigger.required)..", "..
+                "triggerInformed == "..tostring(bucket.trigger.informed);
             SAO:Info(Module, str);
         end
     end

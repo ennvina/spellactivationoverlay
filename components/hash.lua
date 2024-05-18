@@ -28,6 +28,106 @@ local HASH_HOLY_POWER_2    = 0x0600
 local HASH_HOLY_POWER_3    = 0x0800
 local HASH_HOLY_POWER_MASK = 0x0E00
 
+local HashStringifierList = {}
+local HashStringifierMap = {}
+
+local HashStringifier = {
+    register = function(self, mask, key, toValue, fromValue)
+        local converter = {
+            mask = mask,
+            key = key,
+
+            toValue = toValue,
+            fromValue = fromValue,
+        }
+
+        self.__index = nil;
+        setmetatable(converter, self);
+        self.__index = self;
+
+        tinsert(HashStringifierList, converter);
+        HashStringifierMap[converter.key] = converter;
+    end,
+
+    -- Returns the key/value string, or nil if the flag is not set with the stringifier mask
+    toKeyValue = function(self, hash)
+        if bit.band(hash.hash, self.mask) == 0 then
+            return nil;
+        end
+        local value = self.toValue(hash);
+        return self.key..'='..value;
+    end,
+
+    -- Returns true if the value was set, false is something went wrong
+    fromKeyValue = function(self, hash, key, value)
+        if key ~= self.key then
+            SAO:Error(Module, "Wrong stringifier called to convert key/value "..tostring(key).."="..tostring(value));
+            return false;
+        end
+        return self.fromValue(hash, value) ~= nil;
+    end,
+}
+
+HashStringifier:register(
+    HASH_AURA_MASK,
+    "aura_stacks", -- key
+    function(hash) -- toValue()
+        local auraStacks = hash:getAuraStacks();
+        return (auraStacks == nil) and "missing" or (auraStacks == 0 and "any" or tostring(auraStacks));
+    end,
+    function(hash, value) -- fromValue()
+        if value == "missing" then
+            hash:setAuraStacks(nil);
+            return true;
+        elseif value == "any" then
+            hash:setAuraStacks(0);
+            return true;
+        elseif tostring(tonumber(value)) == value then
+            hash:setAuraStacks(tonumber(value));
+            return true;
+        else
+            return nil; -- Not good
+        end
+    end
+);
+
+HashStringifier:register(
+    HASH_ACTION_USABLE_MASK,
+    "action", -- key
+    function(hash) -- toValue()
+        local actionUsable = hash:isActionUsable();
+        return actionUsable and "usable" or "not_usable";
+    end,
+    function(hash, value) -- fromValue()
+        if value == "usable" then
+            hash:setActionUsable(true);
+            return true;
+        elseif value == "not_usable" then
+            hash:setActionUsable(false);
+            return true;
+        else
+            return nil; -- Not good
+        end
+    end
+);
+
+HashStringifier:register(
+    HASH_HOLY_POWER_MASK,
+    "holy_power", -- key
+    function(hash) -- toValue()
+        local holyPower = hash:getHolyPower();
+        return tostring(holyPower);
+    end,
+    function(hash, value) -- fromValue()
+        if tostring(tonumber(value)) == value then
+            hash:setHolyPower(tonumber(value));
+            return true;
+        else
+            return nil; -- Not good
+        end
+    end
+);
+
 SAO.Hash = {
     new = function(self, initialHash)
         local hash = { hash = initialHash or 0 }
@@ -123,5 +223,53 @@ SAO.Hash = {
         if maskedHash == nil then return nil; end
 
         return (maskedHash / HASH_HOLY_POWER_0) - 1;
+    end,
+
+    toString = function(self)
+        local result = "";
+
+        for _, stringifier in ipairs(HashStringifierList) do
+            local keyValue = stringifier:toKeyValue(self);
+            if keyValue then
+                if result == "" then
+                    result = keyValue;
+                else
+                    result = result..";"..keyValue;
+                end
+            end
+        end
+
+        return result;
+    end,
+
+    fromString = function(self, str)
+        --[[ Use a temporary new hash in order to:
+            - start from a clean slate
+            - rollback automatically, if there is a problem
+            Once everything is okay, the temp hash will be set to the current hash
+        ]]
+        local hash = SAO.Hash:new();
+        for keyValue in str:gmatch("([^;]+)") do
+            local first, last = strfind(keyValue, '=');
+            if not first or not last then
+                SAO:Error(Module, "Wrong hash key/value "..tostring(keyValue));
+                return;
+            end
+            local key, value = keyValue:sub(1, first-1), keyValue:sub(last+1);
+
+            local stringifier = HashStringifierMap[key];
+            if not stringifier then
+                SAO:Error(Module, "Unknown hash key "..tostring(key).." in key/value "..tostring(keyValue));
+                return;
+            end
+
+            if not stringifier:fromKeyValue(hash, key, value) then
+                -- SAO:Error(Module, ...); -- Not message to write here, errors should be written in fromKeyValue call
+                return;
+            end
+        end
+
+        -- Everything's alright: use computed hash
+        self.hash = hash.hash;
     end,
 }
