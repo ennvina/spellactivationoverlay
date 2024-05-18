@@ -28,6 +28,18 @@ local HASH_HOLY_POWER_2    = 0x0600
 local HASH_HOLY_POWER_3    = 0x0800
 local HASH_HOLY_POWER_MASK = 0x0E00
 
+-- Check that masks are not overlapping with one another
+local masks = { HASH_AURA_MASK, HASH_ACTION_USABLE_MASK, HASH_HOLY_POWER_MASK }
+for i1, mask1 in ipairs(masks) do
+    for i2, mask2 in ipairs(masks) do
+        if i2 > i1 and bit.band(mask1, mask2) ~= 0 then
+            local x1 = string.format('0x%X', mask1);
+            local x2 = string.format('0x%X', mask2);
+            print(WrapTextInColor("**SAO** -"..Module.."- Overlapping mask "..x1.." vs. "..x2, RED_FONT_COLOR));
+        end
+    end
+end
+
 local HashStringifierList = {}
 local HashStringifierMap = {}
 
