@@ -3,14 +3,14 @@ local Module = "trigger"
 
 -- List of trigger flags, as bit field
 -- Start high enough to be able to index trigger flag to a list, and avoid confusion with stack counts
-SAO.TRIGGER_AURA       = 1
-SAO.TRIGGER_COUNTER    = 2
-SAO.TRIGGER_HOLY_POWER = 4
+SAO.TRIGGER_AURA          = 1
+SAO.TRIGGER_ACTION_USABLE = 2
+SAO.TRIGGER_HOLY_POWER    = 4
 
 local TriggerNames = {
-    [SAO.TRIGGER_AURA      ] = "aura",
-    [SAO.TRIGGER_COUNTER   ] = "counter",
-    [SAO.TRIGGER_HOLY_POWER] = "resource",
+    [SAO.TRIGGER_AURA         ] = "aura",
+    [SAO.TRIGGER_ACTION_USABLE] = "counter",
+    [SAO.TRIGGER_HOLY_POWER   ] = "resource",
 }
 
 local TriggerManualChecks = {
@@ -26,7 +26,7 @@ local TriggerManualChecks = {
             bucket:setStacks(nil);
         end
     end,
-    [SAO.TRIGGER_COUNTER] = function(bucket)
+    [SAO.TRIGGER_ACTION_USABLE] = function(bucket)
         return false; -- @todo
     end,
     [SAO.TRIGGER_HOLY_POWER] = function(bucket)
@@ -107,7 +107,7 @@ SAO.Trigger = {
 
         self.informed = 0; -- Reset informed flags to avoid premature show/hide when parsing all trigger functions
 
-        for _, flag in ipairs({ SAO.TRIGGER_AURA, SAO.TRIGGER_COUNTER, SAO.TRIGGER_HOLY_POWER }) do
+        for _, flag in ipairs({ SAO.TRIGGER_AURA, SAO.TRIGGER_ACTION_USABLE, SAO.TRIGGER_HOLY_POWER }) do
             if self:reactsWith(flag) then
                 TriggerManualChecks[flag](self.parent);
             end

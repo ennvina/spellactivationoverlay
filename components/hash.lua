@@ -15,10 +15,10 @@ local HASH_AURA_ZERO   = HASH_AURA_ANY
 local HASH_AURA_MAX    = HASH_AURA_ZERO + 99 -- Allow no more than 99 stacks
 local HASH_AURA_MASK   = 0x7F
 
--- Counter on/off
-local HASH_COUNTER_UNAVAILABLE = 0x080
-local HASH_COUNTER_AVAILABLE   = 0x100
-local HASH_COUNTER_MASK        = 0x180
+-- Action usable or not
+local HASH_ACTION_USABLE_NO   = 0x080
+local HASH_ACTION_USABLE_YES  = 0x100
+local HASH_ACTION_USABLE_MASK = 0x180
 
 -- Holy Power
 -- hash = HASH_HOLY_POWER_0 * (1 + holy_power)
@@ -83,24 +83,24 @@ SAO.Hash = {
         return bit.band(self.hash, bit.bnot(HASH_AURA_MASK)) + HASH_AURA_ANY;
     end,
 
-    hasCounter = function(self)
-        return bit.band(self.hash, HASH_COUNTER_MASK) ~= 0;
+    hasActionUsable = function(self)
+        return bit.band(self.hash, HASH_ACTION_USABLE_MASK) ~= 0;
     end,
 
-    setCounter = function(self, available)
-        if type(available) ~= 'boolean' then
-            SAO:Warn(Module, "Invalid Counter flag "..tostring(available));
+    setActionUsable = function(self, usable)
+        if type(usable) ~= 'boolean' then
+            SAO:Warn(Module, "Invalid Action Usable flag "..tostring(usable));
         else
-            local maskedHash = available and HASH_COUNTER_AVAILABLE or HASH_COUNTER_UNAVAILABLE;
-            self:setMaskedHash(maskedHash, HASH_COUNTER_MASK);
+            local maskedHash = usable and HASH_ACTION_USABLE_YES or HASH_ACTION_USABLE_NO;
+            self:setMaskedHash(maskedHash, HASH_ACTION_USABLE_MASK);
         end
     end,
 
-    getCounter = function(self)
-        local maskedHash = self:getMaskedHash(HASH_COUNTER_MASK);
+    isActionUsable = function(self)
+        local maskedHash = self:getMaskedHash(HASH_ACTION_USABLE_MASK);
         if maskedHash == nil then return nil; end
 
-        return maskedHash == HASH_COUNTER_AVAILABLE;
+        return maskedHash == HASH_ACTION_USABLE_YES;
     end,
 
     hasHolyPower = function(self)
