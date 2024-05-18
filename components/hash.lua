@@ -128,6 +128,22 @@ HashStringifier:register(
     end
 );
 
+
+-- Private methods
+
+local function setMaskedHash(self, maskedHash, mask)
+    self.hash = bit.band(self.hash, bit.bnot(mask)) + maskedHash;
+end
+
+local function getMaskedHash(self, mask)
+    local maskedHash = bit.band(self.hash, mask);
+    if maskedHash == 0 then
+        SAO:Debug(Module, "Cannot convert hash ("..tostring(self.hash)..") with mask "..tostring(mask));
+        return nil; -- Potential issue: for aura stacks, may be mistaken with 'aura absent'
+    end
+    return maskedHash;
+end
+
 SAO.Hash = {
     new = function(self, initialHash)
         local hash = { hash = initialHash or 0 }
@@ -137,18 +153,7 @@ SAO.Hash = {
         return hash;
     end,
 
-    setMaskedHash = function(self, maskedHash, mask)
-        self.hash = bit.band(self.hash, bit.bnot(mask)) + maskedHash;
-    end,
-
-    getMaskedHash = function(self, mask)
-        local maskedHash = bit.band(self.hash, mask);
-        if maskedHash == 0 then
-            SAO:Debug(Module, "Cannot convert hash ("..tostring(self.hash)..") with mask "..tostring(mask));
-            return nil; -- Potential issue: for aura stacks, may be mistaken with 'aura absent'
-        end
-        return maskedHash;
-    end,
+    -- Aura Stacks
 
     hasAuraStacks = function(self)
         return bit.band(self.hash, HASH_AURA_MASK) ~= 0;
@@ -156,21 +161,21 @@ SAO.Hash = {
 
     setAuraStacks = function(self, stacks, stackAgnostic)
         if stacks == nil then
-            self:setMaskedHash(HASH_AURA_ABSENT, HASH_AURA_MASK);
+            setMaskedHash(self, HASH_AURA_ABSENT, HASH_AURA_MASK);
         elseif type(stacks) ~= 'number' or stacks < 0 then
             SAO:Warn(Module, "Invalid stack count "..tostring(stacks));
         elseif stackAgnostic then
-            self:setMaskedHash(HASH_AURA_ANY, HASH_AURA_MASK);
+            setMaskedHash(self, HASH_AURA_ANY, HASH_AURA_MASK);
         elseif stacks > 99 then
             SAO:Debug(Module, "Stack overflow ("..stacks..") truncated to 99");
-            self:setMaskedHash(HASH_AURA_MAX, HASH_AURA_MASK);
+            setMaskedHash(self, HASH_AURA_MAX, HASH_AURA_MASK);
         else
-            self:setMaskedHash(HASH_AURA_ZERO + stacks, HASH_AURA_MASK);
+            setMaskedHash(self, HASH_AURA_ZERO + stacks, HASH_AURA_MASK);
         end
     end,
 
     getAuraStacks = function(self)
-        local maskedHash = self:getMaskedHash(HASH_AURA_MASK);
+        local maskedHash = getMaskedHash(self, HASH_AURA_MASK);
         if maskedHash == nil then return nil; end
 
         if maskedHash == HASH_AURA_ABSENT then
@@ -183,6 +188,8 @@ SAO.Hash = {
         return bit.band(self.hash, bit.bnot(HASH_AURA_MASK)) + HASH_AURA_ANY;
     end,
 
+    -- Action Usable
+
     hasActionUsable = function(self)
         return bit.band(self.hash, HASH_ACTION_USABLE_MASK) ~= 0;
     end,
@@ -192,16 +199,18 @@ SAO.Hash = {
             SAO:Warn(Module, "Invalid Action Usable flag "..tostring(usable));
         else
             local maskedHash = usable and HASH_ACTION_USABLE_YES or HASH_ACTION_USABLE_NO;
-            self:setMaskedHash(maskedHash, HASH_ACTION_USABLE_MASK);
+            setMaskedHash(self, maskedHash, HASH_ACTION_USABLE_MASK);
         end
     end,
 
     isActionUsable = function(self)
-        local maskedHash = self:getMaskedHash(HASH_ACTION_USABLE_MASK);
+        local maskedHash = getMaskedHash(self, HASH_ACTION_USABLE_MASK);
         if maskedHash == nil then return nil; end
 
         return maskedHash == HASH_ACTION_USABLE_YES;
     end,
+
+    -- Holy Power
 
     hasHolyPower = function(self)
         return bit.band(self.hash, HASH_HOLY_POWER_MASK) ~= 0;
@@ -212,18 +221,20 @@ SAO.Hash = {
             SAO:Warn(Module, "Invalid Holy Power "..tostring(holyPower));
         elseif holyPower > 3 then
             SAO:Debug(Module, "Holy Power overflow ("..holyPower..") truncated to 3");
-            self:setMaskedHash(HASH_HOLY_POWER_3, HASH_HOLY_POWER_MASK);
+            setMaskedHash(self, HASH_HOLY_POWER_3, HASH_HOLY_POWER_MASK);
         else
-            self:setMaskedHash(HASH_HOLY_POWER_0 * (1 + holyPower), HASH_HOLY_POWER_MASK);
+            setMaskedHash(self, HASH_HOLY_POWER_0 * (1 + holyPower), HASH_HOLY_POWER_MASK);
         end
     end,
 
     getHolyPower = function(self)
-        local maskedHash = self:getMaskedHash(HASH_HOLY_POWER_MASK);
+        local maskedHash = getMaskedHash(self, HASH_HOLY_POWER_MASK);
         if maskedHash == nil then return nil; end
 
         return (maskedHash / HASH_HOLY_POWER_0) - 1;
     end,
+
+    -- String Conversion functions
 
     toString = function(self)
         local result = "";
