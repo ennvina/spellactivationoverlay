@@ -94,6 +94,12 @@ SAO.Bucket = {
         self[self.displayedHash]:refresh();
     end,
 
+    checkCombat = function(self, inCombat)
+        if self.displayedHash then
+            self[self.displayedHash]:checkCombat(inCombat);
+        end
+    end,
+
     setStacks = function(self, stacks)
         if self.currentStacks == stacks then
             return;

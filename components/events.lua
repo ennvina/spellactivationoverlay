@@ -143,10 +143,20 @@ end
 
 function SAO.PLAYER_REGEN_ENABLED(self, ...)
     self:CheckAllCounterActions(true);
+
+    local inCombat = false; -- Cannot rely on InCombatLockdown() at this point
+    for _, bucket in pairs(self.RegisteredBucketsBySpellID) do
+        bucket:checkCombat(inCombat);
+    end
 end
 
 function SAO.PLAYER_REGEN_DISABLED(self, ...)
     self:CheckAllCounterActions(true);
+
+    local inCombat = true; -- Cannot rely on InCombatLockdown() at this point
+    for _, bucket in pairs(self.RegisteredBucketsBySpellID) do
+        bucket:checkCombat(inCombat);
+    end
 end
 
 -- Specific spellbook update
