@@ -667,6 +667,8 @@ local function RegisterNativeEffectNow(self, effect)
                 spellToAdd = spellID;
             end
 
+            self:RegisterGlowID(spellToAdd);
+
             local hash = getHash(button.condition, effect.triggers);
 
             self.BucketManager:addEffectButton(bucket, hash, spellToAdd, combatOnly);

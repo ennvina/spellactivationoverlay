@@ -34,23 +34,29 @@ SAO.RegisteredGlowSpellIDs = {}
 -- This helps fill or re-fill RegisteredGlowSpellIDs when e.g. a new spell rank is learned
 SAO.RegisteredGlowSpellNames = {}
 
+-- Register a glow ID
+-- Each ID is either a numeric value (spellID) or a string (spellName)
+function SAO.RegisterGlowID(self, glowID)
+    if (type(glowID) == "number") then
+        self.RegisteredGlowSpellIDs[glowID] = true;
+        self:AwakeButtonsBySpellID(glowID);
+    elseif (type(glowID) == "string") then
+        if (not SAO.RegisteredGlowSpellNames[glowID]) then
+            SAO.RegisteredGlowSpellNames[glowID] = true;
+            local glowSpellIDs = self:GetSpellIDsByName(glowID);
+            for _, glowSpellID in ipairs(glowSpellIDs) do
+                self.RegisteredGlowSpellIDs[glowSpellID] = true;
+                self:AwakeButtonsBySpellID(glowSpellID);
+            end
+        end
+    end
+end
+
 -- Register a list of glow ID
 -- Each ID is either a numeric value (spellID) or a string (spellName)
 function SAO.RegisterGlowIDs(self, glowIDs)
     for _, glowID in ipairs(glowIDs or {}) do
-        if (type(glowID) == "number") then
-            self.RegisteredGlowSpellIDs[glowID] = true;
-            self:AwakeButtonsBySpellID(glowID);
-        elseif (type(glowID) == "string") then
-            if (not SAO.RegisteredGlowSpellNames[glowID]) then
-                SAO.RegisteredGlowSpellNames[glowID] = true;
-                local glowSpellIDs = self:GetSpellIDsByName(glowID);
-                for _, glowSpellID in ipairs(glowSpellIDs) do
-                    self.RegisteredGlowSpellIDs[glowSpellID] = true;
-                    self:AwakeButtonsBySpellID(glowSpellID);
-                end
-            end
-        end
+        self:RegisterGlowID(glowID);
     end
 end
 
