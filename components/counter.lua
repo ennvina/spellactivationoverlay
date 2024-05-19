@@ -35,8 +35,7 @@ SAO.CounterRetryTimers = {};
 -- If the action is triggered by an aura, it will already activate during buff
 -- The spellID is taken from the aura's table
 -- @param bucketName name of the registered bucket
--- @param talent talent object { tab, index } to check when counter triggers; may be nil
-function SAO:RegisterCounter(bucketName, talent)
+function SAO:RegisterCounter(bucketName)
     local bucket = self:GetBucketByName(bucketName);
     if not bucket then
         self:Error(Module, "Cannot find a bucket for counter "..tostring(bucketName));
@@ -47,6 +46,8 @@ function SAO:RegisterCounter(bucketName, talent)
     end
 
     local display = bucket[2] or bucket[1];
+
+    local talent = bucket.requireTalent and bucket.talentTabIndex or nil;
 
     local combatOnly = display.combatOnly;
 

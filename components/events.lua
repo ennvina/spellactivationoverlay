@@ -94,6 +94,13 @@ function SAO.COMBAT_LOG_EVENT_UNFILTERED(self, ...)
     end
 end
 
+function SAO.PLAYER_TALENT_UPDATE(self, ...)
+    local buckets = SAO:GetBucketsByTrigger(SAO.TRIGGER_TALENT);
+    for _, bucket in ipairs(buckets) do
+        bucket.trigger:manualCheck(SAO.TRIGGER_TALENT);
+    end
+end
+
 local arePendingEffectsRegistered = false;
 function SAO.LOADING_SCREEN_DISABLED(self, ...)
     -- Register effects right after the loading screen ends
@@ -109,7 +116,7 @@ function SAO.LOADING_SCREEN_DISABLED(self, ...)
     -- If it is possible to create effects after this point, this kind of manual checks should be called there too
     for _, bucket in pairs(self.RegisteredBucketsBySpellID) do
         if bucket.trigger.required ~= 0 then
-            bucket.trigger:manualCheck();
+            bucket.trigger:manualCheckAll();
         end
     end
 
@@ -120,7 +127,7 @@ function SAO.LOADING_SCREEN_DISABLED(self, ...)
     --     if not self:IsFakeSpell(spellID) and not self:HasPlayerAuraBySpellID(spellID) then
     --         local bucket = self:GetBucketBySpellID(spellID);
     --         if bucket.trigger.required ~= 0 then
-    --             bucket.trigger:manualCheck();
+    --             bucket.trigger:manualCheckAll();
     --         end
     --     end
     -- end

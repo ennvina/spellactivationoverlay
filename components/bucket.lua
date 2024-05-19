@@ -26,13 +26,16 @@ SAO.Bucket = {
             -- Spell ID is the main identifier to activate/deactivate visuals
             spellID = spellID,
 
+            -- Talent Tab-Index is an option object { tab, index } telling the talent location in the player's tree
+            talentTabIndex = nil,
+
             -- Stack-agnostic means the bucket does not care about its number of stacks
             stackAgnostic = true, -- @todo revisit code which used countAgnostic
 
-
             -- Initialize current state with unattainable values
             currentStacks = -1,
-            currentCounter = nil,
+            currentTalented = nil,
+            currentActionUsable = nil,
             currentHolyPower = nil,
 
             -- Initially, nothing is displayed
@@ -66,6 +69,10 @@ SAO.Bucket = {
         return self[hash.hash];
     end,
 
+    setTalentInfo = function(self, tab, index)
+        self.talentTabIndex = { tab, index };
+    end,
+
     refresh = function(self) -- @todo change existing code which called refresh(stacks) to now refresh()
         if self.displayedHash == nil then
             -- Nothing to refresh if nothing is displayed
@@ -88,6 +95,16 @@ SAO.Bucket = {
         self.currentStacks = stacks;
         self.trigger:inform(SAO.TRIGGER_AURA);
         self.hashCalculator:setAuraStacks(stacks, self.stackAgnostic);
+        self:applyHash();
+    end,
+
+    setTalented = function(self, talented)
+        if self.currentTalented == talented then
+            return;
+        end
+        self.currentTalented = talented;
+        self.trigger:inform(SAO.TRIGGER_TALENT);
+        self.hashCalculator:setTalented(talented);
         self:applyHash();
     end,
 
@@ -190,7 +207,7 @@ SAO.BucketManager = {
         local bucket, created = self:getOrCreateBucket(aura.name, aura.spellID);
 
         if created and not SAO:IsFakeSpell(aura.spellID) then
-            bucket.trigger:add(SAO.TRIGGER_AURA);
+            bucket.trigger:require(SAO.TRIGGER_AURA);
         end
 
         local displayHash = SAO.Hash:new();

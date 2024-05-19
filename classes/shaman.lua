@@ -181,6 +181,7 @@ local function registerClass(self)
         "counter_with_overlay",
         {
             talent = 77756, -- Lava Surge (talent)
+            requireTalent = true,
             combatOnly = true,
             overlay = { texture = "imp_empowerment", position = "Left + Right (Flipped)" },
         }

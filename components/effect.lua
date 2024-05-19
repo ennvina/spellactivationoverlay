@@ -10,6 +10,7 @@ local Module = "effect"
     project = SAO.WRATH + SAO.CATA, -- Mandatory
     spellID = 12345, -- Mandatory; usually a buff to track, for counters this is the counter ability
     talent = 49188, -- Talent or rune or nil (for counters that don't rely on other talent)
+    requireTalent = false, -- Default is false
     counter = false, -- Default is false
     combatOnly = false, -- Default is false
     minor = false, -- Default is false; tells the effect is minor, and should not have any option
@@ -226,6 +227,19 @@ local function importTalent(effect, props)
     else
         effect.talent = effect.spellID;
     end
+
+    if type(props.requireTalent) == 'boolean' then
+        effect.requireTalent = props.requireTalent;
+    elseif type(props.requireTalent) == 'table' then
+        for project, requireTalent in pairs(props.requireTalent) do
+            if SAO.IsProject(project) then
+                effect.requireTalent = requireTalent;
+                break;
+            end
+        end
+    else
+        effect.requireTalent = false;
+    end
 end
 
 local function importOverlays(effect, props)
@@ -342,6 +356,10 @@ local function checkNativeEffect(effect)
         SAO:Error(Module, "Registering effect "..effect.name.." with invalid talent "..tostring(effect.talent));
         return false;
     end
+    if effect.requireTalent ~= nil and type(effect.requireTalent) ~= 'boolean' then
+        SAO:Error(Module, "Registering effect "..effect.name.." with invalid talent requirement flag "..tostring(effect.requireTalent));
+        return false;
+    end
     if effect.minor ~= nil and type(effect.minor) ~= 'boolean' then
         SAO:Error(Module, "Registering effect "..effect.name.." with invalid minor flag "..tostring(effect.minor));
         return nil;
@@ -418,6 +436,11 @@ local function checkNativeEffect(effect)
             SAO:Error(Module, "Registering effect "..effect.name.." for button "..i.." with invalid spellID "..tostring(button.spellID));
             return false;
         end
+    end
+
+    if effect.requireTalent and not effect.talent then
+        SAO:Error(Module, "Registering effect "..effect.name.." with talent requirement, but no talent is pointed out in the talent tree");
+        return false;
     end
 
     return true;
@@ -525,15 +548,20 @@ local function RegisterNativeEffectNow(self, effect)
         SAO:Error(Module, "Effect "..tostring(effect.name).." has defined "..#glowBucket.." button(s) for stacks == "..tostring(stacks)..", but these buttons are unused");
     end
 
-    if effect.counter == true then
-        local talent;
-        if effect.talent then
-            local _, _, tab, index = self:GetTalentByName(GetSpellInfo(effect.talent));
-            if type(tab) == 'number' and type(index) == 'number' then
-                talent = { tab, index };
-            end
+    if effect.talent and effect.requireTalent then
+        local talentName = GetSpellInfo(effect.talent);
+        local _, _, tab, index = self:GetTalentByName(talentName);
+        if type(tab) == 'number' and type(index) == 'number' then
+            local bucket = self:GetBucketByName(effect.name);
+            bucket.talentTabIndex = { tab, index };
+            bucket.trigger:require(SAO.TRIGGER_TALENT);
+        elseif effect.requireTalent then
+            self:Error(Module, "Effect "..tostring(effect.name).." requires talent "..effect.talent..(talentName and "("..talentName..")" or "")..", but it cannot be found in the talent tree");
         end
-        self:RegisterCounter(effect.name, talent);
+    end
+
+    if effect.counter == true then
+        self:RegisterCounter(effect.name);
     end
 
     table.insert(allEffects, effect);
