@@ -695,6 +695,10 @@ function SAO:RegisterNativeEffect(effect)
 
     if hasPlayerLoggedIn then
         RegisterNativeEffectNow(self, effect);
+        local bucket = self:GetBucketByName(effect.name);
+        if bucket then
+            bucket.trigger:manualCheckAll();
+        end
     else
         table.insert(pendingEffects, effect);
     end
