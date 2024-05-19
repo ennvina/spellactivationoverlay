@@ -56,8 +56,11 @@ SAO.Bucket = {
     end,
 
     getOrCreateDisplay = function(self, hash)
+        local created = false;
+
         if not self[hash.hash] then
             self[hash.hash] = SAO.Display:new(self, hash.hash);
+
             if hash:hasAuraStacks() then
                 local stacks = hash:getAuraStacks();
                 if stacks and stacks > 0 then
@@ -65,8 +68,11 @@ SAO.Bucket = {
                     self.stackAgnostic = false;
                 end
             end
+
+            created = true;
         end
-        return self[hash.hash];
+
+        return self[hash.hash], created;
     end,
 
     setTalentInfo = function(self, tab, index)
@@ -224,6 +230,18 @@ SAO.BucketManager = {
         end
     end,
 
+    addEffectOverlay = function(self, bucket, hash, overlay, combatOnly)
+        local display = bucket:getOrCreateDisplay(hash);
+        display:addOverlay(overlay);
+        display:setCombatOnly(combatOnly);
+    end,
+
+    addEffectButton = function(self, bucket, hash, button, combatOnly)
+        local display = bucket:getOrCreateDisplay(hash);
+        display:addButton(button);
+        display:setCombatOnly(combatOnly);
+    end,
+
     getOrCreateBucket = function(self, name, spellID)
         local bucket = SAO.RegisteredBucketsBySpellID[spellID];
         local created = false;
@@ -283,8 +301,8 @@ function SpellActivationOverlay_DumpBuckets(devDump)
             DevTools_Dump({ [spellID] = bucket });
         else
             local str = bucket.name..", "..
-                "currentHash == "..tostring(bucket.currentHash).." == "..SAO.Hash:new(bucket.currentHash):toString()..", "..
-                "displayedHash == "..tostring(bucket.displayedHash).." == "..SAO.Hash:new(bucket.displayedHash):toString()..", "..
+                "currentHash == "..tostring(bucket.currentHash)..(bucket.currentHash and " == "..SAO.Hash:new(bucket.currentHash):toString() or "")..", "..
+                "displayedHash == "..tostring(bucket.displayedHash)..(bucket.displayedHash and " == "..SAO.Hash:new(bucket.displayedHash):toString() or "")..", "..
                 "triggerRequired == "..tostring(bucket.trigger.required)..", "..
                 "triggerInformed == "..tostring(bucket.trigger.informed);
             SAO:Info(Module, str);

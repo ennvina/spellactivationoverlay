@@ -47,7 +47,7 @@ function SAO:RegisterCounter(bucketName)
 
     local display = bucket[2] or bucket[1];
 
-    local talent = bucket.requireTalent and bucket.talentTabIndex or nil;
+    local talent = bucket.triggers:reactsWith(SAO.TRIGGER_TALENT) and bucket.talentTabIndex or nil;
 
     local combatOnly = display.combatOnly;
 

@@ -11,16 +11,21 @@ SAO.TRIGGER_ACTION_USABLE = 0x2
 SAO.TRIGGER_TALENT        = 0x4
 SAO.TRIGGER_HOLY_POWER    = 0x8
 
-local TriggerNames = {
+SAO.TriggerNames = {
     [SAO.TRIGGER_AURA         ] = "aura",
-    [SAO.TRIGGER_ACTION_USABLE] = "counter",
+    [SAO.TRIGGER_ACTION_USABLE] = "action",
     [SAO.TRIGGER_TALENT       ] = "talent",
-    [SAO.TRIGGER_HOLY_POWER   ] = "resource",
+    [SAO.TRIGGER_HOLY_POWER   ] = "holyPower",
 }
 
+SAO.TriggerFlags = {} -- Transpose index for fast lookup in both directions
+for flag, name in pairs(SAO.TriggerNames) do
+    SAO.TriggerFlags[name] = flag;
+end
+
 -- Check that flags are not overlapping with one another
-for flag1, name1 in pairs(TriggerNames) do
-    for flag2, name2 in pairs(TriggerNames) do
+for flag1, name1 in pairs(SAO.TriggerNames) do
+    for flag2, name2 in pairs(SAO.TriggerNames) do
         if flag2 > flag1 and bit.band(flag1, flag2) ~= 0 then
             local x1 = string.format('0x%X', flag1);
             local x2 = string.format('0x%X', flag2);
@@ -31,7 +36,7 @@ end
 
 -- List of lists of buckets requiring each type of trigger
 SAO.RegisteredBucketsByTrigger = {};
-for flag, _ in pairs(TriggerNames) do
+for flag, _ in pairs(SAO.TriggerNames) do
     SAO.RegisteredBucketsByTrigger[flag] = {}
 end
 
@@ -90,7 +95,7 @@ SAO.Trigger = {
     end,
 
     require = function(self, flag)
-        local name = TriggerNames[flag];
+        local name = SAO.TriggerNames[flag];
         if not name then
             SAO:Error(Module, "Unknown trigger "..tostring(flag));
             return;
@@ -113,7 +118,7 @@ SAO.Trigger = {
     end,
 
     inform = function(self, flag)
-        local name = tostring(TriggerNames[flag] or flag);
+        local name = tostring(SAO.TriggerNames[flag] or flag);
         if bit.bor(self.required, flag) ~= self.required then
             SAO:Error(Module, "Informing unsupported trigger "..name.." for "..self.parent.description);
             return;
@@ -127,7 +132,7 @@ SAO.Trigger = {
     end,
 
     uninform = function(self, flag) -- @todo remove code maybe, probably dead code. Who needs to un-inform?
-        local name = tostring(TriggerNames[flag] or flag);
+        local name = tostring(SAO.TriggerNames[flag] or flag);
         if bit.band(self.required, flag) ~= self.required then
             return;
         end
@@ -151,13 +156,13 @@ SAO.Trigger = {
         end
 
         -- Reset informed flags to avoid premature show/hide when parsing all trigger functions
-        for flag, name in pairs(TriggerNames) do
+        for flag, name in pairs(SAO.TriggerNames) do
             if bit.band(flag, flags) then
                 self.informed = bit.band(self.informed, bit.bnot(flag));
             end
         end
 
-        for flag, name in pairs(TriggerNames) do
+        for flag, name in pairs(SAO.TriggerNames) do
             if bit.band(flag, flags) ~= 0 and self:reactsWith(flag) then
                 TriggerManualChecks[flag](self.parent);
             end
@@ -172,7 +177,7 @@ SAO.Trigger = {
 
         self.informed = 0; -- Reset informed flags to avoid premature show/hide when parsing all trigger functions
 
-        for flag, name in pairs(TriggerNames) do
+        for flag, name in pairs(SAO.TriggerNames) do
             if self:reactsWith(flag) then
                 TriggerManualChecks[flag](self.parent);
             end

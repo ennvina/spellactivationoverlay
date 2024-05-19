@@ -10,13 +10,25 @@ local Module = "effect"
     project = SAO.WRATH + SAO.CATA, -- Mandatory
     spellID = 12345, -- Mandatory; usually a buff to track, for counters this is the counter ability
     talent = 49188, -- Talent or rune or nil (for counters that don't rely on other talent)
-    requireTalent = false, -- Default is false
     counter = false, -- Default is false
     combatOnly = false, -- Default is false
     minor = false, -- Default is false; tells the effect is minor, and should not have any option
 
+    triggers = { -- Default is false for every trigger; at least one trigger must be set
+        aura = true, -- The aura with spell ID 'spellID' is gained or lost by the player
+        action = false, -- The action with spell ID 'spellID' is usable or not
+        talent = false, -- The player spent at least one point in effect's talent, or spent none
+        holyPower = false, -- Number of charges of Holy Power (Paladin only, Cataclysm)
+    },
+
     overlays = {{
-        stacks = 0, -- Default is 0
+        project = SAO.WRATH, -- Default is project from effect
+        condition = { -- Default is the default value for each trigger defined in 'triggers'
+            aura = 0, -- Default is 0. -1 for 'aura missing', 0 for 'any stacks', 1 or more tells the number of stacks
+            action = nil, -- Default is true. true for action usable, false for action not usable
+            talent = nil, -- Default is true. true for talent picked (at least one point), false for talent not picked
+            holyPower = nil, -- Default is 3
+        },
         spellID = nil, -- Default is spellID from effect
         texture = "genericarc_05", -- Mandatory
         position = "Top", -- Mandatory
@@ -33,9 +45,9 @@ local Module = "effect"
 
     buttons = {{
         project = SAO.WRATH, -- Default is project from effect
+        condition = {}, -- Default is the default value for each trigger. See above comment of 'overlays.condition'
         spellID = 1111, -- Default is spellID from effect
         useName = true, -- Default is false from Era to Wrath, default is true starting from Cataclysm
-        stacks = 0, -- Default is nil to apply to all overlays (if any); may target one of the stacks from overlays
         option = { -- Default is true
             talentSubText = "no stacks", -- Default is nil; if option is not set at all, try to guess a good stack count for SAO:NbStacks
             spellSubText = nil, -- Default is nil
@@ -135,15 +147,105 @@ local function getValueOrDefault(value, default)
     end
 end
 
-local function addOneOverlay(overlays, overlayConfig, project, default)
+local ConditionBuilders = {}
+local ConditionBuilder = {
+    register = function(self, nativeVar, humanReadableVar, defaultValue, hashSetter, description, checker)
+        local builder = {
+            nativeVar = nativeVar,
+            humanReadableVar = humanReadableVar,
+            hashSetter = hashSetter,
+            defaultValue = defaultValue,
+            description = description,
+            checker = checker,
+        }
+        self.__index = nil;
+        setmetatable(builder, self);
+        self.__index = self;
+        ConditionBuilders[nativeVar] = builder;
+    end,
+
+    -- Value fetched by CreateEffect to transform a Human Readable Effect into a Native Optimized Effect
+    getHumanReadableValue = function(self, config, default)
+        local value = config[self.humanReadableVar];
+        if value == nil then
+            value = default[self.humanReadableVar];
+        end
+        if type(value) ~= 'nil' and not self.checker(value) then
+            SAO:Error(Module, "Building condition with invalid "..self.description.." "..tostring(value));
+        end
+        return value;
+    end,
+
+    -- Value fetched by RegisterNativeEffectNow to use a Native Optimized Effect to create an overlay or button
+    getNativeValue = function(self, object) -- Object is either an overlay or button
+        local value = object[self.nativeVar];
+        if value == nil then
+            value = self.defaultValue;
+        end
+        if type(value) ~= 'nil' and not self.checker(value) then
+            SAO:Error(Module, "Using invalid "..self.description.." "..tostring(value));
+        end
+        return value;
+    end,
+
+    -- Update a hash with specified value
+    setHashValue = function(self, hash, value)
+        hash[self.hashSetter](hash, value);
+    end,
+}
+
+ConditionBuilder:register(
+    "aura", -- Name used by NOE
+    "stacks", -- Name used by HRE
+    0, -- Default (NOE only)
+    "setAuraStacks", -- Setter method for Hash
+    "number of stacks",
+    function(value) return type(value) == 'number' and value >= -1 and value <= 99 end
+);
+ConditionBuilder:register(
+    "action", -- Name used by NOE
+    "actionUsable", -- Name used by HRE
+    true, -- Default (NOE only)
+    "setActionUsable", -- Setter method for Hash
+    "action usable flag",
+    function(value) return type(value) == 'boolean' end
+);
+ConditionBuilder:register(
+    "talent", -- Name used by NOE
+    "requireTalent", -- Name used by HRE
+    true, -- Default (NOE only)
+    "setTalented", -- Setter method for Hash
+    "talent flag",
+    function(value) return type(value) == 'boolean' end
+);
+ConditionBuilder:register(
+    "holyPower", -- Name used by NOE
+    "holyPower", -- Name used by HRE
+    0, -- Default (NOE only)
+    "setHolyPower", -- Setter method for Hash
+    "Holy Power value",
+    function(value) return type(value) == 'number' and value >= 0 and value <= 3 end
+);
+
+local function getCondition(config, default, triggers)
+    local condition = {}
+
+    for _, builder in ipairs(ConditionBuilders) do
+        if triggers[builder.nativeVar] then
+            local value = builder:getHumanReadableValue(config, default);
+            condition[builder.nativeVar] = value;
+        end
+    end
+
+    return condition;
+end
+
+local function addOneOverlay(overlays, overlayConfig, project, default, triggers)
     if not default then
         default = {}
     end
 
-    local stacks = overlayConfig.stacks or default.stacks;
-    if type(stacks) ~= 'nil' and (type(stacks) ~= 'number' or stacks < 0) then
-        SAO:Error(Module, "Adding Overlay with invalid number of stacks "..tostring(stacks));
-    end
+    local condition = getCondition(overlayConfig, default, triggers);
 
     local texture = overlayConfig.texture or default.texture;
     if type(texture) ~= 'string' then
@@ -165,7 +267,7 @@ local function addOneOverlay(overlays, overlayConfig, project, default)
 
     local overlay = {
         project = overlayConfig.project or project, -- Note: cannot have a 'default.project'
-        stacks = stacks,
+        condition = condition,
         texture = texture,
         position = position,
         scale = overlayConfig.scale or default.scale,
@@ -181,10 +283,12 @@ local function addOneOverlay(overlays, overlayConfig, project, default)
     table.insert(overlays, overlay);
 end
 
-local function addOneButton(buttons, buttonConfig, project, default)
+local function addOneButton(buttons, buttonConfig, project, default, triggers)
     if not default then
         default = {}
     end
+
+    local condition;
 
     if type(buttonConfig) == 'table' then
         local spellID = buttonConfig.spellID or default.spellID;
@@ -196,9 +300,14 @@ local function addOneButton(buttons, buttonConfig, project, default)
         if option ~= nil and type(option) ~= 'boolean' and type(option) ~= 'table' then
             SAO:Error(Module, "Adding Button with invalid option "..tostring(option));
         end
+        condition = getCondition(buttonConfig, default, triggers);
+    else
+        condition = getCondition({}, default, triggers);
     end
 
-    local button = {};
+    local button = {
+        condition = condition,
+    };
 
     if type(buttonConfig) == 'number' then
         button.project = project; -- Note: cannot have a 'default.project'
@@ -238,23 +347,23 @@ local function importTalent(effect, props)
     end
 
     if type(props.requireTalent) == 'boolean' then
-        effect.requireTalent = props.requireTalent;
+        effect.triggers.talent = props.requireTalent;
     elseif type(props.requireTalent) == 'table' then
         for project, requireTalent in pairs(props.requireTalent) do
             if SAO.IsProject(project) then
-                effect.requireTalent = requireTalent;
+                effect.triggers.talent = requireTalent;
                 break;
             end
         end
     else
-        effect.requireTalent = false;
+        effect.triggers.talent = false;
     end
 end
 
 local function importOverlays(effect, props)
     effect.overlays = {}
     if props.overlay then
-        addOneOverlay(effect.overlays, props.overlay);
+        addOneOverlay(effect.overlays, props.overlay, nil, nil, effect.triggers);
     end
     local default = props.overlays and props.overlays.default or nil;
     for key, overlayConfig in pairs(props.overlays or {}) do
@@ -262,13 +371,13 @@ local function importOverlays(effect, props)
             if type(key) == 'number' and key >= SAO.ERA then
                 if type(overlayConfig) == 'table' and overlayConfig[1] then
                     for _, subOverlayConfig in ipairs(overlayConfig) do
-                        addOneOverlay(effect.overlays, subOverlayConfig, key, overlayConfig.default or default);
+                        addOneOverlay(effect.overlays, subOverlayConfig, key, overlayConfig.default or default, effect.triggers);
                     end
                 else
-                    addOneOverlay(effect.overlays, overlayConfig, key, default);
+                    addOneOverlay(effect.overlays, overlayConfig, key, default, effect.triggers);
                 end
             else
-                addOneOverlay(effect.overlays, overlayConfig, nil, default);
+                addOneOverlay(effect.overlays, overlayConfig, nil, default, effect.triggers);
             end
         end
     end
@@ -277,7 +386,7 @@ end
 local function importButtons(effect, props)
     effect.buttons = {}
     if props.button then
-        addOneButton(effect.buttons, props.button);
+        addOneButton(effect.buttons, props.button, nil, nil, effect.triggers);
     end
     local default = props.buttons and props.buttons.default or nil;
     for key, buttonConfig in pairs(props.buttons or {}) do
@@ -285,13 +394,13 @@ local function importButtons(effect, props)
             if type(key) == 'number' and key >= SAO.ERA then
                 if type(buttonConfig) == 'table' and buttonConfig[1] then
                     for _, subButtonConfig in ipairs(buttonConfig) do
-                        addOneButton(effect.buttons, subButtonConfig, key, buttonConfig.default or default);
+                        addOneButton(effect.buttons, subButtonConfig, key, buttonConfig.default or default, effect.triggers);
                     end
                 else
-                    addOneButton(effect.buttons, buttonConfig, key, default);
+                    addOneButton(effect.buttons, buttonConfig, key, default, effect.triggers);
                 end
             else
-                addOneButton(effect.buttons, buttonConfig, nil, default);
+                addOneButton(effect.buttons, buttonConfig, nil, default, effect.triggers);
             end
         end
     end
@@ -321,6 +430,8 @@ local function createAura(effect, props)
         SAO:Error(Module, "Creating an aura for "..tostring(effect.name).." requires a 'props' table");
     end
 
+    effect.triggers.aura = true;
+
     importTalent(effect, props);
 
     importOverlays(effect, props);
@@ -344,6 +455,20 @@ local function createCounterWithOverlay(effect, props)
     return effect;
 end
 
+local function getHash(condition, triggers)
+    local hash = SAO.Hash:new();
+
+    for trigger, enabled in pairs(triggers) do
+        if enabled then
+            local builder = ConditionBuilders[trigger];
+            local value = builder:getNativeValue(condition);
+            builder:setHashValue(hash, value);
+        end
+    end
+
+    return hash;
+end
+
 local function checkNativeEffect(effect)
     if type(effect) ~= 'table' then
         SAO:Error(Module, "Registering invalid effect "..tostring(effect));
@@ -365,10 +490,6 @@ local function checkNativeEffect(effect)
         SAO:Error(Module, "Registering effect "..effect.name.." with invalid talent "..tostring(effect.talent));
         return false;
     end
-    if effect.requireTalent ~= nil and type(effect.requireTalent) ~= 'boolean' then
-        SAO:Error(Module, "Registering effect "..effect.name.." with invalid talent requirement flag "..tostring(effect.requireTalent));
-        return false;
-    end
     if effect.minor ~= nil and type(effect.minor) ~= 'boolean' then
         SAO:Error(Module, "Registering effect "..effect.name.." with invalid minor flag "..tostring(effect.minor));
         return nil;
@@ -381,12 +502,35 @@ local function checkNativeEffect(effect)
         SAO:Error(Module, "Registering effect "..effect.name.." with no buttons despite being a counter");
         return false;
     end
+    if type(effect.triggers) ~= 'table' then
+        SAO:Error(Module, "Registering effect "..effect.name.." with invalid trigger list");
+        return false;
+    end
     if effect.overlays and type(effect.overlays) ~= 'table' then
         SAO:Error(Module, "Registering effect "..effect.name.." with invalid overlay list");
         return false;
     end
     if effect.buttons and type(effect.buttons) ~= 'table' then
         SAO:Error(Module, "Registering effect "..effect.name.." with invalid button list");
+        return false;
+    end
+
+    local nbTriggers = 0;
+    for name, enabled in pairs(effect.triggers) do
+        if not tContains(SAO.TriggerNames, name) then
+            SAO:Error(Module, "Registering effect "..effect.name.." with unknown trigger "..tostring(name));
+            return false;
+        end
+        if type(enabled) ~= 'boolean' then
+            SAO:Error(Module, "Registering effect "..effect.name.." for trigger "..tostring(name).." with invalid value "..tostring(enabled));
+            return false;
+        end
+        if enabled then
+            nbTriggers = nbTriggers + 1;
+        end
+    end
+    if nbTriggers == 0 then
+        SAO:Error(Module, "Registering effect "..effect.name.." without any trigger enabled in the list of triggers");
         return false;
     end
 
@@ -400,7 +544,7 @@ local function checkNativeEffect(effect)
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid spellID "..tostring(overlay.spellID));
             return false;
         end
-        if type(overlay.stacks) ~= 'nil' and (type(overlay.stacks) ~= 'number' or overlay.stacks < 0) then
+        if type(overlay.stacks) ~= 'nil' and (type(overlay.stacks) ~= 'number' or overlay.stacks < -1 or overlay.stacks > 99) then
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid number of stacks "..tostring(overlay.stacks));
             return false;
         end
@@ -418,8 +562,12 @@ local function checkNativeEffect(effect)
             end
             hasStacksNonZero = true;
         end
-        if type(overlay.texture) ~= 'string' then -- @todo check the texture even exists
+        if type(overlay.texture) ~= 'string' then
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid texture name "..tostring(overlay.texture));
+            return false;
+        end
+        if SAO.TexName[overlay.texture] == nil then
+            SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with unknown texture name "..tostring(overlay.texture));
             return false;
         end
         if type(overlay.position) ~= 'string' then -- @todo check the position is one of the allowed values
@@ -447,7 +595,7 @@ local function checkNativeEffect(effect)
         end
     end
 
-    if effect.requireTalent and not effect.talent then
+    if effect.triggers.talent and not effect.talent then
         SAO:Error(Module, "Registering effect "..effect.name.." with talent requirement, but no talent is pointed out in the talent tree");
         return false;
     end
@@ -456,6 +604,17 @@ local function checkNativeEffect(effect)
 end
 
 local function RegisterNativeEffectNow(self, effect)
+    local bucket, created = self.BucketManager:getOrCreateBucket(effect.name, effect.spellID);
+    if not created then
+        self:Warn(Module, "Overwriting bucket "..bucket.description);
+    end
+
+    for name, enabled in pairs(effect.triggers) do
+        if enabled then
+            bucket.trigger:require(SAO.TriggerFlags[name]);
+        end
+    end
+
     -- Buckets of glow IDs, sorted by their number of stacks
     -- Key = Nb of stacks, Value = List of glow IDs
     -- Stack index is guided by available overlays; if there are no overlays, index from button stacks instead
@@ -526,11 +685,7 @@ local function RegisterNativeEffectNow(self, effect)
 
     for _, overlay in ipairs(effect.overlays or {}) do
         if not overlay.project or self.IsProject(overlay.project) then
-            local name = effect.name;
-            local stacks = overlay.stacks or 0;
-            if stacks > 0 then
-                name = name.." "..stacks; -- @todo Stop appending stacks to name
-            end
+            local stacks = overlay.condition.stacks or 0;
             local spellID = overlay.spellID or effect.spellID;
             local texture = overlay.texture;
             local position = overlay.position;
@@ -539,32 +694,53 @@ local function RegisterNativeEffectNow(self, effect)
             if overlay.color then r, g, b = overlay.color[1], overlay.color[2], overlay.color[3] end
             local autoPulse = overlay.pulse ~= false;
             local combatOnly = overlay.combatOnly == true or effect.combatOnly == true;
-            self:RegisterAura(name, stacks, spellID, texture, position, scale, r, g, b, autoPulse, glowIDsByStack[stacks], combatOnly);
-            glowIDsByStack[stacks] = nil; -- Immediately clear the glow ID list to avoid re-registering the same list on next overlay with same number of stacks
+
+            local hash = getHash(overlay.condition, effect.triggers);
+
+            local overlayPod = {
+                stacks = stacks, -- @todo replace with real hash
+                spellID = spellID,
+                texture = SAO.TexName[texture], -- Map from TexName
+                position = position,
+                scale = scale,
+                r = r, g = g, b = b,
+                autoPulse = autoPulse,
+                combatOnly = combatOnly,
+            }
+
+            self.BucketManager:addEffectOverlay(bucket, hash, overlayPod, combatOnly);
         end
     end
 
-    if not effect.overlays or #effect.overlays == 0 then
-        -- If there are no overlays, assume each button expects to have a trigger for their number of stacks
-        local combatOnly = effect.combatOnly == true;
-        for stacks, glowBucket in pairs(glowIDsByStack) do
-            self:RegisterAura(effect.name, stacks, effect.spellID, nil, "", 0, 0, 0, 0, false, glowBucket, combatOnly);
+    for _, button in ipairs(effect.buttons or {}) do
+        if not button.project or self.IsProject(button.project) then
+            local spellID = button.spellID or effect.spellID;
+            local useName = doesUseName(button.useName);
+            local combatOnly = effect.combatOnly == true;
+            local spellToAdd;
+            if useName then
+                local spellName = GetSpellInfo(spellID);
+                if not spellName then
+                    self:Warn(Module, "Registering effect "..effect.name.." for button with unknown spellID "..tostring(spellID));
+                    spellToAdd = spellID;
+                end
+                spellToAdd = spellName;
+            else
+                spellToAdd = spellID;
+            end
+
+            local hash = getHash(button.condition, effect.triggers);
+
+            self.BucketManager:addEffectButton(bucket, hash, spellToAdd, combatOnly);
         end
-        glowIDsByStack = {};
     end
 
-    for stacks, glowBucket in pairs(glowIDsByStack) do
-        self:Error(Module, "Effect "..tostring(effect.name).." has defined "..#glowBucket.." button(s) for stacks == "..tostring(stacks)..", but these buttons are unused");
-    end
-
-    if effect.talent and effect.requireTalent then
+    if effect.talent and effect.triggers.talent then
         local talentName = GetSpellInfo(effect.talent);
         local _, _, tab, index = self:GetTalentByName(talentName);
         if type(tab) == 'number' and type(index) == 'number' then
-            local bucket = self:GetBucketByName(effect.name);
             bucket.talentTabIndex = { tab, index };
-            bucket.trigger:require(SAO.TRIGGER_TALENT);
-        elseif effect.requireTalent then
+        else
             self:Error(Module, "Effect "..tostring(effect.name).." requires talent "..effect.talent..(talentName and "("..talentName..")" or "")..", but it cannot be found in the talent tree");
         end
     end
@@ -712,6 +888,7 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
         project = project,
         spellID = spellID,
         minor = type(props) == 'table' and props.minor,
+        triggers = {},
     }
 
     if strlower(class) == "counter" then

@@ -11,6 +11,7 @@
         "strlenutf8",
         "strlower",
         "strupper",
+        "tContains",
         "tDeleteItem",
         "tinsert",
         "tremove",

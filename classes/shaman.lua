@@ -207,7 +207,6 @@ local function registerClass(self)
                 { stacks = 2, texture = "high_tide", position = "Right (CW)", scale = 0.8, option = { setupStacks = 0, testStacks = 2 } },
             },
             buttons = {
-                default = { stacks = 0 },
                 [SAO.SOD+SAO.WRATH] = { lesserHealingWave, healingWave },
                 [SAO.CATA] = { greaterHealingWave, healingWave, healingSurge },
             },

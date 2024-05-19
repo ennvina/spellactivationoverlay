@@ -138,12 +138,13 @@ local function customLogin(self, ...)
         RiposteHandler:init(riposteSpellID, riposteSpellName);
 
         local _, _, tab, index = self:GetTalentByName(riposteSpellName);
-        local talent;
         if (type(tab) == "number" and type(index) == "number") then
-            talent = { tab, index };
+            local bucket = self:GetBucketByName("riposte");
+            bucket:setTalentInfo(tab, index);
+            bucket.trigger:require(SAO.TRIGGER_TALENT);
         end
 
-        self:RegisterCounter("riposte", talent); -- 1st arguement must match 1st argument passed to RegisterAura
+        self:RegisterCounter("riposte"); -- Must match 1st argument passed to RegisterAura
     end
 end
 

@@ -136,7 +136,7 @@ local function registerMoltenCore(self, rank)
                 { stacks = 3, texture = "molten_core", position = "Left + Right (Flipped)", option = overlayOption }, -- Same visuals as 2 charges
             },
             buttons = {
-                default = { stacks = 0, option = buttonOption },
+                default = { option = buttonOption },
                 [SAO.WRATH] = { incinerate, soulFire },
                 [SAO.CATA] = { incinerate },
             },
