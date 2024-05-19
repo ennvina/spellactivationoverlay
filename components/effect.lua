@@ -48,11 +48,20 @@ local Module = "effect"
     }},
 }
 
+    Creating an object is done by a higher level function, called CreateEffect.
+    CreateEffect translates human-readable effects (HREs) into Native Optimized Effects (NOEs).
+    Once created, an effect may not be registered immediately, due to lazy init (e.g. requires talent tree which is sent by the server later).
+    When an effect is registered, it gets 'promoted' with functions to perform operations like activating or deactivating.
 ]]
-local allEffects = {}
+local registeredEffects = {}
 
--- List of effects waiting to be added to allEffects
--- Cannot add them immediately to allEffects because the game is in need of other initialization, such as talent tree
+-- Same list, but sorted by effect name
+-- Unlike registeredEffects which was sorted by time of insertion, this list has a random order
+-- When order matters, registeredEffects should be preferred
+local registeredEffectsByName = {}
+
+-- List of effects waiting to be added to registeredEffects
+-- Cannot add them immediately to registeredEffects because the game is in need of other initialization, such as talent tree
 local pendingEffects = {}
 
 -- Flag to know when the player has logged in, detected by PLAYER_LOGIN event
@@ -485,7 +494,7 @@ local function RegisterNativeEffectNow(self, effect)
                 if useName then
                     local spellName = GetSpellInfo(spellID);
                     if not spellName then
-                        SAO:Error(Module, "Registering effect "..effect.name.." for button "..i.." with unknown spellID "..tostring(spellID));
+                        self:Error(Module, "Registering effect "..effect.name.." for button "..i.." with unknown spellID "..tostring(spellID));
                         return false;
                     end
                     spellToAdd = spellName;
@@ -502,7 +511,7 @@ local function RegisterNativeEffectNow(self, effect)
                 elseif stacks then
                     -- An explicit number of stacks will go directly to the target bucket
                     if not glowIDsByStack[stacks] then
-                        SAO:Error(Module, "A button of "..tostring(effect.name).." has a 'stacks' number unbeknownst to overlays");
+                        self:Error(Module, "A button of "..tostring(effect.name).." has a 'stacks' number unbeknownst to overlays");
                     end
                     table.insert(glowIDsByStack[stacks], spellToAdd);
                 else
@@ -520,13 +529,13 @@ local function RegisterNativeEffectNow(self, effect)
             local name = effect.name;
             local stacks = overlay.stacks or 0;
             if stacks > 0 then
-                name = name.." "..stacks;
+                name = name.." "..stacks; -- @todo Stop appending stacks to name
             end
             local spellID = overlay.spellID or effect.spellID;
             local texture = overlay.texture;
             local position = overlay.position;
             local scale = overlay.scale or 1;
-            local r, g, b = 255, 255, 255
+            local r, g, b = 255, 255, 255;
             if overlay.color then r, g, b = overlay.color[1], overlay.color[2], overlay.color[3] end
             local autoPulse = overlay.pulse ~= false;
             local combatOnly = overlay.combatOnly == true or effect.combatOnly == true;
@@ -545,7 +554,7 @@ local function RegisterNativeEffectNow(self, effect)
     end
 
     for stacks, glowBucket in pairs(glowIDsByStack) do
-        SAO:Error(Module, "Effect "..tostring(effect.name).." has defined "..#glowBucket.." button(s) for stacks == "..tostring(stacks)..", but these buttons are unused");
+        self:Error(Module, "Effect "..tostring(effect.name).." has defined "..#glowBucket.." button(s) for stacks == "..tostring(stacks)..", but these buttons are unused");
     end
 
     if effect.talent and effect.requireTalent then
@@ -564,7 +573,11 @@ local function RegisterNativeEffectNow(self, effect)
         self:RegisterCounter(effect.name);
     end
 
-    table.insert(allEffects, effect);
+    table.insert(registeredEffects, effect);
+    if registeredEffectsByName[effect.name] then
+        self:Warn(Module, "Registering multiple effects with same name "..tostring(effect.name));
+    end
+    registeredEffectsByName[effect.name] = effect;
 end
 
 function SAO:RegisterNativeEffect(effect)
@@ -596,7 +609,7 @@ function SAO:RegisterPendingEffectsAfterPlayerLoggedIn()
 end
 
 function SAO:AddEffectOptions()
-    for _, effect in ipairs(allEffects) do
+    for _, effect in ipairs(registeredEffects) do
         local talent = effect.talent;
         local skipOptions = effect.minor == true;
 
