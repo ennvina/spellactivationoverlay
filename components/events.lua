@@ -95,10 +95,7 @@ function SAO.COMBAT_LOG_EVENT_UNFILTERED(self, ...)
 end
 
 function SAO.PLAYER_TALENT_UPDATE(self, ...)
-    local buckets = SAO:GetBucketsByTrigger(SAO.TRIGGER_TALENT);
-    for _, bucket in ipairs(buckets) do
-        bucket.trigger:manualCheck(SAO.TRIGGER_TALENT);
-    end
+    self:CheckManuallyAllBuckets(SAO.TRIGGER_TALENT);
 end
 
 local arePendingEffectsRegistered = false;
@@ -114,11 +111,7 @@ function SAO.LOADING_SCREEN_DISABLED(self, ...)
     -- Check manually if buckets are triggered immediately after their creation (see above code)
     -- Or after a loading screen in-between zones, because CLEU may not trigger everything during a loading screen
     -- If it is possible to create effects after this point, this kind of manual checks should be called there too
-    for _, bucket in pairs(self.RegisteredBucketsBySpellID) do
-        if bucket.trigger.required ~= 0 then
-            bucket.trigger:manualCheckAll();
-        end
-    end
+    self:CheckManuallyAllBuckets();
 
     -- Check if auras are still there after a loading screen
     -- This circumvents a limitation of the CLEU which may not trigger during a loading screen
@@ -134,11 +127,15 @@ function SAO.LOADING_SCREEN_DISABLED(self, ...)
 end
 
 function SAO.PLAYER_ENTERING_WORLD(self, ...)
-    C_Timer.NewTimer(1, function() self:CheckAllCounterActions() end);
+    C_Timer.NewTimer(1, function()
+        self:CheckAllCounterActions();
+        self:CheckManuallyAllBuckets(SAO.TRIGGER_ACTION_USABLE);
+    end);
 end
 
 function SAO.SPELL_UPDATE_USABLE(self, ...)
     self:CheckAllCounterActions();
+    self:CheckManuallyAllBuckets(SAO.TRIGGER_ACTION_USABLE);
 end
 
 function SAO.PLAYER_REGEN_ENABLED(self, ...)

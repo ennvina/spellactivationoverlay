@@ -407,7 +407,7 @@ local function importButtons(effect, props)
 end
 
 local function createCounter(effect, props)
-    effect.counter = true;
+    effect.triggers.action = true;
 
     if type(props) == 'table' then
         effect.combatOnly = props.combatOnly;
@@ -493,14 +493,6 @@ local function checkNativeEffect(effect)
     if effect.minor ~= nil and type(effect.minor) ~= 'boolean' then
         SAO:Error(Module, "Registering effect "..effect.name.." with invalid minor flag "..tostring(effect.minor));
         return nil;
-    end
-    if effect.counter ~= true and type(effect.overlays) ~= "table" then
-        SAO:Error(Module, "Registering effect "..effect.name.." with no overlays and not as counter");
-        return false;
-    end
-    if effect.counter == true and (type(effect.buttons) ~= "table" or #effect.buttons == 0) then
-        SAO:Error(Module, "Registering effect "..effect.name.." with no buttons despite being a counter");
-        return false;
     end
     if type(effect.triggers) ~= 'table' then
         SAO:Error(Module, "Registering effect "..effect.name.." with invalid trigger list");
@@ -683,10 +675,6 @@ local function RegisterNativeEffectNow(self, effect)
         else
             self:Error(Module, "Effect "..tostring(effect.name).." requires talent "..effect.talent..(talentName and "("..talentName..")" or "")..", but it cannot be found in the talent tree");
         end
-    end
-
-    if effect.counter == true then
-        self:RegisterCounter(effect.name);
     end
 
     table.insert(registeredEffects, effect);

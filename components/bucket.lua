@@ -34,8 +34,8 @@ SAO.Bucket = {
 
             -- Initialize current state with unattainable values
             currentStacks = -1,
-            currentTalented = nil,
             currentActionUsable = nil,
+            currentTalented = nil,
             currentHolyPower = nil,
 
             -- Initially, nothing is displayed
@@ -107,6 +107,16 @@ SAO.Bucket = {
         self.currentStacks = stacks;
         self.trigger:inform(SAO.TRIGGER_AURA);
         self.hashCalculator:setAuraStacks(stacks, self.stackAgnostic);
+        self:applyHash();
+    end,
+
+    setActionUsable = function(self, usable)
+        if self.currentActionUsable == usable then
+            return;
+        end
+        self.currentActionUsable = usable;
+        self.trigger:inform(SAO.TRIGGER_ACTION_USABLE);
+        self.hashCalculator:setActionUsable(usable);
         self:applyHash();
     end,
 
@@ -292,6 +302,23 @@ function SAO:GetBucketBySpellIDOrSpellName(spellID, fallbackSpellName)
             spellID = bucket.spellID;
         end
         return bucket, spellID;
+    end
+end
+
+-- Perform a manual check on all buckets
+-- If 'trigger' is set, only to buckets requiring this trigger are visited, and they check only this trigger
+function SAO:CheckManuallyAllBuckets(trigger)
+    if trigger then
+        local buckets = SAO:GetBucketsByTrigger(trigger);
+        for _, bucket in ipairs(buckets) do
+            bucket.trigger:manualCheck(trigger);
+        end
+    else
+        for _, bucket in pairs(self.RegisteredBucketsBySpellID) do
+            if bucket.trigger.required ~= 0 then
+                bucket.trigger:manualCheckAll();
+            end
+        end
     end
 end
 

@@ -2,7 +2,10 @@ local AddonName, SAO = ...
 local Module = "trigger"
 
 -- Optimize frequent calls
+local GetSpellCooldown = GetSpellCooldown
+local GetSpellPowerCost = GetSpellPowerCost
 local GetTalentInfo = GetTalentInfo
+local IsUsableSpell = IsUsableSpell
 
 -- List of trigger flags, as bit field
 -- Start high enough to be able to index trigger flag to a list, and avoid confusion with stack counts
@@ -48,7 +51,11 @@ function SAO:GetBucketsByTrigger(flag)
     return buckets;
 end
 
+-- List of timers trying to retry manual checks of action usable
+local ActionRetryTimers = {}
+
 local TriggerManualChecks = {
+
     [SAO.TRIGGER_AURA] = function(bucket)
         local auraStacks = SAO:GetPlayerAuraStacksBySpellID(bucket.spellID);
         if auraStacks ~= nil then
@@ -61,9 +68,63 @@ local TriggerManualChecks = {
             bucket:setStacks(nil);
         end
     end,
+
     [SAO.TRIGGER_ACTION_USABLE] = function(bucket)
-        return false; -- @todo
+        local spellID = bucket.spellID;
+
+        if not SAO:IsSpellLearned(spellID) then
+            -- Spell not learned
+            bucket:setActionUsable(false);
+            return;
+        end
+
+        local start, duration, enabled, modRate = GetSpellCooldown(spellID);
+        if type(start) ~= "number" then
+            -- Spell not available
+            bucket:setActionUsable(false);
+            return;
+        end
+
+        local isActionUsable, notEnoughPower = IsUsableSpell(spellID);
+
+        local gcdDuration = SAO:GetGCD();
+        local isGCD = duration <= gcdDuration;
+        local isActionOnCD = start > 0 and not isGCD;
+
+        -- Non-mana spells and abilities should always be considered usable, regardless of player's current resources
+        local costsMana = false;
+        for _, spellCost in ipairs(GetSpellPowerCost(spellID) or {}) do
+            if spellCost.name == "MANA" then
+                costsMana = true;
+                break;
+            end
+        end
+
+        -- Evaluate whether or not the action is actually usable
+        local usable = not isActionOnCD and (isActionUsable or (notEnoughPower and not costsMana));
+
+        if isActionUsable and isActionOnCD then
+            -- Action could be usable, but CD prevents us to: try again in a few seconds
+            local endTime = start+duration;
+
+            if (not ActionRetryTimers[spellID] or ActionRetryTimers[spellID].endTime ~= endTime) then
+                if (ActionRetryTimers[spellID]) then
+                    ActionRetryTimers[spellID]:Cancel();
+                end
+
+                local remainingTime = endTime-GetTime();
+                local delta = 0.05; -- Add a small delay to account for lags and whatnot
+                local retryFunc = function()
+                    bucket.trigger:manualCheck(SAO.TRIGGER_ACTION_USABLE);
+                end;
+                ActionRetryTimers[spellID] = C_Timer.NewTimer(remainingTime+delta, retryFunc);
+                ActionRetryTimers[spellID].endTime = endTime;
+            end
+        end
+
+        bucket:setActionUsable(usable);
     end,
+
     [SAO.TRIGGER_TALENT] = function(bucket)
         if bucket.talentTabIndex then
             local tab, index = bucket.talentTabIndex[1], bucket.talentTabIndex[2];
@@ -73,6 +134,7 @@ local TriggerManualChecks = {
             bucket:setTalented(false);
         end
     end,
+
     [SAO.TRIGGER_HOLY_POWER] = function(bucket)
         return false; -- @todo
     end,
