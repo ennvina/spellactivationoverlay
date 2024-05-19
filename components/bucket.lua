@@ -322,23 +322,37 @@ function SAO:CheckManuallyAllBuckets(trigger)
     end
 end
 
-function SpellActivationOverlay_DumpBuckets(devDump)
+local function dumpOneBucket(bucket, devDump)
+    if devDump then
+        DevTools_Dump({ [bucket.spellID] = bucket });
+    else
+        local str = bucket.name..", "..
+            "currentHash == "..tostring(bucket.currentHash)..(bucket.currentHash and " == "..SAO.Hash:new(bucket.currentHash):toString() or "")..", "..
+            "displayedHash == "..tostring(bucket.displayedHash)..(bucket.displayedHash and " == "..SAO.Hash:new(bucket.displayedHash):toString() or "")..", "..
+            "triggerRequired == "..tostring(bucket.trigger.required)..", "..
+            "triggerInformed == "..tostring(bucket.trigger.informed);
+        SAO:Info(Module, str);
+    end
+end
+
+function SpellActivationOverlay_DumpBuckets(spellID, devDump)
+    if spellID then
+        local bucket = SAO.RegisteredBucketsBySpellID[spellID];
+        if bucket then
+            dumpOneBucket(bucket, devDump);
+            return;
+        end
+        SAO:Info(Module, "Bucket not found with spellID "..tostring(spellID));
+        return;
+    end
+
     local nbBuckets = 0;
     for _, _ in pairs(SAO.RegisteredBucketsBySpellID) do
         nbBuckets = nbBuckets + 1;
     end
     SAO:Info(Module, "Listing buckets ("..nbBuckets.." item"..(nbBuckets == 1 and "" or "s")..")");
 
-    for spellID, bucket in pairs(SAO.RegisteredBucketsBySpellID) do
-        if devDump then
-            DevTools_Dump({ [spellID] = bucket });
-        else
-            local str = bucket.name..", "..
-                "currentHash == "..tostring(bucket.currentHash)..(bucket.currentHash and " == "..SAO.Hash:new(bucket.currentHash):toString() or "")..", "..
-                "displayedHash == "..tostring(bucket.displayedHash)..(bucket.displayedHash and " == "..SAO.Hash:new(bucket.displayedHash):toString() or "")..", "..
-                "triggerRequired == "..tostring(bucket.trigger.required)..", "..
-                "triggerInformed == "..tostring(bucket.trigger.informed);
-            SAO:Info(Module, str);
-        end
+    for _, bucket in pairs(SAO.RegisteredBucketsBySpellID) do
+        dumpOneBucket(bucket, devDump)
     end
 end
