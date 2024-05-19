@@ -18,6 +18,17 @@ local TriggerNames = {
     [SAO.TRIGGER_HOLY_POWER   ] = "resource",
 }
 
+-- Check that flags are not overlapping with one another
+for flag1, name1 in pairs(TriggerNames) do
+    for flag2, name2 in pairs(TriggerNames) do
+        if flag2 > flag1 and bit.band(flag1, flag2) ~= 0 then
+            local x1 = string.format('0x%X', flag1);
+            local x2 = string.format('0x%X', flag2);
+            print(WrapTextInColor("**SAO** -"..Module.."- Overlapping trigger flag "..x1.." vs. "..x2, RED_FONT_COLOR));
+        end
+    end
+end
+
 -- List of lists of buckets requiring each type of trigger
 SAO.RegisteredBucketsByTrigger = {};
 for flag, _ in pairs(TriggerNames) do
