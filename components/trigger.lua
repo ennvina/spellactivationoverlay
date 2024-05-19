@@ -157,7 +157,7 @@ SAO.Trigger = {
 
         -- Reset informed flags to avoid premature show/hide when parsing all trigger functions
         for flag, name in pairs(SAO.TriggerNames) do
-            if bit.band(flag, flags) then
+            if bit.band(flag, flags) ~= 0 then
                 self.informed = bit.band(self.informed, bit.bnot(flag));
             end
         end
@@ -165,6 +165,10 @@ SAO.Trigger = {
         for flag, name in pairs(SAO.TriggerNames) do
             if bit.band(flag, flags) ~= 0 and self:reactsWith(flag) then
                 TriggerManualChecks[flag](self.parent);
+                -- Must inform explicitly
+                -- Usually, the manual check would change state of the bucket, which will re-inform the trigger has triggered
+                -- But if the state does not change, the bucket may ignore the change, and thus not re-inform the trigger
+                self.informed = bit.bor(self.informed, flag);
             end
         end
     end,
@@ -180,6 +184,10 @@ SAO.Trigger = {
         for flag, name in pairs(SAO.TriggerNames) do
             if self:reactsWith(flag) then
                 TriggerManualChecks[flag](self.parent);
+                -- Must inform explicitly
+                -- Usually, the manual check would change state of the bucket, which will re-inform the trigger has triggered
+                -- But if the state does not change, the bucket may ignore the change, and thus not re-inform the trigger
+                self.informed = bit.bor(self.informed, flag);
             end
         end
     end,
