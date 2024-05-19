@@ -44,7 +44,7 @@ SAO.Bucket = {
             hashCalculator = SAO.Hash:new(),
 
             -- Constant for more efficient debugging
-            description = "bucket "..spellID.." "..(GetSpellInfo(spellID) or ""),
+            description = name.." ("..spellID..(GetSpellInfo(spellID) and " = "..GetSpellInfo(spellID) or "")..")",
         };
         bucket.trigger = SAO.Trigger:new(bucket);
 
