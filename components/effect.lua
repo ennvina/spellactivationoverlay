@@ -534,7 +534,7 @@ local function checkNativeEffect(effect)
         return false;
     end
 
-    local hasStacksZero, hasStacksNonZero = false, false;
+    local hasStacksZero, hasStacksNonZero, hasStacksNegative = false, false, false;
     for i, overlay in ipairs(effect.overlays or {}) do
         if overlay.project and type(overlay.project) ~= 'number' then
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid project flags "..tostring(overlay.project));
@@ -550,14 +550,20 @@ local function checkNativeEffect(effect)
         end
         local stacks = overlay.stacks or 0;
         if stacks == 0 then
-            if hasStacksNonZero then
-                SAO:Error(Module, "Registering effect "..effect.name.." with mixed stacks of zero and non-zero");
+            if hasStacksNonZero or hasStacksNegative then
+                SAO:Error(Module, "Registering effect "..effect.name.." with mixed stacks of "..(hasStacksNonZero and "zero and non-zero" or "positive and negative"));
                 return false;
             end
             hasStacksZero = true;
+        elseif stacks == -1 then
+            if hasStacksZero or hasStacksNonZero then
+                SAO:Error(Module, "Registering effect "..effect.name.." with mixed stacks of positive and negative");
+                return false;
+            end
+            hasStacksNegative = true;
         else
-            if hasStacksZero then
-                SAO:Error(Module, "Registering effect "..effect.name.." with mixed stacks of zero and non-zero");
+            if hasStacksZero or hasStacksNegative then
+                SAO:Error(Module, "Registering effect "..effect.name.." with mixed stacks of "..(hasStacksZero and "zero and non-zero" or "positive and negative"));
                 return false;
             end
             hasStacksNonZero = true;
