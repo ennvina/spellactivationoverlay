@@ -461,7 +461,7 @@ local function getHash(condition, triggers)
     for trigger, enabled in pairs(triggers) do
         if enabled then
             local builder = ConditionBuilders[trigger];
-            local value = builder:getNativeValue(condition);
+            local value = builder:getNativeValue(condition or {});
             builder:setHashValue(hash, value);
         end
     end
