@@ -166,8 +166,8 @@ SAO.Bucket = {
             end
         else
             local hashForAnyStacks = self.hashCalculator:toAnyAuraStacks();
-            if self.displayedHash == nil then
-                if self.currentHash == nil or self.currentHash == 0 then
+            if self.displayedHash == nil then -- Displayed aura was 'nil'
+                if self.currentStacks == nil or self.currentStacks == 0 then
                     if self[self.currentHash] then
                         self[self.currentHash]:show();
                     end
