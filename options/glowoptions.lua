@@ -40,13 +40,15 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
 
         -- Talent text
         local spellName, spellIcon;
-        if (talentID) then
+        if (talentID and talentID ~= glowID) then
             spellName, _, spellIcon = GetSpellInfo(talentID);
             text = text.." |T"..spellIcon..":0|t "..spellName;
             if (talentSubText) then
                 text = text.." ("..talentSubText..")";
             end
             text = text.." +"
+        elseif (talentID and talentID == glowID and talentSubText) then
+            self:Debug(Module, "Glowing option of glowID "..tostring(glowID).." has talent sub-text '"..talentSubText.."' but the text will be discarded because talentID matches glowID");
         end
 
         -- Spell text

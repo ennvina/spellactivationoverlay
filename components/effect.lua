@@ -731,6 +731,9 @@ function SAO:AddEffectOptions()
                     local testStacks = type(overlay.option.testStacks) == 'number' and overlay.option.testStacks or setupStacks;
                     local subText = overlay.option.subText;
                     local variants = overlay.option.variants;
+                    if type(variants) == 'function' then
+                        variants = variants();
+                    end
                     self:AddOverlayOption(talent, buff, setupStacks, subText, variants, testStacks);
                 else
                     local setupStacks = overlay.stacks;
