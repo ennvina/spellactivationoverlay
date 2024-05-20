@@ -102,7 +102,7 @@ function SAO.AddOverlayOption(self, talentID, auraID, hash, talentSubText, varia
                 return;
             end
 
-            local testHashData = { hashName = testHashCalculator:toString() }
+            local testHashData = { optionIndex = testHashCalculator:toOptionIndex() }
 
             local testTexture = type(variants) == 'table' and type(variants.textureTestFunc) == 'function' and variants.textureTestFunc(cb, sb) or nil;
 
@@ -124,8 +124,8 @@ function SAO.AddOverlayOption(self, talentID, auraID, hash, talentSubText, varia
         end
     end
 
-    local optionHash = self:GetSimplifiedOptionHash(hashCalculator.hash);
-    self:AddOption("alert", auraID, optionHash, type(variants) == 'table' and variants.values, applyTextFunc, testFunc, { frame = SpellActivationOverlayOptionsPanelSpellAlertLabel, xOffset = 4, yOffset = -4 });
+    local optionIndex = hashCalculator:toOptionIndex();
+    self:AddOption("alert", auraID, optionIndex, type(variants) == 'table' and variants.values, applyTextFunc, testFunc, { frame = SpellActivationOverlayOptionsPanelSpellAlertLabel, xOffset = 4, yOffset = -4 });
 end
 
 function SAO.AddOverlayLink(self, srcOption, dstOption)

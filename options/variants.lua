@@ -1,9 +1,9 @@
 local AddonName, SAO = ...
 
 -- Create a texture variant object
-function SAO.CreateTextureVariants(self, auraID, hashName, values)
+function SAO.CreateTextureVariants(self, auraID, optionIndex, values)
     local textureFunc = function()
-        return self.TexName[self:GetOverlayOptions(auraID)[hashName]];
+        return self.TexName[self:GetOverlayOptions(auraID)[optionIndex]];
     end
 
     local textureTestFunc = function(cb, sb)
@@ -57,7 +57,7 @@ function SAO.TextureVariantValue(self, texture, horizontal, suffix)
 end
 
 -- Create a string variant object
-function SAO.CreateStringVariants(self, optionType, optionID, optionSubID, values) -- @todo use hashName
+function SAO.CreateStringVariants(self, optionType, optionID, optionSubID, values) -- @todo use optionIndex
     local getOption = function()
         if optionType == "glow" then
             return self:GetGlowingOptions(optionID)[optionSubID];

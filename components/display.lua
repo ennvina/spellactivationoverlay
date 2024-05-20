@@ -28,23 +28,19 @@ SAO.Display = {
 
         local tempHash = SAO.Hash:new(hash);
         local hashData = {
-            hashName = tempHash:toString(),
+            optionIndex = tempHash:toOptionIndex(),
+            optionAnyStacks = nil,
         }
-        local legacyReady = type(SAO:GetSimplifiedOptionHash(hash)) == 'number';
+        local legacyReady = type(hashData.optionIndex) == 'number';
         if not legacyReady then
-            SAO:Warn(Module, "Display of "..parent.description.." is based on hash "..hash.." ("..tempHash:toString()..") which requires migrating option");
+            SAO:Warn(Module, "Display of "..parent.description.." is based on hash "..hash.." ("..tempHash:toString()..") which requires migrating its option");
         end
         if tempHash:hasAuraStacks() then
             local stacks = tempHash:getAuraStacks();
-            if stacks >= 0 and tempHash:basedOnlyOnAuraStacks() then
-                hashData.fallbackIndex = stacks; -- Legacy code
-            end
             if stacks ~= 0 then
                 tempHash.hash = tempHash:toAnyAuraStacks();
-                hashData.hashAny = tempHash:toString();
+                hashData.optionAnyStacks = tempHash:toOptionIndex();
             end
-        elseif tempHash:basedOnlyOnActionUsable() then
-            hashData.fallbackIndex = 0; -- Legacy code
         end
         display.hashData = hashData;
 
@@ -66,17 +62,7 @@ SAO.Display = {
             SAO:Warn(Module, "Missing position for overlay");
         end
 
-        local hashData;
-        if overlay.stacks then
-            -- Legacy code
-            hashData = overlay.stacks;
-        else
-            -- Modern code
-            hashData = self.hashData;
-        end
-
         local _overlay = {
-            hashData = hashData,
             spellID = overlay.spellID,
             texture = overlay.texture,
             position = overlay.position,
@@ -127,7 +113,7 @@ SAO.Display = {
             if options and options.mimicPulse then
                 forcePulsePlay = overlay.autoPulse;
             end
-            SAO:ActivateOverlay(overlay.hashData, overlay.spellID, overlay.texture, overlay.position, overlay.scale, overlay.r, overlay.g, overlay.b, overlay.autoPulse, forcePulsePlay, nil, overlay.combatOnly);
+            SAO:ActivateOverlay(self.hashData, overlay.spellID, overlay.texture, overlay.position, overlay.scale, overlay.r, overlay.g, overlay.b, overlay.autoPulse, forcePulsePlay, nil, overlay.combatOnly);
         end
     end,
 

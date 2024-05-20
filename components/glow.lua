@@ -199,26 +199,26 @@ function SAO.AddGlowNumber(self, spellID, glowID)
 end
 
 -- Find a glowing option in the options table
--- First try to find from hashName, otherwise fallback to legacy options
+-- First try to find from optionIndex, otherwise fallback to legacy options
 local function isGlowingOptionEnabled(glowingOptions, glowID, hashData)
     if not glowingOptions then
         return true; -- Enabled by default, in case there is not an option for it
     end
 
-    local hashName = hashData and hashData.hashName;
-    local legacyAllowed = hashData == nil or hashData.fallbackIndex == 0;
+    local optionIndex = hashData and hashData.optionIndex;
+    local legacyAllowed = hashData == nil or hashData.optionAnyStacks;
 
     if type(glowID) == "number" then
-        if hashName and type(glowingOptions[hashName]) == 'table' and type(glowingOptions[hashName][glowID]) == 'boolean' then
-            return glowingOptions[hashName][glowID];
+        if optionIndex and type(glowingOptions[optionIndex]) == 'table' and type(glowingOptions[optionIndex][glowID]) == 'boolean' then
+            return glowingOptions[optionIndex][glowID];
         elseif legacyAllowed and type(glowingOptions[glowID]) == "boolean" then
             return glowingOptions[glowID];
         end
     else
         local glowSpellName = (type(glowID) == "number") and GetSpellInfo(glowID) or glowID;
 
-        if hashName and type(glowingOptions[hashName]) == 'table' then
-            for optionSpellID, optionEnabled in pairs(glowingOptions[hashName]) do
+        if optionIndex and type(glowingOptions[optionIndex]) == 'table' then
+            for optionSpellID, optionEnabled in pairs(glowingOptions[optionIndex]) do
                 if (GetSpellInfo(optionSpellID) == glowSpellName) then
                     return optionEnabled;
                 end

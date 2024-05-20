@@ -31,7 +31,7 @@ local HASH_HOLY_POWER_0    = 0x0800
 local HASH_HOLY_POWER_1    = 0x1000
 local HASH_HOLY_POWER_2    = 0x1800
 local HASH_HOLY_POWER_3    = 0x2000
-local HASH_HOLY_POWER_MASK = 0x2800
+local HASH_HOLY_POWER_MASK = 0x3800
 
 -- Check that masks are not overlapping with one another
 -- This order must be stable over patches, because it is used to index saved variables
@@ -57,7 +57,7 @@ local HashStringifierList = {}
 local HashStringifierMap = {}
 
 local HashStringifier = {
-    register = function(self, mask, key, toValue, fromValue, getHumanReadableKeyValue)
+    register = function(self, mask, key, toValue, fromValue, getHumanReadableKeyValue, optionIndexer)
         local converter = {
             mask = mask,
             key = key,
@@ -65,6 +65,7 @@ local HashStringifier = {
             toValue = toValue,
             fromValue = fromValue,
             getHumanReadableKeyValue = getHumanReadableKeyValue,
+            optionIndexer = optionIndexer,
         }
 
         self.__index = nil;
@@ -101,6 +102,15 @@ local HashStringifier = {
         end
         return self.getHumanReadableKeyValue(hash);
     end,
+
+    -- Returns a trivial index for options, if there is one
+    -- Returns either 0 if trivial, or nonzero if non trivial
+    getOptionIndex = function(self, hash)
+        if bit.band(hash.hash, self.mask) == 0 then
+            return 0;
+        end
+        return self.optionIndexer(hash);
+    end,
 }
 
 HashStringifier:register(
@@ -131,6 +141,9 @@ HashStringifier:register(
         else
             return nil; -- Should be obvious if aura is 'missing' or 'any'
         end
+    end,
+    function(hash) -- optionIndexer
+        return hash:getAuraStacks() or -1; -- returns n if n > 0, otherwise (if n == nil) returns -1
     end
 );
 
@@ -154,6 +167,9 @@ HashStringifier:register(
     end,
     function(hash) -- getHumanReadableKeyValue
         return nil; -- Should be obvious
+    end,
+    function(hash) -- optionIndexer
+        return hash:isActionUsable() and 0 or -1;
     end
 );
 
@@ -177,6 +193,9 @@ HashStringifier:register(
     end,
     function(hash) -- getHumanReadableKeyValue
         return nil; -- Should be obvious
+    end,
+    function(hash) -- optionIndexer
+        return hash:isTalented() and 0 or -1;
     end
 );
 
@@ -198,6 +217,9 @@ HashStringifier:register(
     function(hash) -- getHumanReadableKeyValue
         local holyPower = hash:getHolyPower();
         return string.format(HOLY_POWER_COST, holyPower);
+    end,
+    function(hash) -- optionIndexer
+        return hash:getHolyPower();
     end
 );
 
@@ -406,5 +428,24 @@ SAO.Hash = {
         else
             return nil;
         end
+    end,
+
+    -- Tries to translate the hash as an obvious index number
+    -- If not possible, the string from toString() is returned
+    toOptionIndex = function(self)
+        local prevIndex = 0;
+
+        for _, stringifier in ipairs(HashStringifierList) do
+            local index = stringifier:getOptionIndex(self);
+            if index ~= 0 then
+                if prevIndex ~= 0 then
+                    -- Multiple non-trivial indexes: no luck
+                    return self:toString();
+                end
+                prevIndex = index;
+            end
+        end
+
+        return prevIndex;
     end,
 }

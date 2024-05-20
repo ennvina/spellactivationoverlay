@@ -11,7 +11,7 @@ local Module = "option"
 -- variants optional variant object that tells which are sub-options and how to use them
 -- @note Options must be linked asap, not during loadOptions() which would be loaded only when the options panel is opened
 -- By linking options as soon as possible, before their respective RegisterAura() calls, options can be used by initial triggers, if any
-function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText, variants)
+function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText, variants) -- @todo use hash and testHash like overlay options
     if (talentID and not GetSpellInfo(talentID)) or (not self:IsFakeSpell(glowID) and not GetSpellInfo(glowID)) then
         if talentID and not GetSpellInfo(talentID) then
             self:Debug(Module, "Skipping glowing option of talentID "..tostring(talentID).." because the spell does not exist");
