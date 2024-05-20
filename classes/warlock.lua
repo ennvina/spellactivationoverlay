@@ -120,7 +120,7 @@ end
 
 local function registerMoltenCore(self, rank)
     local moltenCoreName = { "molten_core_low", "molten_core_medium", "molten_core_high" };
-    local overlayOption = (rank == 3) and { setupStacks = 0, testStacks = 3 };
+    local overlayOption = (rank == 3) and { setupStacks = 0, testStacks = 3 }; -- @todo replace setupStacks with setupHash
     local buttonOption = rank == 3;
 
     self:CreateEffect(

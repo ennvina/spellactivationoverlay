@@ -143,6 +143,10 @@ function SAO.IsTimeAlmostEqual(self, t1, t2, delta)
 	return t1-delta < t2 and t2 < t1+delta;
 end
 
+--[[
+    Aura utility functions
+]]
+
 -- Factorize API calls to get player buff or debuff or whatever
 local function PlayerAura(index, filter)
     return UnitAura("player", index, filter);
@@ -238,6 +242,10 @@ function SAO:GetPlayerAuraDurationExpirationTimBySpellIdOrName(spellIdOrName)
 end
 
 --[[
+    Spell utility functions
+]]
+
+--[[
     Utility function to know how many talent points the player has spent on a specific talent
 
     If the talent is found, returns:
@@ -298,6 +306,23 @@ function SAO.GetHomonymSpellIDs(self, spell)
     end
 
     return homonyms;
+end
+
+--[[
+    Hash utility functions
+]]
+
+-- Computes a hash string based on a hash numerical value
+function SAO:HashNameFromHashNumber(hash)
+    return self.Hash:new(hash):toString();
+end
+
+-- Computes a hash string based only from a number of stacks
+-- Used for legacy code
+function SAO:HashNameFromStacks(stacks)
+    local hash = self.Hash:new();
+    hash:setAuraStacks(stacks);
+    return hash:toString();
 end
 
 --[[

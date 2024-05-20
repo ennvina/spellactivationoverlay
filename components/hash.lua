@@ -57,13 +57,14 @@ local HashStringifierList = {}
 local HashStringifierMap = {}
 
 local HashStringifier = {
-    register = function(self, mask, key, toValue, fromValue)
+    register = function(self, mask, key, toValue, fromValue, getHumanReadableKeyValue)
         local converter = {
             mask = mask,
             key = key,
 
             toValue = toValue,
             fromValue = fromValue,
+            getHumanReadableKeyValue = getHumanReadableKeyValue,
         }
 
         self.__index = nil;
@@ -91,6 +92,15 @@ local HashStringifier = {
         end
         return self.fromValue(hash, value) ~= nil;
     end,
+
+    -- Returns a string telling what the hash does
+    -- Returns nil if either the flag is not set, or the text is irrelevant / obvious
+    toHumanReadableString = function(self, hash)
+        if bit.band(hash.hash, self.mask) == 0 then
+            return nil;
+        end
+        return self.getHumanReadableKeyValue(hash);
+    end,
 }
 
 HashStringifier:register(
@@ -113,6 +123,14 @@ HashStringifier:register(
         else
             return nil; -- Not good
         end
+    end,
+    function(hash) -- getHumanReadableKeyValue
+        local auraStacks = hash:getAuraStacks();
+        if auraStacks and auraStacks > 0 then
+            return SAO:NbStacks(auraStacks);
+        else
+            return nil; -- Should be obvious if aura is 'missing' or 'any'
+        end
     end
 );
 
@@ -133,6 +151,9 @@ HashStringifier:register(
         else
             return nil; -- Not good
         end
+    end,
+    function(hash) -- getHumanReadableKeyValue
+        return nil; -- Should be obvious
     end
 );
 
@@ -153,6 +174,9 @@ HashStringifier:register(
         else
             return nil; -- Not good
         end
+    end,
+    function(hash) -- getHumanReadableKeyValue
+        return nil; -- Should be obvious
     end
 );
 
@@ -170,6 +194,10 @@ HashStringifier:register(
         else
             return nil; -- Not good
         end
+    end,
+    function(hash) -- getHumanReadableKeyValue
+        local holyPower = hash:getHolyPower();
+        return string.format(HOLY_POWER_COST, holyPower);
     end
 );
 
@@ -196,6 +224,10 @@ SAO.Hash = {
         setmetatable(hash, self);
         self.__index = self;
         return hash;
+    end,
+
+    reset = function(self)
+        self.hash = 0;
     end,
 
     -- Aura Stacks
@@ -357,5 +389,22 @@ SAO.Hash = {
 
         -- Everything's alright: use computed hash
         self.hash = hash.hash;
+    end,
+
+    toHumanReadableString = function(self)
+        local answers = {};
+
+        for _, stringifier in ipairs(HashStringifierList) do
+            local answer = stringifier:toHumanReadableString(self);
+            if answer then
+                tinsert(answers, answer);
+            end
+        end
+
+        if #answers > 0 then
+            return strjoin(", ", unpack(answers));
+        else
+            return nil;
+        end
     end,
 }
