@@ -79,6 +79,17 @@ SAO.Bucket = {
         self.talentTabIndex = { tab, index };
     end,
 
+    -- Check if a specific hash is currently displayed
+    -- For soft displays, it returns true even is the display is not currently on screen
+    -- If hash is not set, returns tru if any display is currently shown
+    isDisplayed = function(self, hash)
+        if hash then
+            return self.displayedHash == hash;
+        else
+            return self.displayedHash ~= nil;
+        end
+    end,
+
     refresh = function(self) -- @todo change existing code which called refresh(stacks) to now refresh()
         if self.displayedHash == nil then
             -- Nothing to refresh if nothing is displayed

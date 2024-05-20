@@ -111,7 +111,7 @@ local function checkRollingThunderRuneAndLightningSieldStacks(self, ...)
         -- Fortunately, RollingThunderHandler is used only on Season of Discovery and Cataclysm
         local aura = C_UnitAuras.GetAuraDataBySpellName("player", GetSpellInfo(324));
         local stackThreshold = SAO:IsCata() and 6 or 7; -- 6 or more for Cata, 7 or more for SoD
-        if aura and aura.applications >= stackThreshold and not SAO:GetActiveOverlay(324) then
+        if aura and aura.applications >= stackThreshold and not SAO:GetBucketBySpellID(RollingThunderHandler.fakeSpellID):isDisplayed() then
             RollingThunderHandler:activate(aura.applications);
         end
     end
