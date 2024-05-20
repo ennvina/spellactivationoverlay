@@ -30,18 +30,21 @@ SAO.Display = {
         local hashData = {
             hashName = tempHash:toString(),
         }
-        if not tempHash:hasAuraStacks() or not tempHash:isAuraStacksOnly() then
+        local legacyReady = tempHash:basedOnlyOnAuraStacks() or tempHash:basedOnlyOnActionUsable();
+        if not legacyReady then
             SAO:Warn(Module, "Display of "..parent.description.." is based on hash "..hash.." ("..tempHash:toString()..") which requires migrating option");
         end
         if tempHash:hasAuraStacks() then
             local stacks = tempHash:getAuraStacks();
-            if stacks >= 0 and tempHash:isAuraStacksOnly() then
-                hashData.fallbackIndex = stacks;
+            if stacks >= 0 and tempHash:basedOnlyOnAuraStacks() then
+                hashData.fallbackIndex = stacks; -- Legacy code
             end
             if stacks ~= 0 then
                 tempHash.hash = tempHash:toAnyAuraStacks();
                 hashData.hashAny = tempHash:toString();
             end
+        elseif tempHash:basedOnlyOnActionUsable() then
+            hashData.fallbackIndex = 0; -- Legacy code
         end
         display.hashData = hashData;
 

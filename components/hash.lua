@@ -34,6 +34,9 @@ local HASH_HOLY_POWER_3    = 0x2000
 local HASH_HOLY_POWER_MASK = 0x2800
 
 -- Check that masks are not overlapping with one another
+-- This order must be stable over patches, because it is used to index saved variables
+-- Only the order must be stable: if x < y in patch A, then x must be < y in patch B
+-- However, a new z can be anywhere, even between x and y, as long as the new order is stable
 local masks = {
     HASH_AURA_MASK,
     HASH_ACTION_USABLE_MASK,
@@ -230,7 +233,7 @@ SAO.Hash = {
         return bit.band(self.hash, bit.bnot(HASH_AURA_MASK)) + HASH_AURA_ANY;
     end,
 
-    isAuraStacksOnly = function(self)
+    basedOnlyOnAuraStacks = function(self) -- Used for legacy code
         return self:hasAuraStacks() and bit.bor(self.hash, HASH_AURA_MASK) == HASH_AURA_MASK;
     end,
 
@@ -254,6 +257,10 @@ SAO.Hash = {
         if maskedHash == nil then return nil; end
 
         return maskedHash == HASH_ACTION_USABLE_YES;
+    end,
+
+    basedOnlyOnActionUsable = function(self) -- Used for legacy code
+        return self:hasActionUsable() and bit.bor(self.hash, HASH_ACTION_USABLE_MASK) == HASH_ACTION_USABLE_MASK;
     end,
 
     -- Talented
