@@ -413,6 +413,7 @@ local function createCounter(effect, props)
         effect.combatOnly = props.combatOnly;
         effect.buttons = {{
             useName = doesUseName(props.useName),
+            option = copyOption(props.buttonOption),
         }}
     else
         effect.buttons = {{
@@ -753,6 +754,9 @@ function SAO:AddEffectOptions()
                     local talentSubText = button.option.talentSubText;
                     local spellSubText = button.option.spellSubText;
                     local variants = button.option.variants;
+                    if type(variants) == 'function' then
+                        variants = variants();
+                    end
                     self:AddGlowingOption(talent, buff, spellID, talentSubText, spellSubText, variants);
                 else
                     local stacks = button.stacks or (uniqueOverlayStack.unique and uniqueOverlayStack.latest) or nil;
