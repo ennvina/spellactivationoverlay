@@ -353,6 +353,10 @@ local function addOneButton(buttons, buttonConfig, project, default, triggers)
 end
 
 local function importTalent(effect, props)
+    if type(props) ~= 'table' then
+        return;
+    end
+
     if type(props.talent) == 'number' then
         effect.talent = props.talent;
     elseif type(props.talent) == 'table' then
@@ -426,11 +430,8 @@ local function importButtons(effect, props)
     end
 end
 
-local function createCounter(effect, props)
-    effect.triggers.action = true;
-
+local function importCounterButton(effect, props)
     if type(props) == 'table' then
-        effect.combatOnly = props.combatOnly;
         effect.buttons = {{
             useName = doesUseName(props.useName),
             option = copyOption(props.buttonOption),
@@ -440,10 +441,24 @@ local function createCounter(effect, props)
             useName = doesUseName(),
         }}
     end
+
     local condition = getCondition({}, {}, effect.triggers);
     effect.buttons[1].condition = condition;
+
     local hash = getHash(condition, effect.triggers).hash;
     effect.buttons[1].hash = hash;
+end
+
+local function createCounter(effect, props)
+    effect.triggers.action = true;
+
+    if type(props) == 'table' then
+        effect.combatOnly = props.combatOnly;
+    end
+
+    importTalent(effect, props);
+
+    importCounterButton(effect, props);
 
     return effect;
 end
@@ -472,8 +487,6 @@ local function createCounterWithOverlay(effect, props)
     end
 
     createCounter(effect, props);
-
-    importTalent(effect, props);
 
     importOverlays(effect, props);
 
