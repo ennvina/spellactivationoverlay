@@ -440,6 +440,10 @@ local function createCounter(effect, props)
             useName = doesUseName(),
         }}
     end
+    local condition = getCondition({}, {}, effect.triggers);
+    effect.buttons[1].condition = condition;
+    local hash = getHash(condition, effect.triggers).hash;
+    effect.buttons[1].hash = hash;
 
     return effect;
 end
