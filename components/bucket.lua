@@ -292,7 +292,23 @@ SAO.BucketManager = {
         end
 
         return bucket, created;
-    end
+    end,
+
+    checkIntegrity = function(self, bucket)
+        local optionIndexes = {}
+        for hash, display in pairs(bucket) do
+            if type(hash) == 'number' then -- Assume number-based keys are used only by displays
+                local hashCalculator = SAO.Hash:new(hash);
+                local optionIndex = hashCalculator:toOptionIndex();
+                local optionIndexName = hashCalculator:toString();
+                if optionIndexes[optionIndex] then
+                    SAO:Warn(Module, "Option conflict for "..bucket.description.." between display "..tostring(optionIndexes[optionIndex]).." and "..tostring(optionIndexName));
+                else
+                    optionIndexes[optionIndex] = optionIndexName;
+                end
+            end
+        end
+    end,
 }
 
 function SAO:GetBucketByName(name)
