@@ -300,15 +300,15 @@ function SAO:GetBucketByName(name)
 end
 
 function SAO:GetBucketBySpellID(spellID)
-    return SAO.RegisteredBucketsBySpellID[spellID];
+    return self.RegisteredBucketsBySpellID[spellID];
 end
 
 function SAO:GetBucketBySpellIDOrSpellName(spellID, fallbackSpellName)
-    if not SAO.IsEra() or (type(spellID) == 'number' and spellID ~= 0) then
-        return SAO.RegisteredBucketsBySpellID[spellID], spellID;
+    if not self.IsEra() or (type(spellID) == 'number' and spellID ~= 0) then
+        return self.RegisteredBucketsBySpellID[spellID], spellID;
     else
         -- Due to Classic Era limitation, aura is registered by its spell name
-        local bucket = SAO.RegisteredBucketsBySpellID[fallbackSpellName];
+        local bucket = self.RegisteredBucketsBySpellID[fallbackSpellName];
         if bucket then
             spellID = bucket.spellID;
         end
@@ -320,7 +320,7 @@ end
 -- If 'trigger' is set, only to buckets requiring this trigger are visited, and they check only this trigger
 function SAO:CheckManuallyAllBuckets(trigger)
     if trigger then
-        local buckets = SAO:GetBucketsByTrigger(trigger);
+        local buckets = self:GetBucketsByTrigger(trigger);
         for _, bucket in ipairs(buckets) do
             bucket.trigger:manualCheck(trigger);
         end
@@ -338,6 +338,7 @@ local function dumpOneBucket(bucket, devDump)
         DevTools_Dump({ [bucket.spellID] = bucket });
     else
         local str = bucket.name..", "..
+            "spellID == "..tostring(bucket.spellID)..", "..
             "currentHash == "..tostring(bucket.currentHash)..(bucket.currentHash and " == "..SAO.Hash:new(bucket.currentHash):toString() or "")..", "..
             "displayedHash == "..tostring(bucket.displayedHash)..(bucket.displayedHash and " == "..SAO.Hash:new(bucket.displayedHash):toString() or "")..", "..
             "triggerRequired == "..tostring(bucket.trigger.required)..", "..

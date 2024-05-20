@@ -112,18 +112,6 @@ function SAO.LOADING_SCREEN_DISABLED(self, ...)
     -- Or after a loading screen in-between zones, because CLEU may not trigger everything during a loading screen
     -- If it is possible to create effects after this point, this kind of manual checks should be called there too
     self:CheckManuallyAllBuckets();
-
-    -- Check if auras are still there after a loading screen
-    -- This circumvents a limitation of the CLEU which may not trigger during a loading screen
-    -- Commented, because not needed in theory, thanks to explicit manual check (see above)
-    -- for spellID, stacks in pairs(self.ActiveOverlays) do
-    --     if not self:IsFakeSpell(spellID) and not self:HasPlayerAuraBySpellID(spellID) then
-    --         local bucket = self:GetBucketBySpellID(spellID);
-    --         if bucket.trigger.required ~= 0 then
-    --             bucket.trigger:manualCheckAll();
-    --         end
-    --     end
-    -- end
 end
 
 function SAO.PLAYER_ENTERING_WORLD(self, ...)

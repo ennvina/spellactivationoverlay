@@ -628,7 +628,7 @@ local function RegisterNativeEffectNow(self, effect)
             local hash = getHash(overlay.condition, effect.triggers);
 
             local overlayPod = {
-                stacks = stacks, -- @todo replace with real hash
+                stacks = nil, -- Not set, to use hash instead
                 spellID = spellID,
                 texture = SAO.TexName[texture], -- Map from TexName
                 position = position,

@@ -26,6 +26,22 @@ SAO.Display = {
             softTimer = nil,
         }
 
+        local tempHash = SAO.Hash:new(hash);
+        local hashData = {
+            hashName = tempHash:toString(),
+        }
+        if tempHash:hasAuraStacks() then
+            local stacks = tempHash:getAuraStacks();
+            if stacks >= 0 then
+                hashData.fallbackIndex = stacks;
+            end
+            if stacks ~= 0 then
+                tempHash.hash = tempHash:toAnyAuraStacks();
+                hashData.hashAny = tempHash:toString();
+            end
+        end
+        display.hashData = hashData;
+
         self.__index = nil;
         setmetatable(display, self);
         self.__index = self;
@@ -44,8 +60,17 @@ SAO.Display = {
             SAO:Warn(Module, "Missing position for overlay");
         end
 
+        local hashData;
+        if overlay.stacks then
+            -- Legacy code
+            hashData = overlay.stacks;
+        else
+            -- Modern code
+            hashData = self.hashData;
+        end
+
         local _overlay = {
-            stacks = overlay.stacks or 0,
+            hashData = hashData,
             spellID = overlay.spellID,
             texture = overlay.texture,
             position = overlay.position,
@@ -96,7 +121,7 @@ SAO.Display = {
             if options and options.mimicPulse then
                 forcePulsePlay = overlay.autoPulse;
             end
-            SAO:ActivateOverlay(overlay.stacks, overlay.spellID, overlay.texture, overlay.position, overlay.scale, overlay.r, overlay.g, overlay.b, overlay.autoPulse, forcePulsePlay, nil, overlay.combatOnly);
+            SAO:ActivateOverlay(overlay.hashData, overlay.spellID, overlay.texture, overlay.position, overlay.scale, overlay.r, overlay.g, overlay.b, overlay.autoPulse, forcePulsePlay, nil, overlay.combatOnly);
         end
     end,
 
@@ -108,7 +133,7 @@ SAO.Display = {
 
     showButtons = function(self, options)
         if #self.buttons > 0 then
-            SAO:AddGlow(self.spellID, self.buttons);
+            SAO:AddGlow(self.spellID, self.buttons, self.hashData.hashName);
         end
     end,
 

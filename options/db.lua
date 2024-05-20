@@ -151,9 +151,19 @@ function SAO.LoadDB(self)
                             if (not db.classes[classFile][optionType][auraID]) then
                                 db.classes[classFile][optionType][auraID] = CopyTable(auraData);
                             else
-                                for id, value in pairs(auraData) do
-                                    if (type(db.classes[classFile][optionType][auraID][id]) == "nil") then
-                                        db.classes[classFile][optionType][auraID][id] = value;
+                                for hashID, hashData in pairs(auraData) do
+                                    if (type(db.classes[classFile][optionType][auraID][hashID]) == 'nil') then
+                                        if (type(hashData) == 'table') then
+                                            db.classes[classFile][optionType][auraID][hashID] = CopyTable(hashData);
+                                        else
+                                            db.classes[classFile][optionType][auraID][hashID] = hashData;
+                                        end
+                                    elseif (type(db.classes[classFile][optionType][auraID][hashID]) == "table" and type(hashData) == 'table') then
+                                        for id, value in pairs(hashData) do
+                                            if (type(db.classes[classFile][optionType][auraID][hashID][id]) == 'nil') then
+                                                db.classes[classFile][optionType][auraID][hashID][id] = value;
+                                            end
+                                        end
                                     end
                                 end
                             end
