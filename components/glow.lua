@@ -200,19 +200,23 @@ end
 
 -- Find a glowing option in the options table
 -- First try to find from hashName, otherwise fallback to legacy options
-local function isGlowingOptionEnabled(glowingOptions, glowID, hashName)
+local function isGlowingOptionEnabled(glowingOptions, glowID, hashData)
     if not glowingOptions then
         return true; -- Enabled by default, in case there is not an option for it
     end
 
+    local hashName = hashData and hashData.hashName;
+    local legacyAllowed = hashData == nil or hashData.fallbackIndex == 0;
+
     if type(glowID) == "number" then
         if hashName and type(glowingOptions[hashName]) == 'table' and type(glowingOptions[hashName][glowID]) == 'boolean' then
             return glowingOptions[hashName][glowID];
-        elseif type(glowingOptions[glowID]) == "boolean" then
+        elseif legacyAllowed and type(glowingOptions[glowID]) == "boolean" then
             return glowingOptions[glowID];
         end
     else
         local glowSpellName = (type(glowID) == "number") and GetSpellInfo(glowID) or glowID;
+
         if hashName and type(glowingOptions[hashName]) == 'table' then
             for optionSpellID, optionEnabled in pairs(glowingOptions[hashName]) do
                 if (GetSpellInfo(optionSpellID) == glowSpellName) then
@@ -220,9 +224,12 @@ local function isGlowingOptionEnabled(glowingOptions, glowID, hashName)
                 end
             end
         end
-        for optionSpellID, optionEnabled in pairs(glowingOptions) do
-            if (type(optionSpellID) == 'number' and GetSpellInfo(optionSpellID) == glowSpellName) then
-                return optionEnabled;
+
+        if legacyAllowed then
+            for optionSpellID, optionEnabled in pairs(glowingOptions) do
+                if (type(optionSpellID) == 'number' and GetSpellInfo(optionSpellID) == glowSpellName) then
+                    return optionEnabled;
+                end
             end
         end
     end
@@ -232,7 +239,7 @@ end
 
 -- Add a glow effect for action buttons matching one of the given glow IDs
 -- Each glow ID may be a spell identifier (number) or spell name (string)
-function SAO.AddGlow(self, spellID, glowIDs, hashName)
+function SAO.AddGlow(self, spellID, glowIDs, hashData)
     if (glowIDs == nil) then
         return;
     end
@@ -242,7 +249,7 @@ function SAO.AddGlow(self, spellID, glowIDs, hashName)
     for _, glowID in ipairs(glowIDs) do
 
         -- Find if the glow option is enabled
-        local glowEnabled = isGlowingOptionEnabled(glowingOptions, glowID, hashName);
+        local glowEnabled = isGlowingOptionEnabled(glowingOptions, glowID, hashData);
 
         -- Let it glow
         if (glowEnabled) then

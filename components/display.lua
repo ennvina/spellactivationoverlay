@@ -136,7 +136,7 @@ SAO.Display = {
 
     showButtons = function(self, options)
         if #self.buttons > 0 then
-            SAO:AddGlow(self.spellID, self.buttons, self.hashData.hashName);
+            SAO:AddGlow(self.spellID, self.buttons, self.hashData);
         end
     end,
 
