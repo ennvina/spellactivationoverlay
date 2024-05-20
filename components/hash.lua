@@ -230,6 +230,10 @@ SAO.Hash = {
         return bit.band(self.hash, bit.bnot(HASH_AURA_MASK)) + HASH_AURA_ANY;
     end,
 
+    isAuraStacksOnly = function(self)
+        return self:hasAuraStacks() and bit.bor(self.hash, HASH_AURA_MASK) == HASH_AURA_MASK;
+    end,
+
     -- Action Usable
 
     hasActionUsable = function(self)

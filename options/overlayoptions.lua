@@ -79,7 +79,7 @@ function SAO.AddOverlayOption(self, talentID, auraID, count, talentSubText, vari
         local fakeOffset = 42000000;
         local stacks = testStacks or count or 0;
         local hash = SAO.Hash:new()
-        hash:setAuraStacks(stacks);
+        hash:setAuraStacks(stacks); -- @todo use correct hash
         local display = bucket[hash.hash];
         if (start) then
             if (not display) then
