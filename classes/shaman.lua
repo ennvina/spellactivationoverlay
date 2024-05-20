@@ -277,8 +277,15 @@ local function registerClass(self)
         end
 
         local moltenBlastSoD = 425339;
-        self:RegisterAura("molten_blast", 0, moltenBlastSoD, "impact", "Top", 0.8, 255, 255, 255, true, { moltenBlastSoD }, true);
-        self:RegisterCounter("molten_blast");
+        self:CreateEffect(
+            "molten_blast",
+            SAO.SOD,
+            moltenBlastSoD,
+            "counter_with_overlay",
+            {
+                overlay = { texture = "impact", position = "Top", scale = 0.8 },
+            }
+        );
 
         -- Power Surge
         local powerSurgeSoDBuff = 415105;
