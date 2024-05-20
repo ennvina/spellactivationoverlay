@@ -30,7 +30,7 @@ SAO.Display = {
         local hashData = {
             hashName = tempHash:toString(),
         }
-        local legacyReady = tempHash:basedOnlyOnAuraStacks() or tempHash:basedOnlyOnActionUsable();
+        local legacyReady = type(SAO:GetSimplifiedOptionHash(hash)) == 'number';
         if not legacyReady then
             SAO:Warn(Module, "Display of "..parent.description.." is based on hash "..hash.." ("..tempHash:toString()..") which requires migrating option");
         end

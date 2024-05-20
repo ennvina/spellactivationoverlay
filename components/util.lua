@@ -325,6 +325,20 @@ function SAO:HashNameFromStacks(stacks)
     return hash:toString();
 end
 
+-- Computes a simple index for look up into options, returning a number
+-- If the simple index cannot be computed, the full string is returned instead
+function SAO:GetSimplifiedOptionHash(hash)
+    local hashCalculator = self.Hash:new(hash);
+
+    if hashCalculator:basedOnlyOnAuraStacks() and hashCalculator:getAuraStacks() ~= nil then
+        return hashCalculator:getAuraStacks();
+    elseif hashCalculator:basedOnlyOnActionUsable() then
+        return 0;
+    else
+        return hashCalculator:toString();
+    end
+end
+
 --[[
     GlowInterface generalizes how to invoke custom glowing buttons
 

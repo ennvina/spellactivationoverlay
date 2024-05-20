@@ -124,14 +124,7 @@ function SAO.AddOverlayOption(self, talentID, auraID, hash, talentSubText, varia
         end
     end
 
-    local optionHash;
-    if hashCalculator:basedOnlyOnAuraStacks() and hashCalculator:getAuraStacks() ~= nil then
-        optionHash = hashCalculator:getAuraStacks();
-    elseif hashCalculator:basedOnlyOnActionUsable() then
-        optionHash = 0;
-    else
-        optionHash = hash;
-    end
+    local optionHash = self:GetSimplifiedOptionHash(hashCalculator.hash);
     self:AddOption("alert", auraID, optionHash, type(variants) == 'table' and variants.values, applyTextFunc, testFunc, { frame = SpellActivationOverlayOptionsPanelSpellAlertLabel, xOffset = 4, yOffset = -4 });
 end
 

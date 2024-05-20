@@ -30,7 +30,7 @@ SAO.Bucket = {
             talentTabIndex = nil,
 
             -- Stack-agnostic means the bucket does not care about its number of stacks
-            stackAgnostic = true, -- @todo revisit code which used countAgnostic
+            stackAgnostic = true,
 
             -- Initialize current state with unattainable values
             currentStacks = -1,
@@ -90,7 +90,7 @@ SAO.Bucket = {
         end
     end,
 
-    refresh = function(self) -- @todo change existing code which called refresh(stacks) to now refresh()
+    refresh = function(self)
         if self.displayedHash == nil then
             -- Nothing to refresh if nothing is displayed
             return;

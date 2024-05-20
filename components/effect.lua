@@ -37,7 +37,7 @@ local Module = "effect"
         pulse = true, -- Default is true
         option = { -- Default is true
             setupHash = 0, -- Default is hash from overlay
-            testStacks = 0, -- Default is nil, which defaults to setupHash
+            testHash = 0, -- Default is nil, which defaults to setupHash
             subText = "no stacks", -- Default is nil
             variants = nil, -- Default is nil
         },

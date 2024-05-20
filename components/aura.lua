@@ -8,7 +8,6 @@ local function promoteAura(aura)
     aura.spellID = aura[3];
     if aura[4] then
         aura.overlay = {
-            stacks = aura[2], -- @todo replace with real hash
             spellID = aura[3],
             texture = aura[4],
             position = aura[5],
