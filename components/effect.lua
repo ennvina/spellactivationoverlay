@@ -393,6 +393,10 @@ local function importTalent(effect, props)
     importTrigger(effect, props, "talent", "requireTalent");
 end
 
+local function importAura(effect, props)
+    importTrigger(effect, props, "aura", "requireAura");
+end
+
 local function importActionUsable(effect, props)
     importTrigger(effect, props, "action", "actionUsable");
 end
@@ -469,18 +473,21 @@ local function importCounterButton(effect, props)
     effect.buttons = { button }
 end
 
-local function createCounter(effect, props)
-
+local function createGeneric(effect, props)
     if type(props) == 'table' then
         effect.combatOnly = props.combatOnly;
+    else
+        SAO:Error(Module, "Creating a generic effect for "..tostring(effect.name).." requires a 'props' table");
     end
 
     -- Import things that can add triggers before importing overlays and buttons
-    effect.triggers.action = true;
     importTalent(effect, props);
+    importAura(effect, props);
+    importActionUsable(effect, props);
     importResource(effect, props);
 
-    importCounterButton(effect, props);
+    importOverlays(effect, props);
+    importButtons(effect, props);
 
     return effect;
 end
@@ -500,6 +507,22 @@ local function createAura(effect, props)
 
     importOverlays(effect, props);
     importButtons(effect, props);
+
+    return effect;
+end
+
+local function createCounter(effect, props)
+
+    if type(props) == 'table' then
+        effect.combatOnly = props.combatOnly;
+    end
+
+    -- Import things that can add triggers before importing overlays and buttons
+    effect.triggers.action = true;
+    importTalent(effect, props);
+    importResource(effect, props);
+
+    importCounterButton(effect, props);
 
     return effect;
 end
@@ -869,10 +892,12 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
         triggers = {},
     }
 
-    if strlower(class) == "counter" then
-        createCounter(effect, props);
+    if strlower(class) == "generic" then
+        createGeneric(effect, props);
     elseif strlower(class) == "aura" then
         createAura(effect, props);
+    elseif strlower(class) == "counter" then
+        createCounter(effect, props);
     elseif strlower(class) == "counter_with_overlay" then
         createCounterWithOverlay(effect, props);
     else
