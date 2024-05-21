@@ -34,6 +34,7 @@ SAO.Display = {
         local hashData = {
             optionIndex = tempHash:toOptionIndex(),
             optionAnyStacks = nil,
+            legacyGlowingOption = true, -- Always allow legacy glowing button options, for now
         }
         local legacyReady = type(hashData.optionIndex) == 'number';
         if not legacyReady then

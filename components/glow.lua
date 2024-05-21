@@ -206,7 +206,7 @@ local function isGlowingOptionEnabled(glowingOptions, glowID, hashData)
     end
 
     local optionIndex = hashData and hashData.optionIndex;
-    local legacyAllowed = hashData == nil or hashData.optionAnyStacks;
+    local legacyAllowed = hashData == nil or hashData.legacyGlowingOption;
 
     if type(glowID) == "number" then
         if optionIndex and type(glowingOptions[optionIndex]) == 'table' and type(glowingOptions[optionIndex][glowID]) == 'boolean' then
