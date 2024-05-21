@@ -53,6 +53,19 @@ local function useDivineStorm()
     );
 end
 
+local function useWordOfGlory()
+    SAO:CreateEffect(
+        "word_of_glory",
+        SAO.CATA,
+        wordOfGlory,
+        "counter",
+        {
+            useHolyPower = true,
+            holyPower = 3,
+        }
+    );
+end
+
 local function useInfusionOfLight()
     local infusionOfLightBuff1 = 53672;
     local infusionOfLightBuff2 = 54149;
@@ -178,6 +191,9 @@ local function registerClass(self)
     useHolyShock();
     useExorcism();
     useDivineStorm();
+
+    -- Holy Power spenders
+    useWordOfGlory();
 
     -- Items
     self:RegisterAuraSoulPreserver("soul_preserver_paladin", 60513); -- 60513 = Paladin buff
