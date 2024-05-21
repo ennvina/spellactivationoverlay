@@ -26,6 +26,10 @@ SAO.Display = {
             softTimer = nil,
         }
 
+        if hash == 0 then
+            SAO:Debug(Module, "Creating display with invalid hash == 0 for "..parent.description);
+        end
+
         local tempHash = SAO.Hash:new(hash);
         local hashData = {
             optionIndex = tempHash:toOptionIndex(),

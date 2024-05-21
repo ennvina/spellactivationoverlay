@@ -141,11 +141,23 @@ SAO.Bucket = {
         self:applyHash();
     end,
 
+    setHolyPower = function(self, holyPower)
+        if self.currentHolyPower == holyPower then
+            return;
+        end
+        self.currentHolyPower = holyPower;
+        self.trigger:inform(SAO.TRIGGER_HOLY_POWER);
+        self.hashCalculator:setHolyPower(holyPower);
+        self:applyHash();
+    end,
+
     applyHash = function(self)
         if self.currentHash == self.hashCalculator.hash then
             return;
         end
-        SAO:Debug(Module, "Changing hash from "..tostring(self.currentHash).." to "..self.hashCalculator.hash.." for "..self.description);
+        local strHashBefore = type(self.currentHash) == 'number' and string.format("0x%X", self.currentHash) or tostring(self.currentHash);
+        local strHashAfter = type(self.hashCalculator.hash) == 'number' and string.format("0x%X", self.hashCalculator.hash) or tostring(self.hashCalculator.hash);
+        SAO:Debug(Module, "Changing hash from "..strHashBefore.." to "..strHashAfter.." for "..self.description);
         self.currentHash = self.hashCalculator.hash;
 
         if not self.trigger:isFullyInformed() then

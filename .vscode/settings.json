@@ -45,6 +45,7 @@
         "CloseDropDownMenus",
         "CreateColor",
         "CreateFrame",
+        "Enum",
         "InterfaceOptions_AddCategory",
         "InterfaceOptionsFrame_OpenToCategory",
         "OverrideActionBar",
@@ -97,6 +98,7 @@
         "UnitGUID",
         "UnitHealth",
         "UnitHealthMax",
+        "UnitPower",
         "UnitRace",
         "UnitSex",
         // WoW constants

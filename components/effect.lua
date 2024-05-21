@@ -352,6 +352,26 @@ local function addOneButton(buttons, buttonConfig, project, default, triggers)
     table.insert(buttons, button);
 end
 
+local function importTrigger(effect, props, triggerName, propName)
+    if type(props) ~= 'table' then
+        effect.triggers[triggerName] = false;
+        return;
+    end
+
+    if type(props[propName]) == 'boolean' then
+        effect.triggers[triggerName] = props[propName];
+    elseif type(props[propName]) == 'table' then
+        for project, prop in pairs(props[propName]) do
+            if SAO.IsProject(project) then
+                effect.triggers[triggerName] = prop;
+                break;
+            end
+        end
+    else
+        effect.triggers[triggerName] = false;
+    end
+end
+
 local function importTalent(effect, props)
     if type(props) ~= 'table' then
         return;
@@ -370,18 +390,15 @@ local function importTalent(effect, props)
         effect.talent = effect.spellID;
     end
 
-    if type(props.requireTalent) == 'boolean' then
-        effect.triggers.talent = props.requireTalent;
-    elseif type(props.requireTalent) == 'table' then
-        for project, requireTalent in pairs(props.requireTalent) do
-            if SAO.IsProject(project) then
-                effect.triggers.talent = requireTalent;
-                break;
-            end
-        end
-    else
-        effect.triggers.talent = false;
-    end
+    importTrigger(effect, props, "talent", "requireTalent");
+end
+
+local function importActionUsable(effect, props)
+    importTrigger(effect, props, "action", "actionUsable");
+end
+
+local function importResource(effect, props)
+    importTrigger(effect, props, "holyPower", "useHolyPower");
 end
 
 local function importOverlays(effect, props)
@@ -431,32 +448,37 @@ local function importButtons(effect, props)
 end
 
 local function importCounterButton(effect, props)
+    -- Grab condition directly from props, but use { actionUsable = true } as main prop, to force this setting
+    -- In practice, it will ignore any mischievious 'actionUsable' property that could have been set
+    local condition = getCondition({ actionUsable = true }, props, effect.triggers);
+    local hash = getHash(condition, effect.triggers).hash;
+
+    local button = {
+        condition = condition,
+        hash = hash,
+    }
+
     if type(props) == 'table' then
-        effect.buttons = {{
-            useName = doesUseName(props.useName),
-            option = copyOption(props.buttonOption),
-        }}
+        button.useName = doesUseName(props.useName); -- Grab useName directly from props
+        button.option = copyOption(props.buttonOption); -- Special variable 'buttonOption' to avoid confusion with eventual overlay options
     else
-        effect.buttons = {{
-            useName = doesUseName(),
-        }}
+        button.useName = doesUseName();
     end
 
-    local condition = getCondition({}, {}, effect.triggers);
-    effect.buttons[1].condition = condition;
-
-    local hash = getHash(condition, effect.triggers).hash;
-    effect.buttons[1].hash = hash;
+    -- Counter has always exactly one button
+    effect.buttons = { button }
 end
 
 local function createCounter(effect, props)
-    effect.triggers.action = true;
 
     if type(props) == 'table' then
         effect.combatOnly = props.combatOnly;
     end
 
+    -- Import things that can add triggers before importing overlays and buttons
+    effect.triggers.action = true;
     importTalent(effect, props);
+    importResource(effect, props);
 
     importCounterButton(effect, props);
 
@@ -466,17 +488,17 @@ end
 local function createAura(effect, props)
     if type(props) == 'table' then
         effect.combatOnly = props.combatOnly;
-        effect.triggers.action = props.actionUsable == true;
     else
         SAO:Error(Module, "Creating an aura for "..tostring(effect.name).." requires a 'props' table");
     end
 
+    -- Import things that can add triggers before importing overlays and buttons
     effect.triggers.aura = true;
-
     importTalent(effect, props);
+    importActionUsable(effect, props);
+    importResource(effect, props);
 
     importOverlays(effect, props);
-
     importButtons(effect, props);
 
     return effect;

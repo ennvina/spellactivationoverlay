@@ -5,6 +5,8 @@ local Module = "events"
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local UnitGUID = UnitGUID
 
+local HolyPowerPowerTypeToken = "HOLY_POWER"
+
 -- Events starting with SPELL_AURA e.g., SPELL_AURA_APPLIED
 -- This should be invoked only if the buff is done on the player i.e., UnitGUID("player") == destGUID
 function SAO.SPELL_AURA(self, ...)
@@ -96,6 +98,12 @@ end
 
 function SAO.PLAYER_TALENT_UPDATE(self, ...)
     self:CheckManuallyAllBuckets(SAO.TRIGGER_TALENT);
+end
+
+function SAO.UNIT_POWER_FREQUENT(self, unitTarget, powerType)
+    if unitTarget == "player" and powerType == HolyPowerPowerTypeToken then
+        self:CheckManuallyAllBuckets(SAO.TRIGGER_HOLY_POWER);
+    end
 end
 
 local arePendingEffectsRegistered = false;
