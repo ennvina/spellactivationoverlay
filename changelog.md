@@ -10,6 +10,10 @@ New effects:
 
 Bug Fixes
 - Buffs should now be detected a bit more efficiently (Season of Discovery)
+- Checking a checkbox in options panel refreshes their effects immediately
+
+Known Issues
+- Rare effects still do not refresh immediately after changing their option
 
 #### v1.4.4 (2024-05-20)
 

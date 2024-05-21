@@ -37,9 +37,9 @@ end
 
 -- Apply glowing buttons on/off
 function SAO.ApplyGlowingButtonsToggle(self)
-    -- Don't do anything
-    -- Buttons will stop glowing by themselves, and will never light up again
-
-    -- A better function would be to stop glowing / start glowing now
-    -- But this would be more complex to code, and the benefit is minimal
+    -- @todo Find a way to only refresh spell alert when checking spell alert, or glowing button when clicking glowing button
+    for _, bucket in pairs(self.RegisteredBucketsBySpellID) do
+        bucket:reset(); -- Reset hash to force re-display if needed
+        bucket.trigger:manualCheckAll();
+    end
 end

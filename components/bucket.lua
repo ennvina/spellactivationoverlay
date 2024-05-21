@@ -111,6 +111,19 @@ SAO.Bucket = {
         end
     end,
 
+    reset = function(self)
+        self.currentStacks = -1;
+        self.currentActionUsable = nil;
+        self.currentTalented = nil;
+        self.currentHolyPower = nil;
+
+        self.trigger.informed = 0;
+
+        self.hashCalculator:reset();
+
+        self:applyHash();
+    end,
+
     setStacks = function(self, stacks)
         if self.currentStacks == stacks then
             return;
