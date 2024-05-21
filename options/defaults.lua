@@ -342,20 +342,23 @@ SAO.defaults = {
                     [879]   = true, -- Exorcism
                     [19750] = true, -- Flash of Light (not for Cata)
                 },
+                [84963] = { -- Inquisition (Cataclysm)
+                    [84963] = false, -- Inquisition
+                },
                 [85222] = { -- Light of Dawn (Cataclysm)
                     [85222] = true, -- Light of Dawn
                 },
                 [85256] = { -- Templar's Verdict (Cataclysm)
                     [85256] = true, -- Templar's Verdict
                 },
+                [85416] = { -- Grand Crusader (Cataclysm)
+                    [31935] = true, -- Avenger's Shield
+                },
                 [85673] = { -- Word of Glory (Cataclysm)
                     [85673] = true, -- Word of Glory
                 },
                 [88819] = { -- Daybreak (Cataclysm)
                     [20473] = true, -- Holy Shock
-                },
-                [85416] = { -- Grand Crusader (Cataclysm)
-                    [31935] = true, -- Avenger's Shield
                 },
                 [90174] = { -- Divine Purpose (Cataclysm)
                     [85673] = true, -- Word of Glory

@@ -199,6 +199,7 @@ local function registerClass(self)
     useHolySpender("light_of_dawn", lightOfDawn); -- Holy only
     useHolySpender("shield_of_the_righteous", shieldOfTheRighteous); -- Protection only
     useHolySpender("templars_verdict", templarsVerdict); -- Retribution only
+    useHolySpender("inquisition", inquisition);
 
     -- Items
     self:RegisterAuraSoulPreserver("soul_preserver_paladin", 60513); -- 60513 = Paladin buff
