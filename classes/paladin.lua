@@ -10,6 +10,7 @@ local holyRadiance = 82327;
 local holyShock = 20473;
 local how = 24275;
 local inquisition = 84963;
+local lightOfDawn = 85222;
 local templarsVerdict = 85256;
 local wordOfGlory = 85673;
 local zealotry = 85696;
@@ -53,11 +54,11 @@ local function useDivineStorm()
     );
 end
 
-local function useWordOfGlory()
+local function useHolySpender(name, spellID)
     SAO:CreateEffect(
-        "word_of_glory",
+        name,
         SAO.CATA,
-        wordOfGlory,
+        spellID,
         "counter",
         {
             useHolyPower = true,
@@ -193,7 +194,8 @@ local function registerClass(self)
     useDivineStorm();
 
     -- Holy Power spenders
-    useWordOfGlory();
+    useHolySpender("word_of_glory", wordOfGlory);
+    useHolySpender("light_of_dawn", lightOfDawn); -- Holy only
 
     -- Items
     self:RegisterAuraSoulPreserver("soul_preserver_paladin", 60513); -- 60513 = Paladin buff

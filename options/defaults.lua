@@ -339,6 +339,9 @@ SAO.defaults = {
                     [879]   = true, -- Exorcism
                     [19750] = true, -- Flash of Light (not for Cata)
                 },
+                [85222] = { -- Light of Dawn (Cataclysm)
+                    [85222] = true, -- Light of Dawn
+                },
                 [85673] = { -- Word of Glory (Cataclysm)
                     [85673] = true, -- Word of Glory
                 },
