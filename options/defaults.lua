@@ -324,7 +324,10 @@ SAO.defaults = {
                     [24275] = true, -- Hammer of Wrath
                 },
                 [53385] = { -- Divine Storm (Wrath+)
-                    [53385] = true, -- Divine Storm (Wrath+)
+                    [53385] = true, -- Divine Storm
+                },
+                [53600] = { -- Shield of the Righteous (Cataclysm)
+                    [53600] = true, -- Shield of the Righteous
                 },
                 [407778] = { -- Divine Storm (Season of Discovery)
                     [407778]= true, -- Divine Storm (Season of Discovery)

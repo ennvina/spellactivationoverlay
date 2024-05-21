@@ -6,7 +6,9 @@ This release marks a major overhaul of the effect system
 
 New effects:
 - New GAB: Death Knight's Bone Shield, when the buff is missing (Cataclysm)
-- New GAB: Paladin's Word of Glory, at 3 charges of Holy Power (Cataclysm)
+- New GAB: Paladin's Light of Dawn, at 3 charges of Holy Power (Cataclysm)
+- New GAB: Paladin's Shield of the Righteous, at 3 Holy Power (Cataclysm)
+- New GAB: Paladin's Word of Glory, at 3 Holy Power (Cataclysm)
 
 Bug Fixes
 - Buffs should now be detected a bit more efficiently (Season of Discovery)

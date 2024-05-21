@@ -11,6 +11,7 @@ local holyShock = 20473;
 local how = 24275;
 local inquisition = 84963;
 local lightOfDawn = 85222;
+local shieldOfTheRighteous = 53600;
 local templarsVerdict = 85256;
 local wordOfGlory = 85673;
 local zealotry = 85696;
@@ -196,6 +197,7 @@ local function registerClass(self)
     -- Holy Power spenders
     useHolySpender("word_of_glory", wordOfGlory);
     useHolySpender("light_of_dawn", lightOfDawn); -- Holy only
+    useHolySpender("shield_of_the_righteous", shieldOfTheRighteous); -- Protection only
 
     -- Items
     self:RegisterAuraSoulPreserver("soul_preserver_paladin", 60513); -- 60513 = Paladin buff
