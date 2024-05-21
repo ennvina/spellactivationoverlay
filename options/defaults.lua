@@ -303,10 +303,15 @@ SAO.defaults = {
                 [60513] = { -- Healing Trance / Soul Preserver (Wrath)
                     [0] = false,
                 },
-                [88819] = { -- Daybreak (Cataclysm)
-                    [0] = true,
+                [85247] = { -- Holy Power (not an actual buff) (Cataclysm)
+                    [1] = false, -- 1 charge of Holy Power
+                    [2] = false, -- 2 charges of Holy Power
+                    [3] = true,  -- 3 charges of Holy Power
                 },
                 [85416] = { -- Grand Crusader (Cataclysm)
+                    [0] = true,
+                },
+                [88819] = { -- Daybreak (Cataclysm)
                     [0] = true,
                 },
                 [90174] = { -- Divine Purpose (Cataclysm)

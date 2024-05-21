@@ -16,6 +16,30 @@ local templarsVerdict = 85256;
 local wordOfGlory = 85673;
 local zealotry = 85696;
 
+local function useHolyPowerTracker()
+    local holyPower = 85247; -- Not a real aura or action, but the game client has it
+
+    local overlays = {}
+    for hp=1,3 do
+        local texture = "arcane_missiles_"..hp;
+        local pulse = hp == 3;
+        tinsert(overlays, { holyPower = hp, texture = texture, position = "Left (vFlipped)", scale = 0.4, color = { 255, 255, 55 }, pulse = pulse, });
+        tinsert(overlays, { holyPower = hp, texture = texture, position = "Right (180)",     scale = 0.4, color = { 255, 255, 55 }, pulse = pulse, option = false });
+    end
+
+    SAO:CreateEffect(
+        "holy_power_tracker",
+        SAO.CATA,
+        holyPower,
+        "generic",
+        {
+            combatOnly = true,
+            useHolyPower = true,
+            overlays = overlays,
+        }
+    );
+end
+
 local function useHammerOfWrath()
     SAO:CreateEffect(
         "how",
@@ -188,6 +212,9 @@ local function useArtOfWar()
 end
 
 local function registerClass(self)
+    -- Holy Power tracking
+    useHolyPowerTracker();
+
     -- Counters
     useHammerOfWrath();
     useHolyShock();

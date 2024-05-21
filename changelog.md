@@ -5,6 +5,7 @@
 This release marks a major overhaul of the effect system
 
 New effects:
+- New SAO: Paladin's charges of Holy Power (Cataclysm)
 - New GAB: Death Knight's Bone Shield, when the buff is missing (Cataclysm)
 - New GAB: Paladin's Inquisition, at 3 charges of Holy Power (Cataclysm)
 - New GAB: Paladin's Light of Dawn, at 3 Holy Power (Cataclysm)

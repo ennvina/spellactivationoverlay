@@ -194,9 +194,6 @@ TEXTURES_NOT_FOR_CATA=(
 tooth_and_claw
 monk_serpent
 raging_blow
-arcane_missiles_1
-arcane_missiles_2
-arcane_missiles_3
 fulmination
 $(texbelow 511469 450914 450915)
 )
