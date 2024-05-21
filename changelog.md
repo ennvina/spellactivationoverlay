@@ -1,16 +1,23 @@
 ## SpellActivationOverlay Changelog
 
-#### v1.4.4 (2024-05-xx)
+#### v2.0.0 (2024-05-xx)
+
+This release marks a major overhaul of the effect system
+
+Bug Fixes
+- Buffs should now be detected a bit more efficiently (Season of Discovery)
+
+#### v1.4.4 (2024-05-20)
 
 Shout-out to fellow developer stako. Thanks!
 
 Bug Fixes
 - Hunter's Master Marksman should now trigger correctly (Cataclysm)
-- Buffs should not be detected a bit more efficiently (Season of Discovery)
+- Mage's Heating Up during Hot Streak has been reinstated (Cataclysm)
 
 #### v1.4.3 (2024-05-12)
 
-New Spell Alerts:
+New Glowing Buttons:
 - New GAB: Priest's Mind Blast, with 2 stacks of Mind Melt (Cataclysm)
 - New GAB: Hunter's Kill Command, during Killing Streak (Cataclysm)
 - New GAB: Warrior's Cleave, during Battle Trance (Cataclysm)
