@@ -103,6 +103,7 @@
         "UnitSex",
         // WoW constants
         "ACTION_SPELL_AURA_APPLIED_DOSE",
+        "ACTION_SPELL_AURA_REMOVED_DEBUFF",
         "AVAILABLE",
         "BOOKTYPE_SPELL",
         "CALENDAR_TOOLTIP_DATE_RANGE",

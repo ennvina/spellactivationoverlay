@@ -9,9 +9,10 @@ local Module = "option"
 -- talentSubText is a string describing the specificity of this option, appended to talent text
 -- spellSubText is a string describing the specificity of this option, appended to spell text
 -- variants optional variant object that tells which are sub-options and how to use them
+-- hash optional hash, used to describe what the display is expected to depend on
 -- @note Options must be linked asap, not during loadOptions() which would be loaded only when the options panel is opened
 -- By linking options as soon as possible, before their respective RegisterAura() calls, options can be used by initial triggers, if any
-function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText, variants) -- @todo use hash and testHash like overlay options
+function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText, variants, hash) -- @todo use hash and testHash like overlay options
     if (talentID and not GetSpellInfo(talentID)) or (not self:IsFakeSpell(glowID) and not GetSpellInfo(glowID)) then
         if talentID and not GetSpellInfo(talentID) then
             self:Debug(Module, "Skipping glowing option of talentID "..tostring(talentID).." because the spell does not exist");
@@ -56,6 +57,16 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
         text = text.." |T"..spellIcon..":0|t "..spellName;
         if (spellSubText) then
             text = text.." ("..spellSubText..")";
+        end
+
+        -- Hash text
+        if type(hash) == 'string' then
+            local hashCalculator = SAO.Hash:new();
+            hashCalculator:fromString(hash);
+            local humanReadableHash = hashCalculator:toHumanReadableString();
+            if humanReadableHash then
+                text = text .. " ("..humanReadableHash..")";
+            end
         end
 
         -- Set final text to checkbox

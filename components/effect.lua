@@ -769,7 +769,6 @@ function SAO:AddEffectOptions()
         local talent = effect.talent;
         local skipOptions = effect.minor == true;
 
-        local uniqueOverlayStack = { latest = nil, unique = true };
         for _, overlay in ipairs((not skipOptions) and effect.overlays or {}) do
             if overlay.option ~= false and (not overlay.project or self.IsProject(overlay.project)) then
                 local buff = overlay.spellID or effect.spellID;
@@ -786,13 +785,6 @@ function SAO:AddEffectOptions()
                     local setupHash = self:HashNameFromHashNumber(overlay.hash);
                     self:AddOverlayOption(talent, buff, setupHash);
                 end
-
-                -- Bonus: detect if all overlays are based on a unique stack count; it will help write sub-text for glowing option
-                local stacks = overlay.stacks or 0;
-                if uniqueOverlayStack.latest and uniqueOverlayStack.latest ~= stacks and uniqueOverlayStack.unique then
-                    uniqueOverlayStack.unique = false;
-                end
-                uniqueOverlayStack.latest = stacks;
             end
         end
 
@@ -804,14 +796,14 @@ function SAO:AddEffectOptions()
                     local talentSubText = button.option.talentSubText;
                     local spellSubText = button.option.spellSubText;
                     local variants = button.option.variants;
+                    local hashName = self.Hash:new(button.hash):toString();
                     if type(variants) == 'function' then
                         variants = variants();
                     end
-                    self:AddGlowingOption(talent, buff, spellID, talentSubText, spellSubText, variants);
+                    self:AddGlowingOption(talent, buff, spellID, talentSubText, spellSubText, variants, hashName);
                 else
-                    local stacks = button.stacks or (uniqueOverlayStack.unique and uniqueOverlayStack.latest) or nil;
-                    local talentSubText = stacks and stacks > 0 and self:NbStacks(stacks) or nil;
-                    self:AddGlowingOption(talent, buff, spellID, talentSubText);
+                    local hashName = self.Hash:new(button.hash):toString();
+                    self:AddGlowingOption(talent, buff, spellID, nil, nil, nil, hashName);
                 end
             end
         end

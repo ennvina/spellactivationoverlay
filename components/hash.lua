@@ -138,8 +138,10 @@ HashStringifier:register(
         local auraStacks = hash:getAuraStacks();
         if auraStacks and auraStacks > 0 then
             return SAO:NbStacks(auraStacks);
+        elseif auraStacks == nil then
+            return ACTION_SPELL_AURA_REMOVED_DEBUFF;
         else
-            return nil; -- Should be obvious if aura is 'missing' or 'any'
+            return nil; -- Should be obvious if aura is 'any'
         end
     end,
     function(hash) -- optionIndexer
