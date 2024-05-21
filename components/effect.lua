@@ -691,8 +691,7 @@ local function RegisterNativeEffectNow(self, effect)
             local texture = overlay.texture;
             local position = overlay.position;
             local scale = overlay.scale or 1;
-            local r, g, b = 255, 255, 255;
-            if overlay.color then r, g, b = overlay.color[1], overlay.color[2], overlay.color[3] end
+            local color = overlay.color and { overlay.color[1], overlay.color[2], overlay.color[3] } or { 255, 255, 255 };
             local autoPulse = overlay.pulse ~= false;
             local combatOnly = overlay.combatOnly == true or effect.combatOnly == true;
 
@@ -702,7 +701,7 @@ local function RegisterNativeEffectNow(self, effect)
                 texture = SAO.TexName[texture], -- Map from TexName
                 position = position,
                 scale = scale,
-                r = r, g = g, b = b,
+                color = color,
                 autoPulse = autoPulse,
                 combatOnly = combatOnly,
             }
