@@ -152,9 +152,9 @@ SAO.Display = {
         end
         self.parent.displayedHash = self.hash;
         if not self.combatOnly or InCombatLockdown() then
-            self:setStatus('hard');
+            self:setStatus('hard', options);
         else
-            self:setStatus('soft');
+            self:setStatus('soft', options);
         end
     end,
 
