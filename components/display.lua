@@ -145,7 +145,11 @@ SAO.Display = {
     -- It also sets the display status to 'soft' or 'hard'
     -- Because of that, setStatus() must *not* show overlays and buttons by calling show()
     show = function(self, options)
-        SAO:Debug(Module, "Showing hash "..self.hash.." of "..self.parent.description);
+        if SAO:HasDebug() then
+            local hashCalculator = SAO.Hash:new(self.hash);
+            local hashDescription = string.format("%s (0x%X = %d)", hashCalculator:toString(), self.hash, self.hash);
+            SAO:Debug(Module, "Showing hash "..hashDescription.." of "..self.parent.description);
+        end
         self.parent.displayedHash = self.hash;
         if not self.combatOnly or InCombatLockdown() then
             self:setStatus('hard');
@@ -159,7 +163,11 @@ SAO.Display = {
     -- It also sets the display status to 'off'
     -- Because of that, setStatus() must *not* hide overlays and buttons by calling hide()
     hide = function(self)
-        SAO:Debug(Module, "Hiding hash "..self.hash.." of "..self.parent.description);
+        if SAO:HasDebug() then
+            local hashCalculator = SAO.Hash:new(self.hash);
+            local hashDescription = string.format("%s (0x%X = %d)", hashCalculator:toString(), self.hash, self.hash);
+            SAO:Debug(Module, "Hiding hash "..hashDescription.." of "..self.parent.description);
+        end
         self.parent.displayedHash = nil;
         self:setStatus('off');
     end,

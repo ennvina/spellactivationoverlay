@@ -35,10 +35,18 @@ function SAO.Info(self, prefix, msg, ...)
     print(WrapTextInColor("SAO -"..prefix.."- "..msg, LIGHTBLUE_FONT_COLOR), ...);
 end
 
+function SAO:HasDebug()
+    return SpellActivationOverlayDB and SpellActivationOverlayDB.debug;
+end
+
 function SAO.Debug(self, prefix, msg, ...)
     if SpellActivationOverlayDB and SpellActivationOverlayDB.debug then
         print(WrapTextInColorCode("[SAO@"..GetTime().."] -"..prefix.."- "..msg, "FFFFFFAA"), ...);
     end
+end
+
+function SAO:HasTrace(prefix)
+    return SpellActivationOverlayDB and SpellActivationOverlayDB.trace and SpellActivationOverlayDB.trace[prefix];
 end
 
 function SAO.Trace(self, prefix, msg, ...)

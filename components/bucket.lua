@@ -168,9 +168,33 @@ SAO.Bucket = {
         if self.currentHash == self.hashCalculator.hash then
             return;
         end
-        local strHashBefore = type(self.currentHash) == 'number' and string.format("0x%X", self.currentHash) or tostring(self.currentHash);
-        local strHashAfter = type(self.hashCalculator.hash) == 'number' and string.format("0x%X", self.hashCalculator.hash) or tostring(self.hashCalculator.hash);
-        SAO:Debug(Module, "Changing hash from "..strHashBefore.." to "..strHashAfter.." for "..self.description);
+
+        if SAO:HasDebug() or SAO:HasTrace(Module) then
+            local describeHash = function(hash)
+                local str, num = "unknown", tostring(hash);
+                if type(hash) == 'number' then
+                    str = SAO.Hash:new(hash):toString();
+                    num = string.format("0x%X == %d", hash, hash);
+                end
+                return str, string.format("%s (%s)", str, num);
+            end
+
+            if self.currentHash == nil or self.currentHash == 0 then
+                local shortStrHashAfter, longStrHashAfter = describeHash(self.hashCalculator.hash);
+                SAO:Debug(Module, "Setting hash to "..shortStrHashAfter.." for "..self.description);
+                SAO:Trace(Module, "Setting hash to "..longStrHashAfter.." for "..self.description);
+            elseif self.hashCalculator.hash == 0 then
+                local _, longStrHashBefore = describeHash(self.currentHash);
+                SAO:Debug(Module, "Resetting hash for "..self.description);
+                SAO:Trace(Module, "Resetting hash from "..longStrHashBefore.." for "..self.description);
+            else
+                local shortStrHashBefore, longStrHashBefore = describeHash(self.currentHash);
+                local shortStrHashAfter, longStrHashAfter = describeHash(self.hashCalculator.hash);
+                SAO:Debug(Module, "Changing hash from "..shortStrHashBefore.." to "..shortStrHashAfter.." for "..self.description);
+                SAO:Trace(Module, "Changing hash from "..longStrHashBefore.." to "..longStrHashAfter.." for "..self.description);
+            end
+        end
+
         self.currentHash = self.hashCalculator.hash;
 
         if not self.trigger:isFullyInformed() then
@@ -320,6 +344,10 @@ SAO.BucketManager = {
     end,
 
     checkIntegrity = function(self, bucket)
+        if bucket.trigger.required == 0 then
+            SAO:Warn(Module, "Effect "..bucket.description.." does not depend on any trigger");
+        end
+
         local optionIndexes = {}
         for hash, display in pairs(bucket) do
             if type(hash) == 'number' then -- Assume number-based keys are used only by displays
@@ -378,10 +406,18 @@ local function dumpOneBucket(bucket, devDump)
     if devDump then
         DevTools_Dump({ [bucket.spellID] = bucket });
     else
+        local describeHash = function(hash)
+            local str = tostring(hash);
+            if hash then
+                str = string.format("%s == 0x%X == %d", SAO.Hash:new(hash):toString(), hash, hash);
+            end
+            return str;
+        end
+
         local str = bucket.name..", "..
             "spellID == "..tostring(bucket.spellID)..", "..
-            "currentHash == "..tostring(bucket.currentHash)..(bucket.currentHash and " == "..SAO.Hash:new(bucket.currentHash):toString() or "")..", "..
-            "displayedHash == "..tostring(bucket.displayedHash)..(bucket.displayedHash and " == "..SAO.Hash:new(bucket.displayedHash):toString() or "")..", "..
+            "currentHash == "..describeHash(bucket.currentHash)..", "..
+            "displayedHash == "..describeHash(bucket.displayedHash)..", "..
             "triggerRequired == "..tostring(bucket.trigger.required)..", "..
             "triggerInformed == "..tostring(bucket.trigger.informed);
         SAO:Info(Module, str);
