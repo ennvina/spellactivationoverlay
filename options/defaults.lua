@@ -345,6 +345,9 @@ SAO.defaults = {
                 [85222] = { -- Light of Dawn (Cataclysm)
                     [85222] = true, -- Light of Dawn
                 },
+                [85256] = { -- Templar's Verdict (Cataclysm)
+                    [85256] = true, -- Templar's Verdict
+                },
                 [85673] = { -- Word of Glory (Cataclysm)
                     [85673] = true, -- Word of Glory
                 },
