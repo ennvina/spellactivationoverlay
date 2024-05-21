@@ -466,6 +466,7 @@ end
 local function createAura(effect, props)
     if type(props) == 'table' then
         effect.combatOnly = props.combatOnly;
+        effect.triggers.action = props.actionUsable == true;
     else
         SAO:Error(Module, "Creating an aura for "..tostring(effect.name).." requires a 'props' table");
     end

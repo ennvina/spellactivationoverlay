@@ -21,6 +21,9 @@ SAO.defaults = {
                 },
             },
             glow = {
+                [49222] = { -- Bone Shield (Cataclysm)
+                    [49222] = true, -- Bone Shield
+                },
                 [56815] = { -- Rune Strike (Wrath)
                     [56815] = true, -- Rune Strike
                 },

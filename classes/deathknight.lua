@@ -1,6 +1,7 @@
 local AddonName, SAO = ...
 
 local bloodBoil = 48721;
+local boneShield = 49222;
 local deathCoil = 47541;
 local frostStrike = 49143;
 local howlingBlast = 49184;
@@ -16,6 +17,21 @@ local function useRuneStrike()
         runeStrike, -- Rune Strike (ability)
         "counter",
         { useName = false }
+    );
+end
+
+local function useBoneShield()
+    SAO:CreateEffect(
+        "bone_shield",
+        SAO.CATA,
+        boneShield,
+        "aura",
+        {
+            talent = boneShield,
+            requireTalent = true,
+            actionUsable = true,
+            button = { stacks = -1, spellID = boneShield },
+        }
     );
 end
 
@@ -96,12 +112,20 @@ local function useWotn()
 end
 
 local function registerClass(self)
+    -- Counters
     useRuneStrike();
+
+    -- Blood
+    useBoneShield();
+    useWotn();
+    useCrimsonScourge();
+
+    -- Frost
     useRime();
     useKillingMachine();
-    useCrimsonScourge();
+
+    -- Unholy
     useSuddenDoom();
-    useWotn();
 end
 
 SAO.Class["DEATHKNIGHT"] = {

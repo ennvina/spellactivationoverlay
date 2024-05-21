@@ -4,6 +4,9 @@
 
 This release marks a major overhaul of the effect system
 
+New effects:
+- New GAB: Death Knight's Bone Shield, when the buff is missing (Cataclysm)
+
 Bug Fixes
 - Buffs should now be detected a bit more efficiently (Season of Discovery)
 
