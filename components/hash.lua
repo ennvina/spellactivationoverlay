@@ -25,14 +25,6 @@ local HASH_TALENT_NO   = 0x200
 local HASH_TALENT_YES  = 0x400
 local HASH_TALENT_MASK = 0x600
 
--- Holy Power
--- hash = HASH_HOLY_POWER_0 * (1 + holy_power)
-local HASH_HOLY_POWER_0    = 0x0800
-local HASH_HOLY_POWER_1    = 0x1000
-local HASH_HOLY_POWER_2    = 0x1800
-local HASH_HOLY_POWER_3    = 0x2000
-local HASH_HOLY_POWER_MASK = 0x3800
-
 local HashStringifierList = {}
 local HashStringifierMap = {}
 
@@ -186,31 +178,6 @@ SAO.HashStringifier:register(
     end
 );
 
-SAO.HashStringifier:register(
-    4,
-    HASH_HOLY_POWER_MASK,
-    "holy_power", -- key
-    function(hash) -- toValue()
-        local holyPower = hash:getHolyPower();
-        return tostring(holyPower);
-    end,
-    function(hash, value) -- fromValue()
-        if tostring(tonumber(value)) == value then
-            hash:setHolyPower(tonumber(value));
-            return true;
-        else
-            return nil; -- Not good
-        end
-    end,
-    function(hash) -- getHumanReadableKeyValue
-        local holyPower = hash:getHolyPower();
-        return string.format(HOLY_POWER_COST, holyPower);
-    end,
-    function(hash) -- optionIndexer
-        return hash:getHolyPower();
-    end
-);
-
 
 SAO.Hash = {
     new = function(self, initialHash)
@@ -323,30 +290,6 @@ SAO.Hash = {
         if maskedHash == nil then return nil; end
 
         return maskedHash == HASH_TALENT_YES;
-    end,
-
-    -- Holy Power
-
-    hasHolyPower = function(self)
-        return bit.band(self.hash, HASH_HOLY_POWER_MASK) ~= 0;
-    end,
-
-    setHolyPower = function(self, holyPower)
-        if type(holyPower) ~= 'number' or holyPower < 0 then
-            SAO:Warn(Module, "Invalid Holy Power "..tostring(holyPower));
-        elseif holyPower > 3 then
-            SAO:Debug(Module, "Holy Power overflow ("..holyPower..") truncated to 3");
-            self:setMaskedHash(HASH_HOLY_POWER_3, HASH_HOLY_POWER_MASK);
-        else
-            self:setMaskedHash(HASH_HOLY_POWER_0 * (1 + holyPower), HASH_HOLY_POWER_MASK);
-        end
-    end,
-
-    getHolyPower = function(self)
-        local maskedHash = self:getMaskedHash(HASH_HOLY_POWER_MASK);
-        if maskedHash == nil then return nil; end
-
-        return (maskedHash / HASH_HOLY_POWER_0) - 1;
     end,
 
     -- String Conversion functions

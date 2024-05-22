@@ -36,7 +36,6 @@ SAO.Bucket = {
             currentStacks = -1,
             currentActionUsable = nil,
             currentTalented = nil,
-            currentHolyPower = nil,
 
             -- Initially, nothing is displayed
             displayedHash = nil,
@@ -60,7 +59,6 @@ SAO.Bucket = {
         self.currentStacks = -1;
         self.currentActionUsable = nil;
         self.currentTalented = nil;
-        self.currentHolyPower = nil;
 
         self.currentState:reset();
 
@@ -154,16 +152,6 @@ SAO.Bucket = {
         self.currentTalented = talented;
         self.trigger:inform(SAO.TRIGGER_TALENT);
         self.hashCalculator:setTalented(talented);
-        self:applyHash();
-    end,
-
-    setHolyPower = function(self, holyPower)
-        if self.currentHolyPower == holyPower then
-            return;
-        end
-        self.currentHolyPower = holyPower;
-        self.trigger:inform(SAO.TRIGGER_HOLY_POWER);
-        self.hashCalculator:setHolyPower(holyPower);
         self:applyHash();
     end,
 

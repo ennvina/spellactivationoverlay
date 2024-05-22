@@ -155,6 +155,9 @@ fi
 WRATH_BUILD_VERSION=30403
 mkproject wrath $WRATH_BUILD_VERSION
 
+VARIABLES_NOT_FOR_WRATH=(holypower)
+prunevar "${VARIABLES_NOT_FOR_WRATH[@]}"
+
 TEXTURES_NOT_FOR_WRATH=(
 tooth_and_claw
 monk_serpent
@@ -173,6 +176,9 @@ cdup
 # Release vanilla version
 VANILLA_BUILD_VERSION=11502
 mkproject vanilla $VANILLA_BUILD_VERSION
+
+VARIABLES_NOT_FOR_VANILLA=(holypower)
+prunevar "${VARIABLES_NOT_FOR_VANILLA[@]}"
 
 CLASSES_NOT_FOR_VANILLA=(deathknight)
 pruneclass "${CLASSES_NOT_FOR_VANILLA[@]}"

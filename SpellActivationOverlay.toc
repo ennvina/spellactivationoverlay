@@ -34,6 +34,8 @@ components\trigger.lua
 components\util.lua
 components\variable.lua
 
+variables\holypower.lua
+
 textures\texname.lua
 
 classes\common.lua

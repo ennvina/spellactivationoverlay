@@ -6,9 +6,6 @@ local GetSpellCooldown = GetSpellCooldown
 local GetSpellPowerCost = GetSpellPowerCost
 local GetTalentInfo = GetTalentInfo
 local IsUsableSpell = IsUsableSpell
-local UnitPower = UnitPower
-
-local EnumHolyPower = Enum and Enum.PowerType and Enum.PowerType.HolyPower
 
 -- List of trigger flags, as bit field
 -- Start high enough to be able to index trigger flag to a list, and avoid confusion with stack counts
@@ -21,7 +18,6 @@ SAO.TriggerNames = {
     [SAO.TRIGGER_AURA         ] = "aura",
     [SAO.TRIGGER_ACTION_USABLE] = "action",
     [SAO.TRIGGER_TALENT       ] = "talent",
-    [SAO.TRIGGER_HOLY_POWER   ] = "holyPower",
 }
 
 SAO.TriggerFlags = {} -- Transpose index for fast lookup in both directions
@@ -124,15 +120,6 @@ SAO.TriggerManualChecks = {
             bucket:setTalented(rank > 0);
         else
             bucket:setTalented(false);
-        end
-    end,
-
-    [SAO.TRIGGER_HOLY_POWER] = function(bucket)
-        if EnumHolyPower then
-            local holyPower = UnitPower("player", Enum.PowerType.HolyPower);
-            bucket:setHolyPower(holyPower);
-        else
-            SAO:Debug(Module, "Cannot fetch Holy Power because this resource is unknown from Enum.PowerType");
         end
     end,
 }

@@ -222,15 +222,6 @@ SAO.ConditionBuilder:register(
     function(value) return type(value) == 'boolean' end,
     function(value) return value end
 );
-SAO.ConditionBuilder:register(
-    "holyPower", -- Name used by NOE
-    "holyPower", -- Name used by HRE
-    0, -- Default (NOE only)
-    "setHolyPower", -- Setter method for Hash
-    "Holy Power value",
-    function(value) return type(value) == 'number' and value >= 0 and value <= 3 end,
-    function(value) return value end
-);
 
 local function getCondition(config, default, triggers)
     local condition = {}
@@ -405,7 +396,6 @@ local function importActionUsable(effect, props)
 end
 
 local function importResources(effect, props)
-    importTrigger(effect, props, "holyPower", "useHolyPower");
     SAO.VariableImporter:importTrigger(SAO.TRIGGER_HOLY_POWER, effect, props);
 end
 
