@@ -33,32 +33,13 @@ local HASH_HOLY_POWER_2    = 0x1800
 local HASH_HOLY_POWER_3    = 0x2000
 local HASH_HOLY_POWER_MASK = 0x3800
 
--- Check that masks are not overlapping with one another
--- This order must be stable over patches, because it is used to index saved variables
--- Only the order must be stable: if x < y in patch A, then x must be < y in patch B
--- However, a new z can be anywhere, even between x and y, as long as the new order is stable
-local masks = {
-    HASH_AURA_MASK,
-    HASH_ACTION_USABLE_MASK,
-    HASH_TALENT_MASK,
-    HASH_HOLY_POWER_MASK
-}
-for i1, mask1 in ipairs(masks) do
-    for i2, mask2 in ipairs(masks) do
-        if i2 > i1 and bit.band(mask1, mask2) ~= 0 then
-            local x1 = string.format('0x%X', mask1);
-            local x2 = string.format('0x%X', mask2);
-            print(WrapTextInColor("**SAO** -"..Module.."- Overlapping hash mask "..x1.." vs. "..x2, RED_FONT_COLOR));
-        end
-    end
-end
-
 local HashStringifierList = {}
 local HashStringifierMap = {}
 
-local HashStringifier = {
-    register = function(self, mask, key, toValue, fromValue, getHumanReadableKeyValue, optionIndexer)
-        local converter = {
+SAO.HashStringifier = {
+    register = function(self, order, mask, key, toValue, fromValue, getHumanReadableKeyValue, optionIndexer)
+        local stringifier = {
+            order = order,
             mask = mask,
             key = key,
 
@@ -69,11 +50,12 @@ local HashStringifier = {
         }
 
         self.__index = nil;
-        setmetatable(converter, self);
+        setmetatable(stringifier, self);
         self.__index = self;
 
-        tinsert(HashStringifierList, converter);
-        HashStringifierMap[converter.key] = converter;
+        tinsert(HashStringifierList, stringifier);
+        table.sort(HashStringifierList, function(s1, s2) return s1.order < s2.order end);
+        HashStringifierMap[stringifier.key] = stringifier;
     end,
 
     -- Returns the key/value string, or nil if the flag is not set with the stringifier mask
@@ -113,7 +95,8 @@ local HashStringifier = {
     end,
 }
 
-HashStringifier:register(
+SAO.HashStringifier:register(
+    1,
     HASH_AURA_MASK,
     "aura_stacks", -- key
     function(hash) -- toValue()
@@ -149,7 +132,8 @@ HashStringifier:register(
     end
 );
 
-HashStringifier:register(
+SAO.HashStringifier:register(
+    2,
     HASH_ACTION_USABLE_MASK,
     "action", -- key
     function(hash) -- toValue()
@@ -175,7 +159,8 @@ HashStringifier:register(
     end
 );
 
-HashStringifier:register(
+SAO.HashStringifier:register(
+    3,
     HASH_TALENT_MASK,
     "talent", -- key
     function(hash) -- toValue()
@@ -201,7 +186,8 @@ HashStringifier:register(
     end
 );
 
-HashStringifier:register(
+SAO.HashStringifier:register(
+    4,
     HASH_HOLY_POWER_MASK,
     "holy_power", -- key
     function(hash) -- toValue()
@@ -226,21 +212,6 @@ HashStringifier:register(
 );
 
 
--- Private methods
-
-local function setMaskedHash(self, maskedHash, mask)
-    self.hash = bit.band(self.hash, bit.bnot(mask)) + maskedHash;
-end
-
-local function getMaskedHash(self, mask)
-    local maskedHash = bit.band(self.hash, mask);
-    if maskedHash == 0 then
-        SAO:Debug(Module, "Cannot convert hash ("..tostring(self.hash)..") with mask "..tostring(mask));
-        return nil; -- Potential issue: for aura stacks, may be mistaken with 'aura absent'
-    end
-    return maskedHash;
-end
-
 SAO.Hash = {
     new = function(self, initialHash)
         local hash = { hash = initialHash or 0 }
@@ -254,29 +225,42 @@ SAO.Hash = {
         self.hash = 0;
     end,
 
+    setMaskedHash = function(self, maskedHash, mask)
+        self.hash = bit.band(self.hash, bit.bnot(mask)) + maskedHash;
+    end,
+
+    getMaskedHash = function(self, mask)
+        local maskedHash = bit.band(self.hash, mask);
+        if maskedHash == 0 then
+            SAO:Debug(Module, "Cannot convert hash ("..tostring(self.hash)..") with mask "..tostring(mask));
+            return nil; -- Potential issue: for aura stacks, may be mistaken with 'aura absent'
+        end
+        return maskedHash;
+    end,
+
     -- Aura Stacks
 
     hasAuraStacks = function(self)
         return bit.band(self.hash, HASH_AURA_MASK) ~= 0;
     end,
 
-    setAuraStacks = function(self, stacks, stackAgnostic)
+    setAuraStacks = function(self, stacks, bucket)
         if stacks == nil then
-            setMaskedHash(self, HASH_AURA_ABSENT, HASH_AURA_MASK);
+            self:setMaskedHash(HASH_AURA_ABSENT, HASH_AURA_MASK);
         elseif type(stacks) ~= 'number' or stacks < 0 then
             SAO:Warn(Module, "Invalid stack count "..tostring(stacks));
-        elseif stackAgnostic then
-            setMaskedHash(self, HASH_AURA_ANY, HASH_AURA_MASK);
+        elseif bucket and bucket.stackAgnostic then
+            self:setMaskedHash(HASH_AURA_ANY, HASH_AURA_MASK);
         elseif stacks > 99 then
             SAO:Debug(Module, "Stack overflow ("..stacks..") truncated to 99");
-            setMaskedHash(self, HASH_AURA_MAX, HASH_AURA_MASK);
+            self:setMaskedHash(HASH_AURA_MAX, HASH_AURA_MASK);
         else
-            setMaskedHash(self, HASH_AURA_ZERO + stacks, HASH_AURA_MASK);
+            self:setMaskedHash(HASH_AURA_ZERO + stacks, HASH_AURA_MASK);
         end
     end,
 
     getAuraStacks = function(self)
-        local maskedHash = getMaskedHash(self, HASH_AURA_MASK);
+        local maskedHash = self:getMaskedHash(HASH_AURA_MASK);
         if maskedHash == nil then return nil; end
 
         if maskedHash == HASH_AURA_ABSENT then
@@ -304,12 +288,12 @@ SAO.Hash = {
             SAO:Warn(Module, "Invalid Action Usable flag "..tostring(usable));
         else
             local maskedHash = usable and HASH_ACTION_USABLE_YES or HASH_ACTION_USABLE_NO;
-            setMaskedHash(self, maskedHash, HASH_ACTION_USABLE_MASK);
+            self:setMaskedHash(maskedHash, HASH_ACTION_USABLE_MASK);
         end
     end,
 
     isActionUsable = function(self)
-        local maskedHash = getMaskedHash(self, HASH_ACTION_USABLE_MASK);
+        local maskedHash = self:getMaskedHash(HASH_ACTION_USABLE_MASK);
         if maskedHash == nil then return nil; end
 
         return maskedHash == HASH_ACTION_USABLE_YES;
@@ -330,12 +314,12 @@ SAO.Hash = {
             SAO:Warn(Module, "Invalid Talented flag "..tostring(usable));
         else
             local maskedHash = usable and HASH_TALENT_YES or HASH_TALENT_NO;
-            setMaskedHash(self, maskedHash, HASH_TALENT_MASK);
+            self:setMaskedHash(maskedHash, HASH_TALENT_MASK);
         end
     end,
 
     isTalented = function(self)
-        local maskedHash = getMaskedHash(self, HASH_TALENT_MASK);
+        local maskedHash = self:getMaskedHash(HASH_TALENT_MASK);
         if maskedHash == nil then return nil; end
 
         return maskedHash == HASH_TALENT_YES;
@@ -352,14 +336,14 @@ SAO.Hash = {
             SAO:Warn(Module, "Invalid Holy Power "..tostring(holyPower));
         elseif holyPower > 3 then
             SAO:Debug(Module, "Holy Power overflow ("..holyPower..") truncated to 3");
-            setMaskedHash(self, HASH_HOLY_POWER_3, HASH_HOLY_POWER_MASK);
+            self:setMaskedHash(HASH_HOLY_POWER_3, HASH_HOLY_POWER_MASK);
         else
-            setMaskedHash(self, HASH_HOLY_POWER_0 * (1 + holyPower), HASH_HOLY_POWER_MASK);
+            self:setMaskedHash(HASH_HOLY_POWER_0 * (1 + holyPower), HASH_HOLY_POWER_MASK);
         end
     end,
 
     getHolyPower = function(self)
-        local maskedHash = getMaskedHash(self, HASH_HOLY_POWER_MASK);
+        local maskedHash = self:getMaskedHash(HASH_HOLY_POWER_MASK);
         if maskedHash == nil then return nil; end
 
         return (maskedHash / HASH_HOLY_POWER_0) - 1;

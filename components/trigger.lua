@@ -29,17 +29,6 @@ for flag, name in pairs(SAO.TriggerNames) do
     SAO.TriggerFlags[name] = flag;
 end
 
--- Check that flags are not overlapping with one another
-for flag1, name1 in pairs(SAO.TriggerNames) do
-    for flag2, name2 in pairs(SAO.TriggerNames) do
-        if flag2 > flag1 and bit.band(flag1, flag2) ~= 0 then
-            local x1 = string.format('0x%X', flag1);
-            local x2 = string.format('0x%X', flag2);
-            print(WrapTextInColor("**SAO** -"..Module.."- Overlapping trigger flag "..x1.." vs. "..x2, RED_FONT_COLOR));
-        end
-    end
-end
-
 -- List of lists of buckets requiring each type of trigger
 SAO.RegisteredBucketsByTrigger = {};
 for flag, _ in pairs(SAO.TriggerNames) do
@@ -57,7 +46,7 @@ end
 -- List of timers trying to retry manual checks of action usable
 local ActionRetryTimers = {}
 
-local TriggerManualChecks = {
+SAO.TriggerManualChecks = {
 
     [SAO.TRIGGER_AURA] = function(bucket)
         local auraStacks = SAO:GetPlayerAuraStacksBySpellID(bucket.spellID);
@@ -234,7 +223,7 @@ SAO.Trigger = {
 
         for flag, name in pairs(SAO.TriggerNames) do
             if bit.band(flag, flags) ~= 0 and self:reactsWith(flag) then
-                TriggerManualChecks[flag](self.parent);
+                SAO.TriggerManualChecks[flag](self.parent);
                 -- Must inform explicitly
                 -- Usually, the manual check would change state of the bucket, which will re-inform the trigger has triggered
                 -- But if the state does not change, the bucket may ignore the change, and thus not re-inform the trigger
@@ -253,7 +242,7 @@ SAO.Trigger = {
 
         for flag, name in pairs(SAO.TriggerNames) do
             if self:reactsWith(flag) then
-                TriggerManualChecks[flag](self.parent);
+                SAO.TriggerManualChecks[flag](self.parent);
                 -- Must inform explicitly
                 -- Usually, the manual check would change state of the bucket, which will re-inform the trigger has triggered
                 -- But if the state does not change, the bucket may ignore the change, and thus not re-inform the trigger

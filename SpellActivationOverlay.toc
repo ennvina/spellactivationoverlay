@@ -32,6 +32,7 @@ components\sound.lua
 components\spell.lua
 components\trigger.lua
 components\util.lua
+components\variable.lua
 
 textures\texname.lua
 

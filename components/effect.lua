@@ -148,7 +148,7 @@ local function getValueOrDefault(value, default)
 end
 
 local ConditionBuilders = {}
-local ConditionBuilder = {
+SAO.ConditionBuilder = {
     register = function(self, nativeVar, humanReadableVar, defaultValue, hashSetter, description, checker, nativeToHash)
         local builder = {
             nativeVar = nativeVar,
@@ -195,7 +195,7 @@ local ConditionBuilder = {
     end,
 }
 
-ConditionBuilder:register(
+SAO.ConditionBuilder:register(
     "aura", -- Name used by NOE
     "stacks", -- Name used by HRE
     0, -- Default (NOE only)
@@ -204,7 +204,7 @@ ConditionBuilder:register(
     function(value) return type(value) == 'number' and value >= -1 and value <= 99 end,
     function(value) return value >= 0 and value or nil end -- return n if n > 0, otherwise (if n == -1) return nil
 );
-ConditionBuilder:register(
+SAO.ConditionBuilder:register(
     "action", -- Name used by NOE
     "actionUsable", -- Name used by HRE
     true, -- Default (NOE only)
@@ -213,7 +213,7 @@ ConditionBuilder:register(
     function(value) return type(value) == 'boolean' end,
     function(value) return value end
 );
-ConditionBuilder:register(
+SAO.ConditionBuilder:register(
     "talent", -- Name used by NOE
     "requireTalent", -- Name used by HRE
     true, -- Default (NOE only)
@@ -222,7 +222,7 @@ ConditionBuilder:register(
     function(value) return type(value) == 'boolean' end,
     function(value) return value end
 );
-ConditionBuilder:register(
+SAO.ConditionBuilder:register(
     "holyPower", -- Name used by NOE
     "holyPower", -- Name used by HRE
     0, -- Default (NOE only)
@@ -391,18 +391,22 @@ local function importTalent(effect, props)
     end
 
     importTrigger(effect, props, "talent", "requireTalent");
+    SAO.VariableImporter:importTrigger(SAO.TRIGGER_TALENT, effect, props);
 end
 
 local function importAura(effect, props)
     importTrigger(effect, props, "aura", "requireAura");
+    SAO.VariableImporter:importTrigger(SAO.TRIGGER_AURA, effect, props);
 end
 
 local function importActionUsable(effect, props)
     importTrigger(effect, props, "action", "actionUsable");
+    SAO.VariableImporter:importTrigger(SAO.TRIGGER_ACTION_USABLE, effect, props);
 end
 
-local function importResource(effect, props)
+local function importResources(effect, props)
     importTrigger(effect, props, "holyPower", "useHolyPower");
+    SAO.VariableImporter:importTrigger(SAO.TRIGGER_HOLY_POWER, effect, props);
 end
 
 local function importOverlays(effect, props)
@@ -484,7 +488,7 @@ local function createGeneric(effect, props)
     importTalent(effect, props);
     importAura(effect, props);
     importActionUsable(effect, props);
-    importResource(effect, props);
+    importResources(effect, props);
 
     importOverlays(effect, props);
     importButtons(effect, props);
@@ -503,7 +507,7 @@ local function createAura(effect, props)
     effect.triggers.aura = true;
     importTalent(effect, props);
     importActionUsable(effect, props);
-    importResource(effect, props);
+    importResources(effect, props);
 
     importOverlays(effect, props);
     importButtons(effect, props);
@@ -520,7 +524,7 @@ local function createCounter(effect, props)
     -- Import things that can add triggers before importing overlays and buttons
     effect.triggers.action = true;
     importTalent(effect, props);
-    importResource(effect, props);
+    importResources(effect, props);
 
     importCounterButton(effect, props);
 

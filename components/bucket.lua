@@ -47,12 +47,28 @@ SAO.Bucket = {
             description = name.." ("..spellID..(GetSpellInfo(spellID) and " = "..GetSpellInfo(spellID) or "")..")",
         };
         bucket.trigger = SAO.Trigger:new(bucket);
+        bucket.currentState = SAO.VariableState:new();
 
         self.__index = nil;
         setmetatable(bucket, self);
         self.__index = self;
 
         return bucket;
+    end,
+
+    reset = function(self)
+        self.currentStacks = -1;
+        self.currentActionUsable = nil;
+        self.currentTalented = nil;
+        self.currentHolyPower = nil;
+
+        self.currentState:reset();
+
+        self.trigger.informed = 0;
+
+        self.hashCalculator:reset();
+
+        self:applyHash();
     end,
 
     getOrCreateDisplay = function(self, hash)
@@ -111,26 +127,13 @@ SAO.Bucket = {
         end
     end,
 
-    reset = function(self)
-        self.currentStacks = -1;
-        self.currentActionUsable = nil;
-        self.currentTalented = nil;
-        self.currentHolyPower = nil;
-
-        self.trigger.informed = 0;
-
-        self.hashCalculator:reset();
-
-        self:applyHash();
-    end,
-
     setStacks = function(self, stacks)
         if self.currentStacks == stacks then
             return;
         end
         self.currentStacks = stacks;
         self.trigger:inform(SAO.TRIGGER_AURA);
-        self.hashCalculator:setAuraStacks(stacks, self.stackAgnostic);
+        self.hashCalculator:setAuraStacks(stacks, self);
         self:applyHash();
     end,
 
@@ -390,7 +393,7 @@ end
 function SAO:CheckManuallyAllBuckets(trigger)
     if trigger then
         local buckets = self:GetBucketsByTrigger(trigger);
-        for _, bucket in ipairs(buckets) do
+        for _, bucket in ipairs(buckets or {}) do
             bucket.trigger:manualCheck(trigger);
         end
     else

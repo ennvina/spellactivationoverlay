@@ -29,7 +29,7 @@ mkproject() {
     echo -n "Creating $flavor project..."
     rm -rf ./_release/$flavor || bye "Cannot clean wrath directory"
     mkdir -p ./_release/$flavor/SpellActivationOverlay || bye "Cannot create $flavor directory"
-    cp -R changelog.md LICENSE SpellActivationOverlay.* classes components options sounds textures ./_release/$flavor/SpellActivationOverlay/ || bye "Cannot copy $flavor files"
+    cp -R changelog.md LICENSE SpellActivationOverlay.* classes components options sounds textures variables ./_release/$flavor/SpellActivationOverlay/ || bye "Cannot copy $flavor files"
     cd ./_release/$flavor || bye "Cannot cd to $flavor directory"
     sed -i s/'^## Interface:.*'/"## Interface: $build_version"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update version of $flavor TOC file"
     echo
@@ -44,6 +44,17 @@ prunecopyright() {
         grep -q "${expansion}" SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot find copyright of expansion ${expansion} in TOC file"
         sed -i "/${expansion}/,+2d" SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot remove copyright of expansion ${expansion} from TOC file"
     done
+}
+
+# Remove unused variables to reduce archive size.
+# $@ = array of variables
+prunevar() {
+    echo -n "Cleaning up variables..."
+    for varname in "$@"
+    do
+        rm -f SpellActivationOverlay/variables/"$varname".* || bye "Cannot cleanup variables from installation"
+    done
+    echo
 }
 
 # Find texture names which file data ID is lesser or equal to a specific threshold
