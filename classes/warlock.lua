@@ -120,7 +120,7 @@ end
 
 local function registerMoltenCore(self, rank)
     local moltenCoreName = { "molten_core_low", "molten_core_medium", "molten_core_high" };
-    local overlayOption = (rank == 3) and { setupStacks = 0, testStacks = 3 };
+    local overlayOption = (rank == 3) and { setupHash = SAO:HashNameFromStacks(0), testHash = SAO:HashNameFromStacks(3) };
     local buttonOption = rank == 3;
 
     self:CreateEffect(
@@ -136,7 +136,7 @@ local function registerMoltenCore(self, rank)
                 { stacks = 3, texture = "molten_core", position = "Left + Right (Flipped)", option = overlayOption }, -- Same visuals as 2 charges
             },
             buttons = {
-                default = { stacks = 0, option = buttonOption },
+                default = { option = buttonOption },
                 [SAO.WRATH] = { incinerate, soulFire },
                 [SAO.CATA] = { incinerate },
             },

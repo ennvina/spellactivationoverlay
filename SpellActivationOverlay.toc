@@ -1,8 +1,8 @@
 ## Interface: 40400
-## Title: |TInterface/Icons/Spell_Frost_Stun:16:16:0:0:512:512:64:448:64:448|t SpellActivationOverlay |cffa2f3ff1.4.4|r
+## Title: |TInterface/Icons/Spell_Frost_Stun:16:16:0:0:512:512:64:448:64:448|t SpellActivationOverlay |cffdb550d2.0.0|r
 ## Notes: Mimic Spell Activation Overlays from Modern World of Warcraft
 ## Author: Vinny/Ennvina
-## Version: 1.4.4
+## Version: 2.0.0
 ## SavedVariables: SpellActivationOverlayDB
 
 # SpellActivationOverlay.lua, SpellActivationOverlay.xml and all textures were created by Blizzard Entertainment, Inc.
@@ -17,16 +17,20 @@
 # ©2014 Blizzard Entertainment, Inc. All rights reserved. Warlords of Draenor is a trademark, and World of Warcraft, Warcraft and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc. in the U.S. and/or other countries.
 
 components\aura.lua
+components\bucket.lua
 components\counter.lua
+components\display.lua
 components\effect.lua
 components\events.lua
 components\glow.lua
+components\hash.lua
 components\item.lua
 components\overlay.lua
 components\project.lua
 components\rune.lua
 components\sound.lua
 components\spell.lua
+components\trigger.lua
 components\util.lua
 
 textures\texname.lua

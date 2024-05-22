@@ -189,10 +189,9 @@ local function hotStreakCLEU(self, ...)
             -- Either way, if the Hot Streak buff is deserved, we'll know soon enough with a "SPELL_AURA_APPLIED"
         end
     elseif (HotStreakHandler.state == 'hot_streak') then
-        if (critical and not SAO.IsCata()) then
+        if (critical) then
             -- If crit during a Hot Streak, store this 'charge' to eventually restore it when Pyroblast is cast
             -- This is called "hot streaking heating up", which means Hot Streak has a pending Heating Up effect
-            -- Starting with Cataclysm, this state is no longer possible (tested during Beta - may change in the future)
             HotStreakHandler.state = 'hot_streak_heating_up';
             activateHeatingUp(self, hotStreakHeatingUpSpellID);
             -- Please note this works only because we are fairly certain that SPELL_AURA_APPLIED of a Hot Streak
@@ -556,6 +555,7 @@ local function registerClass(self)
     elseif self.IsCata() then
         local iceLanceAndDeepFreeze = { (GetSpellInfo(FrozenHandler.ice_lance[1])), (GetSpellInfo(FrozenHandler.deep_freeze[1])) };
          -- Slightly bigger to avoid overlap with Arcane Missiles, and slightly dimmer to compensate
+        -- self:RegisterAura("fingers_of_frost_0", 0, 44544, "frozen_fingers", "Left (CCW)", 1.1, 222, 222, 222, true, iceLanceAndDeepFreeze);
         self:RegisterAura("fingers_of_frost_1", 1, 44544, "frozen_fingers", "Left (CCW)", 1.1, 222, 222, 222, true, iceLanceAndDeepFreeze);
         self:RegisterAura("fingers_of_frost_2", 2, 44544, "frozen_fingers", "Left (CCW)", 1.1, 222, 222, 222, true, iceLanceAndDeepFreeze);
         self:RegisterAura("fingers_of_frost_2", 2, 44544, "frozen_fingers", "Right (CW)", 1.1, 222, 222, 222, true); -- no need to re-glow iceLanceAndDeepFreeze for right texture
@@ -699,7 +699,7 @@ local function loadOptions(self)
     end
     if self.IsSoD() then
         self:AddOverlayOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, 0, oneToThreeStacks, nil, 3); -- setup any stacks, test with 3 stacks
-        self:AddOverlayOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, 4); -- setup 4 stacks
+        self:AddOverlayOption(arcaneBlastSoDBuff, arcaneBlastSoDBuff, self:HashNameFromStacks(4)); -- setup 4 stacks
     end
     if self.IsCata() then
         self:AddOverlayOption(arcanePotencyTalent, arcanePotencyBuff2, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
@@ -708,14 +708,10 @@ local function loadOptions(self)
         self:AddOverlayOption(hotStreakSoDRune, heatingUpBuff, 0, heatingUpDetails);
         self:AddOverlayOption(hotStreakSoDRune, hotStreakSoDBuff, 0, hotStreakDetails);
         self:AddOverlayOption(hotStreakSoDRune, hotStreakHeatingUpBuff, 0, hotStreakHeatingUpDetails);
-    elseif self.IsWrath() then
+    elseif self.IsWrath() or self.IsCata() then
         self:AddOverlayOption(hotStreakTalent, heatingUpBuff, 0, heatingUpDetails);
         self:AddOverlayOption(hotStreakTalent, hotStreakBuff, 0, hotStreakDetails);
         self:AddOverlayOption(hotStreakTalent, hotStreakHeatingUpBuff, 0, hotStreakHeatingUpDetails);
-    elseif self.IsCata() then
-        self:AddOverlayOption(hotStreakTalent, heatingUpBuff, 0, heatingUpDetails);
-        self:AddOverlayOption(hotStreakTalent, hotStreakBuff, 0, hotStreakDetails);
-        -- Evidence shows that Hot Streak Heating Up is not possible in Cataclysm
     end
     self:AddOverlayOption(firestarterTalent, firestarterBuff);
     self:AddOverlayOption(impactTalent, impactBuff);

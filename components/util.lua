@@ -16,6 +16,9 @@ local GetTalentInfo = GetTalentInfo
 local GetTime = GetTime
 local UnitAura = UnitAura
 
+local GetAuraDataBySpellName = C_UnitAuras and C_UnitAuras.GetAuraDataBySpellName
+local GetPlayerAuraBySpellID = C_UnitAuras and C_UnitAuras.GetPlayerAuraBySpellID
+
 --[[
     Logging functions
 ]]
@@ -32,10 +35,18 @@ function SAO.Info(self, prefix, msg, ...)
     print(WrapTextInColor("SAO -"..prefix.."- "..msg, LIGHTBLUE_FONT_COLOR), ...);
 end
 
+function SAO:HasDebug()
+    return SpellActivationOverlayDB and SpellActivationOverlayDB.debug;
+end
+
 function SAO.Debug(self, prefix, msg, ...)
     if SpellActivationOverlayDB and SpellActivationOverlayDB.debug then
         print(WrapTextInColorCode("[SAO@"..GetTime().."] -"..prefix.."- "..msg, "FFFFFFAA"), ...);
     end
+end
+
+function SAO:HasTrace(prefix)
+    return SpellActivationOverlayDB and SpellActivationOverlayDB.trace and SpellActivationOverlayDB.trace[prefix];
 end
 
 function SAO.Trace(self, prefix, msg, ...)
@@ -140,6 +151,10 @@ function SAO.IsTimeAlmostEqual(self, t1, t2, delta)
 	return t1-delta < t2 and t2 < t1+delta;
 end
 
+--[[
+    Aura utility functions
+]]
+
 -- Factorize API calls to get player buff or debuff or whatever
 local function PlayerAura(index, filter)
     return UnitAura("player", index, filter);
@@ -164,7 +179,7 @@ local function FindPlayerAuraBy(condition)
 end
 
 -- Utility aura function, one of the many that Blizzard could've done better years ago...
-function SAO.FindPlayerAuraByID(self, id)
+local function FindPlayerAuraByID(self, id)
     local index, filter = FindPlayerAuraBy(function(_id, _name) return _id == id end);
     if index then
         return PlayerAura(index, filter);
@@ -172,12 +187,71 @@ function SAO.FindPlayerAuraByID(self, id)
 end
 
 -- Utility aura function, similar to AuraUtil.FindAuraByName
-function SAO.FindPlayerAuraByName(self, name)
+local function FindPlayerAuraByName(self, name)
     local index, filter = FindPlayerAuraBy(function(_id, _name) return _name == name end);
     if index then
         return PlayerAura(index, filter);
     end
 end
+
+function SAO:HasPlayerAuraBySpellID(id)
+    if GetPlayerAuraBySpellID then
+        return GetPlayerAuraBySpellID(id) ~= nil;
+    else
+        return FindPlayerAuraByID(id) ~= nil;
+    end
+end
+
+function SAO:GetPlayerAuraStacksBySpellID(id)
+    if GetPlayerAuraBySpellID then
+        local aura = GetPlayerAuraBySpellID(id);
+        if aura then
+            return aura.applications;
+        end
+    else
+        local exists, _, count = FindPlayerAuraByID(id);
+        if exists then
+            return count;
+        end
+    end
+    return nil;
+end
+
+function SAO:GetPlayerAuraDurationExpirationTimBySpellIdOrName(spellIdOrName)
+    if type(spellIdOrName) == 'string' then
+        if GetAuraDataBySpellName then
+            local aura = GetAuraDataBySpellName("player", spellIdOrName, "HELPFUL");
+            if not aura then
+                aura = GetAuraDataBySpellName("player", spellIdOrName, "HARMFUL");
+            end
+            if aura then
+                return aura.duration, aura.expirationTime;
+            end
+        else
+            local exists, _, _, _, duration, expirationTime = FindPlayerAuraByName(spellIdOrName);
+            if exists then
+                return duration, expirationTime;
+            end
+        end
+    elseif type(spellIdOrName) == 'number' and not self:IsFakeSpell(spellIdOrName) then -- Don't look for fake spells
+        if GetPlayerAuraBySpellID then
+            local aura = GetPlayerAuraBySpellID(spellIdOrName);
+            if aura then
+                return aura.duration, aura.expirationTime;
+            end
+        else
+            local exists, _, _, _, duration, expirationTime = FindPlayerAuraByID(spellIdOrName);
+            if exists then
+                return duration, expirationTime;
+            end
+        end
+    end
+    return nil, nil;
+end
+
+--[[
+    Spell utility functions
+]]
 
 --[[
     Utility function to know how many talent points the player has spent on a specific talent
@@ -240,6 +314,23 @@ function SAO.GetHomonymSpellIDs(self, spell)
     end
 
     return homonyms;
+end
+
+--[[
+    Hash utility functions
+]]
+
+-- Computes a hash string based on a hash numerical value
+function SAO:HashNameFromHashNumber(hash)
+    return self.Hash:new(hash):toString();
+end
+
+-- Computes a hash string based only from a number of stacks
+-- Used for legacy code
+function SAO:HashNameFromStacks(stacks)
+    local hash = self.Hash:new();
+    hash:setAuraStacks(stacks);
+    return hash:toString();
 end
 
 --[[

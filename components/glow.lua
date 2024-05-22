@@ -34,23 +34,29 @@ SAO.RegisteredGlowSpellIDs = {}
 -- This helps fill or re-fill RegisteredGlowSpellIDs when e.g. a new spell rank is learned
 SAO.RegisteredGlowSpellNames = {}
 
+-- Register a glow ID
+-- Each ID is either a numeric value (spellID) or a string (spellName)
+function SAO.RegisterGlowID(self, glowID)
+    if (type(glowID) == "number") then
+        self.RegisteredGlowSpellIDs[glowID] = true;
+        self:AwakeButtonsBySpellID(glowID);
+    elseif (type(glowID) == "string") then
+        if (not SAO.RegisteredGlowSpellNames[glowID]) then
+            SAO.RegisteredGlowSpellNames[glowID] = true;
+            local glowSpellIDs = self:GetSpellIDsByName(glowID);
+            for _, glowSpellID in ipairs(glowSpellIDs) do
+                self.RegisteredGlowSpellIDs[glowSpellID] = true;
+                self:AwakeButtonsBySpellID(glowSpellID);
+            end
+        end
+    end
+end
+
 -- Register a list of glow ID
 -- Each ID is either a numeric value (spellID) or a string (spellName)
 function SAO.RegisterGlowIDs(self, glowIDs)
     for _, glowID in ipairs(glowIDs or {}) do
-        if (type(glowID) == "number") then
-            self.RegisteredGlowSpellIDs[glowID] = true;
-            self:AwakeButtonsBySpellID(glowID);
-        elseif (type(glowID) == "string") then
-            if (not SAO.RegisteredGlowSpellNames[glowID]) then
-                SAO.RegisteredGlowSpellNames[glowID] = true;
-                local glowSpellIDs = self:GetSpellIDsByName(glowID);
-                for _, glowSpellID in ipairs(glowSpellIDs) do
-                    self.RegisteredGlowSpellIDs[glowSpellID] = true;
-                    self:AwakeButtonsBySpellID(glowSpellID);
-                end
-            end
-        end
+        self:RegisterGlowID(glowID);
     end
 end
 
@@ -192,9 +198,48 @@ function SAO.AddGlowNumber(self, spellID, glowID)
     end
 end
 
+-- Find a glowing option in the options table
+-- First try to find from optionIndex, otherwise fallback to legacy options
+local function isGlowingOptionEnabled(glowingOptions, glowID, hashData)
+    if not glowingOptions then
+        return true; -- Enabled by default, in case there is not an option for it
+    end
+
+    local optionIndex = hashData and hashData.optionIndex;
+    local legacyAllowed = hashData == nil or hashData.legacyGlowingOption;
+
+    if type(glowID) == "number" then
+        if optionIndex and type(glowingOptions[optionIndex]) == 'table' and type(glowingOptions[optionIndex][glowID]) == 'boolean' then
+            return glowingOptions[optionIndex][glowID];
+        elseif legacyAllowed and type(glowingOptions[glowID]) == "boolean" then
+            return glowingOptions[glowID];
+        end
+    else
+        local glowSpellName = (type(glowID) == "number") and GetSpellInfo(glowID) or glowID;
+
+        if optionIndex and type(glowingOptions[optionIndex]) == 'table' then
+            for optionSpellID, optionEnabled in pairs(glowingOptions[optionIndex]) do
+                if (GetSpellInfo(optionSpellID) == glowSpellName) then
+                    return optionEnabled;
+                end
+            end
+        end
+
+        if legacyAllowed then
+            for optionSpellID, optionEnabled in pairs(glowingOptions) do
+                if (type(optionSpellID) == 'number' and GetSpellInfo(optionSpellID) == glowSpellName) then
+                    return optionEnabled;
+                end
+            end
+        end
+    end
+
+    return true; -- Enabled by default, in case there is not an option for it
+end
+
 -- Add a glow effect for action buttons matching one of the given glow IDs
 -- Each glow ID may be a spell identifier (number) or spell name (string)
-function SAO.AddGlow(self, spellID, glowIDs)
+function SAO.AddGlow(self, spellID, glowIDs, hashData)
     if (glowIDs == nil) then
         return;
     end
@@ -204,20 +249,7 @@ function SAO.AddGlow(self, spellID, glowIDs)
     for _, glowID in ipairs(glowIDs) do
 
         -- Find if the glow option is enabled
-        local glowEnabled = true; -- Enabled by default, in case there is not an option for it
-        if (glowingOptions) then
-            if (type(glowID) == "number" and type(glowingOptions[glowID]) == "boolean") then
-                glowEnabled = glowingOptions[glowID];
-            else
-                local glowSpellName = (type(glowID) == "number") and GetSpellInfo(glowID) or glowID;
-                for optionSpellID, optionEnabled in pairs(glowingOptions) do
-                    if (GetSpellInfo(optionSpellID) == glowSpellName) then
-                        glowEnabled = optionEnabled;
-                        break;
-                    end
-                end
-            end
-        end
+        local glowEnabled = isGlowingOptionEnabled(glowingOptions, glowID, hashData);
 
         -- Let it glow
         if (glowEnabled) then

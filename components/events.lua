@@ -3,8 +3,9 @@ local Module = "events"
 
 -- Optimize frequent calls
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
-local GetSpellInfo = GetSpellInfo
 local UnitGUID = UnitGUID
+
+local HolyPowerPowerTypeToken = "HOLY_POWER"
 
 -- Events starting with SPELL_AURA e.g., SPELL_AURA_APPLIED
 -- This should be invoked only if the buff is done on the player i.e., UnitGUID("player") == destGUID
@@ -35,140 +36,55 @@ function SAO.SPELL_AURA(self, ...)
     end
 
     -- Use the game's aura from CLEU to find its corresponding aura item in SAO, if any
-    local auras;
-    if not self.IsEra() then
-        auras = self.RegisteredAurasBySpellID[spellID];
-    else
-        -- Due to Classic Era limitation, aura is registered by its spell name
-        auras = self.RegisteredAurasBySpellID[spellName];
-        if (auras) then
-            -- Must fetch spellID from aura, because spellID from CLEU is most likely 0 at this point
-            -- We can fetch any aura from auras because all auras store the same spellID
-            for _, auraStacks in pairs(auras) do
-                spellID = auraStacks[1][3]; -- [1] for first aura in auraStacks, [3] because spellID is the third item
-                break;
-            end
-        end
-    end
-    if not auras then
+    local bucket;
+    bucket, spellID = self:GetBucketBySpellIDOrSpellName(spellID, spellName);
+    if not bucket then
         -- This spell is not tracked by SAO
         return;
     end
-
-    local count = 0; -- Number of stacks of the aura, unless the aura is count-agnostic (see below)
-    local countAgnostic; -- Flag to tell that we don't care what is the exact stack count
-    if auras[0] then
-        -- An aura which defined stacks == 0 means the aura is count-agnostic
-        -- What matters is whether or not the buff is found, independently of its number of stacks
-        -- Please note, count-agnostic auras may or may not be stackable, they just don't care about the number of stacks, if any
-        countAgnostic = true;
-    else
-        -- If there is no aura with stacks == 0, this must mean that this aura is stackable
-        -- Unlike count-agnostic auras, non-count-agnostic auras are *always* stackable
-        countAgnostic = false;
-        -- To handle stackable auras, we must find the aura (ugh!) to get its number of stacks
-        -- In an ideal world, we'd use a stack count from the combat log which, unfortunately, is unavailable
-        if event ~= "SPELL_AURA_REMOVED" then -- No need to find aura with complete removal: the buff is not there anymore
-            count = select(3, self:FindPlayerAuraByID(spellID)) or 0;
-        end
+    if not bucket.trigger:reactsWith(SAO.TRIGGER_AURA) then
+        -- This spell ignores aura-based triggers
+        return;
     end
-
-    --[[ Check if the spell is currently displayed, and if yes, with which count
-    Reminder: returned count will always be zero if tracking a count-agnostic aura
-    Possible values:
-    - 1 or more, if the aura is displayed and it is a stackable aura, in which case the value indicates the number of stacks
-    - 0, if the aura is displayed and either the aura is not stackable or the effect is count-agnostic
-    - nil, if the aura is not displayed
-    ]]
-    local displayedCount = self:GetAuraMarker(spellID);
-    local isDisplayed = displayedCount ~= nil;
 
     -- Handle unique case first: aura refresh
     if (auraRefresh) then
-        if (
-            -- Aura is already visible
-            (isDisplayed)
-        and
-            -- The number of stacks is supported
-            (auras[count])
-        ) then
-            -- Reactivate aura timer
-            self:RefreshAura(spellID);
-        end
-
+        bucket:refresh();
         -- Can return now, because SPELL_AURA_REFRESH is used only to refresh timer
         return;
     end
 
-    -- Now, we are in a situation where either we got a buff (SPELL_AURA_APPLIED*) or lost it (SPELL_AURA_REMOVED*)
+    -- Now, we are in a situation where we either got a buff (SPELL_AURA_APPLIED*) or lost it (SPELL_AURA_REMOVED*)
 
-    -- Check if we should activate the aura effect
-    if (not isDisplayed) then
-        if (
-        --[[ Aura is enabled, either because:
+    if (auraRemovedLast) then
+        bucket:setStacks(nil); -- nil means "not currently holding any stacks"
+        -- Can return now, because SPELL_AURA_REMOVED resets everything
+        return;
+    end
+
+    --[[ Now, we are in a situation where either:
+        - we got a buff (SPELL_AURA_APPLIED*)
+        - or we lost a stack but still have the buff (SPELL_AURA_REMOVED_DOSE)
+        Either way, the player currently has the buff or debuff
+    ]]
+
+    local stacks = 0; -- Number of stacks of the aura, unless the aura is stack-agnostic (see below)
+    if not bucket.stackAgnostic then
+        -- To handle stackable auras, we must find the aura (ugh!) to get its number of stacks
+        -- In an ideal world, we would use a stack count from the combat log which, unfortunately, is unavailable
+        if event ~= "SPELL_AURA_REMOVED" then -- No need to find aura with complete removal: the buff is not there anymore
+            stacks = self:GetPlayerAuraStacksBySpellID(spellID) or 0;
+        end
+        -- For the record, stacks will always be 0 for stack-agnostic auras, even if the aura actually has stacks
+        -- This is an optimization that prevents the above call of GetPlayerAuraStacksBySpellID, which has a significant cost
+    end
+
+    --[[ Aura is enabled, either because:
         - it was added now (SPELL_AURA_APPLIED)
         - or was upgraded (SPELL_AURA_APPLIED_DOSE)
         - or was downgraded but still visible (SPELL_AURA_REMOVED_DOSE)
-        ]]
-            (auraApplied or auraRemovedDose)
-        and
-            -- The number of stacks is supported
-            (auras[count])
-        ) then
-            -- Activate aura
-            self:DisplayAllAuras(spellID, count, auras[count]);
-        end
-
-        -- Can return now, because a non-displayed is either displayed now, or nothing can be done with it
-        return;
-    end
-
-    --[[ At this point:
-    - isDisplayed == true, meaning the aura is currently displayed on screen
-    - displayedCount equals to either:
-      - 0 for count-agnostic auras
-      - otherwise, the number of currently displayed stacks
     ]]
-
-    if (countAgnostic) then
-        if (
-            -- The aura is completely removed (SPELL_AURA_REMOVED)
-            (auraRemovedLast)
-        ) then
-            -- Aura just disappeared completely
-            -- For count-agnostic aura, it does not matter which count it came from, if the aura is missing: hide it
-            self:UndisplayAura(spellID);
-        end
-
-        -- Can return now: count-agnostic auras of displayed auras are either un-displayed, or nothing can be done with it
-        return;
-    end
-
-    if (
-        -- Number of stacks changed
-        (displayedCount ~= count)
-    and
-        -- The new stack count allows it to be visible
-        (auraApplied or auraRemovedDose)
-    and
-        -- The number of stacks is supported
-        (auras[count])
-    ) then
-        -- Deactivate old aura and activate the new one
-        self:ChangeAuraCount(spellID, displayedCount, count, auras[count]);
-        return;
-    end
-
-    if (
-        --[[ The aura should not be visible, either because:
-        - the aura is completely removed (SPELL_AURA_REMOVED)
-        - or the aura has changed stacks to an unsupported stack count
-        ]]
-        (auraRemovedLast or ((auraApplied or auraRemovedDose) and displayedCount ~= count and not auras[count]))
-    ) then
-        -- Aura just disappeared or is not supported for this number of stacks
-        self:UndisplayAura(spellID);
-    end
+    bucket:setStacks(stacks);
 end
 
 -- The (in)famous CLEU event
@@ -177,6 +93,16 @@ function SAO.COMBAT_LOG_EVENT_UNFILTERED(self, ...)
 
     if ( (event:sub(0,11) == "SPELL_AURA_") and (destGUID == UnitGUID("player")) ) then
         self:SPELL_AURA(...);
+    end
+end
+
+function SAO.PLAYER_TALENT_UPDATE(self, ...)
+    self:CheckManuallyAllBuckets(SAO.TRIGGER_TALENT);
+end
+
+function SAO.UNIT_POWER_FREQUENT(self, unitTarget, powerType)
+    if unitTarget == "player" and powerType == HolyPowerPowerTypeToken then
+        self:CheckManuallyAllBuckets(SAO.TRIGGER_HOLY_POWER);
     end
 end
 
@@ -190,30 +116,40 @@ function SAO.LOADING_SCREEN_DISABLED(self, ...)
         self:RegisterPendingEffectsAfterPlayerLoggedIn();
     end
 
-    -- Check if auras are still there after a loading screen
-    -- This circumvents a limitation of the CLEU which may not trigger during a loading screen
-    for spellID, stacks in pairs(self.ActiveOverlays) do
-        if not self:IsFakeSpell(spellID) and not self:FindPlayerAuraByID(spellID) then
-            self:DeactivateOverlay(spellID);
-            self:RemoveGlow(spellID);
-        end
-    end
+    -- Check manually if buckets are triggered immediately after their creation (see above code)
+    -- Or after a loading screen in-between zones, because CLEU may not trigger everything during a loading screen
+    -- If it is possible to create effects after this point, this kind of manual checks should be called there too
+    self:CheckManuallyAllBuckets();
 end
 
 function SAO.PLAYER_ENTERING_WORLD(self, ...)
-    C_Timer.NewTimer(1, function() self:CheckAllCounterActions() end);
+    C_Timer.NewTimer(1, function()
+        self:CheckAllCounterActions();
+        self:CheckManuallyAllBuckets(SAO.TRIGGER_ACTION_USABLE);
+    end);
 end
 
 function SAO.SPELL_UPDATE_USABLE(self, ...)
     self:CheckAllCounterActions();
+    self:CheckManuallyAllBuckets(SAO.TRIGGER_ACTION_USABLE);
 end
 
 function SAO.PLAYER_REGEN_ENABLED(self, ...)
     self:CheckAllCounterActions(true);
+
+    local inCombat = false; -- Cannot rely on InCombatLockdown() at this point
+    for _, bucket in pairs(self.RegisteredBucketsBySpellID) do
+        bucket:checkCombat(inCombat);
+    end
 end
 
 function SAO.PLAYER_REGEN_DISABLED(self, ...)
     self:CheckAllCounterActions(true);
+
+    local inCombat = true; -- Cannot rely on InCombatLockdown() at this point
+    for _, bucket in pairs(self.RegisteredBucketsBySpellID) do
+        bucket:checkCombat(inCombat);
+    end
 end
 
 -- Specific spellbook update

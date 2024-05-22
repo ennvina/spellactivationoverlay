@@ -148,10 +148,10 @@ local function loadOptions(self)
     if not self.IsEra() then
         if self.IsWrath() then
             self:AddOverlayOption(serendipityTalent, serendipityBuff3, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks
-            self:AddOverlayOption(serendipityTalent, serendipityBuff3, 3); -- setup 3 stacks
+            self:AddOverlayOption(serendipityTalent, serendipityBuff3, self:HashNameFromStacks(3)); -- setup 3 stacks
         elseif self.IsCata() then
-            self:AddOverlayOption(serendipityTalent, serendipityBuff2, 1);
-            self:AddOverlayOption(serendipityTalent, serendipityBuff2, 2);
+            self:AddOverlayOption(serendipityTalent, serendipityBuff2, self:HashNameFromStacks(1));
+            self:AddOverlayOption(serendipityTalent, serendipityBuff2, self:HashNameFromStacks(2));
         end
         self:AddSoulPreserverOverlayOption(60514); -- 60514 = Priest buff
 
@@ -164,9 +164,9 @@ local function loadOptions(self)
         end
     elseif self.IsSoD() then
         self:AddOverlayOption(serendipitySoDBuff, serendipitySoDBuff, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks
-        self:AddOverlayOption(serendipitySoDBuff, serendipitySoDBuff, 3); -- setup 3 stacks
+        self:AddOverlayOption(serendipitySoDBuff, serendipitySoDBuff, self:HashNameFromStacks(3)); -- setup 3 stacks
         self:AddOverlayOption(mindSpikeSoDRune, mindSpikeSoDBuff, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks
-        self:AddOverlayOption(mindSpikeSoDRune, mindSpikeSoDBuff, 3); -- setup 3 stacks
+        self:AddOverlayOption(mindSpikeSoDRune, mindSpikeSoDBuff, self:HashNameFromStacks(3)); -- setup 3 stacks
 
         self:AddGlowingOption(serendipitySoDBuff, serendipitySoDBuff, lesserHeal, threeStacks);
         self:AddGlowingOption(serendipitySoDBuff, serendipitySoDBuff, heal, threeStacks);

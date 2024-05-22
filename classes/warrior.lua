@@ -9,8 +9,16 @@ local UnitGUID = UnitGUID
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
-local heroicStrike = 78;
 local cleave = 845;
+local colossusSmash = 86346;
+local execute = 5308;
+local heroicStrike = 78;
+local overpower = 7384;
+local ragingBlowSoD = 402911;
+local revenge = 6572;
+local shieldSlam = 23922;
+local slam = 1464;
+local victoryRush = SAO.IsSoD() and 402927 or 34428;
 
 local function easyAs123(option)
     return option == "stance:1/2/3";
@@ -145,7 +153,7 @@ local OPTFBHandler = {
         end);
 
         self.buffID = buffID;
-        self.hasBuff = SAO:FindPlayerAuraByID(self.buffID);
+        self.hasBuff = SAO:HasPlayerAuraBySpellID(self.buffID);
         if self.hasBuff then
             self:glow();
         end
@@ -310,7 +318,6 @@ local ExecuteHandler = {
 }
 
 local function customLogin(self, ...)
-    local overpower = 7384;
     local overpowerName = GetSpellInfo(overpower);
     if (overpowerName) then
         -- Overpower is used for OverpowerHandler, detecting when the target dodges
@@ -326,13 +333,11 @@ local function customLogin(self, ...)
         end
     end
 
-    local revenge = 6572;
     local revengeName = GetSpellInfo(revenge);
     if (revengeName) then
         RevengeHandler:init(revenge, revengeName);
     end
 
-    local execute = 5308;
     local executeName = GetSpellInfo(execute);
     if (executeName) then
         ExecuteHandler:init(execute, executeName);
@@ -367,6 +372,85 @@ local function unitHealth(self, ...)
     if ExecuteHandler.initialized then
         ExecuteHandler:healthChanged(...);
     end
+end
+
+
+local function useOverpower()
+    SAO:CreateEffect(
+        "overpower",
+        SAO.ALL_PROJECTS,
+        overpower,
+        "counter",
+        {   -- Lazy evaluation for variants, because they are created later on
+            buttonOption = { variants = function() return OverpowerHandler.variants end },
+        }
+    );
+end
+
+local function useExecute()
+    SAO:CreateEffect(
+        "execute",
+        SAO.ALL_PROJECTS,
+        execute,
+        "counter",
+        {   -- Lazy evaluation for variants, because they are created later on
+            buttonOption = { variants = function() return ExecuteHandler.variants end },
+        }
+    );
+end
+
+local function useRevenge()
+    SAO:CreateEffect(
+        "revenge",
+        SAO.ALL_PROJECTS,
+        revenge,
+        "counter",
+        {   -- Lazy evaluation for variants, because they are created later on
+            buttonOption = { variants = function() return RevengeHandler.variants end },
+        }
+    );
+end
+
+local function useVictoryRush()
+    SAO:CreateEffect(
+        "victory_rush",
+        SAO.SOD + SAO.TBC + SAO.WRATH + SAO.CATA,
+        victoryRush,
+        "counter"
+    );
+end
+
+local function useRagingBlow()
+    -- Has a spell alert, unlike other Warrior 'counters'
+    SAO:CreateEffect(
+        "raging_blow",
+        SAO.SOD,
+        ragingBlowSoD,
+        "counter",
+        {
+            overlay = { texture = "raging_blow", position = "Left + Right (Flipped)" },
+        }
+    );
+end
+
+local function useSuddenDeath()
+    local suddenDeathBuff = 52437;
+    local suddenDeathTalent = 29723;
+
+    SAO:CreateEffect(
+        "sudden_death",
+        SAO.WRATH + SAO.CATA,
+        suddenDeathBuff,
+        "aura",
+        {
+            talent = suddenDeathTalent,
+            overlay = { texture = "sudden_death", position = "Left + Right (Flipped)" },
+            buttons = {
+                [SAO.WRATH] = execute,
+                [SAO.CATA] = colossusSmash,
+            },
+        }
+    );
 end
 
 local function useBladestorm()
@@ -435,136 +519,69 @@ local function useBattleTrance()
     );
 end
 
-local function registerClass(self)
-    local overpower = 7384;
-    local execute = 5308;
-    local revenge = 6572;
-    local victoryRush = 34428;
-    local slam = 1464;
-    local shieldSlam = 23922;
-    local colossusSmash = 86346;
-    local victoryRushSoD = 402927;
-    local ragingBlowSoD = 402911;
-    local bloodSurgeSoD = 413399;
+local function useBloodsurge()
+    -- Quick note: the ability is spelled "Bloodsurge" in Wrath+ and "Blood Surge" in Season of Discovery
+    local bloodsurgeBuff = SAO.IsSoD() and 413399 or 46916;
+    local bloodsurgeTalent = SAO.IsSoD() and 413380 or 46913;
 
-    if self.IsSoD() then
-        self:RegisterAura("bloodsurge", 0, bloodSurgeSoD, "blood_surge", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(slam)) });
-        self:RegisterAura("sword_and_board", 0, 426979, "sword_and_board", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(shieldSlam)) });
-    elseif self.IsWrath() then
-        for stacks = 1, 2 do -- Bloodsurge and Sudden Death may have several charges, due to T10 4pc
-            self:RegisterAura("bloodsurge_"..stacks, stacks, 46916, "blood_surge", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(slam)) });
-            self:RegisterAura("sudden_death_"..stacks, stacks, 52437, "sudden_death", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(execute)) });
-        end
-        self:RegisterAura("sword_and_board", 0, 50227, "sword_and_board", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(shieldSlam)) });
-    elseif self.IsCata() then
---        self:RegisterAura("bloodsurge", 0, 46916, "blood_surge", "Top (CW)", 1, 255, 255, 255, true, { (GetSpellInfo(slam)) }); -- Clockwise because texture is different
-        self:RegisterAura("bloodsurge", 0, 46916, "blood_surge", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(slam)) });
-        self:RegisterAura("sudden_death", 0, 52437, "sudden_death", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(colossusSmash)) });
-        self:RegisterAura("sword_and_board", 0, 50227, "sword_and_board", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(shieldSlam)) });
-    end
-
-    -- Overpower
-    self:RegisterAura("overpower", 0, overpower, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(overpower)) });
-    self:RegisterCounter("overpower"); -- Must match name from above call
-
-    -- Execute
-    self:RegisterAura("execute", 0, execute, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(execute)) });
-    self:RegisterCounter("execute"); -- Must match name from above call
-
-    -- Revenge
-    self:RegisterAura("revenge", 0, revenge, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(revenge)) });
-    self:RegisterCounter("revenge"); -- Must match name from above call
-
-    -- Victory Rush
-    self:RegisterAura("victory_rush", 0, victoryRush, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(victoryRush)) });
-    self:RegisterCounter("victory_rush"); -- Must match name from above call
-
-    -- Victory Rush (Season of Discovery)
-    if self.IsSoD() then
-        self:RegisterAura("victory_rush_sod", 0, victoryRushSoD, nil, "", 0, 0, 0, 0, false, { (GetSpellInfo(victoryRushSoD)) });
-        self:RegisterCounter("victory_rush_sod"); -- Must match name from above call
-    end
-
-    -- Raging Blow (Season of Discovery), with a spell alert, unlike other Warrior 'counters'
-    if self.IsSoD() then
-        self:RegisterAura("raging_blow", 0, ragingBlowSoD, "raging_blow", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(ragingBlowSoD)) });
-        self:RegisterCounter("raging_blow"); -- Must match name from above call
-    end
-
-    -- Bladestorm (Arms)
-    useBladestorm();
-
-    -- Battle Trance (Fury)
-    useBattleTrance();
+    SAO:CreateEffect(
+        "bloodsurge",
+        SAO.SOD + SAO.WRATH + SAO.CATA,
+        bloodsurgeBuff,
+        "aura",
+        {
+            overlays = {
+                [SAO.SOD+SAO.WRATH] = { texture = "blood_surge", position = "Top" },
+                -- [SAO.CATA] = { texture = "blood_surge", position = "Top (CW)" }, -- Clockwise because texture is different
+                [SAO.CATA] = { texture = "blood_surge", position = "Left + Right (Flipped)" },
+            },
+            buttons = {
+                [SAO.SOD+SAO.WRATH] = slam,
+                [SAO.CATA] = { spellID = slam, option = { subText = SAO:RecentlyUpdated() } }, -- Updated 2024-04-30
+            },
+        }
+    );
 end
 
-local function loadOptions(self)
-    local execute = 5308;
-    local victoryRush = 34428;
-    local slam = 1464;
-    local shieldSlam = 23922;
-    local colossusSmash = 86346;
+local function useSwordAndBoard()
+    local swordAndBoardBuff = SAO.IsSoD() and 426979 or 50227;
+    local swordAndBoardTalent = SAO.IsSoD() and 426978 or 46951;
 
-    local bloodsurgeBuff = 46916;
-    local bloodsurgeTalent = 46913;
-    local bloodSurgeBuffSoD = 413399;
-    local bloodSurgeTalentSoD = 413380;
+    SAO:CreateEffect(
+        "sword_and_board",
+        SAO.SOD + SAO.WRATH + SAO.CATA,
+        swordAndBoardBuff,
+        "aura",
+        {
+            talent = swordAndBoardTalent,
+            overlay = { texture = "sword_and_board", position = "Left + Right (Flipped)" },
+            button = shieldSlam,
+        }
+    );
+end
 
-    local suddenDeathBuff = 52437;
-    local suddenDeathTalent = 29723;
+local function registerClass(self)
+    -- Counters
+    useOverpower();
+    useExecute();
+    useRevenge();
+    useVictoryRush();
+    useRagingBlow();
 
-    local swordAndBoardBuff = 50227;
-    local swordAndBoardTalent = 46951;
-    local swordAndBoardBuffSoD = 426979;
-    local swordAndBoardTalentSoD = 426978;
+    -- Arms
+    useSuddenDeath();
+    useBladestorm();
 
-    local victoryRushSoD = 402927;
-    local ragingBlowSoD = 402911;
+    -- Fury
+    useBattleTrance();
+    useBloodsurge();
 
-    if self.IsSoD() then
-        self:AddOverlayOption(bloodSurgeTalentSoD, bloodSurgeBuffSoD);
-        self:AddOverlayOption(swordAndBoardTalentSoD, swordAndBoardBuffSoD);
-        self:AddOverlayOption(ragingBlowSoD, ragingBlowSoD);
-    elseif self.IsWrath() then
-        self:AddOverlayOption(bloodsurgeTalent, bloodsurgeBuff, 0, nil, nil, 1); -- setup any stacks, test with 1 stack
-        self:AddOverlayOption(suddenDeathTalent, suddenDeathBuff, 0, nil, nil, 1); -- setup any stacks, test with 1 stack
-        self:AddOverlayOption(swordAndBoardTalent, swordAndBoardBuff);
-    elseif self.IsCata() then
-        self:AddOverlayOption(bloodsurgeTalent, bloodsurgeBuff, 0, self:RecentlyUpdated()); -- Updated 2024-04-30
-        self:AddOverlayOption(suddenDeathTalent, suddenDeathBuff);
-        self:AddOverlayOption(swordAndBoardTalent, swordAndBoardBuff);
-    end
-
-    if OverpowerHandler.initialized then
-        self:AddGlowingOption(nil, OverpowerHandler.optionID, OverpowerHandler.spellID, nil, nil, OverpowerHandler.variants);
-    end
-    if RevengeHandler.initialized then
-        self:AddGlowingOption(nil, RevengeHandler.optionID, RevengeHandler.spellID, nil, nil, RevengeHandler.variants);
-    end
-    if ExecuteHandler.initialized then
-        self:AddGlowingOption(nil, ExecuteHandler.optionID, ExecuteHandler.spellID, nil, nil, ExecuteHandler.variants);
-    end
-    if self.IsSoD() then
-        self:AddGlowingOption(nil, victoryRushSoD, victoryRushSoD);
-        self:AddGlowingOption(nil, ragingBlowSoD, ragingBlowSoD);
-        self:AddGlowingOption(bloodSurgeTalentSoD, bloodSurgeBuffSoD, slam);
-        self:AddGlowingOption(swordAndBoardTalentSoD, swordAndBoardBuffSoD, shieldSlam);
-    elseif self.IsWrath() then
-        self:AddGlowingOption(nil, victoryRush, victoryRush);
-        self:AddGlowingOption(bloodsurgeTalent, bloodsurgeBuff, slam);
-        self:AddGlowingOption(suddenDeathTalent, suddenDeathBuff, execute);
-        self:AddGlowingOption(swordAndBoardTalent, swordAndBoardBuff, shieldSlam);
-    elseif self.IsCata() then
-        self:AddGlowingOption(nil, victoryRush, victoryRush);
-        self:AddGlowingOption(bloodsurgeTalent, bloodsurgeBuff, slam);
-        self:AddGlowingOption(suddenDeathTalent, suddenDeathBuff, colossusSmash);
-        self:AddGlowingOption(swordAndBoardTalent, swordAndBoardBuff, shieldSlam);
-    end
+    -- Protection
+    useSwordAndBoard();
 end
 
 SAO.Class["WARRIOR"] = {
     ["Register"] = registerClass,
-    ["LoadOptions"] = loadOptions,
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
     ["PLAYER_LOGIN"] = customLogin,
     ["PLAYER_TARGET_CHANGED"] = retarget,

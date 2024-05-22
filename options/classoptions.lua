@@ -136,6 +136,14 @@ function SAO.AddOption(self, optionType, auraID, id, subValues, applyTextFunc, t
         else
             SpellActivationOverlayDB.classes[classFile][optionType][auraID][id] = checked;
         end
+
+        -- Re-evaluate effect triggers to refresh its visual state
+        -- @todo Find a way to only refresh spell alert when checking spell alert, or glowing button when clicking glowing button
+        local bucket = SAO:GetBucketBySpellID(auraID);
+        if bucket then -- Bucket may not exist with this auraID, especially for fake spell IDs
+            bucket:reset(); -- Reset hash to force re-display if needed
+            bucket.trigger:manualCheckAll();
+        end
     end);
 
     cb:SetSize(20, 20);

@@ -68,6 +68,10 @@ function SpellActivationOverlay_OnLoad(self)
 	self:RegisterEvent("LEARNED_SPELL_IN_TAB");
 	self:RegisterEvent("LOADING_SCREEN_DISABLED");
 	self:RegisterEvent("PLAYER_LOGIN");
+	self:RegisterEvent("PLAYER_TALENT_UPDATE");
+	if ( SAO.IsCata() and classFile == "PALADIN" ) then
+		self:RegisterEvent("UNIT_POWER_FREQUENT"); -- For Holy Power, introduced in Cataclysm
+	end
 end
 
 function SpellActivationOverlay_OnChangeGeometry(self)

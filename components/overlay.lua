@@ -1,19 +1,12 @@
 local AddonName, SAO = ...
-
--- List of currently active overlays
--- key = spellID, value = aura config
--- This list will change each time an overlay is triggered or un-triggered
-SAO.ActiveOverlays = {}
-
--- Check if overlay is active
-function SAO.GetActiveOverlay(self, spellID)
-    return self.ActiveOverlays[spellID] ~= nil;
-end
+local Module = "overlay"
 
 -- Search in overlay options if the specified auraID should be discarded
 -- By default, do *not* discard
 -- This happens e.g., if there is no option for this auraID
-local function discardedByOverlayOption(self, auraID, stacks)
+-- @param optionIndex Main indexing of overlay in options
+-- @param optionAnyStacks For aura triggers, the 'aura_stacks=any' counterpart
+local function discardedByOverlayOption(self, auraID, optionIndex, optionAnyStacks)
     if (not SpellActivationOverlayDB) then
         return false; -- By default, do not discard
     end
@@ -28,29 +21,35 @@ local function discardedByOverlayOption(self, auraID, stacks)
         return false; -- By default, do not discard
     end
 
-    -- Look for option in the exact stack count
-    if (type(overlayOptions[stacks]) ~= "nil") then
-        return not overlayOptions[stacks];
-    end
-
-    -- Look for a default option as if stacks == 0
-    if (stacks and stacks > 0 and type(overlayOptions[0]) ~= "nil") then
-        return not overlayOptions[0];
+    -- Look for option in the exact hash
+    if optionIndex and type(overlayOptions[optionIndex]) ~= 'nil' then
+        return not overlayOptions[optionIndex];
+    elseif optionAnyStacks and type(overlayOptions[optionAnyStacks]) ~= 'nil' then
+        return not overlayOptions[optionAnyStacks];
     end
 
     return false; -- By default, do not discard
 end
 
 -- Add or refresh an overlay
-function SAO.ActivateOverlay(self, stacks, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly)
+function SAO.ActivateOverlay(self, hashData, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly)
     if (texture) then
-        -- Tell the overlay is active, even though the overlay may be discarded below
-        -- This "active state" tells the aura is in place, which is used by e.g. the glowing button system
-        self.ActiveOverlays[spellID] = stacks;
-
         -- Discard the overlay if options are not favorable
-        if (discardedByOverlayOption(self, spellID, stacks)) then
-            return;
+        if type(hashData) == 'number' then
+            -- Legacy code
+            local stacks = hashData;
+            local fallbackAny = stacks > 0 and 0 or nil;
+            if discardedByOverlayOption(self, spellID, stacks, fallbackAny) then
+                return;
+            end
+        elseif type(hashData) == 'table' then
+            -- Modern code
+            local optionIndex, optionAnyStacks = hashData.optionIndex, hashData.optionAnyStacks;
+            if discardedByOverlayOption(self, spellID, optionIndex, optionAnyStacks) then
+                return;
+            end
+        else
+            SAO:Warn(Module, "Unknown overlay hash-data type '"..type(hashData).."'");
         end
 
         -- Hack to avoid glowIDs to be treated as forcePulsePlay
@@ -73,9 +72,7 @@ end
 
 -- Remove an overlay
 function SAO.DeactivateOverlay(self, spellID)
-    self.ActiveOverlays[spellID] = nil;
     self.HideOverlays(self.Frame, spellID);
-    self:UnmarkAura(spellID); -- Remove aura marker automatically
 end
 
 -- Refresh the duration of an overlay

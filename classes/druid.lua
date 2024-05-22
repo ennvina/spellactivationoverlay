@@ -84,7 +84,7 @@ local function useFuryOfStormrage()
     local buff = SAO.IsSoD() and 414800 or 81093; -- Fury of Stormrage (buff)
     local talent = SAO.IsSoD() and 414799 or 17104; -- Fury of Stormrage (rune) or Fury of Stormrage (talent)
     SAO:CreateEffect(
-        "natures_grace",
+        "fury_of_stormrage",
         SAO.SOD + SAO.CATA,
         buff,
         "aura",
@@ -128,15 +128,15 @@ local function isFeral(self)
 end
 
 local function hasClarity(self)
-    return self:FindPlayerAuraByID(omenSpellID) ~= nil;
+    return self:HasPlayerAuraBySpellID(omenSpellID);
 end
 
 local function hasLunar(self)
-    return self:FindPlayerAuraByID(lunarSpellID) ~= nil;
+    return self:HasPlayerAuraBySpellID(lunarSpellID);
 end
 
 local function hasSolar(self)
-    return self:FindPlayerAuraByID(solarSpellID) ~= nil;
+    return self:HasPlayerAuraBySpellID(solarSpellID);
 end
 
 local function updateOneSAO(self, position, fakeSpellID, realSpellID, texture)

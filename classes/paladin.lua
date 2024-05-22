@@ -10,9 +10,35 @@ local holyRadiance = 82327;
 local holyShock = 20473;
 local how = 24275;
 local inquisition = 84963;
+local lightOfDawn = 85222;
+local shieldOfTheRighteous = 53600;
 local templarsVerdict = 85256;
 local wordOfGlory = 85673;
 local zealotry = 85696;
+
+local function useHolyPowerTracker()
+    local holyPower = 85247; -- Not a real aura or action, but the game client has it
+
+    local overlays = {}
+    for hp=1,3 do
+        local texture = "arcane_missiles_"..hp;
+        local pulse = hp == 3;
+        tinsert(overlays, { holyPower = hp, texture = texture, position = "Left (vFlipped)", scale = 0.4, color = { 255, 255, 55 }, pulse = pulse, });
+        tinsert(overlays, { holyPower = hp, texture = texture, position = "Right (180)",     scale = 0.4, color = { 255, 255, 55 }, pulse = pulse, option = false });
+    end
+
+    SAO:CreateEffect(
+        "holy_power_tracker",
+        SAO.CATA,
+        holyPower,
+        "generic",
+        {
+            combatOnly = true,
+            useHolyPower = true,
+            overlays = overlays,
+        }
+    );
+end
 
 local function useHammerOfWrath()
     SAO:CreateEffect(
@@ -50,6 +76,19 @@ local function useDivineStorm()
         divineStorm,
         "counter",
         { combatOnly = true }
+    );
+end
+
+local function useHolySpender(name, spellID)
+    SAO:CreateEffect(
+        name,
+        SAO.CATA,
+        spellID,
+        "counter",
+        {
+            useHolyPower = true,
+            holyPower = 3,
+        }
     );
 end
 
@@ -173,11 +212,21 @@ local function useArtOfWar()
 end
 
 local function registerClass(self)
+    -- Holy Power tracking
+    useHolyPowerTracker();
+
     -- Counters
     useHammerOfWrath();
     useHolyShock();
     useExorcism();
     useDivineStorm();
+
+    -- Holy Power spenders
+    useHolySpender("word_of_glory", wordOfGlory);
+    useHolySpender("light_of_dawn", lightOfDawn); -- Holy only
+    useHolySpender("shield_of_the_righteous", shieldOfTheRighteous); -- Protection only
+    useHolySpender("templars_verdict", templarsVerdict); -- Retribution only
+    useHolySpender("inquisition", inquisition);
 
     -- Items
     self:RegisterAuraSoulPreserver("soul_preserver_paladin", 60513); -- 60513 = Paladin buff

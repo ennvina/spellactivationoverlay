@@ -111,7 +111,7 @@ local function checkRollingThunderRuneAndLightningSieldStacks(self, ...)
         -- Fortunately, RollingThunderHandler is used only on Season of Discovery and Cataclysm
         local aura = C_UnitAuras.GetAuraDataBySpellName("player", GetSpellInfo(324));
         local stackThreshold = SAO:IsCata() and 6 or 7; -- 6 or more for Cata, 7 or more for SoD
-        if aura and aura.applications >= stackThreshold and not SAO:GetActiveOverlay(324) then
+        if aura and aura.applications >= stackThreshold and not SAO:GetBucketBySpellID(RollingThunderHandler.fakeSpellID):isDisplayed() then
             RollingThunderHandler:activate(aura.applications);
         end
     end
@@ -148,10 +148,13 @@ local function customCLEU(self, ...)
 end
 
 local function registerClass(self)
+    local hash0Stacks = self:HashNameFromStacks(0);
+    local hash2Stacks = self:HashNameFromStacks(2);
+    local hash4Stacks = self:HashNameFromStacks(4);
 
    -- Elemental Focus has 2 charges on TBC, Wrath and Cataclysm
--- TBC/Wrath use echo_of_the_elements texture, with scale of 100%
--- Cataclysm uses cleaner texture, with scale of 150%
+    -- TBC/Wrath use echo_of_the_elements texture, with scale of 100%
+    -- Cataclysm uses cleaner texture, with scale of 150%
     self:CreateEffect(
         "elemental_focus",
         SAO.TBC + SAO.WRATH + SAO.CATA,
@@ -162,11 +165,11 @@ local function registerClass(self)
             overlays = {
                 [SAO.TBC+SAO.WRATH] = {
                     { stacks = 1, texture = "echo_of_the_elements", position = "Left", scale = 1, pulse = false, option = false },
-                    { stacks = 2, texture = "echo_of_the_elements", position = "Left + Right (Flipped)", scale = 1, pulse = false, option = { setupStacks = 0, testStacks = 2 } },
+                    { stacks = 2, texture = "echo_of_the_elements", position = "Left + Right (Flipped)", scale = 1, pulse = false, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
                 },
                 [SAO.CATA] = {
                     { stacks = 1, texture = "genericarc_05", position = "Left", scale = 1.5, pulse = false, option = false },
-                    { stacks = 2, texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.5, pulse = false, option = { setupStacks = 0, testStacks = 2 } },
+                    { stacks = 2, texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.5, pulse = false, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
                 }
             },
         }
@@ -181,6 +184,7 @@ local function registerClass(self)
         "counter_with_overlay",
         {
             talent = 77756, -- Lava Surge (talent)
+            requireTalent = true,
             combatOnly = true,
             overlay = { texture = "imp_empowerment", position = "Left + Right (Flipped)" },
         }
@@ -203,10 +207,9 @@ local function registerClass(self)
             overlays = {
                 { stacks = 1, texture = "high_tide", position = "Left (CCW)", scale = 0.8, option = false },
                 { stacks = 2, texture = "high_tide", position = "Left (CCW)", scale = 0.8, option = false },
-                { stacks = 2, texture = "high_tide", position = "Right (CW)", scale = 0.8, option = { setupStacks = 0, testStacks = 2 } },
+                { stacks = 2, texture = "high_tide", position = "Right (CW)", scale = 0.8, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
             },
             buttons = {
-                default = { stacks = 0 },
                 [SAO.SOD+SAO.WRATH] = { lesserHealingWave, healingWave },
                 [SAO.CATA] = { greaterHealingWave, healingWave, healingSurge },
             },
@@ -234,7 +237,7 @@ local function registerClass(self)
                 { stacks = 1, texture = "maelstrom_weapon_1", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
                 { stacks = 2, texture = "maelstrom_weapon_2", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
                 { stacks = 3, texture = "maelstrom_weapon_3", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
-                { stacks = 4, texture = "maelstrom_weapon_4", position = "Top", scale = maelstromWeaponScale, pulse = false, option = { setupStacks = 0, testStacks = 4, subText = self:NbStacks(1,4) } },
+                { stacks = 4, texture = "maelstrom_weapon_4", position = "Top", scale = maelstromWeaponScale, pulse = false, option = { setupHash = hash0Stacks, testHash = hash4Stacks, subText = self:NbStacks(1,4) } },
                 { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = true , option = true },
             },
             buttons = {
@@ -277,8 +280,15 @@ local function registerClass(self)
         end
 
         local moltenBlastSoD = 425339;
-        self:RegisterAura("molten_blast", 0, moltenBlastSoD, "impact", "Top", 0.8, 255, 255, 255, true, { moltenBlastSoD }, true);
-        self:RegisterCounter("molten_blast");
+        self:CreateEffect(
+            "molten_blast",
+            SAO.SOD,
+            moltenBlastSoD,
+            "counter_with_overlay",
+            {
+                overlay = { texture = "impact", position = "Top", scale = 0.8 },
+            }
+        );
 
         -- Power Surge
         local powerSurgeSoDBuff = 415105;
@@ -356,19 +366,19 @@ local function loadOptions(self)
     end
 
     if self.IsCata() then
-        self:AddOverlayOption(fulminationTalentCata, lightningShield, 6, nil, nil, nil, RollingThunderHandler.fakeSpellID);
-        self:AddOverlayOption(fulminationTalentCata, lightningShield, 7, nil, nil, nil, RollingThunderHandler.fakeSpellID);
-        self:AddOverlayOption(fulminationTalentCata, lightningShield, 8, nil, nil, nil, RollingThunderHandler.fakeSpellID);
-        self:AddOverlayOption(fulminationTalentCata, lightningShield, 9, nil, nil, nil, RollingThunderHandler.fakeSpellID);
+        self:AddOverlayOption(fulminationTalentCata, lightningShield, self:HashNameFromStacks(6), nil, nil, nil, RollingThunderHandler.fakeSpellID);
+        self:AddOverlayOption(fulminationTalentCata, lightningShield, self:HashNameFromStacks(7), nil, nil, nil, RollingThunderHandler.fakeSpellID);
+        self:AddOverlayOption(fulminationTalentCata, lightningShield, self:HashNameFromStacks(8), nil, nil, nil, RollingThunderHandler.fakeSpellID);
+        self:AddOverlayOption(fulminationTalentCata, lightningShield, self:HashNameFromStacks(9), nil, nil, nil, RollingThunderHandler.fakeSpellID);
     end
     if self.IsWrath() then
         self:AddSoulPreserverOverlayOption(60515); -- 60515 = Shaman buff
     elseif self.IsSoD() then
         self:AddOverlayOption(powerSurgeSoD, powerSurgeSoDBuff);
         self:AddOverlayOption(moltenBlastSoD, moltenBlastSoD);
-        self:AddOverlayOption(rollingThunderSoD, lightningShield, 7, nil, nil, nil, RollingThunderHandler.fakeSpellID);
-        self:AddOverlayOption(rollingThunderSoD, lightningShield, 8, nil, nil, nil, RollingThunderHandler.fakeSpellID);
-        self:AddOverlayOption(rollingThunderSoD, lightningShield, 9, nil, nil, nil, RollingThunderHandler.fakeSpellID);
+        self:AddOverlayOption(rollingThunderSoD, lightningShield, self:HashNameFromStacks(7), nil, nil, nil, RollingThunderHandler.fakeSpellID);
+        self:AddOverlayOption(rollingThunderSoD, lightningShield, self:HashNameFromStacks(8), nil, nil, nil, RollingThunderHandler.fakeSpellID);
+        self:AddOverlayOption(rollingThunderSoD, lightningShield, self:HashNameFromStacks(9), nil, nil, nil, RollingThunderHandler.fakeSpellID);
     end
 
     if self.IsCata() then

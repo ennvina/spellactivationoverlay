@@ -102,11 +102,10 @@ local function useLockAndLoad()
                 [SAO.SOD] = { texture = "lock_and_load", position = "Top" },
                 [SAO.WRATH+SAO.CATA] = {
                     { stacks = 1, texture = "lock_and_load", position = "Top", option = false },
-                    { stacks = 2, texture = "lock_and_load", position = "Top", option = { setupStacks = 0, testStacks = 2 } },
+                    { stacks = 2, texture = "lock_and_load", position = "Top", option = { setupHash = SAO:HashNameFromStacks(0), testHash = SAO:HashNameFromStacks(2) } },
                 },
             },
             buttons = {
-                default = { stacks = 0 },
                 [SAO.SOD] = nil, -- Don't glow buttons for Season of Discovery, there would be too many to suggest
                 [SAO.WRATH] = { arcaneShot, explosiveShot },
                 [SAO.CATA] = explosiveShot,
@@ -141,7 +140,7 @@ local function useCobraStrikes()
             talent = cobraStrikesTalent,
             overlays = {
                 { stacks = 1, texture = "monk_serpent", position = "Left", scale = 0.7, option = false },
-                { stacks = 2, texture = "monk_serpent", position = "Left + Right (Flipped)", scale = 0.7, option = { setupStacks = 0, testStacks = 2 } },
+                { stacks = 2, texture = "monk_serpent", position = "Left + Right (Flipped)", scale = 0.7, option = { setupHash = SAO:HashNameFromStacks(0), testHash = SAO:HashNameFromStacks(2) } },
             },
         }
     );
