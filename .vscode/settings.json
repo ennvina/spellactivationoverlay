@@ -27,6 +27,7 @@
         "SpellActivationOverlayOptionsPanelSpellAlertLabel",
         "SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider",
         "SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider",
+        "SpellActivationOverlayOptionsPanelSpellAlertResponsiveButton",
         "SpellActivationOverlayOptionsPanelSpellAlertScaleSlider",
         "SpellActivationOverlayOptionsPanelSpellAlertSoundSlider",
         "SpellActivationOverlayOptionsPanelSpellAlertTestButton",

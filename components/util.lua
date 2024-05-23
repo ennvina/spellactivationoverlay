@@ -142,6 +142,30 @@ function SAO:translateDebuff()
     return tr(debuffTranslations);
 end
 
+-- Get the "Responsive Mode" localized text
+function SAO:responsiveMode()
+    local responsiveTranslations = {
+        ["en"] = "Responsive mode (decreases performance)",
+        ["de"] = "Responsiver Modus (verringert die Leistung)",
+        ["fr"] = "Mode réactif (diminue les performances)",
+        ["es"] = "Modo de respuesta (disminuye el rendimiento)",
+        ["ru"] = "Отзывчивый режим (снижает производительность)",
+        ["it"] = "Modalità reattiva (riduce le prestazioni)",
+        ["pt"] = "Modo responsivo (diminui o desempenho)",
+        ["ko"] = "반응형 모드(성능 저하)",
+        ["zh"] = "响应模式（降低性能）",
+    };
+    return tr(responsiveTranslations);
+end
+
+--[[
+    Addon mode
+]]
+
+function SAO:IsResponsiveMode()
+    return SpellActivationOverlayDB and SpellActivationOverlayDB.responsiveMode == true;
+end
+
 --[[
     Time utility functions
 ]]

@@ -104,6 +104,12 @@ local function unitHealth(self, unitID)
     end
 end
 
+local function unitHealthFrequent(self, unitID)
+    if self:IsResponsiveMode() then
+        unitHealth(self, unitID);
+    end
+end
+
 local function useNightfall(self)
     self:CreateEffect(
         "nightfall",
@@ -272,4 +278,5 @@ SAO.Class["WARLOCK"] = {
     ["PLAYER_LOGIN"] = customLogin,
     ["PLAYER_TARGET_CHANGED"] = retarget,
     ["UNIT_HEALTH"] = unitHealth,
+    ["UNIT_HEALTH_FREQUENT"] = unitHealthFrequent,
 }

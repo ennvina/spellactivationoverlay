@@ -81,9 +81,14 @@ SAO.Variable:register({
 
     event = {
         isRequired = SAO.IsCata() and select(2, UnitClass("player")) == "PALADIN",
-        names = { "UNIT_POWER_FREQUENT" },
-        UNIT_POWER_FREQUENT = function(unitTarget, powerType)
+        names = { "UNIT_POWER_UPDATE", "UNIT_POWER_FREQUENT" },
+        UNIT_POWER_UPDATE = function(unitTarget, powerType)
             if unitTarget == "player" and powerType == HolyPowerPowerTypeToken then
+                SAO:CheckManuallyAllBuckets(SAO.TRIGGER_HOLY_POWER);
+            end
+        end,
+        UNIT_POWER_FREQUENT = function(unitTarget, powerType)
+            if unitTarget == "player" and powerType == HolyPowerPowerTypeToken and SAO:IsResponsiveMode() then
                 SAO:CheckManuallyAllBuckets(SAO.TRIGGER_HOLY_POWER);
             end
         end,

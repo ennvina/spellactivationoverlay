@@ -104,6 +104,10 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     debugButton.Text:SetText("Write Debug to Chatbox");
     debugButton:SetChecked(SpellActivationOverlayDB.debug == true);
 
+    local responsiveButton = SpellActivationOverlayOptionsPanelSpellAlertResponsiveButton;
+    responsiveButton.Text:SetText(SAO:responsiveMode());
+    responsiveButton:SetChecked(SpellActivationOverlayDB.responsiveMode == true);
+
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     glowingButtonCheckbox.Text:SetText("Glowing Buttons");
     glowingButtonCheckbox.initialValue = SpellActivationOverlayDB.glow.enabled;
