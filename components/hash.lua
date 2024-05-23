@@ -208,10 +208,6 @@ SAO.Hash = {
         return bit.band(self.hash, bit.bnot(HASH_AURA_MASK)) + HASH_AURA_ANY;
     end,
 
-    basedOnlyOnAuraStacks = function(self) -- Used for legacy code
-        return self:hasAuraStacks() and bit.bor(self.hash, HASH_AURA_MASK) == HASH_AURA_MASK;
-    end,
-
     -- Action Usable
 
     hasActionUsable = function(self)
@@ -232,10 +228,6 @@ SAO.Hash = {
         if maskedHash == nil then return nil; end
 
         return maskedHash == HASH_ACTION_USABLE_YES;
-    end,
-
-    basedOnlyOnActionUsable = function(self) -- Used for legacy code
-        return self:hasActionUsable() and bit.bor(self.hash, HASH_ACTION_USABLE_MASK) == HASH_ACTION_USABLE_MASK;
     end,
 
     -- String Conversion functions
