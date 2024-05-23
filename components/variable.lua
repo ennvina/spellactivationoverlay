@@ -164,7 +164,9 @@ SAO.Variable = {
             bucket.currentState["current"..var.core] = value;
             bucket.trigger:inform(var.trigger.flag);
             bucket.hashCalculator["set"..var.core](bucket.hashCalculator, value, bucket);
-            bucket:applyHash();
+            if bucket.trigger:isFullyInformed() then
+                bucket:applyHash();
+            end
         end
 
         SAO.HashStringifier:register(

@@ -121,6 +121,9 @@ SAO.Trigger = {
                 self.informed = bit.bor(self.informed, flag);
             end
         end
+
+        -- Apply hash, in case it wasn't applied because of lazy evaluations during bucket setters (setAuraStacks, etc.)
+        self.parent:applyHash();
     end,
 
     manualCheckAll = function(self)
@@ -140,5 +143,8 @@ SAO.Trigger = {
                 self.informed = bit.bor(self.informed, flag);
             end
         end
+
+        -- Apply hash, in case it wasn't applied because of lazy evaluations during bucket setters (setAuraStacks, etc.)
+        self.parent:applyHash();
     end,
 }
