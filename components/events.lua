@@ -57,7 +57,7 @@ function SAO.SPELL_AURA(self, ...)
     -- Now, we are in a situation where we either got a buff (SPELL_AURA_APPLIED*) or lost it (SPELL_AURA_REMOVED*)
 
     if (auraRemovedLast) then
-        bucket:setStacks(nil); -- nil means "not currently holding any stacks"
+        bucket:setAuraStacks(nil); -- nil means "not currently holding any stacks"
         -- Can return now, because SPELL_AURA_REMOVED resets everything
         return;
     end
@@ -84,7 +84,7 @@ function SAO.SPELL_AURA(self, ...)
         - or was upgraded (SPELL_AURA_APPLIED_DOSE)
         - or was downgraded but still visible (SPELL_AURA_REMOVED_DOSE)
     ]]
-    bucket:setStacks(stacks);
+    bucket:setAuraStacks(stacks);
 end
 
 -- The (in)famous CLEU event

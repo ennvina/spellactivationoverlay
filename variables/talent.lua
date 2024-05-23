@@ -36,6 +36,7 @@ SAO.Variable:register({
 
             return maskedHash == HASH_TALENT_YES;
         end,
+        toAnyFunc = nil,
 
         toValue = function(hash)
             local talented = hash:getTalented();

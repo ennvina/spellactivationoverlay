@@ -35,6 +35,7 @@ components\util.lua
 components\variable.lua
 
 variables\actionusable.lua
+variables\aurastacks.lua
 variables\holypower.lua
 variables\talent.lua
 

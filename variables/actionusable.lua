@@ -41,6 +41,7 @@ SAO.Variable:register({
 
             return maskedHash == HASH_ACTION_USABLE_YES;
         end,
+        toAnyFunc = nil,
 
         toValue = function(hash)
             local actionUsable = hash:getActionUsable();

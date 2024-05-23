@@ -70,6 +70,7 @@ SAO.Variable = {
             return (maskedHash / HASH_HOLY_POWER_0) - 1;
         end]]
         check(var.hash, "getterFunc", 'function');
+        check(var.hash, "toAnyFunc", { 'function', 'nil' }); -- nil means there is no 'toAnyX' method
         -- function(hash) return tostring(hash:getHolyPower()) end
         check(var.hash, "toValue", 'function');
         --[[ function(hash, value)
@@ -151,6 +152,9 @@ SAO.Variable = {
         SAO.Hash["has"..var.core] = function(hash) return bit.band(hash.hash, var.hash.mask) ~= 0 end;
         SAO.Hash["set"..var.core] = var.hash.setterFunc;
         SAO.Hash["get"..var.core] = var.hash.getterFunc;
+        if var.hash.toAnyFunc then
+            SAO.Hash["toAny"..var.core] = var.hash.toAnyFunc;
+        end
 
         -- Add the bucket setter directly to the bucket class declaration
         SAO.Bucket["set"..var.core] = function(bucket, value)

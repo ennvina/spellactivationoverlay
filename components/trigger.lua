@@ -8,20 +8,17 @@ SAO.TRIGGER_ACTION_USABLE = 0x2
 SAO.TRIGGER_TALENT        = 0x4
 SAO.TRIGGER_HOLY_POWER    = 0x8
 
-SAO.TriggerNames = {
-    [SAO.TRIGGER_AURA] = "aura",
-}
+-- Trigger names for variables and conditions
+SAO.TriggerNames = {} -- Will be filled by Variable
 
-SAO.TriggerFlags = {} -- Transpose index for fast lookup in both directions
-for flag, name in pairs(SAO.TriggerNames) do
-    SAO.TriggerFlags[name] = flag;
-end
+-- Transpose index for fast lookup in both directions
+SAO.TriggerFlags = {} -- Will be filled by Variable
+
+-- Functions to check manually if a trigger should be triggered
+SAO.TriggerManualChecks = {} -- Will be filled by Variable
 
 -- List of lists of buckets requiring each type of trigger
-SAO.RegisteredBucketsByTrigger = {};
-for flag, _ in pairs(SAO.TriggerNames) do
-    SAO.RegisteredBucketsByTrigger[flag] = {}
-end
+SAO.RegisteredBucketsByTrigger = {} -- Will be filled by Variable
 
 function SAO:GetBucketsByTrigger(flag)
     local buckets = SAO.RegisteredBucketsByTrigger[flag];
@@ -30,22 +27,6 @@ function SAO:GetBucketsByTrigger(flag)
     end
     return buckets;
 end
-
-SAO.TriggerManualChecks = {
-
-    [SAO.TRIGGER_AURA] = function(bucket)
-        local auraStacks = SAO:GetPlayerAuraStacksBySpellID(bucket.spellID);
-        if auraStacks ~= nil then
-            if bucket.stackAgnostic then
-                bucket:setStacks(0);
-            else
-                bucket:setStacks(auraStacks);
-            end
-        else
-            bucket:setStacks(nil);
-        end
-    end,
-}
 
 SAO.Trigger = {
     new = function(self, parent) -- parent is the bucket attached to the new trigger

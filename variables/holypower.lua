@@ -42,6 +42,7 @@ SAO.Variable:register({
 
             return (maskedHash / HASH_HOLY_POWER_0) - 1;
         end,
+        toAnyFunc = nil,
 
         toValue = function(hash)
             local holyPower = hash:getHolyPower();

@@ -195,16 +195,6 @@ SAO.ConditionBuilder = {
     end,
 }
 
-SAO.ConditionBuilder:register(
-    "aura", -- Name used by NOE
-    "stacks", -- Name used by HRE
-    0, -- Default (NOE only)
-    "setAuraStacks", -- Setter method for Hash
-    "number of stacks",
-    function(value) return type(value) == 'number' and value >= -1 and value <= 9 end,
-    function(value) return value >= 0 and value or nil end -- return n if n > 0, otherwise (if n == -1) return nil
-);
-
 local function getCondition(config, default, triggers)
     local condition = {}
 
@@ -350,7 +340,6 @@ local function importTalent(effect, props)
 end
 
 local function importAura(effect, props)
-    importTrigger(effect, props, "aura", "requireAura");
     SAO.VariableImporter:importTrigger(SAO.TRIGGER_AURA, effect, props);
 end
 
@@ -563,6 +552,7 @@ local function checkNativeEffect(effect)
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid spellID "..tostring(overlay.spellID));
             return false;
         end
+        -- Special checks for aura stacks
         local stacks = effect.triggers.aura and type(overlay.condition) == 'table' and type(overlay.condition.aura) == 'number' and overlay.condition.aura;
         if stacks then
             if stacks < -1 or stacks > 9 then

@@ -1,20 +1,6 @@
 local AddonName, SAO = ...
 local Module = "hash"
 
--- Aura stacks
---  if stacks >= 0 then
---      if stackAgnostic then
---          hash = HASH_AURA_ANY
---      else 
---          hash = HASH_AURA_ZERO + stacks
---  else
---      hash = HASH_AURA_ABSENT
-local HASH_AURA_ABSENT = 1
-local HASH_AURA_ANY    = 2
-local HASH_AURA_ZERO   = HASH_AURA_ANY
-local HASH_AURA_MAX    = HASH_AURA_ZERO + 9 -- Allow no more than 9 stacks
-local HASH_AURA_MASK   = 0xF
-
 local HashStringifierList = {}
 local HashStringifierMap = {}
 
@@ -77,44 +63,6 @@ SAO.HashStringifier = {
     end,
 }
 
-SAO.HashStringifier:register(
-    1,
-    HASH_AURA_MASK,
-    "aura_stacks", -- key
-    function(hash) -- toValue()
-        local auraStacks = hash:getAuraStacks();
-        return (auraStacks == nil) and "missing" or (auraStacks == 0 and "any" or tostring(auraStacks));
-    end,
-    function(hash, value) -- fromValue()
-        if value == "missing" then
-            hash:setAuraStacks(nil);
-            return true;
-        elseif value == "any" then
-            hash:setAuraStacks(0);
-            return true;
-        elseif tostring(tonumber(value)) == value then
-            hash:setAuraStacks(tonumber(value));
-            return true;
-        else
-            return nil; -- Not good
-        end
-    end,
-    function(hash) -- getHumanReadableKeyValue
-        local auraStacks = hash:getAuraStacks();
-        if auraStacks and auraStacks > 0 then
-            return SAO:NbStacks(auraStacks);
-        elseif auraStacks == nil then
-            return ACTION_SPELL_AURA_REMOVED_DEBUFF;
-        else
-            return nil; -- Should be obvious if aura is 'any'
-        end
-    end,
-    function(hash) -- optionIndexer
-        return hash:getAuraStacks() or -1; -- returns n if n > 0, otherwise (if n == nil) returns -1
-    end
-);
-
-
 SAO.Hash = {
     new = function(self, initialHash)
         local hash = { hash = initialHash or 0 }
@@ -139,41 +87,6 @@ SAO.Hash = {
             return nil; -- Potential issue: for aura stacks, may be mistaken with 'aura absent'
         end
         return maskedHash;
-    end,
-
-    -- Aura Stacks
-
-    hasAuraStacks = function(self)
-        return bit.band(self.hash, HASH_AURA_MASK) ~= 0;
-    end,
-
-    setAuraStacks = function(self, stacks, bucket)
-        if stacks == nil then
-            self:setMaskedHash(HASH_AURA_ABSENT, HASH_AURA_MASK);
-        elseif type(stacks) ~= 'number' or stacks < 0 then
-            SAO:Warn(Module, "Invalid stack count "..tostring(stacks));
-        elseif bucket and bucket.stackAgnostic then
-            self:setMaskedHash(HASH_AURA_ANY, HASH_AURA_MASK);
-        elseif stacks > 9 then
-            SAO:Debug(Module, "Stack overflow ("..stacks..") truncated to 9");
-            self:setMaskedHash(HASH_AURA_MAX, HASH_AURA_MASK);
-        else
-            self:setMaskedHash(HASH_AURA_ZERO + stacks, HASH_AURA_MASK);
-        end
-    end,
-
-    getAuraStacks = function(self)
-        local maskedHash = self:getMaskedHash(HASH_AURA_MASK);
-        if maskedHash == nil then return nil; end
-
-        if maskedHash == HASH_AURA_ABSENT then
-            return nil;
-        end
-        return maskedHash - HASH_AURA_ZERO;
-    end,
-
-    toAnyAuraStacks = function(self)
-        return bit.band(self.hash, bit.bnot(HASH_AURA_MASK)) + HASH_AURA_ANY;
     end,
 
     -- String Conversion functions
