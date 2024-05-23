@@ -15,6 +15,7 @@ local HASH_HOLY_POWER_MASK = 0x700
 
 SAO.Variable:register({
     order = 4,
+    core = "HolyPower",
 
     trigger = {
         flag = SAO.TRIGGER_HOLY_POWER,
@@ -24,7 +25,6 @@ SAO.Variable:register({
     hash = {
         mask = HASH_HOLY_POWER_MASK,
         key = "holy_power",
-        core = "HolyPower",
         setterFunc = function(self, holyPower)
             if type(holyPower) ~= 'number' or holyPower < 0 then
                 SAO:Warn(Module, "Invalid Holy Power "..tostring(holyPower));
@@ -64,9 +64,7 @@ SAO.Variable:register({
     },
 
     bucket = {
-        member = "currentHolyPower",
         impossibleValue = nil,
-        setter = "setHolyPower",
         fetchAndSet = function(bucket)
             if EnumHolyPower then
                 local holyPower = UnitPower("player", Enum.PowerType.HolyPower);

@@ -11,6 +11,7 @@ local HASH_TALENT_MASK = 0xC0
 
 SAO.Variable:register({
     order = 3,
+    core = "Talented",
 
     trigger = {
         flag = SAO.TRIGGER_TALENT,
@@ -20,7 +21,6 @@ SAO.Variable:register({
     hash = {
         mask = HASH_TALENT_MASK,
         key = "talent",
-        core = "Talented",
         setterFunc = function(self, usable)
             if type(usable) ~= 'boolean' then
                 SAO:Warn(Module, "Invalid Talented flag "..tostring(usable));
@@ -60,9 +60,7 @@ SAO.Variable:register({
     },
 
     bucket = {
-        member = "currentTalented",
         impossibleValue = nil,
-        setter = "setTalented",
         fetchAndSet = function(bucket)
             if bucket.talentTabIndex then
                 local tab, index = bucket.talentTabIndex[1], bucket.talentTabIndex[2];

@@ -44,6 +44,8 @@ SAO.Variable = {
         -- Only the order must be stable: if x < y in patch A, then x must be < y in patch B
         -- However, an eventual new z can be anywhere, even between x and y, as long as the new order is also stable
 
+        check(var, "core", 'string'); -- "HolyPower", used for hasHolyPower, getHolyPower, setHolyPower, etc.
+
         check(var, "trigger", 'table');
         check(var.trigger, "flag", 'number'); -- TRIGGER_HOLY_POWER
         check(var.trigger, "name", 'string'); -- "holyPower"
@@ -51,7 +53,6 @@ SAO.Variable = {
         check(var, "hash", 'table');
         check(var.hash, "mask", 'number'); -- HASH_HOLY_POWER_MASK
         check(var.hash, "key", 'string'); -- "holy_power"
-        check(var.hash, "core", 'string'); -- "HolyPower", used for hasHolyPower, getHolyPower, setHolyPower
         --[[ function(self, holyPower, bucket)
             if type(holyPower) ~= 'number' or holyPower < 0 then
                 SAO:Warn(Module, "Invalid Holy Power "..tostring(holyPower));
@@ -86,9 +87,7 @@ SAO.Variable = {
         check(var.hash, "optionIndexer", 'function');
 
         check(var, "bucket", 'table');
-        check(var.bucket, "member", 'string'); -- "currentHolyPower"
         -- check(var.bucket, "impossibleValue", 'any'); -- can be anything, usually nil or -1
-        check(var.bucket, "setter", 'string'); -- "setHolyPower"
         --[[ function(bucket)
             if Enum and Enum.PowerType and Enum.PowerType.HolyPower then
                 local holyPower = UnitPower("player", Enum.PowerType.HolyPower);
@@ -149,18 +148,18 @@ SAO.Variable = {
         SAO.TriggerManualChecks[var.trigger.flag] = var.bucket.fetchAndSet;
 
         -- Add the hash setter and getter directly to the Hash class definition
-        SAO.Hash["has"..var.hash.core] = function(hash) return bit.band(hash.hash, var.hash.mask) ~= 0 end;
-        SAO.Hash["set"..var.hash.core] = var.hash.setterFunc;
-        SAO.Hash["get"..var.hash.core] = var.hash.getterFunc;
+        SAO.Hash["has"..var.core] = function(hash) return bit.band(hash.hash, var.hash.mask) ~= 0 end;
+        SAO.Hash["set"..var.core] = var.hash.setterFunc;
+        SAO.Hash["get"..var.core] = var.hash.getterFunc;
 
         -- Add the bucket setter directly to the bucket class declaration
-        SAO.Bucket[var.bucket.setter] = function(bucket, value)
-            if bucket[var.bucket.member] == value then
+        SAO.Bucket["set"..var.core] = function(bucket, value)
+            if bucket["current"..var.core] == value then
                 return;
             end
-            bucket.currentState[var.bucket.member] = value;
+            bucket.currentState["current"..var.core] = value;
             bucket.trigger:inform(var.trigger.flag);
-            bucket.hashCalculator["set"..var.hash.core](bucket.hashCalculator, value, bucket);
+            bucket.hashCalculator["set"..var.core](bucket.hashCalculator, value, bucket);
             bucket:applyHash();
         end
 
@@ -178,7 +177,7 @@ SAO.Variable = {
             var.condition.noeVar, -- Name used by NOE
             var.condition.hreVar, -- Name used by HRE
             var.condition.noeDefault, -- Default (NOE only)
-            "set"..var.hash.core, -- Setter method for Hash, comes from var.hash insted of var.condition
+            "set"..var.core, -- Setter method for Hash
             var.condition.description,
             var.condition.checker,
             var.condition.noeToHash
@@ -255,7 +254,7 @@ SAO.VariableState = {
 
     reset = function(self)
         for _, var in pairs(SAO.Variables) do
-            self[var.bucket.member] = var.bucket.impossibleValue;
+            self["current"..var.core] = var.bucket.impossibleValue;
         end
     end,
 }
