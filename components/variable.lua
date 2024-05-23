@@ -262,20 +262,22 @@ SAO.Variable = {
 }
 
 SAO.VariableState = {
-    new = function(self)
-        local state = {}
+    new = function(self, parent) -- parent is the bucket attached to the new state
+        local state = { parent = parent }
 
         self.__index = nil;
         setmetatable(state, self);
         self.__index = self;
 
-        state:reset();
+        -- state:reset(); -- No need to reset now, trigger flags are probably not set yet
         return state;
     end,
 
     reset = function(self)
         for _, var in pairs(SAO.Variables) do
-            self["current"..var.core] = var.bucket.impossibleValue;
+            if self.parent.trigger:reactsWith(var.trigger.flag) then
+                self["current"..var.core] = var.bucket.impossibleValue;
+            end
         end
     end,
 }

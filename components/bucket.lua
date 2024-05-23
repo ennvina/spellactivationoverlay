@@ -29,9 +29,6 @@ SAO.Bucket = {
             -- Stack-agnostic means the bucket does not care about its number of stacks
             stackAgnostic = true,
 
-            -- Initialize current state with unattainable values
-            currentState = SAO.VariableState:new(),
-
             -- Initially, nothing is displayed
             displayedHash = nil,
             currentHash = nil,
@@ -41,6 +38,9 @@ SAO.Bucket = {
             description = name.." ("..spellID..(GetSpellInfo(spellID) and " = "..GetSpellInfo(spellID) or "")..")",
         };
         bucket.trigger = SAO.Trigger:new(bucket);
+        -- Initialize current state with unattainable values
+        -- State must be initialized after trigger is set
+        bucket.currentState = SAO.VariableState:new(bucket);
 
         self.__index = nil;
         setmetatable(bucket, self);
@@ -54,9 +54,10 @@ SAO.Bucket = {
 
         self.trigger.informed = 0;
 
-        self.hashCalculator:reset();
-
-        self:applyHash();
+        if self.hashCalculator.hash ~= 0 then
+            self.hashCalculator:reset();
+            self:applyHash();
+        end
     end,
 
     getOrCreateDisplay = function(self, hash)

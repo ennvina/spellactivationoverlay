@@ -636,6 +636,7 @@ local function RegisterNativeEffectNow(self, effect)
             bucket.trigger:require(SAO.TriggerFlags[name]);
         end
     end
+    bucket:reset(); -- Force reset after triggers are set, because resetting is optimized, based on trigger flags
 
     for _, overlay in ipairs(effect.overlays or {}) do
         if not overlay.project or self.IsProject(overlay.project) then
