@@ -158,7 +158,7 @@ SAO.Variable = {
 
         -- Add the bucket setter directly to the bucket class declaration
         SAO.Bucket["set"..var.core] = function(bucket, value)
-            if bucket["current"..var.core] == value then
+            if bucket.currentState["current"..var.core] == value then
                 return;
             end
             bucket.currentState["current"..var.core] = value;
