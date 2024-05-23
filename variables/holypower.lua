@@ -5,6 +5,8 @@ local Module = "holypower"
 local UnitPower = UnitPower
 local EnumHolyPower = Enum and Enum.PowerType and Enum.PowerType.HolyPower
 
+local HolyPowerPowerTypeToken = "HOLY_POWER"
+
 -- Holy Power, Cataclysm only
 -- hash = HASH_HOLY_POWER_0 * (1 + holy_power)
 local HASH_HOLY_POWER_0    = 0x100
@@ -78,8 +80,13 @@ SAO.Variable:register({
     },
 
     event = {
+        isRequired = SAO.IsCata() and select(2, UnitClass("player")) == "PALADIN",
         names = { "UNIT_POWER_FREQUENT" },
-        isRequired = function() return SAO.IsCata() and select(2, UnitClass("player")) == "PALADIN" end,
+        UNIT_POWER_FREQUENT = function(unitTarget, powerType)
+            if unitTarget == "player" and powerType == HolyPowerPowerTypeToken then
+                SAO:CheckManuallyAllBuckets(SAO.TRIGGER_HOLY_POWER);
+            end
+        end,
     },
 
     condition = {

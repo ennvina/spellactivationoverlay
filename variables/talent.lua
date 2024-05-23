@@ -75,8 +75,11 @@ SAO.Variable:register({
     },
 
     event = {
-        names = { "PLAYER_TALENT_UPDATE" },
         isRequired = true,
+        names = { "PLAYER_TALENT_UPDATE" },
+        PLAYER_TALENT_UPDATE = function(...)
+            SAO:CheckManuallyAllBuckets(SAO.TRIGGER_TALENT);
+        end,
     },
 
     condition = {

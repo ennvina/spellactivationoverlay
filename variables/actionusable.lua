@@ -126,8 +126,16 @@ SAO.Variable:register({
     },
 
     event = {
-        names = { "PLAYER_ENTERING_WORLD", "SPELL_UPDATE_USABLE" },
         isRequired = true,
+        names = { "PLAYER_ENTERING_WORLD", "SPELL_UPDATE_USABLE" },
+        PLAYER_ENTERING_WORLD = function()
+            C_Timer.NewTimer(1, function()
+                SAO:CheckManuallyAllBuckets(SAO.TRIGGER_ACTION_USABLE);
+            end);
+        end,
+        SPELL_UPDATE_USABLE = function()
+            SAO:CheckManuallyAllBuckets(SAO.TRIGGER_ACTION_USABLE);
+        end,
     },
 
     condition = {

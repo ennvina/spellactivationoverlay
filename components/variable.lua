@@ -100,9 +100,11 @@ SAO.Variable = {
         check(var.bucket, "fetchAndSet", 'function'); -- Formerly in TriggerManualChecks
 
         check(var, "event", 'table');
+        check(var.event, "isRequired", { 'boolean', 'function' }); -- SAO.IsCata() and select(2, UnitClass("player")) == "PALADIN"
         check(var.event, "names", 'table'); -- { "UNIT_POWER_FREQUENT" }
-        -- function() return SAO.IsCata() and select(2, UnitClass("player")) == "PALADIN" end
-        check(var.event, "isRequired", { 'boolean', 'function' });
+        for _, eventName in ipairs(var.event.names or {}) do
+            check(var.event, eventName, { 'function', 'nil' });
+        end
 
         check(var, "condition", 'table');
         check(var.condition, "noeVar", 'string'); -- "holyPower"
@@ -189,6 +191,19 @@ SAO.Variable = {
             var.condition.noeToHash
         );
 
+        if type(var.event.isRequired) == 'function' and var.event.isRequired()
+        or type(var.event.isRequired) == 'boolean' and var.event.isRequired then
+            for _, eventName in ipairs(var.event.names or {}) do
+                if var.event[eventName] then
+                    if SAO.VariableEventProxy[eventName] then
+                        tinsert(SAO.VariableEventProxy[eventName], var);
+                    else
+                        SAO.VariableEventProxy[eventName] = { var };
+                    end
+                end
+            end
+        end
+
         SAO.VariableImporter[var.trigger.flag] = function(effect, props)
             local triggerName = var.import.noeTrigger;
 
@@ -269,6 +284,14 @@ SAO.VariableImporter = {
     importTrigger = function(self, flag, effect, props)
         if self[flag] then
             self[flag](effect, props);
+        end
+    end,
+}
+
+SAO.VariableEventProxy = {
+    OnEvent = function(self, event, ...)
+        for _, var in ipairs(self[event] or {}) do
+            var.event[event](...);
         end
     end,
 }

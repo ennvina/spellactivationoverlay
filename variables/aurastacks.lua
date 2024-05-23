@@ -105,8 +105,9 @@ SAO.Variable:register({
     },
 
     event = {
-        names = { "COMBAT_LOG_EVENT_UNFILTERED" },
         isRequired = true,
+        names = { "COMBAT_LOG_EVENT_UNFILTERED" },
+        -- COMBAT_LOG_EVENT_UNFILTERED = function(...) -- Special case: handled by events.lua
     },
 
     condition = {
