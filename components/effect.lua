@@ -315,26 +315,6 @@ local function addOneButton(buttons, buttonConfig, project, default, triggers)
     table.insert(buttons, button);
 end
 
-local function importTrigger(effect, props, triggerName, propName)
-    if type(props) ~= 'table' then
-        effect.triggers[triggerName] = false;
-        return;
-    end
-
-    if type(props[propName]) == 'boolean' then
-        effect.triggers[triggerName] = props[propName];
-    elseif type(props[propName]) == 'table' then
-        for project, prop in pairs(props[propName]) do
-            if SAO.IsProject(project) then
-                effect.triggers[triggerName] = prop;
-                break;
-            end
-        end
-    else
-        effect.triggers[triggerName] = false;
-    end
-end
-
 local function importTalent(effect, props)
     SAO.VariableImporter:importTrigger(SAO.TRIGGER_TALENT, effect, props);
 end
