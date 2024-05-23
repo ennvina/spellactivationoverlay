@@ -374,6 +374,7 @@ local function dumpOneBucket(bucket, devDump)
     end
 end
 
+-- Write bucket information
 function SpellActivationOverlay_DumpBuckets(spellID, devDump)
     if spellID then
         local bucket = SAO.RegisteredBucketsBySpellID[spellID];
@@ -393,5 +394,28 @@ function SpellActivationOverlay_DumpBuckets(spellID, devDump)
 
     for _, bucket in pairs(SAO.RegisteredBucketsBySpellID) do
         dumpOneBucket(bucket, devDump)
+    end
+end
+
+-- Perform a manual check on all buckets
+function SpellActivationOverlay_CheckBuckets(spellID)
+    if spellID then
+        local bucket = SAO:GetBucketBySpellID(spellID);
+        if bucket then
+            SAO:Info(Module, "Checking bucket "..bucket.description);
+            bucket.trigger:manualCheckAll();
+        else
+            SAO:Info(Module, "Bucket not found with spellID "..tostring(spellID));
+        end
+    else
+        local nbBuckets = 0;
+        for _, _ in pairs(SAO.RegisteredBucketsBySpellID) do
+            nbBuckets = nbBuckets + 1;
+        end
+        SAO:Info(Module, "Checking all buckets ("..nbBuckets.." item"..(nbBuckets == 1 and "" or "s")..")");
+
+        for _, bucket in pairs(SAO.RegisteredBucketsBySpellID) do
+            bucket.trigger:manualCheckAll();
+        end
     end
 end
