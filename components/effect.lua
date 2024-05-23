@@ -213,15 +213,6 @@ SAO.ConditionBuilder:register(
     function(value) return type(value) == 'boolean' end,
     function(value) return value end
 );
-SAO.ConditionBuilder:register(
-    "talent", -- Name used by NOE
-    "requireTalent", -- Name used by HRE
-    true, -- Default (NOE only)
-    "setTalented", -- Setter method for Hash
-    "talent flag",
-    function(value) return type(value) == 'boolean' end,
-    function(value) return value end
-);
 
 local function getCondition(config, default, triggers)
     local condition = {}
@@ -364,24 +355,6 @@ local function importTrigger(effect, props, triggerName, propName)
 end
 
 local function importTalent(effect, props)
-    if type(props) ~= 'table' then
-        return;
-    end
-
-    if type(props.talent) == 'number' then
-        effect.talent = props.talent;
-    elseif type(props.talent) == 'table' then
-        for project, talent in pairs(props.talent) do
-            if SAO.IsProject(project) then
-                effect.talent = talent;
-                break;
-            end
-        end
-    else
-        effect.talent = effect.spellID;
-    end
-
-    importTrigger(effect, props, "talent", "requireTalent");
     SAO.VariableImporter:importTrigger(SAO.TRIGGER_TALENT, effect, props);
 end
 
@@ -659,9 +632,14 @@ local function checkNativeEffect(effect)
         end
     end
 
-    if effect.triggers.talent and not effect.talent then
-        SAO:Error(Module, "Registering effect "..effect.name.." with talent requirement, but no talent is pointed out in the talent tree");
-        return false;
+    for _, var in pairs(SAO.Variables) do
+        local triggerName = var.trigger.name;
+        local dependencyName = var.import.dependency and var.import.dependency.name;
+        local dependencyRequired = var.import.dependency and var.import.dependency.default ~= nil;
+        if dependencyRequired and effect.triggers[triggerName] and not effect[dependencyName] then
+            SAO:Error(Module, "Registering effect "..effect.name.." which requires "..triggerName.." but without its depencency "..dependencyName);
+            return false;
+        end
     end
 
     return true;
@@ -729,13 +707,11 @@ local function RegisterNativeEffectNow(self, effect)
         end
     end
 
-    if effect.talent and effect.triggers.talent then
-        local talentName = GetSpellInfo(effect.talent);
-        local _, _, tab, index = self:GetTalentByName(talentName);
-        if type(tab) == 'number' and type(index) == 'number' then
-            bucket.talentTabIndex = { tab, index };
-        else
-            self:Error(Module, "Effect "..tostring(effect.name).." requires talent "..effect.talent..(talentName and "("..talentName..")" or "")..", but it cannot be found in the talent tree");
+    for _, var in pairs(SAO.Variables) do
+        local triggerName = var.trigger.name;
+        local dependencyName = var.import.dependency and var.import.dependency.name;
+        if effect[dependencyName] and effect.triggers[triggerName] then
+            var.import.dependency.prepareBucket(bucket, effect[dependencyName]);
         end
     end
 

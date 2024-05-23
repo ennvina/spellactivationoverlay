@@ -68,9 +68,9 @@ function SpellActivationOverlay_OnLoad(self)
 	self:RegisterEvent("LEARNED_SPELL_IN_TAB");
 	self:RegisterEvent("LOADING_SCREEN_DISABLED");
 	self:RegisterEvent("PLAYER_LOGIN");
-	self:RegisterEvent("PLAYER_TALENT_UPDATE");
 	for _, var in pairs(SAO.Variables) do
-		if type(var.event.isRequired) == 'function' and var.event.isRequired() then
+		if type(var.event.isRequired) == 'function' and var.event.isRequired()
+		or type(var.event.isRequired) == 'boolean' and var.event.isRequired then
 			for _, eventName in ipairs(var.event.names) do
 				self:RegisterEvent(eventName);
 			end

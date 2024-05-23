@@ -4,7 +4,6 @@ local Module = "trigger"
 -- Optimize frequent calls
 local GetSpellCooldown = GetSpellCooldown
 local GetSpellPowerCost = GetSpellPowerCost
-local GetTalentInfo = GetTalentInfo
 local IsUsableSpell = IsUsableSpell
 
 -- List of trigger flags, as bit field
@@ -17,7 +16,6 @@ SAO.TRIGGER_HOLY_POWER    = 0x8
 SAO.TriggerNames = {
     [SAO.TRIGGER_AURA         ] = "aura",
     [SAO.TRIGGER_ACTION_USABLE] = "action",
-    [SAO.TRIGGER_TALENT       ] = "talent",
 }
 
 SAO.TriggerFlags = {} -- Transpose index for fast lookup in both directions
@@ -111,16 +109,6 @@ SAO.TriggerManualChecks = {
         end
 
         bucket:setActionUsable(usable);
-    end,
-
-    [SAO.TRIGGER_TALENT] = function(bucket)
-        if bucket.talentTabIndex then
-            local tab, index = bucket.talentTabIndex[1], bucket.talentTabIndex[2];
-            local rank = select(5, GetTalentInfo(tab, index));
-            bucket:setTalented(rank > 0);
-        else
-            bucket:setTalented(false);
-        end
     end,
 }
 

@@ -16,10 +16,19 @@ end
 local function check(var, member, expectedType)
     if type(var) ~= 'table' then
         return;
-    elseif not var[member] then
-        error("Variable does not define a "..tostring(member));
-    elseif type(var[member]) ~= expectedType then
-        error("Variable defines member "..tostring(member).." of type '"..type(var[member]).."' instead of '"..expectedType.."'");
+    elseif type(expectedType) == 'string' then
+        if not var[member] then
+            error("Variable does not define a "..tostring(member));
+        elseif type(var[member]) ~= expectedType then
+            error("Variable defines member "..tostring(member).." of type '"..type(var[member]).."' instead of '"..expectedType.."'");
+        end
+    else -- type(expectedType) == 'table'
+        for _, expType in ipairs(expectedType) do
+            if type(var[member]) == expType then
+                return;
+            end
+        end
+        error("Variable defines member "..tostring(member).." of type '"..type(var[member]).."' instead of '"..strjoin("' or '", unpack(expectedType)).."'");
     end
 end
 
@@ -93,7 +102,7 @@ SAO.Variable = {
         check(var, "event", 'table');
         check(var.event, "names", 'table'); -- { "UNIT_POWER_FREQUENT" }
         -- function() return SAO.IsCata() and select(2, UnitClass("player")) == "PALADIN" end
-        check(var.event, "isRequired", 'function');
+        check(var.event, "isRequired", { 'boolean', 'function' });
 
         check(var, "condition", 'table');
         check(var.condition, "noeVar", 'string'); -- "holyPower"
@@ -108,6 +117,13 @@ SAO.Variable = {
         check(var, "import", 'table');
         check(var.import, "noeTrigger", 'string'); -- "holyPower"
         check(var.import, "hreTrigger", 'string'); -- "useHolyPower"
+        check(var.import, "depencency", { 'table', 'nil' });
+        if type(var.import.dependency) == 'table' then
+            check(var.import.dependency, "name", 'string'); -- "execValue"
+            check(var.import.dependency, "expectedType", 'string'); -- "number"
+            check(var.import.dependency, "default", { 'nil', var.import.dependency.expectedType, 'function' }); -- 25
+            check(var.import.dependency, "prepareBucket", 'function'); -- function(bucket, value) bucket.execValue = value end
+        end
 
         -- Uniqueness tests
         for _, var2 in pairs(SAO.Variables) do
@@ -169,13 +185,40 @@ SAO.Variable = {
         );
 
         SAO.VariableImporter[var.trigger.flag] = function(effect, props)
-            local triggerName, propName = var.import.noeTrigger, var.import.hreTrigger;
+            local triggerName = var.import.noeTrigger;
 
             if type(props) ~= 'table' then
                 effect.triggers[triggerName] = false;
                 return;
             end
 
+            local dependency = var.import.dependency;
+            if dependency then
+                local depName, depType, depDefault = dependency.name, dependency.expectedType, dependency.default;
+                if type(props[depName]) == depType then
+                    effect[depName] = props[depName];
+                elseif type(props[depName]) == 'table' then
+                    for project, talent in pairs(props[depName]) do
+                        if SAO.IsProject(project) then
+                            effect[depName] = talent;
+                            break;
+                        end
+                    end
+                elseif props[depName] == nil then
+                    if type(depDefault) == 'function' then
+                        effect[depName] = depDefault(effect);
+                    else
+                        effect[depName] = depDefault;
+                    end
+                end
+                if effect[depName] == nil and depDefault ~= nil then
+                    SAO:Debug(Module, "Missing dependency "..tostring(depName).." for effect "..tostring(effect.name));
+                elseif type(effect[depName]) ~= depType and type(depDefault) == depType then
+                    SAO:Debug(Module, "Wrong type for dependency "..tostring(depName).." of effect "..tostring(effect.name));
+                end
+            end
+
+            local propName = var.import.hreTrigger;
             if type(props[propName]) == 'boolean' then
                 effect.triggers[triggerName] = props[propName];
             elseif type(props[propName]) == 'table' then

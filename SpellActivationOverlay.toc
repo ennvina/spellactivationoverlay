@@ -35,6 +35,7 @@ components\util.lua
 components\variable.lua
 
 variables\holypower.lua
+variables\talent.lua
 
 textures\texname.lua
 

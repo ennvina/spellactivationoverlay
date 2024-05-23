@@ -26,16 +26,12 @@ SAO.Bucket = {
             -- Spell ID is the main identifier to activate/deactivate visuals
             spellID = spellID,
 
-            -- Talent Tab-Index is an option object { tab, index } telling the talent location in the player's tree
-            talentTabIndex = nil,
-
             -- Stack-agnostic means the bucket does not care about its number of stacks
             stackAgnostic = true,
 
             -- Initialize current state with unattainable values
             currentStacks = -1,
             currentActionUsable = nil,
-            currentTalented = nil,
 
             -- Initially, nothing is displayed
             displayedHash = nil,
@@ -58,7 +54,6 @@ SAO.Bucket = {
     reset = function(self)
         self.currentStacks = -1;
         self.currentActionUsable = nil;
-        self.currentTalented = nil;
 
         self.currentState:reset();
 
@@ -87,10 +82,6 @@ SAO.Bucket = {
         end
 
         return self[hash.hash], created;
-    end,
-
-    setTalentInfo = function(self, tab, index)
-        self.talentTabIndex = { tab, index };
     end,
 
     -- Check if a specific hash is currently displayed
@@ -142,16 +133,6 @@ SAO.Bucket = {
         self.currentActionUsable = usable;
         self.trigger:inform(SAO.TRIGGER_ACTION_USABLE);
         self.hashCalculator:setActionUsable(usable);
-        self:applyHash();
-    end,
-
-    setTalented = function(self, talented)
-        if self.currentTalented == talented then
-            return;
-        end
-        self.currentTalented = talented;
-        self.trigger:inform(SAO.TRIGGER_TALENT);
-        self.hashCalculator:setTalented(talented);
         self:applyHash();
     end,
 

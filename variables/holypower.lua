@@ -60,16 +60,13 @@ SAO.Variable:register({
         end,
         optionIndexer = function(hash)
             return hash:getHolyPower();
-        end
+        end,
     },
 
     bucket = {
         member = "currentHolyPower",
         impossibleValue = nil,
         setter = "setHolyPower",
-        isRequired = function()
-            return SAO.IsCata() and select(2, UnitClass("player")) == "PALADIN"
-        end,
         fetchAndSet = function(bucket)
             if EnumHolyPower then
                 local holyPower = UnitPower("player", Enum.PowerType.HolyPower);
@@ -97,5 +94,6 @@ SAO.Variable:register({
     import = {
         noeTrigger = "holyPower",
         hreTrigger = "useHolyPower",
+        dependency = nil, -- No additional dependency value
     },
 });

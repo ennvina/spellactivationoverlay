@@ -20,11 +20,6 @@ local HASH_ACTION_USABLE_NO   = 0x080
 local HASH_ACTION_USABLE_YES  = 0x100
 local HASH_ACTION_USABLE_MASK = 0x180
 
--- Has spent point in the talent tree
-local HASH_TALENT_NO   = 0x200
-local HASH_TALENT_YES  = 0x400
-local HASH_TALENT_MASK = 0x600
-
 local HashStringifierList = {}
 local HashStringifierMap = {}
 
@@ -151,33 +146,6 @@ SAO.HashStringifier:register(
     end
 );
 
-SAO.HashStringifier:register(
-    3,
-    HASH_TALENT_MASK,
-    "talent", -- key
-    function(hash) -- toValue()
-        local talented = hash:isTalented();
-        return talented and "yes" or "no";
-    end,
-    function(hash, value) -- fromValue()
-        if value == "yes" then
-            hash:setTalented(true);
-            return true;
-        elseif value == "no" then
-            hash:setTalented(false);
-            return true;
-        else
-            return nil; -- Not good
-        end
-    end,
-    function(hash) -- getHumanReadableKeyValue
-        return nil; -- Should be obvious
-    end,
-    function(hash) -- optionIndexer
-        return hash:isTalented() and 0 or -1;
-    end
-);
-
 
 SAO.Hash = {
     new = function(self, initialHash)
@@ -268,28 +236,6 @@ SAO.Hash = {
 
     basedOnlyOnActionUsable = function(self) -- Used for legacy code
         return self:hasActionUsable() and bit.bor(self.hash, HASH_ACTION_USABLE_MASK) == HASH_ACTION_USABLE_MASK;
-    end,
-
-    -- Talented
-
-    hasTalented = function(self)
-        return bit.band(self.hash, HASH_TALENT_MASK) ~= 0;
-    end,
-
-    setTalented = function(self, usable)
-        if type(usable) ~= 'boolean' then
-            SAO:Warn(Module, "Invalid Talented flag "..tostring(usable));
-        else
-            local maskedHash = usable and HASH_TALENT_YES or HASH_TALENT_NO;
-            self:setMaskedHash(maskedHash, HASH_TALENT_MASK);
-        end
-    end,
-
-    isTalented = function(self)
-        local maskedHash = self:getMaskedHash(HASH_TALENT_MASK);
-        if maskedHash == nil then return nil; end
-
-        return maskedHash == HASH_TALENT_YES;
     end,
 
     -- String Conversion functions
