@@ -201,7 +201,7 @@ SAO.ConditionBuilder:register(
     0, -- Default (NOE only)
     "setAuraStacks", -- Setter method for Hash
     "number of stacks",
-    function(value) return type(value) == 'number' and value >= -1 and value <= 99 end,
+    function(value) return type(value) == 'number' and value >= -1 and value <= 9 end,
     function(value) return value >= 0 and value or nil end -- return n if n > 0, otherwise (if n == -1) return nil
 );
 SAO.ConditionBuilder:register(
@@ -575,7 +575,7 @@ local function checkNativeEffect(effect)
         end
         local stacks = effect.triggers.aura and type(overlay.condition) == 'table' and type(overlay.condition.aura) == 'number' and overlay.condition.aura;
         if stacks then
-            if stacks < -1 or stacks > 99 then
+            if stacks < -1 or stacks > 9 then
                 SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid number of stacks "..tostring(stacks));
                 return false;
             end

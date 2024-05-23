@@ -12,13 +12,13 @@ local Module = "hash"
 local HASH_AURA_ABSENT = 1
 local HASH_AURA_ANY    = 2
 local HASH_AURA_ZERO   = HASH_AURA_ANY
-local HASH_AURA_MAX    = HASH_AURA_ZERO + 99 -- Allow no more than 99 stacks
-local HASH_AURA_MASK   = 0x7F
+local HASH_AURA_MAX    = HASH_AURA_ZERO + 9 -- Allow no more than 9 stacks
+local HASH_AURA_MASK   = 0xF
 
 -- Action usable or not
-local HASH_ACTION_USABLE_NO   = 0x080
-local HASH_ACTION_USABLE_YES  = 0x100
-local HASH_ACTION_USABLE_MASK = 0x180
+local HASH_ACTION_USABLE_NO   = 0x10
+local HASH_ACTION_USABLE_YES  = 0x20
+local HASH_ACTION_USABLE_MASK = 0x30
 
 local HashStringifierList = {}
 local HashStringifierMap = {}
@@ -186,8 +186,8 @@ SAO.Hash = {
             SAO:Warn(Module, "Invalid stack count "..tostring(stacks));
         elseif bucket and bucket.stackAgnostic then
             self:setMaskedHash(HASH_AURA_ANY, HASH_AURA_MASK);
-        elseif stacks > 99 then
-            SAO:Debug(Module, "Stack overflow ("..stacks..") truncated to 99");
+        elseif stacks > 9 then
+            SAO:Debug(Module, "Stack overflow ("..stacks..") truncated to 9");
             self:setMaskedHash(HASH_AURA_MAX, HASH_AURA_MASK);
         else
             self:setMaskedHash(HASH_AURA_ZERO + stacks, HASH_AURA_MASK);

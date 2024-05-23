@@ -5,9 +5,9 @@ local Module = "talent"
 local GetTalentInfo = GetTalentInfo
 
 -- Has spent point in the talent tree
-local HASH_TALENT_NO   = 0x200
-local HASH_TALENT_YES  = 0x400
-local HASH_TALENT_MASK = 0x600
+local HASH_TALENT_NO   = 0x40
+local HASH_TALENT_YES  = 0x80
+local HASH_TALENT_MASK = 0xC0
 
 SAO.Variable:register({
     order = 3,

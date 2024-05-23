@@ -7,11 +7,11 @@ local EnumHolyPower = Enum and Enum.PowerType and Enum.PowerType.HolyPower
 
 -- Holy Power, Cataclysm only
 -- hash = HASH_HOLY_POWER_0 * (1 + holy_power)
-local HASH_HOLY_POWER_0    = 0x0800
-local HASH_HOLY_POWER_1    = 0x1000
-local HASH_HOLY_POWER_2    = 0x1800
-local HASH_HOLY_POWER_3    = 0x2000
-local HASH_HOLY_POWER_MASK = 0x3800
+local HASH_HOLY_POWER_0    = 0x100
+local HASH_HOLY_POWER_1    = 0x200
+local HASH_HOLY_POWER_2    = 0x300
+local HASH_HOLY_POWER_3    = 0x400
+local HASH_HOLY_POWER_MASK = 0x700
 
 SAO.Variable:register({
     order = 4,
