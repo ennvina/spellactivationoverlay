@@ -331,6 +331,10 @@ local function importResources(effect, props)
     SAO.VariableImporter:importTrigger(SAO.TRIGGER_HOLY_POWER, effect, props);
 end
 
+local function importExecute(effect, props)
+    SAO.VariableImporter:importTrigger(SAO.TRIGGER_EXECUTE, effect, props);
+end
+
 local function importOverlays(effect, props)
     effect.overlays = {}
     if props.overlay then
@@ -411,6 +415,7 @@ local function createGeneric(effect, props)
     importAura(effect, props);
     importActionUsable(effect, props);
     importResources(effect, props);
+    importExecute(effect, props);
 
     importOverlays(effect, props);
     importButtons(effect, props);
@@ -430,6 +435,7 @@ local function createAura(effect, props)
     importTalent(effect, props);
     importActionUsable(effect, props);
     importResources(effect, props);
+    importExecute(effect, props);
 
     importOverlays(effect, props);
     importButtons(effect, props);
@@ -447,6 +453,7 @@ local function createCounter(effect, props)
     effect.triggers.action = true;
     importTalent(effect, props);
     importResources(effect, props);
+    importExecute(effect, props);
 
     importCounterButton(effect, props);
 
