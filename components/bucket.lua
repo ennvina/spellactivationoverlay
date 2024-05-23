@@ -31,7 +31,6 @@ SAO.Bucket = {
 
             -- Initialize current state with unattainable values
             currentStacks = -1,
-            currentActionUsable = nil,
 
             -- Initially, nothing is displayed
             displayedHash = nil,
@@ -53,7 +52,6 @@ SAO.Bucket = {
 
     reset = function(self)
         self.currentStacks = -1;
-        self.currentActionUsable = nil;
 
         self.currentState:reset();
 
@@ -123,16 +121,6 @@ SAO.Bucket = {
         self.currentStacks = stacks;
         self.trigger:inform(SAO.TRIGGER_AURA);
         self.hashCalculator:setAuraStacks(stacks, self);
-        self:applyHash();
-    end,
-
-    setActionUsable = function(self, usable)
-        if self.currentActionUsable == usable then
-            return;
-        end
-        self.currentActionUsable = usable;
-        self.trigger:inform(SAO.TRIGGER_ACTION_USABLE);
-        self.hashCalculator:setActionUsable(usable);
         self:applyHash();
     end,
 

@@ -21,6 +21,7 @@ SAO.Variable:register({
     hash = {
         mask = HASH_TALENT_MASK,
         key = "talent",
+
         setterFunc = function(self, usable)
             if type(usable) ~= 'boolean' then
                 SAO:Warn(Module, "Invalid Talented flag "..tostring(usable));

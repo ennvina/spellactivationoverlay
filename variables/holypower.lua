@@ -25,6 +25,7 @@ SAO.Variable:register({
     hash = {
         mask = HASH_HOLY_POWER_MASK,
         key = "holy_power",
+
         setterFunc = function(self, holyPower)
             if type(holyPower) ~= 'number' or holyPower < 0 then
                 SAO:Warn(Module, "Invalid Holy Power "..tostring(holyPower));

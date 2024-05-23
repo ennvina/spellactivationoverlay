@@ -15,11 +15,6 @@ local HASH_AURA_ZERO   = HASH_AURA_ANY
 local HASH_AURA_MAX    = HASH_AURA_ZERO + 9 -- Allow no more than 9 stacks
 local HASH_AURA_MASK   = 0xF
 
--- Action usable or not
-local HASH_ACTION_USABLE_NO   = 0x10
-local HASH_ACTION_USABLE_YES  = 0x20
-local HASH_ACTION_USABLE_MASK = 0x30
-
 local HashStringifierList = {}
 local HashStringifierMap = {}
 
@@ -119,33 +114,6 @@ SAO.HashStringifier:register(
     end
 );
 
-SAO.HashStringifier:register(
-    2,
-    HASH_ACTION_USABLE_MASK,
-    "action", -- key
-    function(hash) -- toValue()
-        local actionUsable = hash:isActionUsable();
-        return actionUsable and "usable" or "not_usable";
-    end,
-    function(hash, value) -- fromValue()
-        if value == "usable" then
-            hash:setActionUsable(true);
-            return true;
-        elseif value == "not_usable" then
-            hash:setActionUsable(false);
-            return true;
-        else
-            return nil; -- Not good
-        end
-    end,
-    function(hash) -- getHumanReadableKeyValue
-        return nil; -- Should be obvious
-    end,
-    function(hash) -- optionIndexer
-        return hash:isActionUsable() and 0 or -1;
-    end
-);
-
 
 SAO.Hash = {
     new = function(self, initialHash)
@@ -206,28 +174,6 @@ SAO.Hash = {
 
     toAnyAuraStacks = function(self)
         return bit.band(self.hash, bit.bnot(HASH_AURA_MASK)) + HASH_AURA_ANY;
-    end,
-
-    -- Action Usable
-
-    hasActionUsable = function(self)
-        return bit.band(self.hash, HASH_ACTION_USABLE_MASK) ~= 0;
-    end,
-
-    setActionUsable = function(self, usable)
-        if type(usable) ~= 'boolean' then
-            SAO:Warn(Module, "Invalid Action Usable flag "..tostring(usable));
-        else
-            local maskedHash = usable and HASH_ACTION_USABLE_YES or HASH_ACTION_USABLE_NO;
-            self:setMaskedHash(maskedHash, HASH_ACTION_USABLE_MASK);
-        end
-    end,
-
-    isActionUsable = function(self)
-        local maskedHash = self:getMaskedHash(HASH_ACTION_USABLE_MASK);
-        if maskedHash == nil then return nil; end
-
-        return maskedHash == HASH_ACTION_USABLE_YES;
     end,
 
     -- String Conversion functions

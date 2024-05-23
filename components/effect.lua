@@ -204,15 +204,6 @@ SAO.ConditionBuilder:register(
     function(value) return type(value) == 'number' and value >= -1 and value <= 9 end,
     function(value) return value >= 0 and value or nil end -- return n if n > 0, otherwise (if n == -1) return nil
 );
-SAO.ConditionBuilder:register(
-    "action", -- Name used by NOE
-    "actionUsable", -- Name used by HRE
-    true, -- Default (NOE only)
-    "setActionUsable", -- Setter method for Hash
-    "action usable flag",
-    function(value) return type(value) == 'boolean' end,
-    function(value) return value end
-);
 
 local function getCondition(config, default, triggers)
     local condition = {}
@@ -364,7 +355,6 @@ local function importAura(effect, props)
 end
 
 local function importActionUsable(effect, props)
-    importTrigger(effect, props, "action", "actionUsable");
     SAO.VariableImporter:importTrigger(SAO.TRIGGER_ACTION_USABLE, effect, props);
 end
 

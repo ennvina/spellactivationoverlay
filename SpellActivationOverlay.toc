@@ -34,6 +34,7 @@ components\trigger.lua
 components\util.lua
 components\variable.lua
 
+variables\actionusable.lua
 variables\holypower.lua
 variables\talent.lua
 
