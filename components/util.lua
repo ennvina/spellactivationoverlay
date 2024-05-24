@@ -104,6 +104,11 @@ function SAO:RecentlyUpdated()
     return WrapTextInColor(KBASE_RECENTLY_UPDATED, GREEN_FONT_COLOR);
 end
 
+-- Execute text to tell enemy HP is below a certain threshold
+function SAO:ExecuteBelow(threshold)
+    return string.format(string.format(HEALTH_COST_PCT, "<%s%"), threshold);
+end
+
 local function tr(translations)
     local locale = GetLocale();
     return translations[locale] or translations[locale:sub(1,2)] or translations["en"];

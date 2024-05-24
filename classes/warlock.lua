@@ -268,7 +268,7 @@ local function loadOptions(self)
     local drainSoul = 1120;
 
     if DrainSoulHandler.initialized then
-        self:AddGlowingOption(nil, DrainSoulHandler.optionID, drainSoul, nil, string.format(string.format(HEALTH_COST_PCT, "<%s%"), 25), DrainSoulHandler.variants);
+        self:AddGlowingOption(nil, DrainSoulHandler.optionID, drainSoul, nil, SAO:ExecuteBelow(25), DrainSoulHandler.variants);
     end
 end
 
