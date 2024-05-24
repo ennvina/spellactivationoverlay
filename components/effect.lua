@@ -320,6 +320,10 @@ local function addOneButton(buttons, buttonConfig, project, default, triggers)
 end
 
 local function importOverlays(effect, props)
+    if type(props) ~= 'table' then
+        return;
+    end
+
     effect.overlays = {}
     if props.overlay then
         addOneOverlay(effect.overlays, props.overlay, nil, nil, effect.triggers);
@@ -343,6 +347,10 @@ local function importOverlays(effect, props)
 end
 
 local function importButtons(effect, props)
+    if type(props) ~= 'table' then
+        return;
+    end
+
     effect.buttons = {}
     if props.button then
         addOneButton(effect.buttons, props.button, nil, nil, effect.triggers);
@@ -811,6 +819,10 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
     else
         self:Error(Module, "Creating effect "..name.." with unknown class '"..tostring(class).."'");
         return nil;
+    end
+
+    if (not effect.overlays or #effect.overlays == 0) and (not effect.buttons or #effect.buttons == 0) then
+        self:Warn(Module, "Creating effect "..name.." with no overlays and no buttons");
     end
 
     if register == nil or register == true then
