@@ -408,6 +408,9 @@ SAO.defaults = {
                 },
             },
             glow = {
+                [15473] = { -- Shadowform
+                    [15473] = true, -- Shadowform
+                },
                 [32379] = { -- Shadow Word: Death (Cataclysm)
                     [32379] = true, -- Shadow Word: Death
                 },

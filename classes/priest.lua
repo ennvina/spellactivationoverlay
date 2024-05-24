@@ -3,6 +3,7 @@ local AddonName, SAO = ...
 local flashHeal = 2061;
 local flashHealNoMana = 101062;
 local mindBlast = 8092;
+local shadowform = 15473;
 local smite = 585;
 local swDeath = 32379;
 
@@ -29,6 +30,20 @@ local function useSurgeOfLight()
                 [SAO.WRATH] = { smite, flashHeal },
                 [SAO.CATA] = flashHealNoMana,
             },
+        }
+    );
+end
+
+local function useShadowform()
+    SAO:CreateEffect(
+        "shadowform",
+        SAO.ALL_PROJECTS,
+        shadowform,
+        "aura",
+        {
+            requireTalent = true,
+            combatOnly = true,
+            button = { stacks = -1 },
         }
     );
 end
@@ -140,6 +155,7 @@ local function registerClass(self)
 
     -- Shadow
     useShadowWordDeath();
+    useShadowform();
     useMindMelt();
 end
 
