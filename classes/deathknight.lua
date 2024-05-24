@@ -30,6 +30,7 @@ local function useBoneShield()
             talent = boneShield,
             requireTalent = true,
             actionUsable = true,
+            combatOnly = true,
             button = { stacks = -1, spellID = boneShield },
         }
     );
