@@ -139,26 +139,26 @@ local function hasSolar(self)
     return self:HasPlayerAuraBySpellID(solarSpellID);
 end
 
-local function updateOneSAO(self, position, fakeSpellID, realSpellID, texture)
+local function updateOneSAO(self, position, fakeSpellID, realSpellID, texture, combatOnly)
     if (texture == "") then
         self:DeactivateOverlay(fakeSpellID);
     else
         local endTime = SAO:GetSpellEndTime(realSpellID);
-        self:ActivateOverlay(0, fakeSpellID, self.TexName[texture], position, 1, 255, 255, 255, true, nil, endTime);
+        self:ActivateOverlay(0, fakeSpellID, self.TexName[texture], position, 1, 255, 255, 255, true, nil, endTime, combatOnly);
     end
 end
 
-local function updateLeftSAO(self, texture, realSpellID)
+local function updateLeftSAO(self, texture, realSpellID, combatOnly)
     if (leftTexture ~= texture) then
         leftTexture = texture;
-        updateOneSAO(self, "Left", leftFakeSpellID, realSpellID, texture);
+        updateOneSAO(self, "Left", leftFakeSpellID, realSpellID, texture, combatOnly);
     end
 end
 
-local function updateRightSAO(self, texture, realSpellID)
+local function updateRightSAO(self, texture, realSpellID, combatOnly)
     if (rightTexture ~= texture) then
         rightTexture = texture;
-        updateOneSAO(self, "Right (Flipped)", rightFakeSpellID, realSpellID, texture);
+        updateOneSAO(self, "Right (Flipped)", rightFakeSpellID, realSpellID, texture, combatOnly);
     end
 end
 
@@ -211,6 +211,7 @@ local function updateSAOs(self)
         -- Season of Discovery
         local leftImage, rightImage = '', '';
         local leftSpell, rightSpell = nil, nil;
+        local leftCOnly, rightCOnly = nil, nil;
         if (mayActivateOmen) then
             leftImage, rightImage = omenTexture, omenTexture;
             leftSpell, rightSpell = omenSpellID, omenSpellID;
@@ -218,23 +219,25 @@ local function updateSAOs(self)
         if (mustActivateLunar) then
             leftImage = lunarTexture;
             leftSpell = lunarSpellID;
+            leftCOnly = true;
         end
         if (mustActivateSolar) then
             rightImage = solarTexture;
             rightSpell = solarSpellID;
+            rightCOnly = true;
         end
-        updateLeftSAO (self, leftImage , leftSpell );
-        updateRightSAO(self, rightImage, rightSpell);
+        updateLeftSAO (self, leftImage , leftSpell , leftCOnly);
+        updateRightSAO(self, rightImage, rightSpell, rightCOnly);
     else
-        -- Wrath of the Lich King
+        -- Wrath of the Lich King / Cataclysm
         if (mustActivateLunar) then
             -- Lunar Eclipse
-            updateLeftSAO (self, lunarTexture, lunarSpellID); -- Left is always Lunar Eclipse
+            updateLeftSAO (self, lunarTexture, lunarSpellID, true); -- Left is always Lunar Eclipse
             updateRightSAO(self, mayActivateOmen and omenTexture or '', mayActivateOmen and omenSpellID or nil); -- Right is either Omen or nothing
         elseif (mustActivateSolar) then
             -- Solar Eclipse
             updateLeftSAO (self, mayActivateOmen and omenTexture or '', mayActivateOmen and omenSpellID or nil); -- Left is either Omen or nothing
-            updateRightSAO(self, solarTexture, solarSpellID); -- Right is always Solar Eclipse
+            updateRightSAO(self, solarTexture, solarSpellID, true); -- Right is always Solar Eclipse
         else
             -- No Eclipse: either both SAOs are Omen of Clarity, or both are nothing
             if (mayActivateOmen) then
