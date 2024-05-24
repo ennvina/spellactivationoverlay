@@ -151,5 +151,9 @@ SAO.Variable:register({
         noeTrigger = "action",
         hreTrigger = "actionUsable",
         dependency = nil,
+        classes = {
+            force = "counter",
+            ignore = nil,
+        },
     },
 });

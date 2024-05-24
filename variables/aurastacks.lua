@@ -123,5 +123,9 @@ SAO.Variable:register({
         noeTrigger = "aura",
         hreTrigger = "requireAura",
         dependency = nil, -- Actually, aura stacks depend on 'spellID', but this property is mandatory and automatically imported
+        classes = {
+            force = "aura",
+            ignore = nil,
+        },
     },
 });

@@ -160,7 +160,7 @@ local function registerClass(self)
         "riposte",
         SAO.ERA + SAO.TBC + SAO.WRATH,
         riposte,
-        "counter_with_overlay",
+        "counter",
         {
             talent = riposte,
             requireTalent = true,

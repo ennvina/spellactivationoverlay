@@ -109,5 +109,9 @@ SAO.Variable:register({
                 end
             end,
         },
+        classes = {
+            force = nil,
+            ignore = nil,
+        },
     },
 });

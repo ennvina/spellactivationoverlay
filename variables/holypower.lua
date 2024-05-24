@@ -107,5 +107,9 @@ SAO.Variable:register({
         noeTrigger = "holyPower",
         hreTrigger = "useHolyPower",
         dependency = nil, -- No additional dependency value
+        classes = {
+            force = nil,
+            ignore = nil,
+        },
     },
 });

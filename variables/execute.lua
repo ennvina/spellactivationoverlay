@@ -172,5 +172,9 @@ SAO.Variable:register({
                 bucket.execThreshold = value;
             end,
         },
+        classes = {
+            force = nil,
+            ignore = nil,
+        },
     },
 });

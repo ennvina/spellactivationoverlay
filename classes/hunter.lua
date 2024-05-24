@@ -119,7 +119,7 @@ local function useFlankingStrike()
         "flanking_strike",
         SAO.SOD,
         flankingStrike,
-        "counter_with_overlay",
+        "counter",
         {
             useName = false,
             combatOnly = true,

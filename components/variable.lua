@@ -97,7 +97,7 @@ SAO.Variable = {
                 SAO:Debug(Module, "Cannot fetch Holy Power because this resource is unknown from Enum.PowerType");
             end
         end]]
-        check(var.bucket, "fetchAndSet", 'function'); -- Formerly in TriggerManualChecks
+        check(var.bucket, "fetchAndSet", 'function'); -- Added in TriggerManualChecks
 
         check(var, "event", 'table');
         check(var.event, "isRequired", { 'boolean', 'function' }); -- SAO.IsCata() and select(2, UnitClass("player")) == "PALADIN"
@@ -125,6 +125,11 @@ SAO.Variable = {
             check(var.import.dependency, "expectedType", 'string'); -- "number"
             check(var.import.dependency, "default", { 'nil', var.import.dependency.expectedType, 'function' }); -- 25
             check(var.import.dependency, "prepareBucket", 'function'); -- function(bucket, value) bucket.execValue = value end
+        end
+        check(var.import, "classes", { 'table', 'nil' });
+        if type(var.import.classes) == 'table' then
+            check(var.import.classes, "force", { 'string', 'table', 'nil' });
+            check(var.import.classes, "ignore", { 'string', 'table', 'nil' });
         end
 
         -- Uniqueness tests
@@ -204,18 +209,44 @@ SAO.Variable = {
             end
         end
 
-        SAO.VariableImporter[var.trigger.flag] = function(effect, props)
+        SAO.VariableImporter[var.trigger.flag] = function(effect, props, class)
+            local ignoreClasses = var.import.classes and var.import.classes.ignore and var.import.classes.ignore;
+            local forceClasses = var.import.classes and var.import.classes.force and var.import.classes.force;
+
+            if type(ignoreClasses) == 'string' and ignoreClasses == class
+            or type(ignoreClasses) == 'table' and tContains(ignoreClasses, class) then
+                return;
+            end
+
             local triggerName = var.import.noeTrigger;
 
-            if type(props) ~= 'table' then
+            if type(forceClasses) == 'string' and forceClasses == class
+            or type(forceClasses) == 'table' and tContains(forceClasses, class) then
+                effect.triggers[triggerName] = true;
+            elseif type(props) ~= 'table' then
                 effect.triggers[triggerName] = false;
-                return;
+            else
+                local propName = var.import.hreTrigger;
+                if type(props[propName]) == 'boolean' then
+                    effect.triggers[triggerName] = props[propName];
+                elseif type(props[propName]) == 'table' then
+                    for project, prop in pairs(props[propName]) do
+                        if SAO.IsProject(project) then
+                            effect.triggers[triggerName] = prop;
+                            break;
+                        end
+                    end
+                else
+                    effect.triggers[triggerName] = false;
+                end
             end
 
             local dependency = var.import.dependency;
             if dependency then
                 local depName, depType, depDefault = dependency.name, dependency.expectedType, dependency.default;
-                if type(props[depName]) == depType then
+                if type(props) ~= 'table' then
+                    effect[depName] = depDefault;
+                elseif type(props[depName]) == depType then
                     effect[depName] = props[depName];
                 elseif type(props[depName]) == 'table' then
                     for project, talent in pairs(props[depName]) do
@@ -236,20 +267,6 @@ SAO.Variable = {
                 elseif type(effect[depName]) ~= depType and type(depDefault) == depType then
                     SAO:Debug(Module, "Wrong type for dependency "..tostring(depName).." of effect "..tostring(effect.name));
                 end
-            end
-
-            local propName = var.import.hreTrigger;
-            if type(props[propName]) == 'boolean' then
-                effect.triggers[triggerName] = props[propName];
-            elseif type(props[propName]) == 'table' then
-                for project, prop in pairs(props[propName]) do
-                    if SAO.IsProject(project) then
-                        effect.triggers[triggerName] = prop;
-                        break;
-                    end
-                end
-            else
-                effect.triggers[triggerName] = false;
             end
         end
 
@@ -283,9 +300,9 @@ SAO.VariableState = {
 }
 
 SAO.VariableImporter = {
-    importTrigger = function(self, flag, effect, props)
+    importTrigger = function(self, flag, effect, props, class)
         if self[flag] then
-            self[flag](effect, props);
+            self[flag](effect, props, class);
         end
     end,
 }

@@ -181,7 +181,7 @@ local function registerClass(self)
         "lava_surge",
         SAO.CATA,
         lavaBurstCata,
-        "counter_with_overlay",
+        "counter",
         {
             talent = 77756, -- Lava Surge (talent)
             requireTalent = true,
@@ -284,7 +284,7 @@ local function registerClass(self)
             "molten_blast",
             SAO.SOD,
             moltenBlastSoD,
-            "counter_with_overlay",
+            "counter",
             {
                 overlay = { texture = "impact", position = "Top", scale = 0.8 },
             }
