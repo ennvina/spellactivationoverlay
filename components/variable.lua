@@ -244,18 +244,16 @@ SAO.Variable = {
             local dependency = var.import.dependency;
             if dependency then
                 local depName, depType, depDefault = dependency.name, dependency.expectedType, dependency.default;
-                if type(props) ~= 'table' then
-                    effect[depName] = depDefault;
-                elseif type(props[depName]) == depType then
+                if type(props) == 'table' and type(props[depName]) == depType then
                     effect[depName] = props[depName];
-                elseif type(props[depName]) == 'table' then
+                elseif type(props) == 'table' and type(props[depName]) == 'table' then
                     for project, talent in pairs(props[depName]) do
                         if SAO.IsProject(project) then
                             effect[depName] = talent;
                             break;
                         end
                     end
-                elseif props[depName] == nil then
+                elseif type(props) ~= 'table' or props[depName] == nil then
                     if type(depDefault) == 'function' then
                         effect[depName] = depDefault(effect);
                     else
