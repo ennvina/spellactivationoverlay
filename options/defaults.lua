@@ -448,6 +448,9 @@ SAO.defaults = {
                 },
             },
             glow = {
+                [14158] = { -- Murderous Intent (not an actual buff) (Cataclysm)
+                    [53] = true, -- Backstab
+                },
                 [14251] = { -- Riposte (Era - Wrath)
                     [14251] = "cd:off", -- Riposte
                 },
