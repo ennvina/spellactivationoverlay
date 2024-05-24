@@ -169,6 +169,20 @@ local function registerClass(self)
             buttonOption = riposteButtonOption,
         }
     );
+
+    local backstab = 53;
+    local murderousIntent = 14158;
+    self:CreateEffect(
+        "murderous_intent",
+        SAO.CATA,
+        murderousIntent,
+        "execute",
+        {
+            execThreshold = 35,
+            requireTalent = true,
+            button = backstab,
+        }
+    );
 end
 
 SAO.Class["ROGUE"] = {
