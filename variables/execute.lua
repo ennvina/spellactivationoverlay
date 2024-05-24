@@ -169,11 +169,15 @@ SAO.Variable:register({
             expectedType = "number",
             default = 0.2,
             prepareBucket = function(bucket, value)
-                bucket.execThreshold = value;
+                if value > 1 then -- Assume threshold greater than 1 are percentages
+                    bucket.execThreshold = value / 100;
+                else
+                    bucket.execThreshold = value;
+                end
             end,
         },
         classes = {
-            force = nil,
+            force = "execute",
             ignore = nil,
         },
     },

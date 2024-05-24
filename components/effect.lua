@@ -416,6 +416,17 @@ local function createCounter(effect, props)
     return effect;
 end
 
+local function createExecute(effect, props)
+    if type(props) ~= 'table' then
+        SAO:Error(Module, "Creating an execute effect for "..tostring(effect.name).." requires a 'props' table");
+    end
+
+    importOverlays(effect, props);
+    importButtons(effect, props);
+
+    return effect;
+end
+
 --[[
     Functions for Native Optimized Effects (NOEs)
 ]]
@@ -725,6 +736,7 @@ local EffectClassConstructors = {
     ["generic"] = createGeneric,
     ["aura"] = createAura,
     ["counter"] = createCounter,
+    ["execute"] = createExecute,
 }
 
 --[[
