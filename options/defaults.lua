@@ -408,6 +408,9 @@ SAO.defaults = {
                 },
             },
             glow = {
+                [32379] = { -- Shadow Word: Death (Cataclysm)
+                    [32379] = true, -- Shadow Word: Death
+                },
                 [33151] = { -- Surge of Light (TBC - Wrath)
                     [585]  = true, -- Smite
                     [2061] = true, -- Flash Heal (not for TBC)

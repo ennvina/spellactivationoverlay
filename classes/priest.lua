@@ -4,6 +4,7 @@ local flashHeal = 2061;
 local flashHealNoMana = 101062;
 local mindBlast = 8092;
 local smite = 585;
+local swDeath = 32379;
 
 local function useSurgeOfLight()
     SAO:CreateEffect(
@@ -28,6 +29,20 @@ local function useSurgeOfLight()
                 [SAO.WRATH] = { smite, flashHeal },
                 [SAO.CATA] = flashHealNoMana,
             },
+        }
+    );
+end
+
+local function useShadowWordDeath()
+    SAO:CreateEffect(
+        "sw_death",
+        SAO.CATA,
+        swDeath,
+        "counter",
+        {
+            useExecute = true,
+            execThreshold = 25,
+            buttonOption = { spellSubText = SAO:ExecuteBelow(25) },
         }
     );
 end
@@ -124,6 +139,7 @@ local function registerClass(self)
     useSurgeOfLight();
 
     -- Shadow
+    useShadowWordDeath();
     useMindMelt();
 end
 
