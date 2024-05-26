@@ -2,10 +2,24 @@ local AddonName, SAO = ...
 
 local flashHeal = 2061;
 local flashHealNoMana = 101062;
+local innerFire = 588;
 local mindBlast = 8092;
 local shadowform = 15473;
 local smite = 585;
 local swDeath = 32379;
+
+local function useInnerFire()
+    SAO:CreateEffect(
+        "inner_fire",
+        SAO.WRATH + SAO.CATA,
+        innerFire,
+        "aura",
+        {
+            combatOnly = true,
+            button = { stacks = -1 },
+        }
+    );
+end
 
 local function useSurgeOfLight()
     SAO:CreateEffect(
@@ -149,6 +163,9 @@ local function registerClass(self)
             self:RegisterAura("mind_spike_sod", nbStacks, mindSpikeBuff, "frozen_fingers", "Left + Right (Flipped)", scale, 160, 60, 220, pulse, glowIDs);
         end
     end
+
+    -- Discipline
+    useInnerFire();
 
     -- Holy
     useSurgeOfLight();

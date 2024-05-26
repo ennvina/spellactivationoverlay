@@ -408,6 +408,9 @@ SAO.defaults = {
                 },
             },
             glow = {
+                [588] = { -- Inner Fire (Wrath+)
+                    [588] = true, -- Inner Fire
+                },
                 [15473] = { -- Shadowform
                     [15473] = true, -- Shadowform
                 },
