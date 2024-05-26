@@ -92,6 +92,29 @@ local function useHolySpender(name, spellID)
     );
 end
 
+local function useJudgementsOfThePure()
+    local judgementOfLight, judgementOfWisdom, judgementOfJustice = 20271, 53408, 53407; -- Spells for Wrath
+    local judgement = 20271; -- Unique spell for Cataclysù
+    local judgementsOfThePure = 53671; -- Talent
+
+    SAO:CreateEffect(
+        "jotp",
+        SAO.WRATH + SAO.CATA,
+        judgement,
+        "aura",
+        {
+            talent = judgementsOfThePure,
+            requireTalent = true,
+            combatOnly = true,
+            buttons = {
+                default = { stacks = -1 },
+                [SAO.WRATH] = { judgementOfLight, judgementOfWisdom, judgementOfJustice },
+                [SAO.CATA] = judgement,
+            }
+        }
+    );
+end
+
 local function useInfusionOfLight()
     local infusionOfLightBuff1 = 53672;
     local infusionOfLightBuff2 = 54149;
@@ -232,6 +255,7 @@ local function registerClass(self)
     self:RegisterAuraSoulPreserver("soul_preserver_paladin", 60513); -- 60513 = Paladin buff
 
     -- Holy
+    useJudgementsOfThePure();
     useInfusionOfLight();
     useDaybreak();
 

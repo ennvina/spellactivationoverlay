@@ -334,6 +334,11 @@ SAO.defaults = {
                 [53600] = { -- Shield of the Righteous (Cataclysm)
                     [53600] = true, -- Shield of the Righteous
                 },
+                [53671] = { -- Judgements of the Pure (Wrath+)
+                    [20271] = true, -- Judgement of Light (Wrath) / Judgement (Cata)
+                    [53408] = true, -- Judgement of Wisdom (Wrath only)
+                    [53407] = true, -- Judgement of Justice (Wrath only)
+                },
                 [407778] = { -- Divine Storm (Season of Discovery)
                     [407778]= true, -- Divine Storm (Season of Discovery)
                 },
