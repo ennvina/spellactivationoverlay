@@ -69,7 +69,7 @@ SAO.Variable:register({
     bucket = {
         impossibleValue = nil,
         fetchAndSet = function(bucket)
-            local spellID = bucket.spellID;
+            local spellID = bucket.actionSpellID;
 
             if not SAO:IsSpellLearned(spellID) then
                 -- Spell not learned
@@ -150,7 +150,17 @@ SAO.Variable:register({
     import = {
         noeTrigger = "action",
         hreTrigger = "actionUsable",
-        dependency = nil,
+        dependency = {
+            name = "action",
+            expectedType = "number",
+            default = function(effect) return effect.spellID end,
+            prepareBucket = function(bucket, value)
+                bucket.actionSpellID = value;
+                if not GetSpellInfo(value) then
+                    SAO:Warn(Module, bucket.description.." requires action usable with spell "..value..", but the spell does not exist");
+                end
+            end,
+        },
         classes = {
             force = "counter",
             ignore = nil,
