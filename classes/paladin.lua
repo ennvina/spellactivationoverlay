@@ -147,6 +147,8 @@ local function useDaybreak()
         "aura",
         {
             talent = 88820, -- Daybreak (talent)
+            action = holyShock,
+            actionUsable = true,
             overlay = { texture = "daybreak", position ="Left + Right (Flipped)" },
             button = holyShock,
         }
