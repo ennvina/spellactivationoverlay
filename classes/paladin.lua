@@ -21,10 +21,11 @@ local function useHolyPowerTracker()
 
     local overlays = {}
     for hp=1,3 do
-        local texture = "arcane_missiles_"..hp;
+        local texture = "surge_of_light";
+        local scale = 0.4 + 0.1*hp; -- 50%, 60%, 70%
         local pulse = hp == 3;
-        tinsert(overlays, { holyPower = hp, texture = texture, position = "Left (vFlipped)", scale = 0.8, color = { 222, 222, 44 }, pulse = pulse, });
-        tinsert(overlays, { holyPower = hp, texture = texture, position = "Right (180)",     scale = 0.8, color = { 222, 222, 44 }, pulse = pulse, option = false });
+        tinsert(overlays, { holyPower = hp, texture = texture, position = "Left (vFlipped)", scale = scale, pulse = pulse });
+        tinsert(overlays, { holyPower = hp, texture = texture, position = "Right (180)",     scale = scale, pulse = pulse, option = false });
     end
 
     SAO:CreateEffect(

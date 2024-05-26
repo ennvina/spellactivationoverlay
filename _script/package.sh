@@ -208,10 +208,13 @@ mkproject cata $CATA_BUILD_VERSION
 prunecopyright Cataclysm
 
 TEXTURES_NOT_FOR_CATA=(
-tooth_and_claw
+arcane_missiles_1
+arcane_missiles_2
+arcane_missiles_3
+fulmination
 monk_serpent
 raging_blow
-fulmination
+tooth_and_claw
 $(texbelow 511469 450914 450915)
 )
 prunetex "${TEXTURES_NOT_FOR_CATA[@]}"
