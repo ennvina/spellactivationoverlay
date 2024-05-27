@@ -1,6 +1,8 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.0.0 (2024-05-xx)
+#### v2.1.0 (2024-06-xx)
+
+#### v2.0.0 (2024-05-27)
 
 This release marks a major overhaul of the effect system
 
