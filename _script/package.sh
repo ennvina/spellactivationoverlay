@@ -52,6 +52,7 @@ prunevar() {
     echo -n "Cleaning up variables..."
     for varname in "$@"
     do
+        sed -i "/$varname/d" SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot remove $varname from TOC file"
         rm -f SpellActivationOverlay/variables/"$varname".* || bye "Cannot cleanup variables from installation"
     done
     echo
@@ -111,7 +112,7 @@ pruneclass() {
     echo -n "Cleaning up classes..."
     for classname in "$@"
     do
-        sed -i "/$classname/d" SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot remove $classname from TOC filer"
+        sed -i "/$classname/d" SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot remove $classname from TOC file"
         rm -f SpellActivationOverlay/classes/$classname.lua || bye "Cannot remove $classname class file"
     done
     echo
