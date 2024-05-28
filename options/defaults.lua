@@ -569,6 +569,9 @@ SAO.defaults = {
                 [47283] = { -- Empowered Imp (Wrath+)
                     [0] = true,
                 },
+                [89937] = { -- Fel Spark (Cataclysm)
+                    [0] = true, -- any stacks
+                },
             },
             glow = {
                 [1120] = { -- Drain Soul (Wrath+)
@@ -598,6 +601,9 @@ SAO.defaults = {
                 },
                 [47283] = { -- Empowered Imp (Cataclysm)
                     [6353]  = true, -- Soul Fire
+                },
+                [89937] = { -- Fel Spark (Cataclysm)
+                    [77799]  = true, -- Fel Flame
                 },
             },
         },

@@ -18,12 +18,16 @@ Updated effects:
 * Exceptionally, this does not match the reference client, on purpose
 It felt weird to see Daybreak proc, try to cast Holy Shock but fail, due to CD
 
+New Spell Alert:
+- Warlock's Fel Spark, from tier 11 set bonus (Cataclysm)
+
 New Glowing Buttons:
 - Judgement when Judgements of the Pure buff is missing (Wrath, Cataclysm)
 - Priest's Inner Fire, when the buff is missing (Wrath, Cataclysm)**
 - Priest's Shadowform, when not assuming the shadowform (Cataclysm)
 - Priest's Shadow Word: Death, when the enemy has low hp (Cataclysm)
 - Rogue's Backstab, with Murderous Intent when the enemy has low hp (Cataclysm)
+- Warlock's Fel Flame, during Fel Spark, from tier 11 set bonus (Cataclysm)
 - Warlock's Shadowburn, when the spell is usable (Cataclysm)***
 
 ** Inner Fire existed before, but has become very important only since Wrath

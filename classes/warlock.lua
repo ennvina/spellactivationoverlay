@@ -7,6 +7,8 @@ local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
 local chaosBolt = 50796;
+local felFlame = 77799;
+local felSpark = 89937;
 local incinerate = 29722;
 local shadowBolt = 686;
 local shadowburn = 17877;
@@ -260,6 +262,23 @@ local function useEmpoweredImp(self)
     );
 end
 
+local function useFelSpark(self)
+    self:CreateEffect(
+        "fel_spark",
+        SAO.CATA,
+        felSpark,
+        "aura",
+        {
+            overlays = {
+                { stacks = 1, texture = "impact", position = "Left (CCW)", scale = 0.6, color = { 22, 222, 122 }, option = false },
+                { stacks = 2, texture = "impact", position = "Left (CCW)", scale = 0.6, color = { 22, 222, 122 }, option = false },
+                { stacks = 2, texture = "impact", position = "Right (CW)", scale = 0.6, color = { 22, 222, 122 }, option = { setupHash = self:HashNameFromStacks(0), testHash = self:HashNameFromStacks(2) } },
+            },
+            button = felFlame,
+        }
+    );
+end
+
 local function registerClass(self)
     -- Affliction
     useNightfall(self); -- a.k.a. Shadow Trance
@@ -273,6 +292,9 @@ local function registerClass(self)
     useShadowburn(self);
     useBacklash(self);
     useEmpoweredImp(self);
+
+    -- Tier 11
+    useFelSpark(self);
 end
 
 local function loadOptions(self)
