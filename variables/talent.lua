@@ -105,7 +105,7 @@ SAO.Variable:register({
                     -- Talent Tab-Index is an option object { tab, index } telling the talent location in the player's tree
                     bucket.talentTabIndex = { tab, index };
                 else
-                    SAO:Error(Module, bucket.description.." requires talent "..value..(talentName and "("..talentName..")" or "")..", but it cannot be found in the talent tree");
+                    SAO:Error(Module, bucket.description.." requires talent "..value..(talentName and " ("..talentName..")" or "")..", but it cannot be found in the talent tree");
                 end
             end,
         },

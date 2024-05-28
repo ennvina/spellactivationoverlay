@@ -95,16 +95,17 @@ end
 
 local function useJudgementsOfThePure()
     local judgementOfLight, judgementOfWisdom, judgementOfJustice = 20271, 53408, 53407; -- Spells for Wrath
-    local judgement = 20271; -- Unique spell for Cataclysù
-    local judgementsOfThePure = 53671; -- Talent
+    local judgement = 20271; -- Unique spell for Cataclysm
+    local judgementsOfThePureBuff = 53657;
+    local judgementsOfThePureTalent = 53671;
 
     SAO:CreateEffect(
         "jotp",
         SAO.WRATH + SAO.CATA,
-        judgement,
+        judgementsOfThePureBuff,
         "aura",
         {
-            talent = judgementsOfThePure,
+            talent = judgementsOfThePureTalent,
             requireTalent = true,
             combatOnly = true,
             buttons = {
