@@ -574,6 +574,9 @@ SAO.defaults = {
                 [1120] = { -- Drain Soul (Wrath+)
                     [1120] = "spec:1", -- Drain Soul
                 },
+                [17877] = { -- Shadowburn
+                    [17877] = true, -- Shadowburn
+                },
                 [17941] = { -- Nightfall
                     [686] = true, -- Shadow Bolt
                 },

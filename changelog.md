@@ -24,8 +24,10 @@ New Glowing Buttons:
 - Priest's Shadowform, when not assuming the shadowform (Cataclysm)
 - Priest's Shadow Word: Death, when the enemy has low hp (Cataclysm)
 - Rogue's Backstab, with Murderous Intent when the enemy has low hp (Cataclysm)
+- Warlock's Shadowburn, when the spell is usable (Cataclysm)***
 
 ** Inner Fire existed before, but has become very important only since Wrath
+*** Shadowburn existed before, but it costs no soul shards only since Cataclysm
 
 Bug Fixes
 - Effects gained or lost during a loading screen are correctly updated

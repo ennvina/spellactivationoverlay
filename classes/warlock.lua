@@ -9,6 +9,7 @@ local UnitHealthMax = UnitHealthMax
 local chaosBolt = 50796;
 local incinerate = 29722;
 local shadowBolt = 686;
+local shadowburn = 17877;
 local soulFire = 6353;
 
 local moltenCoreBuff = { 47383, 71162, 71165 };
@@ -220,6 +221,15 @@ local function useBackdraft(self)
     end
 end
 
+local function useShadowburn(self)
+    self:CreateEffect(
+        "shadowburn",
+        SAO.CATA,
+        shadowburn,
+        "counter"
+    );
+end
+
 local function useBacklash(self)
     self:CreateEffect(
         "backlash",
@@ -260,6 +270,7 @@ local function registerClass(self)
 
     -- Destruction
     useBackdraft(self);
+    useShadowburn(self);
     useBacklash(self);
     useEmpoweredImp(self);
 end
