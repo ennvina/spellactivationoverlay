@@ -34,7 +34,6 @@ local function useHolyPowerTracker()
         holyPower,
         "generic",
         {
-            combatOnly = true,
             useHolyPower = true,
             overlays = overlays,
         }

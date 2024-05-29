@@ -13,6 +13,7 @@ Updated effects:
 - Druid's Eclipses are now combat-only (Season of Discovery, Wrath, Cataclysm)
 - Paladin's Infusion of Light texture matches the reference client (Cataclysm)
 - Updated texture and size of Paladin's Charges of Holy Power (Cataclysm)
+- Paladin's Charges of Holy Power is no longer combat-only (Cataclysm)
 - Paladin's Daybreak is displayed only when Holy Shock is usable (Cataclysm)*
 
 * Exceptionally, this does not match the reference client, on purpose
