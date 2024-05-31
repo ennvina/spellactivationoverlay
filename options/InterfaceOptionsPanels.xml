@@ -155,6 +155,24 @@
           </PostClick>
         </Scripts>
       </CheckButton>
+      <CheckButton name="$parentSpellAlertResponsiveButton" inherits="InterfaceOptionsCheckButtonTemplate">
+        <Anchors>
+          <Anchor point="BOTTOMLEFT" relativeTo="$parentSpellAlertDebugButton" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="256" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <PostClick>
+            if (self:GetChecked()) then
+              SpellActivationOverlayDB.responsiveMode = true;
+            else
+              SpellActivationOverlayDB.responsiveMode = nil;
+            end
+          </PostClick>
+        </Scripts>
+      </CheckButton>
     </Frames>
     <Layers>
       <Layer level="ARTWORK">

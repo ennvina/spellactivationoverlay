@@ -160,13 +160,27 @@ local function registerClass(self)
         "riposte",
         SAO.ERA + SAO.TBC + SAO.WRATH,
         riposte,
-        "counter_with_overlay",
+        "counter",
         {
             talent = riposte,
             requireTalent = true,
             useName = false,
             overlay = { texture = "bandits_guile", position = "Top (CW)", option = riposteOverlayOption },
             buttonOption = riposteButtonOption,
+        }
+    );
+
+    local backstab = 53;
+    local murderousIntent = 14158;
+    self:CreateEffect(
+        "murderous_intent",
+        SAO.CATA,
+        murderousIntent,
+        "execute",
+        {
+            execThreshold = 35,
+            requireTalent = true,
+            button = backstab,
         }
     );
 end

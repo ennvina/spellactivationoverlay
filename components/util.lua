@@ -104,6 +104,11 @@ function SAO:RecentlyUpdated()
     return WrapTextInColor(KBASE_RECENTLY_UPDATED, GREEN_FONT_COLOR);
 end
 
+-- Execute text to tell enemy HP is below a certain threshold
+function SAO:ExecuteBelow(threshold)
+    return string.format(string.format(HEALTH_COST_PCT, "<%s%"), threshold);
+end
+
 local function tr(translations)
     local locale = GetLocale();
     return translations[locale] or translations[locale:sub(1,2)] or translations["en"];
@@ -140,6 +145,30 @@ function SAO:translateDebuff()
         ["zhTW"] = "減益",
     };
     return tr(debuffTranslations);
+end
+
+-- Get the "Responsive Mode" localized text
+function SAO:responsiveMode()
+    local responsiveTranslations = {
+        ["en"] = "Responsive mode (decreases performance)",
+        ["de"] = "Responsiver Modus (verringert die Leistung)",
+        ["fr"] = "Mode réactif (diminue les performances)",
+        ["es"] = "Modo de respuesta (disminuye el rendimiento)",
+        ["ru"] = "Отзывчивый режим (снижает производительность)",
+        ["it"] = "Modalità reattiva (riduce le prestazioni)",
+        ["pt"] = "Modo responsivo (diminui o desempenho)",
+        ["ko"] = "반응형 모드(성능 저하)",
+        ["zh"] = "响应模式（降低性能）",
+    };
+    return tr(responsiveTranslations);
+end
+
+--[[
+    Addon mode
+]]
+
+function SAO:IsResponsiveMode()
+    return SpellActivationOverlayDB and SpellActivationOverlayDB.responsiveMode == true;
 end
 
 --[[

@@ -5,8 +5,6 @@ local Module = "events"
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local UnitGUID = UnitGUID
 
-local HolyPowerPowerTypeToken = "HOLY_POWER"
-
 -- Events starting with SPELL_AURA e.g., SPELL_AURA_APPLIED
 -- This should be invoked only if the buff is done on the player i.e., UnitGUID("player") == destGUID
 function SAO.SPELL_AURA(self, ...)
@@ -57,7 +55,7 @@ function SAO.SPELL_AURA(self, ...)
     -- Now, we are in a situation where we either got a buff (SPELL_AURA_APPLIED*) or lost it (SPELL_AURA_REMOVED*)
 
     if (auraRemovedLast) then
-        bucket:setStacks(nil); -- nil means "not currently holding any stacks"
+        bucket:setAuraStacks(nil); -- nil means "not currently holding any stacks"
         -- Can return now, because SPELL_AURA_REMOVED resets everything
         return;
     end
@@ -84,7 +82,7 @@ function SAO.SPELL_AURA(self, ...)
         - or was upgraded (SPELL_AURA_APPLIED_DOSE)
         - or was downgraded but still visible (SPELL_AURA_REMOVED_DOSE)
     ]]
-    bucket:setStacks(stacks);
+    bucket:setAuraStacks(stacks);
 end
 
 -- The (in)famous CLEU event
@@ -93,16 +91,6 @@ function SAO.COMBAT_LOG_EVENT_UNFILTERED(self, ...)
 
     if ( (event:sub(0,11) == "SPELL_AURA_") and (destGUID == UnitGUID("player")) ) then
         self:SPELL_AURA(...);
-    end
-end
-
-function SAO.PLAYER_TALENT_UPDATE(self, ...)
-    self:CheckManuallyAllBuckets(SAO.TRIGGER_TALENT);
-end
-
-function SAO.UNIT_POWER_FREQUENT(self, unitTarget, powerType)
-    if unitTarget == "player" and powerType == HolyPowerPowerTypeToken then
-        self:CheckManuallyAllBuckets(SAO.TRIGGER_HOLY_POWER);
     end
 end
 
@@ -125,13 +113,11 @@ end
 function SAO.PLAYER_ENTERING_WORLD(self, ...)
     C_Timer.NewTimer(1, function()
         self:CheckAllCounterActions();
-        self:CheckManuallyAllBuckets(SAO.TRIGGER_ACTION_USABLE);
     end);
 end
 
 function SAO.SPELL_UPDATE_USABLE(self, ...)
     self:CheckAllCounterActions();
-    self:CheckManuallyAllBuckets(SAO.TRIGGER_ACTION_USABLE);
 end
 
 function SAO.PLAYER_REGEN_ENABLED(self, ...)
@@ -170,5 +156,6 @@ function SAO.OnEvent(self, event, ...)
     if self[event] then
         self[event](self, ...);
     end
+    SAO.VariableEventProxy:OnEvent(event, ...);
     self:InvokeClassEvent(event, ...)
 end

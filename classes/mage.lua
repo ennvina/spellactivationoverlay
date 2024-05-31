@@ -499,6 +499,12 @@ local function unitHealth(self, unitID)
     end
 end
 
+local function unitHealthFrequent(self, unitID)
+    if self:IsResponsiveMode() then
+        unitHealth(self, unitID);
+    end
+end
+
 local function lazyCreateClearcastingVariants(self)
     if (clearcastingVariants) then
         return;
@@ -788,6 +794,7 @@ SAO.Class["MAGE"] = {
     ["CHARACTER_POINTS_CHANGED"] = recheckTalents,
     ["PLAYER_TARGET_CHANGED"] = retarget,
     ["UNIT_HEALTH"] = unitHealth,
+    ["UNIT_HEALTH_FREQUENT"] = unitHealthFrequent,
     [SAO.IsWrath() and "PLAYER_TALENT_UPDATE" or "CHARACTER_POINTS_CHANGED"] = recheckTalents, -- Event changed in Wrath
     ["RUNE_UPDATED"] = SAO.IsSoD() and recheckTalents or nil,
 }

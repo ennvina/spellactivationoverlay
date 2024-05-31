@@ -2,8 +2,24 @@ local AddonName, SAO = ...
 
 local flashHeal = 2061;
 local flashHealNoMana = 101062;
+local innerFire = 588;
 local mindBlast = 8092;
+local shadowform = 15473;
 local smite = 585;
+local swDeath = 32379;
+
+local function useInnerFire()
+    SAO:CreateEffect(
+        "inner_fire",
+        SAO.WRATH + SAO.CATA,
+        innerFire,
+        "aura",
+        {
+            combatOnly = true,
+            button = { stacks = -1 },
+        }
+    );
+end
 
 local function useSurgeOfLight()
     SAO:CreateEffect(
@@ -28,6 +44,34 @@ local function useSurgeOfLight()
                 [SAO.WRATH] = { smite, flashHeal },
                 [SAO.CATA] = flashHealNoMana,
             },
+        }
+    );
+end
+
+local function useShadowform()
+    SAO:CreateEffect(
+        "shadowform",
+        SAO.ALL_PROJECTS,
+        shadowform,
+        "aura",
+        {
+            requireTalent = true,
+            combatOnly = true,
+            button = { stacks = -1 },
+        }
+    );
+end
+
+local function useShadowWordDeath()
+    SAO:CreateEffect(
+        "sw_death",
+        SAO.CATA,
+        swDeath,
+        "counter",
+        {
+            useExecute = true,
+            execThreshold = 25,
+            buttonOption = { spellSubText = SAO:ExecuteBelow(25) },
         }
     );
 end
@@ -120,10 +164,15 @@ local function registerClass(self)
         end
     end
 
+    -- Discipline
+    useInnerFire();
+
     -- Holy
     useSurgeOfLight();
 
     -- Shadow
+    useShadowWordDeath();
+    useShadowform();
     useMindMelt();
 end
 

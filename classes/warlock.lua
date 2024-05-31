@@ -7,8 +7,11 @@ local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
 local chaosBolt = 50796;
+local felFlame = 77799;
+local felSpark = 89937;
 local incinerate = 29722;
 local shadowBolt = 686;
+local shadowburn = 17877;
 local soulFire = 6353;
 
 local moltenCoreBuff = { 47383, 71162, 71165 };
@@ -101,6 +104,12 @@ end
 local function unitHealth(self, unitID)
     if DrainSoulHandler.initialized and unitID == "target" then
         DrainSoulHandler:checkTargetHealth();
+    end
+end
+
+local function unitHealthFrequent(self, unitID)
+    if self:IsResponsiveMode() then
+        unitHealth(self, unitID);
     end
 end
 
@@ -214,6 +223,15 @@ local function useBackdraft(self)
     end
 end
 
+local function useShadowburn(self)
+    self:CreateEffect(
+        "shadowburn",
+        SAO.CATA,
+        shadowburn,
+        "counter"
+    );
+end
+
 local function useBacklash(self)
     self:CreateEffect(
         "backlash",
@@ -244,6 +262,23 @@ local function useEmpoweredImp(self)
     );
 end
 
+local function useFelSpark(self)
+    self:CreateEffect(
+        "fel_spark",
+        SAO.CATA,
+        felSpark,
+        "aura",
+        {
+            overlays = {
+                { stacks = 1, texture = "impact", position = "Left (CCW)", scale = 0.6, color = { 22, 222, 122 }, option = false },
+                { stacks = 2, texture = "impact", position = "Left (CCW)", scale = 0.6, color = { 22, 222, 122 }, option = false },
+                { stacks = 2, texture = "impact", position = "Right (CW)", scale = 0.6, color = { 22, 222, 122 }, option = { setupHash = self:HashNameFromStacks(0), testHash = self:HashNameFromStacks(2) } },
+            },
+            button = felFlame,
+        }
+    );
+end
+
 local function registerClass(self)
     -- Affliction
     useNightfall(self); -- a.k.a. Shadow Trance
@@ -254,15 +289,19 @@ local function registerClass(self)
 
     -- Destruction
     useBackdraft(self);
+    useShadowburn(self);
     useBacklash(self);
     useEmpoweredImp(self);
+
+    -- Tier 11
+    useFelSpark(self);
 end
 
 local function loadOptions(self)
     local drainSoul = 1120;
 
     if DrainSoulHandler.initialized then
-        self:AddGlowingOption(nil, DrainSoulHandler.optionID, drainSoul, nil, string.format(string.format(HEALTH_COST_PCT, "<%s%"), 25), DrainSoulHandler.variants);
+        self:AddGlowingOption(nil, DrainSoulHandler.optionID, drainSoul, nil, SAO:ExecuteBelow(25), DrainSoulHandler.variants);
     end
 end
 
@@ -272,4 +311,5 @@ SAO.Class["WARLOCK"] = {
     ["PLAYER_LOGIN"] = customLogin,
     ["PLAYER_TARGET_CHANGED"] = retarget,
     ["UNIT_HEALTH"] = unitHealth,
+    ["UNIT_HEALTH_FREQUENT"] = unitHealthFrequent,
 }

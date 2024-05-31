@@ -12,7 +12,7 @@ local function promoteAura(aura)
             texture = aura[4],
             position = aura[5],
             scale = aura[6],
-            r = aura[7], g = aura[8], b = aura[9],
+            color = { aura[7], aura[8], aura[9] },
             autoPulse = aura[10],
             combatOnly = aura[13],
         }

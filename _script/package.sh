@@ -29,7 +29,7 @@ mkproject() {
     echo -n "Creating $flavor project..."
     rm -rf ./_release/$flavor || bye "Cannot clean wrath directory"
     mkdir -p ./_release/$flavor/SpellActivationOverlay || bye "Cannot create $flavor directory"
-    cp -R changelog.md LICENSE SpellActivationOverlay.* classes components options sounds textures ./_release/$flavor/SpellActivationOverlay/ || bye "Cannot copy $flavor files"
+    cp -R changelog.md LICENSE SpellActivationOverlay.* classes components options sounds textures variables ./_release/$flavor/SpellActivationOverlay/ || bye "Cannot copy $flavor files"
     cd ./_release/$flavor || bye "Cannot cd to $flavor directory"
     sed -i s/'^## Interface:.*'/"## Interface: $build_version"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update version of $flavor TOC file"
     echo
@@ -44,6 +44,18 @@ prunecopyright() {
         grep -q "${expansion}" SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot find copyright of expansion ${expansion} in TOC file"
         sed -i "/${expansion}/,+2d" SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot remove copyright of expansion ${expansion} from TOC file"
     done
+}
+
+# Remove unused variables to reduce archive size.
+# $@ = array of variables
+prunevar() {
+    echo -n "Cleaning up variables..."
+    for varname in "$@"
+    do
+        sed -i "/$varname/d" SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot remove $varname from TOC file"
+        rm -f SpellActivationOverlay/variables/"$varname".* || bye "Cannot cleanup variables from installation"
+    done
+    echo
 }
 
 # Find texture names which file data ID is lesser or equal to a specific threshold
@@ -100,7 +112,7 @@ pruneclass() {
     echo -n "Cleaning up classes..."
     for classname in "$@"
     do
-        sed -i "/$classname/d" SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot remove $classname from TOC filer"
+        sed -i "/$classname/d" SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot remove $classname from TOC file"
         rm -f SpellActivationOverlay/classes/$classname.lua || bye "Cannot remove $classname class file"
     done
     echo
@@ -144,6 +156,9 @@ fi
 WRATH_BUILD_VERSION=30403
 mkproject wrath $WRATH_BUILD_VERSION
 
+VARIABLES_NOT_FOR_WRATH=(holypower)
+prunevar "${VARIABLES_NOT_FOR_WRATH[@]}"
+
 TEXTURES_NOT_FOR_WRATH=(
 tooth_and_claw
 monk_serpent
@@ -162,6 +177,9 @@ cdup
 # Release vanilla version
 VANILLA_BUILD_VERSION=11502
 mkproject vanilla $VANILLA_BUILD_VERSION
+
+VARIABLES_NOT_FOR_VANILLA=(holypower)
+prunevar "${VARIABLES_NOT_FOR_VANILLA[@]}"
 
 CLASSES_NOT_FOR_VANILLA=(deathknight)
 pruneclass "${CLASSES_NOT_FOR_VANILLA[@]}"
@@ -191,10 +209,13 @@ mkproject cata $CATA_BUILD_VERSION
 prunecopyright Cataclysm
 
 TEXTURES_NOT_FOR_CATA=(
-tooth_and_claw
+arcane_missiles_1
+arcane_missiles_2
+arcane_missiles_3
+fulmination
 monk_serpent
 raging_blow
-fulmination
+tooth_and_claw
 $(texbelow 511469 450914 450915)
 )
 prunetex "${TEXTURES_NOT_FOR_CATA[@]}"

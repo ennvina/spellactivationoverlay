@@ -9,13 +9,13 @@ local Module = "bucket"
 ]]
 
 --[[
-    Lists of auras and effects that must be tracked
+    Lists of effects that must be tracked
     These lists should be setup at start, based on the player class
 ]]
 SAO.RegisteredBucketsByName = {}
 SAO.RegisteredBucketsBySpellID = {}
 
--- List of aura arrays, indexed by stack count
+-- List of displays, indexed by hash
 -- A stack count of zero means "for everyone"
 -- A stack count of non-zero means "for a specific number of stacks"
 SAO.Bucket = {
@@ -26,17 +26,8 @@ SAO.Bucket = {
             -- Spell ID is the main identifier to activate/deactivate visuals
             spellID = spellID,
 
-            -- Talent Tab-Index is an option object { tab, index } telling the talent location in the player's tree
-            talentTabIndex = nil,
-
             -- Stack-agnostic means the bucket does not care about its number of stacks
             stackAgnostic = true,
-
-            -- Initialize current state with unattainable values
-            currentStacks = -1,
-            currentActionUsable = nil,
-            currentTalented = nil,
-            currentHolyPower = nil,
 
             -- Initially, nothing is displayed
             displayedHash = nil,
@@ -47,6 +38,9 @@ SAO.Bucket = {
             description = name.." ("..spellID..(GetSpellInfo(spellID) and " = "..GetSpellInfo(spellID) or "")..")",
         };
         bucket.trigger = SAO.Trigger:new(bucket);
+        -- Initialize current state with unattainable values
+        -- State must be initialized after trigger is set
+        bucket.currentState = SAO.VariableState:new(bucket);
 
         self.__index = nil;
         setmetatable(bucket, self);
@@ -55,12 +49,24 @@ SAO.Bucket = {
         return bucket;
     end,
 
+    reset = function(self)
+        self.currentState:reset();
+
+        self.trigger.informed = 0;
+
+        if self.hashCalculator.hash ~= 0 then
+            self.hashCalculator:reset();
+            self:applyHash();
+        end
+    end,
+
     getOrCreateDisplay = function(self, hash)
         local created = false;
 
         if not self[hash.hash] then
             self[hash.hash] = SAO.Display:new(self, hash.hash);
 
+            -- Special case for aura stacks: detect if the bucket is stackAgnostic based on inserted displays
             if hash:hasAuraStacks() then
                 local stacks = hash:getAuraStacks();
                 if stacks and stacks > 0 then
@@ -73,10 +79,6 @@ SAO.Bucket = {
         end
 
         return self[hash.hash], created;
-    end,
-
-    setTalentInfo = function(self, tab, index)
-        self.talentTabIndex = { tab, index };
     end,
 
     -- Check if a specific hash is currently displayed
@@ -96,7 +98,8 @@ SAO.Bucket = {
             return;
         end
 
-        if not self.stackAgnostic and (self.currentStacks and self.currentStacks > 0) then
+        local currentStacks = self.currentState.currentAuraStacks;
+        if not self.stackAgnostic and (currentStacks and currentStacks > 0) then
             local hashForAnyStacks = self.hashCalculator:toAnyAuraStacks();
             if self[hashForAnyStacks] then
                 self[hashForAnyStacks]:refresh();
@@ -109,59 +112,6 @@ SAO.Bucket = {
         if self.displayedHash then
             self[self.displayedHash]:checkCombat(inCombat);
         end
-    end,
-
-    reset = function(self)
-        self.currentStacks = -1;
-        self.currentActionUsable = nil;
-        self.currentTalented = nil;
-        self.currentHolyPower = nil;
-
-        self.trigger.informed = 0;
-
-        self.hashCalculator:reset();
-
-        self:applyHash();
-    end,
-
-    setStacks = function(self, stacks)
-        if self.currentStacks == stacks then
-            return;
-        end
-        self.currentStacks = stacks;
-        self.trigger:inform(SAO.TRIGGER_AURA);
-        self.hashCalculator:setAuraStacks(stacks, self.stackAgnostic);
-        self:applyHash();
-    end,
-
-    setActionUsable = function(self, usable)
-        if self.currentActionUsable == usable then
-            return;
-        end
-        self.currentActionUsable = usable;
-        self.trigger:inform(SAO.TRIGGER_ACTION_USABLE);
-        self.hashCalculator:setActionUsable(usable);
-        self:applyHash();
-    end,
-
-    setTalented = function(self, talented)
-        if self.currentTalented == talented then
-            return;
-        end
-        self.currentTalented = talented;
-        self.trigger:inform(SAO.TRIGGER_TALENT);
-        self.hashCalculator:setTalented(talented);
-        self:applyHash();
-    end,
-
-    setHolyPower = function(self, holyPower)
-        if self.currentHolyPower == holyPower then
-            return;
-        end
-        self.currentHolyPower = holyPower;
-        self.trigger:inform(SAO.TRIGGER_HOLY_POWER);
-        self.hashCalculator:setHolyPower(holyPower);
-        self:applyHash();
     end,
 
     applyHash = function(self)
@@ -201,6 +151,7 @@ SAO.Bucket = {
             return;
         end
 
+        local currentStacks = self.currentState.currentAuraStacks;
         local transitionOptions = { mimicPulse = true };
         if self.stackAgnostic then
             if self.displayedHash == nil then
@@ -216,7 +167,7 @@ SAO.Bucket = {
         else
             local hashForAnyStacks = self.hashCalculator:toAnyAuraStacks();
             if self.displayedHash == nil then -- Displayed aura was 'nil'
-                if self.currentStacks == nil or self.currentStacks == 0 then
+                if currentStacks == nil or currentStacks == 0 then
                     if self[self.currentHash] then
                         self[self.currentHash]:show();
                     end
@@ -235,11 +186,11 @@ SAO.Bucket = {
                     if self[hashForAnyStacks] then
                         self[hashForAnyStacks]:show(transitionOptions);
                     end
-                    if self.currentStacks > 0 and self[self.currentHash] then
+                    if currentStacks > 0 and self[self.currentHash] then
                         self[self.currentHash]:show(transitionOptions);
                     end
                 elseif displayedStacks == 0 then -- Displayed aura was 'Any'
-                    if self.currentStacks == nil then
+                    if currentStacks == nil then
                         self[self.displayedHash]:hide();
                         if self[self.currentHash] then
                             self[self.currentHash]:show(transitionOptions);
@@ -250,7 +201,7 @@ SAO.Bucket = {
                         end
                     end
                 else -- Displayed aura was N, where N > 0
-                    if self.currentStacks == nil then -- Now displaying 'Absent'
+                    if currentStacks == nil then -- Now displaying 'Absent'
                         local displayedHash = self.displayedHash; -- Must backup because it may be overwritten during hide() call
                         if self[hashForAnyStacks] then
                             self[hashForAnyStacks]:hide();
@@ -259,7 +210,7 @@ SAO.Bucket = {
                         if self[self.currentHash] then
                             self[self.currentHash]:show(transitionOptions);
                         end
-                    elseif self.currentStacks == 0 then -- Now displaying 'Any'
+                    elseif currentStacks == 0 then -- Now displaying 'Any'
                         self[self.displayedHash]:hide();
                         if self[self.currentHash] then
                             -- Normally, we would not need to show() 'Any' because it should be currently shown
@@ -285,7 +236,7 @@ SAO.Bucket = {
 }
 
 SAO.BucketManager = {
-    addAura = function(self, aura)
+    addAura = function(self, aura) -- Helper for legacy auras
         local bucket, created = self:getOrCreateBucket(aura.name, aura.spellID);
 
         if created and not SAO:IsFakeSpell(aura.spellID) then
@@ -333,7 +284,7 @@ SAO.BucketManager = {
                 if spellName then
                     SAO.RegisteredBucketsBySpellID[spellName] = bucket; -- Share pointer
                 else
-                    SAO:Debug(Module, "Registering aura with unknown spell "..tostring(spellID));
+                    SAO:Debug(Module, "Registering bucket with unknown spell "..tostring(spellID));
                 end
             end
 
@@ -376,7 +327,7 @@ function SAO:GetBucketBySpellIDOrSpellName(spellID, fallbackSpellName)
     if not self.IsEra() or (type(spellID) == 'number' and spellID ~= 0) then
         return self.RegisteredBucketsBySpellID[spellID], spellID;
     else
-        -- Due to Classic Era limitation, aura is registered by its spell name
+        -- Due to Classic Era limitation, bucket is registered by its spell name
         local bucket = self.RegisteredBucketsBySpellID[fallbackSpellName];
         if bucket then
             spellID = bucket.spellID;
@@ -390,7 +341,7 @@ end
 function SAO:CheckManuallyAllBuckets(trigger)
     if trigger then
         local buckets = self:GetBucketsByTrigger(trigger);
-        for _, bucket in ipairs(buckets) do
+        for _, bucket in ipairs(buckets or {}) do
             bucket.trigger:manualCheck(trigger);
         end
     else
@@ -424,6 +375,7 @@ local function dumpOneBucket(bucket, devDump)
     end
 end
 
+-- Write bucket information
 function SpellActivationOverlay_DumpBuckets(spellID, devDump)
     if spellID then
         local bucket = SAO.RegisteredBucketsBySpellID[spellID];
@@ -443,5 +395,28 @@ function SpellActivationOverlay_DumpBuckets(spellID, devDump)
 
     for _, bucket in pairs(SAO.RegisteredBucketsBySpellID) do
         dumpOneBucket(bucket, devDump)
+    end
+end
+
+-- Perform a manual check on all buckets
+function SpellActivationOverlay_CheckBuckets(spellID)
+    if spellID then
+        local bucket = SAO:GetBucketBySpellID(spellID);
+        if bucket then
+            SAO:Info(Module, "Checking bucket "..bucket.description);
+            bucket.trigger:manualCheckAll();
+        else
+            SAO:Info(Module, "Bucket not found with spellID "..tostring(spellID));
+        end
+    else
+        local nbBuckets = 0;
+        for _, _ in pairs(SAO.RegisteredBucketsBySpellID) do
+            nbBuckets = nbBuckets + 1;
+        end
+        SAO:Info(Module, "Checking all buckets ("..nbBuckets.." item"..(nbBuckets == 1 and "" or "s")..")");
+
+        for _, bucket in pairs(SAO.RegisteredBucketsBySpellID) do
+            bucket.trigger:manualCheckAll();
+        end
     end
 end

@@ -368,9 +368,15 @@ local function retarget(self, ...)
     end
 end
 
-local function unitHealth(self, ...)
+local function unitHealth(self, unitID)
     if ExecuteHandler.initialized then
-        ExecuteHandler:healthChanged(...);
+        ExecuteHandler:healthChanged(unitID);
+    end
+end
+
+local function unitHealthFrequent(self, unitID)
+    if self:IsResponsiveMode() then
+        unitHealth(self, unitID);
     end
 end
 
@@ -586,4 +592,5 @@ SAO.Class["WARRIOR"] = {
     ["PLAYER_LOGIN"] = customLogin,
     ["PLAYER_TARGET_CHANGED"] = retarget,
     ["UNIT_HEALTH"] = unitHealth,
+    ["UNIT_HEALTH_FREQUENT"] = unitHealthFrequent,
 }

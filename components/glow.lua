@@ -4,6 +4,7 @@ local Module = "glow"
 -- Optimize frequent calls
 local ActionButton_HideOverlayGlow = ActionButton_HideOverlayGlow
 local ActionButton_ShowOverlayGlow = ActionButton_ShowOverlayGlow
+local GetNumShapeshiftForms = GetNumShapeshiftForms
 local GetSpellInfo = GetSpellInfo
 local HasAction = HasAction
 
@@ -160,6 +161,35 @@ function HookActionButton_Update(button)
     SAO:UpdateActionButton(button);
 end
 hooksecurefunc("ActionButton_Update", HookActionButton_Update);
+
+-- Grab buttons in the stance bar
+function HookStanceBar_UpdateState()
+    local numForms = GetNumShapeshiftForms();
+    for i=1, numForms do
+        if i > NUM_STANCE_SLOTS then
+            break;
+        end
+        local button = StanceBarFrame.StanceButtons[i];
+        button.stanceForm = i;
+        if (not button.GetGlowID) then
+            button.GetGlowID = function(button)
+                return select(4, GetShapeshiftFormInfo(button.stanceForm));
+            end
+        end
+        if (not button.EnableGlow) then
+            button.EnableGlow = function(button)
+                ActionButton_ShowOverlayGlow(button);
+            end
+        end
+        if (not button.DisableGlow) then
+            button.DisableGlow = function(button)
+                ActionButton_HideOverlayGlow(button);
+            end
+        end
+        SAO:UpdateActionButton(button);
+    end
+end
+hooksecurefunc("StanceBar_UpdateState", HookStanceBar_UpdateState);
 
 -- Also look for specific events for bar swaps when e.g. entering/leaving stealth
 -- Not sure if it is really necessary, but in theory it will do nothing at worst

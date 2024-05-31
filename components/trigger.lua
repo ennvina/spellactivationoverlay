@@ -1,50 +1,25 @@
 local AddonName, SAO = ...
 local Module = "trigger"
 
--- Optimize frequent calls
-local GetSpellCooldown = GetSpellCooldown
-local GetSpellPowerCost = GetSpellPowerCost
-local GetTalentInfo = GetTalentInfo
-local IsUsableSpell = IsUsableSpell
-local UnitPower = UnitPower
-
-local EnumHolyPower = Enum and Enum.PowerType and Enum.PowerType.HolyPower
-
 -- List of trigger flags, as bit field
 -- Start high enough to be able to index trigger flag to a list, and avoid confusion with stack counts
-SAO.TRIGGER_AURA          = 0x1
-SAO.TRIGGER_ACTION_USABLE = 0x2
-SAO.TRIGGER_TALENT        = 0x4
-SAO.TRIGGER_HOLY_POWER    = 0x8
+SAO.TRIGGER_AURA          = 0x01
+SAO.TRIGGER_ACTION_USABLE = 0x02
+SAO.TRIGGER_TALENT        = 0x04
+SAO.TRIGGER_HOLY_POWER    = 0x08
+SAO.TRIGGER_EXECUTE       = 0x10
 
-SAO.TriggerNames = {
-    [SAO.TRIGGER_AURA         ] = "aura",
-    [SAO.TRIGGER_ACTION_USABLE] = "action",
-    [SAO.TRIGGER_TALENT       ] = "talent",
-    [SAO.TRIGGER_HOLY_POWER   ] = "holyPower",
-}
+-- Trigger names for variables and conditions
+SAO.TriggerNames = {} -- Will be filled by Variable
 
-SAO.TriggerFlags = {} -- Transpose index for fast lookup in both directions
-for flag, name in pairs(SAO.TriggerNames) do
-    SAO.TriggerFlags[name] = flag;
-end
+-- Transpose index for fast lookup in both directions
+SAO.TriggerFlags = {} -- Will be filled by Variable
 
--- Check that flags are not overlapping with one another
-for flag1, name1 in pairs(SAO.TriggerNames) do
-    for flag2, name2 in pairs(SAO.TriggerNames) do
-        if flag2 > flag1 and bit.band(flag1, flag2) ~= 0 then
-            local x1 = string.format('0x%X', flag1);
-            local x2 = string.format('0x%X', flag2);
-            print(WrapTextInColor("**SAO** -"..Module.."- Overlapping trigger flag "..x1.." vs. "..x2, RED_FONT_COLOR));
-        end
-    end
-end
+-- Functions to check manually if a trigger should be triggered
+SAO.TriggerManualChecks = {} -- Will be filled by Variable
 
 -- List of lists of buckets requiring each type of trigger
-SAO.RegisteredBucketsByTrigger = {};
-for flag, _ in pairs(SAO.TriggerNames) do
-    SAO.RegisteredBucketsByTrigger[flag] = {}
-end
+SAO.RegisteredBucketsByTrigger = {} -- Will be filled by Variable
 
 function SAO:GetBucketsByTrigger(flag)
     local buckets = SAO.RegisteredBucketsByTrigger[flag];
@@ -53,100 +28,6 @@ function SAO:GetBucketsByTrigger(flag)
     end
     return buckets;
 end
-
--- List of timers trying to retry manual checks of action usable
-local ActionRetryTimers = {}
-
-local TriggerManualChecks = {
-
-    [SAO.TRIGGER_AURA] = function(bucket)
-        local auraStacks = SAO:GetPlayerAuraStacksBySpellID(bucket.spellID);
-        if auraStacks ~= nil then
-            if bucket.stackAgnostic then
-                bucket:setStacks(0);
-            else
-                bucket:setStacks(auraStacks);
-            end
-        else
-            bucket:setStacks(nil);
-        end
-    end,
-
-    [SAO.TRIGGER_ACTION_USABLE] = function(bucket)
-        local spellID = bucket.spellID;
-
-        if not SAO:IsSpellLearned(spellID) then
-            -- Spell not learned
-            bucket:setActionUsable(false);
-            return;
-        end
-
-        local start, duration, enabled, modRate = GetSpellCooldown(spellID);
-        if type(start) ~= "number" then
-            -- Spell not available
-            bucket:setActionUsable(false);
-            return;
-        end
-
-        local isActionUsable, notEnoughPower = IsUsableSpell(spellID);
-
-        local gcdDuration = SAO:GetGCD();
-        local isGCD = duration <= gcdDuration;
-        local isActionOnCD = start > 0 and not isGCD;
-
-        -- Non-mana spells and abilities should always be considered usable, regardless of player's current resources
-        local costsMana = false;
-        for _, spellCost in ipairs(GetSpellPowerCost(spellID) or {}) do
-            if spellCost.name == "MANA" then
-                costsMana = true;
-                break;
-            end
-        end
-
-        -- Evaluate whether or not the action is actually usable
-        local usable = not isActionOnCD and (isActionUsable or (notEnoughPower and not costsMana));
-
-        if isActionUsable and isActionOnCD then
-            -- Action could be usable, but CD prevents us to: try again in a few seconds
-            local endTime = start+duration;
-
-            if (not ActionRetryTimers[spellID] or ActionRetryTimers[spellID].endTime ~= endTime) then
-                if (ActionRetryTimers[spellID]) then
-                    ActionRetryTimers[spellID]:Cancel();
-                end
-
-                local remainingTime = endTime-GetTime();
-                local delta = 0.05; -- Add a small delay to account for lags and whatnot
-                local retryFunc = function()
-                    bucket.trigger:manualCheck(SAO.TRIGGER_ACTION_USABLE);
-                end;
-                ActionRetryTimers[spellID] = C_Timer.NewTimer(remainingTime+delta, retryFunc);
-                ActionRetryTimers[spellID].endTime = endTime;
-            end
-        end
-
-        bucket:setActionUsable(usable);
-    end,
-
-    [SAO.TRIGGER_TALENT] = function(bucket)
-        if bucket.talentTabIndex then
-            local tab, index = bucket.talentTabIndex[1], bucket.talentTabIndex[2];
-            local rank = select(5, GetTalentInfo(tab, index));
-            bucket:setTalented(rank > 0);
-        else
-            bucket:setTalented(false);
-        end
-    end,
-
-    [SAO.TRIGGER_HOLY_POWER] = function(bucket)
-        if EnumHolyPower then
-            local holyPower = UnitPower("player", Enum.PowerType.HolyPower);
-            bucket:setHolyPower(holyPower);
-        else
-            SAO:Debug(Module, "Cannot fetch Holy Power because this resource is unknown from Enum.PowerType");
-        end
-    end,
-}
 
 SAO.Trigger = {
     new = function(self, parent) -- parent is the bucket attached to the new trigger
@@ -234,13 +115,16 @@ SAO.Trigger = {
 
         for flag, name in pairs(SAO.TriggerNames) do
             if bit.band(flag, flags) ~= 0 and self:reactsWith(flag) then
-                TriggerManualChecks[flag](self.parent);
+                SAO.TriggerManualChecks[flag](self.parent);
                 -- Must inform explicitly
                 -- Usually, the manual check would change state of the bucket, which will re-inform the trigger has triggered
                 -- But if the state does not change, the bucket may ignore the change, and thus not re-inform the trigger
                 self.informed = bit.bor(self.informed, flag);
             end
         end
+
+        -- Apply hash, in case it wasn't applied because of lazy evaluations during bucket setters (setAuraStacks, etc.)
+        self.parent:applyHash();
     end,
 
     manualCheckAll = function(self)
@@ -253,12 +137,15 @@ SAO.Trigger = {
 
         for flag, name in pairs(SAO.TriggerNames) do
             if self:reactsWith(flag) then
-                TriggerManualChecks[flag](self.parent);
+                SAO.TriggerManualChecks[flag](self.parent);
                 -- Must inform explicitly
                 -- Usually, the manual check would change state of the bucket, which will re-inform the trigger has triggered
                 -- But if the state does not change, the bucket may ignore the change, and thus not re-inform the trigger
                 self.informed = bit.bor(self.informed, flag);
             end
         end
+
+        -- Apply hash, in case it wasn't applied because of lazy evaluations during bucket setters (setAuraStacks, etc.)
+        self.parent:applyHash();
     end,
 }

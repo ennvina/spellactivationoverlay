@@ -21,10 +21,11 @@ local function useHolyPowerTracker()
 
     local overlays = {}
     for hp=1,3 do
-        local texture = "arcane_missiles_"..hp;
+        local texture = "surge_of_light";
+        local scale = 0.4 + 0.1*hp; -- 50%, 60%, 70%
         local pulse = hp == 3;
-        tinsert(overlays, { holyPower = hp, texture = texture, position = "Left (vFlipped)", scale = 0.4, color = { 255, 255, 55 }, pulse = pulse, });
-        tinsert(overlays, { holyPower = hp, texture = texture, position = "Right (180)",     scale = 0.4, color = { 255, 255, 55 }, pulse = pulse, option = false });
+        tinsert(overlays, { holyPower = hp, texture = texture, position = "Left (vFlipped)", scale = scale, pulse = pulse });
+        tinsert(overlays, { holyPower = hp, texture = texture, position = "Right (180)",     scale = scale, pulse = pulse, option = false });
     end
 
     SAO:CreateEffect(
@@ -33,7 +34,6 @@ local function useHolyPowerTracker()
         holyPower,
         "generic",
         {
-            combatOnly = true,
             useHolyPower = true,
             overlays = overlays,
         }
@@ -92,6 +92,30 @@ local function useHolySpender(name, spellID)
     );
 end
 
+local function useJudgementsOfThePure()
+    local judgementOfLight, judgementOfWisdom, judgementOfJustice = 20271, 53408, 53407; -- Spells for Wrath
+    local judgement = 20271; -- Unique spell for Cataclysm
+    local judgementsOfThePureBuff = 53657;
+    local judgementsOfThePureTalent = 53671;
+
+    SAO:CreateEffect(
+        "jotp",
+        SAO.WRATH + SAO.CATA,
+        judgementsOfThePureBuff,
+        "aura",
+        {
+            talent = judgementsOfThePureTalent,
+            requireTalent = true,
+            combatOnly = true,
+            buttons = {
+                default = { stacks = -1 },
+                [SAO.WRATH] = { judgementOfLight, judgementOfWisdom, judgementOfJustice },
+                [SAO.CATA] = judgement,
+            }
+        }
+    );
+end
+
 local function useInfusionOfLight()
     local infusionOfLightBuff1 = 53672;
     local infusionOfLightBuff2 = 54149;
@@ -106,7 +130,7 @@ local function useInfusionOfLight()
             talent = infusionOfLightTalent,
             overlays = {
                 [SAO.WRATH] = { texture = "daybreak", position = "Left + Right (Flipped)" },
-                [SAO.CATA] = { texture = "surge_of_light", position = "Top (CW)", option = { subText = SAO:RecentlyUpdated() } }, -- Updated 2024-04-30
+                [SAO.CATA] = { texture = "denounce", position = "Top", option = { subText = SAO:RecentlyUpdated() } }, -- Updated 2024-05-26
             },
             buttons = {
                 [SAO.WRATH] = { flashOfLight, holyLight },
@@ -124,6 +148,8 @@ local function useDaybreak()
         "aura",
         {
             talent = 88820, -- Daybreak (talent)
+            action = holyShock,
+            actionUsable = true,
             overlay = { texture = "daybreak", position ="Left + Right (Flipped)" },
             button = holyShock,
         }
@@ -232,6 +258,7 @@ local function registerClass(self)
     self:RegisterAuraSoulPreserver("soul_preserver_paladin", 60513); -- 60513 = Paladin buff
 
     -- Holy
+    useJudgementsOfThePure();
     useInfusionOfLight();
     useDaybreak();
 
