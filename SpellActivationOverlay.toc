@@ -38,6 +38,7 @@ variables\actionusable.lua
 variables\aurastacks.lua
 variables\execute.lua
 variables\holypower.lua
+variables\nativesao.lua
 variables\talent.lua
 
 textures\texname.lua
