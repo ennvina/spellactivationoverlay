@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.1.0 (2024-06-xx)
+#### v2.1.0 (2024-06-03)
 
 Options Panel
 - A new option "responsive mode" is available in the options panel
@@ -17,6 +17,7 @@ Updated effects:
 - Paladin's Daybreak is displayed only when Holy Shock is usable (Cataclysm)\*
 
 \* Exceptionally, this does not match the reference client, on purpose
+
 It felt weird to see Daybreak proc, try to cast Holy Shock but fail, due to CD
 
 New Spell Alert:
@@ -32,6 +33,7 @@ New Glowing Buttons:
 - Warlock's Shadowburn, when the spell is usable (Cataclysm)\*\*\*
 
 \*\* Inner Fire existed before, but has become very important only since Wrath
+
 \*\*\* Shadowburn existed before, but costs no soul shards only since Cataclysm
 
 Bug Fixes
@@ -225,6 +227,7 @@ Known issues
 #### v1.3.2 (2024-04-30)
 
 The Death Knight class experiments the upcoming rework for Cataclysm.
+
 Make sure to report issues you would encounter, thank you :)
 
 New effects:
@@ -259,6 +262,7 @@ New effects:
 - New GAB: Warrior's Overpower, during Taste for Blood\* (Season of Discovery)
 
 \* As in Wrath, there is no dedicated Taste for Blood option
+
 Taste for Blood shares its option with Overpower
 
 Updated effects:
@@ -494,6 +498,7 @@ List of spells that trigger the Frozen effect:
 - Taste for Blood is available on Wrath Classic only
 
 The bug that happened to druids may also happen to other classes
+
 Please report bugs to the addon's Discord, GitHub or CurseForge
 
 #### v0.9.2 (2023-06-21)
@@ -617,6 +622,7 @@ Shout-out to MartGon and xHashii for their contribution to the code. Thanks!
 #### v0.5.0-beta (2022-08-31)
 
 SpellActivationOverlay now has a Discord server!
+
 Make sure to check it out at https://discord.gg/xJmGfGcd4M
 
 Support for Glowing Action Buttons (GABs), making some actions glow, namely:
