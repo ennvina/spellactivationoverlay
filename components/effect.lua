@@ -435,6 +435,17 @@ local function createExecute(effect, props)
     return effect;
 end
 
+local function createNativeSAO(effect, props)
+    if type(props) ~= 'table' then
+        SAO:Error(Module, "Creating a native SAO effect for "..tostring(effect.name).." requires a 'props' table");
+    end
+
+    importOverlays(effect, props);
+    importButtons(effect, props);
+
+    return effect;
+end
+
 --[[
     Functions for Native Optimized Effects (NOEs)
 ]]
@@ -745,6 +756,7 @@ local EffectClassConstructors = {
     ["aura"] = createAura,
     ["counter"] = createCounter,
     ["execute"] = createExecute,
+    ["native"] = createNativeSAO,
 }
 
 --[[

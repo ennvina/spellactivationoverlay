@@ -16,6 +16,9 @@ SAO.defaults = {
                 [81340] = { -- Sudden Doom (Cataclysm)
                     [0] = true,
                 },
+                [93426] = { -- Dark Transformation (not an actual buff) (Cataclysm)
+                    [0] = true,
+                },
                 [96171] = { -- Will of the Necropolis (Cataclysm)
                     [0] = true,
                 },
@@ -42,6 +45,9 @@ SAO.defaults = {
                 },
                 [81340] = { -- Sudden Doom (Cataclysm)
                     [47541] = true, -- Death Coil
+                },
+                [93426] = { -- Dark Transformation (not an actual buff) (Cataclysm)
+                    [63560] = true, -- Dark Transformation
                 },
                 [96171] = { -- Will of the Necropolis (Cataclysm)
                     [48982] = true, -- Rune Tap
