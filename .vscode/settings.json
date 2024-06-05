@@ -102,6 +102,7 @@
         "UnitGUID",
         "UnitHealth",
         "UnitHealthMax",
+        "UnitLevel",
         "UnitPower",
         "UnitRace",
         "UnitSex",
