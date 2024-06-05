@@ -270,7 +270,7 @@ SAO.Variable = {
 
         self.__index = nil;
         setmetatable(var, self);
-        self.__index = nil;
+        self.__index = self;
 
         SAO.Variables[var.trigger.flag] = var;
     end

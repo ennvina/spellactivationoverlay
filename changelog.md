@@ -8,6 +8,9 @@ New Spell Alert:
 New Glowing Button:
 - Death Knight's Dark Transformation (Cataclysm)
 
+Bug Fixes
+- Effects based on Holy Power can no longer trigger before level 9 (Cataclysm)
+
 #### v2.1.0 (2024-06-03)
 
 Options Panel

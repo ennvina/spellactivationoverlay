@@ -15,6 +15,25 @@ local HASH_HOLY_POWER_2    = 0x300
 local HASH_HOLY_POWER_3    = 0x400
 local HASH_HOLY_POWER_MASK = 0x700
 
+local canUseHolyPower = false;
+if SAO.IsCata() and select(2, UnitClass("player")) == "PALADIN" then
+    local PALADINPOWERBAR_SHOW_LEVEL = PALADINPOWERBAR_SHOW_LEVEL or 9;
+    if UnitLevel("player") >= PALADINPOWERBAR_SHOW_LEVEL then
+        canUseHolyPower = true;
+    else
+        local levelTracker = CreateFrame("Frame", "SpellActivationOverlayHolyPowerLevelTracker");
+        levelTracker:RegisterEvent("PLAYER_LEVEL_UP");
+        levelTracker:SetScript("OnEvent", function (self, event, level)
+            if level >= PALADINPOWERBAR_SHOW_LEVEL then
+                canUseHolyPower = true;
+                levelTracker:UnregisterEvent("PLAYER_LEVEL_UP");
+                levelTracker = nil;
+                SAO:CheckManuallyAllBuckets(SAO.TRIGGER_HOLY_POWER);
+            end
+        end);
+    end
+end
+
 SAO.Variable:register({
     order = 4,
     core = "HolyPower",
@@ -71,8 +90,10 @@ SAO.Variable:register({
         impossibleValue = nil,
         fetchAndSet = function(bucket)
             if EnumHolyPower then
-                local holyPower = UnitPower("player", Enum.PowerType.HolyPower);
-                bucket:setHolyPower(holyPower);
+                if canUseHolyPower then
+                    local holyPower = UnitPower("player", Enum.PowerType.HolyPower);
+                    bucket:setHolyPower(holyPower);
+                end
             else
                 SAO:Debug(Module, "Cannot fetch Holy Power because this resource is unknown from Enum.PowerType");
             end

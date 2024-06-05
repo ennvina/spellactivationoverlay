@@ -204,7 +204,7 @@ end
 -- Utility frame dedicated to react to variable loading
 local loader = CreateFrame("Frame", "SpellActivationOverlayDBLoader");
 loader:RegisterEvent("VARIABLES_LOADED");
-loader:SetScript("OnEvent", function (event)
+loader:SetScript("OnEvent", function (self, event)
     SAO:LoadDB();
     SAO:ApplyAllVariables();
     SpellActivationOverlayOptionsPanel_Init(SAO.OptionsPanel);
