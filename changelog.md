@@ -10,6 +10,10 @@ New Glowing Button:
 
 Bug Fixes
 - Effects based on Holy Power can no longer trigger before level 9 (Cataclysm)
+- Mage's Arcane Missiles timer should now refresh correctly (Cataclysm)
+
+The Arcane Missiles issue is most likely a bug from the game client
+Until Blizzard fixes it, the addon exceptionally implements a local fix
 
 #### v2.1.0 (2024-06-03)
 
