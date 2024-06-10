@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.1.1 (2024-06-xx)
+#### v2.1.1 (2024-06-10)
 
 New Spell Alert:
 - Death Knight's Dark Transformation (Cataclysm)
