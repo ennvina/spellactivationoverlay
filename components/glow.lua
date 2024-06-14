@@ -61,6 +61,18 @@ function SAO.RegisterGlowIDs(self, glowIDs)
     end
 end
 
+local function EnableGlow(frame, glowID, reason)
+    if frame:IsShown() then -- Invisible frames might cause issues; worse case scenario they will be visible soon and the player will have to wait for next proc
+        SAO:Debug(Module, "Enabling Glow for button "..tostring(frame.GetName and frame:GetName() or "").." with glow id "..tostring(glowID).." due to "..reason);
+        frame:EnableGlow();
+    end
+end
+
+local function DisableGlow(frame, glowID, reason)
+    SAO:Debug(Module, "Disabling Glow for button "..tostring(frame.GetName and frame:GetName() or "").." with glow id "..tostring(glowID).." due to "..reason);
+    frame:DisableGlow();
+end
+
 -- An action button has been updated
 -- Check its old/new action and old/new spell ID, and put it in appropriate lists
 -- If forceRefresh is true, refresh even if old spell ID and new spell ID are identical
@@ -125,12 +137,10 @@ function SAO.UpdateActionButton(self, button, forceRefresh)
 
     if (not wasGlowing and mustGlow) then
         if (not SpellActivationOverlayDB or not SpellActivationOverlayDB.glow or SpellActivationOverlayDB.glow.enabled) then
-            SAO:Debug(Module, "Enabling Glow for button "..tostring(newGlowID).." due to action button update");
-            button:EnableGlow();
+            EnableGlow(button, newGlowID, "action button update");
         end
     elseif (wasGlowing and not mustGlow) then
-        SAO:Debug(Module, "Disabling Glow for button "..tostring(newGlowID).." due to action button update");
-        button:DisableGlow();
+        DisableGlow(button, newGlowID, "action button update");
     end
 end
 
@@ -225,8 +235,7 @@ function SAO.AddGlowNumber(self, spellID, glowID)
         self.GlowingSpells[glowID] = { [spellID] = true };
         for _, frame in pairs(actionButtons or {}) do
             if (not SpellActivationOverlayDB or not SpellActivationOverlayDB.glow or SpellActivationOverlayDB.glow.enabled) then
-                SAO:Debug(Module, "Enabling Glow for button "..tostring(frame.GetGlowID and frame:GetGlowID()).." due to direct activation");
-                frame:EnableGlow();
+                EnableGlow(frame, frame.GetGlowID and frame:GetGlowID(), "direct activation");
             end
         end
     end
@@ -329,8 +338,7 @@ function SAO.RemoveGlow(self, spellID)
             self.GlowingSpells[glowSpellID] = nil;
             local actionButtons = self.ActionButtons[glowSpellID];
             for _, frame in pairs(actionButtons or {}) do
-                SAO:Debug(Module, "Disabling Glow for button "..tostring(frame.GetGlowID and frame:GetGlowID()).." due to direct deactivation");
-                frame:DisableGlow();
+                DisableGlow(frame, frame.GetGlowID and frame:GetGlowID(), "direct deactivation");
             end
         end
     end
