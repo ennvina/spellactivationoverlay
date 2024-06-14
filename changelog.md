@@ -2,6 +2,10 @@
 
 #### v2.1.2 (2024-06-xx)
 
+Bug Fixes
+- Lua errors caused by 'OverrideActionBarButton' should no longer happen
+- Lua errors caused by other action buttons should happen less often
+
 #### v2.1.1 (2024-06-10)
 
 New Spell Alert:
