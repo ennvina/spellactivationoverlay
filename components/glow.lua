@@ -137,7 +137,20 @@ end
 -- Grab all action button activity that allows us to know which button has which spell
 function HookActionButton_Update(button)
     if (button:GetParent() == OverrideActionBar) then
-        -- Act on all buttons but the ones from OverrideActionBar, whatever that is
+        -- Act on all buttons but the ones from OverrideActionBar
+
+        if not button.saoAnalyzed then
+            button.saoAnalyzed = true;
+            -- Set the "statehidden" attribute upon init, to avoid game client issues with conflicting action slots
+            local useOverrideActionBar = ((HasVehicleActionBar() and UnitVehicleSkin("player") and UnitVehicleSkin("player") ~= "")
+                or (HasOverrideActionBar() and GetOverrideBarSkin() and GetOverrideBarSkin() ~= 0)); -- Test copied from ActionBarController.lua:99
+            if not useOverrideActionBar then
+                -- Set "statehidden" to true
+                -- Don't worry, it should be reset to false next time the player enters a vehicle
+                button:SetAttribute("statehidden", true);
+            end
+        end
+
         return;
     end
 
