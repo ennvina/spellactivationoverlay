@@ -191,15 +191,6 @@ function HookStanceBar_UpdateState()
 end
 hooksecurefunc("StanceBar_UpdateState", HookStanceBar_UpdateState);
 
--- Also look for specific events for bar swaps when e.g. entering/leaving stealth
--- Not sure if it is really necessary, but in theory it will do nothing at worst
-function HookActionButton_OnEvent(self, event)
-    if (event == "ACTIONBAR_PAGE_CHANGED" or event == "UPDATE_BONUS_ACTIONBAR") then
-        HookActionButton_Update(self);
-    end
-end
-hooksecurefunc("ActionButton_OnEvent", HookActionButton_OnEvent);
-
 -- Awake dormant buttons associated to a spellID
 function SAO.AwakeButtonsBySpellID(self, spellID)
     local dormantButtons = {};
