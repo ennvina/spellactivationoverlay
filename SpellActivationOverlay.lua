@@ -67,6 +67,7 @@ function SpellActivationOverlay_OnLoad(self)
 	self:RegisterEvent("LEARNED_SPELL_IN_TAB");
 	self:RegisterEvent("LOADING_SCREEN_DISABLED");
 	self:RegisterEvent("PLAYER_LOGIN");
+	self:RegisterEvent("ADDON_LOADED");
 	for _, var in pairs(SAO.Variables) do
 		if type(var.event.isRequired) == 'function' and var.event.isRequired()
 		or type(var.event.isRequired) == 'boolean' and var.event.isRequired then
@@ -269,6 +270,9 @@ local complexLocationTable = {
 }
 
 function SpellActivationOverlay_ShowAllOverlays(self, spellID, texturePath, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly)
+	if SAO.GlobalOff then
+		return;
+	end
 	SAO:Trace(Module, "SpellActivationOverlay_ShowAllOverlays "..tostring(spellID));
 	positions = strupper(positions);
 	if ( complexLocationTable[positions] ) then

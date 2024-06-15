@@ -129,6 +129,13 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     end
 
     SpellActivationOverlayOptionsPanel.additionalCheckboxes = {};
+
+    if SAO.GlobalOff then
+        SpellActivationOverlayOptionsPanel.globalOff:Show();
+        if SAO.GlobalOffReason then
+            SpellActivationOverlayOptionsPanel.globalOff.label:SetText(SpellActivationOverlayOptionsPanel.globalOff.label:GetText().."\n\n(because of "..SAO.GlobalOffReason..")");
+        end
+    end
 end
 
 -- User clicks OK to the options panel

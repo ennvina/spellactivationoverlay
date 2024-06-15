@@ -62,6 +62,9 @@ function SAO.RegisterGlowIDs(self, glowIDs)
 end
 
 local function EnableGlow(frame, glowID, reason)
+    if SAO.GlobalOff then
+        return;
+    end
     if frame:IsShown() then -- Invisible frames might cause issues; worse case scenario they will be visible soon and the player will have to wait for next proc
         SAO:Debug(Module, "Enabling Glow for button "..tostring(frame.GetName and frame:GetName() or "").." with glow id "..tostring(glowID).." due to "..reason);
         frame:EnableGlow();

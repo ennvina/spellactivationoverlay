@@ -151,6 +151,37 @@ function SAO.LEARNED_SPELL_IN_TAB(self, ...)
     self:LearnNewSpell(spellID);
 end
 
+local warnedSaoVsNecrosis = false;
+function SAO.ADDON_LOADED(self, addOnName, containsBindings)
+    if warnedSaoVsNecrosis then
+        return;
+    end
+
+    local iamSAO = strlower(AddonName) == "spellactivationoverlay";
+    local itisSAO = strlower(addOnName) == "spellactivationoverlay";
+
+    local iamNecrosis = strlower(AddonName):sub(0,8) == "necrosis";
+    local itisNecrosis = strlower(addOnName):sub(0,8) == "necrosis";
+
+    if (iamSAO and (itisNecrosis or itisSAO and NecrosisConfig)) or
+       (iamNecrosis and (itisSAO or itisNecrosis and SpellActivationOverlayDB)) then
+        local className, classFilename, classId = UnitClass("player");
+        if classFilename == "WARLOCK" then
+            self:Info("==", "You have installed Necrosis and SpellActivationOverlay at the same time.")
+            self:Info("==", "Because you are playing "..className..", only Necrosis is required.");
+            if iamSAO then
+                self:Warn("==", "SpellActivationOverlay will be disabled for this character to avoid double procs with Necrosis.");
+                SAO.GlobalOff = true;
+                SAO.GlobalOffReason = "|CFFFF00FFNe|CFFFF50FFcr|CFFFF99FFos|CFFFFC4FFis|CFFFFFFFF";
+            end
+        else
+            self:Info("==", "You have installed Necrosis and SpellActivationOverlay at the same time.")
+            self:Info("==", "Because you are playing "..className..", Necrosis is not necessary.");
+        end
+        warnedSaoVsNecrosis = true;
+    end
+end
+
 -- Event receiver
 function SAO.OnEvent(self, event, ...)
     if self[event] then

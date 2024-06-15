@@ -173,6 +173,23 @@
           </PostClick>
         </Scripts>
       </CheckButton>
+      <Frame name="$parentGlobalOffBlockingFrame" parentKey="globalOff" setAllPoints="true" frameStrata="DIALOG" frameLevel="100" enableMouse="true" hidden="true">
+        <Layers>
+          <Layer level="ARTWORK" textureSubLevel="1">
+            <Texture setAllPoints="true" file="Interface/ContainerFrame/UI-Icon-QuestBang">
+              <Color r="1" g="1" b="1" a="0.75"/>
+            </Texture>
+          </Layer>
+          <Layer level="ARTWORK" textureSubLevel="2">
+            <Texture setAllPoints="true">
+              <Color r="0" g="0" b="0" a="0.75"/>
+            </Texture>
+          </Layer>
+          <Layer level="ARTWORK" textureSubLevel="3">
+            <FontString name="parentGlobalOffLevel" parentKey="label" text="ADDON_DISABLED" inherits="SystemFont_Shadow_Huge3" justifyH="CENTER" justifyV="CENTER"/>
+          </Layer>
+        </Layers>
+      </Frame>
     </Frames>
     <Layers>
       <Layer level="ARTWORK">
