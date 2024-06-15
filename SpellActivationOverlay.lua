@@ -49,7 +49,10 @@ function SpellActivationOverlay_OnLoad(self)
 		end
 	else
 		local currentClass = tostring(select(1, UnitClass("player")));
-		SAO:Error(Module, "Class unknown or not converted yet:", currentClass);
+		SAO:Error(Module, SAO:unsupportedClass(), currentClass);
+		SAO.GlobalOff = {
+			Reason = SAO:unsupportedClass(),
+		}
 	end
 
 	if ( SAO.IsCata() ) then

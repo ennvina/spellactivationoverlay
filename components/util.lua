@@ -164,6 +164,22 @@ function SAO:responsiveMode()
     return tr(responsiveTranslations);
 end
 
+-- Get the "Unsupported class" localized text
+function SAO:unsupportedClass()
+    local unsupportedClassTranslations = {
+        ["en"] = "Unsupported Class",
+        ["de"] = "Nicht unterstützte Klasse",
+        ["fr"] = "Classe non prise en charge",
+        ["es"] = "Clase no compatible",
+        ["ru"] = "Неподдерживаемый класс",
+        ["it"] = "Classe non supportata",
+        ["pt"] = "Classe sem suporte",
+        ["ko"] = "지원되지 않는 클래스",
+        ["zh"] = "不支持的类",
+    };
+    return tr(unsupportedClassTranslations);
+end
+
 -- Get the "because of {reason}" localized text
 function SAO:becauseOf(reason)
     local becauseOfTranslations = {

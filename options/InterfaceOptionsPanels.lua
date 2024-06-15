@@ -341,8 +341,8 @@ function SpellActivationOverlayOptionsPanel_OnShow(self)
 
     for _, optionType in ipairs({ "alert", "glow" }) do
         if (type(SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType]) == "nil") then
-            local className = SAO.CurrentClass.Intrinsics[1];
-            local classFile = SAO.CurrentClass.Intrinsics[2];
+            local className = SAO.CurrentClass and SAO.CurrentClass.Intrinsics[1] or select(1, UnitClass("player"));
+            local classFile = SAO.CurrentClass and SAO.CurrentClass.Intrinsics[2] or select(2, UnitClass("player"));
             local dimFactor = 0.7;
             local dimmedTextColor = CreateColor(dimFactor, dimFactor, dimFactor);
             local dimmedClassColor = CreateColor(dimFactor*RAID_CLASS_COLORS[classFile].r, dimFactor*RAID_CLASS_COLORS[classFile].g, dimFactor*RAID_CLASS_COLORS[classFile].b);
