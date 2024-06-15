@@ -164,6 +164,38 @@ function SAO:responsiveMode()
     return tr(responsiveTranslations);
 end
 
+-- Get the "because of {reason}" localized text
+function SAO:becauseOf(reason)
+    local becauseOfTranslations = {
+        ["en"] = "because of %s",
+        ["de"] = "wegen %s",
+        ["fr"] = "à cause de %s",
+        ["es"] = "por %s",
+        ["ru"] = "из-за %s",
+        ["it"] = "a causa di %s",
+        ["pt"] = "por causa de %s",
+        ["ko"] = "%s 때문에",
+        ["zh"] = "因为 %s",
+    };
+    return string.format(tr(becauseOfTranslations), reason);
+end
+
+-- Get the "Open {x}" localized text
+function SAO:openIt(x)
+    local openItTranslations = {
+        ["en"] = "Open %s",
+        ["de"] = "Öffnen %s",
+        ["fr"] = "Ouvrir %s",
+        ["es"] = "Abrir %s",
+        ["ru"] = "Открыть %s",
+        ["it"] = "Aprire %s",
+        ["pt"] = "Abrir %s",
+        ["ko"] = "열기 %s",
+        ["zh"] = "打开 %s",
+    };
+    return string.format(tr(openItTranslations), x);
+end
+
 --[[
     Addon mode
 ]]

@@ -36,6 +36,8 @@
         "ElvUI",
         "ProjectAzilroka",
         "LibStub",
+        "NecrosisConfig",
+        "NecrosisSpellActivationOverlayOptionsPanel",
         // Utility functions
         "CopyTable",
         "DevTools_Dump",

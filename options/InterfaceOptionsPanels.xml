@@ -186,9 +186,39 @@
             </Texture>
           </Layer>
           <Layer level="ARTWORK" textureSubLevel="3">
-            <FontString name="parentGlobalOffLevel" parentKey="label" text="ADDON_DISABLED" inherits="SystemFont_Shadow_Huge3" justifyH="CENTER" justifyV="CENTER"/>
+            <FontString name="$parentGlobalOffLabelDisabled" text="ADDON_DISABLED" inherits="SystemFont_Shadow_Huge3" justifyH="CENTER" justifyV="CENTER">
+              <Anchors>
+                <Anchor point="TOP">
+                  <Offset>
+                    <AbsDimension x="0" y="-222"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+          <Layer level="ARTWORK" textureSubLevel="3">
+            <FontString name="$parentGlobalOffLabelReason" parentKey="reason" text="" inherits="SystemFont_Shadow_Huge1" justifyH="CENTER" justifyV="CENTER">
+              <Anchors>
+                <Anchor point="TOP" relativeTo="$parentGlobalOffLabelDisabled" relativePoint="BOTTOM">
+                  <Offset>
+                    <AbsDimension x="0" y="-16"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
           </Layer>
         </Layers>
+        <Frames>
+          <Button name="$parentGlobalOffButton" parentKey="button" inherits="OptionsButtonTemplate" hidden="true">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="$parentGlobalOffLabelReason" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="-16"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+        </Frames>
       </Frame>
     </Frames>
     <Layers>

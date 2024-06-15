@@ -1,6 +1,27 @@
 local AddonName, SAO = ...
 
 function SpellActivationOverlayOptionsPanel_Init(self)
+    if SAO.GlobalOff then
+        -- Apply "global off" settings before enything else, in case init fails precisely because of why the addon was "globalled off"
+        SpellActivationOverlayOptionsPanel.globalOff:Show();
+        if SAO.GlobalOff.Reason then
+            local globalOffReason = SpellActivationOverlayOptionsPanel.globalOff.reason;
+            globalOffReason:SetText("("..SAO.GlobalOff.Reason..")");
+        end
+
+        if SAO.GlobalOff.Button then
+            local globalOffButton = SpellActivationOverlayOptionsPanel.globalOff.button;
+            globalOffButton:SetText(SAO.GlobalOff.Button.Text);
+            local estimatedWidth = (2+strlenutf8(SAO.GlobalOff.Button.Text))*8;
+            globalOffButton:SetWidth(estimatedWidth);
+            if estimatedWidth > 48 then
+                globalOffButton:SetHeight(globalOffButton:GetHeight()+ceil((estimatedWidth-32)/16));
+            end
+            globalOffButton:SetScript("OnClick", SAO.GlobalOff.Button.OnClick);
+            globalOffButton:Show();
+        end
+    end
+
     local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
     opacitySlider.Text:SetText(SPELL_ALERT_OPACITY);
     _G[opacitySlider:GetName().."Low"]:SetText(OFF);
@@ -129,13 +150,6 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     end
 
     SpellActivationOverlayOptionsPanel.additionalCheckboxes = {};
-
-    if SAO.GlobalOff then
-        SpellActivationOverlayOptionsPanel.globalOff:Show();
-        if SAO.GlobalOffReason then
-            SpellActivationOverlayOptionsPanel.globalOff.label:SetText(SpellActivationOverlayOptionsPanel.globalOff.label:GetText().."\n\n(because of "..SAO.GlobalOffReason..")");
-        end
-    end
 end
 
 -- User clicks OK to the options panel
