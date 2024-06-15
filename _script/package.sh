@@ -353,7 +353,18 @@ dos2unix "*.lua" "*.xml"
 
 toc2xml SpellActivationOverlay.toc SpellActivations.xml
 
-mv SpellActivationOverlay/SpellActivationOverlay.lua SpellActivationOverlay/NecrosisSpellActivationOverlay.lua || bye "Cannot rename files"
+# Add License at the beginning of main file
+echo -n "Injecting License..."
+{
+    printf '%s\n' '--[[' > SpellActivationOverlay/NecrosisSpellActivationOverlay.lua &&
+    cat SpellActivationOverlay/LICENSE >> SpellActivationOverlay/NecrosisSpellActivationOverlay.lua &&
+    printf '\n%s\n' 'Credits to Blizzard Entertainment for writing original code of Spell Activation Overlay' >> SpellActivationOverlay/NecrosisSpellActivationOverlay.lua &&
+    printf '%s\n' '--]]' >> SpellActivationOverlay/NecrosisSpellActivationOverlay.lua &&
+    cat SpellActivationOverlay/SpellActivationOverlay.lua >> SpellActivationOverlay/NecrosisSpellActivationOverlay.lua &&
+    rm SpellActivationOverlay/SpellActivationOverlay.lua SpellActivationOverlay/LICENSE
+} || bye "Cannot craft main Lua file"
+echo
+
 mv SpellActivationOverlay/SpellActivationOverlay.xml SpellActivationOverlay/NecrosisSpellActivationOverlay.xml || bye "Cannot rename files"
 rm SpellActivationOverlay/changelog.md || bye "Cannot remove unused files"
 
