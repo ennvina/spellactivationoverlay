@@ -99,7 +99,7 @@ end
 
 -- Load database and use default values if needed
 function SAO.LoadDB(self)
-    local currentversion = 143;
+    local currentversion = 220;
     local db = SpellActivationOverlayDB or {};
 
     if not db.alert then
