@@ -14,7 +14,7 @@ Options Panel
 - A special mode "Disabled" has been introduced, blocking the options panel
 - On top of blocking the options panel, effects can no longer trigger
 - SpellActivationOverlay enters "Disabled" mode for Warlocks using Necrosis
-- Necrosis' SpellActivations enters "Disabled" mode for non-Warlock characters
+- A new option lets Warlocks decide if they prefer using one addon or the other
 
 Bug Fixes
 - Lua errors caused by 'OverrideActionBarButton' should no longer happen
