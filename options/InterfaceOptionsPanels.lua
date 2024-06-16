@@ -30,6 +30,10 @@ function SpellActivationOverlayOptionsPanel_Init(self)
                 if checked then
                     disableCondition.OnValueChanged(self, true);
                     SpellActivationOverlayOptionsPanel.globalOff:Show();
+                    local testButton = SpellActivationOverlayOptionsPanelSpellAlertTestButton;
+                    if testButton.isTesting then
+                        testButton:StopTest();
+                    end
                 else
                     disableCondition.OnValueChanged(self, false);
                     SpellActivationOverlayOptionsPanel.globalOff:Hide();
