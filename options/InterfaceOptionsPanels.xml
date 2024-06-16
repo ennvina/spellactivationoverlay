@@ -173,14 +173,14 @@
           </PostClick>
         </Scripts>
       </CheckButton>
-      <CheckButton name="$parentSpellAlertAutoNecrosis" inherits="InterfaceOptionsCheckButtonTemplate" frameLevel="101" hidden="true">
+      <CheckButton name="$parentDisableConditionButton" inherits="InterfaceOptionsCheckButtonTemplate" frameLevel="101" hidden="true">
         <Anchors>
           <Anchor point="BOTTOMLEFT" relativeTo="$parentSpellAlertResponsiveButton" relativePoint="TOPLEFT"/>
         </Anchors>
         <Scripts>
           <PostClick>
-            if (self.EnableAutoNecrosis) then
-              self:EnableAutoNecrosis(self:GetChecked());
+            if (self.OnValueChanged) then
+              self:OnValueChanged(self:GetChecked());
             end
           </PostClick>
         </Scripts>

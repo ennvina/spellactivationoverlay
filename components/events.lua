@@ -164,23 +164,20 @@ function SAO.ADDON_LOADED(self, addOnName, containsBindings)
     local itisNecrosis = strlower(addOnName):sub(0,8) == "necrosis";
 
     if (iamSAO and (itisNecrosis or itisSAO and NecrosisConfig)) or
-       (iamNecrosis and (itisSAO or itisNecrosis and SpellActivationOverlayDB)) then
+       (iamNecrosis and (itisSAO or itisNecrosis and _G["Spell".."ActivationOverlayDB"])) then
         local className, classFilename, classId = UnitClass("player");
         if classFilename == "WARLOCK" then
-            self:Info("==", "You have installed Necrosis and SpellActivationOverlay at the same time.")
+            self:Info("==", "You have installed Necrosis and Spell".."ActivationOverlay at the same time.")
             self:Info("==", "Because you are playing "..className..", only Necrosis is required.");
             if iamSAO then
-                self:Warn("==", "SpellActivationOverlay will be disabled for this character to avoid double procs with Necrosis.");
-                SAO.GlobalOff = SAO.GlobalOff or { -- Do not overwrite GlobalOff, if any
-                    Category = "NECROSIS_INSTALLED",
-                    Reason = SAO:becauseOf("|CFFFF00FFNe|CFFFF50FFcr|CFFFF99FFos|CFFFFC4FFis|CFFFFFFFF"), -- "Necrosis", with colors
-                    Button = NecrosisSpellActivationOverlayOptionsPanel and {
-                        Text = self:openIt("Necrosis Spell Activations"),
-                        OnClick = function()
-                            InterfaceOptionsFrame_OpenToCategory(NecrosisSpellActivationOverlayOptionsPanel);
-                        end
-                    }
-                }
+                self.Shutdown:EnableCategory("NECROSIS_INSTALLED");
+                local shutdownCategory = self.Shutdown:GetCategory();
+                if shutdownCategory.Name == "NECROSIS_INSTALLED" and shutdownCategory.DisableCondition.IsDisabled() then
+                    self:Warn("==", "Spell".."ActivationOverlay will be disabled for this character to avoid double procs with Necrosis.");
+                end
+            elseif iamNecrosis then
+                self.Shutdown:EnableCategory("SAO_INSTALLED");
+                local shutdownCategory = self.Shutdown:GetCategory();
             end
         else
             self:Info("==", "You have installed Necrosis and SpellActivationOverlay at the same time.")

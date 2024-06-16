@@ -2,24 +2,47 @@ local AddonName, SAO = ...
 local iamNecrosis = strlower(AddonName):sub(0,8) == "necrosis"
 
 function SpellActivationOverlayOptionsPanel_Init(self)
-    if SAO.GlobalOff then
-        -- Apply "global off" settings before enything else, in case init fails precisely because of why the addon was "globalled off"
-        SpellActivationOverlayOptionsPanel.globalOff:Show();
-        if SAO.GlobalOff.Reason then
+    local shutdownCategory = SAO.Shutdown:GetCategory();
+    if shutdownCategory then
+        -- Apply shutdown settings before enything else, in case init fails precisely because of why the addon was shut down
+        if shutdownCategory.Reason then
             local globalOffReason = SpellActivationOverlayOptionsPanel.globalOff.reason;
-            globalOffReason:SetText("("..SAO.GlobalOff.Reason..")");
+            globalOffReason:SetText("("..shutdownCategory.Reason..")");
         end
 
-        if SAO.GlobalOff.Button then
+        if shutdownCategory.Button then
             local globalOffButton = SpellActivationOverlayOptionsPanel.globalOff.button;
-            globalOffButton:SetText(SAO.GlobalOff.Button.Text);
-            local estimatedWidth = (2+strlenutf8(SAO.GlobalOff.Button.Text))*8;
+            globalOffButton:SetText(shutdownCategory.Button.Text);
+            local estimatedWidth = (2+strlenutf8(shutdownCategory.Button.Text))*8;
             globalOffButton:SetWidth(estimatedWidth);
             if estimatedWidth > 48 then
                 globalOffButton:SetHeight(globalOffButton:GetHeight()+ceil((estimatedWidth-32)/16));
             end
-            globalOffButton:SetScript("OnClick", SAO.GlobalOff.Button.OnClick);
+            globalOffButton:SetScript("OnClick", shutdownCategory.Button.OnClick);
             globalOffButton:Show();
+        end
+
+        if shutdownCategory.DisableCondition then
+            local disableCondition = SAO.Shutdown:GetCategory().DisableCondition;
+            local disableConditionButton = SpellActivationOverlayOptionsPanelDisableConditionButton;
+            disableConditionButton.Text:SetText(disableCondition.Text);
+            disableConditionButton.OnValueChanged = function(self, checked)
+                if checked then
+                    disableCondition.OnValueChanged(self, true);
+                    SpellActivationOverlayOptionsPanel.globalOff:Show();
+                else
+                    disableCondition.OnValueChanged(self, false);
+                    SpellActivationOverlayOptionsPanel.globalOff:Hide();
+                end
+            end
+            disableConditionButton:SetChecked(SAO.Shutdown:IsAddonDisabled());
+            disableConditionButton:OnValueChanged(disableConditionButton:GetChecked());
+            if disableCondition.ShowIf == nil or disableCondition.ShowIf() then
+                disableConditionButton:Show();
+            end
+        else
+            -- Without disable condition, disabling is absolute
+            SpellActivationOverlayOptionsPanel.globalOff:Show();
         end
     end
 
@@ -129,33 +152,6 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     local responsiveButton = SpellActivationOverlayOptionsPanelSpellAlertResponsiveButton;
     responsiveButton.Text:SetText(SAO:responsiveMode());
     responsiveButton:SetChecked(SpellActivationOverlayDB.responsiveMode == true);
-
-    if not iamNecrosis and select(2, UnitClass("player")) == "WARLOCK" then
-        local autoNecrosisButton = SpellActivationOverlayOptionsPanelSpellAlertAutoNecrosis;
-        autoNecrosisButton.Text:SetText("Disable when Necrosis is installed");
-        if SAO.GlobalOff and SAO.GlobalOff.Category == "NECROSIS_INSTALLED" then
-            autoNecrosisButton.formerGlobalOff = SAO.GlobalOff;
-        end
-        autoNecrosisButton.EnableAutoNecrosis = function(self, enable)
-            if enable then
-                SpellActivationOverlayDB.autoNecrosis = true;
-                if self.formerGlobalOff then
-                    SAO.GlobalOff = self.formerGlobalOff;
-                    SpellActivationOverlayOptionsPanel.globalOff:Show();
-                end
-            else
-                SpellActivationOverlayDB.autoNecrosis = false;
-                if self.formerGlobalOff then
-                    SAO.GlobalOff = nil;
-                    SpellActivationOverlayOptionsPanel.globalOff:Hide();
-                end
-            end
-        end
-        -- Check the button if either the option is set to true, or nil (meaning the option is set by default)
-        autoNecrosisButton:SetChecked(SpellActivationOverlayDB.autoNecrosis == true or SpellActivationOverlayDB.autoNecrosis == nil);
-        autoNecrosisButton:EnableAutoNecrosis(autoNecrosisButton:GetChecked());
-        autoNecrosisButton:Show();
-    end
 
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     glowingButtonCheckbox.Text:SetText("Glowing Buttons");

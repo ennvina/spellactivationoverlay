@@ -50,10 +50,7 @@ function SpellActivationOverlay_OnLoad(self)
 	else
 		local currentClass = tostring(select(1, UnitClass("player")));
 		SAO:Error(Module, SAO:unsupportedClass(), currentClass);
-		SAO.GlobalOff = {
-			Category = "UNSUPPORTED_CLASS",
-			Reason = SAO:unsupportedClass(),
-		}
+		SAO.Shutdown:EnableCategory("UNSUPPORTED_CLASS");
 	end
 
 	if ( SAO.IsCata() ) then
@@ -274,7 +271,7 @@ local complexLocationTable = {
 }
 
 function SpellActivationOverlay_ShowAllOverlays(self, spellID, texturePath, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly)
-	if SAO.GlobalOff then
+	if SAO.Shutdown:IsAddonDisabled() then
 		return;
 	end
 	SAO:Trace(Module, "SpellActivationOverlay_ShowAllOverlays "..tostring(spellID));
