@@ -173,7 +173,19 @@
           </PostClick>
         </Scripts>
       </CheckButton>
-      <Frame name="$parentGlobalOffBlockingFrame" parentKey="globalOff" setAllPoints="true" frameStrata="DIALOG" frameLevel="100" enableMouse="true" hidden="true">
+      <CheckButton name="$parentSpellAlertAutoNecrosis" inherits="InterfaceOptionsCheckButtonTemplate" frameLevel="101" hidden="true">
+        <Anchors>
+          <Anchor point="BOTTOMLEFT" relativeTo="$parentSpellAlertResponsiveButton" relativePoint="TOPLEFT"/>
+        </Anchors>
+        <Scripts>
+          <PostClick>
+            if (self.EnableAutoNecrosis) then
+              self:EnableAutoNecrosis(self:GetChecked());
+            end
+          </PostClick>
+        </Scripts>
+      </CheckButton>
+      <Frame name="$parentGlobalOffBlockingFrame" parentKey="globalOff" setAllPoints="true" frameLevel="100" enableMouse="true" hidden="true">
         <Layers>
           <Layer level="ARTWORK" textureSubLevel="1">
             <Texture setAllPoints="true" file="Interface/ContainerFrame/UI-Icon-QuestBang">

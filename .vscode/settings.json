@@ -23,6 +23,7 @@
         "SpellActivationOverlayFrame",
         "SpellActivationOverlayOptionsPanel",
         "SpellActivationOverlayOptionsPanelGlowingButtons",
+        "SpellActivationOverlayOptionsPanelSpellAlertAutoNecrosis",
         "SpellActivationOverlayOptionsPanelSpellAlertDebugButton",
         "SpellActivationOverlayOptionsPanelSpellAlertLabel",
         "SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider",

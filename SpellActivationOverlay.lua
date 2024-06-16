@@ -51,6 +51,7 @@ function SpellActivationOverlay_OnLoad(self)
 		local currentClass = tostring(select(1, UnitClass("player")));
 		SAO:Error(Module, SAO:unsupportedClass(), currentClass);
 		SAO.GlobalOff = {
+			Category = "UNSUPPORTED_CLASS",
 			Reason = SAO:unsupportedClass(),
 		}
 	end

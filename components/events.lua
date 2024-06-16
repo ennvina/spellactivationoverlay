@@ -172,6 +172,7 @@ function SAO.ADDON_LOADED(self, addOnName, containsBindings)
             if iamSAO then
                 self:Warn("==", "SpellActivationOverlay will be disabled for this character to avoid double procs with Necrosis.");
                 SAO.GlobalOff = SAO.GlobalOff or { -- Do not overwrite GlobalOff, if any
+                    Category = "NECROSIS_INSTALLED",
                     Reason = SAO:becauseOf("|CFFFF00FFNe|CFFFF50FFcr|CFFFF99FFos|CFFFFC4FFis|CFFFFFFFF"), -- "Necrosis", with colors
                     Button = NecrosisSpellActivationOverlayOptionsPanel and {
                         Text = self:openIt("Necrosis Spell Activations"),

@@ -1,4 +1,5 @@
 local AddonName, SAO = ...
+local iamNecrosis = strlower(AddonName):sub(0,8) == "necrosis"
 
 function SpellActivationOverlayOptionsPanel_Init(self)
     if SAO.GlobalOff then
@@ -128,6 +129,33 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     local responsiveButton = SpellActivationOverlayOptionsPanelSpellAlertResponsiveButton;
     responsiveButton.Text:SetText(SAO:responsiveMode());
     responsiveButton:SetChecked(SpellActivationOverlayDB.responsiveMode == true);
+
+    if not iamNecrosis and select(2, UnitClass("player")) == "WARLOCK" then
+        local autoNecrosisButton = SpellActivationOverlayOptionsPanelSpellAlertAutoNecrosis;
+        autoNecrosisButton.Text:SetText("Disable when Necrosis is installed");
+        if SAO.GlobalOff and SAO.GlobalOff.Category == "NECROSIS_INSTALLED" then
+            autoNecrosisButton.formerGlobalOff = SAO.GlobalOff;
+        end
+        autoNecrosisButton.EnableAutoNecrosis = function(self, enable)
+            if enable then
+                SpellActivationOverlayDB.autoNecrosis = true;
+                if self.formerGlobalOff then
+                    SAO.GlobalOff = self.formerGlobalOff;
+                    SpellActivationOverlayOptionsPanel.globalOff:Show();
+                end
+            else
+                SpellActivationOverlayDB.autoNecrosis = false;
+                if self.formerGlobalOff then
+                    SAO.GlobalOff = nil;
+                    SpellActivationOverlayOptionsPanel.globalOff:Hide();
+                end
+            end
+        end
+        -- Check the button if either the option is set to true, or nil (meaning the option is set by default)
+        autoNecrosisButton:SetChecked(SpellActivationOverlayDB.autoNecrosis == true or SpellActivationOverlayDB.autoNecrosis == nil);
+        autoNecrosisButton:EnableAutoNecrosis(autoNecrosisButton:GetChecked());
+        autoNecrosisButton:Show();
+    end
 
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     glowingButtonCheckbox.Text:SetText("Glowing Buttons");
@@ -354,7 +382,7 @@ function SpellActivationOverlayOptionsPanel_OnShow(self)
     optionsLoaded = true;
 end
 
-if strlower(AddonName):sub(0,8) ~= "necrosis" then
+if not iamNecrosis then
     SLASH_SAO1 = "/sao"
     SLASH_SAO2 = "/spellactivationoverlay"
     SlashCmdList.SAO = function(msg, editBox)
