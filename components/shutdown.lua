@@ -28,7 +28,7 @@ local Categories = {
                     end,
                     IsDisabled = function()
                         -- Disable addon if option is set to true, and only true
-                        return SpellActivationOverlayDB.disableIfSAO == true;
+                        return SpellActivationOverlayDB.disableIfSAO == true or SpellActivationOverlayDB.disableIfSAO == nil;
                     end,
                 }
             }
@@ -58,7 +58,7 @@ local Categories = {
                     end,
                     IsDisabled = function()
                         -- Disable addon if option is set to true, or option is not set yet (i.e. default value)
-                        return SpellActivationOverlayDB.disableIfNecrosis == true or SpellActivationOverlayDB.disableIfNecrosis == nil;
+                        return SpellActivationOverlayDB.disableIfNecrosis == true;
                     end,
                 },
             }
