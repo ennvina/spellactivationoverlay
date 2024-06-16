@@ -16,13 +16,13 @@ local Categories = {
         Priority = 2,
         Get = function()
             return {
-                Reason = nil, -- There is no specific reason
+                Reason = SAO:becauseOf("Spell".."ActivationOverlay"),
                 Button = nil, -- There is no obvious action to suggest
                 DisableCondition = {
                     ShowIf = function()
                         return SpellActivationOverlayDB ~= nil;
                     end,
-                    Text = "Disable when Spell".."ActivationOverlay is installed",
+                    Text = SAO:disableWhenInstalled("Spell".."ActivationOverlay"),
                     OnValueChanged = function(self, checked)
                         SpellActivationOverlayDB.disableIfSAO = checked;
                     end,
@@ -52,7 +52,7 @@ local Categories = {
                     ShowIf = function()
                         return NecrosisConfig ~= nil;
                     end,
-                    Text = "Disable when Necrosis is installed",
+                    Text = SAO:disableWhenInstalled("Necrosis"),
                     OnValueChanged = function(self, checked)
                         SpellActivationOverlayDB.disableIfNecrosis = checked;
                     end,

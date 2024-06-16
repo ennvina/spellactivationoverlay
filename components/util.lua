@@ -212,6 +212,22 @@ function SAO:openIt(x)
     return string.format(tr(openItTranslations), x);
 end
 
+-- Get the "Disabled when {addon} is installed" localized text
+function SAO:disableWhenInstalled(addon)
+    local disableWhenInstalledTranslations = {
+        ["en"] = "Disable when %s is installed",
+        ["de"] = "Deaktivieren, wenn %s installiert ist",
+        ["fr"] = "Désactiver lorsque %s est installé",
+        ["es"] = "Desactivar cuando %s está instalado",
+        ["ru"] = "Отключить при установке %s",
+        ["it"] = "Disattivare quando è installato %s",
+        ["pt"] = "Desativar quando %s estiver instalado",
+        ["ko"] = "%s가 설치되어 있으면 사용 안 함",
+        ["zh"] = "安装 %s 时禁用",
+    };
+    return string.format(tr(disableWhenInstalledTranslations), addon);
+end
+
 --[[
     Addon mode
 ]]
