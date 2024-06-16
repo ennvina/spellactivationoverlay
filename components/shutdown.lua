@@ -17,7 +17,15 @@ local Categories = {
         Get = function()
             return {
                 Reason = SAO:becauseOf("Spell".."ActivationOverlay"),
-                Button = nil, -- There is no obvious action to suggest
+                Button = {
+                    ShowIf = function()
+                        return _G["Spell".."ActivationOverlayDB"] ~= nil;
+                    end,
+                    Text = SAO:openIt("Spell".."ActivationOverlay"),
+                    OnClick = function() -- Passed to SetScript
+                        InterfaceOptionsFrame_OpenToCategory(_G["Spell".."ActivationOverlayOptionsPanel"]);
+                    end
+                },
                 DisableCondition = {
                     ShowIf = function()
                         return SpellActivationOverlayDB ~= nil;
