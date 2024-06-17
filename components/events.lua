@@ -151,6 +151,47 @@ function SAO.LEARNED_SPELL_IN_TAB(self, ...)
     self:LearnNewSpell(spellID);
 end
 
+local warnedSaoVsNecrosis = false;
+function SAO.ADDON_LOADED(self, addOnName, containsBindings)
+    if warnedSaoVsNecrosis then
+        return;
+    end
+
+    local iamSAO = strlower(AddonName) == "spellactivationoverlay";
+    local itisSAO = strlower(addOnName) == "spellactivationoverlay";
+
+    local iamNecrosis = strlower(AddonName):sub(0,8) == "necrosis";
+    local itisNecrosis = strlower(addOnName):sub(0,8) == "necrosis";
+
+    if (iamSAO and (itisNecrosis or itisSAO and NecrosisConfig)) or
+       (iamNecrosis and (itisSAO or itisNecrosis and _G["Spell".."ActivationOverlayDB"])) then
+        local className, classFilename, classId = UnitClass("player");
+        if classFilename == "WARLOCK" then
+            self:Info("==", "You have installed Necrosis and Spell".."ActivationOverlay at the same time.")
+            if iamSAO then
+                self.Shutdown:EnableCategory("NECROSIS_INSTALLED");
+                local shutdownCategory = self.Shutdown:GetCategory();
+                if shutdownCategory.Name == "NECROSIS_INSTALLED" and shutdownCategory.DisableCondition.IsDisabled() then
+                    self:Warn("==", "Spell".."ActivationOverlay will be disabled for this character to avoid double procs with Necrosis. "..
+                        "You can go to Options > AddOns to change the preferred addon.");
+                end
+            elseif iamNecrosis then
+                self.Shutdown:EnableCategory("SAO_INSTALLED");
+                local shutdownCategory = self.Shutdown:GetCategory();
+                if shutdownCategory.Name == "SAO_INSTALLED" and shutdownCategory.DisableCondition.IsDisabled() then
+                    self:Warn("==", "Necrosis Spell Activations will be disabled for this character to avoid double procs with Spell".."ActivationOverlay. "..
+                        "You can go to Options > AddOns to change the preferred addon. "..
+                        "This concerns only \"Spell Activations\" of Necrosis; it has no effect on other features of Necrosis.");
+                end
+            end
+        else
+            self:Info("==", "You have installed Necrosis and SpellActivationOverlay at the same time.")
+            self:Info("==", "Because you are playing "..className..", Necrosis is not necessary.");
+        end
+        warnedSaoVsNecrosis = true;
+    end
+end
+
 -- Event receiver
 function SAO.OnEvent(self, event, ...)
     if self[event] then

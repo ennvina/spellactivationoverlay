@@ -22,6 +22,7 @@
         "SpellActivationOverlayDB",
         "SpellActivationOverlayFrame",
         "SpellActivationOverlayOptionsPanel",
+        "SpellActivationOverlayOptionsPanelDisableConditionButton",
         "SpellActivationOverlayOptionsPanelGlowingButtons",
         "SpellActivationOverlayOptionsPanelSpellAlertDebugButton",
         "SpellActivationOverlayOptionsPanelSpellAlertLabel",
@@ -36,6 +37,8 @@
         "ElvUI",
         "ProjectAzilroka",
         "LibStub",
+        "NecrosisConfig",
+        "NecrosisSpellActivationOverlayOptionsPanel",
         // Utility functions
         "CopyTable",
         "DevTools_Dump",

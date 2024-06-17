@@ -118,6 +118,67 @@ pruneclass() {
     echo
 }
 
+# Remove trailing \r characters
+# $@ = array of file wildcards
+dos2unix() {
+    echo -n "Converting files from DOS to Unix..."
+    for wildcard in "$@"
+    do
+        find . -type f -name "$wildcard" -print0 | xargs -0 sed -i 's/\r$//' || bye "Cannot convert from DOS to Unix"
+    done
+    echo
+}
+
+# Replace code contents
+# Replacement is done with sed; strings must not contain characters messing around with sed
+# $1 = text to replace
+# $2 = replacement text
+# $3+ = file wildcards
+replacecode() {
+    local before=$1
+    local after=$2
+    shift 2
+    echo -n "Replacing source code from $before to $after..."
+    for wildcard in "$@"
+    do
+        find . -type f -name "$wildcard" -print0 | xargs -0 sed -i "s~$before~$after~g" || bye "Cannot replace source code"
+    done
+    echo
+}
+
+# Transform a TOC file into XML file that includes scripts and UIs
+# The TOC file is deleted in the process
+# $1 = TOC file input
+# $2 = XML file output
+toc2xml() {
+    local tocfile=SpellActivationOverlay/$1
+    local xmlfile=SpellActivationOverlay/$2
+    echo -n "Transforming TOC file into XML include file"
+    cat > "$xmlfile" <<EOF
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+EOF
+    local nlines=0
+    sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' "$tocfile" |
+        grep -Eo '^[[:alnum:]/\\]*.(lua|xml)$' |
+        tr '\\' / |
+        while read f
+        do
+            if [[ "$f" =~ \.lua$ ]]
+            then
+                printf '\t<Script file="%s"/>\n' "$f" || bye "Cannot write XML file"
+            else
+                printf '\t<Include file="%s"/>\n' "$f" || bye "Cannot write XML file"
+            fi
+            ((++nlines))
+        done >> "$xmlfile"
+    [ $(wc -l "$xmlfile" | grep -Eo '^[0-9]+') -gt 0 ] || bye "No lines written to XML file"
+cat >> "$xmlfile" <<EOF
+</Ui>
+EOF
+    rm "$tocfile" || bye "Cannot remove former TOC file"
+    echo
+}
+
 # Gather all files of the current folder to a single zip.
 # $1 = flavor
 # $2 = addon version
@@ -224,5 +285,103 @@ SOUNDS_NOT_FOR_CATA=(UI_PowerAura_Generic)
 prunesound "${SOUNDS_NOT_FOR_CATA[@]}"
 
 zipproject cata "$VERSION_TOC_VERSION"
+
+cdup
+
+# Release Necrosis version
+NECROSIS_BUILD_VERSION=40400 # Version does not matter, toc will not be used
+mkproject necrosis $NECROSIS_BUILD_VERSION
+
+CLASSES_NOT_FOR_NECROSIS=(
+deathknight
+druid
+hunter
+mage
+paladin
+priest
+rogue
+shaman
+warrior)
+pruneclass "${CLASSES_NOT_FOR_NECROSIS[@]}"
+
+TEXTURES_NOT_FOR_NECROSIS=(
+arcane_missiles
+arcane_missiles_1
+arcane_missiles_2
+arcane_missiles_3
+art_of_war
+bandits_guile
+blood_surge
+brain_freeze
+daybreak
+echo_of_the_elements
+eclipse_moon
+eclipse_sun
+feral_omenofclarity
+frozen_fingers
+fulmination
+fury_of_stormrage
+genericarc_02
+genericarc_05
+high_tide
+hot_streak
+impact
+killing_machine
+lock_and_load
+maelstrom_weapon
+maelstrom_weapon_1
+maelstrom_weapon_2
+maelstrom_weapon_3
+maelstrom_weapon_4
+master_marksman
+monk_serpent
+natures_grace
+natures_grace
+predatory_swiftness
+raging_blow
+rime
+serendipity
+shooting_stars
+sudden_death
+sudden_doom
+surge_of_light
+sword_and_board
+tooth_and_claw)
+prunetex "${TEXTURES_NOT_FOR_NECROSIS[@]}"
+
+dos2unix "*.lua" "*.xml"
+
+toc2xml SpellActivationOverlay.toc SpellActivations.xml
+
+# Add License at the beginning of main file
+echo -n "Injecting License..."
+{
+    printf '%s\n' '--[[' > SpellActivationOverlay/NecrosisSpellActivationOverlay.lua &&
+    cat SpellActivationOverlay/LICENSE >> SpellActivationOverlay/NecrosisSpellActivationOverlay.lua &&
+    printf '\n%s\n' 'Credits to Blizzard Entertainment for writing original code of Spell Activation Overlay' >> SpellActivationOverlay/NecrosisSpellActivationOverlay.lua &&
+    printf '%s\n' '--]]' >> SpellActivationOverlay/NecrosisSpellActivationOverlay.lua &&
+    cat SpellActivationOverlay/SpellActivationOverlay.lua >> SpellActivationOverlay/NecrosisSpellActivationOverlay.lua &&
+    rm SpellActivationOverlay/SpellActivationOverlay.lua SpellActivationOverlay/LICENSE
+} || bye "Cannot craft main Lua file"
+echo
+
+mv SpellActivationOverlay/SpellActivationOverlay.xml SpellActivationOverlay/NecrosisSpellActivationOverlay.xml || bye "Cannot rename files"
+rm SpellActivationOverlay/changelog.md || bye "Cannot remove unused files"
+
+# Saved Variables
+replacecode SpellActivationOverlayDB NecrosisConfig "*.lua" "*.xml"
+# UI Elements
+# replacecode DISPLAY_LABEL "Spell OVERLAY" "InterfaceOptionsPanels.xml"
+# Global variable and widget names
+replacecode SpellActivationOverlay NecrosisSpellActivationOverlay "*.lua" "*.xml"
+# File locations; must be replaced after global rename of SpellActivationOverlay
+replacecode 'Add[oO]ns/NecrosisSpellActivationOverlay' 'AddOns/Necrosis/SpellActivations' "*.lua" "*.xml"
+replacecode 'Add[oO]ns\\\\NecrosisSpellActivationOverlay' 'AddOns\\\\Necrosis\\\\SpellActivations' "*.lua" "*.xml"
+# # File locations
+# replacecode 'Add[oO]ns/SpellActivationOverlay' 'AddOns/Necrosis/SpellActivations' "*.lua" "*.xml"
+# replacecode 'Add[oO]ns\\\\SpellActivationOverlay' 'AddOns\\\\Necrosis\\\\SpellActivations' "*.lua" "*.xml"
+
+
+zipproject necrosis "$VERSION_TOC_VERSION"
 
 cdup

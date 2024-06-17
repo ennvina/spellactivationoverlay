@@ -1,6 +1,55 @@
 local AddonName, SAO = ...
+local iamNecrosis = strlower(AddonName):sub(0,8) == "necrosis"
 
 function SpellActivationOverlayOptionsPanel_Init(self)
+    local shutdownCategory = SAO.Shutdown:GetCategory();
+    if shutdownCategory then
+        -- Apply shutdown settings before enything else, in case init fails precisely because of why the addon was shut down
+        if shutdownCategory.Reason then
+            local globalOffReason = SpellActivationOverlayOptionsPanel.globalOff.reason;
+            globalOffReason:SetText("("..shutdownCategory.Reason..")");
+        end
+
+        if shutdownCategory.Button then
+            local globalOffButton = SpellActivationOverlayOptionsPanel.globalOff.button;
+            globalOffButton:SetText(shutdownCategory.Button.Text);
+            local estimatedWidth = (2+strlenutf8(shutdownCategory.Button.Text))*8;
+            globalOffButton:SetWidth(estimatedWidth);
+            if estimatedWidth > 48 then
+                globalOffButton:SetHeight(globalOffButton:GetHeight()+ceil((estimatedWidth-32)/16));
+            end
+            globalOffButton:SetScript("OnClick", shutdownCategory.Button.OnClick);
+            globalOffButton:Show();
+        end
+
+        if shutdownCategory.DisableCondition then
+            local disableCondition = SAO.Shutdown:GetCategory().DisableCondition;
+            local disableConditionButton = SpellActivationOverlayOptionsPanelDisableConditionButton;
+            disableConditionButton.Text:SetText(disableCondition.Text);
+            disableConditionButton.OnValueChanged = function(self, checked)
+                if checked then
+                    disableCondition.OnValueChanged(self, true);
+                    SpellActivationOverlayOptionsPanel.globalOff:Show();
+                    local testButton = SpellActivationOverlayOptionsPanelSpellAlertTestButton;
+                    if testButton.isTesting then
+                        testButton:StopTest();
+                    end
+                else
+                    disableCondition.OnValueChanged(self, false);
+                    SpellActivationOverlayOptionsPanel.globalOff:Hide();
+                end
+            end
+            disableConditionButton:SetChecked(SAO.Shutdown:IsAddonDisabled());
+            disableConditionButton:OnValueChanged(disableConditionButton:GetChecked());
+            if disableCondition.ShowIf == nil or disableCondition.ShowIf() then
+                disableConditionButton:Show();
+            end
+        else
+            -- Without disable condition, disabling is absolute
+            SpellActivationOverlayOptionsPanel.globalOff:Show();
+        end
+    end
+
     local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
     opacitySlider.Text:SetText(SPELL_ALERT_OPACITY);
     _G[opacitySlider:GetName().."Low"]:SetText(OFF);
@@ -320,8 +369,8 @@ function SpellActivationOverlayOptionsPanel_OnShow(self)
 
     for _, optionType in ipairs({ "alert", "glow" }) do
         if (type(SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType]) == "nil") then
-            local className = SAO.CurrentClass.Intrinsics[1];
-            local classFile = SAO.CurrentClass.Intrinsics[2];
+            local className = SAO.CurrentClass and SAO.CurrentClass.Intrinsics[1] or select(1, UnitClass("player"));
+            local classFile = SAO.CurrentClass and SAO.CurrentClass.Intrinsics[2] or select(2, UnitClass("player"));
             local dimFactor = 0.7;
             local dimmedTextColor = CreateColor(dimFactor, dimFactor, dimFactor);
             local dimmedClassColor = CreateColor(dimFactor*RAID_CLASS_COLORS[classFile].r, dimFactor*RAID_CLASS_COLORS[classFile].g, dimFactor*RAID_CLASS_COLORS[classFile].b);
@@ -333,11 +382,12 @@ function SpellActivationOverlayOptionsPanel_OnShow(self)
     optionsLoaded = true;
 end
 
-SLASH_SAO1 = "/sao"
-SLASH_SAO2 = "/spellactivationoverlay"
-
-SlashCmdList.SAO = function(msg, editBox)
-    -- https://github.com/Stanzilla/WoWUIBugs/issues/89
-    InterfaceOptionsFrame_OpenToCategory(SAO.OptionsPanel);
-    InterfaceOptionsFrame_OpenToCategory(SAO.OptionsPanel);
+if not iamNecrosis then
+    SLASH_SAO1 = "/sao"
+    SLASH_SAO2 = "/spellactivationoverlay"
+    SlashCmdList.SAO = function(msg, editBox)
+        -- https://github.com/Stanzilla/WoWUIBugs/issues/89
+        InterfaceOptionsFrame_OpenToCategory(SAO.OptionsPanel);
+        InterfaceOptionsFrame_OpenToCategory(SAO.OptionsPanel);
+    end
 end
