@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.2.0 (2024-06-xx)
+#### v2.2.0 (2024-06-17)
 
 Necrosis
 - Recently, Necrosis has started to include SpellActivationOverlay
