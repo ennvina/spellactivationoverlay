@@ -346,7 +346,6 @@ local function loadOptions(self)
     local elementalFocusTalent = 16164;
 
     -- Season of Discovery
-    local moltenBlastSoD = 425339;
     local lavaBurstSoD = 408490;
     local powerSurgeSoDBuff = 415105;
     local powerSurgeSoD = 415100;
@@ -375,7 +374,6 @@ local function loadOptions(self)
         self:AddSoulPreserverOverlayOption(60515); -- 60515 = Shaman buff
     elseif self.IsSoD() then
         self:AddOverlayOption(powerSurgeSoD, powerSurgeSoDBuff);
-        self:AddOverlayOption(moltenBlastSoD, moltenBlastSoD);
         self:AddOverlayOption(rollingThunderSoD, lightningShield, self:HashNameFromStacks(7), nil, nil, nil, RollingThunderHandler.fakeSpellID);
         self:AddOverlayOption(rollingThunderSoD, lightningShield, self:HashNameFromStacks(8), nil, nil, nil, RollingThunderHandler.fakeSpellID);
         self:AddOverlayOption(rollingThunderSoD, lightningShield, self:HashNameFromStacks(9), nil, nil, nil, RollingThunderHandler.fakeSpellID);
@@ -384,7 +382,6 @@ local function loadOptions(self)
     if self.IsCata() then
         self:AddGlowingOption(fulminationTalentCata, lightningShield, earthShock, sixToNineStacks);
     elseif self.IsSoD() then
-        self:AddGlowingOption(nil, moltenBlastSoD, moltenBlastSoD);
         self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, chainLightning);
         self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, chainHeal);
         self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, lavaBurstSoD);
