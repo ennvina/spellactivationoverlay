@@ -242,7 +242,7 @@ local function registerClass(self)
             },
             buttons = {
                 default = { stacks = 5 },
-                [SAO.SOD] =   { lightningBolt, chainLightning, lesserHealingWave,                     healingWave, chainHeal,                   lavaBurstSoD },
+                [SAO.SOD] =   { lightningBolt, chainLightning, lesserHealingWave,                                                               lavaBurstSoD },
                 [SAO.WRATH] = { lightningBolt, chainLightning, lesserHealingWave,                     healingWave, chainHeal,              hex },
                 [SAO.CATA] =  { lightningBolt, chainLightning, healingSurge,      greaterHealingWave, healingWave, chainHeal, healingRain, hex },
             },
