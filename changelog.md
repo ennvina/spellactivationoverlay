@@ -2,6 +2,8 @@
 
 #### v2.3.0 (2024-07-17)
 
+Bump in TOC file for Season of Discovery update (Classic Era)
+
 Mage
 - Mage's Impact effect is hidden when Fire Blast misses (Wrath, Cataclysm)
 
