@@ -148,6 +148,7 @@ function SAO.UpdateActionButton(self, button, forceRefresh)
 end
 
 -- Grab all action button activity that allows us to know which button has which spell
+local LBG = LibStub("LibButtonGlow-1.0", false);
 function HookActionButton_Update(button)
     if (button:GetParent() == OverrideActionBar) then
         -- Act on all buttons but the ones from OverrideActionBar
@@ -176,12 +177,14 @@ function HookActionButton_Update(button)
     end
     if (not button.EnableGlow) then
         button.EnableGlow = function(button)
-            ActionButton_ShowOverlayGlow(button);
+            LBG.ShowOverlayGlow(button);
+            -- ActionButton_ShowOverlayGlow(button); -- native API taints buttons
         end
     end
     if (not button.DisableGlow) then
         button.DisableGlow = function(button)
-            ActionButton_HideOverlayGlow(button);
+            LBG.HideOverlayGlow(button);
+            -- ActionButton_HideOverlayGlow(button); -- native API taints buttons
         end
     end
     SAO:UpdateActionButton(button);

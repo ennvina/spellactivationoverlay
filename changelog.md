@@ -1,5 +1,11 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.3.0 (2024-07-17)
+
+Bug Fixes
+- Lua errors caused by action buttons should no longer happen
+- This should fix the infinite action bar switch on Malygos, Nefarian, etc.
+
 #### v2.2.0 (2024-06-17)
 
 Necrosis

@@ -29,7 +29,7 @@ mkproject() {
     echo -n "Creating $flavor project..."
     rm -rf ./_release/$flavor || bye "Cannot clean wrath directory"
     mkdir -p ./_release/$flavor/SpellActivationOverlay || bye "Cannot create $flavor directory"
-    cp -R changelog.md LICENSE SpellActivationOverlay.* classes components options sounds textures variables ./_release/$flavor/SpellActivationOverlay/ || bye "Cannot copy $flavor files"
+    cp -R changelog.md LICENSE SpellActivationOverlay.* classes components libs options sounds textures variables ./_release/$flavor/SpellActivationOverlay/ || bye "Cannot copy $flavor files"
     cd ./_release/$flavor || bye "Cannot cd to $flavor directory"
     sed -i s/'^## Interface:.*'/"## Interface: $build_version"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update version of $flavor TOC file"
     echo
@@ -159,7 +159,7 @@ toc2xml() {
 EOF
     local nlines=0
     sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' "$tocfile" |
-        grep -Eo '^[[:alnum:]/\\]*.(lua|xml)$' |
+        grep -Eo '^[[:alnum:]\./\\-]*.(lua|xml)$' |
         tr '\\' / |
         while read f
         do
