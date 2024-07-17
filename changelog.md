@@ -2,6 +2,11 @@
 
 #### v2.3.0 (2024-07-17)
 
+Shaman
+- Shaman's Molten Blast option was displayed twice (Season of Discovery)
+- Shaman's Maelstorm Weapon no longer empowers Chain Heal (SoD)
+- Shaman's Maelstorm Weapon no longer empowers Healing Wave (SoD)
+
 Bug Fixes
 - Lua errors caused by action buttons should no longer happen
 - This should fix the infinite action bar switch on Malygos, Nefarian, etc.
