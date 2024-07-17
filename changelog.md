@@ -2,6 +2,9 @@
 
 #### v2.3.0 (2024-07-17)
 
+Mage
+- Mage's Impact effect is hidden when Fire Blast misses (Wrath, Cataclysm)
+
 Shaman
 - Shaman's Molten Blast option was displayed twice (Season of Discovery)
 - Shaman's Maelstorm Weapon no longer empowers Chain Heal (SoD)
