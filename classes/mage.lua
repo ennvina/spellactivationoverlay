@@ -87,7 +87,7 @@ end
 HotStreakHandler.hasHotStreakTalent = function(self)
     if (SAO.IsSoD()) then
         -- Not really a 'talent' but in Season of Discovery, hot streak comes from a rune
-        return C_Engraving and C_Engraving.IsRuneEquipped(400624);
+        return C_Engraving and C_Engraving.IsRuneEquipped(48202);
     end
 
     -- Talent information could not be retrieved for Hot Streak

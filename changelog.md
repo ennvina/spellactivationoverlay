@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.3.1 (2024-07-xx)
+
+Bug Fixes
+- Mage's Hot Streak was not detected correctly since last patch on Classic Era
+
 #### v2.3.0 (2024-07-17)
 
 Bump in TOC file for Season of Discovery update (Classic Era)
