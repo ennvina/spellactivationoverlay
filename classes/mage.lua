@@ -33,6 +33,7 @@ local HotStreakHandler = {}
 -- Initialize constants
 HotStreakHandler.init = function(self, talentName)
     local fire_blast = { 2136, 2137, 2138, 8412, 8413, 10197, 10199, 27078, 27079, 42872, 42873 }
+    local fire_blast_sod = { 400618, 400619, 400616, 400620, 400621, 400622, 400623 } -- Improved by Overheat rune
     local fireball = { 133, 143, 145, 3140, 8400, 8401, 8402, 10148, 10149, 10150, 10151, 25306, 27070, 38692, 42832, 42833 }
     local frostfire_bolt = { 44614, 47610 }
     local frostfire_bolt_sod = { 401502 }
@@ -42,6 +43,7 @@ HotStreakHandler.init = function(self, talentName)
     local living_bomb_sod = { 401731 }
     local scorch = { 2948, 8444, 8445, 8446, 10205, 10206, 10207, 27073, 27074, 42858, 42859 }
     local pyroblast_cata = { pyroblast }
+    local balefire_bolt_sod = { 428878 }
 
     self.spells = {}
     local function addSpellPack(spellPack)
@@ -50,6 +52,7 @@ HotStreakHandler.init = function(self, talentName)
         end
     end
     addSpellPack(fire_blast);
+    addSpellPack(fire_blast_sod);
     addSpellPack(fireball);
     addSpellPack(frostfire_bolt);
     addSpellPack(frostfire_bolt_sod);
@@ -60,6 +63,7 @@ HotStreakHandler.init = function(self, talentName)
         addSpellPack(living_bomb);
         addSpellPack(living_bomb_sod);
     end
+    addSpellPack(balefire_bolt_sod);
 
     local _, _, tab, index = SAO:GetTalentByName(talentName);
     if (tab and index) then
@@ -87,7 +91,7 @@ end
 HotStreakHandler.hasHotStreakTalent = function(self)
     if (SAO.IsSoD()) then
         -- Not really a 'talent' but in Season of Discovery, hot streak comes from a rune
-        return C_Engraving and C_Engraving.IsRuneEquipped(400624);
+        return C_Engraving and C_Engraving.IsRuneEquipped(48202);
     end
 
     -- Talent information could not be retrieved for Hot Streak
