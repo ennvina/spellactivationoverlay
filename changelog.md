@@ -2,6 +2,8 @@
 
 #### v2.3.1 (2024-07-xx)
 
+- Mage's Hot Streak triggers from Balefire Bolt (Season of Discovery)
+
 Bug Fixes
 - Mage's Hot Streak was not detected correctly since last patch on Classic Era
 

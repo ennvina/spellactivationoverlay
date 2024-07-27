@@ -42,6 +42,7 @@ HotStreakHandler.init = function(self, talentName)
     local living_bomb_sod = { 401731 }
     local scorch = { 2948, 8444, 8445, 8446, 10205, 10206, 10207, 27073, 27074, 42858, 42859 }
     local pyroblast_cata = { pyroblast }
+    local balefire_bolt_sod = { 428878 }
 
     self.spells = {}
     local function addSpellPack(spellPack)
@@ -60,6 +61,7 @@ HotStreakHandler.init = function(self, talentName)
         addSpellPack(living_bomb);
         addSpellPack(living_bomb_sod);
     end
+    addSpellPack(balefire_bolt_sod);
 
     local _, _, tab, index = SAO:GetTalentByName(talentName);
     if (tab and index) then
