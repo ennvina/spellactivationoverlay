@@ -572,6 +572,9 @@ SAO.defaults = {
                 [63167] = { -- Decimation (Wrath+)
                     [0] = true,
                 },
+                [440873] = { -- Decimation (Season of Discovery)
+                    [0] = true,
+                },
                 [47283] = { -- Empowered Imp (Wrath+)
                     [0] = true,
                 },
@@ -594,6 +597,9 @@ SAO.defaults = {
                     [6353]  = true, -- Soul Fire (not for Cata)
                 },
                 [63167] = { -- Decimation (Wrath+)
+                    [6353] = true, -- Soul Fire
+                },
+                [440873] = { -- Decimation (Season of Discovery)
                     [6353] = true, -- Soul Fire
                 },
                 [54277] = { -- Backdraft (Cataclysm)

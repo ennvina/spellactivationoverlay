@@ -2,11 +2,16 @@
 
 #### v2.3.1 (2024-07-xx)
 
-- Mage's Hot Streak triggers from Balefire Bolt (Season of Discovery)
-- Mage's Hot Streak triggers from Overheat's Fire Blast (SoD)
+New rune for Season of Discovery:
+- New SAO: Warlock's Decimation
+- New GAB: Warlock's Soul Fire, during Decimation
+
+Updated runes for Season of Discovery
+- Mage's Hot Streak triggers from Balefire Bolt
+- Mage's Hot Streak triggers from Overheat's Fire Blast
 
 Bug Fixes
-- Mage's Hot Streak was not detected correctly since last patch on Classic Era
+- Mage's Hot Streak was not detected correctly since last patch of Classic Era
 
 #### v2.3.0 (2024-07-17)
 
