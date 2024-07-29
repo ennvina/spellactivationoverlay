@@ -18,10 +18,10 @@ local function addRuneMapping(rune)
 end
 
 local function initRuneMapping()
-    local categories = C_Engraving and C_Engraving.GetRuneCategories(false, true) or {};
+    local categories = C_Engraving and C_Engraving.GetRuneCategories(false, false) or {};
     local foundRune = false;
     for _, cat in pairs(categories) do
-        local runes = C_Engraving.GetRunesForCategory(cat, true) or {};
+        local runes = C_Engraving.GetRunesForCategory(cat, false) or {};
         for _, rune in pairs(runes) do
             addRuneMapping(rune);
             foundRune = true;
