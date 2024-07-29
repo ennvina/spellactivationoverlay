@@ -183,6 +183,21 @@ local function registerClass(self)
             button = backstab,
         }
     );
+
+    local ambush = 8676;
+    local cutthroatBuff = 462707;
+    local cutthroatRune = 424980;
+    self:CreateEffect(
+        "cutthroat",
+        SAO.SOD,
+        cutthroatBuff,
+        "aura",
+        {
+            talent = cutthroatRune,
+            overlay = { texture = "white_tiger", position = "Left + Right (Flipped)" },
+            button = ambush,
+        }
+    )
 end
 
 SAO.Class["ROGUE"] = {

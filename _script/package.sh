@@ -221,14 +221,15 @@ VARIABLES_NOT_FOR_WRATH=(holypower nativesao)
 prunevar "${VARIABLES_NOT_FOR_WRATH[@]}"
 
 TEXTURES_NOT_FOR_WRATH=(
-tooth_and_claw
-monk_serpent
-raging_blow
 arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
 fulmination
-sudden_doom)
+monk_serpent
+raging_blow
+sudden_doom
+tooth_and_claw
+white_tiger)
 prunetex "${TEXTURES_NOT_FOR_WRATH[@]}"
 
 zipproject wrath "$VERSION_TOC_VERSION"
@@ -277,6 +278,7 @@ fulmination
 monk_serpent
 raging_blow
 tooth_and_claw
+white_tiger
 $(texbelow 511469 450914 450915)
 )
 prunetex "${TEXTURES_NOT_FOR_CATA[@]}"
@@ -346,7 +348,8 @@ sudden_death
 sudden_doom
 surge_of_light
 sword_and_board
-tooth_and_claw)
+tooth_and_claw
+white_tiger)
 prunetex "${TEXTURES_NOT_FOR_NECROSIS[@]}"
 
 dos2unix "*.lua" "*.xml"
