@@ -356,16 +356,16 @@ toc2xml SpellActivationOverlay.toc SpellActivations.xml
 # Add License at the beginning of main file
 echo -n "Injecting License..."
 {
-    printf '%s\n' '--[[' > SpellActivationOverlay/NecrosisSpellActivationOverlay.lua &&
-    cat SpellActivationOverlay/LICENSE >> SpellActivationOverlay/NecrosisSpellActivationOverlay.lua &&
-    printf '\n%s\n' 'Credits to Blizzard Entertainment for writing original code of Spell Activation Overlay' >> SpellActivationOverlay/NecrosisSpellActivationOverlay.lua &&
-    printf '%s\n' '--]]' >> SpellActivationOverlay/NecrosisSpellActivationOverlay.lua &&
-    cat SpellActivationOverlay/SpellActivationOverlay.lua >> SpellActivationOverlay/NecrosisSpellActivationOverlay.lua &&
+    printf '%s\n' '--[[' > SpellActivationOverlay/NecrosisSpellActivation.lua &&
+    cat SpellActivationOverlay/LICENSE >> SpellActivationOverlay/NecrosisSpellActivation.lua &&
+    printf '\n%s\n' 'Credits to Blizzard Entertainment for writing original code of Spell Activation Overlay' >> SpellActivationOverlay/NecrosisSpellActivation.lua &&
+    printf '%s\n' '--]]' >> SpellActivationOverlay/NecrosisSpellActivation.lua &&
+    cat SpellActivationOverlay/SpellActivationOverlay.lua >> SpellActivationOverlay/NecrosisSpellActivation.lua &&
     rm SpellActivationOverlay/SpellActivationOverlay.lua SpellActivationOverlay/LICENSE
 } || bye "Cannot craft main Lua file"
 echo
 
-mv SpellActivationOverlay/SpellActivationOverlay.xml SpellActivationOverlay/NecrosisSpellActivationOverlay.xml || bye "Cannot rename files"
+mv SpellActivationOverlay/SpellActivationOverlay.xml SpellActivationOverlay/NecrosisSpellActivation.xml || bye "Cannot rename files"
 rm SpellActivationOverlay/changelog.md || bye "Cannot remove unused files"
 
 # Saved Variables
@@ -373,6 +373,8 @@ replacecode SpellActivationOverlayDB NecrosisConfig "*.lua" "*.xml"
 # UI Elements
 # replacecode DISPLAY_LABEL "Spell OVERLAY" "InterfaceOptionsPanels.xml"
 # Global variable and widget names
+replacecode 'SpellActivationOverlay\.lua' 'NecrosisSpellActivation\.lua' "*.xml"
+replacecode 'SpellActivationOverlay\.xml' 'NecrosisSpellActivation\.xml' "*.xml"
 replacecode SpellActivationOverlay NecrosisSpellActivationOverlay "*.lua" "*.xml"
 # File locations; must be replaced after global rename of SpellActivationOverlay
 replacecode 'Add[oO]ns/NecrosisSpellActivationOverlay' 'AddOns/Necrosis/SpellActivations' "*.lua" "*.xml"

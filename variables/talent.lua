@@ -68,6 +68,9 @@ SAO.Variable:register({
                 local tab, index = bucket.talentTabIndex[1], bucket.talentTabIndex[2];
                 local rank = select(5, GetTalentInfo(tab, index));
                 bucket:setTalented(rank > 0);
+            elseif bucket.talentRuneID then
+                local hasRune = C_Engraving.IsRuneEquipped(bucket.talentRuneID);
+                bucket:setTalented(hasRune);
             else
                 bucket:setTalented(false);
             end
@@ -76,9 +79,30 @@ SAO.Variable:register({
 
     event = {
         isRequired = true,
-        names = { "PLAYER_TALENT_UPDATE" },
+        names = SAO.IsSoD() and { "PLAYER_TALENT_UPDATE", "RUNE_UPDATED", "PLAYER_EQUIPMENT_CHANGED" } or { "PLAYER_TALENT_UPDATE" },
         PLAYER_TALENT_UPDATE = function(...)
-            SAO:CheckManuallyAllBuckets(SAO.TRIGGER_TALENT);
+            local buckets = SAO:GetBucketsByTrigger(SAO.TRIGGER_TALENT);
+            for _, bucket in ipairs(buckets or {}) do
+                if bucket.talentTabIndex then -- Keep only talent-based buckets
+                    bucket.trigger:manualCheck(SAO.TRIGGER_TALENT);
+                end
+            end
+        end,
+        RUNE_UPDATED = function(rune) -- Cannot rely on rune contents, because we need to refresh even if rune is un-equipped
+            local buckets = SAO:GetBucketsByTrigger(SAO.TRIGGER_TALENT);
+            for _, bucket in ipairs(buckets or {}) do
+                if bucket.talentRuneID then -- Keep only rune-based buckets
+                    bucket.trigger:manualCheck(SAO.TRIGGER_TALENT);
+                end
+            end
+        end,
+        PLAYER_EQUIPMENT_CHANGED = function(equipmentSlot, hasCurrent)
+            local buckets = SAO:GetBucketsByTrigger(SAO.TRIGGER_TALENT);
+            for _, bucket in ipairs(buckets or {}) do
+                if bucket.talentRuneID then -- Keep only rune-based buckets
+                    bucket.trigger:manualCheck(SAO.TRIGGER_TALENT);
+                end
+            end
         end,
     },
 
@@ -105,7 +129,34 @@ SAO.Variable:register({
                     -- Talent Tab-Index is an option object { tab, index } telling the talent location in the player's tree
                     bucket.talentTabIndex = { tab, index };
                 else
-                    SAO:Error(Module, bucket.description.." requires talent "..value..(talentName and " ("..talentName..")" or "")..", but it cannot be found in the talent tree");
+                    if SAO.IsSoD() then -- For Season of Discovery, don't give up if the talent is not found, for it may be a rune
+                        bucket.talentRuneID = SAO:GetRuneFromSpell(value);
+                        if not bucket.talentRuneID then
+                            -- May not be found immediately, because of slow initialization
+                            -- Until we know of a guaranteed event that finalizes rune knowledge, our best bet is to retry over time
+                            bucket.talentRuneNbRetries = 5;
+                            bucket.talentRuneRetryTicker = C_Timer.NewTicker(
+                                1,
+                                function()
+                                    bucket.talentRuneNbRetries = bucket.talentRuneNbRetries - 1;
+                                    local runeID = SAO:GetRuneFromSpell(value);
+                                    if runeID then
+                                        -- Found it, yay!
+                                        bucket.talentRuneRetryTicker:Cancel();
+                                        bucket.talentRuneID = runeID;
+                                        bucket.trigger:manualCheck(SAO.TRIGGER_TALENT); -- Manual check because this code happens after prepareBucket returned
+                                    elseif bucket.talentRuneNbRetries == 0 then
+                                        -- Not found after retrying several times, bummer.
+                                        bucket.talentRuneRetryTicker:Cancel();
+                                        SAO:Error(Module, bucket.description.." requires talent or rune "..value..(talentName and " ("..talentName..")" or "")..
+                                                          ", but it cannot be found, neither in the talent tree nor in the rune set");
+                                    end
+                                end
+                            );
+                        end
+                    else
+                        SAO:Error(Module, bucket.description.." requires talent "..value..(talentName and " ("..talentName..")" or "")..", but it cannot be found in the talent tree");
+                    end
                 end
             end,
         },

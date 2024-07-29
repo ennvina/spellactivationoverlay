@@ -7,11 +7,13 @@ local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
 local chaosBolt = 50796;
+local drainSoul = 1120;
 local felFlame = 77799;
 local felSpark = 89937;
 local incinerate = 29722;
 local shadowBolt = 686;
 local shadowburn = 17877;
+local shadowCleave = 403841;
 local soulFire = 6353;
 
 local moltenCoreBuff = { 47383, 71162, 71165 };
@@ -80,8 +82,7 @@ local DrainSoulHandler = {
 local function customLogin(self, ...)
     if self.IsWrath() or self.IsCata() then
         -- Drain Soul is empowered on low health enemies only in Wrath Classic and Cataclysm Classic
-        local spellID = 1120;
-        local spellName = GetSpellInfo(spellID);
+        local spellName = GetSpellInfo(drainSoul);
         if (spellName) then
             -- Must register glowing buttons manually, because Drain Soul is not registered by an aura/counter/etc.
             self:RegisterGlowIDs({ spellName });
@@ -90,8 +91,26 @@ local function customLogin(self, ...)
                 self:AwakeButtonsBySpellID(oneSpellID);
             end
             -- Initialize handler
-            DrainSoulHandler:init(spellID, spellName);
+            DrainSoulHandler:init(drainSoul, spellName);
         end
+    elseif self.IsSoD() then
+        -- No need to use the DrainSoulHandler for Season of Discovery
+        -- The goal of the handler is to let players choose for which spec(s) Drain Soul will glow
+        -- This allows to ask the players explicitly what they want, because we cannot always guess correctly
+        -- But in Season of Discovery, there is a rune which dedicated to improve Drain Soul
+        -- The rune answers implicitly, thus we don't need to ask players, hence the absence of handler
+        self:CreateEffect(
+            "drain_soul",
+            SAO.SOD,
+            drainSoul,
+            "execute",
+            {
+                execThreshold = 20,
+                requireTalent = true,
+                talent = 403511, -- Soul Siphon (rune)
+                button = drainSoul,
+            }
+        );
     end
 end
 
@@ -122,7 +141,10 @@ local function useNightfall(self)
         {
             talent = 18094, -- Nightfall (talent)
             overlay = { texture = "nightfall", position = "Left + Right (Flipped)" },
-            button = shadowBolt,
+            buttons = {
+                [SAO.ALL_PROJECTS] = shadowBolt,
+                [SAO.SOD] = shadowCleave,
+            },
         }
     );
 end
@@ -189,6 +211,18 @@ local function useDecimation(self)
 
         registerDecimation(self, 1); -- 1/2 talent point
         registerDecimation(self, 2); -- 2/2 talent points
+    elseif self.IsSoD() then
+        self:CreateEffect(
+            "decimation",
+            SAO.SOD,
+            440873, -- Decimation (buff)
+            "aura",
+            {
+                talent = 440870, -- Decimation (rune)
+                overlay = { texture = "impact", position = "Top", scale = 0.8 },
+                button = { spellID = soulFire },
+            }
+        );
     end
 end
 
@@ -298,8 +332,6 @@ local function registerClass(self)
 end
 
 local function loadOptions(self)
-    local drainSoul = 1120;
-
     if DrainSoulHandler.initialized then
         self:AddGlowingOption(nil, DrainSoulHandler.optionID, drainSoul, nil, SAO:ExecuteBelow(25), DrainSoulHandler.variants);
     end
