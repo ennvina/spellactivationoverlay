@@ -5,9 +5,11 @@
 New rune for Season of Discovery:
 - New SAO: Rogues's Cutthroat
 - New SAO: Warlock's Decimation
+- New SAO: Warrior's Sudden Death
 - New GAB: Rogues's Ambush, during Cutthroat
 - New GAB: Warlock's Drain Soul, with Soul Siphon rune
 - New GAB: Warlock's Soul Fire, during Decimation
+- New GAB: Warrior's Execute, during Sudden Death
 
 Updated runes for Season of Discovery
 - Mage's Hot Streak triggers from Balefire Bolt

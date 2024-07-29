@@ -440,18 +440,19 @@ local function useRagingBlow()
 end
 
 local function useSuddenDeath()
-    local suddenDeathBuff = 52437;
-    local suddenDeathTalent = 29723;
+    local suddenDeathBuff = SAO.IsSoD() and 440114 or 52437;
+    local suddenDeathTalent = SAO.IsSoD() and 440113 or 29723;
 
     SAO:CreateEffect(
         "sudden_death",
-        SAO.WRATH + SAO.CATA,
+        SAO.SOD + SAO.WRATH + SAO.CATA,
         suddenDeathBuff,
         "aura",
         {
             talent = suddenDeathTalent,
             overlay = { texture = "sudden_death", position = "Left + Right (Flipped)" },
             buttons = {
+                [SAO.SOD] = execute,
                 [SAO.WRATH] = execute,
                 [SAO.CATA] = colossusSmash,
             },
