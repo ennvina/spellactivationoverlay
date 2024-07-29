@@ -79,9 +79,30 @@ SAO.Variable:register({
 
     event = {
         isRequired = true,
-        names = SAO.IsSoD() and { "PLAYER_TALENT_UPDATE", "RUNE_UPDATED" } or { "PLAYER_TALENT_UPDATE" },
+        names = SAO.IsSoD() and { "PLAYER_TALENT_UPDATE", "RUNE_UPDATED", "PLAYER_EQUIPMENT_CHANGED" } or { "PLAYER_TALENT_UPDATE" },
         PLAYER_TALENT_UPDATE = function(...)
-            SAO:CheckManuallyAllBuckets(SAO.TRIGGER_TALENT);
+            local buckets = SAO:GetBucketsByTrigger(SAO.TRIGGER_TALENT);
+            for _, bucket in ipairs(buckets or {}) do
+                if bucket.talentTabIndex then -- Keep only talent-based buckets
+                    bucket.trigger:manualCheck(SAO.TRIGGER_TALENT);
+                end
+            end
+        end,
+        RUNE_UPDATED = function(rune) -- Cannot rely on rune contents, because we need to refresh even if rune is un-equipped
+            local buckets = SAO:GetBucketsByTrigger(SAO.TRIGGER_TALENT);
+            for _, bucket in ipairs(buckets or {}) do
+                if bucket.talentRuneID then -- Keep only rune-based buckets
+                    bucket.trigger:manualCheck(SAO.TRIGGER_TALENT);
+                end
+            end
+        end,
+        PLAYER_EQUIPMENT_CHANGED = function(equipmentSlot, hasCurrent)
+            local buckets = SAO:GetBucketsByTrigger(SAO.TRIGGER_TALENT);
+            for _, bucket in ipairs(buckets or {}) do
+                if bucket.talentRuneID then -- Keep only rune-based buckets
+                    bucket.trigger:manualCheck(SAO.TRIGGER_TALENT);
+                end
+            end
         end,
     },
 
