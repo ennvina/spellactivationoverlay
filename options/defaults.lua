@@ -583,7 +583,7 @@ SAO.defaults = {
                 },
             },
             glow = {
-                [1120] = { -- Drain Soul (Wrath+)
+                [1120] = { -- Drain Soul (Season of Discovery, Wrath+)
                     [1120] = "spec:1", -- Drain Soul
                 },
                 [17877] = { -- Shadowburn
