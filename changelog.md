@@ -3,7 +3,9 @@
 #### v2.3.1 (2024-07-xx)
 
 New rune for Season of Discovery:
+- New SAO: Rogues's Cutthroat
 - New SAO: Warlock's Decimation
+- New GAB: Rogues's Ambush, during Cutthroat
 - New GAB: Warlock's Drain Soul, with Soul Siphon rune
 - New GAB: Warlock's Soul Fire, during Decimation
 

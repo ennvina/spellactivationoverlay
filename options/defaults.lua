@@ -466,6 +466,9 @@ SAO.defaults = {
                 [14251] = { -- Riposte (Era - Wrath)
                     [0] = "cd:off",
                 },
+                [462707] = { -- Cutthroat (Season of Discovery)
+                    [0] = true,
+                },
             },
             glow = {
                 [14158] = { -- Murderous Intent (not an actual buff) (Cataclysm)
@@ -473,6 +476,9 @@ SAO.defaults = {
                 },
                 [14251] = { -- Riposte (Era - Wrath)
                     [14251] = "cd:off", -- Riposte
+                },
+                [462707] = { -- Cutthroat (Season of Discovery)
+                    [8676] = true, -- Ambush
                 },
             },
         },
