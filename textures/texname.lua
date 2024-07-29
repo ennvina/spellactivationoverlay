@@ -175,6 +175,7 @@ local availableTextures = {
   ["surge_of_light"] = true,
   ["sword_and_board"] = true,
   ["tooth_and_claw"] = true,
+  ["white_tiger"] = true,
 }
 
 -- Global functions, helpful for optimizing package
