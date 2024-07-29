@@ -130,20 +130,29 @@ SAO.Variable:register({
                     bucket.talentTabIndex = { tab, index };
                 else
                     if SAO.IsSoD() then -- For Season of Discovery, don't give up if the talent is not found, for it may be a rune
-                        for _, cat in pairs(C_Engraving.GetRuneCategories(false, false) or {}) do
-                            for _, rune in pairs(C_Engraving.GetRunesForCategory(cat, false) or {}) do
-                                for _, abilitySpellID in ipairs(rune.learnedAbilitySpellIDs or {}) do
-                                    if abilitySpellID == value then
-                                        bucket.talentRuneID = rune.skillLineAbilityID;
-                                        break;
+                        bucket.talentRuneID = SAO:GetRuneFromSpell(value);
+                        if not bucket.talentRuneID then
+                            -- May not be found immediately, because of slow initialization
+                            -- Until we know of a guaranteed event that finalizes rune knowledge, our best bet is to retry over time
+                            bucket.talentRuneNbRetries = 5;
+                            bucket.talentRuneRetryTicker = C_Timer.NewTicker(
+                                1,
+                                function()
+                                    bucket.talentRuneNbRetries = bucket.talentRuneNbRetries - 1;
+                                    local runeID = SAO:GetRuneFromSpell(value);
+                                    if runeID then
+                                        -- Found it, yay!
+                                        bucket.talentRuneRetryTicker:Cancel();
+                                        bucket.talentRuneID = runeID;
+                                        bucket.trigger:manualCheck(SAO.TRIGGER_TALENT); -- Manual check because this code happens after prepareBucket returned
+                                    elseif bucket.talentRuneNbRetries == 0 then
+                                        -- Not found after retrying several times, bummer.
+                                        bucket.talentRuneRetryTicker:Cancel();
+                                        SAO:Error(Module, bucket.description.." requires talent or rune "..value..(talentName and " ("..talentName..")" or "")..
+                                                          ", but it cannot be found, neither in the talent tree nor in the rune set");
                                     end
                                 end
-                                if bucket.talentRuneID then break end
-                            end
-                            if bucket.talentRuneID then break end
-                        end
-                        if not bucket.talentRuneID then
-                            SAO:Error(Module, bucket.description.." requires talent or rune "..value..(talentName and " ("..talentName..")" or "")..", but it cannot be found, neither in the talent tree nor in the rune set");
+                            );
                         end
                     else
                         SAO:Error(Module, bucket.description.." requires talent "..value..(talentName and " ("..talentName..")" or "")..", but it cannot be found in the talent tree");
