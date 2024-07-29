@@ -13,6 +13,7 @@ local felSpark = 89937;
 local incinerate = 29722;
 local shadowBolt = 686;
 local shadowburn = 17877;
+local shadowCleave = 403841;
 local soulFire = 6353;
 
 local moltenCoreBuff = { 47383, 71162, 71165 };
@@ -140,7 +141,10 @@ local function useNightfall(self)
         {
             talent = 18094, -- Nightfall (talent)
             overlay = { texture = "nightfall", position = "Left + Right (Flipped)" },
-            button = shadowBolt,
+            buttons = {
+                [SAO.ALL_PROJECTS] = shadowBolt,
+                [SAO.SOD] = shadowCleave,
+            },
         }
     );
 end

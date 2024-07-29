@@ -10,6 +10,7 @@ New rune for Season of Discovery:
 Updated runes for Season of Discovery
 - Mage's Hot Streak triggers from Balefire Bolt
 - Mage's Hot Streak triggers from Overheat's Fire Blast
+- Warlock's Shadow Cleave glows during Shadow Trance (a.k.a. Nightfall)
 
 Bug Fixes
 - Mage's Hot Streak was not detected correctly since last patch of Classic Era

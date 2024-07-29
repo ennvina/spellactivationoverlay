@@ -591,6 +591,7 @@ SAO.defaults = {
                 },
                 [17941] = { -- Nightfall
                     [686] = true, -- Shadow Bolt
+                    [403841] = true, -- Shadow Cleave (Season of Discovery)
                 },
                 [71165] = { -- Molten Core (Wrath+)
                     [29722] = true, -- Incinerate
