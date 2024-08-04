@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.3.1 (2024-07-xx)
+#### v2.3.1 (2024-08-04)
 
 New rune for Season of Discovery:
 - New SAO: Rogues's Cutthroat
