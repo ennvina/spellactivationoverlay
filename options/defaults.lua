@@ -631,6 +631,9 @@ SAO.defaults = {
                 [52437] = { -- Sudden Death (Wrath+)
                     [0] = true, -- any stacks (up to 2 stacks with tier 10)
                 },
+                [440114] = { -- Sudden Death (Season of Discovery)
+                    [0] = true,
+                },
                 [46924] = { -- Bladestorm (Wrath+)
                     [0] = true,
                 },
@@ -676,6 +679,9 @@ SAO.defaults = {
                 [52437] = { -- Sudden Death (Wrath+)
                     [5308] = true, -- Execute (not for Cata)
                     [86346]= true, -- Colossus Smash (Cataclysm)
+                },
+                [440114] = { -- Sudden Death (Season of Discovery)
+                    [5308] = true, -- Execute
                 },
                 [46916] = { -- Bloodsurge (Wrath+)
                     [1464] = true, -- Slam
