@@ -8,6 +8,9 @@ New Spell Alert:
 Updated Glowing Button:
 - Shaman's Molten Blast no longer glows infinitely after leaving combat (SoD)
 
+Removed Effect:
+- Priest's Mind Spike has been removed temporarily until it is resolved (SoD)
+
 #### v2.3.1 (2024-08-04)
 
 New runes for Season of Discovery:

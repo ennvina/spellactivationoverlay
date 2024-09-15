@@ -154,14 +154,15 @@ local function registerClass(self)
         end
 
         -- Mind Spike
-        local mindSpikeBuff = 431655;
-        local mindSpikeImprovedSpells = { (GetSpellInfo(mindBlast)) };
-        for nbStacks=1,3 do
-            local scale = 0.4 + 0.2 * nbStacks; -- 60%, 80%, 100%
-            local pulse = nbStacks == 3;
-            local glowIDs = nbStacks == 3 and mindSpikeImprovedSpells or nil;
-            self:RegisterAura("mind_spike_sod", nbStacks, mindSpikeBuff, "frozen_fingers", "Left + Right (Flipped)", scale, 160, 60, 220, pulse, glowIDs);
-        end
+-- Disabled because it must to track the target debuff, not the player buff, which requires new development
+--         local mindSpikeBuff = 431655;
+--         local mindSpikeImprovedSpells = { (GetSpellInfo(mindBlast)) };
+--         for nbStacks=1,3 do
+--             local scale = 0.4 + 0.2 * nbStacks; -- 60%, 80%, 100%
+--             local pulse = nbStacks == 3;
+--             local glowIDs = nbStacks == 3 and mindSpikeImprovedSpells or nil;
+--             self:RegisterAura("mind_spike_sod", nbStacks, mindSpikeBuff, "frozen_fingers", "Left + Right (Flipped)", scale, 160, 60, 220, pulse, glowIDs);
+--         end
     end
 
     -- Discipline
@@ -214,14 +215,14 @@ local function loadOptions(self)
     elseif self.IsSoD() then
         self:AddOverlayOption(serendipitySoDBuff, serendipitySoDBuff, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks
         self:AddOverlayOption(serendipitySoDBuff, serendipitySoDBuff, self:HashNameFromStacks(3)); -- setup 3 stacks
-        self:AddOverlayOption(mindSpikeSoDRune, mindSpikeSoDBuff, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks
-        self:AddOverlayOption(mindSpikeSoDRune, mindSpikeSoDBuff, self:HashNameFromStacks(3)); -- setup 3 stacks
+--         self:AddOverlayOption(mindSpikeSoDRune, mindSpikeSoDBuff, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks
+--         self:AddOverlayOption(mindSpikeSoDRune, mindSpikeSoDBuff, self:HashNameFromStacks(3)); -- setup 3 stacks
 
         self:AddGlowingOption(serendipitySoDBuff, serendipitySoDBuff, lesserHeal, threeStacks);
         self:AddGlowingOption(serendipitySoDBuff, serendipitySoDBuff, heal, threeStacks);
         self:AddGlowingOption(serendipitySoDBuff, serendipitySoDBuff, greaterHeal, threeStacks);
         self:AddGlowingOption(serendipitySoDBuff, serendipitySoDBuff, prayerOfHealing, threeStacks);
-        self:AddGlowingOption(mindSpikeSoDRune, mindSpikeSoDBuff, mindBlast, threeStacks);
+--         self:AddGlowingOption(mindSpikeSoDRune, mindSpikeSoDBuff, mindBlast, threeStacks);
     end
 end
 
