@@ -2,7 +2,7 @@
 ..\FrameXML\UI.xsd">
   <Script file="InterfaceOptionsPanels.lua"/>
 
-  <Frame name="SpellActivationOverlayOptionsPanel" hidden="true" parent="InterfaceOptionsFramePanelContainer">
+  <Frame name="SpellActivationOverlayOptionsPanel" hidden="true" parent="UIParent">
     <Frames>
       <Slider name="$parentSpellAlertOpacitySlider" inherits="OptionsSliderTemplate">
         <Anchors>
@@ -104,7 +104,7 @@
           </OnValueChanged>
         </Scripts>
       </Slider>
-      <Button name="$parentSpellAlertTestButton" inherits="OptionsButtonTemplate">
+      <Button name="$parentSpellAlertTestButton" inherits="UIPanelButtonTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertOpacitySlider" relativePoint="TOPRIGHT">
             <Offset>
@@ -221,7 +221,7 @@
           </Layer>
         </Layers>
         <Frames>
-          <Button name="$parentGlobalOffButton" parentKey="button" inherits="OptionsButtonTemplate" hidden="true">
+          <Button name="$parentGlobalOffButton" parentKey="button" inherits="UIPanelButtonTemplate" hidden="true">
             <Anchors>
               <Anchor point="TOP" relativeTo="$parentGlobalOffLabelReason" relativePoint="BOTTOM">
                 <Offset>

@@ -11,6 +11,9 @@ Updated Glowing Button:
 Removed Effect:
 - Priest's Mind Spike has been removed temporarily until it is resolved (SoD)
 
+Bug Fixes
+- The options panel has been fixed for Firelands' PTR (Cataclysm)
+
 #### v2.3.1 (2024-08-04)
 
 New runes for Season of Discovery:
