@@ -5,6 +5,9 @@
 New Spell Alert:
 - Hunter's Mongoose Bite (Era, TBC)
 
+Updated Glowing Button:
+- Shaman's Molten Blast no longer glows infinitely after leaving combat (SoD)
+
 #### v2.3.1 (2024-08-04)
 
 New runes for Season of Discovery:
@@ -16,7 +19,7 @@ New runes for Season of Discovery:
 - New GAB: Warlock's Soul Fire, during Decimation
 - New GAB: Warrior's Execute, during Sudden Death
 
-Updated runes for Season of Discovery
+Updated runes for Season of Discovery:
 - Mage's Hot Streak triggers from Balefire Bolt
 - Mage's Hot Streak triggers from Overheat's Fire Blast
 - Warlock's Shadow Cleave glows during Shadow Trance (a.k.a. Nightfall)
