@@ -286,6 +286,7 @@ local function registerClass(self)
             moltenBlastSoD,
             "counter",
             {
+                combatOnly = true,
                 overlay = { texture = "impact", position = "Top", scale = 0.8 },
             }
         );
