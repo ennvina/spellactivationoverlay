@@ -1,8 +1,13 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.3.2 (2024-09-xx)
+
+New Spell Alert:
+- Hunter's Mongoose Bite (Era, TBC)
+
 #### v2.3.1 (2024-08-04)
 
-New rune for Season of Discovery:
+New runes for Season of Discovery:
 - New SAO: Rogues's Cutthroat
 - New SAO: Warlock's Decimation
 - New SAO: Warrior's Sudden Death

@@ -34,7 +34,12 @@ local function useMongooseBite()
         "mongoose_bite",
         SAO.ERA + SAO.TBC,
         mongooseBite,
-        "counter"
+        "counter",
+        {
+            useName = false,
+            combatOnly = true,
+            overlay = { texture = "bandits_guile", position = "Top (CW)", scale = 1.1 },
+        }
     );
 end
 

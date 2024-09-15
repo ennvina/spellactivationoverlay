@@ -132,6 +132,9 @@ SAO.defaults = {
         },
         ["HUNTER"] = {
             alert = {
+                [1495] = { -- Mongoose Bite (Era, TBC)
+                    [0] = true, -- Mongoose Bite
+                },
                 [53220] = { -- Improved Steady Shot (Wrath)
                     [0] = true,
                 },
