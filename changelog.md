@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.3.2 (2024-09-xx)
+#### v2.3.2 (2024-09-15)
 
 New Spell Alert:
 - Hunter's Mongoose Bite (Era, TBC)
