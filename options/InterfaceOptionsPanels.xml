@@ -4,7 +4,7 @@
 
   <Frame name="SpellActivationOverlayOptionsPanel" hidden="true" parent="UIParent">
     <Frames>
-      <Slider name="$parentSpellAlertOpacitySlider" inherits="OptionsSliderTemplate">
+      <Slider name="$parentSpellAlertOpacitySlider" inherits="FixOptionsSliderTemplate">
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
@@ -32,7 +32,7 @@
           </OnValueChanged>
         </Scripts>
       </Slider>
-      <Slider name="$parentSpellAlertScaleSlider" inherits="OptionsSliderTemplate">
+      <Slider name="$parentSpellAlertScaleSlider" inherits="FixOptionsSliderTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertOpacitySlider" relativePoint="BOTTOMLEFT">
             <Offset>
@@ -48,7 +48,7 @@
           </OnValueChanged>
         </Scripts>
       </Slider>
-      <Slider name="$parentSpellAlertOffsetSlider" inherits="OptionsSliderTemplate">
+      <Slider name="$parentSpellAlertOffsetSlider" inherits="FixOptionsSliderTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertScaleSlider" relativePoint="BOTTOMLEFT">
             <Offset>
@@ -64,7 +64,7 @@
           </OnValueChanged>
         </Scripts>
       </Slider>
-      <Slider name="$parentSpellAlertTimerSlider" inherits="OptionsSliderTemplate">
+      <Slider name="$parentSpellAlertTimerSlider" inherits="FixOptionsSliderTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertOffsetSlider" relativePoint="BOTTOMLEFT">
             <Offset>
@@ -84,7 +84,7 @@
           </OnValueChanged>
         </Scripts>
       </Slider>
-      <Slider name="$parentSpellAlertSoundSlider" inherits="OptionsSliderTemplate">
+      <Slider name="$parentSpellAlertSoundSlider" inherits="FixOptionsSliderTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertTimerSlider" relativePoint="BOTTOMLEFT">
             <Offset>

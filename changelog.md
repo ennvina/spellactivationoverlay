@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.3.3 (2024-09-28)
+
+Bug Fixes
+- The options panel was broken since last patch (Classic Era)
+
 #### v2.3.2 (2024-09-15)
 
 New Spell Alert:

@@ -1,8 +1,8 @@
 ## Interface: 40400
-## Title: |TInterface/Icons/Spell_Frost_Stun:16:16:0:0:512:512:64:448:64:448|t SpellActivationOverlay |cffdb550d2.3.2|r
+## Title: |TInterface/Icons/Spell_Frost_Stun:16:16:0:0:512:512:64:448:64:448|t SpellActivationOverlay |cffdb550d2.3.3|r
 ## Notes: Mimic Spell Activation Overlays from Modern World of Warcraft
 ## Author: Vinny/Ennvina
-## Version: 2.3.2
+## Version: 2.3.3
 ## SavedVariables: SpellActivationOverlayDB
 
 # SpellActivationOverlay.lua, SpellActivationOverlay.xml and all textures were created by Blizzard Entertainment, Inc.
@@ -60,6 +60,9 @@ classes\rogue.lua
 classes\shaman.lua
 classes\warlock.lua
 classes\warrior.lua
+
+options\fix\Backdrop.lua
+options\fix\SharedUIPanelTemplates.xml
 
 options\defaults.lua
 options\db.lua
