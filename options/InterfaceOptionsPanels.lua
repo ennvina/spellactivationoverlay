@@ -121,7 +121,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     testButton.isTesting = false;
     local testTextureLeftRight = SAO.IsEra() and "echo_of_the_elements" or "imp_empowerment";
     local testTextureTop = SAO.IsEra() and "fury_of_stormrage" or "brain_freeze";
-    local testPositionTop = SAO.IsCata and "Top (CW)" or "Top";
+    local testPositionTop = SAO.IsCata() and "Top (CW)" or "Top";
     testButton.StartTest = function(self)
         if (not self.isTesting) then
             self.isTesting = true;
