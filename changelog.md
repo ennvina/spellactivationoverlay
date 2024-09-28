@@ -2,6 +2,8 @@
 
 #### v2.3.3 (2024-09-28)
 
+Bump in TOC file for Season of Discovery update (Classic Era)
+
 Bug Fixes
 - The options panel was broken since last patch (Classic Era)
 - Toggle Test used wrong orientation for top texture (Classic Era)

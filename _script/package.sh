@@ -237,7 +237,7 @@ zipproject wrath "$VERSION_TOC_VERSION"
 cdup
 
 # Release vanilla version
-VANILLA_BUILD_VERSION=11503
+VANILLA_BUILD_VERSION=11504
 mkproject vanilla $VANILLA_BUILD_VERSION
 
 VARIABLES_NOT_FOR_VANILLA=(holypower nativesao)
