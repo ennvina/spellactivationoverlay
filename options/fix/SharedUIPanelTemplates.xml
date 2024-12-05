@@ -14,7 +14,7 @@
 			<AbsInset left="0" right="0" top="-10" bottom="-10"/>
 		</HitRectInsets>
 		<KeyValues>
-			<KeyValue key="backdropInfo" value="BACKDROP_SLIDER_8_8" type="global"/>
+			<KeyValue key="backdropInfo" value="FIX_BACKDROP_SLIDER_8_8" type="global"/>
 		</KeyValues>
 		<ThumbTexture parentKey="Thumb" name="$parentThumb" file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
 			<Size x="32" y="32"/>
