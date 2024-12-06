@@ -8,6 +8,7 @@ Bump in TOC file for Firelands patch (Cataclysm)
 Bug Fixes:
 - Restored size of "Toggle Test" button in options panel
 - Loading both SpellActivationOverlay and Necrosis could cause a Lua error
+- Prevent taint from (unofficial) Cataclysm release of v2.3.3
 
 #### v2.3.3 (2024-09-28)
 
