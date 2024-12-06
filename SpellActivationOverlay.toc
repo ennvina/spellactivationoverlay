@@ -61,9 +61,6 @@ classes\shaman.lua
 classes\warlock.lua
 classes\warrior.lua
 
-options\fix\Backdrop.lua
-options\fix\SharedUIPanelTemplates.xml
-
 options\defaults.lua
 options\db.lua
 options\variables.lua
