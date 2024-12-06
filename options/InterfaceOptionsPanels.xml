@@ -105,6 +105,7 @@
         </Scripts>
       </Slider>
       <Button name="$parentSpellAlertTestButton" inherits="UIPanelButtonTemplate">
+        <Size x="96" y="22"/>
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertOpacitySlider" relativePoint="TOPRIGHT">
             <Offset>
