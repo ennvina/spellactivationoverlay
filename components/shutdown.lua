@@ -1,6 +1,20 @@
 local AddonName, SAO = ...
 local Module = "shutdown"
 
+-- Fix of options functions, also seen in options\InterfaceOptionsPanels.lua
+local InterfaceOptionsFrame_OpenToCategory = InterfaceOptionsFrame_OpenToCategory
+if Settings and Settings.RegisterCanvasLayoutCategory then
+    -- Deprecated. Use Settings.OpenToCategory().
+    InterfaceOptionsFrame_OpenToCategory = function(categoryIDOrFrame)
+        if type(categoryIDOrFrame) == "table" then
+            local categoryID = categoryIDOrFrame.name;
+            return Settings.OpenToCategory(categoryID);
+        else
+            return Settings.OpenToCategory(categoryIDOrFrame);
+        end
+    end
+end
+
 local Categories = {
     UNSUPPORTED_CLASS = {
         Priority = 1,

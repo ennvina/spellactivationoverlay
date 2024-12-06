@@ -5,6 +5,9 @@
 Bump in TOC file for Anniversary update (Classic Era)
 Bump in TOC file for Firelands patch (Cataclysm)
 
+Bug Fixes:
+- Loading both SpellActivationOverlay and Necrosis could cause a Lua error
+
 #### v2.3.3 (2024-09-28)
 
 Bump in TOC file for Season of Discovery update (Classic Era)
