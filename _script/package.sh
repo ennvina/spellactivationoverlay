@@ -237,7 +237,7 @@ zipproject wrath "$VERSION_TOC_VERSION"
 cdup
 
 # Release vanilla version
-VANILLA_BUILD_VERSION=11504
+VANILLA_BUILD_VERSION=11505
 mkproject vanilla $VANILLA_BUILD_VERSION
 
 VARIABLES_NOT_FOR_VANILLA=(holypower nativesao)
@@ -264,7 +264,7 @@ zipproject vanilla "$VERSION_TOC_VERSION"
 cdup
 
 # Release cata version
-CATA_BUILD_VERSION=40400
+CATA_BUILD_VERSION=40401
 mkproject cata $CATA_BUILD_VERSION
 
 prunecopyright Cataclysm
@@ -290,7 +290,7 @@ zipproject cata "$VERSION_TOC_VERSION"
 cdup
 
 # Release Necrosis version
-NECROSIS_BUILD_VERSION=40400 # Version does not matter, toc will not be used
+NECROSIS_BUILD_VERSION=40401 # Version does not matter, toc will not be used
 mkproject necrosis $NECROSIS_BUILD_VERSION
 
 CLASSES_NOT_FOR_NECROSIS=(

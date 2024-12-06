@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.3.4 (2025-12-06)
+
+Bump in TOC file for Anniversary update (Classic Era)
+Bump in TOC file for Firelands patch (Cataclysm)
+
 #### v2.3.3 (2024-09-28)
 
 Bump in TOC file for Season of Discovery update (Classic Era)
