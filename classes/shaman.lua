@@ -151,6 +151,8 @@ local function registerClass(self)
     local hash0Stacks = self:HashNameFromStacks(0);
     local hash2Stacks = self:HashNameFromStacks(2);
     local hash4Stacks = self:HashNameFromStacks(4);
+    local hash6Stacks = self:HashNameFromStacks(6);
+    local hash9Stacks = self:HashNameFromStacks(9);
 
    -- Elemental Focus has 2 charges on TBC, Wrath and Cataclysm
     -- TBC/Wrath use echo_of_the_elements texture, with scale of 100%
@@ -238,7 +240,17 @@ local function registerClass(self)
                 { stacks = 2, texture = "maelstrom_weapon_2", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
                 { stacks = 3, texture = "maelstrom_weapon_3", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
                 { stacks = 4, texture = "maelstrom_weapon_4", position = "Top", scale = maelstromWeaponScale, pulse = false, option = { setupHash = hash0Stacks, testHash = hash4Stacks, subText = self:NbStacks(1,4) } },
-                { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = true , option = true },
+                [SAO.WRATH+SAO.CATA] = {
+                    { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = true , option = true },
+                },
+                [SAO.SOD] = { 
+                    { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = false , option = true },
+                    { stacks = 6, texture = "maelstrom_weapon_1", color = {255, 50, 50}, position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
+                    { stacks = 7, texture = "maelstrom_weapon_2", color = {255, 50, 50}, position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
+                    { stacks = 8, texture = "maelstrom_weapon_3", color = {255, 50, 50}, position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
+                    { stacks = 9, texture = "maelstrom_weapon_4", color = {255, 50, 50}, position = "Top", scale = maelstromWeaponScale, pulse = false, option = { setupHash = hash6Stacks, testHash = hash9Stacks, subText = self:NbStacks(6,9) } },
+                    { stacks = 10, texture = "maelstrom_weapon" , color = {255, 50, 50}, position = "Top", scale = maelstromWeaponScale, pulse = true , option = true },
+                },
             },
             buttons = {
                 default = { stacks = 5 },
@@ -293,9 +305,9 @@ local function registerClass(self)
 
         -- Power Surge
         local powerSurgeSoDBuff = 415105;
+        local powerSurgeSoDHealBuff = 468526;
         local powerSurgeSpells = {
             (GetSpellInfo(chainLightning)),
-            (GetSpellInfo(chainHeal)),
             (GetSpellInfo(lavaBurstSoD)),
         }
 
@@ -336,6 +348,16 @@ local function registerClass(self)
             local pulse = lightningShieldStacks == 9;
             self:RegisterAura(auraName, lightningShieldStacks, RollingThunderHandler.fakeSpellID, "fulmination", "Top", scale, 255, 255, 255, pulse, RollingThunderHandler.earthShockSpells);
         end
+        SAO:CreateEffect(
+            "power_surge_sod_heal",
+            SAO.SOD,
+            powerSurgeSoDHealBuff,
+            "aura",
+            {
+                talent = powerSurgeSoDRune+1000000,
+                buttons = { chainHeal },
+            }
+    );
     end
 end
 
@@ -384,7 +406,6 @@ local function loadOptions(self)
         self:AddGlowingOption(fulminationTalentCata, lightningShield, earthShock, sixToNineStacks);
     elseif self.IsSoD() then
         self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, chainLightning);
-        self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, chainHeal);
         self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, lavaBurstSoD);
         self:AddGlowingOption(rollingThunderSoD, lightningShield, earthShock, sevenToNineStacks);
     end
