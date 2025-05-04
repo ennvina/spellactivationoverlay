@@ -33,13 +33,12 @@ local cyclone = 33786;
 local entanglingRoots = 339;
 local healingTouch = 5185;
 local hibernate = 2637;
-local nourish = 50464;
+local nourish = SAO.IsSoD() and 408247 or 50464;
 local rebirth = 20484;
 local regrowth = 8936;
 local starfire = 2912;
 local starsurge = 78674;
 local wrath = 5176;
-local sodNourish = 408247;
 
 local function useShootingStars()
     SAO:CreateEffect(
@@ -93,7 +92,7 @@ local function useFuryOfStormrage()
             talent = talent,
             overlay = { texture = "fury_of_stormrage", position = "Top" },
             buttons = {
-                [SAO.SOD] = { healingTouch, sodNourish },
+                [SAO.SOD] = { healingTouch, nourish },
                 [SAO.CATA] = starfire,
             },
         }
@@ -109,7 +108,7 @@ local function useSwiftbloom()
         {
             overlay = { texture = "fury_of_stormrage", position = "Top" },
             buttons = {
-                sodNourish,
+                nourish,
                 healingTouch,
                 regrowth,
             },
