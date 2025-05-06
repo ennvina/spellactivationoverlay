@@ -7,6 +7,7 @@ local mindBlast = 8092;
 local shadowform = 15473;
 local smite = 585;
 local swDeath = 32379;
+local bindingHeal = 401937;
 
 local function useInnerFire()
     SAO:CreateEffect(
@@ -39,7 +40,7 @@ local function useSurgeOfLight()
             },
             overlay = { texture = "surge_of_light", position = "Left + Right (Flipped)" },
             buttons = {
-                [SAO.SOD] = { smite, flashHeal },
+                [SAO.SOD] = { smite, flashHeal, bindingHeal },
                 [SAO.TBC] = smite,
                 [SAO.WRATH] = { smite, flashHeal },
                 [SAO.CATA] = flashHealNoMana,
