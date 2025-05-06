@@ -2,7 +2,7 @@
 
 #### v2.3.5 (2025-05-xx)
 
-Shout-out to fellow developer Vanheden. Thanks!
+Shout-out to fellow developers Vanheden and Adal4. Thanks!
 
 Bump in TOC file for Scarlet Enclave update (Classic Era)
 Bump in TOC file for Dragon Soul patch (Cataclysm)
