@@ -106,7 +106,7 @@ local function useSwiftbloom()
         1226035,  -- Swiftbloom (buff)
         "aura",
         {
-            overlay = { texture = "fury_of_stormrage", position = "Top" },
+            overlay = { texture = "swiftbloom", position = "Top", scale = 0.7 },
             buttons = {
                 nourish,
                 healingTouch,
