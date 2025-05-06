@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.3.5 (2025-05-xx)
+
+Bump in TOC file for Scarlet Enclave update (Classic Era)
+Bump in TOC file for Dragon Soul patch (Cataclysm)
+
 #### v2.3.4 (2025-12-06)
 
 Bump in TOC file for Anniversary update (Classic Era)
