@@ -111,7 +111,7 @@ end
 for classicTexture in pairs(classicSeasonalExclusiveTextures) do
   local filename = classicTexture:gsub(" ", "_"):gsub("'", "");
   local fullTextureName = "Interface\\Addons\\SpellActivationOverlay\\textures\\"..filename;
-  SAO.TexName[strlower(classicTexture)] = fullTextureName
+  SAO.TexName[strlower(classicTexture)] = fullTextureName;
   SAO.TexName[strlower(classicTexture):gsub(" ", "_"):gsub("'", "")] = fullTextureName;
   SAO.TextureFilenameFromFullname[fullTextureName] = strlower(filename);
 end
