@@ -2,8 +2,13 @@
 
 #### v2.3.5 (2025-05-xx)
 
+Shout-out to fellow developer Vanheden. Thanks!
+
 Bump in TOC file for Scarlet Enclave update (Classic Era)
 Bump in TOC file for Dragon Soul patch (Cataclysm)
+
+New Glowing Button:
+- Priest's Binding Heal, during Surge of Light (Season of Discovery)
 
 #### v2.3.4 (2025-12-06)
 

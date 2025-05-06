@@ -456,8 +456,9 @@ SAO.defaults = {
                     [596]  = true, -- Prayer of Healing
                 },
                 [431666] = {  -- Surge of Light (Season of Discovery)
-                    [585]  = true, -- Smite
-                    [2061] = true, -- Flash Heal
+                    [585]    = true, -- Smite
+                    [2061]   = true, -- Flash Heal
+                    [401937] = true, -- Binding Heal
                 },
                 [431655] = {  -- Mind Spike (Season of Discovery)
                     [8092] = true, -- Mind Blast
