@@ -1,5 +1,6 @@
 local AddonName, SAO = ...
 
+local bindingHeal = 401937;
 local flashHeal = 2061;
 local flashHealNoMana = 101062;
 local innerFire = 588;
@@ -7,7 +8,6 @@ local mindBlast = 8092;
 local shadowform = 15473;
 local smite = 585;
 local swDeath = 32379;
-local bindingHeal = 401937;
 
 local function useInnerFire()
     SAO:CreateEffect(
