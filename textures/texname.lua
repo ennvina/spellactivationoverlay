@@ -173,7 +173,6 @@ local availableTextures = {
   ["sudden_death"] = true,
   ["sudden_doom"] = true,
   ["surge_of_light"] = true,
-  ["swiftbloom"] = true,
   ["sword_and_board"] = true,
   ["tooth_and_claw"] = true,
   ["white_tiger"] = true,
