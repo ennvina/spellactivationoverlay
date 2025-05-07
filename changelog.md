@@ -2,12 +2,19 @@
 
 #### v2.3.5 (2025-05-xx)
 
-Shout-out to fellow developers Vanheden and Adal4. Thanks!
+Shout-out to fellow developers Skyward, Vanheden and Adal4. Thanks!
 
 Bump in TOC file for Scarlet Enclave update (Classic Era)
 Bump in TOC file for Dragon Soul patch (Cataclysm)
 
-New Glowing Button:
+New Spell Alert:
+- Druid's Swiftbloom (Scarlet Enclave 2pc, Season of Discovery)
+
+New Glowing Buttons:
+- Druid's Nourish, during Fury of Stormrage (Season of Discovery)
+- Druid's Healing Touch, during Swiftbloom (Season of Discovery)
+- Druid's Nourish, during Swiftbloom (Season of Discovery)
+- Druid's Regrowth, during Swiftbloom (Season of Discovery)
 - Priest's Binding Heal, during Surge of Light (Season of Discovery)
 
 #### v2.3.4 (2025-12-06)
