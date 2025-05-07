@@ -85,10 +85,6 @@ local mapping =
     ["603339"] 	= "White Tiger",
 }
 
-local classicSeasonalExclusiveTextures = {
-    ["Swiftbloom"] = true,
-}
-
 SAO.TexName = {}
 SAO.TextureFilenameFromFullname = {}
 for retailTexture, classicTexture in pairs(mapping) do
@@ -103,14 +99,6 @@ for retailTexture, classicTexture in pairs(mapping) do
   end
   SAO.TexName[retailTexture] = fullTextureName;
   SAO.TexName[retailNumber] = fullTextureName;
-  SAO.TexName[strlower(classicTexture)] = fullTextureName;
-  SAO.TexName[strlower(classicTexture):gsub(" ", "_"):gsub("'", "")] = fullTextureName;
-  SAO.TextureFilenameFromFullname[fullTextureName] = strlower(filename);
-end
-
-for classicTexture in pairs(classicSeasonalExclusiveTextures) do
-  local filename = classicTexture:gsub(" ", "_"):gsub("'", "");
-  local fullTextureName = "Interface\\Addons\\SpellActivationOverlay\\textures\\"..filename;
   SAO.TexName[strlower(classicTexture)] = fullTextureName;
   SAO.TexName[strlower(classicTexture):gsub(" ", "_"):gsub("'", "")] = fullTextureName;
   SAO.TextureFilenameFromFullname[fullTextureName] = strlower(filename);
