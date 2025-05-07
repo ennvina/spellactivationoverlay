@@ -125,8 +125,14 @@ SAO.defaults = {
                 [81093] = { -- Fury of Stormrage (Cataclysm)
                     [2912] = true, -- Starfire
                 },
-                [414800]= { -- Fury of Stormrage (Season of Discovery)
+                [414800] = { -- Fury of Stormrage (Season of Discovery)
                     [5185] = true, -- Healing Touch
+                    [408247] = true, -- Nourish
+                },
+                [1226035] = { -- Swiftbloom (Season of Discovery)
+                    [5185] = true, -- Healing Touch
+                    [408247] = true, -- Nourish
+                    [8936] = true, -- Regrowth
                 },
             }
         },

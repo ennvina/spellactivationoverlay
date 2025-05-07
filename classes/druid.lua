@@ -33,7 +33,7 @@ local cyclone = 33786;
 local entanglingRoots = 339;
 local healingTouch = 5185;
 local hibernate = 2637;
-local nourish = 50464;
+local nourish = SAO.IsSoD() and 408247 or 50464;
 local rebirth = 20484;
 local regrowth = 8936;
 local starfire = 2912;
@@ -92,8 +92,25 @@ local function useFuryOfStormrage()
             talent = talent,
             overlay = { texture = "fury_of_stormrage", position = "Top" },
             buttons = {
-                [SAO.SOD] = healingTouch,
+                [SAO.SOD] = { healingTouch, nourish },
                 [SAO.CATA] = starfire,
+            },
+        }
+    );
+end
+
+local function useSwiftbloom()
+    SAO:CreateEffect(
+        "swiftbloom",
+        SAO.SOD,
+        1226035,  -- Swiftbloom (buff)
+        "aura",
+        {
+            overlay = { texture = "fury_of_stormrage", position = "Top", scale = 0.7, color = { 255, 60, 255 } },
+            buttons = {
+                nourish,
+                healingTouch,
+                regrowth,
             },
         }
     );
@@ -429,6 +446,9 @@ local function registerClass(self)
 
     -- Fury of Stormrage
     useFuryOfStormrage();
+
+    -- Swiftbloom
+    useSwiftbloom();  -- SoD Scarlet Enclave Resto 2pc
 
     -- Healing Trance / Soul Preserver
     self:RegisterAuraSoulPreserver("soul_preserver_druid", 60512); -- 60512 = Druid buff
