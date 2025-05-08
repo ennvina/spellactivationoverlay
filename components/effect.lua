@@ -610,7 +610,7 @@ local function RegisterNativeEffectNow(self, effect)
             local position = overlay.position;
             local scale = overlay.scale or 1;
             local color = overlay.color and { overlay.color[1], overlay.color[2], overlay.color[3] } or { 255, 255, 255 };
-            local autoPulse = overlay.pulse ~= false;
+            local autoPulse = type(overlay.pulse) == 'function' and overlay.pulse or overlay.pulse ~= false;
             local combatOnly = overlay.combatOnly == true or effect.combatOnly == true;
 
             local overlayPod = {
