@@ -58,6 +58,11 @@ local Module = "effect"
         spellID = 2222,
         useName = true,
     }},
+
+    handlers = {
+        onRegister = function(bucket) print("Registered "..bucket.name) end, -- Default is nil
+        onRepeat = function(bucket) print("Repeating "..bucket.name) end, -- Default is nil
+    },
 }
 
     Creating an object is done by a higher level function, called CreateEffect.
@@ -663,6 +668,18 @@ local function RegisterNativeEffectNow(self, effect)
 
     self.BucketManager:checkIntegrity(bucket); -- Optional, but better safe than sorry
 
+    if type(effect.handlers) == 'table' then
+        if type(effect.handlers.onRegister) == 'function' then
+            effect.handlers.onRegister(bucket);
+        end
+
+        if type(effect.handlers.onRepeat) == 'function' then
+            C_Timer.NewTicker(1, function()
+                effect.handlers.onRepeat(bucket);
+            end);
+        end
+    end
+
     table.insert(registeredEffects, effect);
     if registeredEffectsByName[effect.name] then
         self:Warn(Module, "Registering multiple effects with same name "..tostring(effect.name));
@@ -792,6 +809,10 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
         self:Error(Module, "Creating effect "..name.." with invalid minor flag "..tostring(props.minor));
         return nil;
     end
+    if props and props.handlers ~= nil and type(props.handlers) ~= 'table' then
+        self:Error(Module, "Creating effect "..name.." with invalid handlers "..tostring(props.handlers));
+        return nil;
+    end
 
     if not self.IsProject(project) then
         return;
@@ -818,6 +839,7 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
         combatOnly = type(props) == 'table' and props.combatOnly,
         minor = type(props) == 'table' and props.minor,
         triggers = {},
+        handlers = type(props) == 'table' and props.handlers,
     }
 
     -- Import things that can add triggers before importing overlays and buttons
