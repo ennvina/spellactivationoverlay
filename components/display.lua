@@ -75,7 +75,7 @@ SAO.Display = {
             r = overlay.color and overlay.color[1] or 255,
             g = overlay.color and overlay.color[2] or 255,
             b = overlay.color and overlay.color[3] or 255,
-            autoPulse = overlay.autoPulse ~= false, -- true by default
+            autoPulse = type(overlay.autoPulse) == 'function' and overlay.autoPulse or overlay.autoPulse ~= false, -- true by default
             combatOnly = overlay.combatOnly == true, -- false by default
         }
 
