@@ -57,6 +57,15 @@ function SAO.ActivateOverlay(self, hashData, spellID, texture, positions, scale,
             forcePulsePlay = false;
         end
 
+        -- Pulse can be functions
+        -- Now is the last moment to evaluate them before showing the overlay
+        if (type(autoPulse) == 'function') then
+            autoPulse = autoPulse(self);
+        end
+        if (type(forcePulsePlay) == 'function') then
+            forcePulsePlay = forcePulsePlay(self);
+        end
+
         -- Fetch texture from functor if needed
         if (type(texture) == 'function') then
             texture = texture(self);
