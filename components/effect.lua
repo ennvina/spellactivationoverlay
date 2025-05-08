@@ -59,10 +59,11 @@ local Module = "effect"
         useName = true,
     }},
 
-    handlers = {
+    handlers = {{
+        project = SAO.WRATH,
         onRegister = function(bucket) print("Registered "..bucket.name) end, -- Default is nil
         onRepeat = function(bucket) print("Repeating "..bucket.name) end, -- Default is nil
-    },
+    }}, -- Although rare, multiple handlers are possible
 }
 
     Creating an object is done by a higher level function, called CreateEffect.
@@ -306,6 +307,16 @@ local function addOneButton(buttons, buttonConfig, project, default, triggers)
     table.insert(buttons, button);
 end
 
+local function addOneHandler(handlers, handlerConfig, project, default, triggers)
+    local handler = {
+        project = project,
+        onRegister = handlerConfig.onRegister or default.onRegister,
+        onRepeat = handlerConfig.onRepeat or default.onRepeat,
+    }
+
+    table.insert(handlers, handler);
+end
+
 local function importListOf(effect, props, keyOne, keyMany, addOneFunc)
     if type(props) ~= 'table' then
         return;
@@ -354,6 +365,10 @@ local function importButtons(effect, props)
     importListOf(effect, props, "button", "buttons", addOneButton);
 end
 
+local function importHandlers(effect, props)
+    importListOf(effect, props, "handler", "handlers", addOneHandler);
+end
+
 local function importCounterButton(effect, props)
     -- Grab condition directly from props, but use { actionUsable = true } as main prop, to force this setting
     -- In practice, it will ignore any mischievious 'actionUsable' property that could have been set
@@ -383,6 +398,7 @@ local function createGeneric(effect, props)
 
     importOverlays(effect, props);
     importButtons(effect, props);
+    importHandlers(effect, props);
 
     return effect;
 end
@@ -394,6 +410,7 @@ local function createAura(effect, props)
 
     importOverlays(effect, props);
     importButtons(effect, props);
+    importHandlers(effect, props);
 
     return effect;
 end
@@ -401,6 +418,7 @@ end
 local function createCounter(effect, props)
     importOverlays(effect, props);
     importCounterButton(effect, props);
+    importHandlers(effect, props);
 
     return effect;
 end
@@ -412,6 +430,7 @@ local function createExecute(effect, props)
 
     importOverlays(effect, props);
     importButtons(effect, props);
+    importHandlers(effect, props);
 
     return effect;
 end
@@ -423,6 +442,7 @@ local function createNativeSAO(effect, props)
 
     importOverlays(effect, props);
     importButtons(effect, props);
+    importHandlers(effect, props);
 
     return effect;
 end
@@ -644,15 +664,17 @@ local function RegisterNativeEffectNow(self, effect)
 
     self.BucketManager:checkIntegrity(bucket); -- Optional, but better safe than sorry
 
-    if type(effect.handlers) == 'table' then
-        if type(effect.handlers.onRegister) == 'function' then
-            effect.handlers.onRegister(bucket);
-        end
+    for _, handler in ipairs(effect.handlers or {}) do
+        if not handler.project or self.IsProject(handler.project) then
+            if type(handler.onRegister) == 'function' then
+                handler.onRegister(bucket);
+            end
 
-        if type(effect.handlers.onRepeat) == 'function' then
-            C_Timer.NewTicker(1, function()
-                effect.handlers.onRepeat(bucket);
-            end);
+            if type(handler.onRepeat) == 'function' then
+                C_Timer.NewTicker(1, function()
+                    handler.onRepeat(bucket);
+                end);
+            end
         end
     end
 
@@ -815,7 +837,6 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
         combatOnly = type(props) == 'table' and props.combatOnly,
         minor = type(props) == 'table' and props.minor,
         triggers = {},
-        handlers = type(props) == 'table' and props.handlers,
     }
 
     -- Import things that can add triggers before importing overlays and buttons
