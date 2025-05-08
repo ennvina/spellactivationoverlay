@@ -564,19 +564,13 @@ local function useArcaneMissiles()
         {
             overlay = { texture = "arcane_missiles", position = "Left + Right (Flipped)", scale = 0.6 }, -- Smaller, to avoid overlap with Arcane Potency
             button = arcaneMissiles,
+            handler = {
+                -- Force refresh on a regular basis, because the game client does not send the correct SPELL_AURA_REFRESH events
+                -- We can call refresh() even without an active display; the bucket will send refresh to displays if and only if there is an active one
+                onRepeat = function(bucket) bucket:refresh(); end,
+            },
         }
     );
-
-    -- Special case for Arcane Missiles: the game client does not send SPELL_AURA_REFRESH when it should
-    -- We need to force the refresh whenever appropriate
-    C_Timer.NewTicker(1, function()
-        local arcaneMissilesBucket = SAO:GetBucketBySpellID(arcaneMissilesBuff);
-        if arcaneMissilesBucket then
-            -- We can call refresh() on the bucket even if the effect is not active display
-            -- The bucket will send refresh to displays if and only if there is an active display
-            arcaneMissilesBucket:refresh();
-        end
-    end);
 end
 
 local function registerClass(self)
