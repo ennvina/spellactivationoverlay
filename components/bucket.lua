@@ -270,6 +270,10 @@ SAO.BucketManager = {
     end,
 
     getOrCreateBucket = function(self, name, spellID)
+        if type(spellID) ~= 'number' then
+            SAO:Warn(Module, "Creating a bucket for spellID "..tostring(spellID).." which is of type "..type(spellID).." instead of number")
+        end
+
         local bucket = SAO.RegisteredBucketsBySpellID[spellID];
         local created = false;
 
@@ -282,6 +286,10 @@ SAO.BucketManager = {
             if SAO.IsEra() and not SAO:IsFakeSpell(spellID) then
                 local spellName = GetSpellInfo(spellID);
                 if spellName then
+                    local conflictingBucket = SAO.RegisteredBucketsBySpellID[spellName];
+                    if conflictingBucket then
+                        SAO:Debug(Module, "Registering spells with different spell IDs ("..conflictingBucket.name.." uses spell ID "..conflictingBucket.spellID.." vs. "..bucket.name.." uses spell ID "..bucket.spellID..") but sharing the same spell name '"..spellName.."', this might cause issues");
+                    end
                     SAO.RegisteredBucketsBySpellID[spellName] = bucket; -- Share pointer
                 else
                     SAO:Debug(Module, "Registering bucket with unknown spell "..tostring(spellID));
@@ -320,6 +328,9 @@ function SAO:GetBucketByName(name)
 end
 
 function SAO:GetBucketBySpellID(spellID)
+    if type(spellID) ~= 'number' then
+        SAO:Warn(Module, "Asking a bucket with spell ID "..tostring(spellID).." which is of type "..type(spellID).." instead of type number");
+    end
     return self.RegisteredBucketsBySpellID[spellID];
 end
 
