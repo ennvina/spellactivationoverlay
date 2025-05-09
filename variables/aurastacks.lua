@@ -12,7 +12,7 @@ local Module = "aurastacks"
 local HASH_AURA_ABSENT = 1
 local HASH_AURA_ANY    = 2
 local HASH_AURA_ZERO   = HASH_AURA_ANY
-local HASH_AURA_MAX    = HASH_AURA_ZERO + 9 -- Allow no more than 9 stacks
+local HASH_AURA_MAX    = HASH_AURA_ZERO + 10 -- Allow no more than 10 stacks
 local HASH_AURA_MASK   = 0xF
 
 SAO.Variable:register({

@@ -147,6 +147,22 @@ local function customCLEU(self, ...)
     end
 end
 
+--Checking for 6set tier4 enhancement
+local function checkTierSetFunction(self, ...)
+local slots = {240131, 240135, 240128, 240136, 240134, 240129, 240137, 240130}
+    local tier = 0 
+    for i=1,8 do
+        if(C_Item.IsEquippedItem(slots[i])) then
+            tier = tier + 1
+        end
+    end 
+    if tier < 6 then    
+        return true 
+    else 
+        return false
+    end
+end
+
 local function registerClass(self)
     local hash0Stacks = self:HashNameFromStacks(0);
     local hash2Stacks = self:HashNameFromStacks(2);
@@ -244,12 +260,12 @@ local function registerClass(self)
                     { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = true , option = true },
                 },
                 [SAO.SOD] = { 
-                    { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = false , option = true },
-                    { stacks = 6, texture = "maelstrom_weapon_1", color = {255, 50, 50}, position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
-                    { stacks = 7, texture = "maelstrom_weapon_2", color = {255, 50, 50}, position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
-                    { stacks = 8, texture = "maelstrom_weapon_3", color = {255, 50, 50}, position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
-                    { stacks = 9, texture = "maelstrom_weapon_4", color = {255, 50, 50}, position = "Top", scale = maelstromWeaponScale, pulse = false, option = { setupHash = hash6Stacks, testHash = hash9Stacks, subText = self:NbStacks(6,9) } },
-                    { stacks = 10, texture = "maelstrom_weapon" , color = {255, 50, 50}, position = "Top", scale = maelstromWeaponScale, pulse = true , option = true },
+                    { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = checkTierSetFunction , option = true },
+                    { stacks = 6, texture = "maelstrom_weapon_1", color = {255, 70, 70}, position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
+                    { stacks = 7, texture = "maelstrom_weapon_2", color = {255, 70, 70}, position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
+                    { stacks = 8, texture = "maelstrom_weapon_3", color = {255, 70, 70}, position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
+                    { stacks = 9, texture = "maelstrom_weapon_4", color = {255, 70, 70}, position = "Top", scale = maelstromWeaponScale, pulse = false, option = { setupHash = hash6Stacks, testHash = hash9Stacks, subText = self:NbStacks(6,9) } },
+                    { stacks = 10, texture = "maelstrom_weapon" , color = {255, 70, 70}, position = "Top", scale = maelstromWeaponScale, pulse = true , option = true },
                 },
             },
             buttons = {
@@ -257,6 +273,10 @@ local function registerClass(self)
                 [SAO.SOD] =   { lightningBolt, chainLightning, lesserHealingWave,                                                               lavaBurstSoD },
                 [SAO.WRATH] = { lightningBolt, chainLightning, lesserHealingWave,                     healingWave, chainHeal,              hex },
                 [SAO.CATA] =  { lightningBolt, chainLightning, healingSurge,      greaterHealingWave, healingWave, chainHeal, healingRain, hex },
+            },
+            handlers = {
+                -- Force refresh on a regular basis, because the game client does not send the correct SPELL_AURA_REFRESH events
+                [SAO.SOD] = { onRepeat = function(bucket) bucket:refresh(); end },
             },
         }
     );
@@ -354,10 +374,10 @@ local function registerClass(self)
             powerSurgeSoDHealBuff,
             "aura",
             {
-                talent = powerSurgeSoDRune+1000000,
+                talent = powerSurgeSoDHealBuff,
                 buttons = { chainHeal },
             }
-    );
+        );
     end
 end
 
