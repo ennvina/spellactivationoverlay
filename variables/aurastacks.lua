@@ -12,7 +12,7 @@ local Module = "aurastacks"
 local HASH_AURA_ABSENT = 1
 local HASH_AURA_ANY    = 2
 local HASH_AURA_ZERO   = HASH_AURA_ANY
-local HASH_AURA_MAX    = HASH_AURA_ZERO + 9 -- Allow no more than 9 stacks
+local HASH_AURA_MAX    = HASH_AURA_ZERO + 10 -- Allow no more than 10 stacks
 local HASH_AURA_MASK   = 0xF
 
 SAO.Variable:register({
@@ -35,8 +35,8 @@ SAO.Variable:register({
                 SAO:Warn(Module, "Invalid stack count "..tostring(stacks));
             elseif bucket and bucket.stackAgnostic then
                 self:setMaskedHash(HASH_AURA_ANY, HASH_AURA_MASK);
-            elseif stacks > 9 then
-                SAO:Debug(Module, "Stack overflow ("..stacks..") truncated to 9");
+            elseif stacks > 10 then
+                SAO:Debug(Module, "Stack overflow ("..stacks..") truncated to 10");
                 self:setMaskedHash(HASH_AURA_MAX, HASH_AURA_MASK);
             else
                 self:setMaskedHash(HASH_AURA_ZERO + stacks, HASH_AURA_MASK);
@@ -115,7 +115,7 @@ SAO.Variable:register({
         hreVar = "stacks",
         noeDefault = 0,
         description = "number of stacks",
-        checker = function(value) return type(value) == 'number' and value >= -1 and value <= 9 end,
+        checker = function(value) return type(value) == 'number' and value >= -1 and value <= 10 end,
         noeToHash = function(value) return value >= 0 and value or nil end, -- return n if n >= 0, otherwise (if n == -1) return nil
     },
 

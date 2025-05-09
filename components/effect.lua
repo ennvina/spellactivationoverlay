@@ -521,7 +521,7 @@ local function checkNativeEffect(effect)
         -- Special checks for aura stacks
         local stacks = effect.triggers.aura and type(overlay.condition) == 'table' and type(overlay.condition.aura) == 'number' and overlay.condition.aura;
         if stacks then
-            if stacks < -1 or stacks > 9 then
+            if stacks < -1 or stacks > 10 then
                 SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid number of stacks "..tostring(stacks));
                 return false;
             end

@@ -510,6 +510,8 @@ SAO.defaults = {
                 [408505] = { -- Maelstrom Weapon (Season of Discovery)
                     [5] = true, -- 5 stacks
                     [0] = true, -- any stacks but 5
+                    [6] = true, -- 6-9 stacks
+                    [10]= true, -- 10 stacks
                 },
                 [53390] = { -- Tidal Waves
                     [0] = false, -- any stacks
@@ -551,8 +553,10 @@ SAO.defaults = {
                 },
                 [415105] = {  -- Power Surge (Season of Discovery)
                     [421]   = false, -- Chain Lightning
-                    [1064]  = false, -- Chain Heal
                     [408490] = false, -- Lava Burst (Season of Discovery)
+                },
+                [468526] = { -- Power Surge Healing proc (Season of Discovery)
+                    [1064] = false,  -- Chain Heal
                 },
                 [51505] = {  -- Lava Burst, for Lava Surge (Cataclysm)
                     [51505] = true,
