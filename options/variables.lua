@@ -38,8 +38,8 @@ end
 -- Apply glowing buttons on/off
 function SAO.ApplyGlowingButtonsToggle(self)
     -- @todo Find a way to only refresh spell alert when checking spell alert, or glowing button when clicking glowing button
-    for _, bucket in pairs(self.RegisteredBucketsBySpellID) do
+    self:ForEachBucket(function(bucket)
         bucket:reset(); -- Reset hash to force re-display if needed
         bucket.trigger:manualCheckAll();
-    end
+    end);
 end

@@ -347,6 +347,16 @@ function SAO:GetBucketBySpellIDOrSpellName(spellID, fallbackSpellName)
     end
 end
 
+function SAO:ForEachBucket(bucketFunc)
+    for key, bucket in pairs(self.RegisteredBucketsBySpellID) do
+        -- Original buckets are indexed by their spell IDs, which are numbers, unlike spell name indexes which are strings
+        -- There is no point in parsing buckets indexed by a spell name, such buckets are already indexed somewhere else by their spell ID
+        if type(key) == 'number' then
+            bucketFunc(bucket);
+        end
+    end
+end
+
 -- Perform a manual check on all buckets
 -- If 'trigger' is set, only to buckets requiring this trigger are visited, and they check only this trigger
 function SAO:CheckManuallyAllBuckets(trigger)
@@ -356,11 +366,11 @@ function SAO:CheckManuallyAllBuckets(trigger)
             bucket.trigger:manualCheck(trigger);
         end
     else
-        for _, bucket in pairs(self.RegisteredBucketsBySpellID) do
+        SAO:ForEachBucket(function(bucket)
             if bucket.trigger.required ~= 0 then
                 bucket.trigger:manualCheckAll();
             end
-        end
+        end);
     end
 end
 
@@ -399,14 +409,14 @@ function SpellActivationOverlay_DumpBuckets(spellID, devDump)
     end
 
     local nbBuckets = 0;
-    for _, _ in pairs(SAO.RegisteredBucketsBySpellID) do
+    SAO:ForEachBucket(function(bucket)
         nbBuckets = nbBuckets + 1;
-    end
+    end);
     SAO:Info(Module, "Listing buckets ("..nbBuckets.." item"..(nbBuckets == 1 and "" or "s")..")");
 
-    for _, bucket in pairs(SAO.RegisteredBucketsBySpellID) do
+    SAO:ForEachBucket(function(bucket)
         dumpOneBucket(bucket, devDump)
-    end
+    end);
 end
 
 -- Perform a manual check on all buckets
@@ -421,13 +431,13 @@ function SpellActivationOverlay_CheckBuckets(spellID)
         end
     else
         local nbBuckets = 0;
-        for _, _ in pairs(SAO.RegisteredBucketsBySpellID) do
+        SAO:ForEachBucket(function(bucket)
             nbBuckets = nbBuckets + 1;
-        end
+        end);
         SAO:Info(Module, "Checking all buckets ("..nbBuckets.." item"..(nbBuckets == 1 and "" or "s")..")");
 
-        for _, bucket in pairs(SAO.RegisteredBucketsBySpellID) do
+        SAO:ForEachBucket(function(bucket)
             bucket.trigger:manualCheckAll();
-        end
+        end);
     end
 end
