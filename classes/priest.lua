@@ -1,5 +1,6 @@
 local AddonName, SAO = ...
 
+local bindingHeal = 401937;
 local flashHeal = 2061;
 local flashHealNoMana = 101062;
 local innerFire = 588;
@@ -39,7 +40,7 @@ local function useSurgeOfLight()
             },
             overlay = { texture = "surge_of_light", position = "Left + Right (Flipped)" },
             buttons = {
-                [SAO.SOD] = { smite, flashHeal },
+                [SAO.SOD] = { smite, flashHeal, bindingHeal },
                 [SAO.TBC] = smite,
                 [SAO.WRATH] = { smite, flashHeal },
                 [SAO.CATA] = flashHealNoMana,

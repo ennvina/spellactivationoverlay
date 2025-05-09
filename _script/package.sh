@@ -27,10 +27,10 @@ mkproject() {
     echo
     echo "==== ${flavor^^} ===="
     echo -n "Creating $flavor project..."
-    rm -rf ./_release/$flavor || bye "Cannot clean wrath directory"
-    mkdir -p ./_release/$flavor/SpellActivationOverlay || bye "Cannot create $flavor directory"
-    cp -R changelog.md LICENSE SpellActivationOverlay.* classes components libs options sounds textures variables ./_release/$flavor/SpellActivationOverlay/ || bye "Cannot copy $flavor files"
-    cd ./_release/$flavor || bye "Cannot cd to $flavor directory"
+    rm -rf ./_release/"$flavor" || bye "Cannot clean wrath directory"
+    mkdir -p ./_release/"$flavor"/SpellActivationOverlay || bye "Cannot create $flavor directory"
+    cp -R changelog.md LICENSE SpellActivationOverlay.* classes components libs options sounds textures variables ./_release/"$flavor"/SpellActivationOverlay/ || bye "Cannot copy $flavor files"
+    cd ./_release/"$flavor" || bye "Cannot cd to $flavor directory"
     sed -i s/'^## Interface:.*'/"## Interface: $build_version"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update version of $flavor TOC file"
     echo
 }
@@ -113,7 +113,7 @@ pruneclass() {
     for classname in "$@"
     do
         sed -i "/$classname/d" SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot remove $classname from TOC file"
-        rm -f SpellActivationOverlay/classes/$classname.lua || bye "Cannot remove $classname class file"
+        rm -f SpellActivationOverlay/classes/"$classname".lua || bye "Cannot remove $classname class file"
     done
     echo
 }
@@ -151,8 +151,8 @@ replacecode() {
 # $1 = TOC file input
 # $2 = XML file output
 toc2xml() {
-    local tocfile=SpellActivationOverlay/$1
-    local xmlfile=SpellActivationOverlay/$2
+    local tocfile=SpellActivationOverlay/"$1"
+    local xmlfile=SpellActivationOverlay/"$2"
     echo -n "Transforming TOC file into XML include file"
     cat > "$xmlfile" <<EOF
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
@@ -237,7 +237,7 @@ zipproject wrath "$VERSION_TOC_VERSION"
 cdup
 
 # Release vanilla version
-VANILLA_BUILD_VERSION=11505
+VANILLA_BUILD_VERSION=11507
 mkproject vanilla $VANILLA_BUILD_VERSION
 
 VARIABLES_NOT_FOR_VANILLA=(holypower nativesao)
@@ -264,7 +264,7 @@ zipproject vanilla "$VERSION_TOC_VERSION"
 cdup
 
 # Release cata version
-CATA_BUILD_VERSION=40401
+CATA_BUILD_VERSION=40402
 mkproject cata $CATA_BUILD_VERSION
 
 prunecopyright Cataclysm
@@ -290,7 +290,7 @@ zipproject cata "$VERSION_TOC_VERSION"
 cdup
 
 # Release Necrosis version
-NECROSIS_BUILD_VERSION=40401 # Version does not matter, toc will not be used
+NECROSIS_BUILD_VERSION=40402 # Version does not matter, toc will not be used
 mkproject necrosis $NECROSIS_BUILD_VERSION
 
 CLASSES_NOT_FOR_NECROSIS=(
@@ -384,7 +384,6 @@ replacecode 'Add[oO]ns\\\\NecrosisSpellActivationOverlay' 'AddOns\\\\Necrosis\\\
 # # File locations
 # replacecode 'Add[oO]ns/SpellActivationOverlay' 'AddOns/Necrosis/SpellActivations' "*.lua" "*.xml"
 # replacecode 'Add[oO]ns\\\\SpellActivationOverlay' 'AddOns\\\\Necrosis\\\\SpellActivations' "*.lua" "*.xml"
-
 
 zipproject necrosis "$VERSION_TOC_VERSION"
 

@@ -58,6 +58,12 @@ local Module = "effect"
         spellID = 2222,
         useName = true,
     }},
+
+    handlers = {{
+        project = SAO.WRATH,
+        onRegister = function(bucket) print("Registered "..bucket.name) end, -- Default is nil
+        onRepeat = function(bucket) print("Repeating "..bucket.name) end, -- Default is nil
+    }}, -- Although rare, multiple handlers are possible
 }
 
     Creating an object is done by a higher level function, called CreateEffect.
@@ -227,15 +233,6 @@ end
 ]]
 
 local function addOneOverlay(overlays, overlayConfig, project, default, triggers)
-    project = overlayConfig.project or project; -- Note: cannot have a 'default.project'
-    if type(project) == 'number' and not SAO.IsProject(project) then
-        return;
-    end
-
-    if not default then
-        default = {}
-    end
-
     local condition = getCondition(overlayConfig, default, triggers);
 
     local texture = overlayConfig.texture or default.texture;
@@ -272,15 +269,6 @@ local function addOneOverlay(overlays, overlayConfig, project, default, triggers
 end
 
 local function addOneButton(buttons, buttonConfig, project, default, triggers)
-    project = type(buttonConfig) == 'table' and buttonConfig.project or project; -- Note: cannot have a 'default.project'
-    if type(project) == 'number' and not SAO.IsProject(project) then
-        return;
-    end
-
-    if not default then
-        default = {}
-    end
-
     local condition;
 
     if type(buttonConfig) == 'table' then
@@ -319,58 +307,66 @@ local function addOneButton(buttons, buttonConfig, project, default, triggers)
     table.insert(buttons, button);
 end
 
-local function importOverlays(effect, props)
+local function addOneHandler(handlers, handlerConfig, project, default, triggers)
+    local handler = {
+        project = project,
+        onRegister = handlerConfig.onRegister or default.onRegister,
+        onRepeat = handlerConfig.onRepeat or default.onRepeat,
+    }
+
+    table.insert(handlers, handler);
+end
+
+local function importListOf(effect, props, keyOne, keyMany, addOneFunc)
     if type(props) ~= 'table' then
         return;
     end
 
-    effect.overlays = {}
-    if props.overlay then
-        addOneOverlay(effect.overlays, props.overlay, nil, nil, effect.triggers);
+    local addOneWithChecks = function(items, itemConfig, project, default, triggers)
+        project = type(itemConfig) == 'table' and itemConfig.project or project; -- Note: cannot have a 'default.project'
+        if type(project) == 'number' and not SAO.IsProject(project) then
+            return;
+        end
+
+        if not default then
+            default = {}
+        end
+
+        addOneFunc(items, itemConfig, project, default, triggers);
     end
-    local default = props.overlays and props.overlays.default or nil;
-    for key, overlayConfig in pairs(props.overlays or {}) do
+
+    effect[keyMany] = {}
+    if props[keyOne] then
+        addOneWithChecks(effect[keyMany], props[keyOne], nil, nil, effect.triggers);
+    end
+    local default = props[keyMany] and props[keyMany].default or nil;
+    for key, config in pairs(props[keyMany] or {}) do
         if key ~= "default" then
             if type(key) == 'number' and key >= SAO.ERA then
-                if type(overlayConfig) == 'table' and overlayConfig[1] then
-                    for _, subOverlayConfig in ipairs(overlayConfig) do
-                        addOneOverlay(effect.overlays, subOverlayConfig, key, overlayConfig.default or default, effect.triggers);
+                if type(config) == 'table' and config[1] then
+                    for _, subConfig in ipairs(config) do
+                        addOneWithChecks(effect[keyMany], subConfig, key, config.default or default, effect.triggers);
                     end
                 else
-                    addOneOverlay(effect.overlays, overlayConfig, key, default, effect.triggers);
+                    addOneWithChecks(effect[keyMany], config, key, default, effect.triggers);
                 end
             else
-                addOneOverlay(effect.overlays, overlayConfig, nil, default, effect.triggers);
+                addOneWithChecks(effect[keyMany], config, nil, default, effect.triggers);
             end
         end
     end
 end
 
-local function importButtons(effect, props)
-    if type(props) ~= 'table' then
-        return;
-    end
+local function importOverlays(effect, props)
+    importListOf(effect, props, "overlay", "overlays", addOneOverlay);
+end
 
-    effect.buttons = {}
-    if props.button then
-        addOneButton(effect.buttons, props.button, nil, nil, effect.triggers);
-    end
-    local default = props.buttons and props.buttons.default or nil;
-    for key, buttonConfig in pairs(props.buttons or {}) do
-        if key ~= "default" then
-            if type(key) == 'number' and key >= SAO.ERA then
-                if type(buttonConfig) == 'table' and buttonConfig[1] then
-                    for _, subButtonConfig in ipairs(buttonConfig) do
-                        addOneButton(effect.buttons, subButtonConfig, key, buttonConfig.default or default, effect.triggers);
-                    end
-                else
-                    addOneButton(effect.buttons, buttonConfig, key, default, effect.triggers);
-                end
-            else
-                addOneButton(effect.buttons, buttonConfig, nil, default, effect.triggers);
-            end
-        end
-    end
+local function importButtons(effect, props)
+    importListOf(effect, props, "button", "buttons", addOneButton);
+end
+
+local function importHandlers(effect, props)
+    importListOf(effect, props, "handler", "handlers", addOneHandler);
 end
 
 local function importCounterButton(effect, props)
@@ -402,6 +398,7 @@ local function createGeneric(effect, props)
 
     importOverlays(effect, props);
     importButtons(effect, props);
+    importHandlers(effect, props);
 
     return effect;
 end
@@ -413,6 +410,7 @@ local function createAura(effect, props)
 
     importOverlays(effect, props);
     importButtons(effect, props);
+    importHandlers(effect, props);
 
     return effect;
 end
@@ -420,6 +418,7 @@ end
 local function createCounter(effect, props)
     importOverlays(effect, props);
     importCounterButton(effect, props);
+    importHandlers(effect, props);
 
     return effect;
 end
@@ -431,6 +430,7 @@ local function createExecute(effect, props)
 
     importOverlays(effect, props);
     importButtons(effect, props);
+    importHandlers(effect, props);
 
     return effect;
 end
@@ -442,6 +442,7 @@ local function createNativeSAO(effect, props)
 
     importOverlays(effect, props);
     importButtons(effect, props);
+    importHandlers(effect, props);
 
     return effect;
 end
@@ -610,7 +611,7 @@ local function RegisterNativeEffectNow(self, effect)
             local position = overlay.position;
             local scale = overlay.scale or 1;
             local color = overlay.color and { overlay.color[1], overlay.color[2], overlay.color[3] } or { 255, 255, 255 };
-            local autoPulse = overlay.pulse ~= false;
+            local autoPulse = type(overlay.pulse) == 'function' and overlay.pulse or overlay.pulse ~= false;
             local combatOnly = overlay.combatOnly == true or effect.combatOnly == true;
 
             local overlayPod = {
@@ -662,6 +663,20 @@ local function RegisterNativeEffectNow(self, effect)
     end
 
     self.BucketManager:checkIntegrity(bucket); -- Optional, but better safe than sorry
+
+    for _, handler in ipairs(effect.handlers or {}) do
+        if not handler.project or self.IsProject(handler.project) then
+            if type(handler.onRegister) == 'function' then
+                handler.onRegister(bucket);
+            end
+
+            if type(handler.onRepeat) == 'function' then
+                C_Timer.NewTicker(1, function()
+                    handler.onRepeat(bucket);
+                end);
+            end
+        end
+    end
 
     table.insert(registeredEffects, effect);
     if registeredEffectsByName[effect.name] then
@@ -790,6 +805,10 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
     end
     if props and props.minor ~= nil and type(props.minor) ~= 'boolean' then
         self:Error(Module, "Creating effect "..name.." with invalid minor flag "..tostring(props.minor));
+        return nil;
+    end
+    if props and props.handlers ~= nil and type(props.handlers) ~= 'table' then
+        self:Error(Module, "Creating effect "..name.." with invalid handlers "..tostring(props.handlers));
         return nil;
     end
 

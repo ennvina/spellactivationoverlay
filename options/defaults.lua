@@ -125,8 +125,14 @@ SAO.defaults = {
                 [81093] = { -- Fury of Stormrage (Cataclysm)
                     [2912] = true, -- Starfire
                 },
-                [414800]= { -- Fury of Stormrage (Season of Discovery)
+                [414800] = { -- Fury of Stormrage (Season of Discovery)
                     [5185] = true, -- Healing Touch
+                    [408247] = true, -- Nourish
+                },
+                [1226035] = { -- Swiftbloom (Season of Discovery)
+                    [5185] = true, -- Healing Touch
+                    [408247] = true, -- Nourish
+                    [8936] = true, -- Regrowth
                 },
             }
         },
@@ -456,8 +462,9 @@ SAO.defaults = {
                     [596]  = true, -- Prayer of Healing
                 },
                 [431666] = {  -- Surge of Light (Season of Discovery)
-                    [585]  = true, -- Smite
-                    [2061] = true, -- Flash Heal
+                    [585]    = true, -- Smite
+                    [2061]   = true, -- Flash Heal
+                    [401937] = true, -- Binding Heal
                 },
                 [431655] = {  -- Mind Spike (Season of Discovery)
                     [8092] = true, -- Mind Blast
