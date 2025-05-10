@@ -225,6 +225,11 @@ arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
 fulmination
+maelstrom_weapon_6
+maelstrom_weapon_7
+maelstrom_weapon_8
+maelstrom_weapon_9
+maelstrom_weapon_10
 monk_serpent
 raging_blow
 sudden_doom
@@ -274,6 +279,11 @@ arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
 fulmination
+maelstrom_weapon_6
+maelstrom_weapon_7
+maelstrom_weapon_8
+maelstrom_weapon_9
+maelstrom_weapon_10
 monk_serpent
 raging_blow
 tooth_and_claw
@@ -334,6 +344,11 @@ maelstrom_weapon_1
 maelstrom_weapon_2
 maelstrom_weapon_3
 maelstrom_weapon_4
+maelstrom_weapon_6
+maelstrom_weapon_7
+maelstrom_weapon_8
+maelstrom_weapon_9
+maelstrom_weapon_10
 master_marksman
 monk_serpent
 natures_grace
