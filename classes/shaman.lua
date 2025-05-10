@@ -261,11 +261,11 @@ local function registerClass(self)
                 },
                 [SAO.SOD] = { 
                     { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = checkTierSetFunction , option = true },
-                    { stacks = 6, texture = "maelstrom_weapon_1", color = {255, 70, 70}, position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
-                    { stacks = 7, texture = "maelstrom_weapon_2", color = {255, 70, 70}, position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
-                    { stacks = 8, texture = "maelstrom_weapon_3", color = {255, 70, 70}, position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
-                    { stacks = 9, texture = "maelstrom_weapon_4", color = {255, 70, 70}, position = "Top", scale = maelstromWeaponScale, pulse = false, option = { setupHash = hash6Stacks, testHash = hash9Stacks, subText = self:NbStacks(6,9) } },
-                    { stacks = 10, texture = "maelstrom_weapon" , color = {255, 70, 70}, position = "Top", scale = maelstromWeaponScale, pulse = true , option = true },
+                    { stacks = 6, texture = "maelstrom_weapon_6", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
+                    { stacks = 7, texture = "maelstrom_weapon_7", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
+                    { stacks = 8, texture = "maelstrom_weapon_8", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
+                    { stacks = 9, texture = "maelstrom_weapon_9", position = "Top", scale = maelstromWeaponScale, pulse = false, option = { setupHash = hash6Stacks, testHash = hash9Stacks, subText = self:NbStacks(6,9) } },
+                    { stacks = 10, texture = "maelstrom_weapon_10" , position = "Top", scale = maelstromWeaponScale, pulse = true , option = true },
                 },
             },
             buttons = {
