@@ -4,12 +4,18 @@ local aimedShot = 19434;
 local aimedShotBang = 82928;
 local arcaneShot = 3044;
 local chimeraShot = 53209;
+local concussiveShot = 5116;
 local counterattack = 19306;
+local distractingShot = 20736;
 local explosiveShot = 53301;
 local flankingStrike = 415320;
 local killCommand = 34026;
 local killShot = 53351;
 local mongooseBite = 1495;
+local multiShot = 2643;
+local scatterShot = 19503;
+local thrillOfTheHunt = 34498;
+local tranquilizingShot = 19801;
 
 local function useKillShot()
     SAO:CreateEffect(
@@ -171,6 +177,45 @@ local function useSniperTraining()
     );
 end
 
+local function useBurningAdrenaline()
+    local burningAdrenalineBuff = 99060;
+
+    SAO:CreateEffect(
+        "burning_adrenaline",
+        SAO.CATA,
+        burningAdrenalineBuff,
+        "aura",
+        {
+            overlay = { texture = "genericarc_05", position = "Left + Right (Flipped)" },
+--[[
+    Do not add buttons for Burning Adrenaline, because there are too many of them:
+    - action bars would light up like a Xmas tree
+    - it adds a lot of bloat to the options panel
+
+    It would be slightly better if we could enable each shot per spec
+    But it's currently not possible, and not planned either
+
+    Also, as a tier set, this effect will be probably forgotten in a few months
+    Not to mention, the effect may just disappear for Mists of Pandaria Classic
+]]
+            -- buttons = {
+            --     aimedShot,
+            --     aimedShotBang,
+            --     arcaneShot,
+            --     chimeraShot,
+            --     concussiveShot,
+            --     distractingShot,
+            --     explosiveShot,
+            --     killCommand,
+            --     multiShot,
+            --     scatterShot,
+            --     thrillOfTheHunt,
+            --     tranquilizingShot,
+            -- },
+        }
+    )
+end
+
 local function registerClass(self)
 
     -- Kill Shot, Execute-like ability for targets at 20% hp or less
@@ -196,6 +241,9 @@ local function registerClass(self)
     useFlankingStrike();
     useCobraStrikes();
     -- useSniperTraining();
+
+    -- Tier Sets
+    useBurningAdrenaline(); -- T12 4pc
 end
 
 SAO.Class["HUNTER"] = {

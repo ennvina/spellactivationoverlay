@@ -150,6 +150,9 @@ SAO.defaults = {
                 [82926] = { -- Master Marksman (Cataclysm)
                     [0] = true,
                 },
+                [99060] = { -- Burning Adrenaline (Cataclysm)
+                    [0] = true,
+                },
                 [415414]= { -- Lock and Load (Season of Discovery)
                     [0] = true, -- any stacks
                 },
