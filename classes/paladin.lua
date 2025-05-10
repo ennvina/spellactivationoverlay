@@ -130,7 +130,7 @@ local function useInfusionOfLight()
             talent = infusionOfLightTalent,
             overlays = {
                 [SAO.WRATH] = { texture = "daybreak", position = "Left + Right (Flipped)" },
-                [SAO.CATA] = { texture = "denounce", position = "Top", option = { subText = SAO:RecentlyUpdated() } }, -- Updated 2024-05-26
+                [SAO.CATA] = { texture = "denounce", position = "Top" },
             },
             buttons = {
                 [SAO.WRATH] = { flashOfLight, holyLight },
