@@ -73,13 +73,13 @@ SAO.Variable:register({
         isRequired = SAO.IsCata(),
         names = { "SPELL_ACTIVATION_OVERLAY_SHOW", "SPELL_ACTIVATION_OVERLAY_HIDE" },
         SPELL_ACTIVATION_OVERLAY_SHOW = function(spellID, overlayFileDataID, locationName, scale, r, g, b)
-            local bucket = SAO:GetBucketBySpellID(spellID);
+            local bucket = spellID ~= nil and SAO:GetBucketBySpellID(spellID);
             if bucket and bucket.trigger:reactsWith(SAO.TRIGGER_NATIVE_SAO) then
                 bucket:setNativeSAO(true);
             end
         end,
         SPELL_ACTIVATION_OVERLAY_HIDE = function(spellID)
-            local bucket = SAO:GetBucketBySpellID(spellID);
+            local bucket = spellID ~= nil and SAO:GetBucketBySpellID(spellID);
             if bucket and bucket.trigger:reactsWith(SAO.TRIGGER_NATIVE_SAO) then
                 bucket:setNativeSAO(false);
             end
