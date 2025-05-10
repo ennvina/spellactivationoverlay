@@ -9,6 +9,7 @@ Bump in TOC file for Dragon Soul patch (Cataclysm)
 
 New Spell Alert:
 - Druid's Swiftbloom (Scarlet Enclave 2pc, Season of Discovery)
+- Hunter's Burning Adrenaline (Firelands 4pc, Cataclysm)
 
 New Glowing Buttons:
 - Druid's Nourish, during Fury of Stormrage (Season of Discovery)
