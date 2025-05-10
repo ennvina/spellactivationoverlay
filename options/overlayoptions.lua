@@ -73,8 +73,6 @@ function SAO.AddOverlayOption(self, talentID, auraID, hash, talentSubText, varia
         local registeredSpellID;
         if testAuraID then
             registeredSpellID = testAuraID;
-        elseif self.IsEra() and not self:IsFakeSpell(auraID) then
-            registeredSpellID = GetSpellInfo(auraID); -- Cannot track spell ID on Classic Era, but can track spell name
         else
             registeredSpellID = auraID;
         end
