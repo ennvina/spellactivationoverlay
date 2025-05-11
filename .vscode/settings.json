@@ -67,6 +67,7 @@
         "WrapTextInColorCode",
         // WoW game API
         "C_Engraving",
+        "C_Item",
         "C_Timer",
         "C_UnitAuras",
         "CombatLogGetCurrentEventInfo",
