@@ -376,6 +376,7 @@ local function registerClass(self)
             local pulse = lightningShieldStacks == 9;
             self:RegisterAura(auraName, lightningShieldStacks, RollingThunderHandler.fakeSpellID, "fulmination", "Top", scale, 255, 255, 255, pulse, RollingThunderHandler.earthShockSpells);
         end
+
         SAO:CreateEffect(
             "power_surge_sod_heal",
             SAO.SOD,
@@ -383,7 +384,7 @@ local function registerClass(self)
             "aura",
             {
                 talent = powerSurgeSoDHealBuff,
-                buttons = { chainHeal },
+                button = { spellID = chainHeal, option = { talentSubText = HEALER } },
             }
         );
     end
@@ -424,7 +425,7 @@ local function loadOptions(self)
     if self.IsWrath() then
         self:AddSoulPreserverOverlayOption(60515); -- 60515 = Shaman buff
     elseif self.IsSoD() then
-        self:AddOverlayOption(powerSurgeSoD, powerSurgeSoDBuff);
+        self:AddOverlayOption(powerSurgeSoD, powerSurgeSoDBuff, nil, DAMAGER);
         self:AddOverlayOption(rollingThunderSoD, lightningShield, self:HashNameFromStacks(7), nil, nil, nil, RollingThunderHandler.fakeSpellID);
         self:AddOverlayOption(rollingThunderSoD, lightningShield, self:HashNameFromStacks(8), nil, nil, nil, RollingThunderHandler.fakeSpellID);
         self:AddOverlayOption(rollingThunderSoD, lightningShield, self:HashNameFromStacks(9), nil, nil, nil, RollingThunderHandler.fakeSpellID);
@@ -433,8 +434,8 @@ local function loadOptions(self)
     if self.IsCata() then
         self:AddGlowingOption(fulminationTalentCata, lightningShield, earthShock, sixToNineStacks);
     elseif self.IsSoD() then
-        self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, chainLightning);
-        self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, lavaBurstSoD);
+        self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, chainLightning, DAMAGER);
+        self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, lavaBurstSoD, DAMAGER);
         self:AddGlowingOption(rollingThunderSoD, lightningShield, earthShock, sevenToNineStacks);
     end
 end
