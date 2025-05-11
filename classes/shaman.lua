@@ -147,19 +147,27 @@ local function customCLEU(self, ...)
     end
 end
 
---Checking for 6set tier4 enhancement
-local function checkTierSetFunction(self, ...)
-local slots = {240131, 240135, 240128, 240136, 240134, 240129, 240137, 240130}
-    local tier = 0 
-    for i=1,8 do
-        if(C_Item.IsEquippedItem(slots[i])) then
-            tier = tier + 1
+-- Check if Maelstrom Weapon effect should pulse at 5 stacks
+-- This question only applies to 5 stacks, because the answer is obvious for other stacks
+-- At 5 stacks, we want to pulse if the shaman is capped at 5 stacks, and not pulse if capped at 10
+local function mustPulseMSW5(self, ...)
+    -- Count the number of items currently equipped from Enhancement's T4 set (Season of Discovery)
+    local t4Items = { 240131, 240135, 240128, 240136, 240134, 240129, 240137, 240130 }
+    local nbT4Items = 0;
+    for _, item in ipairs(t4Items) do
+        if C_Item.IsEquippedItem(item) then
+            nbT4Items = nbT4Items + 1;
         end
-    end 
-    if tier < 6 then    
-        return true 
-    else 
-        return false
+    end
+
+    if nbT4Items < 6 then
+        -- If the shaman does not have the T4 6pc, s/he is capped at 5 stacks
+        -- In which case, the Maelstrom Weapon should pulse at 5 stacks
+        return true;
+    else
+        -- If the shaman has at least 6 pieces of Enhancement's T4, Maelstrom Weapon is capped at 10 stacks
+        -- In this case, Maelstrom Weapon should *not* pulse at 5 stacks
+        return false;
     end
 end
 
@@ -260,7 +268,7 @@ local function registerClass(self)
                     { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = true , option = true },
                 },
                 [SAO.SOD] = { 
-                    { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = checkTierSetFunction , option = true },
+                    { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = mustPulseMSW5, option = true },
                     { stacks = 6, texture = "maelstrom_weapon_6", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
                     { stacks = 7, texture = "maelstrom_weapon_7", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
                     { stacks = 8, texture = "maelstrom_weapon_8", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
@@ -368,6 +376,7 @@ local function registerClass(self)
             local pulse = lightningShieldStacks == 9;
             self:RegisterAura(auraName, lightningShieldStacks, RollingThunderHandler.fakeSpellID, "fulmination", "Top", scale, 255, 255, 255, pulse, RollingThunderHandler.earthShockSpells);
         end
+
         SAO:CreateEffect(
             "power_surge_sod_heal",
             SAO.SOD,
@@ -375,7 +384,7 @@ local function registerClass(self)
             "aura",
             {
                 talent = powerSurgeSoDHealBuff,
-                buttons = { chainHeal },
+                button = { spellID = chainHeal, option = { talentSubText = HEALER } },
             }
         );
     end
@@ -416,7 +425,7 @@ local function loadOptions(self)
     if self.IsWrath() then
         self:AddSoulPreserverOverlayOption(60515); -- 60515 = Shaman buff
     elseif self.IsSoD() then
-        self:AddOverlayOption(powerSurgeSoD, powerSurgeSoDBuff);
+        self:AddOverlayOption(powerSurgeSoD, powerSurgeSoDBuff, nil, DAMAGER);
         self:AddOverlayOption(rollingThunderSoD, lightningShield, self:HashNameFromStacks(7), nil, nil, nil, RollingThunderHandler.fakeSpellID);
         self:AddOverlayOption(rollingThunderSoD, lightningShield, self:HashNameFromStacks(8), nil, nil, nil, RollingThunderHandler.fakeSpellID);
         self:AddOverlayOption(rollingThunderSoD, lightningShield, self:HashNameFromStacks(9), nil, nil, nil, RollingThunderHandler.fakeSpellID);
@@ -425,8 +434,8 @@ local function loadOptions(self)
     if self.IsCata() then
         self:AddGlowingOption(fulminationTalentCata, lightningShield, earthShock, sixToNineStacks);
     elseif self.IsSoD() then
-        self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, chainLightning);
-        self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, lavaBurstSoD);
+        self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, chainLightning, DAMAGER);
+        self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, lavaBurstSoD, DAMAGER);
         self:AddGlowingOption(rollingThunderSoD, lightningShield, earthShock, sevenToNineStacks);
     end
 end

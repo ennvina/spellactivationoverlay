@@ -48,8 +48,8 @@ local mapping =
     ["1028137"]	= "Maelstrom Weapon 2",
     ["1028138"]	= "Maelstrom Weapon 3",
     ["1028139"]	= "Maelstrom Weapon 4",
-    ["450927"] 	= "Maelstrom Weapon",
-    ["30000000"]	= "Maelstrom Weapon 4",
+    ["450927"] 	= "Maelstrom Weapon", -- This acts as a "Maelstrom Weapon 5" texture
+    -- Maelstrom Weapon 6-10 were made up for Season of Discovery
     ["30000001"]	= "Maelstrom Weapon 6",
     ["30000002"]	= "Maelstrom Weapon 7",
     ["30000003"]	= "Maelstrom Weapon 8",
