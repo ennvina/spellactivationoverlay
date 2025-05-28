@@ -563,6 +563,21 @@ local function useSwordAndBoard()
     );
 end
 
+local function useRegicide()
+    local regicideBuff = 1231436;
+
+    SAO:CreateEffect(
+        "regicide_warrior",
+        SAO.SOD,
+        regicideBuff,
+        "aura",
+        {
+            overlay = { texture = "sudden_death", position = "Left + Right (Flipped)" },
+            button = execute,
+        }
+    );
+end
+
 local function registerClass(self)
     -- Counters
     useOverpower();
@@ -581,6 +596,9 @@ local function registerClass(self)
 
     -- Protection
     useSwordAndBoard();
+
+    -- Items
+    useRegicide();
 end
 
 SAO.Class["WARRIOR"] = {
