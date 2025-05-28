@@ -19,6 +19,7 @@ Introducting Mists of Pandaria flavor!
 - Support for Death Knight's Dark Transformation
 - Support for Death Knight's Sudden Doom
 - Support for Death Knight's Glyph of Dark Succor
+- Support for Priest's Shadowform
 
 Known limitations:
 - Dark Transformation does not display an overlay, due to a game client issue
