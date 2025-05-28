@@ -1,7 +1,14 @@
 {
     "search.exclude": {
-        "**/libs/**": true
+        "**/libs/**": true,
+        "**/_release/**": true
     },
+    "files.exclude": {
+        "**/libs/**": true,
+        "**/_release/**": true
+    },
+    "search.useIgnoreFiles": false,
+    "explorer.excludeGitIgnore": false,
     "Lua.diagnostics.globals": [
         // Lua global functions and objects
         "bit",
