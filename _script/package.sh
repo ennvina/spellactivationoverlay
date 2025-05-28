@@ -299,6 +299,37 @@ zipproject cata "$VERSION_TOC_VERSION"
 
 cdup
 
+# Release mop version
+MOP_BUILD_VERSION=50500
+mkproject mop $MOP_BUILD_VERSION
+
+prunecopyright Cataclysm Pandaria
+
+TEXTURES_NOT_FOR_MOP=(
+arcane_missiles_1
+arcane_missiles_2
+arcane_missiles_3
+fulmination
+maelstrom_weapon_6
+maelstrom_weapon_7
+maelstrom_weapon_8
+maelstrom_weapon_9
+maelstrom_weapon_10
+monk_serpent
+raging_blow
+tooth_and_claw
+white_tiger
+$(texbelow 898423 450914 450915)
+)
+prunetex "${TEXTURES_NOT_FOR_MOP[@]}"
+
+SOUNDS_NOT_FOR_MOP=(UI_PowerAura_Generic)
+prunesound "${SOUNDS_NOT_FOR_MOP[@]}"
+
+zipproject mop "$VERSION_TOC_VERSION"
+
+cdup
+
 # Release Necrosis version
 NECROSIS_BUILD_VERSION=40402 # Version does not matter, toc will not be used
 mkproject necrosis $NECROSIS_BUILD_VERSION
