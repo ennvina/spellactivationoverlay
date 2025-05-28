@@ -2,7 +2,6 @@ local AddonName, SAO = ...
 
 -- Optimize frequent calls
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
-local GetTalentInfo = GetTalentInfo
 local UnitGUID = UnitGUID
 
 -- Detect Rolling Thunder stacks
@@ -350,7 +349,7 @@ local function registerClass(self)
 
         local powerSurgeRightTextureFunc = function()
             local hasElementalFocusOption = SpellActivationOverlayDB.classes["SHAMAN"]["alert"][elementalFocusBuff][0];
-            local canProcElementalFocus = efTalentTab and efTalentIndex and select(5, GetTalentInfo(efTalentTab, efTalentIndex)) > 0;
+            local canProcElementalFocus = efTalentTab and efTalentIndex and self:GetNbTalentPoints(efTalentTab, efTalentIndex) > 0;
             if hasElementalFocusOption and canProcElementalFocus then
                 return;
             end
@@ -448,4 +447,5 @@ SAO.Class["SHAMAN"] = {
     ["PLAYER_REGEN_ENABLED"] = deactivateRollingThunderGlow,
     ["PLAYER_REGEN_DISABLED"] = activateRollingThunderGlow,
     ["PLAYER_LOGIN"] = deactivateRollingThunderGlow,
+    IsDisabled = SAO.IsMoP(),
 }

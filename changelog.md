@@ -1,5 +1,42 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.4.1 (2025-05-xx)
+
+Shout-out to Flow who designed Shaman's 6-10 Maelstrom Weapon textures. Thanks!
+
+New Spell Alert
+- Warrior's Regicide (Season of Discovery)
+
+New Glowing Button
+- Warrior's Execute, during Regicide (Season of Discovery)
+
+Introducting Mists of Pandaria flavor!
+- The addon is still in very early stage
+- Support for Death Knight's Crimson Scourge
+- Support for Death Knight's Will of the Necropolis
+- Support for Death Knight's Rime
+- Support for Death Knight's Killing Machine
+- Support for Death Knight's Dark Transformation
+- Support for Death Knight's Sudden Doom
+- Support for Death Knight's Glyph of Dark Succor
+- Support for Mage's Freeze debuff
+- Support for Paladin's Hammer of Wrath
+- Support for Paladin's Exorcism
+- Support for Paladin's Holy Shock
+- Support for Priest's Shadowform
+- Support for Warrior's Overpower
+- Support for Warrior's Execute
+- Support for Warrior's Revenge
+- Support for Warrior's Victory Rush
+
+Known limitations:
+- Dark Transformation does not display an overlay, due to a game client issue
+- Dark Succor will glow Death Strike in all presences, including Blood Presence
+- Mage's Freeze debuff does not track Shaman's Freeze debuff, from Frozen Power
+
+There were significant changes which, hopefully, should not break anything.
+But in case it did break something, please to report issues. Thank you :)
+
 #### v2.4.0 (2025-05-11)
 
 Shout-out to fellow developers Skyward, Vanheden and Adal4. Thanks!
@@ -89,8 +126,8 @@ Mage
 
 Shaman
 - Shaman's Molten Blast option was displayed twice (Season of Discovery)
-- Shaman's Maelstorm Weapon no longer empowers Chain Heal (SoD)
-- Shaman's Maelstorm Weapon no longer empowers Healing Wave (SoD)
+- Shaman's Maelstrom Weapon no longer empowers Chain Heal (SoD)
+- Shaman's Maelstrom Weapon no longer empowers Healing Wave (SoD)
 
 Bug Fixes
 - Lua errors caused by action buttons should no longer happen

@@ -3,7 +3,7 @@ local AddonName, SAO = ...
 local Module = "option"
 
 -- Add a checkbox for an overlay
--- talentID is the spell ID of the associated talent
+-- talentID is the spell ID of the associated talent; can be negative for specs instead of talents
 -- auraID is the spell ID that triggers the overlay; it must match a spell ID of an aura registered with RegisterAura
 -- hash is the display hash expected for this option; use a numerical value as legacy option "stacks", including 0 for "any stacks"
 -- talentSubText is a string describing the specificity of this option
@@ -13,8 +13,9 @@ local Module = "option"
 -- @note Options must be linked asap, not during loadOptions() which would be loaded only when the options panel is opened
 -- By linking options as soon as possible, before their respective RegisterAura() calls, options can be used by initial triggers, if any
 function SAO.AddOverlayOption(self, talentID, auraID, hash, talentSubText, variants, testHash, testAuraID)
-    if not GetSpellInfo(talentID) or (not self:IsFakeSpell(auraID) and not GetSpellInfo(auraID)) then
-        if not GetSpellInfo(talentID) then
+    local talentText = self:GetTalentText(talentID);
+    if not talentText or (not self:IsFakeSpell(auraID) and not GetSpellInfo(auraID)) then
+        if not talentText then
             self:Debug(Module, "Skipping overlay option of talentID "..tostring(talentID).." because the spell does not exist");
         end
         if not self:IsFakeSpell(auraID) and not GetSpellInfo(auraID) then
@@ -49,8 +50,7 @@ function SAO.AddOverlayOption(self, talentID, auraID, hash, talentSubText, varia
         local text = WrapTextInColorCode(className, classColor);
 
         -- Talent text
-        local spellName, _, spellIcon = GetSpellInfo(talentID);
-        text = text.." |T"..spellIcon..":0|t "..spellName;
+        text = text.." "..talentText;
         local humanReadableHash = hashCalculator:toHumanReadableString();
         if humanReadableHash then
             text = text .. " ("..humanReadableHash..")";

@@ -1,5 +1,6 @@
 local AddonName, SAO = ...
 local ShortAddonName = strlower(AddonName):sub(0,8) == "necrosis" and "Necrosis" or "SAO"
+local Module = "util"
 
 -- This script file is not a 'component' per se, but its functions are used across components
 
@@ -16,9 +17,14 @@ local GetSpellTabInfo = GetSpellTabInfo
 local GetTalentInfo = GetTalentInfo
 local GetTime = GetTime
 local UnitAura = UnitAura
+local UnitClassBase = UnitClassBase
 
 local GetAuraDataBySpellName = C_UnitAuras and C_UnitAuras.GetAuraDataBySpellName
 local GetPlayerAuraBySpellID = C_UnitAuras and C_UnitAuras.GetPlayerAuraBySpellID
+
+local GetNumSpecializationsForClassID = C_SpecializationInfo and C_SpecializationInfo.GetNumSpecializationsForClassID
+local GetSpecializationInfo = C_SpecializationInfo and C_SpecializationInfo.GetSpecializationInfo
+      GetTalentInfo = C_SpecializationInfo and C_SpecializationInfo.GetTalentInfo or GetTalentInfo
 
 --[[
     Logging functions
@@ -110,6 +116,11 @@ function SAO:ExecuteBelow(threshold)
     return string.format(string.format(HEALTH_COST_PCT, "<%s%"), threshold);
 end
 
+-- Text to limit something to one kind of items (class, role, spec...)
+function SAO:OnlyFor(item)
+    return string.format(RACE_CLASS_ONLY, item);
+end
+
 local function tr(translations)
     local locale = GetLocale();
     return translations[locale] or translations[locale:sub(1,2)] or translations["en"];
@@ -176,6 +187,22 @@ function SAO:unsupportedClass()
         ["pt"] = "Classe sem suporte",
         ["ko"] = "지원되지 않는 클래스",
         ["zh"] = "不支持的类",
+    };
+    return tr(unsupportedClassTranslations);
+end
+
+-- Get the "Disabled class" localized text
+function SAO:disabledClass()
+    local unsupportedClassTranslations = {
+        ["en"] = "Disabled class %s while development is in progress.\nPlease come back soon :)",
+        ["de"] = "Deaktivierte Klasse %s, während der Entwicklungsphase.\nBitte kommen Sie bald wieder :)",
+        ["fr"] = "Classe %s désactivée pendant que le développement est en cours.\nRevenez bientôt :)",
+        ["es"] = "Clase %s desactivada mientras el desarrollo está en curso.\nVuelva pronto :)",
+        ["ru"] = "Класс %s отключен на время разработки.\nПожалуйста, вернитесь в ближайшее время :)",
+        ["it"] = "La classe %s è stata disabilitata mentre lo sviluppo è in corso.\nSi prega di tornare presto :)",
+        ["pt"] = "Classe %s desativada enquanto o desenvolvimento está em andamento.\nPor favor, volte em breve :)",
+        ["ko"] = "개발이 진행되는 동안 %s 클래스를 사용할 수 없습니다.\n곧 다시 돌아와주세요 :)",
+        ["zh"] = "开发过程中禁用了%s类。请尽快回来 :)",
     };
     return tr(unsupportedClassTranslations);
 end
@@ -353,21 +380,106 @@ end
     If the talent is found, returns:
     - the number of points spent for this talent
     - the total number of points possible for this talent
-    - the tabulation in which the talent was found
-    - the index in which the talent was found
+    - the tabulation in which the talent was found (for MoP+, the row/tier where it was found)
+    - the index in which the talent was found (for MoP+, the column where it was found)
     Tabulation and index can be re-used in GetTalentInfo to avoid re-parsing all talents
+    For MoP+, the tier and column can be re-used in C_SpecializationInfo.GetTalentInfo({ tier=tier, column=column })
 
     Returns nil if no talent is found with this name e.g., in the wrong expansion
 ]]
-function SAO.GetTalentByName(self, talentName)
-    for tab = 1, GetNumTalentTabs() do
-        for index = 1, GetNumTalents(tab) do
-            local name, iconTexture, tier, column, rank, maxRank, isExceptional, available = GetTalentInfo(tab, index);
-            if (name == talentName) then
-                return rank, maxRank, tab, index;
+function SAO:GetTalentByName(talentName)
+    if self.IsMoP() then
+        for tier = 1, MAX_NUM_TALENT_TIERS do
+            for column = 1, NUM_TALENT_COLUMNS do
+                local talentInfo = GetTalentInfo({ tier=tier, column=column });
+                if talentInfo and talentInfo.name == talentName then
+                    local rank = talentInfo.selected and 1 or 0; -- Use talentInfo.known, if .selected is unreliable
+                    local maxRank = talentInfo.maxRank
+                    return rank, maxRank, tier, column
+                end
+            end
+        end
+    else
+        for tab = 1, GetNumTalentTabs() do
+            for index = 1, GetNumTalents(tab) do
+                local name, iconTexture, tier, column, rank, maxRank, isExceptional, available = GetTalentInfo(tab, index);
+                if name == talentName then
+                    return rank, maxRank, tab, index;
+                end
             end
         end
     end
+end
+
+--[[
+    Get the number of talent points spent at a specific talent coordinate
+    - for Era-Cataclysm, i is the tab and j is the index
+    - for MoP+, i is the tier and j is the column
+
+    Return a number, or nil if the talent is not found
+]]
+function SAO:GetNbTalentPoints(i, j)
+    if self.IsMoP() then
+        local talentInfo = GetTalentInfo({ tier=i, column=j });
+        return talentInfo and talentInfo.selected and 1 or 0;
+    else
+        return (select(5, GetTalentInfo(i, j)));
+    end
+end
+
+-- Get the list of specializations based on a negative talent bit-field
+function SAO:GetSpecsFromTalent(talentID)
+    if type(talentID) ~= 'number' or talentID >= 0 then
+        SAO:Error(Module, "Getting specializations for a non-negative talentID "..tostring(talentID));
+        return nil;
+    end
+
+    local specs = {};
+    for spec = 1, SAO:GetNbSpecs() do
+        local hasSpec = bit.band(-talentID, bit.lshift(1, spec-1)) ~= 0;
+        if hasSpec then
+            tinsert(specs, spec);
+        end
+    end
+    return specs;
+end
+
+-- Get text and icon for either a talent as spellID, or as spec bit-field
+function SAO:GetTalentText(talentID)
+    if type(talentID) == 'number' and talentID < 0 then
+        if not self:IsMoP() then
+            self:Error(Module, "Getting talent text for a negative talentID "..talentID.." but prior to the Mists of Pandaria specialization rework");
+            return nil;
+        end
+        local specs = self:GetSpecsFromTalent(talentID);
+        if not specs or #specs == 0 then
+            return nil;
+        elseif #specs == 1 then
+            local _, name, _, icon = GetSpecializationInfo(specs[1]);
+            local text = "|T"..icon..":0|t "..name;
+            return SPECIALIZATION..": "..text;
+        else
+            local text = "";
+            for _, spec in ipairs(specs) do
+                local _, name, _, icon = GetSpecializationInfo(spec);
+                if text ~= "" then text = text.." / " end
+                text = text.."|T"..icon..":0|t "..name;
+            end
+            return SPECIALIZATION..": "..text;
+        end
+    else
+        local spellName, _, spellIcon = GetSpellInfo(talentID);
+        if not spellName then
+            self:Error(Module, "Unknown spell for talentID "..tostring(talentID));
+            return nil;
+        end
+        return "|T"..spellIcon..":0|t "..spellName;
+    end
+end
+
+-- Get the number of specializations for the current class
+function SAO:GetNbSpecs()
+    return GetNumSpecializationsForClassID(select(2, UnitClassBase("player")));
 end
 
 -- Utility function to get the spell ID associated to an action

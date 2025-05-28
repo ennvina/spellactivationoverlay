@@ -489,4 +489,5 @@ SAO.Class["DRUID"] = {
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
     ["UPDATE_SHAPESHIFT_FORM"] = updateShapeshift,
     ["PLAYER_ENTERING_WORLD"] = customLoad,
+    IsDisabled = SAO.IsMoP(),
 }

@@ -1,5 +1,9 @@
 local AddonName, SAO = ...
 
+local PRIEST_SPEC_DISCIPLINE = -1;
+local PRIEST_SPEC_HOLY = -2;
+local PRIEST_SPEC_SHADOW = -4;
+
 local bindingHeal = 401937;
 local flashHeal = 2061;
 local flashHealNoMana = 101062;
@@ -56,6 +60,7 @@ local function useShadowform()
         shadowform,
         "aura",
         {
+            talent = SAO.IsMoP() and PRIEST_SPEC_SHADOW or nil,
             requireTalent = true,
             combatOnly = true,
             button = { stacks = -1 },

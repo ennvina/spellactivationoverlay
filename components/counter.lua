@@ -4,7 +4,6 @@ local Module = "counter"
 -- Optimize frequent calls
 local GetSpellCooldown = GetSpellCooldown
 local GetSpellPowerCost = GetSpellPowerCost
-local GetTalentInfo = GetTalentInfo
 local GetTime = GetTime
 local InCombatLockdown = InCombatLockdown
 local IsUsableSpell = IsUsableSpell
@@ -148,7 +147,7 @@ function SAO.CheckCounterAction(self, spellID, bucketName, talent, combatOnly)
     SAO:TraceThrottled(spellID, Module, "CheckCounterAction "..tostring(spellID).." "..tostring(bucketName).." "..tostring(talent).." "..tostring(combatOnly));
 
     if (talent) then
-        local rank = select(5, GetTalentInfo(talent[1], talent[2]));
+        local rank = self:GetNbTalentPoints(talent[1], talent[2]);
         if (not (rank > 0)) then
             -- 0 points spent in the required Talent
             self:SetCounterStatus(spellID, bucketName, 'off');

@@ -8,7 +8,8 @@ SAO.SOD = 512
 SAO.TBC = 1024
 SAO.WRATH = 2048
 SAO.CATA = 4096
-SAO.ALL_PROJECTS = SAO.ERA+SAO.SOD+SAO.TBC+SAO.WRATH+SAO.CATA
+SAO.MOP = 8192
+SAO.ALL_PROJECTS = SAO.ERA+SAO.SOD+SAO.TBC+SAO.WRATH+SAO.CATA+SAO.MOP
 
 function SAO.IsEra()
     return WOW_PROJECT_ID == WOW_PROJECT_CLASSIC;
@@ -26,6 +27,10 @@ function SAO.IsCata()
     return WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC;
 end
 
+function SAO.IsMoP()
+    return WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC;
+end
+
 function SAO.IsSoD()
     return WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and C_Engraving and C_Engraving.IsEngravingEnabled()
 end
@@ -40,6 +45,7 @@ function SAO.IsProject(projectFlags)
         bit.band(projectFlags, SAO.SOD) ~= 0 and SAO.IsSoD() or
         bit.band(projectFlags, SAO.TBC) ~= 0 and SAO.IsTBC() or
         bit.band(projectFlags, SAO.WRATH) ~= 0 and SAO.IsWrath() or
-        bit.band(projectFlags, SAO.CATA) ~= 0 and SAO.IsCata()
+        bit.band(projectFlags, SAO.CATA) ~= 0 and SAO.IsCata() or
+        bit.band(projectFlags, SAO.MOP) ~= 0 and SAO.IsMoP()
     );
 end

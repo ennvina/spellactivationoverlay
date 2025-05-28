@@ -4,7 +4,6 @@ local Module = "mage"
 -- Optimize frequent calls
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local GetSpellInfo = GetSpellInfo
-local GetTalentInfo = GetTalentInfo
 local UnitCanAttack = UnitCanAttack
 local UnitDebuff = UnitDebuff
 local UnitExists = UnitExists
@@ -102,7 +101,7 @@ HotStreakHandler.hasHotStreakTalent = function(self)
     -- Talent information must include at least one point in Hot Streak
     -- This may not be accurate, but it's almost impossible to do better
     -- Not to mention, almost no one will play with only 1 or 2 points
-    local rank = select(5, GetTalentInfo(self.talent[1], self.talent[2]));
+    local rank = SAO:GetNbTalentPoints(self.talent[1], self.talent[2]);
     return rank > 0;
 end
 

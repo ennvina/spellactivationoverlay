@@ -37,7 +37,7 @@ function SpellActivationOverlay_OnLoad(self)
 
 	local className, classFile, classId = UnitClass("player");
 	local class = SAO.Class[classFile];
-	if class then
+	if class and not class.IsDisabled then
 		class.Intrinsics = { className, classFile, classId };
 		SAO.CurrentClass = class;
 
@@ -49,8 +49,13 @@ function SpellActivationOverlay_OnLoad(self)
 		end
 	else
 		local currentClass = tostring(select(1, UnitClass("player")));
-		SAO:Error(Module, SAO:unsupportedClass(), currentClass);
-		SAO.Shutdown:EnableCategory("UNSUPPORTED_CLASS");
+		if class and class.IsDisabled then
+			SAO:Warn(Module, string.format(SAO:disabledClass(), currentClass));
+			SAO.Shutdown:EnableCategory("DISABLED_CLASS");
+		else
+			SAO:Error(Module, SAO:unsupportedClass(), currentClass);
+			SAO.Shutdown:EnableCategory("UNSUPPORTED_CLASS");
+		end
 	end
 
 	if ( SAO.IsCata() ) then
