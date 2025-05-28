@@ -1,5 +1,6 @@
 local AddonName, SAO = ...
 local ShortAddonName = strlower(AddonName):sub(0,8) == "necrosis" and "Necrosis" or "SAO"
+local Module = "util"
 
 -- This script file is not a 'component' per se, but its functions are used across components
 
@@ -16,9 +17,13 @@ local GetSpellTabInfo = GetSpellTabInfo
 local GetTalentInfo = GetTalentInfo
 local GetTime = GetTime
 local UnitAura = UnitAura
+local UnitClassBase = UnitClassBase
 
 local GetAuraDataBySpellName = C_UnitAuras and C_UnitAuras.GetAuraDataBySpellName
 local GetPlayerAuraBySpellID = C_UnitAuras and C_UnitAuras.GetPlayerAuraBySpellID
+
+local GetNumSpecializationsForClassID = C_SpecializationInfo and C_SpecializationInfo.GetNumSpecializationsForClassID
+      GetTalentInfo = C_SpecializationInfo and C_SpecializationInfo.GetTalentInfo or GetTalentInfo
 
 --[[
     Logging functions
@@ -353,21 +358,73 @@ end
     If the talent is found, returns:
     - the number of points spent for this talent
     - the total number of points possible for this talent
-    - the tabulation in which the talent was found
-    - the index in which the talent was found
+    - the tabulation in which the talent was found (for MoP+, the row/tier where it was found)
+    - the index in which the talent was found (for MoP+, the column where it was found)
     Tabulation and index can be re-used in GetTalentInfo to avoid re-parsing all talents
+    For MoP+, the tier and column can be re-used in C_SpecializationInfo.GetTalentInfo({ tier=tier, column=column })
 
     Returns nil if no talent is found with this name e.g., in the wrong expansion
 ]]
-function SAO.GetTalentByName(self, talentName)
-    for tab = 1, GetNumTalentTabs() do
-        for index = 1, GetNumTalents(tab) do
-            local name, iconTexture, tier, column, rank, maxRank, isExceptional, available = GetTalentInfo(tab, index);
-            if (name == talentName) then
-                return rank, maxRank, tab, index;
+function SAO:GetTalentByName(talentName)
+    if self.IsMoP() then
+        for tier = 1, MAX_NUM_TALENT_TIERS do
+            for column = 1, NUM_TALENT_COLUMNS do
+                local talentInfo = GetTalentInfo({ tier=tier, column=column });
+                if talentInfo and talentInfo.name == talentName then
+                    local rank = talentInfo.selected and 1 or 0; -- Use talentInfo.known, if .selected is unreliable
+                    local maxRank = talentInfo.maxRank
+                    return rank, maxRank, tier, column
+                end
+            end
+        end
+    else
+        for tab = 1, GetNumTalentTabs() do
+            for index = 1, GetNumTalents(tab) do
+                local name, iconTexture, tier, column, rank, maxRank, isExceptional, available = GetTalentInfo(tab, index);
+                if name == talentName then
+                    return rank, maxRank, tab, index;
+                end
             end
         end
     end
+end
+
+--[[
+    Get the number of talent points spent at a specific talent coordinate
+    - for Era-Cataclysm, i is the tab and j is the index
+    - for MoP+, i is the tier and j is the column
+
+    Return a number, or nil if the talent is not found
+]]
+function SAO:GetNbTalentPoints(i, j)
+    if self.IsMoP() then
+        local talentInfo = GetTalentInfo({ tier=i, column=j });
+        return talentInfo and talentInfo.selected and 1 or 0;
+    else
+        return (select(5, GetTalentInfo(i, j)));
+    end
+end
+
+-- Get the list of specializations based on a negative talent bit-field
+function SAO:GetSpecsFromTalent(talentID)
+    if type(talentID) ~= 'number' or talentID >= 0 then
+        SAO:Error(Module, "Getting specializations for a non-negative talentID "..tostring(talentID));
+        return nil;
+    end
+
+    local specs = {};
+    for spec = 1, SAO:GetNbSpecs() do
+        local hasSpec = bit.band(-talentID, bit.lshift(1, spec-1)) ~= 0;
+        if hasSpec then
+            tinsert(specs, spec);
+        end
+    end
+    return specs;
+end
+
+-- Get the number of specializations for the current class
+function SAO:GetNbSpecs()
+    return GetNumSpecializationsForClassID(select(2, UnitClassBase("player")));
 end
 
 -- Utility function to get the spell ID associated to an action

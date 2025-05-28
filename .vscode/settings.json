@@ -68,6 +68,7 @@
         // WoW game API
         "C_Engraving",
         "C_Item",
+        "C_SpecializationInfo",
         "C_Timer",
         "C_UnitAuras",
         "CombatLogGetCurrentEventInfo",
@@ -104,6 +105,7 @@
         "UnitAura",
         "UnitCanAttack",
         "UnitClass",
+        "UnitClassBase",
         "UnitDebuff",
         "UnitExists",
         "UnitGUID",
@@ -132,8 +134,10 @@
         "KBASE_RECENTLY_UPDATED",
         "LARGE",
         "LIGHTBLUE_FONT_COLOR",
+        "MAX_NUM_TALENT_TIERS",
         "NEAR",
         "NONE",
+        "NUM_TALENT_COLUMNS",
         "NUM_STANCE_SLOTS",
         "OFF",
         "ON_COOLDOWN",
@@ -151,10 +155,11 @@
         "UNKNOWN",
         "WARNING_FONT_COLOR",
         "WOW_PROJECT_ID",
-        "WOW_PROJECT_CLASSIC",
         "WOW_PROJECT_BURNING_CRUSADE_CLASSIC",
-        "WOW_PROJECT_WRATH_CLASSIC",
-        "WOW_PROJECT_CATACLYSM_CLASSIC"
+        "WOW_PROJECT_CATACLYSM_CLASSIC",
+        "WOW_PROJECT_CLASSIC",
+        "WOW_PROJECT_MISTS_CLASSIC",
+        "WOW_PROJECT_WRATH_CLASSIC"
     ],
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#4f71dc",
