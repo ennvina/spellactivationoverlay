@@ -10,21 +10,21 @@ SAO.defaults = {
                 [51124] = { -- Killing Machine
                     [0] = true,
                 },
-                [81141] = { -- Crimson Scourge (Cataclysm)
+                [81141] = { -- Crimson Scourge (Cataclysm+)
                     [0] = true,
                 },
-                [81340] = { -- Sudden Doom (Cataclysm)
+                [81340] = { -- Sudden Doom (Cataclysm+)
                     [0] = true,
                 },
-                [93426] = { -- Dark Transformation (not an actual buff) (Cataclysm)
+                [93426] = { -- Dark Transformation (not an actual buff) (Cataclysm+)
                     [0] = true,
                 },
-                [96171] = { -- Will of the Necropolis (Cataclysm)
+                [96171] = { -- Will of the Necropolis (Cataclysm+)
                     [0] = true,
                 },
             },
             glow = {
-                [49222] = { -- Bone Shield (Cataclysm)
+                [49222] = { -- Bone Shield (Cataclysm+)
                     [49222] = false, -- Bone Shield
                 },
                 [56815] = { -- Rune Strike (Wrath)
@@ -36,21 +36,24 @@ SAO.defaults = {
                 },
                 [51124] = { -- Killing Machine
                     [49020] = true, -- Obliterate (not for Wrath)
-                    [45477] = true, -- Icy Touch (not for Cata)
+                    [45477] = true, -- Icy Touch (only for Wrath)
                     [49143] = true, -- Frost Strike
-                    [49184] = true, -- Howling Blast (not for Cata)
+                    [49184] = true, -- Howling Blast (only for Wrath)
                 },
-                [81141] = { -- Crimson Scourge (Cataclysm)
+                [81141] = { -- Crimson Scourge (Cataclysm+)
                     [48721] = true, -- Blood Boil
                 },
-                [81340] = { -- Sudden Doom (Cataclysm)
+                [81340] = { -- Sudden Doom (Cataclysm+)
                     [47541] = true, -- Death Coil
                 },
-                [93426] = { -- Dark Transformation (not an actual buff) (Cataclysm)
+                [93426] = { -- Dark Transformation (not an actual buff) (Cataclysm+)
                     [63560] = true, -- Dark Transformation
                 },
-                [96171] = { -- Will of the Necropolis (Cataclysm)
+                [96171] = { -- Will of the Necropolis (Cataclysm+)
                     [48982] = true, -- Rune Tap
+                },
+                [101568] = { -- Glyph of Dark Succor (MoP)
+                    [49998] = true, -- Death Strike
                 },
             }
         },

@@ -1,9 +1,14 @@
 local AddonName, SAO = ...
 
+local DK_SPEC_BLOOD = -1;
+local DK_SPEC_FROST = -2;
+local DK_SPEC_UNHOLY = -4;
+
 local bloodBoil = 48721;
 local boneShield = 49222;
 local darkTransformation = 63560;
 local deathCoil = 47541;
+local deathStrike = 49998;
 local frostStrike = 49143;
 local howlingBlast = 49184;
 local icyTouch = 45477;
@@ -22,13 +27,15 @@ local function useRuneStrike()
 end
 
 local function useBoneShield()
+    local boneShieldTalent = SAO.IsMoP() and DK_SPEC_BLOOD or boneShield;
+
     SAO:CreateEffect(
         "bone_shield",
-        SAO.CATA,
+        SAO.CATA + SAO.MOP,
         boneShield,
         "aura",
         {
-            talent = boneShield,
+            talent = boneShieldTalent,
             requireTalent = true,
             actionUsable = true,
             combatOnly = true,
@@ -38,49 +45,60 @@ local function useBoneShield()
 end
 
 local function useRime()
+    local rimeTalent = SAO.IsMoP() and 59057 or 49188;
+
     SAO:CreateEffect(
         "rime",
-        SAO.WRATH + SAO.CATA,
+        SAO.WRATH + SAO.CATA + SAO.MOP,
         59052, -- Freezing Fog (buff)
         "aura",
         {
-            talent = 49188, -- Rime (talent)
+            talent = rimeTalent,
             overlay = { texture = "rime", position = "Top" },
             buttons = {
                 [SAO.WRATH] = howlingBlast,
                 [SAO.CATA] = { howlingBlast, icyTouch },
+                -- [SAO.MOP] = { howlingBlast, icyTouch }, -- Buttons already glowing natively
             },
         }
     );
 end
 
 local function useKillingMachine()
+    local killinsMachineTalent = SAO.IsMoP() and 51128 or 51123;
+
     SAO:CreateEffect(
         "killing_machine",
-        SAO.WRATH + SAO.CATA,
+        SAO.WRATH + SAO.CATA + SAO.MOP,
         51124, -- Killing Machine (buff)
         "aura",
         {
-            talent = 51123, -- Killing Machine (talent)
+            talent = killinsMachineTalent,
             overlay = { texture = "killing_machine", position = "Left + Right (Flipped)" },
             buttons = {
                 [SAO.WRATH] = { icyTouch, frostStrike, howlingBlast },
                 [SAO.CATA] = { frostStrike, obliterate },
+                -- [SAO.MOP] = { frostStrike, obliterate }, -- Buttons already glowing natively
             },
         }
     );
 end
 
 local function useCrimsonScourge()
+    local crimsonScourgeTalent = SAO.IsMoP() and 81136 or 81135;
+
     SAO:CreateEffect(
         "crimson_scourge",
-        SAO.CATA,
+        SAO.CATA + SAO.MOP,
         81141, -- Crimson Scourge (buff)
         "aura",
         {
-            talent = 81135, -- Crimson Scourge (talent)
+            talent = crimsonScourgeTalent,
             overlay = { texture = "blood_boil", position = "Left + Right (Flipped)" },
-            button = bloodBoil,
+            buttons = {
+                [SAO.CATA] = bloodBoil,
+                -- [SAO.MOP] = bloodBoil, -- Button already glowing natively
+            },
         }
     );
 end
@@ -88,40 +106,65 @@ end
 local function useDarkTransformation()
     SAO:CreateEffect(
         "dark_transformation",
-        SAO.CATA,
+        SAO.CATA + SAO.MOP,
         93426, -- Dark Transformation proc for Native SHOW event
         "native",
         {
             overlay = { texture = "dark_transformation", position = "Top" },
-            button = darkTransformation,
+            buttons = {
+                [SAO.CATA] = darkTransformation,
+                -- [SAO.MOP] = darkTransformation, -- Button already glowing natively
+            }
         }
     );
 end
 
 local function useSuddenDoom()
+    local suddenDoomTalent = SAO.IsMoP() and 49530 or 81340;
+
     SAO:CreateEffect(
         "sudden_doom",
-        SAO.CATA,
+        SAO.CATA + SAO.MOP,
         81340, -- Sudden Doom (buff)
         "aura",
         {
-            talent = 49018, -- Sudden Doom (talent)
+            talent = suddenDoomTalent,
             overlay = { texture = "sudden_doom", position = "Left + Right (Flipped)" },
-            button = deathCoil,
+            buttons = {
+                [SAO.CATA] = deathCoil,
+                -- [SAO.MOP] = deathCoil, -- Button already glowing natively
+            },
         }
     );
 end
 
 local function useWotn()
+    local wotnTalent = SAO.IsMoP() and 81164 or 52284;
+
     SAO:CreateEffect(
         "wotn",
-        SAO.CATA,
+        SAO.CATA + SAO.MOP,
         96171, -- Will of the Necropolis (buff)
         "aura",
         {
-            talent = 52284, -- Will of the Necropolis (talent)
+            talent = wotnTalent,
             overlay = { texture = "necropolis", position = "Top" },
-            button = runeTap,
+            buttons = {
+                [SAO.CATA] = runeTap,
+                -- [SAO.MOP] = runeTap, -- Button already glowing natively
+            },
+        }
+    );
+end
+
+local function useDarkSuccor()
+    SAO:CreateEffect(
+        "dark_succor",
+        SAO.MOP,
+        101568, -- Dark Succor (buff)
+        "aura",
+        {
+            button = deathStrike,
         }
     );
 end
@@ -142,6 +185,9 @@ local function registerClass(self)
     -- Unholy
     useDarkTransformation();
     useSuddenDoom();
+
+    -- Glyphs
+    useDarkSuccor();
 end
 
 SAO.Class["DEATHKNIGHT"] = {

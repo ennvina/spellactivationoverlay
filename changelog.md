@@ -12,6 +12,17 @@ New Glowing Button
 
 Introducting Mists of Pandaria flavor!
 - The addon is still in very early stage
+- Support for Death Knight's Crimson Scourge
+- Support for Death Knight's Will of the Necropolis
+- Support for Death Knight's Rime
+- Support for Death Knight's Killing Machine
+- Support for Death Knight's Dark Transformation
+- Support for Death Knight's Sudden Doom
+- Support for Death Knight's Glyph of Dark Succor
+
+Known limitations:
+- Dark Transformation does not display an overlay, due to a game client issue
+- Dark Succor will glow Death Strike in all presences, including Blood Presence
 
 There were significant changes which, hopefully, should not break anything.
 But in case it did break something, please to report issues. Thank you :)
