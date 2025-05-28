@@ -568,6 +568,22 @@ local function useSwordAndBoard()
     );
 end
 
+local function useIncite()
+    local inciteBuff = 86627;
+    local inciteTalent = 50685; -- Rank 1
+
+    SAO:CreateEffect(
+        "incite",
+        SAO.CATA,
+        inciteBuff,
+        "aura",
+        {
+            talent = inciteTalent,
+            button = heroicStrike,
+        }
+    );
+end
+
 local function useRegicide()
     local regicideBuff = 1231436;
 
@@ -601,6 +617,7 @@ local function registerClass(self)
 
     -- Protection
     useSwordAndBoard();
+    useIncite();
 
     -- Items
     useRegicide();
