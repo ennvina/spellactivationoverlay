@@ -29,6 +29,7 @@ Introducting Mists of Pandaria flavor!
 - Support for Warrior's Execute
 - Support for Warrior's Revenge
 - Support for Warrior's Victory Rush
+- Support for Warrior's Glyph of Incite
 
 Known limitations:
 - Dark Transformation does not display an overlay, due to a game client issue

@@ -584,6 +584,22 @@ local function useIncite()
     );
 end
 
+local function useGlyphOfIncite()
+    local glyphOfInciteBuff = 122016;
+    local glyphOfInciteTalent = 122013;
+
+    SAO:CreateEffect(
+        "glyph_of_incite",
+        SAO.MOP,
+        glyphOfInciteBuff,
+        "aura",
+        {
+            talent = glyphOfInciteTalent,
+            buttons = { heroicStrike, cleave },
+        }
+    );
+end
+
 local function useRegicide()
     local regicideBuff = 1231436;
 
@@ -618,6 +634,9 @@ local function registerClass(self)
     -- Protection
     useSwordAndBoard();
     useIncite();
+
+    -- Talents
+    useGlyphOfIncite();
 
     -- Items
     useRegicide();
