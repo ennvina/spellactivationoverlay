@@ -453,6 +453,10 @@ function SAO:GetTalentText(talentID)
         end
     else
         local spellName, _, spellIcon = GetSpellInfo(talentID);
+        if not spellName then
+            self:Error(Module, "Unknown spell for talentID "..tostring(talentID));
+            return nil;
+        end
         return "|T"..spellIcon..":0|t "..spellName;
     end
 end
