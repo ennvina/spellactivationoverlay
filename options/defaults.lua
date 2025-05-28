@@ -651,6 +651,9 @@ SAO.defaults = {
                 [440114] = { -- Sudden Death (Season of Discovery)
                     [0] = true,
                 },
+                [1231436] = { -- Warrior's Regicide (Season of Discovery)
+                    [0] = true,
+                },
                 [46924] = { -- Bladestorm (Wrath+)
                     [0] = true,
                 },
@@ -698,6 +701,9 @@ SAO.defaults = {
                     [86346]= true, -- Colossus Smash (Cataclysm)
                 },
                 [440114] = { -- Sudden Death (Season of Discovery)
+                    [5308] = true, -- Execute
+                },
+                [1231436] = { -- Warrior's Regicide (Season of Discovery)
                     [5308] = true, -- Execute
                 },
                 [46916] = { -- Bloodsurge (Wrath+)
