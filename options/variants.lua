@@ -82,7 +82,7 @@ function SAO.StringVariantValue(self, items, valuePrefix, getTextFunc)
 
     if #items == 1 then
         value = tostring(items[1]);
-        text = string.format(RACE_CLASS_ONLY, getTextFunc(items[1]));
+        text = self:OnlyFor(getTextFunc(items[1]));
     elseif #items > 1 then
         for _, item in ipairs(items) do
             value = value == "" and tostring(item) or value.."/"..tostring(item);

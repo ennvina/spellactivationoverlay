@@ -3,7 +3,7 @@ local AddonName, SAO = ...
 local Module = "option"
 
 -- Add a checkbox for a glowing button
--- talentID is the spell ID of the associated talent; can be nil, meaning the button does not glow depending on a talent
+-- talentID is the spell ID of the associated talent; can be nil, meaning the button does not glow depending on a talent; can be negative for specs instead of talents
 -- spellID is the spell ID of the buff or action that triggers the button; if the button is a counter, spellID should match glowID
 -- glowID is the spell ID of the button(s) that will glow
 -- talentSubText is a string describing the specificity of this option, appended to talent text
@@ -13,8 +13,9 @@ local Module = "option"
 -- @note Options must be linked asap, not during loadOptions() which would be loaded only when the options panel is opened
 -- By linking options as soon as possible, before their respective RegisterAura() calls, options can be used by initial triggers, if any
 function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText, variants, hash) -- @todo use hash and testHash like overlay options
-    if (talentID and not GetSpellInfo(talentID)) or (not self:IsFakeSpell(glowID) and not GetSpellInfo(glowID)) then
-        if talentID and not GetSpellInfo(talentID) then
+    local talentText = talentID and self:GetTalentText(talentID);
+    if (talentID and not talentText) or (not self:IsFakeSpell(glowID) and not GetSpellInfo(glowID)) then
+        if talentID and not talentText then
             self:Debug(Module, "Skipping glowing option of talentID "..tostring(talentID).." because the spell does not exist");
         end
         if not self:IsFakeSpell(glowID) and not GetSpellInfo(glowID) then
@@ -42,12 +43,11 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
         -- Talent text
         local spellName, spellIcon;
         if (talentID and talentID ~= glowID) then
-            spellName, _, spellIcon = GetSpellInfo(talentID);
-            text = text.." |T"..spellIcon..":0|t "..spellName;
+            text = text.." "..talentText;
             if (talentSubText) then
                 text = text.." ("..talentSubText..")";
             end
-            text = text.." +"
+            text = text.." +";
         elseif (talentID and talentID == glowID and talentSubText) then
             self:Debug(Module, "Glowing option of glowID "..tostring(glowID).." has talent sub-text '"..talentSubText.."' but the text will be discarded because talentID matches glowID");
         end

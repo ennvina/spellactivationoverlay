@@ -23,6 +23,7 @@ local GetAuraDataBySpellName = C_UnitAuras and C_UnitAuras.GetAuraDataBySpellNam
 local GetPlayerAuraBySpellID = C_UnitAuras and C_UnitAuras.GetPlayerAuraBySpellID
 
 local GetNumSpecializationsForClassID = C_SpecializationInfo and C_SpecializationInfo.GetNumSpecializationsForClassID
+local GetSpecializationInfo = C_SpecializationInfo and C_SpecializationInfo.GetSpecializationInfo
       GetTalentInfo = C_SpecializationInfo and C_SpecializationInfo.GetTalentInfo or GetTalentInfo
 
 --[[
@@ -113,6 +114,11 @@ end
 -- Execute text to tell enemy HP is below a certain threshold
 function SAO:ExecuteBelow(threshold)
     return string.format(string.format(HEALTH_COST_PCT, "<%s%"), threshold);
+end
+
+-- Text to limit something to one kind of items (class, role, spec...)
+function SAO:OnlyFor(item)
+    return string.format(RACE_CLASS_ONLY, item);
 end
 
 local function tr(translations)
@@ -420,6 +426,35 @@ function SAO:GetSpecsFromTalent(talentID)
         end
     end
     return specs;
+end
+
+-- Get text and icon for either a talent as spellID, or as spec bit-field
+function SAO:GetTalentText(talentID)
+    if type(talentID) == 'number' and talentID < 0 then
+        if not self:IsMoP() then
+            self:Error(Module, "Getting talent text for a negative talentID "..talentID.." but prior to the Mists of Pandaria specialization rework");
+            return nil;
+        end
+        local specs = self:GetSpecsFromTalent(talentID);
+        if not specs or #specs == 0 then
+            return nil;
+        elseif #specs == 1 then
+            local _, name, _, icon = GetSpecializationInfo(specs[1]);
+            local text = "|T"..icon..":0|t "..name;
+            return SPECIALIZATION..": "..text;
+        else
+            local text = "";
+            for _, spec in ipairs(specs) do
+                local _, name, _, icon = GetSpecializationInfo(spec);
+                if text ~= "" then text = text.." / " end
+                text = text.."|T"..icon..":0|t "..name;
+            end
+            return SPECIALIZATION..": "..text;
+        end
+    else
+        local spellName, _, spellIcon = GetSpellInfo(talentID);
+        return "|T"..spellIcon..":0|t "..spellName;
+    end
 end
 
 -- Get the number of specializations for the current class
