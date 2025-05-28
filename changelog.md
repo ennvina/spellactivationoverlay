@@ -1,5 +1,21 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.4.1 (2025-05-xx)
+
+Shout-out to Flow who designed Shaman's 6-10 Maelstrom Weapon textures. Thanks!
+
+New Spell Alert
+- Warrior's Regicide (Season of Discovery)
+
+New Glowing Button
+- Warrior's Execute, during Regicide (Season of Discovery)
+
+Introducting Mists of Pandaria flavor!
+- The addon is still in very early stage
+
+There were significant changes which, hopefully, should not break anything.
+But in case it did break something, please to report issues. Thank you :)
+
 #### v2.4.0 (2025-05-11)
 
 Shout-out to fellow developers Skyward, Vanheden and Adal4. Thanks!
@@ -89,8 +105,8 @@ Mage
 
 Shaman
 - Shaman's Molten Blast option was displayed twice (Season of Discovery)
-- Shaman's Maelstorm Weapon no longer empowers Chain Heal (SoD)
-- Shaman's Maelstorm Weapon no longer empowers Healing Wave (SoD)
+- Shaman's Maelstrom Weapon no longer empowers Chain Heal (SoD)
+- Shaman's Maelstrom Weapon no longer empowers Healing Wave (SoD)
 
 Bug Fixes
 - Lua errors caused by action buttons should no longer happen
