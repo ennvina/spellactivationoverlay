@@ -318,8 +318,13 @@ local ExecuteHandler = {
 }
 
 local function customLogin(self, ...)
+    if SAO.IsMoP() then
+        -- No handlers for Mists of Pandaria: all abilities are available in all stances
+        return;
+    end
+
     local overpowerName = GetSpellInfo(overpower);
-    if (overpowerName) then
+    if overpowerName then
         -- Overpower is used for OverpowerHandler, detecting when the target dodges
         OverpowerHandler:init(overpower, overpowerName);
 
@@ -334,12 +339,12 @@ local function customLogin(self, ...)
     end
 
     local revengeName = GetSpellInfo(revenge);
-    if (revengeName) then
+    if revengeName then
         RevengeHandler:init(revenge, revengeName);
     end
 
     local executeName = GetSpellInfo(execute);
-    if (executeName) then
+    if executeName then
         ExecuteHandler:init(execute, executeName);
     end
 end
@@ -388,7 +393,7 @@ local function useOverpower()
         overpower,
         "counter",
         {   -- Lazy evaluation for variants, because they are created later on
-            buttonOption = { variants = function() return OverpowerHandler.variants end },
+            buttonOption = not SAO.IsMoP() and { variants = function() return OverpowerHandler.variants end } or nil,
         }
     );
 end
@@ -400,7 +405,7 @@ local function useExecute()
         execute,
         "counter",
         {   -- Lazy evaluation for variants, because they are created later on
-            buttonOption = { variants = function() return ExecuteHandler.variants end },
+            buttonOption = not SAO.IsMoP() and { variants = function() return ExecuteHandler.variants end } or nil,
         }
     );
 end
@@ -412,7 +417,7 @@ local function useRevenge()
         revenge,
         "counter",
         {   -- Lazy evaluation for variants, because they are created later on
-            buttonOption = { variants = function() return RevengeHandler.variants end },
+            buttonOption = not SAO.IsMoP() and { variants = function() return RevengeHandler.variants end } or nil,
         }
     );
 end
@@ -420,7 +425,7 @@ end
 local function useVictoryRush()
     SAO:CreateEffect(
         "victory_rush",
-        SAO.SOD + SAO.TBC + SAO.WRATH + SAO.CATA,
+        SAO.ALL_PROJECTS - SAO.ERA, -- includes SAO.SOD, then SAO.TBC and later
         victoryRush,
         "counter"
     );

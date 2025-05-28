@@ -20,6 +20,10 @@ Introducting Mists of Pandaria flavor!
 - Support for Death Knight's Sudden Doom
 - Support for Death Knight's Glyph of Dark Succor
 - Support for Priest's Shadowform
+- Support for Warrior's Overpower
+- Support for Warrior's Execute
+- Support for Warrior's Revenge
+- Support for Warrior's Victory Rush
 
 Known limitations:
 - Dark Transformation does not display an overlay, due to a game client issue
