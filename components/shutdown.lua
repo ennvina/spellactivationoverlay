@@ -17,10 +17,20 @@ end
 
 local Categories = {
     UNSUPPORTED_CLASS = {
-        Priority = 1,
+        Priority = 0,
         Get = function()
             return {
                 Reason = SAO:unsupportedClass(),
+                Button = nil, -- There are no obvious action to suggest
+                DisableCondition = nil, -- There are no conditions: disabling is absolute
+            }
+        end,
+    },
+    DISABLED_CLASS = {
+        Priority = 1,
+        Get = function()
+            return {
+                Reason = SAO:disabledClass():gsub(" %%s", ""):gsub("%%s",""):gsub(" :%)", ""),
                 Button = nil, -- There are no obvious action to suggest
                 DisableCondition = nil, -- There are no conditions: disabling is absolute
             }

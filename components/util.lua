@@ -191,6 +191,22 @@ function SAO:unsupportedClass()
     return tr(unsupportedClassTranslations);
 end
 
+-- Get the "Disabled class" localized text
+function SAO:disabledClass()
+    local unsupportedClassTranslations = {
+        ["en"] = "Disabled class %s while development is in progress.\nPlease come back soon :)",
+        ["de"] = "Deaktivierte Klasse %s, während der Entwicklungsphase.\nBitte kommen Sie bald wieder :)",
+        ["fr"] = "Classe %s désactivée pendant que le développement est en cours.\nRevenez bientôt :)",
+        ["es"] = "Clase %s desactivada mientras el desarrollo está en curso.\nVuelva pronto :)",
+        ["ru"] = "Класс %s отключен на время разработки.\nПожалуйста, вернитесь в ближайшее время :)",
+        ["it"] = "La classe %s è stata disabilitata mentre lo sviluppo è in corso.\nSi prega di tornare presto :)",
+        ["pt"] = "Classe %s desativada enquanto o desenvolvimento está em andamento.\nPor favor, volte em breve :)",
+        ["ko"] = "개발이 진행되는 동안 %s 클래스를 사용할 수 없습니다.\n곧 다시 돌아와주세요 :)",
+        ["zh"] = "开发过程中禁用了%s类。请尽快回来 :)",
+    };
+    return tr(unsupportedClassTranslations);
+end
+
 -- Get the "because of {reason}" localized text
 function SAO:becauseOf(reason)
     local becauseOfTranslations = {
