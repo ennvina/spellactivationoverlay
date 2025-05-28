@@ -248,4 +248,5 @@ end
 
 SAO.Class["HUNTER"] = {
     ["Register"] = registerClass,
+    IsDisabled = SAO.IsMoP(),
 }

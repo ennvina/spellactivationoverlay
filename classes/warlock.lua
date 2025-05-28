@@ -344,4 +344,5 @@ SAO.Class["WARLOCK"] = {
     ["PLAYER_TARGET_CHANGED"] = retarget,
     ["UNIT_HEALTH"] = unitHealth,
     ["UNIT_HEALTH_FREQUENT"] = unitHealthFrequent,
+    IsDisabled = SAO.IsMoP(),
 }

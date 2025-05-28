@@ -447,4 +447,5 @@ SAO.Class["SHAMAN"] = {
     ["PLAYER_REGEN_ENABLED"] = deactivateRollingThunderGlow,
     ["PLAYER_REGEN_DISABLED"] = activateRollingThunderGlow,
     ["PLAYER_LOGIN"] = deactivateRollingThunderGlow,
+    IsDisabled = SAO.IsMoP(),
 }

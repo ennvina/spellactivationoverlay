@@ -204,4 +204,5 @@ SAO.Class["ROGUE"] = {
     ["Register"] = registerClass,
     ["PLAYER_LOGIN"] = customLogin,
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
+    IsDisabled = SAO.IsMoP(),
 }
