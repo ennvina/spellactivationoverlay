@@ -1,0 +1,165 @@
+-- Code snippets to try out stuff for debugging purposes or future dev
+
+/run f=CreateFrame("FRAME") f:RegisterEvent("RUNE_UPDATED"); f:SetScript("OnEvent", function(self,event,rune) DevTools_Dump({RUNE_UPDATED={self=self,event=event,rune=rune}}) end)
+
+/run f=CreateFrame("FRAME") f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED") f:SetScript("OnEvent", function() local t,e,_,_,s,_,_,_,d=CombatLogGetCurrentEventInfo() print("@"..t.." e="..e.." s='"..tostring(s).."' d='"..tostring(d).."'") end)
+/run g=CreateFrame("FRAME") g:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED") g:RegisterEvent("PLAYER_XP_UPDATE") g:SetScript("OnEvent", function(self, event) print("@"..GetTime().." e="..event) end)
+
+function reportActionButtons()
+for as=1,120 do att=GetActionText(as) ate=GetActionTexture(as) u=IsUsableAction(as) if ate then msg="Slot "..as..": ["..ate.."]"..(att and " \""..att.."\"" or "")..(u and " usable" or "*not* usable") print(msg, GetActionInfo(as)) end end
+end
+
+/run ActionButton_OnEvent(MultiBarBottomLeftButton2, "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW", 2050)
+
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 14251, "459314", "TOP (180)", 1, 255, 255, 255, false) -- Archangel
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 14251, "449492", "TOP (CW)", 1, 255, 255, 255, false) -- Archangel (Dark)
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 666, "449489", "TOP", 1, 255, 255, 255, false) -- Frozen Fingers
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 777, "457658", "TOP", 1, 255, 255, 255, false) -- Impact
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 666, "449489", "TOP", 1, 255, 255, 255, false) SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 777, "457658", "TOP", 1, 255, 255, 255, false)
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 777, "457658", "TOP", 1, 255, 255, 255, false) SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 666, "449489", "TOP", 1, 255, 255, 255, false)
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 14251, "Interface\\Addons\\SpellActivationOverlay\\textures\\Hot_Streak", "TOP", 1, 255, 255, 255, false, false, 1, true, nil)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, nil)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 12536, "Interface\\Addons\\SpellActivationOverlay\\textures\\GenericArc_02", "Left + Right (Flipped)", 1.5, 192, 192, 192, false, nil)
+
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Brain_Freeze", "Left + Right (CW)", 1, 255, 255, 255, true, nil)
+
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 222222, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles_3", "Left + Right (Flipped)", 1, 255, 255, 64, true)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 222222, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles_2", "Left + Right (Flipped)", 1, 255, 255, 64, false)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 222222, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles_1", "Left (vFlipped)", 0.5, 222, 222, 22, false, nil, nil, true)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 222222, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles_1", "Left + Right (Flipped)", 1, 128, 128, 64, false)
+
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, nil, GetTime()+30)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, nil, GetTime()+30, true)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666667+math.random()*1000, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Top (CW)", 1, 255, 255, 255, true, nil, GetTime()+30, true)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666667+math.random()*1000, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Top (CW)", 1, 255, 255, 255, true, nil, GetTime()+30)
+/dump O.combat:GetVertexOffset(LOWER_LEFT_VERTEX)
+
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 324, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "TOP", 0.6, 255, 255, 255, false, false, 0, nil, nil, GetTime()+60, nil);
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 324, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "TOP", 0.6, 255, 255, 255, false, false, 0, nil, nil, {startTime=GetTime()-10, endTime=GetTime()+50}, nil);
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 324, "467696", "TOP", 0.6, 255, 255, 255, false, false, 0, nil, nil, GetTime()+60, nil);
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 324, "467696", "TOP", 0.6, 255, 255, 255, false, false, 0, nil, nil, { startTime = GetTime()-10, endTime = GetTime()+50 }, nil);
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame,324,"467696","TOP",0.6,255,255,255,false,false,0,nil,nil,GetTime()+60,nil); C_Timer.NewTimer(1, function() _G["SAO_LastShownOverlay"].mask.timeoutX.scaleX:Restart(false, 0) end)
+
+for i = 1, GetNumSpellTabs() do local offset, numSlots = select(3, GetSpellTabInfo(i)) for j = offset+1, offset+numSlots do print(i, j, GetSpellBookItemName(j, BOOKTYPE_SPELL)) end end
+
+/run SpellActivationOverlayFrame.scale = 1; SpellActivationOverlay_OnChangeGeometry(SpellActivationOverlayFrame)
+/run SpellActivationOverlayFrame.offset = 0; SpellActivationOverlay_OnChangeGeometry(SpellActivationOverlayFrame)
+
+/run local name="Soul Siphon"; local ce=C_Engraving; for _,cat in pairs(ce and ce.GetRuneCategories(false,false)or{}) do for _,rune in pairs(ce.GetRunesForCategory(cat,false)or{}) do if rune.name==name then DevTools_Dump({rune=rune}) end end end
+/run local name="Soul Siphon"; local ce=C_Engraving; for _,cat in pairs(ce and ce.GetRuneCategories(false,false)or{}) do for _,rune in pairs(ce.GetRunesForCategory(cat,false)or{}) do DevTools_Dump(rune) end end
+/run local name="Soul Siphon"; local ce=C_Engraving; for _,cat in pairs(ce and ce.GetRuneCategories(false,false)or{}) do DevTools_Dump(ce.GetRunesForCategory(cat,false)or{}) end
+
+/dump MultiBarBottomRightButton6
+/run ActionButton_ShowOverlayGlow(MultiBarBottomRightButton6)
+/dump MultiBarBottomRightButton6.action
+
+/run LAB = LibStub("LibActionButton-1.0", true)
+/run for button in next, LAB.buttonRegistry do print(button, button:GetName()) end
+
+/run LBG = LibStub("LibButtonGlow-1.0", true)
+/run LBG.ShowOverlayGlow(BT4Button54)
+
+/run ECG = ElvUI[1].Libs.CustomGlow
+/dump ElvUI_Bar1Button1
+/run ECG.ShowOverlayGlow(ElvUI_Bar1Button1)
+
+/run for k,v in pairs(_G) do if k:match("CRIT") then print(k,v) end end
+/run for k,v in pairs(_G) do if k:match("FULL") and type(v) == "string" and #v < 20 then print(k,v) end end
+/run for k,v in pairs(_G) do if k:match("^Get") and k:lower():match("spellbook") then print(k,v) end end
+/run for k,v in pairs(_G) do if k:match("COOLDOWN") then print(k,v) end end
+/run for k,v in pairs(_G) do if type(v) == "string" and (v:lower():match("on cooldown") or v:lower():match("off cooldown")) then print(k,v) end end
+/run for k,v in pairs(_G) do if type(v) == "string" and #v < 20 and v:lower():match("ability") then print(k,v) end end
+COMBATLOG_HIGHLIGHT_ABILITY
+/dump string.format(string.format(CHANGED_ITEM, "Effect", TEXTURES_SUBHEADER, "yolo"));
+/dump string.format(RACE_CLASS_ONLY, string.format("%s %s", COMBATLOG_HIGHLIGHT_ABILITY, AVAILABLE));
+/dump string.format("%s %s %s %s", COMBATLOG_HIGHLIGHT_ABILITY, AVAILABLE, QUEST_LOGIC_OR, ON_COOLDOWN);
+/run for k,v in pairs(_G) do if type(v) == "string" and #v < 20 and v:lower():match("also") then print(k,v) end end
+
+/dump PET_BATTLE_COMBAT_LOG_DAMAGE_WEAK:gsub("[ ()]","")
+/dump PET_BATTLE_COMBAT_LOG_DAMAGE_STRONG:gsub("[ ()]","")
+
+/run print("|T133784:16|t Coins")
+
+/run function TSVO(c,x,y)TT:SetVertexOffset(c,x,y*TT:GetHeight())end function TTT(dy) TSVO(UPPER_LEFT_VERTEX,0,-dy) TSVO(UPPER_RIGHT_VERTEX,0,-dy) TSVO(LOWER_LEFT_VERTEX,0,dy) TSVO(LOWER_RIGHT_VERTEX,0,dy) TT:SetTexCoord(0,dy,0,1-dy,1,dy,1,1-dy) end
+
+/run vx=0; vy=0; TT:SetVertexOffset(UPPER_LEFT_VERTEX, vx, vy); TT:SetVertexOffset(LOWER_LEFT_VERTEX, vx, vy);
+
+/run dy=0.5; TT:SetTexCoord(0, dy, 0, 1, 1, dy, 1, 1);
+
+/run f = CreateFrame("Frame", nil, UIParent) f:SetPoint("CENTER") f:SetSize(128, 128) filename="Interface/Addons/SpellActivationOverlay/textures/mask.blp" modulo="CLAMP"
+/run f.tex = f:CreateTexture(nil, "ARTWORK") f.tex:SetAllPoints(f) f.tex:SetTexture("interface/icons/spell_frost_frostnova") -- f.tex:SetColorTexture(1, 0.8, 0, 0.75)
+/run f.mask = f:CreateMaskTexture() f.mask:SetPoint("BOTTOMLEFT", f, "BOTTOMLEFT", 0, 32) f.mask:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, -32) f.mask:SetTexture(filename, modulo, modulo) f.tex:AddMaskTexture(f.mask)
+
+/run filename="creature/questobjects/grad3" f.mask:SetTexture(filename, modulo, modulo)
+/run filename="Interface/Addons/SpellActivationOverlay/textures/mask.blp" f.mask:SetTexture(filename, modulo, modulo)
+/run filename="interface/glues/models/ui_human/gradient5circle" f.mask:SetTexture(filename, modulo, modulo)
+
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 14251, "Interface\\Addons\\SpellActivationOverlay\\textures\\Hot_Streak", "TOP", 1, 255, 255, 255, false, false, 1, true, nil, GetTime()+600, true)
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 14251, "Interface\\Addons\\SpellActivationOverlay\\textures\\Hot_Streak", "TOP", 1, 255, 255, 255, false, false, 1, true, nil, GetTime()+5)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, nil, GetTime()+2)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666.667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Frozen_Fingers", "Left + Right (Flipped)", 1, 127, 0, 255, true, nil, GetTime()+15)
+
+/run for i=1,6 do print("o["..i.."] is "..(o[i]:IsVisible() and "" or "not ").."visible") end
+
+
+--[[ Challenges:
+1- create code for calling Texture methods to achieve the "clip effect" (SetTexCoord, SetVertexOffset, ...)
+2- experiment textures in XML schema to achieve the desired effect (1 texture with mask, 3 textures top/mid/bottom, ...)
+3- add a new parameter to textures to tell if they are horizontal/vertical
+4- create API for setting the textures with a specific progress, e.g. SetEffectProgress(texture, maxValue, value)
+5- create API to animate these textures over time, e.g. StartTextureProgress(texture, duration), and stop animation when done
+6- find aura durations for newfound auras, and plug them to the above texture animation, if it makes sense to have a limited duration
+7- add an option in the settings panel to control the effect on/off (on by default)
+--]]
+
+
+Next step, you should create a new function at the very end of events.lua
+
+```
+lua
+function CombatLogGetCurrentEventInfo(...)
+    -- event spellID sourceGUID destGUID critical
+    local hideCaster;
+    local sourceRaidFlags;
+    local destRaidFlags;
+    local timestamp, event, sourceGUID, sourceName, sourceFlags, destGUID, destName, destFlags = ... -- For all events
+    if (event:sub(0,6) ~= "SPELL_") then
+        return timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags;
+    end
+
+    local spellID, spellName, spellSchool = select(9, ...) -- For SPELL_*
+    if (event:sub(0,12) ~= "SPELL_DAMAGE") then
+        return timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName, spellSchool;
+    end
+
+    local isOffHand;
+    local amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing  = select(12, ...); -- For SPELL_DAMAGE*
+
+    return timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName, spellSchool, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand;
+end
+```
+
+
+/run flag=not flag; f=_G["StaticPopup1"].button1:SetFrameStrata(flag and "DIALOG" or "HIGH"); f=_G["StaticPopup1"].button1:SetFrameStrata(flag and "HIGH" or "DIALOG")
+/run p=_G["StaticPopup1"]; text=p:CreateFontString(nil, "DIALOG", "GameFontHighlight"); text:SetAllPoints(p.button1); text:SetText("YOLO");
+centralText:SetSize(290, 0)
+centralText:SetPoint("TOP", 0, -spacing)
+dialogFrame.centralText = centralText
+
+
+/run f=CreateFrame("Frame", nil, parent) f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED") f:SetScript("OnEvent", function() print(CombatLogGetCurrentEventInfo()) end)
+
+
+function createDontReleaseFrame(parent)
+
+local frame = CreateFrame("Frame", nil, parent)
+
+frame = CreateFrame("Frame", nil, _G["StaticPopup1"]);
+frame:SetAllPoints();
+
+createDontReleaseFrame(_G["StaticPopup1"]);
+
+-- Specific code for overlay options:
+-- Mage's Heating Up, missing
+-- Mage's Clearcasting, missing if option not checked
+-- Druid's Omen of Clarity / Eclipse (Lunar) / Eclipse (Solar), missing
