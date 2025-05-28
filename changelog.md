@@ -19,6 +19,10 @@ Introducting Mists of Pandaria flavor!
 - Support for Death Knight's Dark Transformation
 - Support for Death Knight's Sudden Doom
 - Support for Death Knight's Glyph of Dark Succor
+- Support for Mage's Freeze debuff
+- Support for Paladin's Hammer of Wrath
+- Support for Paladin's Exorcism
+- Support for Paladin's Holy Shock
 - Support for Priest's Shadowform
 - Support for Warrior's Overpower
 - Support for Warrior's Execute
@@ -28,6 +32,7 @@ Introducting Mists of Pandaria flavor!
 Known limitations:
 - Dark Transformation does not display an overlay, due to a game client issue
 - Dark Succor will glow Death Strike in all presences, including Blood Presence
+- Mage's Freeze debuff does not track Shaman's Freeze debuff, from Frozen Power
 
 There were significant changes which, hopefully, should not break anything.
 But in case it did break something, please to report issues. Thank you :)
