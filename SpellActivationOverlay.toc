@@ -1,6 +1,6 @@
 ## Interface: 40402
 ## Title: |TInterface/Icons/Spell_Frost_Stun:16:16:0:0:512:512:64:448:64:448|t SpellActivationOverlay |cffdb550d2.4.0|r
-## Notes: Mimic Spell Activation Overlays from Modern World of Warcraft
+## Notes: Display overlays and glow buttons to improve your gameplay!
 ## Author: Vinny/Ennvina
 ## Version: 2.4.0
 ## SavedVariables: SpellActivationOverlayDB
