@@ -20,9 +20,19 @@ cdup() {
 # Current directory (cd) ends up in the new directory.
 # $1 = flavor
 # $2 = build version, fetched from /dump select(4, GetBuildInfo())
+# $3 = flavor color (RGB hex code without leading #)
+# $4 = flavor icon
+# $5 = flavor icon margin
+# $6 = (unused) flavor full name
 mkproject() {
     local flavor=$1
     local build_version=$2
+    local flavor_color='ff'"$3"
+    local flavor_icon_margin=${5:-16}
+    local flavor_icon_coord_min=$flavor_icon_margin
+    local flavor_icon_coord_max=$((512 - $flavor_icon_margin))
+    local flavor_icon='|TInterface\/Icons\/'"$4:16:16:0:0:512:512:$flavor_icon_coord_min:$flavor_icon_coord_max:$flavor_icon_coord_min:$flavor_icon_coord_max|t"
+    local flavor_fullname=$6
 
     echo
     echo "==== ${flavor^^} ===="
@@ -32,6 +42,8 @@ mkproject() {
     cp -R changelog.md LICENSE SpellActivationOverlay.* classes components libs options sounds textures variables ./_release/"$flavor"/SpellActivationOverlay/ || bye "Cannot copy $flavor files"
     cd ./_release/"$flavor" || bye "Cannot cd to $flavor directory"
     sed -i s/'^## Interface:.*'/"## Interface: $build_version"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update version of $flavor TOC file"
+    sed -i s%'^\(##[[:space:]]*Title:.*|c\)\(........\)\([0-9][^|]*\)|r'%'\1'"$flavor_color"'\3|r '"$flavor_icon"% SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update title of $flavor TOC file"
+#    sed -i s%'^## Notes:.*'%"& Build optimized for $flavor_fullname."% SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update notes of $flavor TOC file"
     echo
 }
 
@@ -41,8 +53,8 @@ mkproject() {
 prunecopyright() {
     for expansion in "$@"
     do
-        grep -q "${expansion}" SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot find copyright of expansion ${expansion} in TOC file"
-        sed -i "/${expansion}/,+2d" SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot remove copyright of expansion ${expansion} from TOC file"
+        grep -q "World of Warcraft.*${expansion}" SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot find copyright of expansion ${expansion} in TOC file"
+        sed -i "/World of Warcraft.*${expansion}/,+2d" SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot remove copyright of expansion ${expansion} from TOC file"
     done
 }
 
@@ -215,7 +227,7 @@ fi
 
 # Release wrath version
 WRATH_BUILD_VERSION=30403
-mkproject wrath $WRATH_BUILD_VERSION
+mkproject wrath $WRATH_BUILD_VERSION 40abff achievement_boss_lichking 64 "Wrath of the Lich King"
 
 VARIABLES_NOT_FOR_WRATH=(holypower nativesao)
 prunevar "${VARIABLES_NOT_FOR_WRATH[@]}"
@@ -243,7 +255,7 @@ cdup
 
 # Release vanilla version
 VANILLA_BUILD_VERSION=11507
-mkproject vanilla $VANILLA_BUILD_VERSION
+mkproject vanilla $VANILLA_BUILD_VERSION ffffff wow_token01 32 "Classic Era and Season of Discovery"
 
 VARIABLES_NOT_FOR_VANILLA=(holypower nativesao)
 prunevar "${VARIABLES_NOT_FOR_VANILLA[@]}"
@@ -270,7 +282,7 @@ cdup
 
 # Release cata version
 CATA_BUILD_VERSION=40402
-mkproject cata $CATA_BUILD_VERSION
+mkproject cata $CATA_BUILD_VERSION db550d achievment_boss_madnessofdeathwing 64 "Cataclysm"
 
 prunecopyright Cataclysm
 
@@ -301,7 +313,7 @@ cdup
 
 # Release mop version
 MOP_BUILD_VERSION=50500
-mkproject mop $MOP_BUILD_VERSION
+mkproject mop $MOP_BUILD_VERSION 00ff96 achievement_character_pandaren_female 64 "Mists of Pandaria"
 
 prunecopyright Cataclysm Pandaria
 
@@ -337,7 +349,7 @@ cdup
 
 # Release Necrosis version
 NECROSIS_BUILD_VERSION=40402 # Version does not matter, toc will not be used
-mkproject necrosis $NECROSIS_BUILD_VERSION
+mkproject necrosis $NECROSIS_BUILD_VERSION 8787ed spell_shadow_abominationexplosion 64 "Necrosis"
 
 CLASSES_NOT_FOR_NECROSIS=(
 deathknight

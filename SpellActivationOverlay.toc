@@ -15,6 +15,7 @@
 #
 # World of Warcraft®: Warlords of Draenor™
 # ©2014 Blizzard Entertainment, Inc. All rights reserved. Warlords of Draenor is a trademark, and World of Warcraft, Warcraft and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc. in the U.S. and/or other countries.
+#
 
 #@no-lib-strip@
 libs\LibStub\LibStub.lua
