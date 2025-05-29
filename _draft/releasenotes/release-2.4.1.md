@@ -46,13 +46,14 @@ New Glowing Buttons
 - Cleave, during Glyph of Incite (Mists of Pandaria)
 ## Known limitations
 ### :dk:  Death Knight
-- Dark Transformation does not display an overlay, due to a game client issue
-- Dark Succor will glow Death Strike in all presences, including Blood Presence
+- Dark Transformation (Mists of Pandaria) does not display an overlay, due to a game client issue
+- Dark Succor (Mists of Pandaria) will glow Death Strike in all presences, including Blood Presence
 ### :mage~1:  Mage
-- Mage's Freeze debuff does not track Shaman's Freeze debuff, from Frozen Power
+- Mage's Freeze debuff (Mists of Pandaria) does not track Shaman's Freeze debuff, from Frozen Power
 ## Miscellaneous
 The addon's flavor is now displayed in the addon title, visible from the list of addons in-game
-- Classic Era, including Season of Discovery, has a WoW Token icon
+- Classic Era and Season of Discovery have a WoW Token icon
+- Wrath of the Lich King has an Arthas icon
 - Cataclysm has a Deathwing icon
 - Mists of Pandaria has a Female Pandaren icon
 
