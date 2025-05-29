@@ -197,13 +197,15 @@ local availableTextures = {
 
 function SAO_DB_ResetMarkedTextures(output)
   if not SpellActivationOverlayDB.dev then
-    SpellActivationOverlayDB.dev = { marked = {} };
+    SpellActivationOverlayDB.dev = { marked = { native = {}, addon = {} } };
   else
-    SpellActivationOverlayDB.dev.marked = {};
+    SpellActivationOverlayDB.dev.marked = { native = {}, addon = {} };
   end
   if type(output) ~= 'boolean' or output then
     print("SAO_DB_ResetMarkedTextures() "..WrapTextInColorCode("OK", "FF00FF00"));
   end
+
+  return { marked = SpellActivationOverlayDB.dev.marked };
 end
 
 function SAO_DB_AddMarkedTextures(output)
@@ -213,25 +215,40 @@ function SAO_DB_AddMarkedTextures(output)
 
   for fullTextureName, filename in pairs(SAO.TextureFilenameFromFullname) do
     if SAO.MarkedTextures[fullTextureName] then
-      SpellActivationOverlayDB.dev.marked[filename] = true;
+      if type(tonumber(fullTextureName)) == 'number' then
+        SpellActivationOverlayDB.dev.marked.native[filename] = true;
+      else
+        SpellActivationOverlayDB.dev.marked.addon[filename] = true;
+      end
     end
   end
 
   if type(output) ~= 'boolean' or output then
     print("SAO_DB_AddMarkedTextures() "..WrapTextInColorCode("OK", "FF00FF00"));
   end
+
+  return { marked = SpellActivationOverlayDB.dev.marked };
 end
 
 function SAO_DB_ComputeUnmarkedTextures(output)
   SAO_DB_AddMarkedTextures(false); -- Not needed in theory, but it avoids confusion
   SpellActivationOverlayDB.dev.unmarked = {};
+  SpellActivationOverlayDB.dev.unmarked = { native = {}, addon = {} };
 
+  -- Find unmarked textures, and classify them as either native or addon
   for fullTextureName, filename in pairs(SAO.TextureFilenameFromFullname) do
     if availableTextures[filename] then
       if     not SAO.MarkedTextures[fullTextureName] -- Not marked by current class
-        and (not SpellActivationOverlayDB.dev.marked or not SpellActivationOverlayDB.dev.marked[filename]) -- Mark not stored in database
+        and (not SpellActivationOverlayDB.dev.marked -- Mark not stored in database
+              or (not SpellActivationOverlayDB.dev.marked.native[filename]
+              and not SpellActivationOverlayDB.dev.marked.addon[filename])
+            )
       then
-        SpellActivationOverlayDB.dev.unmarked[filename] = true;
+        if type(tonumber(fullTextureName)) == 'number' then
+          SpellActivationOverlayDB.dev.unmarked.native[filename] = tonumber(fullTextureName);
+        else
+          SpellActivationOverlayDB.dev.unmarked.addon[filename] = fullTextureName;
+        end
       end
     end
   end
@@ -239,6 +256,8 @@ function SAO_DB_ComputeUnmarkedTextures(output)
   if type(output) ~= 'boolean' or output then
     print("SAO_DB_ComputeUnmarkedTextures() "..WrapTextInColorCode("OK", "FF00FF00"));
   end
+
+  return { unmarked = SpellActivationOverlayDB.dev.unmarked };
 end
 
 function SAO_DB_LookForTexture(fileDataID, output, saveToDev)
