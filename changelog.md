@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.4.1 (2025-05-xx)
+#### v2.4.1 (2025-05-29)
 
 Shout-out to Flow who designed Shaman's 6-10 Maelstrom Weapon textures. Thanks!
 
