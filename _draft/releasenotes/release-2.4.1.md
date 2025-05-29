@@ -1,7 +1,5 @@
 # SpellActivationOverlay 2.4.1
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.4.1
-
-Shout-out to Flow who designed Shaman's 6-10 Maelstrom Weapon textures. Thanks!
 ## General
 This release introduces a new flavor: Mists of Pandaria!  :person_in_lotus_position:
 
@@ -56,6 +54,12 @@ The addon's flavor is now displayed in the addon title, visible from the list of
 - Wrath of the Lich King has an Arthas icon
 - Cataclysm has a Deathwing icon
 - Mists of Pandaria has a Female Pandaren icon
+## Contributors
+Shout-out to our amazing contributors
+- Flow, who designed Shaman's Maelstrom Weapon textures between 6 and 10 stacks
+- Lanésra, who discussed and tested Warrior's Regicide on Season of Discovery
+
+Thanks!
 
 As always, the latest release is available:
 - on CurseForge :point_right:  https://www.curseforge.com/wow/addons/spellactivationoverlay
