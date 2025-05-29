@@ -20,11 +20,11 @@ function SAO.PlaySpellAlertSound(self)
 
     local willPlay, soundHandle;
 
-    if SAO.IsCata() then
+    if SAO.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH) then
+        willPlay, soundHandle = PlaySoundFile("Interface\\Addons\\SpellActivationOverlay\\sounds\\UI_PowerAura_Generic.ogg");
+    else
         -- SOUNDKIT.UI_POWER_AURA_GENERIC was introduced in Cataclysm
         willPlay, soundHandle = PlaySound(SOUNDKIT.UI_POWER_AURA_GENERIC);
-    else
-        willPlay, soundHandle = PlaySoundFile("Interface\\Addons\\SpellActivationOverlay\\sounds\\UI_PowerAura_Generic.ogg");
     end
 
     if willPlay then
