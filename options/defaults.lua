@@ -201,7 +201,7 @@ SAO.defaults = {
         },
         ["MAGE"] = {
             alert = {
-                [12536] = { -- Arcane Concentration
+                [12536] = { -- Arcane Concentration (Era - Cataclysm)
                     [0] = false,
                 },
                 [79683] = { -- Arcane Missiles! (Cataclysm)
@@ -244,7 +244,7 @@ SAO.defaults = {
                 [400670]= { -- Fingers of Frost (Season of Discovery)
                     [0] = true, -- any stacks
                 },
-                [57761] = { -- Brain Freeze (Wrath+)
+                [57761] = { -- Brain Freeze (Wrath, Cataclysm)
                     [0] = true,
                 },
                 [400730] = { -- Brain Freeze (Season of Discovery)
