@@ -699,6 +699,13 @@ SAO.defaults = {
                     [78]  = true, -- Heroic Strike
                     [845] = true, -- Cleave
                 },
+                [86627] = { -- Incite (Cataclysm)
+                    [78]  = true, -- Heroic Strike
+                },
+                [122016] = { -- Glyph of Incite (MoP)
+                    [78]  = true, -- Heroic Strike
+                    [845] = true, -- Cleave
+                },
                 [52437] = { -- Sudden Death (Wrath+)
                     [5308] = true, -- Execute (not for Cata)
                     [86346]= true, -- Colossus Smash (Cataclysm)

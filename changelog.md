@@ -7,8 +7,9 @@ Shout-out to Flow who designed Shaman's 6-10 Maelstrom Weapon textures. Thanks!
 New Spell Alert
 - Warrior's Regicide (Season of Discovery)
 
-New Glowing Button
+New Glowing Buttons
 - Warrior's Execute, during Regicide (Season of Discovery)
+- Warrior's Heroic Strike, during Incite (Cataclysm)
 
 Introducting Mists of Pandaria flavor!
 - The addon is still in very early stage
@@ -28,6 +29,7 @@ Introducting Mists of Pandaria flavor!
 - Support for Warrior's Execute
 - Support for Warrior's Revenge
 - Support for Warrior's Victory Rush
+- Support for Warrior's Glyph of Incite
 
 Known limitations:
 - Dark Transformation does not display an overlay, due to a game client issue
