@@ -511,7 +511,12 @@ local function unitHealthFrequent(self, unitID)
 end
 
 local function lazyCreateClearcastingVariants(self)
-    if (clearcastingVariants) then
+    if clearcastingVariants then
+        return;
+    end
+
+    if not self.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH + SAO.CATA) then
+        -- Clearcasting exists up until Cataclysm
         return;
     end
 
@@ -651,7 +656,9 @@ local function registerClass(self)
     end
 
     lazyCreateClearcastingVariants(self);
-    self:RegisterAura("clearcasting", 0, 12536, clearcastingVariants.textureFunc, "Left + Right (Flipped)", 1.5, 192, 192, 192, false);
+    if clearcastingVariants then
+        self:RegisterAura("clearcasting", 0, 12536, clearcastingVariants.textureFunc, "Left + Right (Flipped)", 1.5, 192, 192, 192, false);
+    end
 
     if self.IsSoD() then
         local arcaneBlastSoDBuff = 400573;
@@ -730,8 +737,10 @@ local function loadOptions(self)
 
     -- Clearcasting variants
     lazyCreateClearcastingVariants(self);
+    if clearcastingVariants then
+        self:AddOverlayOption(clearcastingTalent, clearcastingBuff, 0, nil, clearcastingVariants);
+    end
 
-    self:AddOverlayOption(clearcastingTalent, clearcastingBuff, 0, nil, clearcastingVariants);
     if self.IsSoD() then
         self:AddOverlayOption(missileBarrageSoDRune, missileBarrageSoDBuff);
     elseif self.IsWrath() then
@@ -753,7 +762,9 @@ local function loadOptions(self)
         self:AddOverlayOption(hotStreakTalent, hotStreakBuff, 0, hotStreakDetails);
         self:AddOverlayOption(hotStreakTalent, hotStreakHeatingUpBuff, 0, hotStreakHeatingUpDetails);
     end
-    self:AddOverlayOption(firestarterTalent, firestarterBuff);
+    if self.IsWrath() then
+        self:AddOverlayOption(firestarterTalent, firestarterBuff);
+    end
     if self.IsSoD() then
         self:AddOverlayOption(fingersOfFrostSoDTalent, fingersOfFrostSoDBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
     elseif self.IsWrath() then
@@ -764,7 +775,7 @@ local function loadOptions(self)
     self:AddOverlayOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, 0, self:translateDebuff(), nil, nil, FrozenHandler.fakeSpellID);
     if self.IsSoD() then
         self:AddOverlayOption(brainFreezeSoDRune, brainFreezeSoDBuff);
-    else
+    elseif self.IsWrath() or self.IsCata() then
         self:AddOverlayOption(brainFreezeTalent, brainFreezeBuff);
     end
 
@@ -791,7 +802,7 @@ local function loadOptions(self)
         self:AddGlowingOption(brainFreezeSoDRune, brainFreezeSoDBuff, fireball);
         self:AddGlowingOption(brainFreezeSoDRune, brainFreezeSoDBuff, spellfrostBoltSoD);
         self:AddGlowingOption(brainFreezeSoDRune, brainFreezeSoDBuff, frostfireBoltSoD);
-    else
+    elseif self.IsWrath() or self.IsCata() then
         self:AddGlowingOption(brainFreezeTalent, brainFreezeBuff, fireball);
         self:AddGlowingOption(brainFreezeTalent, brainFreezeBuff, frostfireBolt);
     end

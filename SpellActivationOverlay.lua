@@ -43,7 +43,7 @@ function SpellActivationOverlay_OnLoad(self)
 
 		-- Keys of the class other than "Intrinsics", "Register" and "LoadOptions" are expected to be event names
 		for key, _ in pairs(class) do
-			if (key ~= "Intrinsics" and key ~= "Register" and key ~= "LoadOptions") then
+			if (key ~= "Intrinsics" and key ~= "Register" and key ~= "LoadOptions" and key ~= "IsDisabled") then
 				self:RegisterEvent(key);
 			end
 		end
