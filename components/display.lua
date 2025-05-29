@@ -67,6 +67,10 @@ SAO.Display = {
             SAO:Warn(Module, "Missing position for overlay");
         end
 
+        if type(overlay.texture) == 'string' or type(overlay.texture) == 'number' then
+            SAO:MarkTexture(overlay.texture);
+        end
+
         local _overlay = {
             spellID = overlay.spellID,
             texture = overlay.texture,

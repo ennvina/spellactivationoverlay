@@ -309,16 +309,21 @@ TEXTURES_NOT_FOR_MOP=(
 arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
-fulmination
+bandits_guile
+echo_of_the_elements
+eclipse_moon
+eclipse_sun
+high_tide
+maelstrom_weapon_1
+maelstrom_weapon_2
+maelstrom_weapon_3
+maelstrom_weapon_4
 maelstrom_weapon_6
 maelstrom_weapon_7
 maelstrom_weapon_8
 maelstrom_weapon_9
 maelstrom_weapon_10
-monk_serpent
 raging_blow
-tooth_and_claw
-white_tiger
 $(texbelow 898423 450914 450915)
 )
 prunetex "${TEXTURES_NOT_FOR_MOP[@]}"

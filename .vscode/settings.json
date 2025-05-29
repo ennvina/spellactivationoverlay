@@ -10,7 +10,7 @@
     "search.useIgnoreFiles": false,
     "explorer.excludeGitIgnore": false,
     "Lua.diagnostics.globals": [
-        // Lua global functions and objects
+        // Lua global functions
         "bit",
         "ceil",
         "hooksecurefunc",
@@ -23,7 +23,6 @@
         "tDeleteItem",
         "tinsert",
         "tremove",
-        "WorldFrame",
         // Objects from this addon
         "SpellActivationOverlayContainerFrame",
         "SpellActivationOverlayDB",
@@ -50,13 +49,16 @@
         "CopyTable",
         "DevTools_Dump",
         "SlashCmdList",
+        // WoW global objects
+        "Enum",
+        "WorldFrame",
         // WoW UI helpers
         "ActionButton_HideOverlayGlow",
         "ActionButton_ShowOverlayGlow",
         "CloseDropDownMenus",
         "CreateColor",
         "CreateFrame",
-        "Enum",
+        "GameTooltipTextSmall",
         "InterfaceOptions_AddCategory",
         "InterfaceOptionsFrame_OpenToCategory",
         "OverrideActionBar",

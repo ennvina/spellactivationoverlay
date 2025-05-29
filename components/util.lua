@@ -622,3 +622,13 @@ SAO.GlowInterface = {
         end
     end,
 }
+
+-- Create a quick UI element that can be copy/pasted
+-- Forked from https://github.com/Zarant/WoW_Hardcore/blob/master/Achievements/Thunderstruck.lua
+-- For the record, I submitted this code here https://github.com/Zarant/WoW_Hardcore/commit/a6730a36fda24b10de6773ad8ea92b9eb3b2cebd
+function SAO:DumpCopyableText(title, text)
+    local f=CreateFrame("Frame") f:SetPoint("TOPLEFT",200,-200) f:SetWidth(256) f:SetHeight(256) f.t=f:CreateTexture() f.t:SetColorTexture(0,0,0.5); f.t:SetAllPoints()
+    local CBT = function(b,icon) b[icon]=b:CreateTexture() b[icon]:SetTexture("Interface/Buttons/UI-Panel-MinimizeButton-"..icon) b[icon]:SetAllPoints() b[icon]:SetTexCoord(0.08,0.9,0.1,0.9) return b[icon] end
+    local b=CreateFrame("Button",nil,f) b:SetPoint("TOPRIGHT",0,0) b:SetWidth(14) b:SetHeight(14) b:SetScript("OnClick", function() f:Hide() end) b:SetNormalTexture(CBT(b,"Up")) b:SetPushedTexture(CBT(b,"Down")) b:SetHighlightTexture(CBT(b,"Highlight"))
+    local g=CreateFrame("EditBox", nil, f) g:SetMultiLine(true) g:SetAutoFocus(false) g:SetAllPoints() g:SetFontObject(GameTooltipTextSmall) g:SetText(title.."\n"..text)
+end
