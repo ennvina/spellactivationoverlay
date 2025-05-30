@@ -509,6 +509,9 @@ SAO.defaults = {
                 [51505] = {  -- Lava Burst, for Lava Surge (Cataclysm)
                     [0] = true,
                 },
+                [77762] = { -- Lava Surge (Mists of Pandaria)
+                    [0] = true,
+                },
                 [53817] = { -- Maelstrom Weapon
                     [5] = true, -- 5 stacks
                     [0] = true, -- any stacks but 5
