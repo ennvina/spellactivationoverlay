@@ -325,11 +325,7 @@ bandits_guile
 echo_of_the_elements
 eclipse_moon
 eclipse_sun
-high_tide
-maelstrom_weapon_1
-maelstrom_weapon_2
-maelstrom_weapon_3
-maelstrom_weapon_4
+fulmination
 maelstrom_weapon_6
 maelstrom_weapon_7
 maelstrom_weapon_8
