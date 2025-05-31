@@ -107,7 +107,7 @@ local function checkRollingThunderRuneAndLightningSieldStacks(self, ...)
     end
 
     local RollingThunderEquipped = (C_Engraving and SAO:IsSpellLearned(432056));
-    if not (RollingThunderEquipped or SAO:IsCata() or SAO:IsMoP()) then
+    if not (RollingThunderEquipped or SAO:IsProject(SAO.CATA_AND_ONWARD)) then
         RollingThunderHandler:deactivate();
     else
         -- C_UnitAuras is currently available for Classic Era and Cataclysm only
@@ -186,7 +186,7 @@ local function registerClass(self)
     -- Cataclysm uses cleaner texture, with scale of 150%
     self:CreateEffect(
         "elemental_focus",
-        SAO.TBC + SAO.WRATH + SAO.CATA + SAO.MOP,
+        SAO.TBC + SAO.WRATH + SAO.CATA_AND_ONWARD,
         16246, -- Clearcasting (buff)
         "aura",
         {
@@ -196,7 +196,7 @@ local function registerClass(self)
                     { stacks = 1, texture = "echo_of_the_elements", position = "Left", scale = 1, pulse = false, option = false },
                     { stacks = 2, texture = "echo_of_the_elements", position = "Left + Right (Flipped)", scale = 1, pulse = false, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
                 },
-                [SAO.CATA+SAO.MOP] = {
+                [SAO.CATA_AND_ONWARD] = {
                     { stacks = 1, texture = "genericarc_05", position = "Left", scale = 1.5, pulse = false, option = false },
                     { stacks = 2, texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.5, pulse = false, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
                 }
@@ -242,7 +242,7 @@ local function registerClass(self)
     local tidalWavesTalent = self.IsSoD() and 432233 or 51564;
     self:CreateEffect(
         "tidal_waves",
-        SAO.SOD + SAO.WRATH + SAO.CATA + SAO.MOP,
+        SAO.SOD + SAO.WRATH + SAO.CATA_AND_ONWARD,
         tidalWavesBuff,
         "aura",
         {
@@ -254,7 +254,7 @@ local function registerClass(self)
             },
             buttons = {
                 [SAO.SOD+SAO.WRATH] = { lesserHealingWave, healingWave },
-                [SAO.CATA+SAO.MOP] = { greaterHealingWave, healingWave, healingSurge },
+                [SAO.CATA_AND_ONWARD] = { greaterHealingWave, healingWave, healingSurge },
             },
         }
     );
@@ -271,7 +271,7 @@ local function registerClass(self)
     local maelstromWeaponScale = self.IsSoD() and 0.8 or 1;
     self:CreateEffect(
         "maelstrom_weapon",
-        SAO.ALL_PROJECTS - SAO.ERA - SAO.TBC,
+        SAO.SOD + SAO.WRATH + SAO.CATA_AND_ONWARD,
         maelstromWeaponBuff,
         "aura",
         {
@@ -281,7 +281,7 @@ local function registerClass(self)
                 { stacks = 2, texture = "maelstrom_weapon_2", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
                 { stacks = 3, texture = "maelstrom_weapon_3", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
                 { stacks = 4, texture = "maelstrom_weapon_4", position = "Top", scale = maelstromWeaponScale, pulse = false, option = { setupHash = hash0Stacks, testHash = hash4Stacks, subText = self:NbStacks(1,4) } },
-                [SAO.WRATH+SAO.CATA+SAO.MOP] = {
+                [SAO.WRATH+SAO.CATA_AND_ONWARD] = {
                     { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = true , option = true },
                 },
                 [SAO.SOD] = { 
@@ -297,7 +297,7 @@ local function registerClass(self)
                 default = { stacks = 5 },
                 [SAO.SOD] =   { lightningBolt, chainLightning, lesserHealingWave,                                                               lavaBurstSoD },
                 [SAO.WRATH] = { lightningBolt, chainLightning, lesserHealingWave,                     healingWave, chainHeal,              hex },
-                [SAO.CATA + SAO.MOP] =  { lightningBolt, chainLightning, healingSurge,      greaterHealingWave, healingWave, chainHeal, healingRain, hex },
+                [SAO.CATA_AND_ONWARD] =  { lightningBolt, chainLightning, healingSurge,      greaterHealingWave, healingWave, chainHeal, healingRain, hex },
             },
             handlers = {
                 -- Force refresh on a regular basis, because the game client does not send the correct SPELL_AURA_REFRESH events
