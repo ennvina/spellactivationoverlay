@@ -70,7 +70,7 @@ SAO.Variable:register({
     },
 
     event = {
-        isRequired = SAO.IsCata(),
+        isRequired = SAO.IsProject(SAO.CATA_AND_ONWARD),
         names = { "SPELL_ACTIVATION_OVERLAY_SHOW", "SPELL_ACTIVATION_OVERLAY_HIDE" },
         SPELL_ACTIVATION_OVERLAY_SHOW = function(spellID, overlayFileDataID, locationName, scale, r, g, b)
             local bucket = spellID ~= nil and SAO:GetBucketBySpellID(spellID);
