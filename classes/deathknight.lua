@@ -171,7 +171,7 @@ end
 local function useDarkSuccor()
     SAO:CreateEffect(
         "dark_succor",
-        SAO.MOP,
+        SAO.CATA + SAO.MOP,
         101568, -- Dark Succor (buff)
         "aura",
         {
