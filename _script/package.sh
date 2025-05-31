@@ -15,6 +15,17 @@ cdup() {
     cd "$CWD"/.. || bye "Cannot go to parent directory"
 }
 
+# Remove stuff dedicated to developers to optimize archive size and speed up the addon
+prunedev() {
+    echo -n "Removing developer-specific code..."
+    FILES_TO_REMOVE=(variables/_template.lua)
+    for filename in "${FILES_TO_REMOVE[@]}"
+    do
+        rm -f SpellActivationOverlay/"$filetoremove" || bye "Cannot remove file $filetoremove"
+    done
+    echo
+}
+
 # Create a project directory and copy all addon files to it.
 # Remove existing project directory, if any.
 # Current directory (cd) ends up in the new directory.
@@ -45,6 +56,9 @@ mkproject() {
     sed -i s%'^\(##[[:space:]]*Title:.*|c\)\(........\)\([0-9][^|]*\)|r |T[^|]*|t'%'\1'"$flavor_color"'\3|r '"$flavor_icon"% SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update title of $flavor TOC file"
 #    sed -i s%'^## Notes:.*'%"& Build optimized for $flavor_fullname."% SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update notes of $flavor TOC file"
     echo
+
+    # Always prune dev by default
+    prunedev
 }
 
 # Remove copyright of given expansions because the addon does not embed texture for these expansions
