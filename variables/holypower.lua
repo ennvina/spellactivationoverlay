@@ -101,7 +101,7 @@ SAO.Variable:register({
     },
 
     event = {
-        isRequired = SAO.IsCata() and select(2, UnitClass("player")) == "PALADIN",
+        isRequired = SAO.IsProject(SAO.CATA_AND_ONWARD) and select(2, UnitClass("player")) == "PALADIN",
         names = { "UNIT_POWER_UPDATE", "UNIT_POWER_FREQUENT" },
         UNIT_POWER_UPDATE = function(unitTarget, powerType)
             if unitTarget == "player" and powerType == HolyPowerPowerTypeToken then
