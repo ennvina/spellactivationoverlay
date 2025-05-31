@@ -2,13 +2,13 @@ local AddonName, SAO = ...
 local Module = "trigger"
 
 -- List of trigger flags, as bit field
--- Start high enough to be able to index trigger flag to a list, and avoid confusion with stack counts
 SAO.TRIGGER_AURA          = 0x01
 SAO.TRIGGER_ACTION_USABLE = 0x02
 SAO.TRIGGER_TALENT        = 0x04
 SAO.TRIGGER_HOLY_POWER    = 0x08
 SAO.TRIGGER_EXECUTE       = 0x10
 SAO.TRIGGER_NATIVE_SAO    = 0x20
+SAO.TRIGGER_STANCE        = 0x40
 
 -- Trigger names for variables and conditions
 SAO.TriggerNames = {} -- Will be filled by Variable
