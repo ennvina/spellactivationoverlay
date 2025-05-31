@@ -5,6 +5,7 @@
 /run f=CreateFrame("FRAME") f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED") f:SetScript("OnEvent", function() local t,e,_,_,s,_,_,_,d=CombatLogGetCurrentEventInfo() print("@"..t.." e="..e.." s='"..tostring(s).."' d='"..tostring(d).."'") end)
 /run g=CreateFrame("FRAME") g:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED") g:RegisterEvent("PLAYER_XP_UPDATE") g:SetScript("OnEvent", function(self, event) print("@"..GetTime().." e="..event) end)
 
+/run for i = 1, GetNumShapeshiftForms() do local a,b,c,d = GetShapeshiftFormInfo(i) print("Shapeshift Form #"..i.." uses spellID "..d.." ("..GetSpellInfo(d)..")") end
 
 /run cleu_function = function() local t,e,_,_,s,_,_,_,d,_,_,si,sn=CombatLogGetCurrentEventInfo() if e:sub(0,9)=="SPELL_AUR" and si==20154 then print("@"..t.." e="..e.." si='"..tostring(si).."' sn='"..tostring(sn).."'") end end end
 /run f=CreateFrame("FRAME") f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED") f:SetScript("OnEvent", cleu_function)
