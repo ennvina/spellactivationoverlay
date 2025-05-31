@@ -60,7 +60,9 @@ local function useShadowform()
         shadowform,
         "aura",
         {
-            talent = SAO.IsMoP() and PRIEST_SPEC_SHADOW or nil,
+            talent = {
+                [SAO.MOP] = PRIEST_SPEC_SHADOW,
+            },
             requireTalent = true,
             combatOnly = true,
             button = { stacks = -1 },
