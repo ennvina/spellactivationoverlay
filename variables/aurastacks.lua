@@ -76,10 +76,14 @@ SAO.Variable:register({
         getHumanReadableKeyValue = function(hash)
             local auraStacks = hash:getAuraStacks();
             if auraStacks and auraStacks > 0 then
+                -- Aura aims a specific number of stacks
                 return SAO:NbStacks(auraStacks);
             elseif auraStacks == nil then
+                -- Aura is expected to be missing
                 return ACTION_SPELL_AURA_REMOVED_DEBUFF;
             else
+                -- assert(aurastacks == 0);
+                -- Aura is expected to be present, but we don't care how many stacks it has, a.k.a. it has 'any' stacks
                 return nil; -- Should be obvious if aura is 'any'
             end
         end,

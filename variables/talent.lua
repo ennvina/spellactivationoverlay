@@ -28,7 +28,7 @@ SAO.Variable:register({
 
     hash = {
         mask = HASH_TALENT_MASK,
-        key = "talent",
+        key = "talented",
 
         setterFunc = function(self, usable)
             if type(usable) ~= 'boolean' then
