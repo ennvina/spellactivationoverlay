@@ -1,8 +1,8 @@
 local AddonName, SAO = ...
 
-local DK_SPEC_BLOOD = -1;
-local DK_SPEC_FROST = -2;
-local DK_SPEC_UNHOLY = -4;
+local DK_SPEC_BLOOD = SAO.TALENT.SPEC_1;
+local DK_SPEC_FROST = SAO.TALENT.SPEC_2;
+local DK_SPEC_UNHOLY = SAO.TALENT.SPEC_3;
 
 local bloodBoil = 48721;
 local boneShield = 49222;

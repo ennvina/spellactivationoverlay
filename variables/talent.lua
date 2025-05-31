@@ -1,6 +1,14 @@
 local AddonName, SAO = ...
 local Module = "talent"
 
+-- Global variables
+SAO.TALENT = {
+    SPEC_1 = -1,
+    SPEC_2 = -2,
+    SPEC_3 = -4,
+    SPEC_4 = -8,
+};
+
 -- Optimize frequent calls
 local GetSpecialization = C_SpecializationInfo and C_SpecializationInfo.GetSpecialization
 

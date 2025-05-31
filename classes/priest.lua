@@ -1,8 +1,8 @@
 local AddonName, SAO = ...
 
-local PRIEST_SPEC_DISCIPLINE = -1;
-local PRIEST_SPEC_HOLY = -2;
-local PRIEST_SPEC_SHADOW = -4;
+local PRIEST_SPEC_DISCIPLINE = SAO.TALENT.SPEC_1;
+local PRIEST_SPEC_HOLY = SAO.TALENT.SPEC_2;
+local PRIEST_SPEC_SHADOW = SAO.TALENT.SPEC_3;
 
 local bindingHeal = 401937;
 local flashHeal = 2061;
