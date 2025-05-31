@@ -4,6 +4,10 @@ local DK_SPEC_BLOOD = SAO.TALENT.SPEC_1;
 local DK_SPEC_FROST = SAO.TALENT.SPEC_2;
 local DK_SPEC_UNHOLY = SAO.TALENT.SPEC_3;
 
+local DK_STANCE_BLOOD = 48263;
+local DK_STANCE_FROST = 48266;
+local DK_STANCE_UNHOLY = 48265;
+
 local bloodBoil = 48721;
 local boneShield = 49222;
 local darkTransformation = 63560;
@@ -171,6 +175,9 @@ local function useDarkSuccor()
         101568, -- Dark Succor (buff)
         "aura",
         {
+            useStance = true,
+            stances = { DK_STANCE_FROST, DK_STANCE_UNHOLY },
+
             button = deathStrike,
         }
     );
