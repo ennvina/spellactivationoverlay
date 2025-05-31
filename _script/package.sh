@@ -246,6 +246,9 @@ mkproject wrath $WRATH_BUILD_VERSION 40abff achievement_boss_lichking 64 "Wrath 
 VARIABLES_NOT_FOR_WRATH=(holypower nativesao)
 prunevar "${VARIABLES_NOT_FOR_WRATH[@]}"
 
+# CLASSES_NOT_FOR_WRATH=(monk)
+# pruneclass "${CLASSES_NOT_FOR_WRATH[@]}"
+
 TEXTURES_NOT_FOR_WRATH=(
 arcane_missiles_1
 arcane_missiles_2
@@ -274,7 +277,7 @@ mkproject vanilla $VANILLA_BUILD_VERSION ffffff wow_token01 32 "Classic Era and 
 VARIABLES_NOT_FOR_VANILLA=(holypower nativesao)
 prunevar "${VARIABLES_NOT_FOR_VANILLA[@]}"
 
-CLASSES_NOT_FOR_VANILLA=(deathknight)
+CLASSES_NOT_FOR_VANILLA=(deathknight monk)
 pruneclass "${CLASSES_NOT_FOR_VANILLA[@]}"
 
 TEXTURES_NOT_FOR_VANILLA=(
@@ -299,6 +302,9 @@ CATA_BUILD_VERSION=40402
 mkproject cata $CATA_BUILD_VERSION db550d achievment_boss_madnessofdeathwing 64 "Cataclysm"
 
 prunecopyright Cataclysm
+
+# CLASSES_NOT_FOR_CATA=(monk)
+# pruneclass "${CLASSES_NOT_FOR_CATA[@]}"
 
 TEXTURES_NOT_FOR_CATA=(
 arcane_missiles_1
@@ -370,6 +376,7 @@ deathknight
 druid
 hunter
 mage
+monk
 paladin
 priest
 rogue
