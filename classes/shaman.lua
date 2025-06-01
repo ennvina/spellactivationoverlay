@@ -94,7 +94,9 @@ local RollingThunderHandler = {
         SAO:DeactivateOverlay(324);
 
         -- GAB
-        SAO:RemoveGlow(324);
+        if not SAO:IsMoP() then
+            SAO:RemoveGlow(324);
+        end
     end,
 }
 
