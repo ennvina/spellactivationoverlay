@@ -186,7 +186,7 @@ local function registerClass(self)
     -- Cataclysm uses cleaner texture, with scale of 150%
     self:CreateEffect(
         "elemental_focus",
-        SAO.TBC + SAO.WRATH + SAO.CATA_AND_ONWARD,
+        SAO.TBC_AND_ONWARD,
         16246, -- Clearcasting (buff)
         "aura",
         {
@@ -242,7 +242,7 @@ local function registerClass(self)
     local tidalWavesTalent = self.IsSoD() and 432233 or 51564;
     self:CreateEffect(
         "tidal_waves",
-        SAO.SOD + SAO.WRATH + SAO.CATA_AND_ONWARD,
+        SAO.SOD + SAO.WRATH_AND_ONWARD,
         tidalWavesBuff,
         "aura",
         {
@@ -271,7 +271,7 @@ local function registerClass(self)
     local maelstromWeaponScale = self.IsSoD() and 0.8 or 1;
     self:CreateEffect(
         "maelstrom_weapon",
-        SAO.SOD + SAO.WRATH + SAO.CATA_AND_ONWARD,
+        SAO.SOD + SAO.WRATH_AND_ONWARD,
         maelstromWeaponBuff,
         "aura",
         {
@@ -281,7 +281,7 @@ local function registerClass(self)
                 { stacks = 2, texture = "maelstrom_weapon_2", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
                 { stacks = 3, texture = "maelstrom_weapon_3", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
                 { stacks = 4, texture = "maelstrom_weapon_4", position = "Top", scale = maelstromWeaponScale, pulse = false, option = { setupHash = hash0Stacks, testHash = hash4Stacks, subText = self:NbStacks(1,4) } },
-                [SAO.WRATH+SAO.CATA_AND_ONWARD] = {
+                [SAO.WRATH_AND_ONWARD] = {
                     { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = true , option = true },
                 },
                 [SAO.SOD] = { 
