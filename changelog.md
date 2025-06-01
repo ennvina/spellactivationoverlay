@@ -1,5 +1,14 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.4.2 (2025-06-xx)
+
+New Glowing Button
+- Death Knight's Death Strike, during Glyph of Dark Succor (Cataclysm)
+
+Bug Fixes
+- Death Knight's Dark Tranformation now displays the overlay as intended (MoP)
+- During Dark Succor, Death Strike button only glows in Frost/Unholy presence
+
 #### v2.4.1 (2025-05-29)
 
 Shout-out to Flow who designed Shaman's 6-10 Maelstrom Weapon textures. Thanks!
@@ -31,7 +40,7 @@ Introducting Mists of Pandaria flavor!
 - Support for Warrior's Victory Rush
 - Support for Warrior's Glyph of Incite
 
-Known limitations:
+Known Limitations
 - Dark Transformation does not display an overlay, due to a game client issue
 - Dark Succor will glow Death Strike in all presences, including Blood Presence
 - Mage's Freeze debuff does not track Shaman's Freeze debuff, from Frozen Power
@@ -88,13 +97,13 @@ Bug Fixes
 
 #### v2.3.2 (2024-09-15)
 
-New Spell Alert:
+New Spell Alert
 - Hunter's Mongoose Bite (Era, TBC)
 
-Updated Glowing Button:
+Updated Glowing Button
 - Shaman's Molten Blast no longer glows infinitely after leaving combat (SoD)
 
-Removed Effect:
+Removed Effect
 - Priest's Mind Spike has been removed temporarily until it is resolved (SoD)
 
 Bug Fixes

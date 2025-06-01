@@ -15,6 +15,17 @@ cdup() {
     cd "$CWD"/.. || bye "Cannot go to parent directory"
 }
 
+# Remove stuff dedicated to developers to optimize archive size and speed up the addon
+prunedev() {
+    echo -n "Removing developer-specific code..."
+    FILES_TO_REMOVE=(variables/_template.lua)
+    for filename in "${FILES_TO_REMOVE[@]}"
+    do
+        rm -f SpellActivationOverlay/"$filetoremove" || bye "Cannot remove file $filetoremove"
+    done
+    echo
+}
+
 # Create a project directory and copy all addon files to it.
 # Remove existing project directory, if any.
 # Current directory (cd) ends up in the new directory.
@@ -45,6 +56,9 @@ mkproject() {
     sed -i s%'^\(##[[:space:]]*Title:.*|c\)\(........\)\([0-9][^|]*\)|r |T[^|]*|t'%'\1'"$flavor_color"'\3|r '"$flavor_icon"% SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update title of $flavor TOC file"
 #    sed -i s%'^## Notes:.*'%"& Build optimized for $flavor_fullname."% SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update notes of $flavor TOC file"
     echo
+
+    # Always prune dev by default
+    prunedev
 }
 
 # Remove copyright of given expansions because the addon does not embed texture for these expansions
@@ -232,6 +246,9 @@ mkproject wrath $WRATH_BUILD_VERSION 40abff achievement_boss_lichking 64 "Wrath 
 VARIABLES_NOT_FOR_WRATH=(holypower nativesao)
 prunevar "${VARIABLES_NOT_FOR_WRATH[@]}"
 
+# CLASSES_NOT_FOR_WRATH=(monk)
+# pruneclass "${CLASSES_NOT_FOR_WRATH[@]}"
+
 TEXTURES_NOT_FOR_WRATH=(
 arcane_missiles_1
 arcane_missiles_2
@@ -260,7 +277,7 @@ mkproject vanilla $VANILLA_BUILD_VERSION ffffff wow_token01 32 "Classic Era and 
 VARIABLES_NOT_FOR_VANILLA=(holypower nativesao)
 prunevar "${VARIABLES_NOT_FOR_VANILLA[@]}"
 
-CLASSES_NOT_FOR_VANILLA=(deathknight)
+CLASSES_NOT_FOR_VANILLA=(deathknight monk)
 pruneclass "${CLASSES_NOT_FOR_VANILLA[@]}"
 
 TEXTURES_NOT_FOR_VANILLA=(
@@ -285,6 +302,9 @@ CATA_BUILD_VERSION=40402
 mkproject cata $CATA_BUILD_VERSION db550d achievment_boss_madnessofdeathwing 64 "Cataclysm"
 
 prunecopyright Cataclysm
+
+# CLASSES_NOT_FOR_CATA=(monk)
+# pruneclass "${CLASSES_NOT_FOR_CATA[@]}"
 
 TEXTURES_NOT_FOR_CATA=(
 arcane_missiles_1
@@ -352,6 +372,7 @@ deathknight
 druid
 hunter
 mage
+monk
 paladin
 priest
 rogue
