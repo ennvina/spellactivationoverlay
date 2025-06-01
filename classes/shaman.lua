@@ -75,8 +75,8 @@ local RollingThunderHandler = {
             local scale = 0.5 + 0.1 * (lightningShieldStacks - 6); -- 50%, 60%, 70%, 80% for Cataclysm or 60%, 70%, 80% for Season of Discovery
             local pulse = lightningShieldStacks == 9 or nil;
             if SAO:IsMoP() then
-            scale = 0.8 --80% for Mists of Pandaria
-            pulse = lightningShieldStacks == 7 or nil;
+                scale = 0.8 --80% for Mists of Pandaria
+                pulse = lightningShieldStacks == 7 or nil;
             end
             SAO:ActivateOverlay(lightningShieldStacks, 324, SAO.TexName["fulmination"], "Top", scale, 255, 255, 255, pulse, pulse);
         end
@@ -107,7 +107,7 @@ local function checkRollingThunderRuneAndLightningSieldStacks(self, ...)
     end
 
     local RollingThunderEquipped = (C_Engraving and SAO:IsSpellLearned(432056));
-    if not (RollingThunderEquipped or SAO:IsProject(SAO.CATA_AND_ONWARD)) then
+    if not (RollingThunderEquipped or SAO.IsProject(SAO.CATA_AND_ONWARD)) then
         RollingThunderHandler:deactivate();
     else
         -- C_UnitAuras is currently available for Classic Era and Cataclysm only
@@ -320,11 +320,11 @@ local function registerClass(self)
     end
     
     if self.IsMoP() then
-        -- Initializing Rolling Thunder handler for Fulmination in Cataclysm
+        -- Initializing Rolling Thunder handler for Fulmination in Mists of Pandaria
         if (not RollingThunderHandler.initialized) then
             RollingThunderHandler:init();
         end
-            self:RegisterAura("fulmination", 7, RollingThunderHandler.fakeSpellID, "fulmination", "Top", 0.8, 255, 255, 255, true, RollingThunderHandler.earthShockSpells);
+            self:RegisterAura("fulmination", 7, RollingThunderHandler.fakeSpellID, "fulmination", "Top", 0.8, 255, 255, 255, true);
     end
 
     if self.IsWrath() then
