@@ -153,15 +153,10 @@ end
 -- Check if Maelstrom Weapon effect should pulse at 5 stacks
 -- This question only applies to 5 stacks, because the answer is obvious for other stacks
 -- At 5 stacks, we want to pulse if the shaman is capped at 5 stacks, and not pulse if capped at 10
-local function mustPulseMSW5(self, ...)
+--[[local]] function mustPulseMSW5()
     -- Count the number of items currently equipped from Enhancement's T4 set (Season of Discovery)
     local t4Items = { 240131, 240135, 240128, 240136, 240134, 240129, 240137, 240130 }
-    local nbT4Items = 0;
-    for _, item in ipairs(t4Items) do
-        if C_Item.IsEquippedItem(item) then
-            nbT4Items = nbT4Items + 1;
-        end
-    end
+    local nbT4Items = SAO:GetNbItemsEquipped(t4Items);
 
     if nbT4Items < 6 then
         -- If the shaman does not have the T4 6pc, s/he is capped at 5 stacks
@@ -218,7 +213,7 @@ local function registerClass(self)
             overlay = { texture = "imp_empowerment", position = "Left + Right (Flipped)" },
         }
     );
-    
+
     -- Lava Surge (Mists of Pandaria)
     local lavaSurgeMop = 77762;
     self:CreateEffect(
@@ -266,6 +261,7 @@ local function registerClass(self)
     local healingRain = 73920;
     local hex = 51514;
     local lavaBurstSoD = 408490;
+    local elementalBlast = 117014;
     local maelstromWeaponBuff = self.IsSoD() and 408505 or 53817;
     local maelstromWeaponTalent = self.IsSoD() and 408498 or 51530;
     local maelstromWeaponScale = self.IsSoD() and 0.8 or 1;
@@ -284,7 +280,7 @@ local function registerClass(self)
                 [SAO.WRATH_AND_ONWARD] = {
                     { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = true , option = true },
                 },
-                [SAO.SOD] = { 
+                [SAO.SOD] = {
                     { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = mustPulseMSW5, option = true },
                     { stacks = 6, texture = "maelstrom_weapon_6", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
                     { stacks = 7, texture = "maelstrom_weapon_7", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
@@ -295,9 +291,10 @@ local function registerClass(self)
             },
             buttons = {
                 default = { stacks = 5 },
-                [SAO.SOD] =   { lightningBolt, chainLightning, lesserHealingWave,                                                               lavaBurstSoD },
+                [SAO.SOD]   = { lightningBolt, chainLightning, lesserHealingWave,                                                               lavaBurstSoD },
                 [SAO.WRATH] = { lightningBolt, chainLightning, lesserHealingWave,                     healingWave, chainHeal,              hex },
-                [SAO.CATA_AND_ONWARD] =  { lightningBolt, chainLightning, healingSurge,      greaterHealingWave, healingWave, chainHeal, healingRain, hex },
+                [SAO.CATA]  = { lightningBolt, chainLightning, healingSurge,      greaterHealingWave, healingWave, chainHeal, healingRain, hex },
+                [SAO.MOP]   = { lightningBolt, chainLightning, healingSurge,      greaterHealingWave, healingWave, chainHeal, healingRain, hex,               elementalBlast },
             },
             handlers = {
                 -- Force refresh on a regular basis, because the game client does not send the correct SPELL_AURA_REFRESH events
@@ -318,7 +315,7 @@ local function registerClass(self)
             self:RegisterAura(auraName, lightningShieldStacks, RollingThunderHandler.fakeSpellID, "fulmination", "Top", scale, 255, 255, 255, pulse, RollingThunderHandler.earthShockSpells);
         end
     end
-    
+
     if self.IsMoP() then
         -- Initializing Rolling Thunder handler for Fulmination in Mists of Pandaria
         if (not RollingThunderHandler.initialized) then

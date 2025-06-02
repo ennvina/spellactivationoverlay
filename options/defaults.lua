@@ -512,7 +512,7 @@ SAO.defaults = {
                 [77762] = { -- Lava Surge (Mists of Pandaria)
                     [0] = true,
                 },
-                [53817] = { -- Maelstrom Weapon
+                [53817] = { -- Maelstrom Weapon (Wrath+)
                     [5] = true, -- 5 stacks
                     [0] = true, -- any stacks but 5
                 },
@@ -522,10 +522,13 @@ SAO.defaults = {
                     [6] = true, -- 6-9 stacks
                     [10]= true, -- 10 stacks
                 },
-                [53390] = { -- Tidal Waves
+                [53390] = { -- Tidal Waves (Wrath+)
                     [0] = false, -- any stacks
                 },
-                [60515] = { -- Healing Trance / Soul Preserver
+                [432041] = { -- Tidal Waves (Season of Discovery)
+                    [0] = false, -- any stacks
+                },
+                [60515] = { -- Healing Trance / Soul Preserver (Wrath)
                     [0] = false,
                 },
                 [425339]= { -- Molten Blast (Season of Discovery)
@@ -537,20 +540,18 @@ SAO.defaults = {
                     [8] = false,
                     [9] = true,
                 },
-                [432041] = { -- Tidal Waves (Season of Discovery)
-                    [0] = false, -- any stacks
-                },
             },
             glow = {
-                [53817] = { -- Maelstrom Weapon
-                    [403]   = false, -- Lightning Bolt
-                    [421]   = false, -- Chain Lightning
-                    [8004]  = false, -- Lesser Healing Wave / Healing Surge (Cataclysm)
-                    [331]   = false, -- Healing Wave
-                    [1064]  = false, -- Chain Heal
-                    [51514] = false, -- Hex
-                    [77472] = false, -- Greater Healing Wave (Cataclysm)
-                    [73920] = false, -- Healing Rain (Cataclysm)
+                [53817] = { -- Maelstrom Weapon (Wrath+)
+                    [403]    = false, -- Lightning Bolt
+                    [421]    = false, -- Chain Lightning
+                    [8004]   = false, -- Lesser Healing Wave / Healing Surge (Cataclysm)
+                    [331]    = false, -- Healing Wave
+                    [1064]   = false, -- Chain Heal
+                    [51514]  = false, -- Hex
+                    [77472]  = false, -- Greater Healing Wave (Cataclysm)
+                    [73920]  = false, -- Healing Rain (Cataclysm)
+                    [117014] = false, -- Elemental Blast (Mists of Pandaria)
                 },
                 [408505] = { -- Maelstrom Weapon (Season of Discovery)
                     [403]   = false, -- Lightning Bolt
@@ -570,20 +571,20 @@ SAO.defaults = {
                 [51505] = {  -- Lava Burst, for Lava Surge (Cataclysm)
                     [51505] = true,
                 },
-                [53390] = { -- Tidal Waves
+                [53390] = { -- Tidal Waves (Wrath+)
                     [8004] = false, -- Lesser Healing Wave / Healing Surge (Cataclysm)
                     [331]  = false, -- Healing Wave
                     [77472] = false, -- Greater Healing Wave (Cataclysm)
                 },
-                [425339]= { -- Molten Blast (Season of Discovery)
-                    [425339] = true, -- Molten Blast (Season of Discovery)
-                },
-                [324]= {  -- Lightning Shield, for Rolling Thunder (Season of Discovery) / Fulmination (Cataclysm)
-                    [8042] = true, -- Earth Shock, for for Rolling Thunder (Season of Discovery) / Fulmination (Cataclysm)
-                },
                 [432041] = { -- Tidal Waves (Season of Discovery)
                     [8004] = false, -- Lesser Healing Wave
                     [331]  = false, -- Healing Wave
+                },
+                [425339]= { -- Molten Blast (Season of Discovery)
+                    [425339] = true, -- Molten Blast (Season of Discovery)
+                },
+                [324]= {  -- Lightning Shield, for Rolling Thunder (Season of Discovery) / Fulmination (Cataclysm+)
+                    [8042] = true, -- Earth Shock, for for Rolling Thunder (Season of Discovery) / Fulmination (Cataclysm+)
                 },
             },
         },
