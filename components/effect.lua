@@ -61,8 +61,16 @@ local Module = "effect"
 
     handlers = {{
         project = SAO.WRATH,
-        onRegister = function(bucket) print("Registered "..bucket.name) end, -- Default is nil
-        onRepeat = function(bucket) print("Repeating "..bucket.name) end, -- Default is nil
+        -- All functions are optional
+        onRegister = function(bucket) -- Called immediately after registering the effect
+            print("Registered "..bucket.name);
+        end,
+        onRepeat = function(bucket) -- Called on a regular basis
+            print("Repeating "..bucket.name);
+        end,
+        onAboutToApplyHash = function(hashCalculator) -- Called right before setting hash for display/hide, possibly altering the hash
+            hashCalculator:setAuraStacks(math.max(hashCalculator:getAuraStacks(), 5));
+        end,
     }}, -- Although rare, multiple handlers are possible
 }
 
@@ -312,6 +320,7 @@ local function addOneHandler(handlers, handlerConfig, project, default, triggers
         project = project,
         onRegister = handlerConfig.onRegister or default.onRegister,
         onRepeat = handlerConfig.onRepeat or default.onRepeat,
+        onAboutToApplyHash = handlerConfig.onAboutToApplyHash or default.onAboutToApplyHash,
     }
 
     table.insert(handlers, handler);
@@ -665,7 +674,19 @@ local function RegisterNativeEffectNow(self, effect)
     self.BucketManager:checkIntegrity(bucket); -- Optional, but better safe than sorry
 
     for _, handler in ipairs(effect.handlers or {}) do
-        if not handler.project or self.IsProject(handler.project) then
+        if type(handler) ~= 'table' then
+            self:Warn(Module, "Adding handler of wrong type "..type(handler).." for effect "..tostring(effect.name));
+        elseif not handler.project or self.IsProject(handler.project) then
+            for handlerKey, _ in pairs(handler) do
+                if handlerKey ~= "project"
+                and handlerKey ~= "onRegister"
+                and handlerKey ~= "onRepeat"
+                and handlerKey ~= "onAboutToApplyHash"
+                then
+                    self:Warn(Module, "Adding unknown handler "..tostring(handlerKey).." for effect "..tostring(effect.name));
+                end
+            end
+
             if type(handler.onRegister) == 'function' then
                 handler.onRegister(bucket);
             end
@@ -674,6 +695,13 @@ local function RegisterNativeEffectNow(self, effect)
                 C_Timer.NewTicker(1, function()
                     handler.onRepeat(bucket);
                 end);
+            end
+
+            if type(handler.onAboutToApplyHash) == 'function' then
+                if bucket.onAboutToApplyHash then
+                    self:Warn(Module, "Registering several handlers of onAboutToApplyHash for effect "..tostring(effect.name));
+                end
+                bucket.onAboutToApplyHash = handler.onAboutToApplyHash;
             end
         end
     end
