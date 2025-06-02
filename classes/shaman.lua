@@ -84,7 +84,7 @@ local RollingThunderHandler = {
         -- GABs
         local gabOption = SAO:GetGlowingOptions(324);
         local hasESGAB = not gabOption or type(gabOption[324]) == "nil" or gabOption[324];
-        if (not SAO:IsMoP() and hasESGAB and (hasSAO or lightningShieldStacks == 9)) then -- Glow is not needed for Mists of Pandaria
+        if (hasESGAB and (hasSAO or lightningShieldStacks == 9)) then
             SAO:AddGlow(324, self.earthShockSpells); -- First arg is option ID, second arg is spell ID list
         end
     end,
@@ -94,9 +94,7 @@ local RollingThunderHandler = {
         SAO:DeactivateOverlay(324);
 
         -- GAB
-        if not SAO:IsMoP() then
-            SAO:RemoveGlow(324);
-        end
+        SAO:RemoveGlow(324);
     end,
 }
 
@@ -326,7 +324,7 @@ local function registerClass(self)
         if (not RollingThunderHandler.initialized) then
             RollingThunderHandler:init();
         end
-            self:RegisterAura("fulmination", 7, RollingThunderHandler.fakeSpellID, "fulmination", "Top", 0.8, 255, 255, 255, true);
+            self:RegisterAura("fulmination", 7, RollingThunderHandler.fakeSpellID, "fulmination", "Top", 0.8, 255, 255, 255, true, RollingThunderHandler.earthShockSpells);
     end
 
     if self.IsWrath() then
@@ -461,7 +459,9 @@ local function loadOptions(self)
         self:AddOverlayOption(rollingThunderSoD, lightningShield, self:HashNameFromStacks(9), nil, nil, nil, RollingThunderHandler.fakeSpellID);
     end
 
-    if self.IsCata() then
+    if self.IsMoP() then
+        self:AddGlowingOption(fulminationTalentCata, lightningShield, earthShock, nil, nil, nil, self:HashNameFromStacks(7));
+    elseif self.IsCata() then
         self:AddGlowingOption(fulminationTalentCata, lightningShield, earthShock, sixToNineStacks);
     elseif self.IsSoD() then
         self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, chainLightning, DAMAGER);
