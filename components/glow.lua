@@ -132,7 +132,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
     end,
 
     EndSAOGlow = function(self, frame, glowID)
-        frame:HideGlow();
+        frame:DisableGlow();
     end,
 }
 
