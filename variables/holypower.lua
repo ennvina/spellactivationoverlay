@@ -13,7 +13,11 @@ local HASH_HOLY_POWER_0    = 0x100
 local HASH_HOLY_POWER_1    = 0x200
 local HASH_HOLY_POWER_2    = 0x300
 local HASH_HOLY_POWER_3    = 0x400
+local HASH_HOLY_POWER_4    = 0x500
+local HASH_HOLY_POWER_5    = 0x600
 local HASH_HOLY_POWER_MASK = 0x700
+
+local maxHolyPower = SAO.IsCata() and 3 or 5; -- 3 for Cata, 5 for MoP+
 
 local canUseHolyPower = false;
 if SAO.IsCata() and select(2, UnitClass("player")) == "PALADIN" then
@@ -50,9 +54,9 @@ SAO.Variable:register({
         setterFunc = function(self, holyPower)
             if type(holyPower) ~= 'number' or holyPower < 0 then
                 SAO:Warn(Module, "Invalid Holy Power "..tostring(holyPower));
-            elseif holyPower > 3 then
-                SAO:Debug(Module, "Holy Power overflow ("..holyPower..") truncated to 3");
-                self:setMaskedHash(HASH_HOLY_POWER_3, HASH_HOLY_POWER_MASK);
+            elseif holyPower > maxHolyPower then
+                SAO:Debug(Module, "Holy Power overflow ("..holyPower..") truncated to "..maxHolyPower);
+                self:setMaskedHash(HASH_HOLY_POWER_0 + maxHolyPower, HASH_HOLY_POWER_MASK);
             else
                 self:setMaskedHash(HASH_HOLY_POWER_0 * (1 + holyPower), HASH_HOLY_POWER_MASK);
             end
@@ -120,7 +124,7 @@ SAO.Variable:register({
         hreVar = "holyPower",
         noeDefault = 0,
         description = "Holy Power value",
-        checker = function(value) return type(value) == 'number' and value >= 0 and value <= 3 end,
+        checker = function(value) return type(value) == 'number' and value >= 0 and value <= maxHolyPower end,
         noeToHash = function(value) return value end,
     },
 
