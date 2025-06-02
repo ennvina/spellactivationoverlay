@@ -48,7 +48,7 @@ local RollingThunderHandler = {
         if (event:sub(0,11) ~= "SPELL_AURA_") then return end
 
         local spellID, spellName = select(12, CombatLogGetCurrentEventInfo());
-        local stackThreshold = SAO:IsCata() and 6 or 7; -- 6 or more for Cata, 7 or more for SoD
+        local stackThreshold = SAO:IsCata() and 6 or 7; -- 6 or more for Cata, 7 or more for SoD, 7 for MoP
         if (self.lightningShieldSpellIDs[spellID]) then
             if (event == "SPELL_AURA_APPLIED_DOSE") or (event == "SPELL_AURA_REMOVED_DOSE") then
             -- Deactivating old overlays and activating new one when Lightning Shield stack is gained or lost
@@ -74,6 +74,10 @@ local RollingThunderHandler = {
         if (hasSAO) then
             local scale = 0.5 + 0.1 * (lightningShieldStacks - 6); -- 50%, 60%, 70%, 80% for Cataclysm or 60%, 70%, 80% for Season of Discovery
             local pulse = lightningShieldStacks == 9 or nil;
+            if SAO:IsMoP() then
+                scale = 0.8 --80% for Mists of Pandaria
+                pulse = lightningShieldStacks == 7 or nil;
+            end
             SAO:ActivateOverlay(lightningShieldStacks, 324, SAO.TexName["fulmination"], "Top", scale, 255, 255, 255, pulse, pulse);
         end
 
@@ -103,7 +107,7 @@ local function checkRollingThunderRuneAndLightningSieldStacks(self, ...)
     end
 
     local RollingThunderEquipped = (C_Engraving and SAO:IsSpellLearned(432056));
-    if not (RollingThunderEquipped or SAO:IsCata()) then
+    if not (RollingThunderEquipped or SAO.IsProject(SAO.CATA_AND_ONWARD)) then
         RollingThunderHandler:deactivate();
     else
         -- C_UnitAuras is currently available for Classic Era and Cataclysm only
@@ -182,7 +186,7 @@ local function registerClass(self)
     -- Cataclysm uses cleaner texture, with scale of 150%
     self:CreateEffect(
         "elemental_focus",
-        SAO.TBC + SAO.WRATH + SAO.CATA,
+        SAO.TBC_AND_ONWARD,
         16246, -- Clearcasting (buff)
         "aura",
         {
@@ -192,7 +196,7 @@ local function registerClass(self)
                     { stacks = 1, texture = "echo_of_the_elements", position = "Left", scale = 1, pulse = false, option = false },
                     { stacks = 2, texture = "echo_of_the_elements", position = "Left + Right (Flipped)", scale = 1, pulse = false, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
                 },
-                [SAO.CATA] = {
+                [SAO.CATA_AND_ONWARD] = {
                     { stacks = 1, texture = "genericarc_05", position = "Left", scale = 1.5, pulse = false, option = false },
                     { stacks = 2, texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.5, pulse = false, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
                 }
@@ -214,6 +218,20 @@ local function registerClass(self)
             overlay = { texture = "imp_empowerment", position = "Left + Right (Flipped)" },
         }
     );
+    
+    -- Lava Surge (Mists of Pandaria)
+    local lavaSurgeMop = 77762;
+    self:CreateEffect(
+        "lava_surge",
+        SAO.MOP,
+        lavaSurgeMop,
+        "aura",
+        {
+            talent = 77756, -- Lava Surge (passive)
+            combatOnly = true,
+            overlay = { texture = "imp_empowerment", position = "Left + Right (Flipped)" },
+        }
+    );
 
     -- Tidal Waves
     local greaterHealingWave = 77472;
@@ -221,10 +239,10 @@ local function registerClass(self)
     local healingWave = 331;
     local lesserHealingWave = 8004; -- Renamed Healing Surge in Cataclysm; keep the former name to make the effect easier to design
     local tidalWavesBuff = self.IsSoD() and 432041 or 53390;
-    local tidalWavesTalent = self.IsSoD() and 432233 or 51562;
+    local tidalWavesTalent = self.IsSoD() and 432233 or 51564;
     self:CreateEffect(
         "tidal_waves",
-        SAO.SOD + SAO.WRATH + SAO.CATA,
+        SAO.SOD + SAO.WRATH_AND_ONWARD,
         tidalWavesBuff,
         "aura",
         {
@@ -236,7 +254,7 @@ local function registerClass(self)
             },
             buttons = {
                 [SAO.SOD+SAO.WRATH] = { lesserHealingWave, healingWave },
-                [SAO.CATA] = { greaterHealingWave, healingWave, healingSurge },
+                [SAO.CATA_AND_ONWARD] = { greaterHealingWave, healingWave, healingSurge },
             },
         }
     );
@@ -249,11 +267,11 @@ local function registerClass(self)
     local hex = 51514;
     local lavaBurstSoD = 408490;
     local maelstromWeaponBuff = self.IsSoD() and 408505 or 53817;
-    local maelstromWeaponTalent = self.IsSoD() and 408498 or 51528;
+    local maelstromWeaponTalent = self.IsSoD() and 408498 or 51530;
     local maelstromWeaponScale = self.IsSoD() and 0.8 or 1;
     self:CreateEffect(
         "maelstrom_weapon",
-        SAO.SOD + SAO.WRATH + SAO.CATA,
+        SAO.SOD + SAO.WRATH_AND_ONWARD,
         maelstromWeaponBuff,
         "aura",
         {
@@ -263,7 +281,7 @@ local function registerClass(self)
                 { stacks = 2, texture = "maelstrom_weapon_2", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
                 { stacks = 3, texture = "maelstrom_weapon_3", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
                 { stacks = 4, texture = "maelstrom_weapon_4", position = "Top", scale = maelstromWeaponScale, pulse = false, option = { setupHash = hash0Stacks, testHash = hash4Stacks, subText = self:NbStacks(1,4) } },
-                [SAO.WRATH+SAO.CATA] = {
+                [SAO.WRATH_AND_ONWARD] = {
                     { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = true , option = true },
                 },
                 [SAO.SOD] = { 
@@ -279,7 +297,7 @@ local function registerClass(self)
                 default = { stacks = 5 },
                 [SAO.SOD] =   { lightningBolt, chainLightning, lesserHealingWave,                                                               lavaBurstSoD },
                 [SAO.WRATH] = { lightningBolt, chainLightning, lesserHealingWave,                     healingWave, chainHeal,              hex },
-                [SAO.CATA] =  { lightningBolt, chainLightning, healingSurge,      greaterHealingWave, healingWave, chainHeal, healingRain, hex },
+                [SAO.CATA_AND_ONWARD] =  { lightningBolt, chainLightning, healingSurge,      greaterHealingWave, healingWave, chainHeal, healingRain, hex },
             },
             handlers = {
                 -- Force refresh on a regular basis, because the game client does not send the correct SPELL_AURA_REFRESH events
@@ -299,6 +317,14 @@ local function registerClass(self)
             local pulse = lightningShieldStacks == 9;
             self:RegisterAura(auraName, lightningShieldStacks, RollingThunderHandler.fakeSpellID, "fulmination", "Top", scale, 255, 255, 255, pulse, RollingThunderHandler.earthShockSpells);
         end
+    end
+    
+    if self.IsMoP() then
+        -- Initializing Rolling Thunder handler for Fulmination in Mists of Pandaria
+        if (not RollingThunderHandler.initialized) then
+            RollingThunderHandler:init();
+        end
+            self:RegisterAura("fulmination", 7, RollingThunderHandler.fakeSpellID, "fulmination", "Top", 0.8, 255, 255, 255, true, RollingThunderHandler.earthShockSpells);
     end
 
     if self.IsWrath() then
@@ -415,6 +441,9 @@ local function loadOptions(self)
         self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff);
     end
 
+    if self.IsMoP() then
+        self:AddOverlayOption(fulminationTalentCata, lightningShield, self:HashNameFromStacks(7), nil, nil, nil, RollingThunderHandler.fakeSpellID);
+    end
     if self.IsCata() then
         self:AddOverlayOption(fulminationTalentCata, lightningShield, self:HashNameFromStacks(6), nil, nil, nil, RollingThunderHandler.fakeSpellID);
         self:AddOverlayOption(fulminationTalentCata, lightningShield, self:HashNameFromStacks(7), nil, nil, nil, RollingThunderHandler.fakeSpellID);
@@ -430,7 +459,9 @@ local function loadOptions(self)
         self:AddOverlayOption(rollingThunderSoD, lightningShield, self:HashNameFromStacks(9), nil, nil, nil, RollingThunderHandler.fakeSpellID);
     end
 
-    if self.IsCata() then
+    if self.IsMoP() then
+        self:AddGlowingOption(fulminationTalentCata, lightningShield, earthShock, nil, nil, nil, self:HashNameFromStacks(7));
+    elseif self.IsCata() then
         self:AddGlowingOption(fulminationTalentCata, lightningShield, earthShock, sixToNineStacks);
     elseif self.IsSoD() then
         self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, chainLightning, DAMAGER);
@@ -447,5 +478,4 @@ SAO.Class["SHAMAN"] = {
     ["PLAYER_REGEN_ENABLED"] = deactivateRollingThunderGlow,
     ["PLAYER_REGEN_DISABLED"] = activateRollingThunderGlow,
     ["PLAYER_LOGIN"] = deactivateRollingThunderGlow,
-    IsDisabled = SAO.IsMoP(),
 }
