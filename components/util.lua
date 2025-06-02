@@ -26,6 +26,8 @@ local GetNumSpecializationsForClassID = C_SpecializationInfo and C_Specializatio
 local GetSpecializationInfo = C_SpecializationInfo and C_SpecializationInfo.GetSpecializationInfo
       GetTalentInfo = C_SpecializationInfo and C_SpecializationInfo.GetTalentInfo or GetTalentInfo
 
+local IsEquippedItem = C_Item and C_Item.IsEquippedItem
+
 --[[
     Logging functions
 ]]
@@ -520,6 +522,23 @@ function SAO.GetHomonymSpellIDs(self, spell)
     end
 
     return homonyms;
+end
+
+--[[
+    Spell utility functions
+]]
+
+-- Returns the number of items the player has currently equipped
+function SAO:GetNbItemsEquipped(itemList)
+    local nbItems = 0;
+
+    for _, item in ipairs(itemList) do
+        if IsEquippedItem(item) then
+            nbItems = nbItems + 1;
+        end
+    end
+
+    return nbItems;
 end
 
 --[[
