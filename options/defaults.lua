@@ -543,14 +543,15 @@ SAO.defaults = {
             },
             glow = {
                 [53817] = { -- Maelstrom Weapon
-                    [403]   = false, -- Lightning Bolt
-                    [421]   = false, -- Chain Lightning
-                    [8004]  = false, -- Lesser Healing Wave / Healing Surge (Cataclysm)
-                    [331]   = false, -- Healing Wave
-                    [1064]  = false, -- Chain Heal
-                    [51514] = false, -- Hex
-                    [77472] = false, -- Greater Healing Wave (Cataclysm)
-                    [73920] = false, -- Healing Rain (Cataclysm)
+                    [403]    = false, -- Lightning Bolt
+                    [421]    = false, -- Chain Lightning
+                    [8004]   = false, -- Lesser Healing Wave / Healing Surge (Cataclysm)
+                    [331]    = false, -- Healing Wave
+                    [1064]   = false, -- Chain Heal
+                    [51514]  = false, -- Hex
+                    [77472]  = false, -- Greater Healing Wave (Cataclysm)
+                    [73920]  = false, -- Healing Rain (Cataclysm)
+                    [117014] = false, -- Elemental Blast (Mists of Pandaria)
                 },
                 [408505] = { -- Maelstrom Weapon (Season of Discovery)
                     [403]   = false, -- Lightning Bolt
