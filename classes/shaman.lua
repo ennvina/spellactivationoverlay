@@ -153,7 +153,7 @@ end
 -- Check if Maelstrom Weapon effect should pulse at 5 stacks
 -- This question only applies to 5 stacks, because the answer is obvious for other stacks
 -- At 5 stacks, we want to pulse if the shaman is capped at 5 stacks, and not pulse if capped at 10
---[[local]] function mustPulseMSW5()
+local function mustPulseMSW5()
     -- Count the number of items currently equipped from Enhancement's T4 set (Season of Discovery)
     local t4Items = { 240131, 240135, 240128, 240136, 240134, 240129, 240137, 240130 }
     local nbT4Items = SAO:GetNbItemsEquipped(t4Items);
