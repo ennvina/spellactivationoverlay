@@ -19,7 +19,7 @@ cdup() {
 prunedev() {
     echo -n "Removing developer-specific code..."
     FILES_TO_REMOVE=(variables/_template.lua)
-    for filename in "${FILES_TO_REMOVE[@]}"
+    for filetoremove in "${FILES_TO_REMOVE[@]}"
     do
         rm -f SpellActivationOverlay/"$filetoremove" || bye "Cannot remove file $filetoremove"
     done
