@@ -32,7 +32,9 @@ SAO.Bucket = {
             -- Initially, nothing is displayed
             displayedHash = nil,
             currentHash = nil,
-            hashCalculator = SAO.Hash:new(),
+            hashCalculator = SAO.Hash:new(), -- Hash that reflects real state of the game
+            hashCalculatorToApply = SAO.Hash:new(); -- Hash that holds virtual situation we want to display
+            -- hashCalculator and hashCalculatorToApply may differ if and only if there is an onAboutToApplyHash handler
 
             -- Constant for more efficient debugging
             description = name.." ("..spellID..(GetSpellInfo(spellID) and " = "..GetSpellInfo(spellID) or "")..")",
@@ -115,8 +117,10 @@ SAO.Bucket = {
     end,
 
     applyHash = function(self)
-        if self.currentHash == self.hashCalculator.hash then
-            return;
+        self.hashCalculatorToApply.hash = self.hashCalculator.hash;
+        if self.onAboutToApplyHash then
+            -- Possibly change the hash about do be applied right before applying it
+            self.onAboutToApplyHash(self.hashCalculatorToApply);
         end
 
         if SAO:HasDebug() or SAO:HasTrace(Module) then
@@ -129,24 +133,44 @@ SAO.Bucket = {
                 return str, string.format("%s (%s)", str, num);
             end
 
-            if self.currentHash == nil or self.currentHash == 0 then
-                local shortStrHashAfter, longStrHashAfter = describeHash(self.hashCalculator.hash);
-                SAO:Debug(Module, "Setting hash to "..shortStrHashAfter.." for "..self.description);
-                SAO:Trace(Module, "Setting hash to "..longStrHashAfter.." for "..self.description);
-            elseif self.hashCalculator.hash == 0 then
-                local _, longStrHashBefore = describeHash(self.currentHash);
-                SAO:Debug(Module, "Resetting hash for "..self.description);
-                SAO:Trace(Module, "Resetting hash from "..longStrHashBefore.." for "..self.description);
+            local logHashUpdate = function(oldHash, newHash, prefix)
+                if oldHash == newHash then return end
+                prefix = prefix or "";
+                if oldHash == nil or oldHash == 0 then
+                    local shortStrHashAfter, longStrHashAfter = describeHash(newHash);
+                    SAO:Debug(Module, prefix.."Setting hash to "..shortStrHashAfter.." for "..self.description);
+                    SAO:Trace(Module, prefix.."Setting hash to "..longStrHashAfter.." for "..self.description);
+                elseif newHash == 0 then
+                    local _, longStrHashBefore = describeHash(oldHash);
+                    SAO:Debug(Module, prefix.."Resetting hash for "..self.description);
+                    SAO:Trace(Module, prefix.."Resetting hash from "..longStrHashBefore.." for "..self.description);
+                else
+                    local shortStrHashBefore, longStrHashBefore = describeHash(oldHash);
+                    local shortStrHashAfter, longStrHashAfter = describeHash(newHash);
+                    SAO:Debug(Module, prefix.."Changing hash from "..shortStrHashBefore.." to "..shortStrHashAfter.." for "..self.description);
+                    SAO:Trace(Module, prefix.."Changing hash from "..longStrHashBefore.." to "..longStrHashAfter.." for "..self.description);
+                end
+            end
+
+            if self.onAboutToApplyHash then
+                logHashUpdate(self.lastRealHash, self.hashCalculator.hash, "(real hash) ");
+                self.lastRealHash = self.hashCalculator.hash;
+                logHashUpdate(self.currentHash, self.hashCalculatorToApply.hash, "(virtual hash) ");
             else
-                local shortStrHashBefore, longStrHashBefore = describeHash(self.currentHash);
-                local shortStrHashAfter, longStrHashAfter = describeHash(self.hashCalculator.hash);
-                SAO:Debug(Module, "Changing hash from "..shortStrHashBefore.." to "..shortStrHashAfter.." for "..self.description);
-                SAO:Trace(Module, "Changing hash from "..longStrHashBefore.." to "..longStrHashAfter.." for "..self.description);
+                logHashUpdate(self.currentHash, self.hashCalculatorToApply.hash);
             end
         end
 
-        self.currentHash = self.hashCalculator.hash;
+        -- Get out if the hash to display is the same as the hash currently displayed
+        if self.currentHash == self.hashCalculatorToApply.hash then
+            return;
+        end
 
+        -- Store the new hash to display
+        self.currentHash = self.hashCalculatorToApply.hash;
+
+        -- Get out if the hash to display is incomplete
+        -- But get out *after* storing the new hash, in case someone wants to know the currently displayed hash (although this one is not 'displayed')
         if not self.trigger:isFullyInformed() then
             return;
         end
@@ -165,7 +189,7 @@ SAO.Bucket = {
                 end
             end
         else
-            local hashForAnyStacks = self.hashCalculator:toAnyAuraStacks();
+            local hashForAnyStacks = self.hashCalculatorToApply:toAnyAuraStacks();
             if self.displayedHash == nil then -- Displayed aura was 'nil'
                 if currentStacks == nil or currentStacks == 0 then
                     if self[self.currentHash] then
