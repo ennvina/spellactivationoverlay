@@ -21,7 +21,7 @@ Glyph of Dark Succor
 - Glyph of Dark Succor is now also implemented in Cataclysm, which also benefits from this fix
 ## Known Limitations
 ## Miscellaneous
-The addon is now capable of creating effects based on _stance_. This is what allowed Dark Succor to be fixed.
+The flavor icon of Classic Era is now an ice cream, in reference to the first Classic announcement at BlizzCon 2017.
 ## Contributors
 
 As always, the latest release is available:
