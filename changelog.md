@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.4.3 (2024-06-02)
+
+Bug Fixes
+- Buttons now un-glow as intended when effects end (Classic Era, Cataclysm)
+
 #### v2.4.2 (2025-06-02)
 
 Special thanks to Amanthuul once again for his work on the Shaman class. Kudos!
