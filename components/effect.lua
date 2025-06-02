@@ -674,7 +674,19 @@ local function RegisterNativeEffectNow(self, effect)
     self.BucketManager:checkIntegrity(bucket); -- Optional, but better safe than sorry
 
     for _, handler in ipairs(effect.handlers or {}) do
-        if not handler.project or self.IsProject(handler.project) then
+        if type(handler) ~= 'table' then
+            self:Warn(Module, "Adding handler of wrong type "..type(handler).." for effect "..tostring(effect.name));
+        elseif not handler.project or self.IsProject(handler.project) then
+            for handlerKey, _ in pairs(handler) do
+                if handlerKey ~= "project"
+                and handlerKey ~= "onRegister"
+                and handlerKey ~= "onRepeat"
+                and handlerKey ~= "onAboutToApplyHash"
+                then
+                    self:Warn(Module, "Adding unknown handler "..tostring(handlerKey).." for effect "..tostring(effect.name));
+                end
+            end
+
             if type(handler.onRegister) == 'function' then
                 handler.onRegister(bucket);
             end
