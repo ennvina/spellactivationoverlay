@@ -65,9 +65,9 @@ end
     The GlowEngine object accepts requests to enable to disable glow for SAO
     It also tracks buttons glowing or not glowing from Native glows
     To avoid conflict between SAO and Native glows, SAO glow is only enabled when Native is not
-    PS. This object is introduced in Mists of Pandaria, because Native glow conflicts since MoP
+    PS. This object is enabled for Cataclysm and later, because Native glow was introduced in Cataclysm
 ]]
-local GlowEngine = SAO.IsProject(SAO.MOP_AND_ONWARD) and {
+local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
     SAOGlows = {}, -- Key/value pairs: key = glowID, value = { frame, isGlowing }
     NativeGlows = {}, -- Key/value pairs: key = glowID, value = true
 
@@ -136,7 +136,7 @@ local GlowEngine = SAO.IsProject(SAO.MOP_AND_ONWARD) and {
     end,
 }
 
-if SAO.IsProject(SAO.MOP_AND_ONWARD) then
+if SAO.IsProject(SAO.CATA_AND_ONWARD) then
     local GlowEngineFrame = CreateFrame("Frame", "SpellActivationOverlayGlowEngineFrame");
     GlowEngineFrame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW");
     GlowEngineFrame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE");
