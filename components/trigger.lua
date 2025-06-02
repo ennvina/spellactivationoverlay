@@ -9,6 +9,7 @@ SAO.TRIGGER_HOLY_POWER    = 0x08
 SAO.TRIGGER_EXECUTE       = 0x10
 SAO.TRIGGER_NATIVE_SAO    = 0x20
 SAO.TRIGGER_STANCE        = 0x40
+SAO.TRIGGER_ITEM_SET      = 0x80
 
 -- Trigger names for variables and conditions
 SAO.TriggerNames = {} -- Will be filled by Variable
