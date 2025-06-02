@@ -1,5 +1,34 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.4.4-beta (2025-06-xx)
+
+New Spell Alerts
+- Paladin's charges of Holy Power (Mists of Pandaria)
+- Paladin's Infusion of Light (Mists of Pandaria)
+- Paladin's Daybreak (Mists of Pandaria)
+- Paladin's Grand Crusader (Mists of Pandaria)
+- Paladin's Divine Purpose (Mists of Pandaria)
+
+New Glowing Buttons
+- Paladin's Divine Storm, at 3 charges of Holy Power (Mists of Pandaria)
+- Paladin's Inquisition, at 3 charges of Holy Power (Mists of Pandaria)
+- Paladin's Light of Dawn, at 3 Holy Power (Mists of Pandaria)
+- Paladin's Templar's Verdict, at 3 Holy Power (Mists of Pandaria)
+- Paladin's Shield of the Righteous, at 3 Holy Power (Mists of Pandaria)
+- Paladin's Word of Glory, at 3 Holy Power (Mists of Pandaria)
+- Paladin's Divine Light, during Infusion of Light (Mists of Pandaria)
+- Paladin's Holy Light, during Infusion of Light (Mists of Pandaria)
+- Paladin's Holy Radiance, during Infusion of Light (Mists of Pandaria)
+- Paladin's Holy Shock, during Daybreak (Mists of Pandaria)
+- Paladin's Avenger's Shield, during Grand Crusader (Mists of Pandaria)
+- Paladin's Divine Storm, during Divine Purpose (Mists of Pandaria)
+- Paladin's Inquisition, during Divine Purpose (Mists of Pandaria)
+- Paladin's Light of Dawn, during Divine Purpose (Mists of Pandaria)
+- Paladin's Templar's Verdict, during Divine Purpose (Mists of Pandaria)
+- Paladin's Shield of the Righteous, during Divine Purpose (Mists of Pandaria)
+- Paladin's Word of Glory, during Divine Purpose (Mists of Pandaria)
+- Paladin's Flash of Light, during Supplication (Mists of Pandaria)
+
 #### v2.4.3 (2024-06-02)
 
 Bug Fixes
