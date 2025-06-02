@@ -2,8 +2,29 @@
 
 #### v2.4.2 (2025-06-xx)
 
-New Glowing Button
+Special thanks to Amanthuul once again for his work on the Shaman class. Kudos!
+
+New Spell Alerts
+- Shaman's Fulmination, with 7 Lightning Shield stacks (Mists of Pandaria)
+- Shaman's Lava Surge (Mists of Pandaria)
+- Shaman's Maelstrom Weapon (Mists of Pandaria)
+- Shaman's Tidal Waves (Mists of Pandaria)
+
+New Glowing Buttons
 - Death Knight's Death Strike, during Glyph of Dark Succor (Cataclysm)
+- Shaman's Earth Shock, with 7 Lightning Shield stacks (Mists of Pandaria)
+- Shaman's Elemental Blast, during Maelstrom Weapon (Mists of Pandaria)
+- Shaman's Chain Heal, during Maelstrom Weapon (Mists of Pandaria)
+- Shaman's Chain Lightning, during Maelstrom Weapon (Mists of Pandaria)
+- Shaman's Greater Healing Wave, during Maelstrom Weapon (Mists of Pandaria)
+- Shaman's Healing Rain, during Maelstrom Weapon (Mists of Pandaria)
+- Shaman's Healing Surge, during Maelstrom Weapon (Mists of Pandaria)
+- Shaman's Healing Wave, during Maelstrom Weapon (Mists of Pandaria)
+- Shaman's Hex, during Maelstrom Weapon (Mists of Pandaria)
+- Shaman's Lightning Bolt, during Maelstrom Weapon (Mists of Pandaria)
+- Shaman's Healing Surge, during Tidal Waves (Mists of Pandaria)
+- Shaman's Healing Wave, during Tidal Waves (Mists of Pandaria)
+- Shaman's Greater Healing Wave, during Tidal Waves (Mists of Pandaria)
 
 Bug Fixes
 - Glowing Buttons no longer conflict with the game client's glow (MoP)
@@ -52,7 +73,7 @@ But in case it did break something, please to report issues. Thank you :)
 #### v2.4.0 (2025-05-11)
 
 Shout-out to fellow developers Skyward, Vanheden and Adal4. Thanks!
-Special thanks to Amanthuul once again for his work on the shaman class. Kudos!
+Special thanks to Amanthuul once again for his work on the Shaman class. Kudos!
 
 Bump in TOC file for Scarlet Enclave update (Classic Era)
 Bump in TOC file for Dragon Soul patch (Cataclysm)
