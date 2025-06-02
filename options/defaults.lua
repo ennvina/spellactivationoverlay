@@ -379,6 +379,9 @@ SAO.defaults = {
                 [85222] = { -- Light of Dawn (Cataclysm+)
                     [85222] = true, -- Light of Dawn
                 },
+                [114163] = { -- Eternal Flame (Mists of Pandaria)
+                    [114163] = true, -- Eternal Flame
+                },
                 [85256] = { -- Templar's Verdict (Cataclysm+)
                     [85256] = true, -- Templar's Verdict
                 },
@@ -392,13 +395,14 @@ SAO.defaults = {
                     [20473] = true, -- Holy Shock
                 },
                 [90174] = { -- Divine Purpose (Cataclysm+)
-                    [85673] = true, -- Word of Glory
-                    [85256] = true, -- Templar's Verdict
-                    [84963] = true, -- Inquisition
-                    [85696] = true, -- Zealotry (Cataclysm)
-                    [85222] = true, -- Light of Dawn (Mists of Pandaria+)
-                    [53600] = true, -- Shield of the Righteous (Mists of Pandaria+)
-                    [53385] = true, -- Divine Storm (Mists of Pandaria+)
+                    [85673]  = true, -- Word of Glory
+                    [85256]  = true, -- Templar's Verdict
+                    [84963]  = true, -- Inquisition
+                    [85696]  = true, -- Zealotry (Cataclysm)
+                    [85222]  = true, -- Light of Dawn (Mists of Pandaria+)
+                    [53600]  = true, -- Shield of the Righteous (Mists of Pandaria+)
+                    [53385]  = true, -- Divine Storm (Mists of Pandaria+)
+                    [114163] = true, -- Eternal Flame (Mists of Pandaria+)
                 },
                 [94686] = { -- Crusade (Cataclysm) / Supplication (Mists of Pandaria)
                     [635]   = true, -- Holy Light (Cataclysm)

@@ -14,10 +14,11 @@ New Spell Alerts
 
 New Glowing Buttons
 - Divine Storm, at 3 charges of Holy Power (Mists of Pandaria)
+- Eternal Flame, at 3 charges of Holy Power (Mists of Pandaria)
 - Inquisition, at 3 charges of Holy Power (Mists of Pandaria)
 - Light of Dawn, at 3 Holy Power (Mists of Pandaria)
-- Templar's Verdict, at 3 charges of Holy Power (Mists of Pandaria)
 - Shield of the Righteous, at 3 charges ofHoly Power (Mists of Pandaria)
+- Templar's Verdict, at 3 charges of Holy Power (Mists of Pandaria)
 - Word of Glory, at 3 charges of Holy Power (Mists of Pandaria)
 - Divine Light, during Infusion of Light (Mists of Pandaria)
 - Holy Light, during Infusion of Light (Mists of Pandaria)
@@ -25,10 +26,11 @@ New Glowing Buttons
 - Holy Shock, during Daybreak (Mists of Pandaria)
 - Avenger's Shield, during Grand Crusader (Mists of Pandaria)
 - Divine Storm, during Divine Purpose (Mists of Pandaria)
+- Eternal Flame, during Divine Purpose (Mists of Pandaria)
 - Inquisition, during Divine Purpose (Mists of Pandaria)
 - Light of Dawn, during Divine Purpose (Mists of Pandaria)
-- Templar's Verdict, during Divine Purpose (Mists of Pandaria)
 - Shield of the Righteous, during Divine Purpose (Mists of Pandaria)
+- Templar's Verdict, during Divine Purpose (Mists of Pandaria)
 - Word of Glory, during Divine Purpose (Mists of Pandaria)
 - Flash of Light, during Supplication (Mists of Pandaria)
 ## Known Limitations

@@ -3,6 +3,7 @@ local AddonName, SAO = ...
 local avengersShield = 31935;
 local divineLight = 82326;
 local divineStorm = SAO.IsSoD() and 407778 or 53385;
+local eternalFlame = 114163;
 local exorcism = 879;
 local flashOfLight = 19750;
 local holyLight = 635;
@@ -259,7 +260,7 @@ local function useDivinePurpose()
             overlay = { texture = "hand_of_light", position = "Top" },
             buttons = {
                 [SAO.CATA]           = { wordOfGlory, templarsVerdict, inquisition, zealotry },
-                [SAO.MOP_AND_ONWARD] = { wordOfGlory, templarsVerdict, inquisition,           lightOfDawn, shieldOfTheRighteous, divineStorm },
+                [SAO.MOP_AND_ONWARD] = { wordOfGlory, templarsVerdict, inquisition,           lightOfDawn, shieldOfTheRighteous, divineStorm, eternalFlame },
             },
         }
     );
@@ -313,6 +314,7 @@ local function registerClass(self)
     useHolySpender("shield_of_the_righteous", shieldOfTheRighteous); -- Protection only
     useHolySpender("templars_verdict", templarsVerdict); -- Retribution only
     useHolySpender("inquisition", inquisition);
+    useHolySpender("eternal_flame", eternalFlame);
 
     -- Items
     self:RegisterAuraSoulPreserver("soul_preserver_paladin", 60513); -- 60513 = Paladin buff
