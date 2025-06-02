@@ -7,7 +7,7 @@ local EnumHolyPower = Enum and Enum.PowerType and Enum.PowerType.HolyPower
 
 local HolyPowerPowerTypeToken = "HOLY_POWER"
 
--- Holy Power, Cataclysm only
+-- Holy Power, starting at Cataclysm
 -- hash = HASH_HOLY_POWER_0 * (1 + holy_power)
 local HASH_HOLY_POWER_0    = 0x100
 local HASH_HOLY_POWER_1    = 0x200
@@ -20,7 +20,7 @@ local HASH_HOLY_POWER_MASK = 0x700
 local maxHolyPower = SAO.IsCata() and 3 or 5; -- 3 for Cata, 5 for MoP+
 
 local canUseHolyPower = false;
-if SAO.IsCata() and select(2, UnitClass("player")) == "PALADIN" then
+if SAO.IsProject(SAO.CATA_AND_ONWARD) and select(2, UnitClass("player")) == "PALADIN" then
     local PALADINPOWERBAR_SHOW_LEVEL = PALADINPOWERBAR_SHOW_LEVEL or 9;
     if UnitLevel("player") >= PALADINPOWERBAR_SHOW_LEVEL then
         canUseHolyPower = true;
