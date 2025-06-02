@@ -2,8 +2,8 @@ local AddonName, SAO = ...
 local Module = "glow"
 
 -- Optimize frequent calls
-local ActionButton_HideOverlayGlow = ActionButton_HideOverlayGlow
-local ActionButton_ShowOverlayGlow = ActionButton_ShowOverlayGlow
+--local ActionButton_HideOverlayGlow = ActionButton_HideOverlayGlow -- Native glow disabled to avoid taints
+--local ActionButton_ShowOverlayGlow = ActionButton_ShowOverlayGlow -- Native glow disabled to avoid taints
 local GetNumShapeshiftForms = GetNumShapeshiftForms
 local GetSpellInfo = GetSpellInfo
 local HasAction = HasAction
@@ -295,12 +295,14 @@ function HookStanceBar_UpdateState()
         end
         if (not button.EnableGlow) then
             button.EnableGlow = function(button)
-                ActionButton_ShowOverlayGlow(button);
+                LBG.ShowOverlayGlow(button);
+                -- ActionButton_ShowOverlayGlow(button);
             end
         end
         if (not button.DisableGlow) then
             button.DisableGlow = function(button)
-                ActionButton_HideOverlayGlow(button);
+                LBG.HideOverlayGlow(button);
+                -- ActionButton_HideOverlayGlow(button);
             end
         end
         SAO:UpdateActionButton(button);
