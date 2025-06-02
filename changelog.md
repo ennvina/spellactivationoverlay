@@ -6,6 +6,7 @@ New Glowing Button
 - Death Knight's Death Strike, during Glyph of Dark Succor (Cataclysm)
 
 Bug Fixes
+- Glowing Buttons no longer conflict with the game client's glow (MoP)
 - Death Knight's Dark Tranformation now displays the overlay as intended (MoP)
 - During Dark Succor, Death Strike button only glows in Frost/Unholy presence
 
