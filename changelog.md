@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.4.2 (2025-06-xx)
+#### v2.4.2 (2025-06-02)
 
 Special thanks to Amanthuul once again for his work on the Shaman class. Kudos!
 
