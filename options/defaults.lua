@@ -315,7 +315,7 @@ SAO.defaults = {
         },
         ["PALADIN"] = {
             alert = {
-                [54149] = { -- Infusion of Light (2/2) (Wrath+)
+                [54149] = { -- Infusion of Light (2/2 in Wrath-Cataclysm, Spec in Mists of Pandaria)
                     [0] = true,
                 },
                 [59578] = { -- The Art of War (2/2) (Wrath+)
@@ -324,18 +324,18 @@ SAO.defaults = {
                 [60513] = { -- Healing Trance / Soul Preserver (Wrath)
                     [0] = false,
                 },
-                [85247] = { -- Holy Power (not an actual buff) (Cataclysm)
+                [85247] = { -- Holy Power (not an actual buff) (Cataclysm+)
                     [1] = false, -- 1 charge of Holy Power
                     [2] = false, -- 2 charges of Holy Power
                     [3] = true,  -- 3 charges of Holy Power
                 },
-                [85416] = { -- Grand Crusader (Cataclysm)
+                [85416] = { -- Grand Crusader (Cataclysm+)
                     [0] = true,
                 },
-                [88819] = { -- Daybreak (Cataclysm)
+                [88819] = { -- Daybreak (Cataclysm+)
                     [0] = true,
                 },
-                [90174] = { -- Divine Purpose (Cataclysm)
+                [90174] = { -- Divine Purpose (Cataclysm+)
                     [0] = true,
                 },
             },
@@ -352,7 +352,7 @@ SAO.defaults = {
                 [53385] = { -- Divine Storm (Wrath+)
                     [53385] = true, -- Divine Storm
                 },
-                [53600] = { -- Shield of the Righteous (Cataclysm)
+                [53600] = { -- Shield of the Righteous (Cataclysm+)
                     [53600] = true, -- Shield of the Righteous
                 },
                 [53671] = { -- Judgements of the Pure (Wrath+)
@@ -363,42 +363,46 @@ SAO.defaults = {
                 [407778] = { -- Divine Storm (Season of Discovery)
                     [407778]= true, -- Divine Storm (Season of Discovery)
                 },
-                [54149] = { -- Infusion of Light (2/2) (Wrath+)
-                    [19750] = true, -- Flash of Light
+                [54149] = { -- Infusion of Light (2/2 in Wrath-Cataclysm, Spec in Mists of Pandaria)
+                    [19750] = true, -- Flash of Light (Wrath, Cataclysm)
                     [635]   = true, -- Holy Light
-                    [82326] = true, -- Divine Light (Cataclysm)
-                    [82327] = true, -- Holy Radiance (Cataclysm)
+                    [82326] = true, -- Divine Light (Cataclysm+)
+                    [82327] = true, -- Holy Radiance (Cataclysm+)
                 },
                 [59578] = { -- The Art of War (2/2) (Wrath+)
                     [879]   = true, -- Exorcism
                     [19750] = true, -- Flash of Light (not for Cata)
                 },
-                [84963] = { -- Inquisition (Cataclysm)
+                [84963] = { -- Inquisition (Cataclysm+)
                     [84963] = false, -- Inquisition
                 },
-                [85222] = { -- Light of Dawn (Cataclysm)
+                [85222] = { -- Light of Dawn (Cataclysm+)
                     [85222] = true, -- Light of Dawn
                 },
-                [85256] = { -- Templar's Verdict (Cataclysm)
+                [85256] = { -- Templar's Verdict (Cataclysm+)
                     [85256] = true, -- Templar's Verdict
                 },
-                [85416] = { -- Grand Crusader (Cataclysm)
+                [85416] = { -- Grand Crusader (Cataclysm+)
                     [31935] = true, -- Avenger's Shield
                 },
-                [85673] = { -- Word of Glory (Cataclysm)
+                [85673] = { -- Word of Glory (Cataclysm+)
                     [85673] = true, -- Word of Glory
                 },
-                [88819] = { -- Daybreak (Cataclysm)
+                [88819] = { -- Daybreak (Cataclysm+)
                     [20473] = true, -- Holy Shock
                 },
-                [90174] = { -- Divine Purpose (Cataclysm)
+                [90174] = { -- Divine Purpose (Cataclysm+)
                     [85673] = true, -- Word of Glory
                     [85256] = true, -- Templar's Verdict
                     [84963] = true, -- Inquisition
-                    [85696] = true, -- Zealotry
+                    [85696] = true, -- Zealotry (Cataclysm)
+                    [85222] = true, -- Light of Dawn (Mists of Pandaria+)
+                    [53600] = true, -- Shield of the Righteous (Mists of Pandaria+)
+                    [53385] = true, -- Divine Storm (Mists of Pandaria+)
                 },
-                [94686] = { -- Crusade (Cataclysm)
-                    [635]   = true, -- Holy Light
+                [94686] = { -- Crusade (Cataclysm) / Supplication (Mists of Pandaria)
+                    [635]   = true, -- Holy Light (Cataclysm)
+                    [19750] = true, -- Flash of Light (Mists of Pandaria)
                 },
             },
         },

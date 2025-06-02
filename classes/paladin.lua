@@ -16,6 +16,17 @@ local templarsVerdict = 85256;
 local wordOfGlory = 85673;
 local zealotry = 85696;
 
+local handlerTruncateTo3HolyPower = {
+    [SAO.MOP_AND_ONWARD] = {
+        onAboutToApplyHash = function(hashCalculator)
+            if hashCalculator:getHolyPower() > 3 then
+                -- Virtually cap holy power at 3
+                hashCalculator:setHolyPower(3);
+            end
+        end
+    },
+}
+
 local function useHolyPowerTracker()
     local holyPower = 85247; -- Not a real aura or action, but the game client has it
 
@@ -30,12 +41,14 @@ local function useHolyPowerTracker()
 
     SAO:CreateEffect(
         "holy_power_tracker",
-        SAO.CATA,
+        SAO.CATA_AND_ONWARD,
         holyPower,
         "generic",
         {
             useHolyPower = true,
             overlays = overlays,
+
+            handlers = handlerTruncateTo3HolyPower,
         }
     );
 end
@@ -69,27 +82,33 @@ local function useExorcism()
     );
 end
 
-local function useDivineStorm()
-    SAO:CreateEffect(
-        "divine_storm",
-        SAO.SOD + SAO.WRATH + SAO.CATA,
-        divineStorm,
-        "counter",
-        { combatOnly = true }
-    );
-end
-
 local function useHolySpender(name, spellID)
     SAO:CreateEffect(
         name,
-        SAO.CATA,
+        SAO.CATA_AND_ONWARD,
         spellID,
         "counter",
         {
             useHolyPower = true,
             holyPower = 3,
+
+            handlers = handlerTruncateTo3HolyPower,
         }
     );
+end
+
+local function useDivineStorm()
+    if SAO.IsProject(SAO.MOP_AND_ONWARD) then
+        useHolySpender("divine_storm", divineStorm);
+    else
+        SAO:CreateEffect(
+            "divine_storm",
+            SAO.SOD + SAO.WRATH + SAO.CATA,
+            divineStorm,
+            "counter",
+            { combatOnly = true }
+        );
+    end
 end
 
 local function useJudgementsOfThePure()
@@ -117,37 +136,57 @@ local function useJudgementsOfThePure()
 end
 
 local function useInfusionOfLight()
-    local infusionOfLightBuff1 = 53672;
-    local infusionOfLightBuff2 = 54149;
-    local infusionOfLightTalent = 53569;
+    if SAO.IsProject(SAO.MOP_AND_ONWARD) then
+        local infusionOfLightBuff = 54149;
+        local infusionOfLightTalent = 53576;
 
-    SAO:CreateLinkedEffects(
-        "infusion_of_light",
-        SAO.WRATH + SAO.CATA,
-        { infusionOfLightBuff1, infusionOfLightBuff2 },
-        "aura",
-        {
-            talent = infusionOfLightTalent,
-            overlays = {
-                [SAO.WRATH] = { texture = "daybreak", position = "Left + Right (Flipped)" },
-                [SAO.CATA] = { texture = "denounce", position = "Top" },
-            },
-            buttons = {
-                [SAO.WRATH] = { flashOfLight, holyLight },
-                [SAO.CATA] = { flashOfLight, holyLight, divineLight, holyRadiance },
-            },
-        }
-    );
+        SAO:CreateEffect(
+            "infusion_of_light",
+            SAO.MOP_AND_ONWARD,
+            infusionOfLightBuff,
+            "aura",
+            {
+                talent = infusionOfLightTalent,
+                overlay = { texture = "denounce", position = "Top" },
+                buttons = { holyLight, divineLight, holyRadiance },
+            }
+        );
+    else
+        local infusionOfLightBuff1 = 53672;
+        local infusionOfLightBuff2 = 54149;
+        local infusionOfLightTalent = 53569;
+
+        SAO:CreateLinkedEffects(
+            "infusion_of_light",
+            SAO.WRATH_AND_ONWARD,
+            { infusionOfLightBuff1, infusionOfLightBuff2 },
+            "aura",
+            {
+                talent = infusionOfLightTalent,
+                overlays = {
+                    [SAO.WRATH] = { texture = "daybreak", position = "Left + Right (Flipped)" },
+                    [SAO.CATA]  = { texture = "denounce", position = "Top" },
+                },
+                buttons = {
+                    [SAO.WRATH] = { flashOfLight, holyLight },
+                    [SAO.CATA]  = { flashOfLight, holyLight, divineLight, holyRadiance },
+                },
+            }
+        );
+    end
 end
 
 local function useDaybreak()
     SAO:CreateEffect(
         "daybreak",
-        SAO.CATA,
+        SAO.CATA_AND_ONWARD,
         88819, -- Daybreak (buff)
         "aura",
         {
-            talent = 88820, -- Daybreak (talent)
+            talent = { -- Daybreak (talent)
+                [SAO.CATA] = 88820,
+                [SAO.MOP_AND_ONWARD] = 88821,
+            },
             action = holyShock,
             actionUsable = true,
             overlay = { texture = "daybreak", position ="Left + Right (Flipped)" },
@@ -159,11 +198,14 @@ end
 local function useGrandCrusader()
     SAO:CreateEffect(
         "grand_crusader",
-        SAO.CATA,
+        SAO.CATA_AND_ONWARD,
         85416, -- Grand Crusader (buff)
         "aura",
         {
-            talent = 75806, -- Grand Crusader (talent)
+            talent = { -- Grand Crusader (talent)
+                [SAO.CATA] = 75806,
+                [SAO.MOP_AND_ONWARD] = 85043,
+            },
             overlay = { texture = "grand_crusader", position = "Left + Right (Flipped)" },
             button = avengersShield,
         }
@@ -206,13 +248,19 @@ end
 local function useDivinePurpose()
     SAO:CreateEffect(
         "divine_purpose",
-        SAO.CATA,
+        SAO.CATA_AND_ONWARD,
         90174, -- Divine Purpose (buff)
         "aura",
         {
-            talent = 85117, -- Divine Purpose (talent)
+            talent = {
+                [SAO.CATA] = 85117, -- Divine Purpose (talent)
+                [SAO.MOP_AND_ONWARD] = 86172, -- Divine Purpose (passive)
+            },
             overlay = { texture = "hand_of_light", position = "Top" },
-            buttons = { wordOfGlory, templarsVerdict, inquisition, zealotry },
+            buttons = {
+                [SAO.CATA]           = { wordOfGlory, templarsVerdict, inquisition, zealotry },
+                [SAO.MOP_AND_ONWARD] = { wordOfGlory, templarsVerdict, inquisition,           lightOfDawn, shieldOfTheRighteous, divineStorm },
+            },
         }
     );
 end
@@ -235,6 +283,18 @@ local function useArtOfWar()
 
         registerArtOfWar("art_of_war", SAO.CATA, artOfWarBuff, { exorcism });
     end
+end
+
+local function useSupplication()
+    SAO:CreateEffect(
+        "supplication",
+        SAO.MOP,
+        94686, -- Supplication (buff)
+        "aura",
+        {
+            button = flashOfLight,
+        }
+    );
 end
 
 local function registerClass(self)
@@ -269,6 +329,9 @@ local function registerClass(self)
     useCrusade();
     useArtOfWar();
     useDivinePurpose();
+
+    -- Passive abilities
+    useSupplication();
 end
 
 local function loadOptions(self)
