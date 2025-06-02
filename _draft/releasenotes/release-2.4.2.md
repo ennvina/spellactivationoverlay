@@ -8,6 +8,8 @@ New Glowing Button
 
 Death Strike is already glowing as intended for Mists of Pandaria
 ## Bug Fixes
+### General
+Glowing Buttons from this addon no longer conflict with buttons glowing by the game client
 ### :dk:  Death Knight
 Dark Tranformation
 - Now displays the overlay as intended (Mists of Pandaria)

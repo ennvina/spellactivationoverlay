@@ -22,6 +22,8 @@ libs\LibStub\LibStub.lua
 libs\LibButtonGlow-1.0\LibButtonGlow-1.0.lua
 #@end-no-lib-strip@
 
+components\project.lua
+
 components\aura.lua
 components\bucket.lua
 components\counter.lua
@@ -32,7 +34,6 @@ components\glow.lua
 components\hash.lua
 components\item.lua
 components\overlay.lua
-components\project.lua
 components\rune.lua
 components\shutdown.lua
 components\sound.lua

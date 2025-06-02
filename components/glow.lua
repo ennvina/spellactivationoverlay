@@ -2,8 +2,8 @@ local AddonName, SAO = ...
 local Module = "glow"
 
 -- Optimize frequent calls
-local ActionButton_HideOverlayGlow = ActionButton_HideOverlayGlow
-local ActionButton_ShowOverlayGlow = ActionButton_ShowOverlayGlow
+--local ActionButton_HideOverlayGlow = ActionButton_HideOverlayGlow -- Native glow disabled to avoid taints
+--local ActionButton_ShowOverlayGlow = ActionButton_ShowOverlayGlow -- Native glow disabled to avoid taints
 local GetNumShapeshiftForms = GetNumShapeshiftForms
 local GetSpellInfo = GetSpellInfo
 local HasAction = HasAction
@@ -61,19 +61,107 @@ function SAO.RegisterGlowIDs(self, glowIDs)
     end
 end
 
+--[[
+    The GlowEngine object accepts requests to enable to disable glow for SAO
+    It also tracks buttons glowing or not glowing from Native glows
+    To avoid conflict between SAO and Native glows, SAO glow is only enabled when Native is not
+    PS. This object is introduced in Mists of Pandaria, because Native glow conflicts since MoP
+]]
+local GlowEngine = SAO.IsProject(SAO.MOP_AND_ONWARD) and {
+    SAOGlows = {}, -- Key/value pairs: key = glowID, value = { frame, isGlowing }
+    NativeGlows = {}, -- Key/value pairs: key = glowID, value = true
+
+    SpellInfo = function(self, glowID)
+        return "spell == "..tostring(glowID).." ("..tostring(GetSpellInfo(glowID))..")";
+    end,
+
+    BeginSAOGlow = function(self, frame, glowID)
+        if self.SAOGlows[glowID] then
+            return; -- This button is already known
+        end
+        if self.NativeGlows[glowID] then
+            -- Natively glowing, do not double-glow with SAO+Native
+            SAO:Debug(Module, "BeginSAOGlow does not glow to prevent conflict with Native glow of "..self:SpellInfo(glowID));
+            self.SAOGlows[glowID] = { frame = frame, isGlowing = false };
+        else
+            -- Not natively glowing, start SAO glow now!
+            frame:EnableGlow();
+            self.SAOGlows[glowID] = { frame = frame, isGlowing = true };
+        end
+    end,
+
+    EndSAOGlow = function(self, frame, glowID)
+        if not self.SAOGlows[glowID] then
+            return; -- This button is not in the list of SAO glowing buttons
+        end
+        if self.SAOGlows[glowID].isGlowing then
+            -- Frame was really glowing, unglow now
+            self.SAOGlows[glowID].frame:DisableGlow();
+        end
+        self.SAOGlows[glowID] = nil; -- Remove button from list of SAO glows
+    end,
+
+    BeginNativeGlow = function(self, glowID)
+        if self.NativeGlows[glowID] then
+            return; -- This button is already known
+        end
+        if self.SAOGlows[glowID] and self.SAOGlows[glowID].isGlowing then
+            -- Already glowing with SAO, disable SAO glow to prevent conflict
+            SAO:Debug(Module, "BeginNativeGlow un-glows SAO glowing button of "..self:SpellInfo(glowID));
+            self.SAOGlows[glowID].frame:DisableGlow();
+            self.SAOGlows[glowID].isGlowing = false;
+        end
+        self.NativeGlows[glowID] = true;
+    end,
+
+    EndNativeGlow = function(self, glowID)
+        if not self.NativeGlows[glowID] then
+            return; -- This button is not in the list of Native glowing buttons
+        end
+        if self.SAOGlows[glowID] and not self.SAOGlows[glowID].isGlowing then
+            -- SAO glow was disabled to prevent conflict, but now that Native glow goes away, start SAO glow!
+            SAO:Debug(Module, "EndNativeGlow allows to re-glow SAO glowing button of "..self:SpellInfo(glowID));
+            self.SAOGlows[glowID].frame:EnableGlow();
+            self.SAOGlows[glowID].isGlowing = true;
+        end
+        self.NativeGlows[glowID] = nil; -- Remove button from list of Native glows
+    end,
+} or {
+    BeginSAOGlow = function(self, frame, glowID)
+        frame:EnableGlow();
+    end,
+
+    EndSAOGlow = function(self, frame, glowID)
+        frame:HideGlow();
+    end,
+}
+
+if SAO.IsProject(SAO.MOP_AND_ONWARD) then
+    local GlowEngineFrame = CreateFrame("Frame", "SpellActivationOverlayGlowEngineFrame");
+    GlowEngineFrame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW");
+    GlowEngineFrame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE");
+    GlowEngineFrame:SetScript("OnEvent", function (self, event, spellID)
+        if event == "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW" then
+            GlowEngine:BeginNativeGlow(spellID);
+        elseif event == "SPELL_ACTIVATION_OVERLAY_GLOW_HIDE" then
+            GlowEngine:EndNativeGlow(spellID);
+        end
+    end);
+end
+
 local function EnableGlow(frame, glowID, reason)
     if SAO.Shutdown:IsAddonDisabled() then
         return;
     end
     if frame:IsShown() then -- Invisible frames might cause issues; worse case scenario they will be visible soon and the player will have to wait for next proc
         SAO:Debug(Module, "Enabling Glow for button "..tostring(frame.GetName and frame:GetName() or "").." with glow id "..tostring(glowID).." due to "..reason);
-        frame:EnableGlow();
+        GlowEngine:BeginSAOGlow(frame, glowID);
     end
 end
 
 local function DisableGlow(frame, glowID, reason)
     SAO:Debug(Module, "Disabling Glow for button "..tostring(frame.GetName and frame:GetName() or "").." with glow id "..tostring(glowID).." due to "..reason);
-    frame:DisableGlow();
+    GlowEngine:EndSAOGlow(frame, glowID);
 end
 
 -- An action button has been updated
@@ -207,12 +295,14 @@ function HookStanceBar_UpdateState()
         end
         if (not button.EnableGlow) then
             button.EnableGlow = function(button)
-                ActionButton_ShowOverlayGlow(button);
+                LBG.ShowOverlayGlow(button);
+                -- ActionButton_ShowOverlayGlow(button);
             end
         end
         if (not button.DisableGlow) then
             button.DisableGlow = function(button)
-                ActionButton_HideOverlayGlow(button);
+                LBG.HideOverlayGlow(button);
+                -- ActionButton_HideOverlayGlow(button);
             end
         end
         SAO:UpdateActionButton(button);
