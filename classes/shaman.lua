@@ -266,6 +266,7 @@ local function registerClass(self)
     local healingRain = 73920;
     local hex = 51514;
     local lavaBurstSoD = 408490;
+    local elementalBlast = 117014;
     local maelstromWeaponBuff = self.IsSoD() and 408505 or 53817;
     local maelstromWeaponTalent = self.IsSoD() and 408498 or 51530;
     local maelstromWeaponScale = self.IsSoD() and 0.8 or 1;
@@ -295,9 +296,10 @@ local function registerClass(self)
             },
             buttons = {
                 default = { stacks = 5 },
-                [SAO.SOD] =   { lightningBolt, chainLightning, lesserHealingWave,                                                               lavaBurstSoD },
+                [SAO.SOD]   = { lightningBolt, chainLightning, lesserHealingWave,                                                               lavaBurstSoD },
                 [SAO.WRATH] = { lightningBolt, chainLightning, lesserHealingWave,                     healingWave, chainHeal,              hex },
-                [SAO.CATA_AND_ONWARD] =  { lightningBolt, chainLightning, healingSurge,      greaterHealingWave, healingWave, chainHeal, healingRain, hex },
+                [SAO.CATA]  = { lightningBolt, chainLightning, healingSurge,      greaterHealingWave, healingWave, chainHeal, healingRain, hex },
+                [SAO.MOP]   = { lightningBolt, chainLightning, healingSurge,      greaterHealingWave, healingWave, chainHeal, healingRain, hex,               elementalBlast },
             },
             handlers = {
                 -- Force refresh on a regular basis, because the game client does not send the correct SPELL_AURA_REFRESH events
