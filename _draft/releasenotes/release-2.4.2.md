@@ -8,7 +8,10 @@ New Glowing Button
 
 Death Strike is already glowing as intended for Mists of Pandaria
 ### :shaman:  Shaman
+The Shaman class is now fully compatible with Mists of Pandaria! Big thanks to @Amanthuul for his hard work :)
+
 New Spell Alerts
+- Elemental Focus (Mists of Pandaria)
 - Fulmination, with 7 Lightning Shield stacks (Mists of Pandaria)
 - Lava Surge (Mists of Pandaria)
 - Maelstrom Weapon (Mists of Pandaria)
@@ -25,9 +28,9 @@ New Glowing Buttons
 - Healing Wave, during Maelstrom Weapon (Mists of Pandaria)
 - Hex, during Maelstrom Weapon (Mists of Pandaria)
 - Lightning Bolt, during Maelstrom Weapon (Mists of Pandaria)
+- Greater Healing Wave, during Tidal Waves (Mists of Pandaria)
 - Healing Surge, during Tidal Waves (Mists of Pandaria)
 - Healing Wave, during Tidal Waves (Mists of Pandaria)
-- Greater Healing Wave, during Tidal Waves (Mists of Pandaria)
 ## Bug Fixes
 ### General
 Glowing Buttons from this addon no longer conflict with buttons glowing by the game client
@@ -40,7 +43,6 @@ Glyph of Dark Succor
 - Death Strike button only glows in Frost/Unholy presence (Mists of Pandaria)
 - The issue was limited to Mists of Pandaria because the glyph was tracked only for this expansion
 - Glyph of Dark Succor is now also implemented in Cataclysm, which also benefits from this fix
-## Known Limitations
 ## Miscellaneous
 The flavor icon of Classic Era is now an ice cream, in reference to the first Classic announcement at BlizzCon 2017.
 ## Contributors

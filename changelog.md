@@ -5,6 +5,7 @@
 Special thanks to Amanthuul once again for his work on the Shaman class. Kudos!
 
 New Spell Alerts
+- Shaman's Elemental Focus (Mists of Pandaria)
 - Shaman's Fulmination, with 7 Lightning Shield stacks (Mists of Pandaria)
 - Shaman's Lava Surge (Mists of Pandaria)
 - Shaman's Maelstrom Weapon (Mists of Pandaria)
@@ -22,9 +23,9 @@ New Glowing Buttons
 - Shaman's Healing Wave, during Maelstrom Weapon (Mists of Pandaria)
 - Shaman's Hex, during Maelstrom Weapon (Mists of Pandaria)
 - Shaman's Lightning Bolt, during Maelstrom Weapon (Mists of Pandaria)
+- Shaman's Greater Healing Wave, during Tidal Waves (Mists of Pandaria)
 - Shaman's Healing Surge, during Tidal Waves (Mists of Pandaria)
 - Shaman's Healing Wave, during Tidal Waves (Mists of Pandaria)
-- Shaman's Greater Healing Wave, during Tidal Waves (Mists of Pandaria)
 
 Bug Fixes
 - Glowing Buttons no longer conflict with the game client's glow (MoP)
