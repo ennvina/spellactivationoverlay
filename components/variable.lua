@@ -241,6 +241,12 @@ SAO.Variable = {
                 end
             end
 
+            if not effect.triggers[triggerName] and var.trigger.name ~= "talent" then
+                -- Not need to go further down the import process, if the effect is not interested in this variable
+                -- Special case: talents should be imported even if not used by trigger, because they are used by options
+                return;
+            end
+
             local dependency = var.import.dependency;
             if dependency then
                 local depName, depType, depDefault = dependency.name, dependency.expectedType, dependency.default;
