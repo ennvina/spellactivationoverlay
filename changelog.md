@@ -2,6 +2,8 @@
 
 #### v2.4.4-beta (2025-06-xx)
 
+Thank you to Katalina for sending feedback and testing Paladin. Appreciated!
+
 New Spell Alerts
 - Paladin's charges of Holy Power (Mists of Pandaria)
 - Paladin's Infusion of Light (Mists of Pandaria)

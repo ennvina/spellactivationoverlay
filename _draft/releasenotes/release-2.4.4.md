@@ -38,7 +38,7 @@ New Glowing Buttons
 From now on, archives on the Discord server will be posted to the dedicated [:floppy_disk: Download channel](https://discord.com/channels/1013194771969355858/1379111832207228938).
 ## Contributors
 Shout-out to our amazing contributors
-- Demonatrix/Katterina for their feedback on the Paladin
+- Katalina for sending feedback and testing Paladin
 Thanks!
 
 As always, the latest release is available on [CurseForge](https://www.curseforge.com/wow/addons/spellactivationoverlay) / [GitHub](https://github.com/ennvina/spellactivationoverlay/releases/latest) / and now here on [Discord](https://discord.com/channels/1013194771969355858/1379111832207228938)!
