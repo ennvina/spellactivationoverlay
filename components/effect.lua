@@ -758,6 +758,9 @@ function SAO:AddEffectOptions()
                     local testHash = type(overlay.option.testHash) == 'string' and overlay.option.testHash or setupHash;
                     local subText = overlay.option.subText;
                     local variants = overlay.option.variants;
+                    if type(subText) == 'function' then
+                        subText = subText();
+                    end
                     if type(variants) == 'function' then
                         variants = variants();
                     end
@@ -778,6 +781,12 @@ function SAO:AddEffectOptions()
                     local spellSubText = button.option.spellSubText;
                     local variants = button.option.variants;
                     local hashName = self.Hash:new(button.hash):toString();
+                    if type(talentSubText) == 'function' then
+                        talentSubText = talentSubText();
+                    end
+                    if type(spellSubText) == 'function' then
+                        spellSubText = spellSubText();
+                    end
                     if type(variants) == 'function' then
                         variants = variants();
                     end

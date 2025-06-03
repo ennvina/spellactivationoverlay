@@ -243,15 +243,21 @@ local function useDivineInsight()
         },
     };
 
-    for _, divineInsight in ipairs(divineInsights) do
+    for index, divineInsight in ipairs(divineInsights) do
+        -- Must delay spec name acquisition because the information is not available at start
+        -- Option subtexts will be displayed when the options panel is shown, at which time spec name is probably available
+        local subText = function()
+            return C_SpecializationInfo and select(2, C_SpecializationInfo.GetSpecializationInfo(index));
+        end
+
         SAO:CreateEffect(
             "divine_insight_"..divineInsight.spec,
             SAO.MOP,
             divineInsight.buff,
             "aura",
             {
-                overlay = { texture = divineInsight.texture, position = "Top" },
---                button = divineInsight.button,
+                overlay = { texture = divineInsight.texture, position = "Top", option = { subText = subText } },
+--                button = { spellID = divineInsight.button, option = { talentSubText = subText } },
             }
         );
     end
