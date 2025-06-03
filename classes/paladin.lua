@@ -20,7 +20,8 @@ local zealotry = 85696;
 local handlerTruncateTo3HolyPower = {
     [SAO.MOP_AND_ONWARD] = {
         onAboutToApplyHash = function(hashCalculator)
-            if hashCalculator:getHolyPower() > 3 then
+            local holyPower = hashCalculator:getHolyPower();
+            if type(holyPower) == 'number' and holyPower > 3 then
                 -- Virtually cap holy power at 3
                 hashCalculator:setHolyPower(3);
             end
