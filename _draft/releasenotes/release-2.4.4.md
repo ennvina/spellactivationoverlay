@@ -33,6 +33,19 @@ New Glowing Buttons
 - Templar's Verdict, during Divine Purpose (Mists of Pandaria)
 - Word of Glory, during Divine Purpose (Mists of Pandaria)
 - Flash of Light, during Supplication (Mists of Pandaria)
+### :priest:  Priest
+New Spell Alerts
+- Divine Insight: Discipline (Mists of Pandaria)
+- Divine Insight: Holy (Mists of Pandaria)
+- Divine Insight: Shadow (Mists of Pandaria)
+- Surge of Light (Mists of Pandaria)
+- Surge of Darkness (Mists of Pandaria)
+
+New Glowing Buttons
+- Greater Heal, at 2 stacks of Serendipity (Mists of Pandaria)
+- Prayer of Healing, at 2 stacks of Serendipity (Mists of Pandaria)
+- Flash Heal, during Surge of Light (Mists of Pandaria)
+- Mind Spike, during Surge of Darkness (Mists of Pandaria)
 ## Known Limitations
 ## Miscellaneous
 From now on, archives on the Discord server will be posted to the dedicated [:floppy_disk: Download channel](https://discord.com/channels/1013194771969355858/1379111832207228938).

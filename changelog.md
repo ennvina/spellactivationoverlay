@@ -10,6 +10,11 @@ New Spell Alerts
 - Paladin's Daybreak (Mists of Pandaria)
 - Paladin's Grand Crusader (Mists of Pandaria)
 - Paladin's Divine Purpose (Mists of Pandaria)
+- Priest's Divine Insight: Discipline (Mists of Pandaria)
+- Priest's Divine Insight: Holy (Mists of Pandaria)
+- Priest's Divine Insight: Shadow (Mists of Pandaria)
+- Priest's Surge of Light (Mists of Pandaria)
+- Priest's Surge of Darkness (Mists of Pandaria)
 
 New Glowing Buttons
 - Paladin's Divine Storm, at 3 charges of Holy Power (Mists of Pandaria)
@@ -32,6 +37,10 @@ New Glowing Buttons
 - Paladin's Templar's Verdict, during Divine Purpose (Mists of Pandaria)
 - Paladin's Word of Glory, during Divine Purpose (Mists of Pandaria)
 - Paladin's Flash of Light, during Supplication (Mists of Pandaria)
+- Priest's Greater Heal, at 2 stacks of Serendipity (Mists of Pandaria)
+- Priest's Prayer of Healing, at 2 stacks of Serendipity (Mists of Pandaria)
+- Priest's Flash Heal, during Surge of Light (Mists of Pandaria)
+- Priest's Mind Spike, during Surge of Darkness (Mists of Pandaria)
 
 #### v2.4.3 (2024-06-02)
 
