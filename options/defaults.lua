@@ -418,6 +418,12 @@ SAO.defaults = {
                 [88688] = {  -- Surge of Light (Cataclysm)
                     [0] = true,
                 },
+                [114255] = { -- Surge of Light (Mists of Pandaria)
+                    [0] = nil, -- set to nil to simplify DB migration
+                },
+                [87160] = {  -- Surge of Darkness (Mists of Pandaria)
+                    [0] = true,
+                },
                 [63734] = { -- Serendipity (Wrath)
                     [3] = true,  -- 3 stacks
                     [0] = false, -- any stacks but 3
@@ -440,6 +446,15 @@ SAO.defaults = {
                     [3] = true,  -- 3 stacks
                     [0] = false, -- any stacks but 3
                 },
+                [123266] = { -- Divine Insight, Discipline (Mists of Pandaria)
+                    [0] = true,
+                },
+                [123267] = { -- Divine Insight, Holy (Mists of Pandaria)
+                    [0] = true,
+                },
+                [124430] = { -- Divine Insight, Shadow (Mists of Pandaria)
+                    [0] = true,
+                },
             },
             glow = {
                 [588] = { -- Inner Fire (Wrath+)
@@ -455,21 +470,25 @@ SAO.defaults = {
                     [585]  = true, -- Smite
                     [2061] = true, -- Flash Heal (not for TBC)
                 },
-                [88688] = { -- Surge of Light (Cataclysm)
+                [88688] = { -- Surge of Light (Cataclysm+)
                     [101062] = nil, -- Flash Heal (no mana), set to nil to simplify DB migration
+                },
+                [114255] = { -- Surge of Light (Mists of Pandaria)
+                    [2061] = nil, -- Flash Heal, set to nil to simplify DB migration
+                },
+                [87160] = {  -- Mind Melt (Cataclysm), Surge of Darkness (Mists of Pandaria)
+                    [8092]  = true, -- Mind Blast (Cataclysm)
+                    [73510] = true, -- Mind Spike (Mists of Pandaria)
                 },
                 [63734] = { -- Serendipity 3/3 (Wrath)
                     [2060] = true, -- Greater Heal
                     [596]  = true, -- Prayer of Healing
                 },
-                [63735] = { -- Serendipity 2/2 (Cataclysm)
+                [63735] = { -- Serendipity (talent 2/2 in Cataclysm, spec in Mists of Pandaria)
                     [2060] = nil, -- Greater Heal, set to nil to simplify DB migration
                     [596]  = nil, -- Prayer of Healing, set to nil to simplify DB migration
                 },
-                [87160] = {  -- Mind Melt (Cataclysm)
-                    [8092] = true, -- Mind Blast
-                },
-                [413247]= { -- Serendipity 3/3 (Season of Discovery)
+                [413247]= { -- Serendipity (Season of Discovery)
                     [2050] = true, -- Lesser Heal
                     [2054] = true, -- Heal
                     [2060] = true, -- Greater Heal
@@ -482,6 +501,9 @@ SAO.defaults = {
                 },
                 [431655] = {  -- Mind Spike (Season of Discovery)
                     [8092] = true, -- Mind Blast
+                },
+                [81292] = { -- Glyph of Mind Spike (Mists of Pandaria)
+                    [8092] = true,
                 },
             },
         },

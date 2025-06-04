@@ -97,9 +97,23 @@ local function migrateTo143(db)
     SAO:Info(Module, "Migrated options from pre-1.4.3 to 1.4.3");
 end
 
+-- Migrate from pre-244 to 244 or higher
+local function migrateTo244(db)
+
+    -- Priest's Surge of Lightning in Mists of Pandaria triggers again the normal Flash Heal, but uses another buff
+    local surgeOfLightCata = 88688;
+    local surgeOfLightMoP = 114255;
+    local flashHealNoMana = 101062;
+    local flashHeal = 2061;
+    transferOption(db, "PRIEST", "alert", surgeOfLightCata, 0, surgeOfLightMoP, 0);
+    transferOption(db, "PRIEST", "glow", surgeOfLightCata, flashHealNoMana, surgeOfLightMoP, flashHeal);
+
+    SAO:Info(Module, "Migrated options from pre-2.4.4 to 2.4.4");
+end
+
 -- Load database and use default values if needed
 function SAO.LoadDB(self)
-    local currentversion = 220;
+    local currentversion = 244;
     local db = SpellActivationOverlayDB or {};
 
     if not db.alert then
@@ -189,6 +203,9 @@ function SAO.LoadDB(self)
     end
     if not db.version or db.version < 143 then
         migrateTo143(db);
+    end
+    if not db.version or db.version < 244 then
+        migrateTo244(db);
     end
 
     db.version = currentversion;
