@@ -51,6 +51,10 @@ New Glowing Buttons
 - Mind Blast, during Glyph of Mind Spike (Mists of Pandaria)
 ## Known Limitations
 ## Miscellaneous
+The addon should now load slightly faster.
+
+Some global variables are no longer tainted.
+
 From now on, archives on the Discord server will be posted to the dedicated [:floppy_disk: Download channel](https://discord.com/channels/1013194771969355858/1379111832207228938).
 ## Contributors
 Shout-out to our amazing contributors

@@ -237,7 +237,7 @@ end
 
 -- Grab all action button activity that allows us to know which button has which spell
 local LBG = LibStub("LibButtonGlow-1.0", false);
-function HookActionButton_Update(button)
+local function HookActionButton_Update(button)
     if (button:GetParent() == OverrideActionBar) then
         -- Act on all buttons but the ones from OverrideActionBar
 
@@ -280,7 +280,7 @@ end
 hooksecurefunc("ActionButton_Update", HookActionButton_Update);
 
 -- Grab buttons in the stance bar
-function HookStanceBar_UpdateState()
+local function HookStanceBar_UpdateState()
     local numForms = GetNumShapeshiftForms();
     for i=1, numForms do
         if i > NUM_STANCE_SLOTS then
