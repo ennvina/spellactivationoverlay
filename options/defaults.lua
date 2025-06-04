@@ -502,6 +502,9 @@ SAO.defaults = {
                 [431655] = {  -- Mind Spike (Season of Discovery)
                     [8092] = true, -- Mind Blast
                 },
+                [81292] = { -- Glyph of Mind Spike (Mists of Pandaria)
+                    [8092] = true,
+                },
             },
         },
         ["ROGUE"] = {

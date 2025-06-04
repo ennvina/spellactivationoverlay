@@ -277,6 +277,19 @@ local function useMindSpike()
 --    end
 end
 
+local function useGlyphOfMindSpike()
+    SAO:CreateEffect(
+        "glyph_of_mind_spike",
+        SAO.MOP,
+        81292, -- Glyph of Mind Spike (buff)
+        "aura",
+        {
+            talent = 33371, -- Glyph of Mind Spike (glyph)
+            button = { stacks = 2, spellID = mindBlast },
+        }
+    );
+end
+
 local function registerClass(self)
     -- Discipline
     useInnerFire();
@@ -291,8 +304,9 @@ local function registerClass(self)
     useMindMelt();
     useMindSpike();
 
-    -- Talents
+    -- Talents / Glyphs
     useDivineInsight();
+    useGlyphOfMindSpike();
 end
 
 local function loadOptions(self)

@@ -41,6 +41,7 @@ New Glowing Buttons
 - Priest's Prayer of Healing, at 2 stacks of Serendipity (Mists of Pandaria)
 - Priest's Flash Heal, during Surge of Light (Mists of Pandaria)
 - Priest's Mind Spike, during Surge of Darkness (Mists of Pandaria)
+- Priest's Mind Blast, during Glyph of Mind Spike (Mists of Pandaria)
 
 #### v2.4.3 (2024-06-02)
 
