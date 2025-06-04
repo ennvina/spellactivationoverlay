@@ -35,7 +35,7 @@ New Glowing Buttons
 ### General
 Glowing Buttons from this addon no longer conflict with buttons glowing by the game client
 ### :dk:  Death Knight
-Dark Tranformation
+Dark Transformation
 - Now displays the overlay as intended (Mists of Pandaria)
 - The overlay is already working as intended for Cataclysm
 
