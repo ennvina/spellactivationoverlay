@@ -1,6 +1,5 @@
 # SpellActivationOverlay 2.4.4
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.4.4
-## General
 ## Classes
 ### :paladin:  Paladin
 The Paladin class is now fully compatible with Mists of Pandaria!
@@ -49,7 +48,11 @@ New Glowing Buttons
 - Flash Heal, during Surge of Light (Mists of Pandaria)
 - Mind Spike, during Surge of Darkness (Mists of Pandaria)
 - Mind Blast, during Glyph of Mind Spike (Mists of Pandaria)
-## Known Limitations
+## Bug Fixes
+### :mage~1:  Mage
+When the Pyroblast button glows during Hot Streak, casting Pyroblast now un-glows the button as intended (Cataclysm).
+### :priest:  Priest
+When the Flash Heal button glows during Surge of Light, casting Flash Heal now un-glows the button as intended (Cataclysm).
 ## Miscellaneous
 The addon should now load slightly faster.
 

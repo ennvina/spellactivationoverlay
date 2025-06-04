@@ -235,7 +235,7 @@ function SAO.UpdateActionButton(self, button, forceRefresh)
             EnableGlow(button, newGlowID, "action button update (was "..tostring(oldGlowID)..")");
         end
     elseif (wasGlowing and not mustGlow) then
-        DisableGlow(button, newGlowID, "action button update (was "..tostring(oldGlowID)..")");
+        DisableGlow(button, oldGlowID, "action button update (now "..tostring(newGlowID)..")");
     end
 end
 
