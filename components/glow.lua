@@ -72,7 +72,11 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
     NativeGlows = {}, -- Key/value pairs: key = glowID, value = true
 
     SpellInfo = function(self, glowID)
-        return "spell == "..tostring(glowID).." ("..tostring(GetSpellInfo(glowID))..")";
+        return "glow id == "..tostring(glowID).." ("..tostring(GetSpellInfo(glowID))..")";
+    end,
+
+    GetFrameName = function(self, frame, glowID)
+        return tostring(frame.GetName and frame:GetName() or "").." with "..self:SpellInfo(glowID);
     end,
 
     BeginSAOGlow = function(self, frame, glowID)
@@ -81,7 +85,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
         end
         if self.NativeGlows[glowID] then
             -- Natively glowing, do not double-glow with SAO+Native
-            SAO:Debug(Module, "BeginSAOGlow does not glow to prevent conflict with Native glow of "..self:SpellInfo(glowID));
+            SAO:Debug(Module, "BeginSAOGlow does not glow to prevent conflict with Native glow of "..self:GetFrameName(frame, glowID));
             self.SAOGlows[glowID] = { frame = frame, isGlowing = false };
         else
             -- Not natively glowing, start SAO glow now!
@@ -107,7 +111,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
         end
         if self.SAOGlows[glowID] and self.SAOGlows[glowID].isGlowing then
             -- Already glowing with SAO, disable SAO glow to prevent conflict
-            SAO:Debug(Module, "BeginNativeGlow un-glows SAO glowing button of "..self:SpellInfo(glowID));
+            SAO:Debug(Module, "BeginNativeGlow un-glows SAO glowing button "..self:GetFrameName(self.SAOGlows[glowID].frame, glowID));
             self.SAOGlows[glowID].frame:DisableGlow();
             self.SAOGlows[glowID].isGlowing = false;
         end
@@ -120,7 +124,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
         end
         if self.SAOGlows[glowID] and not self.SAOGlows[glowID].isGlowing then
             -- SAO glow was disabled to prevent conflict, but now that Native glow goes away, start SAO glow!
-            SAO:Debug(Module, "EndNativeGlow allows to re-glow SAO glowing button of "..self:SpellInfo(glowID));
+            SAO:Debug(Module, "EndNativeGlow allows to re-glow SAO glowing button "..self:GetFrameName(self.SAOGlows[glowID].frame, glowID));
             self.SAOGlows[glowID].frame:EnableGlow();
             self.SAOGlows[glowID].isGlowing = true;
         end
@@ -228,10 +232,10 @@ function SAO.UpdateActionButton(self, button, forceRefresh)
 
     if (not wasGlowing and mustGlow) then
         if (not SpellActivationOverlayDB or not SpellActivationOverlayDB.glow or SpellActivationOverlayDB.glow.enabled) then
-            EnableGlow(button, newGlowID, "action button update");
+            EnableGlow(button, newGlowID, "action button update (was "..tostring(oldGlowID)..")");
         end
     elseif (wasGlowing and not mustGlow) then
-        DisableGlow(button, newGlowID, "action button update");
+        DisableGlow(button, newGlowID, "action button update (was "..tostring(oldGlowID)..")");
     end
 end
 
