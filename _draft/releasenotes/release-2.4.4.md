@@ -53,6 +53,8 @@ New Glowing Buttons
 When the Pyroblast button glows during Hot Streak, casting Pyroblast now un-glows the button as intended (Cataclysm).
 ### :priest:  Priest
 When the Flash Heal button glows during Surge of Light, casting Flash Heal now un-glows the button as intended (Cataclysm).
+
+Priests should not longer have a warning at start about Shadowform.
 ## Miscellaneous
 The addon should now load slightly faster.
 

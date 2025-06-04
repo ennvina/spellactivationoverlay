@@ -175,7 +175,7 @@ local function useShadowform()
         "aura",
         {
             talent = {
-                [SAO.ERA+SAO.TBC+SAO.WRATH+SAO.CATA] = nil, -- Defaults to spell ID, which is Shadowform
+                [SAO.ERA+SAO.TBC+SAO.WRATH+SAO.CATA] = shadowform, -- Talent is same spell ID as the spell itself
                 [SAO.MOP] = PRIEST_SPEC_SHADOW, -- In Mists of Pandaria, all shadow priests learn Shadowform
             },
             requireTalent = true,
