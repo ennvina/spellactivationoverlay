@@ -108,7 +108,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
         else
             -- Not natively glowing, start SAO glow now!
             isStartingGlow = true;
-            frame:EnableGlow();
+            frame.__sao.EnableGlow();
         end
         saoGlowForGlowID[frame] = isStartingGlow;
     end,
@@ -117,7 +117,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
         SAO:Trace(Module, "EndSAOGlow("..self:ParamName(frame, glowID)..")");
 
         -- Basic security measure: un-glow first, then ask questions
-        frame:DisableGlow();
+        frame.__sao.DisableGlow();
 
         -- First, look if this glow ID is already known
         local saoGlowForGlowID = self.SAOGlows[glowID];
@@ -152,7 +152,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
                 if isGlowingByUs then
                     -- Already glowing with SAO, disable SAO glow to prevent conflict
                     SAO:Debug(Module, "BeginNativeGlow un-glows SAO glowing button "..self:FrameName(frame, glowID));
-                    frame:DisableGlow();
+                    frame.__sao.DisableGlow();
                     saoGlowForGlowID[frame] = false; -- Set frame as not glowing by 'us'
                 end
             end
@@ -174,7 +174,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
             for frame, isGlowingByUs in pairs(saoGlowForGlowID) do
                 if not isGlowingByUs then
                     SAO:Debug(Module, "EndNativeGlow allows to re-glow SAO glowing buttons "..self:FrameName(frame, glowID));
-                    frame:EnableGlow();
+                    frame.__sao.EnableGlow();
                     saoGlowForGlowID[frame] = true; -- Set frame as glowing by 'us'
                 end
             end
@@ -184,11 +184,11 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
     end,
 } or {
     BeginSAOGlow = function(self, frame, glowID)
-        frame:EnableGlow();
+        frame.__sao.EnableGlow();
     end,
 
     EndSAOGlow = function(self, frame, glowID)
-        frame:DisableGlow();
+        frame.__sao.DisableGlow();
     end,
 }
 
@@ -225,9 +225,9 @@ end
 -- If forceRefresh is true, refresh even if old spell ID and new spell ID are identical
 -- Set forceRefresh if the spell ID of the button may switch from untracked to tracked (or vice versa) in light of recent events
 function SAO.UpdateActionButton(self, button, forceRefresh)
-    local oldGlowID = button.lastGlowID; -- Set by us, a few lines below
-    local newGlowID = button:GetGlowID();
-    button.lastGlowID = newGlowID; -- Write button.lastGlowID here, but use oldGlowID/newGlowID for the rest of the function
+    local oldGlowID = button.__sao.lastGlowID; -- Set by us, a few lines below
+    local newGlowID = button.__sao.GetGlowID();
+    button.__sao.lastGlowID = newGlowID; -- Write button.__sao.lastGlowID here, but use oldGlowID/newGlowID for the rest of the function
 
     if (oldGlowID == newGlowID and not forceRefresh) then
         -- Skip any processing if the glow ID hasn't changed
@@ -312,23 +312,18 @@ local function HookActionButton_Update(button)
         return;
     end
 
-    if (not button.GetGlowID) then
-        button.GetGlowID = function(button)
+    if not button.__sao then
+        button.__sao = { useExternalGlow = false };
+        button.__sao.GetGlowID = function()
             if (button.action and HasAction(button.action)) then
                 return SAO:GetSpellIDByActionSlot(button.action);
             end
         end
-    end
-    if (not button.EnableGlow) then
-        button.EnableGlow = function(button)
+        button.__sao.EnableGlow = function()
             LBG.ShowOverlayGlow(button);
-            -- ActionButton_ShowOverlayGlow(button); -- native API taints buttons
         end
-    end
-    if (not button.DisableGlow) then
-        button.DisableGlow = function(button)
+        button.__sao.DisableGlow = function()
             LBG.HideOverlayGlow(button);
-            -- ActionButton_HideOverlayGlow(button); -- native API taints buttons
         end
     end
     SAO:UpdateActionButton(button);
@@ -344,21 +339,16 @@ local function HookStanceBar_UpdateState()
         end
         local button = StanceBarFrame.StanceButtons[i];
         button.stanceForm = i;
-        if (not button.GetGlowID) then
-            button.GetGlowID = function(button)
+        if not button.__sao then
+            button.__sao = { useExternalGlow = false };
+            button.__sao.GetGlowID = function()
                 return select(4, GetShapeshiftFormInfo(button.stanceForm));
             end
-        end
-        if (not button.EnableGlow) then
-            button.EnableGlow = function(button)
+            button.__sao.EnableGlow = function()
                 LBG.ShowOverlayGlow(button);
-                -- ActionButton_ShowOverlayGlow(button);
             end
-        end
-        if (not button.DisableGlow) then
-            button.DisableGlow = function(button)
+            button.__sao.DisableGlow = function()
                 LBG.HideOverlayGlow(button);
-                -- ActionButton_HideOverlayGlow(button);
             end
         end
         SAO:UpdateActionButton(button);
@@ -387,7 +377,7 @@ function SAO.AddGlowNumber(self, spellID, glowID)
         self.GlowingSpells[glowID] = { [spellID] = true };
         for _, frame in pairs(actionButtons or {}) do
             if (not SpellActivationOverlayDB or not SpellActivationOverlayDB.glow or SpellActivationOverlayDB.glow.enabled) then
-                EnableGlow(frame, frame.GetGlowID and frame:GetGlowID(), "direct activation");
+                EnableGlow(frame, frame.__sao and frame.__sao.GetGlowID(), "direct activation");
             end
         end
     end
@@ -492,7 +482,7 @@ function SAO.RemoveGlow(self, spellID)
             for _, frame in pairs(actionButtons or {}) do
                 DisableGlow(frame, glowSpellID, "direct deactivation");
                 if SAO:HasTrace(Module) then
-                    local oldGlowID, newGlowID = glowSpellID, (frame.GetGlowID and frame:GetGlowID());
+                    local oldGlowID, newGlowID = glowSpellID, (frame.__sao and frame.__sao.GetGlowID());
                     local frameName = tostring(frame and frame.GetName and frame:GetName());
                     if oldGlowID ~= newGlowID then
                         SAO:Trace(Module, "RemoveGlow deactivates button "..frameName.." which had glowID "..tostring(oldGlowID).." but its glow ID is now "..tostring(newGlowID));
@@ -542,17 +532,21 @@ binder:SetScript("OnEvent", function()
             -- They are probably not meant to glow, so it's simpler to just ignore them
             return;
         end
-        if (not self.GetGlowID) then
-            self.GetGlowID = self.GetSpellId;
-        end
-        if (not self.EnableGlow) then
-            self.EnableGlow = function(button)
-                libGlow.ShowOverlayGlow(button);
+        if not self.__sao or self.__sao.useExternalGlow == false then
+            if self.__sao then
+                SAO:Debug(Module, "Replacing glowing button functions of "..tostring(self.GetName and self.GetName()).." with external lib");
+                self.__sao.useExternalGlow = true;
+            else
+                self.__sao = { useExternalGlow = true };
             end
-        end
-        if (not self.DisableGlow) then
-            self.DisableGlow = function(button)
-                libGlow.HideOverlayGlow(button);
+            self.__sao.GetGlowID = function()
+                return self:GetSpellId();
+            end
+            self.__sao.EnableGlow = function()
+                libGlow.ShowOverlayGlow(self);
+            end
+            self.__sao.DisableGlow = function()
+                libGlow.HideOverlayGlow(self);
             end
         end
         SAO:UpdateActionButton(self);
