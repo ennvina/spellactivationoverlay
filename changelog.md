@@ -44,6 +44,8 @@ New Glowing Buttons
 - Priest's Mind Blast, during Glyph of Mind Spike (Mists of Pandaria)
 
 Bug Fixes
+- When glowing duplicate buttons, all buttons should now glow (Cataclysm)
+- Buttons which switch instantly are now un-glowed when the effect is lost
 - Mage's Pyroblast un-glows when cast during Hot Streak (Cataclysm)
 - Priest's Flash Heal un-glows when cast during Surge of Light (Cataclysm)
 - Priests should not longer have an error at start about Shadowform

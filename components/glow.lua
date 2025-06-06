@@ -68,66 +68,118 @@ end
     PS. This object is enabled for Cataclysm and later, because Native glow was introduced in Cataclysm
 ]]
 local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
-    SAOGlows = {}, -- Key/value pairs: key = glowID, value = { frame, isGlowing }
+    SAOGlows = {}, -- Key/value pairs: key = glowID, value = { [frame1] = isGlowingByUs }, { [frame2] = isGlowingByUs }
     NativeGlows = {}, -- Key/value pairs: key = glowID, value = true
 
-    SpellInfo = function(self, glowID)
-        return "glow id == "..tostring(glowID).." ("..tostring(GetSpellInfo(glowID))..")";
+    FrameName = function(self, frame)
+        return tostring(frame and frame.GetName and frame:GetName() or "");
     end,
 
-    GetFrameName = function(self, frame, glowID)
-        return tostring(frame.GetName and frame:GetName() or "").." with "..self:SpellInfo(glowID);
+    SpellInfo = function(self, glowID)
+        return tostring(glowID).." ("..tostring(GetSpellInfo(glowID))..")";
+    end,
+
+    ParamName = function(self, frame, glowID)
+        return self:FrameName(frame)..", "..self:SpellInfo(glowID);
     end,
 
     BeginSAOGlow = function(self, frame, glowID)
-        if self.SAOGlows[glowID] then
-            return; -- This button is already known
+        SAO:Trace(Module, "BeginSAOGlow("..self:ParamName(frame, glowID)..")");
+
+        -- First, look if this glow ID is already known
+        local saoGlowForGlowID = self.SAOGlows[glowID];
+        if saoGlowForGlowID then
+            SAO:Debug(Module, "Re-glowing an already glowing button "..self:ParamName(frame, glowID));
+            if saoGlowForGlowID[frame] == true then
+                return; -- This action is already known
+            end
+        else
+            -- Add the glow ID to the list of known SAO glows
+            self.SAOGlows[glowID] = {};
+            saoGlowForGlowID = self.SAOGlows[glowID];
         end
+
+        -- Then activate the glow, if not in conflict
+        local isStartingGlow;
         if self.NativeGlows[glowID] then
             -- Natively glowing, do not double-glow with SAO+Native
-            SAO:Debug(Module, "BeginSAOGlow does not glow to prevent conflict with Native glow of "..self:GetFrameName(frame, glowID));
-            self.SAOGlows[glowID] = { frame = frame, isGlowing = false };
+            SAO:Debug(Module, "BeginSAOGlow does not glow to prevent conflict with Native glow of "..self:ParamName(frame, glowID));
+            isStartingGlow = false;
         else
             -- Not natively glowing, start SAO glow now!
+            isStartingGlow = true;
             frame:EnableGlow();
-            self.SAOGlows[glowID] = { frame = frame, isGlowing = true };
         end
+        saoGlowForGlowID[frame] = isStartingGlow;
     end,
 
     EndSAOGlow = function(self, frame, glowID)
-        if not self.SAOGlows[glowID] then
-            return; -- This button is not in the list of SAO glowing buttons
+        SAO:Trace(Module, "EndSAOGlow("..self:ParamName(frame, glowID)..")");
+
+        -- Basic security measure: un-glow first, then ask questions
+        frame:DisableGlow();
+
+        -- First, look if this glow ID is already known
+        local saoGlowForGlowID = self.SAOGlows[glowID];
+        if not saoGlowForGlowID then
+            SAO:Debug(Module, "Trying to un-glow a non-tracked action "..self:SpellInfo(glowID));
+            return;
         end
-        if self.SAOGlows[glowID].isGlowing then
-            -- Frame was really glowing, unglow now
-            self.SAOGlows[glowID].frame:DisableGlow();
+        if saoGlowForGlowID[frame] == nil then
+            SAO:Debug(Module, "Trying to un-glow a tracked action but un-tracked button "..self:SpellInfo(glowID));
+            return; -- This action is not in the list of SAO glowing buttons
         end
-        self.SAOGlows[glowID] = nil; -- Remove button from list of SAO glows
+
+        saoGlowForGlowID[frame] = nil; -- Remove button from list of SAO glows
+
+        local nbFrames = 0;
+        for _, _ in pairs(saoGlowForGlowID) do nbFrames = nbFrames + 1; end
+        if nbFrames == 0 then
+            self.SAOGlows[glowID] = nil; -- Remove the action entirely after last button is removed
+        end
     end,
 
     BeginNativeGlow = function(self, glowID)
+        SAO:Trace(Module, "BeginNativeGlow("..self:SpellInfo(glowID)..")");
+
         if self.NativeGlows[glowID] then
-            return; -- This button is already known
+            return; -- This action is already known
         end
-        if self.SAOGlows[glowID] and self.SAOGlows[glowID].isGlowing then
-            -- Already glowing with SAO, disable SAO glow to prevent conflict
-            SAO:Debug(Module, "BeginNativeGlow un-glows SAO glowing button "..self:GetFrameName(self.SAOGlows[glowID].frame, glowID));
-            self.SAOGlows[glowID].frame:DisableGlow();
-            self.SAOGlows[glowID].isGlowing = false;
+
+        local saoGlowForGlowID = self.SAOGlows[glowID];
+        if saoGlowForGlowID then
+            for frame, isGlowingByUs in pairs(saoGlowForGlowID) do
+                if isGlowingByUs then
+                    -- Already glowing with SAO, disable SAO glow to prevent conflict
+                    SAO:Debug(Module, "BeginNativeGlow un-glows SAO glowing button "..self:FrameName(frame, glowID));
+                    frame:DisableGlow();
+                    saoGlowForGlowID[frame] = false; -- Set frame as not glowing by 'us'
+                end
+            end
         end
+
         self.NativeGlows[glowID] = true;
     end,
 
     EndNativeGlow = function(self, glowID)
+        SAO:Trace(Module, "EndNativeGlow("..self:SpellInfo(glowID)..")");
+
         if not self.NativeGlows[glowID] then
-            return; -- This button is not in the list of Native glowing buttons
+            return; -- This action is not in the list of Native glowing buttons
         end
-        if self.SAOGlows[glowID] and not self.SAOGlows[glowID].isGlowing then
+
+        local saoGlowForGlowID = self.SAOGlows[glowID];
+        if saoGlowForGlowID then
             -- SAO glow was disabled to prevent conflict, but now that Native glow goes away, start SAO glow!
-            SAO:Debug(Module, "EndNativeGlow allows to re-glow SAO glowing button "..self:GetFrameName(self.SAOGlows[glowID].frame, glowID));
-            self.SAOGlows[glowID].frame:EnableGlow();
-            self.SAOGlows[glowID].isGlowing = true;
+            for frame, isGlowingByUs in pairs(saoGlowForGlowID) do
+                if not isGlowingByUs then
+                    SAO:Debug(Module, "EndNativeGlow allows to re-glow SAO glowing buttons "..self:FrameName(frame, glowID));
+                    frame:EnableGlow();
+                    saoGlowForGlowID[frame] = true; -- Set frame as glowing by 'us'
+                end
+            end
         end
+
         self.NativeGlows[glowID] = nil; -- Remove button from list of Native glows
     end,
 } or {
@@ -438,7 +490,14 @@ function SAO.RemoveGlow(self, spellID)
             self.GlowingSpells[glowSpellID] = nil;
             local actionButtons = self.ActionButtons[glowSpellID];
             for _, frame in pairs(actionButtons or {}) do
-                DisableGlow(frame, frame.GetGlowID and frame:GetGlowID(), "direct deactivation");
+                DisableGlow(frame, glowSpellID, "direct deactivation");
+                if SAO:HasTrace(Module) then
+                    local oldGlowID, newGlowID = glowSpellID, (frame.GetGlowID and frame:GetGlowID());
+                    local frameName = tostring(frame and frame.GetName and frame:GetName());
+                    if oldGlowID ~= newGlowID then
+                        SAO:Trace(Module, "RemoveGlow deactivates button "..frameName.." which had glowID "..tostring(oldGlowID).." but its glow ID is now "..tostring(newGlowID));
+                    end
+                end
             end
         end
     end
