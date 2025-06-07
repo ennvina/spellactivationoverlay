@@ -1,5 +1,7 @@
-# SpellActivationOverlay 2.4.4
-@here I am pleased to announce the newest release of SpellActivationOverlay, version 2.4.4
+# SpellActivationOverlay 2.5
+@here I am pleased to announce the newest release of SpellActivationOverlay, version 2.5
+
+This release revamps the Glowing Button system, and fully supports two classes to Mists of Pandaria: :paladin: Paladin and :priest: Priest
 ## Classes
 ### :paladin:  Paladin
 The Paladin class is now fully compatible with Mists of Pandaria!

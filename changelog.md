@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.4.4-beta (2025-06-xx)
+#### v2.5.0 (2025-06-08)
 
 Thank you to Katalina for sending feedback and testing Paladin. Appreciated!
 
