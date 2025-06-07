@@ -93,12 +93,26 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
         return self:FrameName(frame)..", "..self:SpellInfo(glowID);
     end,
 
-    BeginGlowFinally = function(self, frame)
+    BeginGlowFinally = function(self, frame, noAnimIn)
         if frame.__sao.startTimer == nil then -- If startTimer is not nil, then a EnableGlow is already planned
             frame.__sao.startTimer = C_Timer.NewTimer(
                 SAO:IsResponsiveMode() and 0.01 or 0.028,
                 function()
                     frame.__sao.EnableGlow();
+
+                    -- Additionally, make things smoother
+                    if noAnimIn and frame.__sao.useExternalGlow == false then
+                        -- Skip the 'animation in' transition
+                        -- This reduces glitches when native glow stops and 'our' glows returns
+                        local animIn = frame.__LBGoverlay and frame.__LBGoverlay.animIn;
+                        if animIn then
+                            local finishScript = animIn.GetScript and animIn:GetScript("OnFinished");
+                            if finishScript then
+                                animIn:Stop();
+                                finishScript(animIn);
+                            end
+                        end
+                    end
                 end
             );
         end
@@ -212,7 +226,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
             for frame, isGlowingByUs in pairs(saoGlowForGlowID) do
                 if not isGlowingByUs then
                     SAO:Debug(Module, "EndNativeGlow allows to re-glow SAO glowing buttons "..self:FrameName(frame, glowID));
-                    self:BeginGlowFinally(frame);
+                    self:BeginGlowFinally(frame, true);
                     saoGlowForGlowID[frame] = true; -- Set frame as glowing by 'us'
                 end
             end
