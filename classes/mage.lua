@@ -615,6 +615,11 @@ local function registerClass(self)
         self:RegisterAura("fingers_of_frost_1", 1, 44544, "frozen_fingers", "Left (CCW)", 1.1, 222, 222, 222, true, iceLanceAndDeepFreeze);
         self:RegisterAura("fingers_of_frost_2", 2, 44544, "frozen_fingers", "Left (CCW)", 1.1, 222, 222, 222, true, iceLanceAndDeepFreeze);
         self:RegisterAura("fingers_of_frost_2", 2, 44544, "frozen_fingers", "Right (CW)", 1.1, 222, 222, 222, true); -- no need to re-glow iceLanceAndDeepFreeze for right texture
+    elseif self.IsMoP() then
+        local iceLanceAndDeepFreeze = { (GetSpellInfo(FrozenHandler.ice_lance[1])), (GetSpellInfo(FrozenHandler.deep_freeze[1])) };
+         -- Slightly bigger to avoid overlap with Arcane Missiles, and slightly dimmer to compensate
+        self:RegisterAura("fingers_of_frost_1", 1, 44544, "frozen_fingers", "Left", 1.1, 222, 222, 222, true, iceLanceAndDeepFreeze);
+        self:RegisterAura("fingers_of_frost_2", 2, 44544, "frozen_fingers", "Left + Right (Flipped)", 1.1, 222, 222, 222, true, iceLanceAndDeepFreeze);
     end
     if not self.IsCata() then
         self:RegisterAura("freeze", 0, FrozenHandler.fakeSpellID, FrozenHandler.saoTexture, "Top (CW)", FrozenHandler.saoScaleFactor, 255, 255, 255, false);
@@ -623,7 +628,7 @@ local function registerClass(self)
     end
     if self.IsSoD() then
         self:RegisterAura("brain_freeze", 0, 400730, "brain_freeze", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(412532)), (GetSpellInfo(401502)) });
-    elseif self.IsWrath() then
+    elseif self.IsWrath() or self.IsMoP() then
         self:RegisterAura("brain_freeze", 0, 57761, "brain_freeze", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(44614)) });
     elseif self.IsCata() then
         self:RegisterAura("brain_freeze", 0, 57761, "brain_freeze", "Top (CW)", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(44614)) });
