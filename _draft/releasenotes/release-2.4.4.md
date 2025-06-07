@@ -49,10 +49,12 @@ New Glowing Buttons
 - Mind Spike, during Surge of Darkness (Mists of Pandaria)
 - Mind Blast, during Glyph of Mind Spike (Mists of Pandaria)
 ## Bug Fixes
-### General
+### Glowing Buttons
 When glowing a spell or ability that is bound to more than one button in the action bar, all buttons should now glow instead of only one.
 
 When a button is glowing and that button switches instantly when the effect is lost, the button should now stop glowing as intended (Cataclysm).
+
+Buttons that stop glowing should no longer have a brief re-glow effect right at the end of the glow.
 
 ElvUI users now benefit from ElvUI's Action Button Glow settings, such as Pixel Glow, Autocast Shine, etc.
 ### :mage~1:  Mage

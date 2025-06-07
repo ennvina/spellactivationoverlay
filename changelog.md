@@ -46,6 +46,7 @@ New Glowing Buttons
 Bug Fixes
 - When glowing duplicate buttons, all buttons should now glow (Cataclysm)
 - Buttons which switch instantly are now un-glowed when the effect is lost
+- Buttons that stop glowing should no longer have a brief re-glow effect
 - ElvUI users now benefit from ElvUI's Action Button Glow settings
 - Mage's Pyroblast un-glows when cast during Hot Streak (Cataclysm)
 - Priest's Flash Heal un-glows when cast during Surge of Light (Cataclysm)

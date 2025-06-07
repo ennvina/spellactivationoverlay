@@ -8,6 +8,16 @@ local GetNumShapeshiftForms = GetNumShapeshiftForms
 local GetSpellInfo = GetSpellInfo
 local HasAction = HasAction
 
+--[[
+Each ActionButton will be granted an object .__sao which holds:
+- .useExternalGlow, a boolean that tells if the glow is handled by an external library, not by 'us'
+- .GetGlowID, a function that fetches the current spell ID bound to the button
+- .EnableGlow, a function that starts the glow
+- .DisableGlow, a function that stops the glow
+- .oldGlowID (optional), the last known ID returned by .GetGlowID
+- .startTimer (optional), the timer that starts a delayed call of .EnableGlow
+]]
+
 -- List of known ActionButton instances that currently match one of the spell IDs to track
 -- This does not mean that buttons are glowing right now, but they could glow at any time
 -- key = glowID (= spellID of action), value = list of ActionButton objects for this spell
@@ -83,6 +93,34 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
         return self:FrameName(frame)..", "..self:SpellInfo(glowID);
     end,
 
+    BeginGlowFinally = function(self, frame)
+        if frame.__sao.startTimer == nil then -- If startTimer is not nil, then a EnableGlow is already planned
+            frame.__sao.startTimer = C_Timer.NewTimer(
+                SAO:IsResponsiveMode() and 0.01 or 0.028,
+                function()
+                    frame.__sao.EnableGlow();
+                end
+            );
+        end
+    end,
+
+    EndGlowFinally = function(self, frame, onlyIfInternal)
+        if frame.__sao.startTimer then
+            frame.__sao.startTimer:Cancel();
+            frame.__sao.startTimer = nil;
+        end
+        if onlyIfInternal then
+            if not frame.__sao.useExternalGlow then
+                -- Disable glow only if using an internal glow
+                -- Using an external glow will most likely want to start glowing from the GLOW_SHOW event that brought us here
+                -- So if we disabled the glow at this point, we would probably interfere with the external glowing engine
+                frame.__sao.DisableGlow();
+            end
+        else
+            frame.__sao.DisableGlow();
+        end
+    end,
+
     BeginSAOGlow = function(self, frame, glowID)
         SAO:Trace(Module, "BeginSAOGlow("..self:ParamName(frame, glowID)..")");
 
@@ -108,7 +146,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
         else
             -- Not natively glowing, start SAO glow now!
             isStartingGlow = true;
-            frame.__sao.EnableGlow();
+            self:BeginGlowFinally(frame);
         end
         saoGlowForGlowID[frame] = isStartingGlow;
     end,
@@ -117,7 +155,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
         SAO:Trace(Module, "EndSAOGlow("..self:ParamName(frame, glowID)..")");
 
         -- Basic security measure: un-glow first, then ask questions
-        frame.__sao.DisableGlow();
+        self:EndGlowFinally(frame);
 
         -- First, look if this glow ID is already known
         local saoGlowForGlowID = self.SAOGlows[glowID];
@@ -152,7 +190,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
                 if isGlowingByUs then
                     -- Already glowing with SAO, disable SAO glow to prevent conflict
                     SAO:Debug(Module, "BeginNativeGlow un-glows SAO glowing button "..self:FrameName(frame, glowID));
-                    frame.__sao.DisableGlow();
+                    self:EndGlowFinally(frame, true);
                     saoGlowForGlowID[frame] = false; -- Set frame as not glowing by 'us'
                 end
             end
@@ -174,7 +212,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
             for frame, isGlowingByUs in pairs(saoGlowForGlowID) do
                 if not isGlowingByUs then
                     SAO:Debug(Module, "EndNativeGlow allows to re-glow SAO glowing buttons "..self:FrameName(frame, glowID));
-                    frame.__sao.EnableGlow();
+                    self:BeginGlowFinally(frame);
                     saoGlowForGlowID[frame] = true; -- Set frame as glowing by 'us'
                 end
             end
