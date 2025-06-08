@@ -2,6 +2,23 @@
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.5.1
 ## General
 ## Classes
+### :druid:  Druid
+The Druid class is now fully supported for Mists of Pandaria!
+
+Druid options have been re-ordered to be more intuitive.
+
+New Spell Alerts
+- Lunar Eclipse and Solar Eclipse (Mists of Pandaria)
+- Shooting Stars (Mists of Pandaria)
+- Tooth and Claw (Mists of Pandaria)
+- Predatory Swiftness (Mists of Pandaria)
+- Omen of Clarity, for Feral and Restoration (Mists of Pandaria)
+
+New Glowing Button
+- Entangling Roots, during Predatory Swiftness (Mists of Pandaria)
+- Healing Touch, during Predatory Swiftness (Mists of Pandaria)
+- Hibernate, during Predatory Swiftness (Mists of Pandaria)
+- Rebirth, during Predatory Swiftness (Mists of Pandaria)
 ### :priest:  Priest
 New Glowing Button
 - Devouring Plague, at 3 Shadow Orbs (Mists of Pandaria)
