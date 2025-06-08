@@ -234,7 +234,7 @@ SAO.defaults = {
                 [57531] = { -- Arcane Potency (2/2) (Cataclysm)
                     [0] = false,
                 },
-                [48107] = { -- Heating Up (not an actual buff for Season of Discovery, Wrath, Cata) (Is a buff in MoP)
+                [48107] = { -- Heating Up (not an actual buff for Season of Discovery, Wrath and Cataclysm; real buff since Mists of Pandaria)
                     [0] = true,
                 },
                 [48108] = { -- Hot Streak (Wrath+)
@@ -264,7 +264,7 @@ SAO.defaults = {
                 [400730] = { -- Brain Freeze (Season of Discovery)
                     [0] = true,
                 },
-                [96215] = { -- Hot Streak + Heating Up (not an actual buff) (Season of Discovery, Wrath)
+                [96215] = { -- Hot Streak + Heating Up (not an actual buff) (Season of Discovery, Wrath, Cataclysm)
                     [0] = false,
                 },
                 [5276] = { -- Representative of spells triggering Frozen effect
@@ -272,7 +272,7 @@ SAO.defaults = {
                 },
             },
             glow = {
-                [79683] = { -- Arcane Missiles! (Cataclysm + MoP)
+                [79683] = { -- Arcane Missiles! (Cataclysm, Mists of Pandaria)
                     [5143] = true, -- Arcane Missiles
                 },
                 [44401] = { -- Missile Barrage (Wrath)
@@ -284,6 +284,9 @@ SAO.defaults = {
                 [400573]= { -- Arcane Blast 4/4 (Season of Discovery)
                     [5143] = true,  -- Arcane Missiles
                     [1449] = false, -- Arcane Explosion
+                },
+                [48107] = { -- Heating Up (Mists of Pandaria)
+                    [108853] = false, -- Inferno Blast
                 },
                 [48108] = { -- Hot Streak (Wrath+)
                     [11366] = true, -- Pyroblast
@@ -324,9 +327,6 @@ SAO.defaults = {
                     [44572] = true, -- Deep Freeze (Wrath+)
                     [400640]= true, -- Ice Lance (Season of Discovery)
                     [428739]= true, -- Deep Freeze (Season of Discovery)
-                },
-                [48107] = { -- Heating Up (MoP)
-                    [108853] = false, -- Inferno Blast (MoP)
                 },
             },
         },
