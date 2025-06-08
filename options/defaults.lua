@@ -62,6 +62,9 @@ SAO.defaults = {
                 [16870] = { -- Omen of Clarity
                     [0] = true,
                 },
+                [135700] = { -- Omen of Clarity, Feral (Mists of Pandaria)
+                    [0] = true,
+                },
                 [48518] = { -- Eclipse (Lunar) (Wrath+)
                     [0] = true,
                 },
@@ -74,7 +77,7 @@ SAO.defaults = {
                 [408250] = { -- Eclipse (Solar, Season of Discovery)
                     [0] = true,
                 },
-                [93400] = { -- Shooting Stars (Cataclysm)
+                [93400] = { -- Shooting Stars (Cataclysm+)
                     [0] = true,
                 },
                 [16886] = { -- Nature's Grace (Era - Wrath)
@@ -86,7 +89,7 @@ SAO.defaults = {
                 [64823] = { -- Elune's Wrath (Wrath)
                     [0] = false,
                 },
-                [69369] = { -- Predatory Strikes (Wrath+)
+                [69369] = { -- Predatory Strikes (Wrath, Cataclysm) / Predatory Swiftness (Mists of Pandaria)
                     [0] = true,
                 },
                 [60512] = { -- Healing Trance / Soul Preserver (Wrath)
@@ -98,6 +101,9 @@ SAO.defaults = {
                 [414800]= { -- Fury of Stormrage (Season of Discovery)
                     [0] = true,
                 },
+                [135286]= { -- Tooth and Claw (Mists of Pandaria)
+                    [0] = true,
+                },
             },
             glow = {
                 [2912] = { -- Starfire (Season of Discovery, Wrath+)
@@ -106,7 +112,7 @@ SAO.defaults = {
                 [5176] = { -- Wrath (Season of Discovery, Wrath+)
                     [5176] = true, -- Wrath
                 },
-                [93400] = { -- Shooting Stars (Cataclysm)
+                [93400] = { -- Shooting Stars (Cataclysm+)
                     [78674] = true, -- Starsurge
                 },
                 [46833] = { -- Wrath of Elune (Wrath)
@@ -115,15 +121,15 @@ SAO.defaults = {
                 [64823] = { -- Elune's Wrath (Wrath)
                     [2912] = true, -- Starfire
                 },
-                [69369] = { -- Predatory Strikes (Wrath+)
-                    [8936]  = false, -- Regrowth
-                    [5185]  = true,  -- Healing Touch
-                    [50464] = false, -- Nourish
-                    [20484] = false, -- Rebirth
-                    [5176]  = false, -- Wrath
-                    [339]   = false, -- Entangling Roots
-                    [33786] = true,  -- Cyclone
-                    [2637]  = false, -- Hibernate
+                [69369] = { -- Predatory Strikes (Wrath, Cataclysm) / Predatory Swiftness (Mists of Pandaria)
+                    [8936]  = false, -- Regrowth (Wrath, Cataclysm)
+                    [5185]  = true,  -- Healing Touch (Wrath+)
+                    [50464] = false, -- Nourish (Wrath, Cataclysm)
+                    [20484] = false, -- Rebirth (Wrath+)
+                    [5176]  = false, -- Wrath (Wrath, Cataclysm)
+                    [339]   = false, -- Entangling Roots (Wrath+)
+                    [33786] = true,  -- Cyclone (Wrath, Cataclysm)
+                    [2637]  = false, -- Hibernate (Wrath+)
                 },
                 [81093] = { -- Fury of Stormrage (Cataclysm)
                     [2912] = true, -- Starfire
@@ -137,6 +143,14 @@ SAO.defaults = {
                     [408247] = true, -- Nourish
                     [8936] = true, -- Regrowth
                 },
+                -- The following glowing buttons are not set because these buttons are glowing natively
+                -- [135286]= { -- Tooth and Claw (Mists of Pandaria)
+                --     [6807] = true, -- Maul
+                -- },
+                -- [145162] = { -- Dream of Cenarius, Guardian (Mists of Pandaria)
+                --     [5185]  = true,  -- Healing Touch
+                --     [20484] = false, -- Rebirth
+                -- }
             }
         },
         ["HUNTER"] = {
