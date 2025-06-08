@@ -15,7 +15,7 @@ local clearcastingVariants; -- Lazy init in lazyCreateClearcastingVariants()
 local arcaneMissiles = 5143;
 local fireBlast = 2136;
 local frostfireBolt = 44614;
-local infernoBlast = 108853; -- Replaces fire blast in MoP, and can be configured to glow with Heating Up active
+local infernoBlast = 108853; -- Replaces Fire Blast in Mists of Pandaria
 local pyroblast = 11366; -- Pyroblast, the base Pyro spell
 local pyroblastBang = 92315; -- Pyroblast!, a specific spell for instant Pyro introduced in Cataclysm
 
@@ -471,7 +471,10 @@ local function customLogin(self, ...)
     -- Must initialize class on PLAYER_LOGIN instead of registerClass
     -- Because we need the talent tree, which is not always available right off the bat
     local hotStreakSpellName;
-    if SAO.IsSoD() then
+    if SAO.IsProject(SAO.MOP_AND_ONWARD) then
+        -- Invalidate hotStreakSpellName to avoid using HotStreakHandler, which is deprecated from Mists of Pandaria
+        hotStreakSpellName = nil;
+    elseif SAO.IsSoD() then
         hotStreakSpellName = GetSpellInfo(hotStreakSoDSpellID);
     elseif SAO.IsCata() then
         hotStreakSpellName = GetSpellInfo(improvedHotStreakSpellID);
@@ -517,8 +520,8 @@ local function lazyCreateClearcastingVariants(self)
         return;
     end
 
-    if not self.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH + SAO.CATA) then
-        -- Clearcasting exists up until Cataclysm
+    if self.IsProject(SAO.MOP_AND_ONWARD) then
+        -- Clearcasting stopped existing since Mists of Pandaria
         return;
     end
 
@@ -627,37 +630,37 @@ local function useBrainFreeze()
         brainFreezeBuff,
         "aura",
         {
-            overlay = {  texture = "brain_freeze", position = "Top" },
-            button = frostfireBolt
+            overlay = { texture = "brain_freeze", position = "Top" },
+            button = frostfireBolt,
         }
     );
 end
 
 local function useHeatingUpAndHotStreak()
     SAO:CreateEffect(
-        "hot_streak",
-        SAO.MOP,
-        hotStreakSpellID,
-        "aura",
-        {
-            overlay = {  texture = "hot_streak", position = "Left + Right (Flipped)" },
-            button = pyroblast
-        }
-    );
-    SAO:CreateEffect(
         "heating_up",
         SAO.MOP,
         heatingUpSpellID,
         "aura",
         {
-            overlay = {  texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.5 },
-            button = infernoBlast
+            overlay = { texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.5 },
+            button = infernoBlast,
+        }
+    );
+
+    SAO:CreateEffect(
+        "hot_streak",
+        SAO.MOP,
+        hotStreakSpellID,
+        "aura",
+        {
+            overlay = { texture = "hot_streak", position = "Left + Right (Flipped)" },
+            button = pyroblast,
         }
     );
 end
 
-local function registerClass(self)
-    -- Fire Procs
+local function registerFire(self)
     useImpact();
     if self.IsWrath() then
         self:RegisterAura("firestarter", 0, 54741, "impact", "Top", 0.8, 255, 255, 255, true, { (GetSpellInfo(2120)) }); -- May conflict with Impact location
@@ -681,8 +684,9 @@ local function registerClass(self)
     -- Heating Up (spellID == 48107) doesn't exist in Wrath Classic, so we can't use the above aura
     -- Instead, we track Fire Blast, Fireball, Living Bomb and Scorch non-periodic critical strikes
     -- Please look at HotStreakHandler and customCLEU for more information
+end
 
-    -- Frost Procs
+local function registerFrost(self)
     if self.IsSoD() then
         local iceLanceAndDeepFreezeSoD = { (GetSpellInfo(FrozenHandler.ice_lance_sod[1])), (GetSpellInfo(FrozenHandler.deep_freeze_sod[1])) };
         self:RegisterAura("fingers_of_frost_1_sod", 1, 400670, "frozen_fingers", "Left", 1, 255, 255, 255, true, iceLanceAndDeepFreezeSoD);
@@ -715,9 +719,10 @@ local function registerClass(self)
     elseif self.IsMoP() then
         useBrainFreeze();
     end
+end
 
-    -- Arcane Procs
-    useArcaneMissiles(self);
+local function registerArcane(self)
+    useArcaneMissiles();
     if self.IsSoD() then
     	-- Blue-ish, slightly smaller, to avoid confusion and overlap with Arcane Blast
         self:RegisterAura("missile_barrage", 0, 400589, "arcane_missiles", "Left + Right (Flipped)", 0.8, 103, 184, 238, true, { (GetSpellInfo(5143)) });
@@ -760,6 +765,12 @@ local function registerClass(self)
             self:RegisterAura("serendipity_sod", nbStacks, arcaneBlastSoDBuff, texture, "Left + Right (Flipped)", scale, 255, 255, 255, pulse, glowIDs);
         end
     end
+end
+
+local function registerClass(self)
+    registerArcane(self);
+    registerFire(self);
+    registerFrost(self);
 end
 
 local function loadOptions(self)
