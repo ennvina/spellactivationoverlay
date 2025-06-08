@@ -460,6 +460,9 @@ SAO.defaults = {
                 [588] = { -- Inner Fire (Wrath+)
                     [588] = true, -- Inner Fire
                 },
+                [2944] = { -- Devouring Plague (Mists of Pandaria)
+                    [2944] = true, -- Devouring Plague (Mists of Pandaria)
+                },
                 [15473] = { -- Shadowform
                     [15473] = true, -- Shadowform
                 },

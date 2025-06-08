@@ -3,13 +3,15 @@ local Module = "project"
 
 -- List of project flags, as bit field
 -- Start high enough to be able to index project flag to a list, and avoid confusion with traditional lists
-SAO.ERA = 256
-SAO.SOD = 512
-SAO.TBC = 1024
-SAO.WRATH = 2048
-SAO.CATA = 4096
-SAO.MOP = 8192
-SAO.ALL_PROJECTS = SAO.ERA + SAO.SOD + SAO.TBC + SAO.WRATH + SAO.CATA + SAO.MOP
+SAO.ERA    = 0x0100
+SAO.SOD    = 0x0200
+SAO.TBC    = 0x0400
+SAO.WRATH  = 0x0800
+SAO.CATA   = 0x1000
+SAO.MOP    = 0x2000
+SAO.WOD    = 0x4000
+SAO.LEGION = 0x8000
+SAO.ALL_PROJECTS = SAO.ERA + SAO.SOD + SAO.TBC + SAO.WRATH + SAO.CATA + SAO.MOP -- + SAO.WOD + SAO.LEGION
 SAO.TBC_AND_ONWARD   = SAO.ALL_PROJECTS - (SAO.ERA + SAO.SOD)
 SAO.WRATH_AND_ONWARD = SAO.ALL_PROJECTS - (SAO.ERA + SAO.SOD + SAO.TBC)
 SAO.CATA_AND_ONWARD  = SAO.ALL_PROJECTS - (SAO.ERA + SAO.SOD + SAO.TBC + SAO.WRATH)

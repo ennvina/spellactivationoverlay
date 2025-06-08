@@ -5,6 +5,7 @@ local PRIEST_SPEC_HOLY = SAO.TALENT.SPEC_2;
 local PRIEST_SPEC_SHADOW = SAO.TALENT.SPEC_3;
 
 local bindingHeal = 401937;
+local devouringPlague = 2944;
 local flashHeal = 2061;
 local flashHealNoMana = 101062;
 local innerFire = 588;
@@ -263,6 +264,21 @@ local function useDivineInsight()
     end
 end
 
+local function useDevouringPlague()
+    SAO:CreateEffect(
+        "devouring_plague",
+        SAO.MOP,
+        devouringPlague,
+        "generic",
+        {
+            useHolyPower = true,
+            combatOnly = true,
+
+            button = { holyPower = 3, spellID = devouringPlague },
+        }
+    );
+end
+
 local function useMindSpike()
 -- Disabled because it must to track the target debuff, not the player buff, which requires new development
 --    if SAO.IsSoD() then
@@ -301,6 +317,7 @@ local function registerClass(self)
     -- Shadow
     useShadowWordDeath();
     useShadowform();
+    useDevouringPlague();
     useMindMelt();
     useMindSpike();
 

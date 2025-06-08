@@ -1,5 +1,13 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.5.1 (2025-06-xx)
+
+New Glowing Button
+- Priest's Devouring Plague, at 3 Shadow Orbs (Mists of Pandaria)
+
+Known Limitations
+- Priest's Devouring Plague may glow up to 30 seconds after leaving combat
+
 #### v2.5.0 (2025-06-08)
 
 Thank you to Katalina for sending feedback and testing Paladin. Appreciated!
