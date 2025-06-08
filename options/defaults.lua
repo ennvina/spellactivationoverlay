@@ -204,7 +204,7 @@ SAO.defaults = {
                 [12536] = { -- Arcane Concentration (Era - Cataclysm)
                     [0] = false,
                 },
-                [79683] = { -- Arcane Missiles! (Cataclysm)
+                [79683] = { -- Arcane Missiles! (Cataclysm+)
                     [0] = true,
                 },
                 [44401] = { -- Missile Barrage (Wrath)
@@ -220,7 +220,7 @@ SAO.defaults = {
                 [57531] = { -- Arcane Potency (2/2) (Cataclysm)
                     [0] = false,
                 },
-                [48107] = { -- Heating Up (not an actual buff) (Season of Discovery, Wrath+)
+                [48107] = { -- Heating Up (not an actual buff for Season of Discovery, Wrath, Cata) (Is a buff in MoP)
                     [0] = true,
                 },
                 [48108] = { -- Hot Streak (Wrath+)
@@ -238,13 +238,13 @@ SAO.defaults = {
                 [74396] = { -- Fingers of Frost (Wrath)
                     [0] = true, -- any stacks
                 },
-                [44544] = { -- Fingers of Frost (Cataclysm)
+                [44544] = { -- Fingers of Frost (Cataclysm+)
                     [0] = nil,  -- any stacks, set to nil to simplify DB migration
                 },
                 [400670]= { -- Fingers of Frost (Season of Discovery)
                     [0] = true, -- any stacks
                 },
-                [57761] = { -- Brain Freeze (Wrath, Cataclysm)
+                [57761] = { -- Brain Freeze (Wrath+)
                     [0] = true,
                 },
                 [400730] = { -- Brain Freeze (Season of Discovery)
@@ -258,7 +258,7 @@ SAO.defaults = {
                 },
             },
             glow = {
-                [79683] = { -- Arcane Missiles! (Cataclysm)
+                [79683] = { -- Arcane Missiles! (Cataclysm + MoP)
                     [5143] = true, -- Arcane Missiles
                 },
                 [44401] = { -- Missile Barrage (Wrath)
@@ -310,6 +310,9 @@ SAO.defaults = {
                     [44572] = true, -- Deep Freeze (Wrath+)
                     [400640]= true, -- Ice Lance (Season of Discovery)
                     [428739]= true, -- Deep Freeze (Season of Discovery)
+                },
+                [48107] = { -- Heating Up (MoP)
+                    [108853] = false, -- Inferno Blast (MoP)
                 },
             },
         },

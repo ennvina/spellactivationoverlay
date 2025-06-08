@@ -14,6 +14,8 @@ local clearcastingVariants; -- Lazy init in lazyCreateClearcastingVariants()
 
 local arcaneMissiles = 5143;
 local fireBlast = 2136;
+local frostfireBolt = 44614;
+local infernoBlast = 108853; -- Replaces fire blast in MoP, and can be configured to glow with Heating Up active
 local pyroblast = 11366; -- Pyroblast, the base Pyro spell
 local pyroblastBang = 92315; -- Pyroblast!, a specific spell for instant Pyro introduced in Cataclysm
 
@@ -34,7 +36,7 @@ HotStreakHandler.init = function(self, talentName)
     local fire_blast = { 2136, 2137, 2138, 8412, 8413, 10197, 10199, 27078, 27079, 42872, 42873 }
     local fire_blast_sod = { 400618, 400619, 400616, 400620, 400621, 400622, 400623 } -- Improved by Overheat rune
     local fireball = { 133, 143, 145, 3140, 8400, 8401, 8402, 10148, 10149, 10150, 10151, 25306, 27070, 38692, 42832, 42833 }
-    local frostfire_bolt = { 44614, 47610 }
+    local frostfire_bolt = { frostfireBolt, 47610 }
     local frostfire_bolt_sod = { 401502 }
     -- local living_bomb = { 44457, 55359, 55360 } this is the DOT effect, which we do NOT want
     local living_bomb = { 44461, 55361, 55362 }
@@ -557,7 +559,7 @@ local function useImpact()
     );
 end
 
-local function useArcaneMissiles(self)
+local function useArcaneMissiles()
     local arcaneMissilesBuff = 79683; -- Cataclysm and MoP require a buff before casting Arcane Missiles
 
     if SAO.IsCata() then
@@ -567,7 +569,7 @@ local function useArcaneMissiles(self)
             arcaneMissilesBuff,
             "aura",
             {
-                overlay = { texture = "arcane_missiles", position = "Left + Right (Flipped)", scale = 0.6, option = true }, -- Smaller, to avoid overlap with Arcane Potency
+                overlay = { texture = "arcane_missiles", position = "Left + Right (Flipped)", scale = 0.6 }, -- Smaller, to avoid overlap with Arcane Potency
                 button = arcaneMissiles,
                 handler = {
                     -- Force refresh on a regular basis, because the game client does not send the correct SPELL_AURA_REFRESH events
@@ -577,8 +579,8 @@ local function useArcaneMissiles(self)
             }
         );
     elseif SAO.IsMoP() then
-        local hash0Stacks = self:HashNameFromStacks(0);
-        local hash2Stacks = self:HashNameFromStacks(2);
+        local hash0Stacks = SAO:HashNameFromStacks(0);
+        local hash2Stacks = SAO:HashNameFromStacks(2);
         SAO:CreateEffect(
             "arcane_missiles",
             SAO.MOP,
@@ -586,8 +588,8 @@ local function useArcaneMissiles(self)
             "aura",
             {
                 overlays = {
-                    { stacks = 1, texture = "arcane_missiles", position = "Left", scale = 1, option = false },
-                    { stacks = 2, texture = "arcane_missiles", position = "Left + Right (Flipped)", scale = 1, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
+                    { stacks = 1, texture = "arcane_missiles", position = "Left", option = false },
+                    { stacks = 2, texture = "arcane_missiles", position = "Left + Right (Flipped)", option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
                 },
                 button = arcaneMissiles,
             }
@@ -595,10 +597,10 @@ local function useArcaneMissiles(self)
     end
 end
 
-local function useFingersOfFrost(self)
+local function useFingersOfFrost()
     local fingersOfFrostBuff = 44544;
-    local hash0Stacks = self:HashNameFromStacks(0);
-    local hash2Stacks = self:HashNameFromStacks(2);
+    local hash0Stacks = SAO:HashNameFromStacks(0);
+    local hash2Stacks = SAO:HashNameFromStacks(2);
     SAO:CreateEffect(
         "fingers_of_frost",
         SAO.MOP,
@@ -618,7 +620,6 @@ local function useFingersOfFrost(self)
 end
 
 local function useBrainFreeze()
-    local frostfireBolt = 44614;
     local brainFreezeBuff = 57761;
     SAO:CreateEffect(
         "brain_freeze",
@@ -626,21 +627,20 @@ local function useBrainFreeze()
         brainFreezeBuff,
         "aura",
         {
-            overlay = {  texture = "brain_freeze", position = "Top", scale = 1, color = { 255, 255, 255 }, option = true },
+            overlay = {  texture = "brain_freeze", position = "Top" },
             button = frostfireBolt
         }
     );
 end
 
 local function useHeatingUpAndHotStreak()
-    local infernoBlast = 108853;
     SAO:CreateEffect(
-        "hot_streak_full",
+        "hot_streak",
         SAO.MOP,
         hotStreakSpellID,
         "aura",
         {
-            overlay = {  texture = "hot_streak", position = "Left + Right (Flipped)", scale = 1, color = { 255, 255, 255 }, option = true },
+            overlay = {  texture = "hot_streak", position = "Left + Right (Flipped)" },
             button = pyroblast
         }
     );
@@ -650,7 +650,7 @@ local function useHeatingUpAndHotStreak()
         heatingUpSpellID,
         "aura",
         {
-            overlay = {  texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.5, color = { 255, 255, 255 }, option = true },
+            overlay = {  texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.5 },
             button = infernoBlast
         }
     );
@@ -658,9 +658,7 @@ end
 
 local function registerClass(self)
     -- Fire Procs
-    if not self.IsMoP() then
-        useImpact(); -- No impact in MoP
-    end
+    useImpact();
     if self.IsWrath() then
         self:RegisterAura("firestarter", 0, 54741, "impact", "Top", 0.8, 255, 255, 255, true, { (GetSpellInfo(2120)) }); -- May conflict with Impact location
     end
@@ -701,7 +699,7 @@ local function registerClass(self)
         self:RegisterAura("fingers_of_frost_2", 2, 44544, "frozen_fingers", "Left (CCW)", 1.1, 222, 222, 222, true, iceLanceAndDeepFreeze);
         self:RegisterAura("fingers_of_frost_2", 2, 44544, "frozen_fingers", "Right (CW)", 1.1, 222, 222, 222, true); -- no need to re-glow iceLanceAndDeepFreeze for right texture
     elseif self.IsMoP() then
-        useFingersOfFrost(self);
+        useFingersOfFrost();
     end
     if not self.IsCata() then
         self:RegisterAura("freeze", 0, FrozenHandler.fakeSpellID, FrozenHandler.saoTexture, "Top (CW)", FrozenHandler.saoScaleFactor, 255, 255, 255, false);
@@ -711,21 +709,20 @@ local function registerClass(self)
     if self.IsSoD() then
         self:RegisterAura("brain_freeze", 0, 400730, "brain_freeze", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(412532)), (GetSpellInfo(401502)) });
     elseif self.IsWrath() then
-        self:RegisterAura("brain_freeze", 0, 57761, "brain_freeze", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(44614)) });
+        self:RegisterAura("brain_freeze", 0, 57761, "brain_freeze", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(frostfireBolt)) });
     elseif self.IsCata() then
-        self:RegisterAura("brain_freeze", 0, 57761, "brain_freeze", "Top (CW)", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(44614)) });
+        self:RegisterAura("brain_freeze", 0, 57761, "brain_freeze", "Top (CW)", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(frostfireBolt)) });
     elseif self.IsMoP() then
         useBrainFreeze();
     end
 
     -- Arcane Procs
+    useArcaneMissiles(self);
     if self.IsSoD() then
     	-- Blue-ish, slightly smaller, to avoid confusion and overlap with Arcane Blast
         self:RegisterAura("missile_barrage", 0, 400589, "arcane_missiles", "Left + Right (Flipped)", 0.8, 103, 184, 238, true, { (GetSpellInfo(5143)) });
     elseif self.IsWrath() then
         self:RegisterAura("missile_barrage", 0, 44401, "arcane_missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(5143)) });
-    elseif self.IsCata() or self.IsMoP() then
-        useArcaneMissiles(self);
     end
     if self.IsCata() then
         local arcanePotency1 = 57529;
@@ -804,7 +801,6 @@ local function loadOptions(self)
     local arcaneExplosion = 1449;
     local flamestrike = 2120;
     local fireball = 133;
-    local frostfireBolt = 44614;
     local frostfireBoltSoD = 401502;
     local spellfrostBoltSoD = 412532;
     local iceLance = FrozenHandler.ice_lance[1];
