@@ -19,6 +19,27 @@ New Glowing Button
 - Healing Touch, during Predatory Swiftness (Mists of Pandaria)
 - Hibernate, during Predatory Swiftness (Mists of Pandaria)
 - Rebirth, during Predatory Swiftness (Mists of Pandaria)
+### :mage~1:  Mage
+The Mage class is now fully supported for Mists of Pandaria!
+
+Mage options have been re-ordered to be more intuitive.
+
+New Spell Alerts
+- Arcane Missiles (Mists of Pandaria)
+- Heating Up (Mists of Pandaria)
+- Hot Streak (Mists of Pandaria)
+- Brain Freeze (Mists of Pandaria)
+- Fingers of Frost (Mists of Pandaria)
+
+New Glowing Buttons
+- Arcane Missiles, during Arcane Missiles (Mists of Pandaria)
+- Inferno Blast\*, during Heating Up (Mists of Pandaria)
+- Pyroblast, during Hot Streak (Mists of Pandaria)
+- Frostfire Bolt, during Brain Freeze (Mists of Pandaria)
+- Deep Freeze, during Fingers of Frost (Mists of Pandaria)
+- Ice Lance, during Fingers of Frost (Mists of Pandaria)
+
+\* Inferno Blast does not glow by default, in case Mages prefer to keep the Inferno Blast cooldown to spread damage over time effects.
 ### :priest:  Priest
 New Glowing Button
 - Devouring Plague, at 3 Shadow Orbs (Mists of Pandaria)
@@ -35,7 +56,7 @@ Because the game client glows Devouring Plague for 30 seconds, the button will k
 ## Miscellaneous
 ## Contributors
 Shout-out to our amazing contributors
-- 
+- Siegester03, for helping a great deal with the Mage class
 Thanks!
 
 As always, the latest release is available on [CurseForge](https://www.curseforge.com/wow/addons/spellactivationoverlay) / [GitHub](https://github.com/ennvina/spellactivationoverlay/releases/latest) / [Discord](https://discord.com/channels/1013194771969355858/1379111832207228938)
