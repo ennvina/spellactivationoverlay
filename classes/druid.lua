@@ -7,6 +7,7 @@ local GetSpellInfo = GetSpellInfo
 local UnitGUID = UnitGUID
 
 local omenSpellID = 16870;
+local omenSpellIDFeral = 135700;
 local lunarSpellID = SAO.IsSoD() and 408255 or 48518;
 local solarSpellID = SAO.IsSoD() and 408250 or 48517;
 
@@ -33,6 +34,8 @@ local cyclone = 33786;
 local entanglingRoots = 339;
 local healingTouch = 5185;
 local hibernate = 2637;
+local maul = 6807;
+local moonfire = 8921;
 local nourish = SAO.IsSoD() and 408247 or 50464;
 local rebirth = 20484;
 local regrowth = 8936;
@@ -40,16 +43,49 @@ local starfire = 2912;
 local starsurge = 78674;
 local wrath = 5176;
 
+local omenOfClarityTalent = 16864;
+-- local eclipseTalent = 48516;
+
 local function useShootingStars()
     SAO:CreateEffect(
         "shooting_stars",
-        SAO.CATA,
+        SAO.CATA_AND_ONWARD,
         93400, -- Shooting Stars (buff)
         "aura",
         {
-            talent = 93398, -- Shooting Stars (talent)
+            talent = {
+                [SAO.CATA] = 93398, -- Shooting Stars (talent)
+                [SAO.MOP]  = 93399, -- Shooting Stars (passive)
+            },
             overlay = { texture = "shooting_stars", position = "Top" },
-            button = starsurge,
+            buttons = {
+                [SAO.CATA] = starsurge,
+                -- [SAO.MOP_AND_ONWARD] = starsurge, -- Button already glowing natively
+            },
+        }
+    );
+end
+
+local function useEclipse()
+    SAO:CreateEffect(
+        "eclipse_lunar",
+        SAO.MOP,
+        lunarSpellID,
+        "aura",
+        {
+            overlay = { texture = "eclipse_moon", position = "Left" },
+            -- buttons = { moonfire, starfire }, -- Buttons already glowing natively
+        }
+    );
+
+    SAO:CreateEffect(
+        "eclipse_solar",
+        SAO.MOP,
+        solarSpellID,
+        "aura",
+        {
+            overlay = { texture = "eclipse_sun", position = "Right (Flipped)" },
+            -- buttons = { wrath }, -- Button already glowing natively
         }
     );
 end
@@ -65,6 +101,28 @@ local function useElunesWrathOfElune(name, spellID)
             button = starfire,
         }
     );
+end
+
+local function useOmenOfClarityForSpec(specIndex, suffix, spellID, texture)
+    local specName = C_SpecializationInfo and (function()
+        return select(2, C_SpecializationInfo.GetSpecializationInfo(specIndex));
+    end) or nil;
+
+    SAO:CreateEffect(
+        "omen_of_clarity_"..suffix,
+        SAO.MOP,
+        spellID,
+        "aura",
+        {
+            talent = omenOfClarityTalent,
+            overlay = { texture = texture, position = "Left + Right (Flipped)", option = { subText = specName } },
+        }
+    );
+end
+
+local function useOmenOfClarity()
+    useOmenOfClarityForSpec(2, "feral", omenSpellIDFeral, "feral_omenofclarity");
+    useOmenOfClarityForSpec(4, "resto", omenSpellID, "natures_grace");
 end
 
 local function useNaturesGrace()
@@ -119,22 +177,66 @@ end
 local function usePredatoryStrikes()
     SAO:CreateEffect(
         "predatory_strikes",
-        SAO.WRATH + SAO.CATA,
-        69369, -- Predator's Swiftness (buff)
+        SAO.WRATH + SAO.CATA + SAO.MOP,
+        69369, -- Predator's Swiftness / Predatory Swiftness (buff)
         "aura",
         {
-            talent = 16972, -- Predatory Strikes (talent)
+            talent = {
+                [SAO.WRATH + SAO.CATA] = 16972, -- Predatory Strikes (talent)
+                [SAO.MOP] = 16974, -- Predatory Swiftness (passive)
+            },
             overlay = { texture = "predatory_swiftness", position = "Top" },
             buttons = {
-                regrowth,
-                healingTouch,
-                nourish,
-                rebirth,
-                wrath,
-                entanglingRoots,
-                cyclone,
-                hibernate,
+                [SAO.WRATH + SAO.CATA] = {
+                    regrowth,
+                    healingTouch,
+                    nourish,
+                    rebirth,
+                    wrath,
+                    entanglingRoots,
+                    cyclone,
+                    hibernate,
+                },
+                [SAO.MOP] = {
+                    healingTouch,
+                    rebirth,
+                    entanglingRoots,
+                    hibernate,
+                },
             },
+        }
+    );
+end
+
+local function useToothAndClaw()
+    SAO:CreateEffect(
+        "tooth_and_claw",
+        SAO.MOP,
+        135286, -- Tooth and Claw (buff)
+        "aura",
+        {
+            talent = 135288, -- Tooth and Claw (passive)
+            overlay = { texture = "ultimatum", position = "Top" },
+            -- button = maul, -- Button already glowing natively
+        }
+    );
+end
+
+local function useDreamOfCenarius()
+    local guardianSpecName = C_SpecializationInfo and (function()
+        return select(2, C_SpecializationInfo.GetSpecializationInfo(3)); -- 3 = Guardian spec
+    end) or nil;
+
+    SAO:CreateEffect(
+        "dream_of_cenarius_bear",
+        SAO.MOP,
+        145162, -- Dream of Cenarius (Guardian buff)
+        "aura",
+        {
+            buttons = {
+                default = { option = { talentSubText = guardianSpecName } },
+                [SAO.MOP] = { healingTouch, rebirth },
+            }
         }
     );
 end
@@ -412,75 +514,72 @@ local function customCLEU(self, ...)
 end
 
 local function registerClass(self)
-    -- Track Eclipses with a custom CLEU function, so that eclipses can coexist with Omen of Clarity
-    -- self:RegisterAura("eclipse_lunar", 0, lunarSpellID, "eclipse_moon", "Left", 1, 255, 255, 255, true);
-    -- self:RegisterAura("eclipse_solar", 0, solarSpellID, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true);
-    if self.IsSoD() or self.IsWrath() or self.IsCata() then -- Must exclude Eclipses for expansions which have no Eclipses, because the fake spell IDs would be accepted
-        self:RegisterAura("eclipse_lunar", 0, lunarSpellID+1000000, "eclipse_moon", "Left", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
-        self:RegisterAura("eclipse_solar", 0, solarSpellID+1000000, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
-    end
-
-    -- Track Omen of Clarity with a custom CLEU function, to be able to switch between feral and non-feral texture
-    -- self:RegisterAura("omen_of_clarity", 0, 16870, "natures_grace", "Left + Right (Flipped)", 1, 255, 255, 255, true);
-    self:RegisterAura("omen_of_clarity", 0, 16870+1000000, "natures_grace", "Left + Right (Flipped)", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
-
-    -- Register glow IDs for glowing buttons, namely Starfire, Wrath and Starsurge
-    self:RegisterGlowIDs({ (GetSpellInfo(starfire)), (GetSpellInfo(wrath)) });
-    -- if self.IsCata() then
-    --     local starsurge = GetSpellInfo(78674);
-    --     self:RegisterGlowIDs({ starsurge });
-    -- end
-
-    -- Nature's Grace
     useNaturesGrace();
-
-    -- Shooting Stars
     useShootingStars();
-
-    -- Balance 4p set bonuses
-    useElunesWrathOfElune("wrath_of_elune", 46833); -- PvP season 5-6-7-8
-    useElunesWrathOfElune("elunes_wrath", 64823); -- PvE tier 8
-
-    -- Predatory Strikes, inspired by Predatory Swiftness
-    usePredatoryStrikes();
-
-    -- Fury of Stormrage
+    useEclipse(); -- MoP+
     useFuryOfStormrage();
-
-    -- Swiftbloom
+    useToothAndClaw();
+    usePredatoryStrikes(); -- a.k.a. Predatory Swiftness
+    --useDreamOfCenarius(); -- Not used because it only suggests glowing buttons, which are natively supported
+    useOmenOfClarity(); -- MoP+
     useSwiftbloom();  -- SoD Scarlet Enclave Resto 2pc
 
-    -- Healing Trance / Soul Preserver
-    self:RegisterAuraSoulPreserver("soul_preserver_druid", 60512); -- 60512 = Druid buff
+    if not SAO.IsProject(SAO.MOP_AND_ONWARD) then -- Pre-MoP
+        -- Track Eclipses with a custom CLEU function, so that eclipses can coexist with Omen of Clarity
+        -- self:RegisterAura("eclipse_lunar", 0, lunarSpellID, "eclipse_moon", "Left", 1, 255, 255, 255, true);
+        -- self:RegisterAura("eclipse_solar", 0, solarSpellID, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true);
+        if self.IsProject(SAO.SOD + SAO.WRATH + SAO.CATA + SAO.MOP) then -- Must exclude Eclipses for expansions which have no Eclipses, because the fake spell IDs would be accepted
+            self:RegisterAura("eclipse_lunar", 0, lunarSpellID+1000000, "eclipse_moon", "Left", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
+            self:RegisterAura("eclipse_solar", 0, solarSpellID+1000000, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
+        end
 
-    -- Mark textures that aren't marked automatically
-    local omenTextureFeral = "feral_omenofclarity";
-    local omenTextureResto = "natures_grace";
-    local lunarTexture = "eclipse_moon";
-    local solarTexture = "eclipse_sun";
-    self:MarkTexture(omenTextureFeral);
-    self:MarkTexture(omenTextureResto);
-    if not self.IsEra() then
-        self:MarkTexture(lunarTexture);
-        self:MarkTexture(solarTexture);
+        -- Track Omen of Clarity with a custom CLEU function, to be able to switch between feral and non-feral texture
+        -- self:RegisterAura("omen_of_clarity", 0, 16870, "natures_grace", "Left + Right (Flipped)", 1, 255, 255, 255, true);
+        self:RegisterAura("omen_of_clarity", 0, 16870+1000000, "natures_grace", "Left + Right (Flipped)", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
+
+        -- Register glow IDs for glowing buttons, namely Starfire, Wrath and Starsurge
+        self:RegisterGlowIDs({ (GetSpellInfo(starfire)), (GetSpellInfo(wrath)) });
+        -- if self.IsCata() then
+        --     local starsurge = GetSpellInfo(78674);
+        --     self:RegisterGlowIDs({ starsurge });
+        -- end
+
+        -- Balance 4p set bonuses
+        useElunesWrathOfElune("wrath_of_elune", 46833); -- PvP season 5-6-7-8
+        useElunesWrathOfElune("elunes_wrath", 64823); -- PvE tier 8
+
+        -- Healing Trance / Soul Preserver
+        self:RegisterAuraSoulPreserver("soul_preserver_druid", 60512); -- 60512 = Druid buff
+
+        -- Mark textures that aren't marked automatically
+        local omenTextureFeral = "feral_omenofclarity";
+        local omenTextureResto = "natures_grace";
+        local lunarTexture = "eclipse_moon";
+        local solarTexture = "eclipse_sun";
+        self:MarkTexture(omenTextureFeral);
+        self:MarkTexture(omenTextureResto);
+        if not self.IsEra() then
+            self:MarkTexture(lunarTexture);
+            self:MarkTexture(solarTexture);
+        end
     end
 end
 
 local function loadOptions(self)
-    local omenOfClarityTalent = 16864;
---    local eclipseTalent = 48516;
-    -- Cheat with fake talents, to tell explicitly which type of eclipse is involved
-    -- Otherwise the player would always see a generic "Eclipse" text
-    local lunarEclipseTalent = lunarSpellID; -- Not really a talent
-    local solarEclipseTalent = solarSpellID; -- Not really a talent
+    if not SAO.IsProject(SAO.MOP_AND_ONWARD) then -- Pre-MoP
+        -- Cheat with fake talents, to tell explicitly which type of eclipse is involved
+        -- Otherwise the player would always see a generic "Eclipse" text
+        local lunarEclipseTalent = lunarSpellID; -- Not really a talent
+        local solarEclipseTalent = solarSpellID; -- Not really a talent
 
-    self:AddOverlayOption(omenOfClarityTalent, omenSpellID, 0, nil, nil, nil,  omenSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
-    self:AddOverlayOption(lunarEclipseTalent, lunarSpellID, 0, nil, nil, nil, lunarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
-    self:AddOverlayOption(solarEclipseTalent, solarSpellID, 0, nil, nil, nil, solarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
-    self:AddSoulPreserverOverlayOption(60512); -- 60512 = Druid buff
+        self:AddOverlayOption(lunarEclipseTalent, lunarSpellID, 0, nil, nil, nil, lunarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
+        self:AddOverlayOption(solarEclipseTalent, solarSpellID, 0, nil, nil, nil, solarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
+        self:AddOverlayOption(omenOfClarityTalent, omenSpellID, 0, nil, nil, nil,  omenSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
+        self:AddSoulPreserverOverlayOption(60512); -- 60512 = Druid buff
 
-    self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
-    self:AddGlowingOption(solarEclipseTalent, wrath, wrath);
+        self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
+        self:AddGlowingOption(solarEclipseTalent, wrath, wrath);
+    end
 end
 
 SAO.Class["DRUID"] = {
@@ -489,5 +588,4 @@ SAO.Class["DRUID"] = {
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
     ["UPDATE_SHAPESHIFT_FORM"] = updateShapeshift,
     ["PLAYER_ENTERING_WORLD"] = customLoad,
-    IsDisabled = SAO.IsMoP(),
 }

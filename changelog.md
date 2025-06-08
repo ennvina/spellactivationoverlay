@@ -2,7 +2,18 @@
 
 #### v2.5.1 (2025-06-xx)
 
+New Spell Alerts
+- Druid's Lunar Eclipse and Solar Eclipse (Mists of Pandaria)
+- Druid's Shooting Stars (Mists of Pandaria)
+- Druid's Tooth and Claw (Mists of Pandaria)
+- Druid's Predatory Swiftness (Mists of Pandaria)
+- Druid's Omen of Clarity, for Feral and Restoration (Mists of Pandaria)
+
 New Glowing Button
+- Druid's Entangling Roots, during Predatory Swiftness (Mists of Pandaria)
+- Druid's Healing Touch, during Predatory Swiftness (Mists of Pandaria)
+- Druid's Hibernate, during Predatory Swiftness (Mists of Pandaria)
+- Druid's Rebirth, during Predatory Swiftness (Mists of Pandaria)
 - Priest's Devouring Plague, at 3 Shadow Orbs (Mists of Pandaria)
 
 Known Limitations
