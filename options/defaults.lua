@@ -104,6 +104,12 @@ SAO.defaults = {
                 [135286]= { -- Tooth and Claw (Mists of Pandaria)
                     [0] = true,
                 },
+                [145152] = { -- Dream of Cenarius, Feral (Mists of Pandaria)
+                    [0] = true,
+                },
+                [145162] = { -- Dream of Cenarius, Guardian (Mists of Pandaria)
+                    [0] = true,
+                },
             },
             glow = {
                 [2912] = { -- Starfire (Season of Discovery, Wrath+)
@@ -150,7 +156,7 @@ SAO.defaults = {
                 -- [145162] = { -- Dream of Cenarius, Guardian (Mists of Pandaria)
                 --     [5185]  = true,  -- Healing Touch
                 --     [20484] = false, -- Rebirth
-                -- }
+                -- },
             }
         },
         ["HUNTER"] = {

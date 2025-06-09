@@ -103,11 +103,7 @@ local function useElunesWrathOfElune(name, spellID)
     );
 end
 
-local function useOmenOfClarityForSpec(specIndex, suffix, spellID, texture)
-    local specName = C_SpecializationInfo and (function()
-        return select(2, C_SpecializationInfo.GetSpecializationInfo(specIndex));
-    end) or nil;
-
+local function useOmenOfClarityForSpec(specIndex, suffix, spellID, texture, scale, level)
     SAO:CreateEffect(
         "omen_of_clarity_"..suffix,
         SAO.MOP,
@@ -115,14 +111,15 @@ local function useOmenOfClarityForSpec(specIndex, suffix, spellID, texture)
         "aura",
         {
             talent = omenOfClarityTalent,
-            overlay = { texture = texture, position = "Left + Right (Flipped)", option = { subText = specName } },
+            overlay = { texture = texture, position = "Left + Right (Flipped)", level = level, scale = scale, option = { subText = SAO:GetSpecNameFunction(specIndex) } },
         }
     );
 end
 
 local function useOmenOfClarity()
-    useOmenOfClarityForSpec(2, "feral", omenSpellIDFeral, "feral_omenofclarity");
-    useOmenOfClarityForSpec(4, "resto", omenSpellID, "natures_grace");
+    -- Feral Omen of Clarity is slightly smaller to avoid conflict with Dream of Cenarius, and higher level to make it more visible
+    useOmenOfClarityForSpec(2, "feral", omenSpellIDFeral, "feral_omenofclarity", 0.9, 4);
+    useOmenOfClarityForSpec(4, "resto", omenSpellID, "natures_grace", nil, nil);
 end
 
 local function useNaturesGrace()
@@ -223,20 +220,38 @@ local function useToothAndClaw()
 end
 
 local function useDreamOfCenarius()
-    local guardianSpecName = C_SpecializationInfo and (function()
-        return select(2, C_SpecializationInfo.GetSpecializationInfo(3)); -- 3 = Guardian spec
-    end) or nil;
-
+    -- Guardian
+    local guardianNameFunc = SAO:GetSpecNameFunction(3); -- 3 == Guardian
     SAO:CreateEffect(
         "dream_of_cenarius_bear",
         SAO.MOP,
         145162, -- Dream of Cenarius (Guardian buff)
         "aura",
         {
+            talent = 108373, -- Dream of Cenarius (talent)
+            overlay = { texture = "dark_tiger", position = "Left + Right (Flipped)", option = { subText = guardianNameFunc } },
             buttons = {
-                default = { option = { talentSubText = guardianSpecName } },
-                [SAO.MOP] = { healingTouch, rebirth },
-            }
+                default = { option = { talentSubText = guardianNameFunc } },
+                -- [SAO.MOP] = { healingTouch, rebirth }, -- Buttons already glowing natively
+            },
+        }
+    );
+
+    -- Feral
+    local feralNameFunc = SAO:GetSpecNameFunction(2); -- 2 == Feral
+    local scale, color = 1.2, { 200, 200, 200 }; -- Overlay is slightly bigger to avoid conflict with Omen of Clarity, dimmer to compensate
+    SAO:CreateEffect(
+        "dream_of_cenarius_cat",
+        SAO.MOP,
+        145152, -- Dream of Cenarius (Feral buff)
+        "aura",
+        {
+            talent = 108373, -- Dream of Cenarius (talent)
+            overlays = {
+                { stacks = 1, texture = "dark_tiger", position = "Left"                  , scale = scale, color = color, pulse = true , option = false },
+                { stacks = 2, texture = "dark_tiger", position = "Left + Right (Flipped)", scale = scale, color = color, pulse = true , option = { subText = feralNameFunc, setupHash = SAO:HashNameFromStacks(0), testHash = SAO:HashNameFromStacks(2) } },
+            },
+            -- buttons = nil, -- Too many buttons to suggest
         }
     );
 end
@@ -519,8 +534,8 @@ local function registerClass(self)
     useEclipse(); -- MoP+
     useFuryOfStormrage();
     useToothAndClaw();
+    useDreamOfCenarius();
     usePredatoryStrikes(); -- a.k.a. Predatory Swiftness
-    --useDreamOfCenarius(); -- Not used because it only suggests glowing buttons, which are natively supported
     useOmenOfClarity(); -- MoP+
     useSwiftbloom();  -- SoD Scarlet Enclave Resto 2pc
 
