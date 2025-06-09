@@ -419,6 +419,9 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 		end
 	end
 
+	local frameStrata = type(extra) == 'table' and extra.strata or "MEDIUM";
+	overlay:SetFrameStrata(frameStrata);
+
 	local frameLevel = type(extra) == 'table' and extra.level or 3;
 	overlay:SetFrameLevel(frameLevel);
 end
