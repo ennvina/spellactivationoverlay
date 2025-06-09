@@ -32,7 +32,7 @@ local function discardedByOverlayOption(self, auraID, optionIndex, optionAnyStac
 end
 
 -- Add or refresh an overlay
-function SAO.ActivateOverlay(self, hashData, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly)
+function SAO.ActivateOverlay(self, hashData, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly, extra)
     if (texture) then
         -- Discard the overlay if options are not favorable
         if type(hashData) == 'number' then
@@ -75,7 +75,7 @@ function SAO.ActivateOverlay(self, hashData, spellID, texture, positions, scale,
         endTime = self:GetSpellEndTime(spellID, endTime);
 
         -- Actually show the overlay(s)
-        self.ShowAllOverlays(self.Frame, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly);
+        self.ShowAllOverlays(self.Frame, spellID, texture, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly, extra);
     end
 end
 

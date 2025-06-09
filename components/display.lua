@@ -75,6 +75,7 @@ SAO.Display = {
             spellID = overlay.spellID,
             texture = overlay.texture,
             position = overlay.position,
+            level = overlay.level, -- optional
             scale = overlay.scale or 1,
             r = overlay.color and overlay.color[1] or 255,
             g = overlay.color and overlay.color[2] or 255,
@@ -122,7 +123,13 @@ SAO.Display = {
             if options and options.mimicPulse then
                 forcePulsePlay = overlay.autoPulse;
             end
-            SAO:ActivateOverlay(self.hashData, overlay.spellID, overlay.texture, overlay.position, overlay.scale, overlay.r, overlay.g, overlay.b, overlay.autoPulse, forcePulsePlay, nil, overlay.combatOnly);
+
+            local extra = nil;
+            if overlay.level then
+                extra = { level = overlay.level };
+            end
+
+            SAO:ActivateOverlay(self.hashData, overlay.spellID, overlay.texture, overlay.position, overlay.scale, overlay.r, overlay.g, overlay.b, overlay.autoPulse, forcePulsePlay, nil, overlay.combatOnly, extra);
         end
     end,
 
