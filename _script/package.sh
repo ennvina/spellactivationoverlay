@@ -262,6 +262,9 @@ maelstrom_weapon_10
 monk_serpent
 raging_blow
 sudden_doom
+thrill_of_the_hunt_1
+thrill_of_the_hunt_2
+thrill_of_the_hunt_3
 tooth_and_claw
 white_tiger)
 prunetex "${TEXTURES_NOT_FOR_WRATH[@]}"
@@ -290,7 +293,10 @@ backlash
 predatory_swiftness
 killing_machine
 rime
-sudden_doom)
+sudden_doom
+thrill_of_the_hunt_1
+thrill_of_the_hunt_2
+thrill_of_the_hunt_3)
 prunetex "${TEXTURES_NOT_FOR_VANILLA[@]}"
 
 zipproject vanilla "$VERSION_TOC_VERSION"
@@ -318,6 +324,9 @@ maelstrom_weapon_9
 maelstrom_weapon_10
 monk_serpent
 raging_blow
+thrill_of_the_hunt_1
+thrill_of_the_hunt_2
+thrill_of_the_hunt_3
 tooth_and_claw
 white_tiger
 $(texbelow 511469 450914 450915)
@@ -426,6 +435,9 @@ sudden_death
 sudden_doom
 surge_of_light
 sword_and_board
+thrill_of_the_hunt_1
+thrill_of_the_hunt_2
+thrill_of_the_hunt_3
 tooth_and_claw
 white_tiger)
 prunetex "${TEXTURES_NOT_FOR_NECROSIS[@]}"
