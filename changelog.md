@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.5.1 (2025-06-xx)
+#### v2.5.1 (2025-06-10)
 
 Thank you to Siegester03 for helping a great deal with Mage. Many thanks!
 

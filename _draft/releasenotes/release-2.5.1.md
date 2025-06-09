@@ -1,6 +1,5 @@
 # SpellActivationOverlay 2.5.1
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.5.1
-## General
 ## Classes
 ### :druid:  Druid
 The Druid class is now fully supported for Mists of Pandaria!
@@ -14,7 +13,7 @@ New Spell Alerts
 - Predatory Swiftness (Mists of Pandaria)
 - Omen of Clarity, for Feral and Restoration (Mists of Pandaria)
 
-New Glowing Button
+New Glowing Buttons
 - Entangling Roots, during Predatory Swiftness (Mists of Pandaria)
 - Healing Touch, during Predatory Swiftness (Mists of Pandaria)
 - Hibernate, during Predatory Swiftness (Mists of Pandaria)
@@ -49,11 +48,9 @@ Although the game client already glows the button of Devouring Plague at 3 Shado
 - Devouring Plague does not glow when the Priest got the 3rd shadow orb from the new functionality that grants an orb every 6 seconds out of combat
 
 The addon solves both issues by setting Devouring Plague as _combat-only_.
-## Bug Fixes
 ## Known Limitations
 ### :priest:  Priest
 Because the game client glows Devouring Plague for 30 seconds, the button will keep glowing even when the Priest leaves combat, up until 30 seconds after getting/refreshing the 3rd orb (or up until Devouring Plague is cast, obviously).
-## Miscellaneous
 ## Contributors
 Shout-out to our amazing contributors
 - Siegester03, for helping a great deal with the Mage class
