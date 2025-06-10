@@ -58,6 +58,7 @@ classes\deathknight.lua
 classes\druid.lua
 classes\hunter.lua
 classes\mage.lua
+classes\monk.lua
 classes\paladin.lua
 classes\priest.lua
 classes\rogue.lua
