@@ -8,9 +8,7 @@ The Hunter class is now fully supported for Mists of Pandaria!
 New Spell Alerts
 - Master Marksman (Mists of Pandaria)
 - Lock and Load (Mists of Pandaria)
-
-New Glowing Buttons
-- , during (Mists of Pandaria)
+- Thrill of the Hunt (Mists of Pandaria)
 
 Updated Spell Alert
 - Lock and Load is slightly dimmer at 1 stack, to indicate that there the next Shot will consume the last stack (Wrath, Cataclysm)
