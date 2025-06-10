@@ -1,5 +1,30 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.5.2 (2025-06-xx)
+
+Thank you to Bison for sending feedback about Feral druids. Thanks!
+
+Options Panel
+- 'Toggle Test' now previews spell alerts on top of the options panel
+- Moving the mouse over a spell alert in the options panel also previews on top
+
+New Spell Alerts
+- Dream of Cenarius, in Guardian specialization (Mists of Pandaria)
+- Dream of Cenarius, in Feral specialization (Mists of Pandaria)
+- Hunter's Master Marksman (Mists of Pandaria)
+- Hunter's Lock and Load (Mists of Pandaria)
+- Hunter's Thrill of the Hunt (Mists of Pandaria)
+
+Updated Spell Alerts
+- Druid's Omen of Clarity (Feral) has been scaled down (Mists of Pandaria)
+- Hunter's Lock and Load is slightly dimmer at 1 stack (Wrath, Cataclysm)
+
+Bug Fixes
+- Hunter's Lock and Load no longer plays a sound at 1 stack (Wrath, Cataclysm)
+
+Miscellaneous
+- The addon is now capable of overlapping spell alerts with a predictable order
+
 #### v2.5.1 (2025-06-10)
 
 Thank you to Siegester03 for helping a great deal with Mage. Many thanks!
