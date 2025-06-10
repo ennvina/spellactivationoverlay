@@ -29,7 +29,7 @@ end
 local function useCounterattack()
     SAO:CreateEffect(
         "counterattack",
-        SAO.ALL_PROJECTS,
+        SAO.ALL_PROJECTS - SAO.MOP_AND_ONWARD,
         counterattack,
         "counter"
     );
@@ -85,42 +85,72 @@ end
 local function useMasterMarksman()
     -- local masterMarksmanBuff1to4 = 82925;
     local masterMarksmanBuff5 = 82926;
-    local masterMarksmanTalent = 34485;
+
     SAO:CreateEffect(
         "master_marksman",
-        SAO.CATA,
-        masterMarksmanBuff5,
+        SAO.CATA_AND_ONWARD,
+        masterMarksmanBuff5, -- Fire! (buff)
         "aura",
         {
-            talent = masterMarksmanTalent,
+            talent = {
+                [SAO.CATA] = 34485, -- Master Marksman (talent)
+                [SAO.MOP_AND_ONWARD] = 34487, -- Master Marksman (passive)
+            },
             overlay = { texture = "master_marksman", position = "Top" },
-            button = aimedShotBang,
+            buttons = {
+                [SAO.CATA] = aimedShotBang,
+                -- [SAO.MOP] = aimedShot, -- Button already glowing natively
+            }
         }
     );
 end
 
 local function useLockAndLoad()
-    local lockAndLoadBuff = SAO.IsSoD() and 415414 or 56453;
-    local lockAndLoadTalent = SAO.IsSoD() and 415413 or 56342;
     SAO:CreateEffect(
         "lock_and_load",
-        SAO.SOD + SAO.WRATH + SAO.CATA,
-        lockAndLoadBuff,
+        SAO.SOD + SAO.WRATH_AND_ONWARD,
+        {
+            [SAO.SOD] = 415414,
+            [SAO.WRATH_AND_ONWARD] = 56453,
+        },
         "aura",
         {
-            talent = lockAndLoadTalent,
+            talent = {
+                [SAO.SOD] = 415413, -- Lock and Load (rune)
+                [SAO.WRATH + SAO.CATA] = 56342, -- Lock and Load (talent)
+                [SAO.MOP_AND_ONWARD] = 56343, -- Lock and Load (passive)
+            },
             overlays = {
                 [SAO.SOD] = { texture = "lock_and_load", position = "Top" },
-                [SAO.WRATH+SAO.CATA] = {
-                    { stacks = 1, texture = "lock_and_load", position = "Top", option = false },
-                    { stacks = 2, texture = "lock_and_load", position = "Top", option = { setupHash = SAO:HashNameFromStacks(0), testHash = SAO:HashNameFromStacks(2) } },
+                [SAO.WRATH_AND_ONWARD] = { -- Stacks == 1 is slightly dimmer, to give information that 'only 1 stack remains'
+                    { stacks = 1, texture = "lock_and_load", position = "Top", color = { 200, 200, 200 }, pulse = false, option = false },
+                    { stacks = 2, texture = "lock_and_load", position = "Top", color = { 255, 255, 255 }, pulse = true,  option = { setupHash = SAO:HashNameFromStacks(0), testHash = SAO:HashNameFromStacks(2) } },
                 },
             },
             buttons = {
                 [SAO.SOD] = nil, -- Don't glow buttons for Season of Discovery, there would be too many to suggest
                 [SAO.WRATH] = { arcaneShot, explosiveShot },
                 [SAO.CATA] = explosiveShot,
+                -- [SAO.MOP_AND_ONWARD] = explosiveShot, -- Button already glowing natively
             },
+        }
+    );
+end
+
+local function useThrillOfTheHunt()
+    SAO:CreateEffect(
+        "thrill_of_the_hunt",
+        SAO.MOP,
+        34720, -- Thrill of the Hunt (buff)
+        "aura",
+        {
+            talent = 109306, -- Thrill of the Hunt (talent)
+            overlays = {
+                { stacks = 1, texture = "thrill_of_the_hunt_1", position = "Left + Right (Flipped)", pulse = false, option = false },
+                { stacks = 2, texture = "thrill_of_the_hunt_2", position = "Left + Right (Flipped)", pulse = false, option = false },
+                { stacks = 3, texture = "thrill_of_the_hunt_3", position = "Left + Right (Flipped)", pulse = true , option = { setupHash = SAO:HashNameFromStacks(0), testHash = SAO:HashNameFromStacks(3) } },
+            },
+            -- buttons = { arcaneShot, multiShot }, -- Buttons already glowing natively
         }
     );
 end
@@ -237,6 +267,9 @@ local function registerClass(self)
     -- Survival
     useLockAndLoad();
 
+    -- Talents
+    useThrillOfTheHunt();
+
     -- Season of Discovery runes
     useFlankingStrike();
     useCobraStrikes();
@@ -248,5 +281,4 @@ end
 
 SAO.Class["HUNTER"] = {
     ["Register"] = registerClass,
-    IsDisabled = SAO.IsMoP(),
 }

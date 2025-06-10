@@ -164,7 +164,7 @@ SAO.defaults = {
                 [56453] = { -- Lock and Load (Wrath+)
                     [0] = true, -- any stacks
                 },
-                [82926] = { -- Master Marksman (Cataclysm)
+                [82926] = { -- Master Marksman (Cataclysm+)
                     [0] = true,
                 },
                 [99060] = { -- Burning Adrenaline (Cataclysm)
@@ -177,6 +177,9 @@ SAO.defaults = {
                     [0] = true,
                 },
                 [425714]= { -- Cobra Strikes (Season of Discovery)
+                    [0] = true, -- any stacks
+                },
+                [34720] = { -- Thrill of the Hunt (Mists of Pandaria)
                     [0] = true, -- any stacks
                 },
             },
