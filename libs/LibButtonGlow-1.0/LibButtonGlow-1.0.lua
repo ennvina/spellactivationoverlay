@@ -37,6 +37,9 @@ if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib, oldversion = LibStub:NewLibrary(MAJOR_VERSION, MINOR_VERSION)
 if not lib then return end
 
+-- Optimize frequent calls
+local GetTime = GetTime
+
 local Masque = LibStub("Masque", true)
 
 lib.unusedOverlays = lib.unusedOverlays or {}
@@ -80,45 +83,51 @@ local function CreateScaleAnim(group, target, order, duration, x, y, delay)
 
 	-- Manual scale for Cooldown objects, because the scale animation is buggy as hell for them
 	if target.__scale then
-		local prevAnim
+		local prevAnimProps
 		if target.__scale.animations then
-			prevAnim = target.__scale.animations[#target.__scale.animations]
+			prevAnimProps = target.__scale.animations[#target.__scale.animations]
 		else
 			target.__scale.animations = {}
 		end
 local noAnim = #target.__scale.animations
-		tinsert(target.__scale.animations, { x = x, y = y })
+		local animProps = { x = x, y = y, startTime = nil, throttle = nil }
+		tinsert(target.__scale.animations, animProps)
 
 		local throttleMin = 0.5
 		scale:SetScript("OnPlay", function(self)
-			target.__scale.startTime = GetTime()
-			target.__scale.throttle = throttleMin
+print("OnPlay anim #", noAnim, "of", target:GetName())
+			animProps.startTime = GetTime() + (delay or 0)
+			animProps.throttle = throttleMin
 		end)
 		scale:SetScript("OnUpdate", function(self, elapsed)
-			local baseScale, startTime = target.__scale.baseScale, target.__scale.startTime
-			if not baseScale or not startTime then
+			local baseScale, startTime = target.__scale.baseScale, animProps.startTime
+			if not baseScale or not startTime or GetTime() < startTime then
 				return
 			end
 
-			if target.__scale.throttle < throttleMin then
-				target.__scale.throttle = target.__scale.throttle + elapsed
+			if animProps.throttle < throttleMin then
+				animProps.throttle = animProps.throttle + elapsed
 				return
 			end
-			target.__scale.throttle = 0
+			animProps.throttle = 0
 
 target:GetParent().innerGlow:Hide()
 target:GetParent().innerGlowOver:Hide()
 target:GetParent().outerGlow:Hide()
 target:GetParent().outerGlowOver:Hide()
-print("Playing anim #", noAnim, "of", target:GetName())
+print("OnUpdate anim #", noAnim, "of", target:GetName())
 			local frame = group:GetParent()
 			local frameWidth, frameHeight = frame:GetSize()
-			local scaleWidth, scaleHeight = prevAnim and prevAnim.x or baseScale, prevAnim and prevAnim.y or baseScale
+			local scaleWidth, scaleHeight = prevAnimProps and prevAnimProps.x or baseScale, prevAnimProps and prevAnimProps.y or baseScale
 			local initialWidth, initialHeight = scaleWidth*frameWidth, scaleHeight*frameHeight
 			local finalWidth, finalHeight = x*initialWidth, y*initialHeight
 			local t = (GetTime() - startTime) / duration
 			local newWidth, newHeight = (1-t) * initialWidth + t * finalWidth, (1-t) * initialHeight + t * finalHeight
 			target:SetSize(newWidth, newHeight)
+		end)
+		scale:SetScript("OnFinished", function(self)
+print("OnFinished anim #", noAnim, "of", target:GetName())
+			animProps.startTime = nil
 		end)
 	end
 

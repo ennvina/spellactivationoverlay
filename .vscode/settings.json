@@ -55,6 +55,7 @@
         // WoW UI helpers
         "ActionButton_HideOverlayGlow",
         "ActionButton_ShowOverlayGlow",
+        "AnimateTexCoords",
         "CloseDropDownMenus",
         "CreateColor",
         "CreateFrame",
