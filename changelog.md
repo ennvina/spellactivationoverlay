@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.5.2 (2025-06-xx)
+#### v2.5.2 (2025-06-13)
 
 Thank you to Bison for sending feedback about Feral druids. Thanks!
 
