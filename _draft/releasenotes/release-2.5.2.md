@@ -26,10 +26,16 @@ New Spell Alerts
 Updated Spell Alert
 - Lock and Load is slightly dimmer at 1 stack, to indicate that there the next Shot will consume the last stack (Wrath, Cataclysm)
 ## Bug Fixes
+### General
+The addon should no longer conflict with the game's Spell Activation Overlay functionality (Mists of Pandaria).
+
+The game's functionality currently has many issues. It can be disabled by going to Options > Gameplay > Combat > Spell Alert Opacity, and move the opacity slider to 0.
 ### :hunter:  Hunter
 Lock and Load no longer plays a sound when dropping from 2 stacks to 1 stack, because there is no new 'proc' (Wrath, Cataclysm).
 
 _Developer's Note: Sounds should indicate something new and hardly controllable by the player has happened, to tell them "Now would be a good time to cast this ability that you maybe wouldn't have cast otherwise". When the player consumes a charge on purpose, there is no point in triggering the sound. At best, it's a distraction (pun intended). At worst, it is misleading players that stacks were refreshed, which they were not._
+### :paladin:  Paladin
+Paladins should no longer have an error at start about Eternal Flame (Cataclysm).
 ## Known Limitations
 ## Miscellaneous
 The addon is now capable of overlapping spell alerts with a predictable order.

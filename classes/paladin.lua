@@ -84,10 +84,10 @@ local function useExorcism()
     );
 end
 
-local function useHolySpender(name, spellID)
+local function useHolySpender(name, spellID, project)
     SAO:CreateEffect(
         name,
-        SAO.CATA_AND_ONWARD,
+        project or SAO.CATA_AND_ONWARD,
         spellID,
         "counter",
         {
@@ -307,7 +307,7 @@ local function registerClass(self)
     useHammerOfWrath();
     useHolyShock();
     useExorcism();
-    useDivineStorm();
+    useDivineStorm(); -- Holy Power spender in Mists of Pandaria
 
     -- Holy Power spenders
     useHolySpender("word_of_glory", wordOfGlory);
@@ -315,7 +315,7 @@ local function registerClass(self)
     useHolySpender("shield_of_the_righteous", shieldOfTheRighteous); -- Protection only
     useHolySpender("templars_verdict", templarsVerdict); -- Retribution only
     useHolySpender("inquisition", inquisition);
-    useHolySpender("eternal_flame", eternalFlame);
+    useHolySpender("eternal_flame", eternalFlame, SAO.MOP_AND_ONWARD);
 
     -- Items
     self:RegisterAuraSoulPreserver("soul_preserver_paladin", 60513); -- 60513 = Paladin buff

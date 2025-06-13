@@ -64,6 +64,17 @@ function SAO.Trace(self, prefix, msg, ...)
     end
 end
 
+function SAO.LogPersistent(self, prefix, msg)
+    if SpellActivationOverlayDB then
+        local line = "[@"..GetTime().."] :"..prefix..": "..msg;
+        if not SpellActivationOverlayDB.logs then
+            SpellActivationOverlayDB.logs = { line };
+        else
+            tinsert(SpellActivationOverlayDB.logs, line);
+        end
+    end
+end
+
 local timeOfLastTrace = {}
 function SAO.TraceThrottled(self, key, prefix, ...)
     key = tostring(key)..tostring(prefix);

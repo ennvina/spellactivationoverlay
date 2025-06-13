@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.5.2 (2025-06-xx)
+#### v2.5.2 (2025-06-13)
 
 Thank you to Bison for sending feedback about Feral druids. Thanks!
 
@@ -20,7 +20,9 @@ Updated Spell Alerts
 - Hunter's Lock and Load is slightly dimmer at 1 stack (Wrath, Cataclysm)
 
 Bug Fixes
+- The addon should no longer conflict with the game client (Mists of Pandaria)
 - Hunter's Lock and Load no longer plays a sound at 1 stack (Wrath, Cataclysm)
+- Paladins no longer have an error at start about Eternal Flame (Cataclysm)
 
 Miscellaneous
 - The addon is now capable of overlapping spell alerts with a predictable order
@@ -107,7 +109,7 @@ Bug Fixes
 - ElvUI users now benefit from ElvUI's Action Button Glow settings
 - Mage's Pyroblast un-glows when cast during Hot Streak (Cataclysm)
 - Priest's Flash Heal un-glows when cast during Surge of Light (Cataclysm)
-- Priests should not longer have an error at start about Shadowform
+- Priests should no longer have an error at start about Shadowform
 
 #### v2.4.3 (2024-06-02)
 
