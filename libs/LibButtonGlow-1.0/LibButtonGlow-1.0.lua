@@ -40,6 +40,9 @@ if not lib then return end
 -- Optimize frequent calls
 local GetTime = GetTime
 
+-- Option to use or avoid Cooldown-based layouts
+local supportCooldown = true
+
 local Masque = LibStub("Masque", true)
 
 lib.unusedOverlays = lib.unusedOverlays or {}
@@ -89,16 +92,16 @@ local function CreateScaleAnim(group, target, order, duration, x, y, delay)
 		else
 			target.__scale.animations = {}
 		end
-local noAnim = #target.__scale.animations
 		local animProps = { x = x, y = y, startTime = nil, throttle = nil }
 		tinsert(target.__scale.animations, animProps)
 
-		local throttleMin = 0.5
+		local throttleMin = 0.01
+
 		scale:SetScript("OnPlay", function(self)
-print("OnPlay anim #", noAnim, "of", target:GetName())
 			animProps.startTime = GetTime() + (delay or 0)
 			animProps.throttle = throttleMin
 		end)
+
 		scale:SetScript("OnUpdate", function(self, elapsed)
 			local baseScale, startTime = target.__scale.baseScale, animProps.startTime
 			if not baseScale or not startTime or GetTime() < startTime then
@@ -111,11 +114,6 @@ print("OnPlay anim #", noAnim, "of", target:GetName())
 			end
 			animProps.throttle = 0
 
-target:GetParent().innerGlow:Hide()
-target:GetParent().innerGlowOver:Hide()
-target:GetParent().outerGlow:Hide()
-target:GetParent().outerGlowOver:Hide()
-print("OnUpdate anim #", noAnim, "of", target:GetName())
 			local frame = group:GetParent()
 			local frameWidth, frameHeight = frame:GetSize()
 			local scaleWidth, scaleHeight = prevAnimProps and prevAnimProps.x or baseScale, prevAnimProps and prevAnimProps.y or baseScale
@@ -125,8 +123,8 @@ print("OnUpdate anim #", noAnim, "of", target:GetName())
 			local newWidth, newHeight = (1-t) * initialWidth + t * finalWidth, (1-t) * initialHeight + t * finalHeight
 			target:SetSize(newWidth, newHeight)
 		end)
+
 		scale:SetScript("OnFinished", function(self)
-print("OnFinished anim #", noAnim, "of", target:GetName())
 			animProps.startTime = nil
 		end)
 	end
@@ -188,10 +186,8 @@ local function AnimIn_OnFinished(group)
 	frame.ants:SetAlpha(1.0)
 end
 
-local first = true
-
 local function CreateTexture(overlay, name, drawLayer)
-	if first then
+	if not supportCooldown then
 		return overlay:CreateTexture(name, drawLayer)
 	end
 
@@ -199,13 +195,15 @@ local function CreateTexture(overlay, name, drawLayer)
 	frame.__scale = {}
 
 	frame:ClearAllPoints()
---	frame:SetPoint("CENTER")
---	frame:SetSize(overlay:GetWidth(), overlay:GetHeight())
 	frame:SetDrawBling(false)
 	frame:SetDrawEdge(false)
 	frame:SetSwipeColor(1, 1, 1, 1);
-	frame.SetTexture = function(self, texture) self:SetSwipeTexture(texture) end
-	frame.SetTexCoord = function(self, left, right, top, bottom) self:SetTexCoordRange({ x = left, y = top }, { x = right, y = bottom }) end
+	frame.SetTexture = function(self, texture)
+		self:SetSwipeTexture(texture)
+	end
+	frame.SetTexCoord = function(self, left, right, top, bottom)
+		self:SetTexCoordRange({ x = left, y = top }, { x = right, y = bottom })
+	end
 
 	if not overlay.cooldowns then
 		overlay.cooldowns = {}
@@ -216,6 +214,7 @@ local function CreateTexture(overlay, name, drawLayer)
 end
 
 local function SetCooldown(overlay, start, duration)
+	start, duration = start or -1, duration or 0 -- By default, disable cooldown clock
 	for _, cooldown in pairs(overlay.cooldowns or {}) do
 		cooldown:SetCooldown(start, duration)
 	end
@@ -273,24 +272,18 @@ local function CreateOverlayGlow()
 
 	-- setup antimations
 	overlay.animIn = overlay:CreateAnimationGroup()
-local timeFactor = 25
-overlay.innerGlow:Hide()
-overlay.innerGlowOver:Hide()
-overlay.outerGlow:Hide()
-overlay.outerGlowOver:Hide()
-local sparkFactor1, sparkFactor2 = 2, 0.5
-	CreateScaleAnim(overlay.animIn, overlay.spark,          1, timeFactor*0.2, sparkFactor1*1.5, sparkFactor1*1.5)
-	CreateAlphaAnim(overlay.animIn, overlay.spark,          1, timeFactor*0.2, 0, 1)
-	CreateScaleAnim(overlay.animIn, overlay.innerGlow,      1, timeFactor*0.3, 2, 2)
-	CreateScaleAnim(overlay.animIn, overlay.innerGlowOver,  1, timeFactor*0.3, 2, 2)
-	CreateAlphaAnim(overlay.animIn, overlay.innerGlowOver,  1, timeFactor*0.3, 1, 0)
-	CreateScaleAnim(overlay.animIn, overlay.outerGlow,      1, timeFactor*0.3, 0.5, 0.5)
-	CreateScaleAnim(overlay.animIn, overlay.outerGlowOver,  1, timeFactor*0.3, 0.5, 0.5)
-	CreateAlphaAnim(overlay.animIn, overlay.outerGlowOver,  1, timeFactor*0.3, 1, 0)
-	CreateScaleAnim(overlay.animIn, overlay.spark,          1, timeFactor*0.2, sparkFactor2*2/3, sparkFactor2*2/3, timeFactor*0.2)
-	CreateAlphaAnim(overlay.animIn, overlay.spark,          1, timeFactor*0.2, 1, 0, timeFactor*0.2)
-	CreateAlphaAnim(overlay.animIn, overlay.innerGlow,      1, timeFactor*0.2, 1, 0, timeFactor*0.3)
-	CreateAlphaAnim(overlay.animIn, overlay.ants,           1, timeFactor*0.2, 0, 1, timeFactor*0.3)
+	CreateScaleAnim(overlay.animIn, overlay.spark,          1, 0.2, 1.5, 1.5)
+	CreateAlphaAnim(overlay.animIn, overlay.spark,          1, 0.2, 0, 1)
+	CreateScaleAnim(overlay.animIn, overlay.innerGlow,      1, 0.3, 2, 2)
+	CreateScaleAnim(overlay.animIn, overlay.innerGlowOver,  1, 0.3, 2, 2)
+	CreateAlphaAnim(overlay.animIn, overlay.innerGlowOver,  1, 0.3, 1, 0)
+	CreateScaleAnim(overlay.animIn, overlay.outerGlow,      1, 0.3, 0.5, 0.5)
+	CreateScaleAnim(overlay.animIn, overlay.outerGlowOver,  1, 0.3, 0.5, 0.5)
+	CreateAlphaAnim(overlay.animIn, overlay.outerGlowOver,  1, 0.3, 1, 0)
+	CreateScaleAnim(overlay.animIn, overlay.spark,          1, 0.2, 2/3, 2/3, 0.2)
+	CreateAlphaAnim(overlay.animIn, overlay.spark,          1, 0.2, 1, 0, 0.2)
+	CreateAlphaAnim(overlay.animIn, overlay.innerGlow,      1, 0.2, 1, 0, 0.3)
+	CreateAlphaAnim(overlay.animIn, overlay.ants,           1, 0.2, 0, 1, 0.3)
 	overlay.animIn:SetScript("OnPlay", AnimIn_OnPlay)
 	overlay.animIn:SetScript("OnFinished", AnimIn_OnFinished)
 
@@ -306,8 +299,6 @@ local sparkFactor1, sparkFactor2 = 2, 0.5
 	overlay:SetScript("OnHide", OverlayGlow_OnHide)
 
 	overlay.__LBGVersion = MINOR_VERSION
-
-	first = false
 
 	return overlay
 end
@@ -328,7 +319,6 @@ function lib.ShowOverlayGlow(frame)
 		end
 	else
 		local overlay = GetOverlayGlow()
-		SetCooldown(overlay, GetTime(), 200)
 		local frameWidth, frameHeight = frame:GetSize()
 		overlay:SetParent(frame)
 		overlay:SetFrameLevel(frame:GetFrameLevel() + 5)

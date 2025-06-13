@@ -14,6 +14,7 @@
         "bit",
         "ceil",
         "hooksecurefunc",
+        "issecurevariable",
         "strfind",
         "strjoin",
         "strlenutf8",
@@ -51,6 +52,7 @@
         "SlashCmdList",
         // WoW global objects
         "Enum",
+        "UIParent",
         "WorldFrame",
         // WoW UI helpers
         "ActionButton_HideOverlayGlow",
