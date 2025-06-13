@@ -344,7 +344,7 @@ function SAO.UpdateActionButton(self, button, forceRefresh)
 end
 
 -- Grab all action button activity that allows us to know which button has which spell
-local LBG = LibStub("LibButtonGlow-1.0", false);
+local LBG_SAO = LibStub("LibButtonGlow-1.0-SAO", false);
 local function HookActionButton_Update(button)
     if (button:GetParent() == OverrideActionBar) then
         -- Act on all buttons but the ones from OverrideActionBar
@@ -372,10 +372,10 @@ local function HookActionButton_Update(button)
             end
         end
         button.__sao.EnableGlow = function()
-            LBG.ShowOverlayGlow(button);
+            LBG_SAO.ShowOverlayGlow(button);
         end
         button.__sao.DisableGlow = function()
-            LBG.HideOverlayGlow(button);
+            LBG_SAO.HideOverlayGlow(button);
         end
     end
     SAO:UpdateActionButton(button);
@@ -397,10 +397,10 @@ local function HookStanceBar_UpdateState()
                 return select(4, GetShapeshiftFormInfo(button.stanceForm));
             end
             button.__sao.EnableGlow = function()
-                LBG.ShowOverlayGlow(button);
+                LBG_SAO.ShowOverlayGlow(button);
             end
             button.__sao.DisableGlow = function()
-                LBG.HideOverlayGlow(button);
+                LBG_SAO.HideOverlayGlow(button);
             end
         end
         SAO:UpdateActionButton(button);

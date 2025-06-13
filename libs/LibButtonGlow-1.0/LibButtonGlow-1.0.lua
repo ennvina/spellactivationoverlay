@@ -27,8 +27,11 @@ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ]]
-local MAJOR_VERSION = "LibButtonGlow-1.0"
-local MINOR_VERSION = 8
+--[[
+Cooldown functionality added by Ennvina/Vinny for SpellActivationOverlay
+]]
+local MAJOR_VERSION = "LibButtonGlow-1.0-SAO"
+local MINOR_VERSION = 9
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib, oldversion = LibStub:NewLibrary(MAJOR_VERSION, MINOR_VERSION)
@@ -75,6 +78,50 @@ local function CreateScaleAnim(group, target, order, duration, x, y, delay)
 	scale:SetDuration(duration)
 	scale:SetScale(x, y)
 
+	-- Manual scale for Cooldown objects, because the scale animation is buggy as hell for them
+	if target.__scale then
+		local prevAnim
+		if target.__scale.animations then
+			prevAnim = target.__scale.animations[#target.__scale.animations]
+		else
+			target.__scale.animations = {}
+		end
+local noAnim = #target.__scale.animations
+		tinsert(target.__scale.animations, { x = x, y = y })
+
+		local throttleMin = 0.5
+		scale:SetScript("OnPlay", function(self)
+			target.__scale.startTime = GetTime()
+			target.__scale.throttle = throttleMin
+		end)
+		scale:SetScript("OnUpdate", function(self, elapsed)
+			local baseScale, startTime = target.__scale.baseScale, target.__scale.startTime
+			if not baseScale or not startTime then
+				return
+			end
+
+			if target.__scale.throttle < throttleMin then
+				target.__scale.throttle = target.__scale.throttle + elapsed
+				return
+			end
+			target.__scale.throttle = 0
+
+target:GetParent().innerGlow:Hide()
+target:GetParent().innerGlowOver:Hide()
+target:GetParent().outerGlow:Hide()
+target:GetParent().outerGlowOver:Hide()
+print("Playing anim #", noAnim, "of", target:GetName())
+			local frame = group:GetParent()
+			local frameWidth, frameHeight = frame:GetSize()
+			local scaleWidth, scaleHeight = prevAnim and prevAnim.x or baseScale, prevAnim and prevAnim.y or baseScale
+			local initialWidth, initialHeight = scaleWidth*frameWidth, scaleHeight*frameHeight
+			local finalWidth, finalHeight = x*initialWidth, y*initialHeight
+			local t = (GetTime() - startTime) / duration
+			local newWidth, newHeight = (1-t) * initialWidth + t * finalWidth, (1-t) * initialHeight + t * finalHeight
+			target:SetSize(newWidth, newHeight)
+		end)
+	end
+
 	if delay then
 		scale:SetStartDelay(delay)
 	end
@@ -96,16 +143,26 @@ end
 local function AnimIn_OnPlay(group)
 	local frame = group:GetParent()
 	local frameWidth, frameHeight = frame:GetSize()
-	frame.spark:SetSize(frameWidth, frameHeight)
-	frame.spark:SetAlpha(0.3)
-	frame.innerGlow:SetSize(frameWidth / 2, frameHeight / 2)
-	frame.innerGlow:SetAlpha(1.0)
+
+	local setInitialScaleAlpha = function(layout, scaleFactor, alpha)
+		if layout.__scale then
+			layout.__scale.baseScale = scaleFactor
+		end
+		layout.__baseScale = scaleFactor
+		layout:SetSize(frameWidth * scaleFactor, frameHeight * scaleFactor)
+		layout:SetAlpha(alpha)
+	end
+
+	setInitialScaleAlpha(frame.spark, 1, 0.3)
+
+	setInitialScaleAlpha(frame.innerGlow, 0.5, 1.0)
 	frame.innerGlowOver:SetAlpha(1.0)
-	frame.outerGlow:SetSize(frameWidth * 2, frameHeight * 2)
-	frame.outerGlow:SetAlpha(1.0)
+
+	setInitialScaleAlpha(frame.outerGlow, 2, 1.0)
 	frame.outerGlowOver:SetAlpha(1.0)
-	frame.ants:SetSize(frameWidth * 0.85, frameHeight * 0.85)
-	frame.ants:SetAlpha(0)
+
+	setInitialScaleAlpha(frame.ants, 0.85, 0)
+
 	frame:Show()
 end
 
@@ -122,6 +179,39 @@ local function AnimIn_OnFinished(group)
 	frame.ants:SetAlpha(1.0)
 end
 
+local first = true
+
+local function CreateTexture(overlay, name, drawLayer)
+	if first then
+		return overlay:CreateTexture(name, drawLayer)
+	end
+
+	local frame = CreateFrame("Cooldown", name, overlay)
+	frame.__scale = {}
+
+	frame:ClearAllPoints()
+--	frame:SetPoint("CENTER")
+--	frame:SetSize(overlay:GetWidth(), overlay:GetHeight())
+	frame:SetDrawBling(false)
+	frame:SetDrawEdge(false)
+	frame:SetSwipeColor(1, 1, 1, 1);
+	frame.SetTexture = function(self, texture) self:SetSwipeTexture(texture) end
+	frame.SetTexCoord = function(self, left, right, top, bottom) self:SetTexCoordRange({ x = left, y = top }, { x = right, y = bottom }) end
+
+	if not overlay.cooldowns then
+		overlay.cooldowns = {}
+	end
+	tinsert(overlay.cooldowns, frame)
+
+	return frame
+end
+
+local function SetCooldown(overlay, start, duration)
+	for _, cooldown in pairs(overlay.cooldowns or {}) do
+		cooldown:SetCooldown(start, duration)
+	end
+end
+
 local function CreateOverlayGlow()
 	lib.numOverlays = lib.numOverlays + 1
 
@@ -130,21 +220,21 @@ local function CreateOverlayGlow()
 	local overlay = CreateFrame("Frame", name, UIParent)
 
 	-- spark
-	overlay.spark = overlay:CreateTexture(name .. "Spark", "BACKGROUND")
+	overlay.spark = CreateTexture(overlay, name .. "Spark", "BACKGROUND")
 	overlay.spark:SetPoint("CENTER")
 	overlay.spark:SetAlpha(0)
 	overlay.spark:SetTexture([[Interface\SpellActivationOverlay\IconAlert]])
 	overlay.spark:SetTexCoord(0.00781250, 0.61718750, 0.00390625, 0.26953125)
 
 	-- inner glow
-	overlay.innerGlow = overlay:CreateTexture(name .. "InnerGlow", "ARTWORK")
+	overlay.innerGlow = CreateTexture(overlay, name .. "InnerGlow", "ARTWORK")
 	overlay.innerGlow:SetPoint("CENTER")
 	overlay.innerGlow:SetAlpha(0)
 	overlay.innerGlow:SetTexture([[Interface\SpellActivationOverlay\IconAlert]])
 	overlay.innerGlow:SetTexCoord(0.00781250, 0.50781250, 0.27734375, 0.52734375)
 
 	-- inner glow over
-	overlay.innerGlowOver = overlay:CreateTexture(name .. "InnerGlowOver", "ARTWORK")
+	overlay.innerGlowOver = CreateTexture(overlay, name .. "InnerGlowOver", "ARTWORK")
 	overlay.innerGlowOver:SetPoint("TOPLEFT", overlay.innerGlow, "TOPLEFT")
 	overlay.innerGlowOver:SetPoint("BOTTOMRIGHT", overlay.innerGlow, "BOTTOMRIGHT")
 	overlay.innerGlowOver:SetAlpha(0)
@@ -152,14 +242,14 @@ local function CreateOverlayGlow()
 	overlay.innerGlowOver:SetTexCoord(0.00781250, 0.50781250, 0.53515625, 0.78515625)
 
 	-- outer glow
-	overlay.outerGlow = overlay:CreateTexture(name .. "OuterGlow", "ARTWORK")
+	overlay.outerGlow = CreateTexture(overlay, name .. "OuterGlow", "ARTWORK")
 	overlay.outerGlow:SetPoint("CENTER")
 	overlay.outerGlow:SetAlpha(0)
 	overlay.outerGlow:SetTexture([[Interface\SpellActivationOverlay\IconAlert]])
 	overlay.outerGlow:SetTexCoord(0.00781250, 0.50781250, 0.27734375, 0.52734375)
 
 	-- outer glow over
-	overlay.outerGlowOver = overlay:CreateTexture(name .. "OuterGlowOver", "ARTWORK")
+	overlay.outerGlowOver = CreateTexture(overlay, name .. "OuterGlowOver", "ARTWORK")
 	overlay.outerGlowOver:SetPoint("TOPLEFT", overlay.outerGlow, "TOPLEFT")
 	overlay.outerGlowOver:SetPoint("BOTTOMRIGHT", overlay.outerGlow, "BOTTOMRIGHT")
 	overlay.outerGlowOver:SetAlpha(0)
@@ -167,25 +257,31 @@ local function CreateOverlayGlow()
 	overlay.outerGlowOver:SetTexCoord(0.00781250, 0.50781250, 0.53515625, 0.78515625)
 
 	-- ants
-	overlay.ants = overlay:CreateTexture(name .. "Ants", "OVERLAY")
+	overlay.ants = CreateTexture(overlay, name .. "Ants", "OVERLAY")
 	overlay.ants:SetPoint("CENTER")
 	overlay.ants:SetAlpha(0)
 	overlay.ants:SetTexture([[Interface\SpellActivationOverlay\IconAlertAnts]])
 
 	-- setup antimations
 	overlay.animIn = overlay:CreateAnimationGroup()
-	CreateScaleAnim(overlay.animIn, overlay.spark,          1, 0.2, 1.5, 1.5)
-	CreateAlphaAnim(overlay.animIn, overlay.spark,          1, 0.2, 0, 1)
-	CreateScaleAnim(overlay.animIn, overlay.innerGlow,      1, 0.3, 2, 2)
-	CreateScaleAnim(overlay.animIn, overlay.innerGlowOver,  1, 0.3, 2, 2)
-	CreateAlphaAnim(overlay.animIn, overlay.innerGlowOver,  1, 0.3, 1, 0)
-	CreateScaleAnim(overlay.animIn, overlay.outerGlow,      1, 0.3, 0.5, 0.5)
-	CreateScaleAnim(overlay.animIn, overlay.outerGlowOver,  1, 0.3, 0.5, 0.5)
-	CreateAlphaAnim(overlay.animIn, overlay.outerGlowOver,  1, 0.3, 1, 0)
-	CreateScaleAnim(overlay.animIn, overlay.spark,          1, 0.2, 2/3, 2/3, 0.2)
-	CreateAlphaAnim(overlay.animIn, overlay.spark,          1, 0.2, 1, 0, 0.2)
-	CreateAlphaAnim(overlay.animIn, overlay.innerGlow,      1, 0.2, 1, 0, 0.3)
-	CreateAlphaAnim(overlay.animIn, overlay.ants,           1, 0.2, 0, 1, 0.3)
+local timeFactor = 25
+overlay.innerGlow:Hide()
+overlay.innerGlowOver:Hide()
+overlay.outerGlow:Hide()
+overlay.outerGlowOver:Hide()
+local sparkFactor1, sparkFactor2 = 2, 0.5
+	CreateScaleAnim(overlay.animIn, overlay.spark,          1, timeFactor*0.2, sparkFactor1*1.5, sparkFactor1*1.5)
+	CreateAlphaAnim(overlay.animIn, overlay.spark,          1, timeFactor*0.2, 0, 1)
+	CreateScaleAnim(overlay.animIn, overlay.innerGlow,      1, timeFactor*0.3, 2, 2)
+	CreateScaleAnim(overlay.animIn, overlay.innerGlowOver,  1, timeFactor*0.3, 2, 2)
+	CreateAlphaAnim(overlay.animIn, overlay.innerGlowOver,  1, timeFactor*0.3, 1, 0)
+	CreateScaleAnim(overlay.animIn, overlay.outerGlow,      1, timeFactor*0.3, 0.5, 0.5)
+	CreateScaleAnim(overlay.animIn, overlay.outerGlowOver,  1, timeFactor*0.3, 0.5, 0.5)
+	CreateAlphaAnim(overlay.animIn, overlay.outerGlowOver,  1, timeFactor*0.3, 1, 0)
+	CreateScaleAnim(overlay.animIn, overlay.spark,          1, timeFactor*0.2, sparkFactor2*2/3, sparkFactor2*2/3, timeFactor*0.2)
+	CreateAlphaAnim(overlay.animIn, overlay.spark,          1, timeFactor*0.2, 1, 0, timeFactor*0.2)
+	CreateAlphaAnim(overlay.animIn, overlay.innerGlow,      1, timeFactor*0.2, 1, 0, timeFactor*0.3)
+	CreateAlphaAnim(overlay.animIn, overlay.ants,           1, timeFactor*0.2, 0, 1, timeFactor*0.3)
 	overlay.animIn:SetScript("OnPlay", AnimIn_OnPlay)
 	overlay.animIn:SetScript("OnFinished", AnimIn_OnFinished)
 
@@ -201,6 +297,8 @@ local function CreateOverlayGlow()
 	overlay:SetScript("OnHide", OverlayGlow_OnHide)
 
 	overlay.__LBGVersion = MINOR_VERSION
+
+	first = false
 
 	return overlay
 end
@@ -221,6 +319,7 @@ function lib.ShowOverlayGlow(frame)
 		end
 	else
 		local overlay = GetOverlayGlow()
+		SetCooldown(overlay, GetTime(), 200)
 		local frameWidth, frameHeight = frame:GetSize()
 		overlay:SetParent(frame)
 		overlay:SetFrameLevel(frame:GetFrameLevel() + 5)

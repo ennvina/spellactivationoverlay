@@ -12,6 +12,22 @@
 
 /run f=CreateFrame("FRAME")f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")f:SetScript("OnEvent",function() local t,e,_,_,s,_,_,_,d,_,_,i=CombatLogGetCurrentEventInfo() if e:sub(0,9)=="SPELL_AUR" and i==408505 then print("@"..t.." MSW ev="..e) end end)
 
+https://warcraft.wiki.gg/wiki/API_Cooldown_SetCooldown
+https://warcraft.wiki.gg/wiki/UIOBJECT_Cooldown
+https://warcraft.wiki.gg/wiki/XML/Cooldown
+
+/run myFrame = CreateFrame("Frame", nil, UIParent) myFrame:SetSize(80, 80) myFrame:SetPoint("CENTER") myTexture = myFrame:CreateTexture() myTexture:SetAllPoints() myTexture:SetTexture("Interface\\Icons\\Ability_Druid_TreeofLife")
+/run myCooldown = CreateFrame("Cooldown", "myCooldown", myFrame, "CooldownFrameTemplate") myCooldown:SetSwipeTexture([[Interface\SpellActivationOverlay\IconAlertAnts]]) myCooldown:SetSwipeColor(1,1,1,1)
+/run myCooldown:ClearAllPoints() myCooldown:SetPoint("CENTER") myCooldown:SetSize(myFrame:GetWidth(), myFrame:GetHeight()) myCooldown:SetDrawBling(false) myCooldown:SetDrawEdge(false) myCooldown:SetCooldown(GetTime()-50, 200)
+/run myCooldown.SetTexCoord = function(self, left, right, top, bottom) self:SetTexCoordRange({ x = left, y = top }, { x = right, y = bottom }) end
+/run myCooldown:SetScript("OnUpdate", function(self, elapsed) AnimateTexCoords(myCooldown, 256, 256, 48, 48, 22, elapsed, 0.01) end)
+
+/run ActionButton1.__sao:DisableGlow() ActionButton3.__sao:DisableGlow() C_Timer.NewTimer(1, function() ActionButton1.__sao:EnableGlow() ActionButton3.__sao:EnableGlow() end)
+/run ActionButton1.__LBGoverlay.outerGlow:Hide() ActionButton3.__LBGoverlay.outerGlow:Hide()
+/run ActionButton1.__LBGoverlay.outerGlow:Show() ActionButton3.__LBGoverlay.outerGlow:Show()
+/dump ActionButton1.__LBGoverlay.outerGlow:GetScale()
+
+
 function reportActionButtons()
 for as=1,120 do att=GetActionText(as) ate=GetActionTexture(as) u=IsUsableAction(as) if ate then msg="Slot "..as..": ["..ate.."]"..(att and " \""..att.."\"" or "")..(u and " usable" or "*not* usable") print(msg, GetActionInfo(as)) end end
 end
