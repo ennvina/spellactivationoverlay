@@ -246,8 +246,8 @@ mkproject wrath $WRATH_BUILD_VERSION 40abff achievement_boss_lichking 64 "Wrath 
 VARIABLES_NOT_FOR_WRATH=(holypower nativesao)
 prunevar "${VARIABLES_NOT_FOR_WRATH[@]}"
 
-# CLASSES_NOT_FOR_WRATH=(monk)
-# pruneclass "${CLASSES_NOT_FOR_WRATH[@]}"
+CLASSES_NOT_FOR_WRATH=(monk)
+pruneclass "${CLASSES_NOT_FOR_WRATH[@]}"
 
 TEXTURES_NOT_FOR_WRATH=(
 arcane_missiles_1
@@ -309,8 +309,8 @@ mkproject cata $CATA_BUILD_VERSION db550d achievment_boss_madnessofdeathwing 64 
 
 prunecopyright Cataclysm
 
-# CLASSES_NOT_FOR_CATA=(monk)
-# pruneclass "${CLASSES_NOT_FOR_CATA[@]}"
+CLASSES_NOT_FOR_CATA=(monk)
+pruneclass "${CLASSES_NOT_FOR_CATA[@]}"
 
 TEXTURES_NOT_FOR_CATA=(
 arcane_missiles_1
