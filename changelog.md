@@ -20,6 +20,7 @@ Updated Spell Alerts
 - Hunter's Lock and Load is slightly dimmer at 1 stack (Wrath, Cataclysm)
 
 Bug Fixes
+- The addon should no longer conflict with the game client (Mists of Pandaria)
 - Hunter's Lock and Load no longer plays a sound at 1 stack (Wrath, Cataclysm)
 - Paladins no longer have an error at start about Eternal Flame (Cataclysm)
 
