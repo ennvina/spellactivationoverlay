@@ -42,9 +42,9 @@ Priest
 https://www.wowhead.com/classic/spell=431655/mind-spike
 Blasts the target for [122 * (9.456667 + 0.635108 * 60 + 0.039063 * 60 * 60) / 100]229.592 to [142 * (9.456667 + 0.635108 * 60 + 0.039063 * 60 * 60) / 100]267.23 Shadowfrost damage, and increases the critical strike chance of your next Mind Blast on the target by 30%, stacking up to 3 times.
 https://www.wowhead.com/classic/guide/season-of-discovery/classes/priest/mind-spike-rune
-/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666.667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Frozen_Fingers", "Left + Right (Flipped)", 1, 160, 60, 220, true, nil, GetTime()+15)
-/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666.667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Sudden_Death", "Left + Right (Flipped)", 1, 128, 0, 192, true, nil, GetTime()+15)
-/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666.667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Nightfall", "Left + Right (Flipped)", 1, 255, 255, 255, true, nil, GetTime()+15)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 666.667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Frozen_Fingers", "Left + Right (Flipped)", 1, 160, 60, 220, true, nil, GetTime()+15)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 666.667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Sudden_Death", "Left + Right (Flipped)", 1, 128, 0, 192, true, nil, GetTime()+15)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 666.667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Nightfall", "Left + Right (Flipped)", 1, 255, 255, 255, true, nil, GetTime()+15)
 
 --
 Rogue

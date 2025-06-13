@@ -18,39 +18,39 @@ end
 
 /run ActionButton_OnEvent(MultiBarBottomLeftButton2, "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW", 2050)
 
-/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 14251, "459314", "TOP (180)", 1, 255, 255, 255, false) -- Archangel
-/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 14251, "449492", "TOP (CW)", 1, 255, 255, 255, false) -- Archangel (Dark)
-/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 666, "449489", "TOP", 1, 255, 255, 255, false) -- Frozen Fingers
-/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 777, "457658", "TOP", 1, 255, 255, 255, false) -- Impact
-/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 666, "449489", "TOP", 1, 255, 255, 255, false) SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 777, "457658", "TOP", 1, 255, 255, 255, false)
-/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 777, "457658", "TOP", 1, 255, 255, 255, false) SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 666, "449489", "TOP", 1, 255, 255, 255, false)
-/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 14251, "Interface\\Addons\\SpellActivationOverlay\\textures\\Hot_Streak", "TOP", 1, 255, 255, 255, false, false, 1, true, nil)
-/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, nil)
-/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 12536, "Interface\\Addons\\SpellActivationOverlay\\textures\\GenericArc_02", "Left + Right (Flipped)", 1.5, 192, 192, 192, false, nil)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 14251, "459314", "TOP (180)", 1, 255, 255, 255, false) -- Archangel
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 14251, "449492", "TOP (CW)", 1, 255, 255, 255, false) -- Archangel (Dark)
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayAddonFrame, 666, "449489", "TOP", 1, 255, 255, 255, false) -- Frozen Fingers
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayAddonFrame, 777, "457658", "TOP", 1, 255, 255, 255, false) -- Impact
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayAddonFrame, 666, "449489", "TOP", 1, 255, 255, 255, false) SpellActivationOverlay_ShowOverlay(SpellActivationOverlayAddonFrame, 777, "457658", "TOP", 1, 255, 255, 255, false)
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayAddonFrame, 777, "457658", "TOP", 1, 255, 255, 255, false) SpellActivationOverlay_ShowOverlay(SpellActivationOverlayAddonFrame, 666, "449489", "TOP", 1, 255, 255, 255, false)
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayAddonFrame, 14251, "Interface\\Addons\\SpellActivationOverlay\\textures\\Hot_Streak", "TOP", 1, 255, 255, 255, false, false, 1, true, nil)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, nil)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 12536, "Interface\\Addons\\SpellActivationOverlay\\textures\\GenericArc_02", "Left + Right (Flipped)", 1.5, 192, 192, 192, false, nil)
 
-/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Brain_Freeze", "Left + Right (CW)", 1, 255, 255, 255, true, nil)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Brain_Freeze", "Left + Right (CW)", 1, 255, 255, 255, true, nil)
 
-/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 222222, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles_3", "Left + Right (Flipped)", 1, 255, 255, 64, true)
-/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 222222, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles_2", "Left + Right (Flipped)", 1, 255, 255, 64, false)
-/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 222222, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles_1", "Left (vFlipped)", 0.5, 222, 222, 22, false, nil, nil, true)
-/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 222222, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles_1", "Left + Right (Flipped)", 1, 128, 128, 64, false)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 222222, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles_3", "Left + Right (Flipped)", 1, 255, 255, 64, true)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 222222, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles_2", "Left + Right (Flipped)", 1, 255, 255, 64, false)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 222222, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles_1", "Left (vFlipped)", 0.5, 222, 222, 22, false, nil, nil, true)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 222222, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles_1", "Left + Right (Flipped)", 1, 128, 128, 64, false)
 
-/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, nil, GetTime()+30)
-/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, nil, GetTime()+30, true)
-/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666667+math.random()*1000, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Top (CW)", 1, 255, 255, 255, true, nil, GetTime()+30, true)
-/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666667+math.random()*1000, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Top (CW)", 1, 255, 255, 255, true, nil, GetTime()+30)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, nil, GetTime()+30)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, nil, GetTime()+30, true)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 666667+math.random()*1000, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Top (CW)", 1, 255, 255, 255, true, nil, GetTime()+30, true)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 666667+math.random()*1000, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Top (CW)", 1, 255, 255, 255, true, nil, GetTime()+30)
 /dump O.combat:GetVertexOffset(LOWER_LEFT_VERTEX)
 
-/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 324, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "TOP", 0.6, 255, 255, 255, false, false, 0, nil, nil, GetTime()+60, nil);
-/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 324, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "TOP", 0.6, 255, 255, 255, false, false, 0, nil, nil, {startTime=GetTime()-10, endTime=GetTime()+50}, nil);
-/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 324, "467696", "TOP", 0.6, 255, 255, 255, false, false, 0, nil, nil, GetTime()+60, nil);
-/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 324, "467696", "TOP", 0.6, 255, 255, 255, false, false, 0, nil, nil, { startTime = GetTime()-10, endTime = GetTime()+50 }, nil);
-/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame,324,"467696","TOP",0.6,255,255,255,false,false,0,nil,nil,GetTime()+60,nil); C_Timer.NewTimer(1, function() _G["SAO_LastShownOverlay"].mask.timeoutX.scaleX:Restart(false, 0) end)
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayAddonFrame, 324, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "TOP", 0.6, 255, 255, 255, false, false, 0, nil, nil, GetTime()+60, nil);
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayAddonFrame, 324, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "TOP", 0.6, 255, 255, 255, false, false, 0, nil, nil, {startTime=GetTime()-10, endTime=GetTime()+50}, nil);
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayAddonFrame, 324, "467696", "TOP", 0.6, 255, 255, 255, false, false, 0, nil, nil, GetTime()+60, nil);
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayAddonFrame, 324, "467696", "TOP", 0.6, 255, 255, 255, false, false, 0, nil, nil, { startTime = GetTime()-10, endTime = GetTime()+50 }, nil);
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayAddonFrame,324,"467696","TOP",0.6,255,255,255,false,false,0,nil,nil,GetTime()+60,nil); C_Timer.NewTimer(1, function() _G["SAO_LastShownOverlay"].mask.timeoutX.scaleX:Restart(false, 0) end)
 
 for i = 1, GetNumSpellTabs() do local offset, numSlots = select(3, GetSpellTabInfo(i)) for j = offset+1, offset+numSlots do print(i, j, GetSpellBookItemName(j, BOOKTYPE_SPELL)) end end
 
-/run SpellActivationOverlayFrame.scale = 1; SpellActivationOverlay_OnChangeGeometry(SpellActivationOverlayFrame)
-/run SpellActivationOverlayFrame.offset = 0; SpellActivationOverlay_OnChangeGeometry(SpellActivationOverlayFrame)
+/run SpellActivationOverlayAddonFrame.scale = 1; SpellActivationOverlay_OnChangeGeometry(SpellActivationOverlayAddonFrame)
+/run SpellActivationOverlayAddonFrame.offset = 0; SpellActivationOverlay_OnChangeGeometry(SpellActivationOverlayAddonFrame)
 
 /run local name="Soul Siphon"; local ce=C_Engraving; for _,cat in pairs(ce and ce.GetRuneCategories(false,false)or{}) do for _,rune in pairs(ce.GetRunesForCategory(cat,false)or{}) do if rune.name==name then DevTools_Dump({rune=rune}) end end end
 /run local name="Soul Siphon"; local ce=C_Engraving; for _,cat in pairs(ce and ce.GetRuneCategories(false,false)or{}) do for _,rune in pairs(ce.GetRunesForCategory(cat,false)or{}) do DevTools_Dump(rune) end end
@@ -103,10 +103,10 @@ COMBATLOG_HIGHLIGHT_ABILITY
 /run filename="Interface/Addons/SpellActivationOverlay/textures/mask.blp" f.mask:SetTexture(filename, modulo, modulo)
 /run filename="interface/glues/models/ui_human/gradient5circle" f.mask:SetTexture(filename, modulo, modulo)
 
-/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 14251, "Interface\\Addons\\SpellActivationOverlay\\textures\\Hot_Streak", "TOP", 1, 255, 255, 255, false, false, 1, true, nil, GetTime()+600, true)
-/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayFrame, 14251, "Interface\\Addons\\SpellActivationOverlay\\textures\\Hot_Streak", "TOP", 1, 255, 255, 255, false, false, 1, true, nil, GetTime()+5)
-/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, nil, GetTime()+2)
-/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayFrame, 666.667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Frozen_Fingers", "Left + Right (Flipped)", 1, 127, 0, 255, true, nil, GetTime()+15)
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayAddonFrame, 14251, "Interface\\Addons\\SpellActivationOverlay\\textures\\Hot_Streak", "TOP", 1, 255, 255, 255, false, false, 1, true, nil, GetTime()+600, true)
+/run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayAddonFrame, 14251, "Interface\\Addons\\SpellActivationOverlay\\textures\\Hot_Streak", "TOP", 1, 255, 255, 255, false, false, 1, true, nil, GetTime()+5)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, nil, GetTime()+2)
+/run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 666.667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Frozen_Fingers", "Left + Right (Flipped)", 1, 127, 0, 255, true, nil, GetTime()+15)
 
 /run for i=1,6 do print("o["..i.."] is "..(o[i]:IsVisible() and "" or "not ").."visible") end
 

@@ -542,7 +542,7 @@ end
 
 function SpellActivationOverlay_CreateOverlay(self)
 	SAO:Trace(Module, "SpellActivationOverlay_CreateOverlay");
-	return CreateFrame("Frame", nil, self, "SpellActivationOverlayTemplate");
+	return CreateFrame("Frame", nil, self, "SpellActivationOverlayAddonTemplate");
 end
 
 function SpellActivationOverlayTexture_OnShow(self)
@@ -749,7 +749,7 @@ end
 function SpellActivationOverlayFrame_SetForceAlpha1(enabled)
 	SAO:Trace(Module, "SpellActivationOverlayFrame_SetForceAlpha1 "..tostring(enabled));
 
-	local self = SpellActivationOverlayFrame;
+	local self = SpellActivationOverlayAddonFrame;
 	if (enabled) then
 		if (not self.disableDimOutOfCombat) then
 			self.disableDimOutOfCombat = 1;
@@ -784,7 +784,7 @@ end
 function SpellActivationOverlayFrame_SetForceAlpha2(enabled)
 	SAO:Trace(Module, "SpellActivationOverlayFrame_SetForceAlpha2 "..tostring(enabled));
 
-	local self = SpellActivationOverlayFrame;
+	local self = SpellActivationOverlayAddonFrame;
 	if (enabled) then
 		if (not self.disableDimOutOfCombat) then
 			self.disableDimOutOfCombat = 10;

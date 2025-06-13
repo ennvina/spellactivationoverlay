@@ -24,9 +24,9 @@
         "tinsert",
         "tremove",
         // Objects from this addon
+        "SpellActivationOverlayAddonFrame",
         "SpellActivationOverlayContainerFrame",
         "SpellActivationOverlayDB",
-        "SpellActivationOverlayFrame",
         "SpellActivationOverlayOptionsPanel",
         "SpellActivationOverlayOptionsPanelDisableConditionButton",
         "SpellActivationOverlayOptionsPanelGlowingButtons",

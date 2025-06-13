@@ -1,7 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 	<Script file="SpellActivationOverlay.lua"/>
-	<Frame name="SpellActivationOverlayTemplate" virtual="true">
+	<Frame name="SpellActivationOverlayAddonTemplate" virtual="true">
 		<Animations>
 			<AnimationGroup name="$parentAnimIn" parentKey="animIn">
 				<Alpha fromAlpha="0" toAlpha="0.5" duration="0.1" order="1" parentKey="alpha1">
@@ -108,7 +108,7 @@
 			<Anchor point="CENTER"/>
 		</Anchors>
 		<Frames>
-			<Frame name="SpellActivationOverlayFrame" alpha="0.5">
+			<Frame name="SpellActivationOverlayAddonFrame" alpha="0.5">
 				<Anchors>
 					<Anchor point="TOPLEFT"/>
 					<Anchor point="BOTTOMRIGHT"/>
