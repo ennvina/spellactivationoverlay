@@ -22,7 +22,7 @@ https://warcraft.wiki.gg/wiki/XML/Cooldown
 /run myCooldown.SetTexCoord = function(self, left, right, top, bottom) self:SetTexCoordRange({ x = left, y = top }, { x = right, y = bottom }) end
 /run myCooldown:SetScript("OnUpdate", function(self, elapsed) AnimateTexCoords(myCooldown, 256, 256, 48, 48, 22, elapsed, 0.01) end)
 
-/run ActionButton1.__sao:DisableGlow() ActionButton3.__sao:DisableGlow() C_Timer.NewTimer(1, function() ActionButton1.__sao:EnableGlow() ActionButton3.__sao:EnableGlow() end)
+/run ActionButton1.__sao:DisableGlow() ActionButton3.__sao:DisableGlow() C_Timer.NewTimer(1, function() ActionButton1.__sao.EnableGlow(GetTime()-5, 20) ActionButton3.__sao.EnableGlow() end)
 /run ActionButton1.__LBGoverlay.outerGlow:Hide() ActionButton3.__LBGoverlay.outerGlow:Hide()
 /run ActionButton1.__LBGoverlay.outerGlow:Show() ActionButton3.__LBGoverlay.outerGlow:Show()
 /dump ActionButton1.__LBGoverlay.outerGlow:GetScale()

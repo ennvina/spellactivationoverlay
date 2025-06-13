@@ -311,7 +311,7 @@ local function GetOverlayGlow()
 	return overlay
 end
 
-function lib.ShowOverlayGlow(frame)
+function lib.ShowOverlayGlow(frame, startTime, duration)
 	if frame.__LBGoverlay then
 		if frame.__LBGoverlay.animOut:IsPlaying() then
 			frame.__LBGoverlay.animOut:Stop()
@@ -338,6 +338,8 @@ function lib.ShowOverlayGlow(frame)
 			frame.overlay = old_overlay
 		end
 	end
+
+	SetCooldown(frame.__LBGoverlay, startTime, duration)
 end
 
 function lib.HideOverlayGlow(frame)
@@ -350,5 +352,11 @@ function lib.HideOverlayGlow(frame)
 		else
 			OverlayGlowAnimOutFinished(frame.__LBGoverlay.animOut)
 		end
+	end
+end
+
+function lib.UpdateOverlayGlowCooldown(frame, startTime, duration)
+	if frame.__LBGoverlay then
+		SetCooldown(frame.__LBGoverlay, startTime, duration)
 	end
 end

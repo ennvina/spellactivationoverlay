@@ -93,12 +93,12 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
         return self:FrameName(frame)..", "..self:SpellInfo(glowID);
     end,
 
-    BeginGlowFinally = function(self, frame, noAnimIn)
+    BeginGlowFinally = function(self, frame, noAnimIn, startTime, duration)
         if frame.__sao.startTimer == nil then -- If startTimer is not nil, then a EnableGlow is already planned
             frame.__sao.startTimer = C_Timer.NewTimer(
                 SAO:IsResponsiveMode() and 0.01 or 0.028,
                 function()
-                    frame.__sao.EnableGlow();
+                    frame.__sao.EnableGlow(startTime, duration);
 
                     -- Additionally, make things smoother
                     if noAnimIn and frame.__sao.useExternalGlow == false then
@@ -135,15 +135,24 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
         end
     end,
 
-    BeginSAOGlow = function(self, frame, glowID)
+    UpdateGlowCooldownFinally = function(self, frame, startTime, duration)
+        if type(frame.__sao.UpdateGlowCooldown) == 'function' then
+            frame.__sao.UpdateGlowCooldown(startTime, duration)
+        end
+    end,
+
+    BeginSAOGlow = function(self, frame, glowID, startTime, duration)
         SAO:Trace(Module, "BeginSAOGlow("..self:ParamName(frame, glowID)..")");
 
         -- First, look if this glow ID is already known
         local saoGlowForGlowID = self.SAOGlows[glowID];
         if saoGlowForGlowID then
             SAO:Debug(Module, "Re-glowing an already glowing button "..self:ParamName(frame, glowID));
-            if saoGlowForGlowID[frame] == true then
-                return; -- This action is already known
+            local glowInfo = saoGlowForGlowID[frame]
+            if glowInfo.isGlowingByUs == true then
+                glowInfo.startTime, glowInfo.duration = startTime, duration
+                self:UpdateGlowCooldownFinally(startTime, duration);
+                return; -- This action is already known and glowing by us
             end
         else
             -- Add the glow ID to the list of known SAO glows
@@ -152,17 +161,17 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
         end
 
         -- Then activate the glow, if not in conflict
-        local isStartingGlow;
+        local glowInfo = { startTime = startTime, duration = duration };
         if self.NativeGlows[glowID] then
             -- Natively glowing, do not double-glow with SAO+Native
             SAO:Debug(Module, "BeginSAOGlow does not glow to prevent conflict with Native glow of "..self:ParamName(frame, glowID));
-            isStartingGlow = false;
+            glowInfo.isGlowingByUs = false;
         else
             -- Not natively glowing, start SAO glow now!
-            isStartingGlow = true;
-            self:BeginGlowFinally(frame);
+            glowInfo.isGlowingByUs = true;
+            self:BeginGlowFinally(frame, nil, startTime, duration);
         end
-        saoGlowForGlowID[frame] = isStartingGlow;
+        saoGlowForGlowID[frame] = glowInfo;
     end,
 
     EndSAOGlow = function(self, frame, glowID)
@@ -200,12 +209,12 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
 
         local saoGlowForGlowID = self.SAOGlows[glowID];
         if saoGlowForGlowID then
-            for frame, isGlowingByUs in pairs(saoGlowForGlowID) do
-                if isGlowingByUs then
+            for frame, glowInfo in pairs(saoGlowForGlowID) do
+                if glowInfo.isGlowingByUs then
                     -- Already glowing with SAO, disable SAO glow to prevent conflict
                     SAO:Debug(Module, "BeginNativeGlow un-glows SAO glowing button "..self:FrameName(frame, glowID));
                     self:EndGlowFinally(frame, true);
-                    saoGlowForGlowID[frame] = false; -- Set frame as not glowing by 'us'
+                    glowInfo.isGlowingByUs = false; -- Set frame as not glowing by 'us'
                 end
             end
         end
@@ -223,11 +232,11 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
         local saoGlowForGlowID = self.SAOGlows[glowID];
         if saoGlowForGlowID then
             -- SAO glow was disabled to prevent conflict, but now that Native glow goes away, start SAO glow!
-            for frame, isGlowingByUs in pairs(saoGlowForGlowID) do
-                if not isGlowingByUs then
+            for frame, glowInfo in pairs(saoGlowForGlowID) do
+                if not glowInfo.isGlowingByUs then
                     SAO:Debug(Module, "EndNativeGlow allows to re-glow SAO glowing buttons "..self:FrameName(frame, glowID));
-                    self:BeginGlowFinally(frame, true);
-                    saoGlowForGlowID[frame] = true; -- Set frame as glowing by 'us'
+                    self:BeginGlowFinally(frame, true, glowInfo.startTime, glowInfo.duration);
+                    glowInfo.isGlowingByUs = true; -- Set frame as glowing by 'us'
                 end
             end
         end
@@ -235,8 +244,8 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
         self.NativeGlows[glowID] = nil; -- Remove button from list of Native glows
     end,
 } or {
-    BeginSAOGlow = function(self, frame, glowID)
-        frame.__sao.EnableGlow();
+    BeginSAOGlow = function(self, frame, glowID, startTime, duration)
+        frame.__sao.EnableGlow(startTime, duration);
     end,
 
     EndSAOGlow = function(self, frame, glowID)
@@ -257,13 +266,13 @@ if SAO.IsProject(SAO.CATA_AND_ONWARD) then
     end);
 end
 
-local function EnableGlow(frame, glowID, reason)
+local function EnableGlow(frame, glowID, reason, startTime, duration)
     if SAO.Shutdown:IsAddonDisabled() then
         return;
     end
     if frame:IsShown() then -- Invisible frames might cause issues; worse case scenario they will be visible soon and the player will have to wait for next proc
         SAO:Debug(Module, "Enabling Glow for button "..tostring(frame.GetName and frame:GetName() or "").." with glow id "..tostring(glowID).." due to "..reason);
-        GlowEngine:BeginSAOGlow(frame, glowID);
+        GlowEngine:BeginSAOGlow(frame, glowID, startTime, duration);
     end
 end
 
@@ -371,11 +380,14 @@ local function HookActionButton_Update(button)
                 return SAO:GetSpellIDByActionSlot(button.action);
             end
         end
-        button.__sao.EnableGlow = function()
-            LBG_SAO.ShowOverlayGlow(button);
+        button.__sao.EnableGlow = function(startTime, duration)
+            LBG_SAO.ShowOverlayGlow(button, startTime, duration);
         end
         button.__sao.DisableGlow = function()
             LBG_SAO.HideOverlayGlow(button);
+        end
+        button.__sao.UpdateGlowCooldown = function(startTime, duration)
+            LBG_SAO.UpdateOverlayGlowCooldown(button, startTime, duration);
         end
     end
     SAO:UpdateActionButton(button);
