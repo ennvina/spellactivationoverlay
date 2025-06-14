@@ -173,6 +173,25 @@ function SpellActivationOverlay_OnEvent(self, event, ...)
 	if ( event == "SPELL_ACTIVATION_OVERLAY_SHOW" ) then
 		local spellID, texture, positions, scale, r, g, b = ...;
 		SAO:Debug(Module, "Received native SPELL_ACTIVATION_OVERLAY_SHOW with spell ID "..tostring(spellID)..", texture "..tostring(texture)..", positions '"..tostring(positions).."', scale "..tostring(scale)..", (r g b) = ("..tostring(r).." "..tostring(g).." "..tostring(b)..")");
+		if spellID and SAO.IsMoP() and not SAO:GetBucketBySpellID(spellID) then
+			if not SAO.UnknownNativeEffects then
+				SAO.UnknownNativeEffects = {}
+			end
+			if not SAO.UnknownNativeEffects[spellID] then
+				local text = "Received unsupported SPELL_ACTIVATION_OVERLAY_SHOW event";
+				text = text..", spell ID "..tostring(spellID).." ("..(GetSpellInfo(spellID) or "unknown spell")..")"
+				text = text..", texture "..tostring(texture);
+				text = text..", positions "..((type(positions) == 'string') and ("'"..positions.."'") or tostring(positions));
+				text = text..", scale "..tostring(scale);
+				text = text..", (r g b) = ("..tostring(r).." "..tostring(g).." "..tostring(b)..")";
+				text = text..". It probably means this effect is not supported yet";
+				text = text..". Please report it to the addon author over Discord or CurseForge";
+				text = text..".";
+				SAO:Info(Module, text);
+
+				SAO.UnknownNativeEffects[spellID] = true;
+			end
+		end
 		-- if ( GetCVarBool("displaySpellActivationOverlays") ) then 
 		-- 	SpellActivationOverlay_ShowAllOverlays(self, spellID, texture, positions, scale, r, g, b, true)
 		-- end
