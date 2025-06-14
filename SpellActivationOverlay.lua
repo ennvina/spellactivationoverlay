@@ -173,7 +173,7 @@ function SpellActivationOverlay_OnEvent(self, event, ...)
 	if ( event == "SPELL_ACTIVATION_OVERLAY_SHOW" ) then
 		local spellID, texture, positions, scale, r, g, b = ...;
 		SAO:Debug(Module, "Received native SPELL_ACTIVATION_OVERLAY_SHOW with spell ID "..tostring(spellID)..", texture "..tostring(texture)..", positions '"..tostring(positions).."', scale "..tostring(scale)..", (r g b) = ("..tostring(r).." "..tostring(g).." "..tostring(b)..")");
-		if spellID and SAO.IsMoP() and not SAO:GetBucketBySpellID(spellID) then
+		if spellID and SAO.IsMoP() and not SAO:GetBucketBySpellID(spellID) and not SAO:IsAka(spellID) then
 			if not SAO.UnknownNativeEffects then
 				SAO.UnknownNativeEffects = {}
 			end
