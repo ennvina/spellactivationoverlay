@@ -157,6 +157,7 @@ local function useSurgeOfLight()
             87160,
             "aura",
             {
+                aka = 126083, -- a.k.a. 126083 (Surge of Darkness), fake buff used by the game to display an overlay of the second stack
                 talent = 87160, -- Surge of Darkness (spell), do not set 109186 (From Darkness, Comes Light) which is confusing with Surge of Light
                 overlays = {
                     { stacks = 1, texture = "surge_of_darkness", position = "Left", option = false },
