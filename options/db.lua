@@ -251,6 +251,7 @@ function SAO.AskQuestions(self)
                 SAO:Info(Module, SAO:gameSpellAlertsLeftAsIs().."\n"..SAO:gameSpellAlertsChangeLater(optionSequence));
             end,
             whileDead = true,
+            customAlertIcon = "Interface/Addons/SpellActivationOverlay/textures/rkm128",
             hideOnEscape = true,
             noCancelOnEscape = true,
             timeout = 0,
