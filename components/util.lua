@@ -101,7 +101,7 @@ function SAO:ReportUnkownEffect(prefix, spellID, texture, positions, scale, r, g
         end
         if not self.UnknownNativeEffects[spellID] then
             local text = "Unsupported SHOW event";
-            text = text..", flavor="..tostring(self.GetProjectName());
+            text = text..", flavor="..tostring(self.GetFlavorName());
             text = text..", spell="..tostring(spellID).." ("..(GetSpellInfo(spellID) or "unknown spell")..")"
             text = text..", tex="..tostring(texture);
             text = text..", pos="..((type(positions) == 'string') and ("'"..positions.."'") or tostring(positions));
