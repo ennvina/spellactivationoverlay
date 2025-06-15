@@ -185,7 +185,7 @@ function SpellActivationOverlay_OnEvent(self, event, ...)
 				text = text..", scale "..tostring(scale);
 				text = text..", (r g b) = ("..tostring(r).." "..tostring(g).." "..tostring(b)..")";
 				text = text..". It probably means this effect is not supported yet";
-				text = text..". Please report it to the addon author over Discord or CurseForge";
+				text = text..". Please report it to the addon author over Discord, GitHub or CurseForge";
 				text = text..".";
 				SAO:Info(Module, text);
 
