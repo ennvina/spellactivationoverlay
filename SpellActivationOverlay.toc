@@ -39,6 +39,7 @@ components\rune.lua
 components\shutdown.lua
 components\sound.lua
 components\spell.lua
+components\tr.lua
 components\trigger.lua
 components\util.lua
 components\variable.lua
