@@ -188,6 +188,10 @@ function SAO.LoadDB(self)
         end
     end
 
+    if not db.questions then
+        db.questions = {};
+    end
+
     -- Migration from older versions
     if not db.version or db.version < 091 then
         migrateTo091(db);
@@ -218,11 +222,50 @@ function SAO.LoadDB(self)
     end
 end
 
+-- Ask questions after the database is loaded
+function SAO.AskQuestions(self)
+    local displayGameSaoVar = "displaySpellActivationOverlays";
+    if SAO.IsProject(SAO.MOP_AND_ONWARD) -- Issue starts with Mists of Pandaria
+    and C_CVar.GetCVarInfo(displayGameSaoVar) ~= nil -- Can only operate if the variable is supported
+    and C_CVar.GetCVarBool(displayGameSaoVar) -- Bother asking only if the game alert is enabled
+    and SpellActivationOverlayDB.alert.enabled -- Only ask if the alert is enabled
+    and SpellActivationOverlayDB.questions.disableGameAlert == nil -- Do not ask if the user already answered
+    then
+        local optionSequence = string.format(
+            "%s > %s > %s",
+            OPTIONS,
+            COMBAT_LABEL,
+            SPELL_ALERT_OPACITY
+        );
+        StaticPopupDialogs["SAO_DISABLE_GAME_ALERT"] = {
+            text = SAO:spellAlertConflicts(),
+            button1 = YES,
+            button2 = NO,
+            OnAccept = function(self)
+                SetCVar(displayGameSaoVar, false);
+                SpellActivationOverlayDB.questions.disableGameAlert = { answer = "yes" };
+                SAO:Info(Module, SAO:gameSpellAlertsDisabled().."\n"..SAO:gameSpellAlertsChangeLater(optionSequence));
+            end,
+            OnCancel = function(self)
+                SpellActivationOverlayDB.questions.disableGameAlert = { answer = "no" };
+                SAO:Info(Module, SAO:gameSpellAlertsLeftAsIs().."\n"..SAO:gameSpellAlertsChangeLater(optionSequence));
+            end,
+            whileDead = true,
+            hideOnEscape = true,
+            noCancelOnEscape = true,
+            timeout = 0,
+            preferredindex = STATICPOPUP_NUMDIALOGS
+        };
+        StaticPopup_Show("SAO_DISABLE_GAME_ALERT");
+    end
+end
+
 -- Utility frame dedicated to react to variable loading
 local loader = CreateFrame("Frame", "SpellActivationOverlayDBLoader");
 loader:RegisterEvent("VARIABLES_LOADED");
 loader:SetScript("OnEvent", function (self, event)
     SAO:LoadDB();
+    SAO:AskQuestions();
     SAO:ApplyAllVariables();
     SpellActivationOverlayOptionsPanel_Init(SAO.OptionsPanel);
     loader:UnregisterEvent("VARIABLES_LOADED");

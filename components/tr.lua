@@ -278,3 +278,71 @@ function SAO:unsupportedShowEvent(details)
     };
     return string.format(tr(unsupportedShowEventTranslations), tostring(details), AddonName);
 end
+
+-- Translate "{AddonName} spell alerts may conflict with the ones from the game.\n\nDo you want to disable the game's spell alerts?",
+function SAO:spellAlertConflicts()
+    local spellAlertConflictsTranslations = {
+        ["en"] = "%s spell alerts may conflict with the ones from the game.\n\nDo you want to disable the game's spell alerts?",
+        ["de"] = "%s Zauberwarnungen können mit denen des Spiels in Konflikt stehen.\n\nMöchten Sie die Zauberwarnungen des Spiels deaktivieren?",
+        ["fr"] = "Les alertes de sort de %s peuvent entrer en conflit avec celles du jeu.\n\nVoulez-vous désactiver les alertes de sort du jeu ?",
+        ["es"] = "Las alertas de hechizo de %s pueden entrar en conflicto con las del juego.\n\n¿Deseas desactivar las alertas de hechizo del juego?",
+        ["ru"] = "Оповещения о заклинаниях %s могут конфликтовать с игровыми оповещениями.\n\nВы хотите отключить игровые оповещения о заклинаниях?",
+        ["it"] = "%s gli avvisi sugli incantesimi potrebbero entrare in conflitto con quelli del gioco.\n\nVuoi disattivare gli avvisi sugli incantesimi del gioco?",
+        ["pt"] = "Os alertas de feitiço do %s podem entrar em conflito com os do jogo.\n\nVocê deseja desativar os alertas de feitiço do jogo?",
+        ["ko"] = "%s 주문 경고가 게임의 주문 경고와 충돌할 수 있습니다.\n\n게임의 주문 경고를 비활성화하시겠습니까?",
+        ["zh"] = "%s 的法术警报可能与游戏中的法术警报冲突。\n\n您想禁用游戏的法术警报吗？",
+        ["zhTW"] = "%s 的法術警報可能與遊戲中的法術警報衝突。\n\n您想停用遊戲的法術警報嗎？",
+    };
+    return string.format(tr(spellAlertConflictsTranslations), AddonName);
+end
+
+-- Translate "You chose to disable the game's spell alerts."
+function SAO:gameSpellAlertsDisabled()
+    local gameSpellAlertsDisabledTranslations = {
+        ["en"] = "You chose to disable the game's spell alerts.",
+        ["de"] = "Sie haben sich entschieden, die Zauberwarnungen des Spiels zu deaktivieren.",
+        ["fr"] = "Vous avez choisi de désactiver les alertes de sort du jeu.",
+        ["es"] = "Has elegido desactivar las alertas de hechizo del juego.",
+        ["ru"] = "Вы выбрали отключить игровые оповещения о заклинаниях.",
+        ["it"] = "Hai scelto di disattivare gli avvisi sugli incantesimi del gioco.",
+        ["pt"] = "Você escolheu desativar os alertas de feitiço do jogo.",
+        ["ko"] = "게임의 주문 경고를 비활성화하기로 선택했습니다.",
+        ["zh"] = "您选择禁用游戏的法术警报。",
+        ["zhTW"] = "您選擇停用遊戲的法術警報。",
+    };
+    return tr(gameSpellAlertsDisabledTranslations);
+end
+
+-- Translate "You chose to leave the game's spell alerts as they are."
+function SAO:gameSpellAlertsLeftAsIs()
+    local gameSpellAlertsLeftAsIsTranslations = {
+        ["en"] = "You chose to leave the game's spell alerts as they are.",
+        ["de"] = "Sie haben sich entschieden, die Zauberwarnungen des Spiels so zu belassen, wie sie sind.",
+        ["fr"] = "Vous avez choisi de laisser les alertes de sort du jeu telles qu'elles sont.",
+        ["es"] = "Has elegido dejar las alertas de hechizo del juego como están.",
+        ["ru"] = "Вы выбрали оставить игровые оповещения о заклинаниях как есть.",
+        ["it"] = "Hai scelto di lasciare gli avvisi sugli incantesimi del gioco così come sono.",
+        ["pt"] = "Você escolheu deixar os alertas de feitiço do jogo como estão.",
+        ["ko"] = "게임의 주문 경고를 그대로 두기로 선택했습니다.",
+        ["zh"] = "您选择保持游戏的法术警报不变。",
+        ["zhTW"] = "您選擇保持遊戲的法術警報不變。",
+    };
+    return tr(gameSpellAlertsLeftAsIsTranslations);
+end
+
+-- Translate "Remember that you can change this later in the game's interface options, under {optionSequence}"
+function SAO:gameSpellAlertsChangeLater(optionSequence)
+    local gameSpellAlertsChangeLaterTranslations = {
+        ["en"] = "Remember that you can change this later in the game's interface options, under %s",
+        ["de"] = "Denken Sie daran, dass Sie dies später in den Schnittstellenoptionen des Spiels unter %s ändern können.",
+        ["fr"] = "N'oubliez pas que vous pouvez modifier cela plus tard dans les options d'interface du jeu, sous %s",
+        ["es"] = "Recuerda que puedes cambiar esto más tarde en las opciones de interfaz del juego, bajo %s",
+        ["ru"] = "Помните, что вы можете изменить это позже в параметрах интерфейса игры, в разделе %s",
+        ["it"] = "Ricorda che puoi modificare questo in seguito nelle opzioni dell'interfaccia di gioco, sotto %s",
+        ["pt"] = "Lembre-se de que você pode mudar isso mais tarde nas opções de interface do jogo, em %s",
+        ["ko"] = "나중에 %s에서 게임의 인터페이스 옵션에서 이를 변경할 수 있음을 기억하십시오.",
+        ["zh"] = "请记住，您可以稍后在游戏的界面选项中更改此设置，位于 %s 下。",
+        ["zhTW"] = "請記住，您可以稍後在遊戲的介面選項中更改此設置，位於 %s 下。",
+    };
+    return string.format(tr(gameSpellAlertsChangeLaterTranslations), optionSequence);
+end
