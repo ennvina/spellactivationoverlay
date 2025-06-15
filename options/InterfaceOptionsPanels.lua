@@ -155,6 +155,14 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     debugButton.Text:SetText("Write Debug to Chatbox");
     debugButton:SetChecked(SpellActivationOverlayDB.debug == true);
 
+    local reportButton = SpellActivationOverlayOptionsPanelSpellAlertReportButton;
+    if SAO:CanReport() then
+        reportButton.Text:SetText("Report unsupported effects to Chatbox");
+        reportButton:SetChecked(SpellActivationOverlayDB.report ~= false); -- Default to true
+    else
+        reportButton:Hide();
+    end
+
     local responsiveButton = SpellActivationOverlayOptionsPanelSpellAlertResponsiveButton;
     responsiveButton.Text:SetText(SAO:responsiveMode());
     responsiveButton:SetChecked(SpellActivationOverlayDB.responsiveMode == true);

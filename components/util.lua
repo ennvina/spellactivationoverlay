@@ -84,6 +84,16 @@ function SAO.TraceThrottled(self, key, prefix, ...)
     end
 end
 
+function SAO:CanReport()
+--    return SAO.IsProject(SAO.CATA_AND_ONWARD);
+    -- Should be CATA_AND_ONWARD, but too late for Cataclysm. Maybe something to consider for Cata Classic Classic?
+    return SAO.IsProject(SAO.MOP_AND_ONWARD);
+end
+
+function SAO:HasReport()
+    return SpellActivationOverlayDB and SpellActivationOverlayDB.report ~= false; -- Default to true
+end
+
 --[[
     Global Cooldown
 ]]
