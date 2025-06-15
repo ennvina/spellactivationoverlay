@@ -300,6 +300,22 @@ function SAO:disableWhenInstalled(addon)
     return string.format(tr(disableWhenInstalledTranslations), addon);
 end
 
+-- Get the "Optimized for {addonBuild}" localized text
+function SAO:optimizedFor(addonBuild)
+    local optimizedForTranslations = {
+        ["en"] = "Optimized for %s",
+        ["de"] = "Optimiert für %s",
+        ["fr"] = "Optimisé pour %s",
+        ["es"] = "Optimizado para %s",
+        ["ru"] = "Оптимизировано для %s",
+        ["it"] = "Ottimizzato per %s",
+        ["pt"] = "Otimizado para %s",
+        ["ko"] = "%s에 최적화됨",
+        ["zh"] = "为 %s 优化",
+    };
+    return string.format(tr(optimizedForTranslations), addonBuild);
+end
+
 --[[
     Addon mode
 ]]
@@ -581,7 +597,7 @@ function SAO.GetHomonymSpellIDs(self, spell)
 end
 
 --[[
-    Spell utility functions
+    Item utility functions
 ]]
 
 -- Returns the number of items the player has currently equipped

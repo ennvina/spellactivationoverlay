@@ -1,6 +1,9 @@
 local AddonName, SAO = ...
 local iamNecrosis = strlower(AddonName):sub(0,8) == "necrosis"
 
+-- Optimize frequent calls
+local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
+
 function SpellActivationOverlayOptionsPanel_Init(self)
     local shutdownCategory = SAO.Shutdown:GetCategory();
     if shutdownCategory then
@@ -47,6 +50,24 @@ function SpellActivationOverlayOptionsPanel_Init(self)
         else
             -- Without disable condition, disabling is absolute
             SpellActivationOverlayOptionsPanel.globalOff:Show();
+        end
+    end
+
+    local build = SpellActivationOverlayOptionsPanelBuild;
+    local xSaoBuild = GetAddOnMetadata(AddonName, "X-SAO-Build");
+    if type(xSaoBuild) == 'string' and #xSaoBuild > 0 then -- X-SAO-Build is defined only for the original SAO addon, not for other builds such as Necrosis
+        local titleText = GetAddOnMetadata(AddonName, "Title");
+        if xSaoBuild == "universal" or xSaoBuild == "dev" then
+            build:SetText(titleText);
+        else
+            local optimizedForText;
+            if xSaoBuild == "vanilla" then
+                local addonBuild = SAO.GetFullProjectName(xSaoBuild);
+                optimizedForText = SAO:optimizedFor(BNET_FRIEND_TOOLTIP_WOW_CLASSIC);
+            else
+                optimizedForText = SAO:optimizedFor(string.format(BNET_FRIEND_ZONE_WOW_CLASSIC, addonBuild));
+            end
+            build:SetText(titleText.."\n"..optimizedForText);
         end
     end
 
