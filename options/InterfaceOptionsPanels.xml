@@ -3,6 +3,19 @@
   <Script file="InterfaceOptionsPanels.lua"/>
 
   <Frame name="SpellActivationOverlayOptionsPanel" hidden="true" parent="UIParent">
+    <Layers>
+      <Layer level="ARTWORK">
+        <FontString name="$parentBuild" text="" inherits="GameFontNormal" justifyH="CENTER" justifyV="CENTER">
+          <Anchors>
+            <Anchor point="BOTTOMRIGHT">
+              <Offset>
+                <AbsDimension x="-16" y="32"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
     <Frames>
       <Slider name="$parentSpellAlertOpacitySlider" inherits="OptionsSliderTemplate">
         <Anchors>

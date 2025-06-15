@@ -4,6 +4,7 @@
 ## Author: Vinny/Ennvina
 ## Version: 2.5.2
 ## SavedVariables: SpellActivationOverlayDB
+## X-SAO-Build: dev
 
 # SpellActivationOverlay.lua, SpellActivationOverlay.xml and all textures were created by Blizzard Entertainment, Inc.
 #
@@ -38,6 +39,7 @@ components\rune.lua
 components\shutdown.lua
 components\sound.lua
 components\spell.lua
+components\tr.lua
 components\trigger.lua
 components\util.lua
 components\variable.lua

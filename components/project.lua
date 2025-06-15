@@ -56,7 +56,7 @@ function SAO.IsProject(projectFlags)
     );
 end
 
-local projectNames = {
+local flavorNames = {
     [WOW_PROJECT_CLASSIC or 2] = "Era",
     [WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5] = "TBC",
     [WOW_PROJECT_WRATH_CLASSIC or 11] = "Wrath",
@@ -64,9 +64,41 @@ local projectNames = {
     [WOW_PROJECT_MISTS_CLASSIC or 19] = "MoP",
 };
 
-function SAO.GetProjectName()
+function SAO.GetFlavorName()
     if SAO.IsSoD() then
         return "SoD"; -- Special case for SoD, which does not have a dedicated WOW_PROJECT_ID
     end
-    return projectNames[WOW_PROJECT_ID] or "Unknown";
+    return flavorNames[WOW_PROJECT_ID] or "Unknown";
+end
+
+-- buildID is an internal code, such as universal, vanilla, tbc, ...
+-- This is supposed to be the same as the suffix of package names
+local projectNameForBuildID = {
+    universal = "*",
+    vanilla   = EXPANSION_NAME0 or "Classic",
+    tbc       = EXPANSION_NAME1 or "The Burning Crusade",
+    wrath     = EXPANSION_NAME2 or "Wrath of the Lich King",
+    cata      = EXPANSION_NAME3 or "Cataclysm",
+    mop       = EXPANSION_NAME4 or "Mists of Pandaria",
+    -- wod       = EXPANSION_NAME5 or "Warlords of Draenor",
+    -- legion    = EXPANSION_NAME6 or "Legion",
+    -- bfa       = EXPANSION_NAME7 or "Battle for Azeroth",
+    -- sl        = EXPANSION_NAME8 or "Shadowlands",
+    -- df        = EXPANSION_NAME9 or "Dragonflight",
+};
+
+function SAO.GetFullProjectName(buildID)
+    return projectNameForBuildID[buildID] or "Unknown";
+end
+
+local expectedBuildID = {
+    [WOW_PROJECT_CLASSIC or 2] = "vanilla",
+    [WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5] = "tbc",
+    [WOW_PROJECT_WRATH_CLASSIC or 11] = "wrath",
+    [WOW_PROJECT_CATACLYSM_CLASSIC or 14] = "cata",
+    [WOW_PROJECT_MISTS_CLASSIC or 19] = "mop",
+};
+
+function SAO.GetExpectedBuildID()
+    return expectedBuildID[WOW_PROJECT_ID] or "";
 end

@@ -54,7 +54,7 @@ mkproject() {
     cd ./_release/"$flavor" || bye "Cannot cd to $flavor directory"
     sed -i s/'^## Interface:.*'/"## Interface: $build_version"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update version of $flavor TOC file"
     sed -i s%'^\(##[[:space:]]*Title:.*|c\)\(........\)\([0-9][^|]*\)|r |T[^|]*|t'%'\1'"$flavor_color"'\3|r '"$flavor_icon"% SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update title of $flavor TOC file"
-#    sed -i s%'^## Notes:.*'%"& Build optimized for $flavor_fullname."% SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update notes of $flavor TOC file"
+    sed -i s/'^## X-SAO-Build:.*'/"## X-SAO-Build: $flavor"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update X-SAO-Build of $flavor TOC file"
     echo
 
     # Always prune dev by default

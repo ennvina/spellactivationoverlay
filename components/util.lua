@@ -101,7 +101,7 @@ function SAO:ReportUnkownEffect(prefix, spellID, texture, positions, scale, r, g
         end
         if not self.UnknownNativeEffects[spellID] then
             local text = "Unsupported SHOW event";
-            text = text..", flavor="..tostring(self.GetProjectName());
+            text = text..", flavor="..tostring(self.GetFlavorName());
             text = text..", spell="..tostring(spellID).." ("..(GetSpellInfo(spellID) or "unknown spell")..")"
             text = text..", tex="..tostring(texture);
             text = text..", pos="..((type(positions) == 'string') and ("'"..positions.."'") or tostring(positions));
@@ -138,166 +138,37 @@ function SAO.GetGCD(self)
 end
 
 --[[
-    Label builders
+    Formatting utility functions
 ]]
 
--- Utility function to write a formatted 'number of stacks' text, translated with the client's locale
--- SAO:NbStacks(4) -- "4 Stacks"
--- SAO:NbStacks(7,9) -- "7-9 Stacks"
-function SAO:NbStacks(minStacks, maxStacks)
-    if maxStacks then
-        return string.format(CALENDAR_TOOLTIP_DATE_RANGE, tostring(minStacks), string.format(STACKS, maxStacks));
+-- Usage: SAO:gradientText("YOLO", { {r=1, g=0, b=0}, {r=0, g=0, b=1} })
+-- There must be at least two characters in the text and at least two colors in the colors table
+function SAO:gradientText(text, colors)
+    local len = #text;
+    local result = "";
+    for i = 1, len do
+        local t = (i-1)/(len-1);
+        local idx, localT;
+        if t <= 0 then
+            idx = 1;
+            localT = 0;
+        elseif t >= 1 then
+            idx = #colors - 1;
+            localT = 1;
+        else
+            -- May be subject to floating point errors, we might need to fix it if we see glitched
+            idx = math.floor(t * (#colors - 1)) + 1;
+            localT = (t * (#colors - 1)) % 1;
+        end
+        local c1 = colors[idx];
+        local c2 = colors[idx+1];
+        local r = c1.r + (c2.r-c1.r)*localT;
+        local g = c1.g + (c2.g-c1.g)*localT;
+        local b = c1.b + (c2.b-c1.b)*localT;
+        local hex = string.format("%02x%02x%02x", r*255, g*255, b*255);
+        result = result .. "|cff" .. hex .. text:sub(i,i) .. "|r";
     end
-    return string.format(STACKS, minStacks);
-end
-
--- Simple function telling something was updated recently
-function SAO:RecentlyUpdated()
-    return WrapTextInColor(KBASE_RECENTLY_UPDATED, GREEN_FONT_COLOR);
-end
-
--- Execute text to tell enemy HP is below a certain threshold
-function SAO:ExecuteBelow(threshold)
-    return string.format(string.format(HEALTH_COST_PCT, "<%s%"), threshold);
-end
-
--- Text to limit something to one kind of items (class, role, spec...)
-function SAO:OnlyFor(item)
-    return string.format(RACE_CLASS_ONLY, item);
-end
-
-local function tr(translations)
-    local locale = GetLocale();
-    return translations[locale] or translations[locale:sub(1,2)] or translations["en"];
-end
-
--- Get the "Heating Up" localized buff name
-function SAO:translateHeatingUp()
-    local heatingUpTranslations = {
-        ["en"] = "Heating Up",
-        ["de"] = "Aufwärmen",
-        ["fr"] = "Réchauffement",
-        ["es"] = "Calentamiento",
-        ["ru"] = "Разогрев",
-        ["it"] = "Riscaldamento",
-        ["pt"] = "Aquecendo",
-        ["ko"] = "열기",
-        ["zh"] = "热力迸发",
-    };
-    return tr(heatingUpTranslations);
-end
-
--- Get the "Debuff" localized text
-function SAO:translateDebuff()
-    local debuffTranslations = {
-        ["en"] = "Debuff",
-        ["de"] = "Schwächung",
-        ["fr"] = "Affaiblissement",
-        ["es"] = "Perjuicio",
-        ["ru"] = "Отрицательный эффект",
-        ["it"] = "Penalità",
-        ["pt"] = "Penalidade",
-        ["ko"] = "약화",
-        ["zh"] = "负面",
-        ["zhTW"] = "減益",
-    };
-    return tr(debuffTranslations);
-end
-
--- Get the "Responsive Mode" localized text
-function SAO:responsiveMode()
-    local responsiveTranslations = {
-        ["en"] = "Responsive mode (decreases performance)",
-        ["de"] = "Responsiver Modus (verringert die Leistung)",
-        ["fr"] = "Mode réactif (diminue les performances)",
-        ["es"] = "Modo de respuesta (disminuye el rendimiento)",
-        ["ru"] = "Отзывчивый режим (снижает производительность)",
-        ["it"] = "Modalità reattiva (riduce le prestazioni)",
-        ["pt"] = "Modo responsivo (diminui o desempenho)",
-        ["ko"] = "반응형 모드(성능 저하)",
-        ["zh"] = "响应模式（降低性能）",
-    };
-    return tr(responsiveTranslations);
-end
-
--- Get the "Unsupported class" localized text
-function SAO:unsupportedClass()
-    local unsupportedClassTranslations = {
-        ["en"] = "Unsupported Class",
-        ["de"] = "Nicht unterstützte Klasse",
-        ["fr"] = "Classe non prise en charge",
-        ["es"] = "Clase no compatible",
-        ["ru"] = "Неподдерживаемый класс",
-        ["it"] = "Classe non supportata",
-        ["pt"] = "Classe sem suporte",
-        ["ko"] = "지원되지 않는 클래스",
-        ["zh"] = "不支持的类",
-    };
-    return tr(unsupportedClassTranslations);
-end
-
--- Get the "Disabled class" localized text
-function SAO:disabledClass()
-    local unsupportedClassTranslations = {
-        ["en"] = "Disabled class %s while development is in progress.\nPlease come back soon :)",
-        ["de"] = "Deaktivierte Klasse %s, während der Entwicklungsphase.\nBitte kommen Sie bald wieder :)",
-        ["fr"] = "Classe %s désactivée pendant que le développement est en cours.\nRevenez bientôt :)",
-        ["es"] = "Clase %s desactivada mientras el desarrollo está en curso.\nVuelva pronto :)",
-        ["ru"] = "Класс %s отключен на время разработки.\nПожалуйста, вернитесь в ближайшее время :)",
-        ["it"] = "La classe %s è stata disabilitata mentre lo sviluppo è in corso.\nSi prega di tornare presto :)",
-        ["pt"] = "Classe %s desativada enquanto o desenvolvimento está em andamento.\nPor favor, volte em breve :)",
-        ["ko"] = "개발이 진행되는 동안 %s 클래스를 사용할 수 없습니다.\n곧 다시 돌아와주세요 :)",
-        ["zh"] = "开发过程中禁用了%s类。请尽快回来 :)",
-    };
-    return tr(unsupportedClassTranslations);
-end
-
--- Get the "because of {reason}" localized text
-function SAO:becauseOf(reason)
-    local becauseOfTranslations = {
-        ["en"] = "because of %s",
-        ["de"] = "wegen %s",
-        ["fr"] = "à cause de %s",
-        ["es"] = "por %s",
-        ["ru"] = "из-за %s",
-        ["it"] = "a causa di %s",
-        ["pt"] = "por causa de %s",
-        ["ko"] = "%s 때문에",
-        ["zh"] = "因为 %s",
-    };
-    return string.format(tr(becauseOfTranslations), reason);
-end
-
--- Get the "Open {x}" localized text
-function SAO:openIt(x)
-    local openItTranslations = {
-        ["en"] = "Open %s",
-        ["de"] = "Öffnen %s",
-        ["fr"] = "Ouvrir %s",
-        ["es"] = "Abrir %s",
-        ["ru"] = "Открыть %s",
-        ["it"] = "Aprire %s",
-        ["pt"] = "Abrir %s",
-        ["ko"] = "열기 %s",
-        ["zh"] = "打开 %s",
-    };
-    return string.format(tr(openItTranslations), x);
-end
-
--- Get the "Disabled when {addon} is installed" localized text
-function SAO:disableWhenInstalled(addon)
-    local disableWhenInstalledTranslations = {
-        ["en"] = "Disable when %s is installed",
-        ["de"] = "Deaktivieren, wenn %s installiert ist",
-        ["fr"] = "Désactiver lorsque %s est installé",
-        ["es"] = "Desactivar cuando %s está instalado",
-        ["ru"] = "Отключить при установке %s",
-        ["it"] = "Disattivare quando è installato %s",
-        ["pt"] = "Desativar quando %s estiver instalado",
-        ["ko"] = "%s가 설치되어 있으면 사용 안 함",
-        ["zh"] = "安装 %s 时禁用",
-    };
-    return string.format(tr(disableWhenInstalledTranslations), addon);
+    return result;
 end
 
 --[[
@@ -581,7 +452,7 @@ function SAO.GetHomonymSpellIDs(self, spell)
 end
 
 --[[
-    Spell utility functions
+    Item utility functions
 ]]
 
 -- Returns the number of items the player has currently equipped

@@ -1,6 +1,9 @@
 local AddonName, SAO = ...
 local iamNecrosis = strlower(AddonName):sub(0,8) == "necrosis"
 
+-- Optimize frequent calls
+local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
+
 function SpellActivationOverlayOptionsPanel_Init(self)
     local shutdownCategory = SAO.Shutdown:GetCategory();
     if shutdownCategory then
@@ -47,6 +50,61 @@ function SpellActivationOverlayOptionsPanel_Init(self)
         else
             -- Without disable condition, disabling is absolute
             SpellActivationOverlayOptionsPanel.globalOff:Show();
+        end
+    end
+
+    local build = SpellActivationOverlayOptionsPanelBuild;
+    local xSaoBuild = GetAddOnMetadata(AddonName, "X-SAO-Build");
+    if type(xSaoBuild) == 'string' and #xSaoBuild > 0 then -- X-SAO-Build is defined only for the original SAO addon, not for other builds such as Necrosis
+        local titleText = GetAddOnMetadata(AddonName, "Title");
+        if xSaoBuild == "universal" then
+            -- Universal build is compatible with everything
+            local universalText = SAO:gradientText(
+                SAO:universalBuild(),
+                {
+                    {r=0.1, g=1, b=0.3}, -- green (start)
+                    {r=1, g=1, b=0.5},   -- yellow
+                    {r=0.9, g=0.1, b=0}, -- red
+                    {r=0.7, g=0, b=0.8}, -- purple
+                    {r=0, g=0.3, b=1},   -- blue (end)
+                }
+            );
+            build:SetText(titleText.."\n"..universalText);
+        elseif xSaoBuild == "dev" then
+            -- Developer build is compatible with everything
+            local buildForDevs = SAO:gradientText(
+                "Build for Developers", -- Do not translate, assume all developers understand English
+                {
+                    {r=0, g=0.3, b=1}, -- blue (start)
+                    {r=1, g=1, b=1},   -- white
+                    {r=0, g=0.3, b=1}, -- blue (end)
+                }
+            );
+            build:SetText(titleText.."\n"..buildForDevs);
+        else
+            -- Optimized build, must check compatibility
+            local addonBuild = SAO.GetFullProjectName(xSaoBuild);
+            local expectedBuild = SAO.GetFullProjectName(SAO.GetExpectedBuildID());
+            if addonBuild ~= expectedBuild then
+                titleText = WrapTextInColorCode(titleText, "ffff0000");
+                addonBuild = WrapTextInColorCode(addonBuild, "ffff0000");
+                expectedBuild = WrapTextInColorCode(expectedBuild, "ffff0000");
+                build:SetFontObject(GameFontNormalLarge);
+                SAO:Info("", SAO:compatibilityWarning(addonBuild, expectedBuild));
+            end
+
+            local optimizedForText;
+            if xSaoBuild == "vanilla" then
+                if addonBuild == expectedBuild then
+                    optimizedForText = SAO:optimizedFor(BNET_FRIEND_TOOLTIP_WOW_CLASSIC);
+                else
+                    optimizedForText = SAO:optimizedFor(WrapTextInColorCode(BNET_FRIEND_TOOLTIP_WOW_CLASSIC, "ffff0000"));
+                end
+            else
+                optimizedForText = SAO:optimizedFor(string.format(BNET_FRIEND_ZONE_WOW_CLASSIC, addonBuild));
+            end
+
+            build:SetText(titleText.."\n"..optimizedForText);
         end
     end
 
