@@ -57,8 +57,30 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     local xSaoBuild = GetAddOnMetadata(AddonName, "X-SAO-Build");
     if type(xSaoBuild) == 'string' and #xSaoBuild > 0 then -- X-SAO-Build is defined only for the original SAO addon, not for other builds such as Necrosis
         local titleText = GetAddOnMetadata(AddonName, "Title");
-        if xSaoBuild == "universal" or xSaoBuild == "dev" then
-            build:SetText(titleText);
+        if xSaoBuild == "universal" then
+            -- Universal build is compatible with everything
+            local universalText = SAO:gradientText(
+                SAO:universalBuild(),
+                {
+                    {r=0.1, g=1, b=0.3}, -- green (start)
+                    {r=1, g=1, b=0.5},   -- yellow
+                    {r=0.9, g=0.1, b=0}, -- red
+                    {r=0.7, g=0, b=0.8}, -- purple
+                    {r=0, g=0.3, b=1},   -- blue (end)
+                }
+            );
+            build:SetText(titleText.."\n"..universalText);
+        elseif xSaoBuild == "dev" then
+            -- Developer build is compatible with everything
+            local buildForDevs = SAO:gradientText(
+                "Build for Developers", -- Do not translate, assume all developers understand English
+                {
+                    {r=0, g=0.3, b=1}, -- blue (start)
+                    {r=1, g=1, b=1},   -- white
+                    {r=0, g=0.3, b=1}, -- blue (end)
+                }
+            );
+            build:SetText(titleText.."\n"..buildForDevs);
         else
             -- Optimized build, must check compatibility
             local addonBuild = SAO.GetFullProjectName(xSaoBuild);

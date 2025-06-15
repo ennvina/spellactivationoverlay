@@ -316,6 +316,22 @@ function SAO:optimizedFor(addonBuild)
     return string.format(tr(optimizedForTranslations), addonBuild);
 end
 
+-- Get the "Universal build" localized text
+function SAO:universalBuild()
+    local universalBuildTranslations = {
+        ["en"] = "Universal build",
+        ["de"] = "Universelle Version",
+        ["fr"] = "Version universelle",
+        ["es"] = "Versión universal",
+        ["ru"] = "Универсальная сборка",
+        ["it"] = "Versione universale",
+        ["pt"] = "Versão universal",
+        ["ko"] = "범용 빌드",
+        ["zh"] = "通用版本",
+    };
+    return tr(universalBuildTranslations);
+end
+
 -- Translate the following text:
 -- "You have installed the optimized build for {addonBuild} but the expected build is {expectedBuild}. Some effects may be missing for your class."
 function SAO:compatibilityWarning(addonBuild, expectedBuild)
@@ -331,6 +347,40 @@ function SAO:compatibilityWarning(addonBuild, expectedBuild)
         ["zh"] = "您已安装了针对 %s 的优化版本，但预期版本为 %s。您的职业可能缺少某些效果。",
     };
     return string.format(tr(compatibilityWarningTranslations), addonBuild, expectedBuild);
+end
+
+--[[
+    Formatting utility functions
+]]
+
+-- Usage: SAO:gradientText("YOLO", { {r=1, g=0, b=0}, {r=0, g=0, b=1} })
+-- There must be at least two characters in the text and at least two colors in the colors table
+function SAO:gradientText(text, colors)
+    local len = #text;
+    local result = "";
+    for i = 1, len do
+        local t = (i-1)/(len-1);
+        local idx, localT;
+        if t <= 0 then
+            idx = 1;
+            localT = 0;
+        elseif t >= 1 then
+            idx = #colors - 1;
+            localT = 1;
+        else
+            -- May be subject to floating point errors, we might need to fix it if we see glitched
+            idx = math.floor(t * (#colors - 1)) + 1;
+            localT = (t * (#colors - 1)) % 1;
+        end
+        local c1 = colors[idx];
+        local c2 = colors[idx+1];
+        local r = c1.r + (c2.r-c1.r)*localT;
+        local g = c1.g + (c2.g-c1.g)*localT;
+        local b = c1.b + (c2.b-c1.b)*localT;
+        local hex = string.format("%02x%02x%02x", r*255, g*255, b*255);
+        result = result .. "|cff" .. hex .. text:sub(i,i) .. "|r";
+    end
+    return result;
 end
 
 --[[
