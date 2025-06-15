@@ -4,6 +4,7 @@
 ## Author: Vinny/Ennvina
 ## Version: 2.5.2
 ## SavedVariables: SpellActivationOverlayDB
+## X-SAO-Build: dev
 
 # SpellActivationOverlay.lua, SpellActivationOverlay.xml and all textures were created by Blizzard Entertainment, Inc.
 #
