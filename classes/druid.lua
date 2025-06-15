@@ -73,6 +73,7 @@ local function useEclipse()
         lunarSpellID,
         "aura",
         {
+            aka = 93431, -- Eclipse Visual (Lunar)
             overlay = { texture = "eclipse_moon", position = "Left" },
             -- buttons = { moonfire, starfire }, -- Buttons already glowing natively
         }
@@ -84,6 +85,7 @@ local function useEclipse()
         solarSpellID,
         "aura",
         {
+            aka = 93430, -- Eclipse Visual (Solar)
             overlay = { texture = "eclipse_sun", position = "Right (Flipped)" },
             -- buttons = { wrath }, -- Button already glowing natively
         }
