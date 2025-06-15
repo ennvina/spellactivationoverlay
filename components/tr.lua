@@ -51,6 +51,7 @@ function SAO:translateHeatingUp()
         ["pt"] = "Aquecendo",
         ["ko"] = "열기",
         ["zh"] = "热力迸发",
+        ["zhTW"] = "熱力迸發", -- Translated, not picked up from a game client
     };
     return tr(heatingUpTranslations);
 end
@@ -84,6 +85,7 @@ function SAO:responsiveMode()
         ["pt"] = "Modo responsivo (diminui o desempenho)",
         ["ko"] = "반응형 모드(성능 저하)",
         ["zh"] = "响应模式（降低性能）",
+        ["zhTW"] = "響應模式（降低性能）",
     };
     return tr(responsiveTranslations);
 end
@@ -100,6 +102,7 @@ function SAO:unsupportedClass()
         ["pt"] = "Classe sem suporte",
         ["ko"] = "지원되지 않는 클래스",
         ["zh"] = "不支持的类",
+        ["zhTW"] = "不支援的類別",
     };
     return tr(unsupportedClassTranslations);
 end
@@ -116,6 +119,7 @@ function SAO:disabledClass()
         ["pt"] = "Classe %s desativada enquanto o desenvolvimento está em andamento.\nPor favor, volte em breve :)",
         ["ko"] = "개발이 진행되는 동안 %s 클래스를 사용할 수 없습니다.\n곧 다시 돌아와주세요 :)",
         ["zh"] = "开发过程中禁用了%s类。请尽快回来 :)",
+        ["zhTW"] = "開發過程中禁用了%s類。請儘快回來 :)",
     };
     return tr(unsupportedClassTranslations);
 end
@@ -132,6 +136,7 @@ function SAO:becauseOf(reason)
         ["pt"] = "por causa de %s",
         ["ko"] = "%s 때문에",
         ["zh"] = "因为 %s",
+        ["zhTW"] = "因為 %s",
     };
     return string.format(tr(becauseOfTranslations), reason);
 end
@@ -148,6 +153,7 @@ function SAO:openIt(x)
         ["pt"] = "Abrir %s",
         ["ko"] = "열기 %s",
         ["zh"] = "打开 %s",
+        ["zhTW"] = "打開 %s",
     };
     return string.format(tr(openItTranslations), x);
 end
@@ -164,6 +170,7 @@ function SAO:disableWhenInstalled(addon)
         ["pt"] = "Desativar quando %s estiver instalado",
         ["ko"] = "%s가 설치되어 있으면 사용 안 함",
         ["zh"] = "安装 %s 时禁用",
+        ["zhTW"] = "安裝 %s 時禁用",
     };
     return string.format(tr(disableWhenInstalledTranslations), addon);
 end
@@ -180,6 +187,7 @@ function SAO:optimizedFor(addonBuild)
         ["pt"] = "Otimizado para %s",
         ["ko"] = "%s에 최적화됨",
         ["zh"] = "为 %s 优化",
+        ["zhTW"] = "為 %s 優化",
     };
     return string.format(tr(optimizedForTranslations), addonBuild);
 end
@@ -196,6 +204,7 @@ function SAO:universalBuild()
         ["pt"] = "Versão universal",
         ["ko"] = "범용 빌드",
         ["zh"] = "通用版本",
+        ["zhTW"] = "通用版本",
     };
     return tr(universalBuildTranslations);
 end
@@ -213,6 +222,7 @@ function SAO:compatibilityWarning(addonBuild, expectedBuild)
         ["pt"] = "Você instalou a versão otimizada para %s, mas a versão esperada é %s. Alguns efeitos podem estar faltando para sua classe.",
         ["ko"] = "%s에 최적화된 빌드를 설치했지만 예상 빌드는 %s입니다. 일부 효과가 클래스에 없을 수 있습니다.",
         ["zh"] = "您已安装了针对 %s 的优化版本，但预期版本为 %s。您的职业可能缺少某些效果。",
+        ["zhTW"] = "您已安裝針對 %s 的最佳化版本，但預期版本為 %s。您的職業可能缺少某些效果。",
     };
     return string.format(tr(compatibilityWarningTranslations), addonBuild, expectedBuild);
 end
