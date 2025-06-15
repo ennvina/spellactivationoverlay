@@ -1,5 +1,25 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.5.3 (2025-06-xx)
+
+Unsupported Spell Alerts (Mists of Pandaria)
+- A message is displayed when detecting an unsupported spell alert
+- You are encouraged to report them, thank you in advance for your help :)
+- Such messages are enabled by default and can be disabled in the options panel
+
+New Spell Alerts
+- Monk's Combo Breaker: Blackout Kick
+- Monk's Combo Breaker: Tiger Palm
+
+Internationalization
+- Traditional Chinese (zh-TW) is now fully supported
+- This does not include Debug messages which are almost always in English
+- This does not include Necrosis warnings, which are not supposed to happen
+
+Miscellaneous
+- The addon flavor is now displayed in the options panel
+- Players are warned when they install the wrong flavor for their game client
+
 #### v2.5.2 (2025-06-13)
 
 Thank you to Bison for sending feedback about Feral druids. Thanks!
