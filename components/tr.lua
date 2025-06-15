@@ -51,6 +51,7 @@ function SAO:translateHeatingUp()
         ["pt"] = "Aquecendo",
         ["ko"] = "열기",
         ["zh"] = "热力迸发",
+        ["zhTW"] = "熱力迸發", -- Translated, not picked up from a game client
     };
     return tr(heatingUpTranslations);
 end
@@ -84,6 +85,7 @@ function SAO:responsiveMode()
         ["pt"] = "Modo responsivo (diminui o desempenho)",
         ["ko"] = "반응형 모드(성능 저하)",
         ["zh"] = "响应模式（降低性能）",
+        ["zhTW"] = "響應模式（降低性能）",
     };
     return tr(responsiveTranslations);
 end
@@ -100,6 +102,7 @@ function SAO:unsupportedClass()
         ["pt"] = "Classe sem suporte",
         ["ko"] = "지원되지 않는 클래스",
         ["zh"] = "不支持的类",
+        ["zhTW"] = "不支援的類別",
     };
     return tr(unsupportedClassTranslations);
 end
@@ -116,6 +119,7 @@ function SAO:disabledClass()
         ["pt"] = "Classe %s desativada enquanto o desenvolvimento está em andamento.\nPor favor, volte em breve :)",
         ["ko"] = "개발이 진행되는 동안 %s 클래스를 사용할 수 없습니다.\n곧 다시 돌아와주세요 :)",
         ["zh"] = "开发过程中禁用了%s类。请尽快回来 :)",
+        ["zhTW"] = "開發過程中禁用了%s類。請儘快回來 :)",
     };
     return tr(unsupportedClassTranslations);
 end
@@ -132,6 +136,7 @@ function SAO:becauseOf(reason)
         ["pt"] = "por causa de %s",
         ["ko"] = "%s 때문에",
         ["zh"] = "因为 %s",
+        ["zhTW"] = "因為 %s",
     };
     return string.format(tr(becauseOfTranslations), reason);
 end
@@ -148,6 +153,7 @@ function SAO:openIt(x)
         ["pt"] = "Abrir %s",
         ["ko"] = "열기 %s",
         ["zh"] = "打开 %s",
+        ["zhTW"] = "打開 %s",
     };
     return string.format(tr(openItTranslations), x);
 end
@@ -164,6 +170,7 @@ function SAO:disableWhenInstalled(addon)
         ["pt"] = "Desativar quando %s estiver instalado",
         ["ko"] = "%s가 설치되어 있으면 사용 안 함",
         ["zh"] = "安装 %s 时禁用",
+        ["zhTW"] = "安裝 %s 時禁用",
     };
     return string.format(tr(disableWhenInstalledTranslations), addon);
 end
@@ -180,6 +187,7 @@ function SAO:optimizedFor(addonBuild)
         ["pt"] = "Otimizado para %s",
         ["ko"] = "%s에 최적화됨",
         ["zh"] = "为 %s 优化",
+        ["zhTW"] = "為 %s 優化",
     };
     return string.format(tr(optimizedForTranslations), addonBuild);
 end
@@ -196,6 +204,7 @@ function SAO:universalBuild()
         ["pt"] = "Versão universal",
         ["ko"] = "범용 빌드",
         ["zh"] = "通用版本",
+        ["zhTW"] = "通用版本",
     };
     return tr(universalBuildTranslations);
 end
@@ -213,6 +222,42 @@ function SAO:compatibilityWarning(addonBuild, expectedBuild)
         ["pt"] = "Você instalou a versão otimizada para %s, mas a versão esperada é %s. Alguns efeitos podem estar faltando para sua classe.",
         ["ko"] = "%s에 최적화된 빌드를 설치했지만 예상 빌드는 %s입니다. 일부 효과가 클래스에 없을 수 있습니다.",
         ["zh"] = "您已安装了针对 %s 的优化版本，但预期版本为 %s。您的职业可能缺少某些效果。",
+        ["zhTW"] = "您已安裝針對 %s 的最佳化版本，但預期版本為 %s。您的職業可能缺少某些效果。",
     };
     return string.format(tr(compatibilityWarningTranslations), addonBuild, expectedBuild);
+end
+
+-- Translate "unknown spell" (lowercase in most languages)
+function SAO:unknownSpell()
+    local unknownSpellTranslations = {
+        ["en"] = "unknown spell",
+        ["de"] = "unbekannter Zauber", -- German nouns are always capitalized
+        ["fr"] = "sort inconnu",
+        ["es"] = "hechizo desconocido",
+        ["ru"] = "неизвестное заклинание",
+        ["it"] = "incantesimo sconosciuto",
+        ["pt"] = "feitiço desconhecido",
+        ["ko"] = "알 수 없는 주문",
+        ["zh"] = "未知法术",
+        ["zhTW"] = "未知法術",
+    };
+    return tr(unknownSpellTranslations);
+end
+
+-- Translate the following text:
+-- "Unsupported SHOW event{details}. Please report it to the {AddonName} Discord, GitHub or CurseForge. (you can disable this message in options: /sao)"
+function SAO:unsupportedShowEvent(details)
+    local unsupportedShowEventTranslations = {
+        ["en"] = "Unsupported SHOW event%s. Please report it to the %s Discord, GitHub or CurseForge. (you can disable this message in options: /sao)",
+        ["de"] = "Nicht unterstütztes SHOW-Ereignis%s. Bitte melden Sie es im %s Discord, GitHub oder CurseForge. (Sie können diese Nachricht in den Optionen deaktivieren: /sao)",
+        ["fr"] = "Événement SHOW non pris en charge%s. Veuillez le signaler sur le Discord, GitHub ou CurseForge de %s. (vous pouvez désactiver ce message dans les options : /sao)",
+        ["es"] = "Evento SHOW no compatible%s. Por favor, repórtalo en el Discord, GitHub o CurseForge de %s. (puedes desactivar este mensaje en las opciones: /sao)",
+        ["ru"] = "Неподдерживаемое событие SHOW%s. Пожалуйста, сообщите об этом в Discord, GitHub или CurseForge %s. (вы можете отключить это сообщение в настройках: /sao)",
+        ["it"] = "Evento SHOW non supportato%s. Si prega di segnalarlo su Discord, GitHub o CurseForge di %s. (è possibile disattivare questo messaggio nelle opzioni: /sao)",
+        ["pt"] = "Evento SHOW não suportado%s. Por favor, relate-o no Discord, GitHub ou CurseForge do %s. (você pode desativar esta mensagem nas opções: /sao)",
+        ["ko"] = "지원되지 않는 SHOW 이벤트입니다%s. %s의 Discord, GitHub 또는 CurseForge에 보고해 주세요. (옵션에서 이 메시지를 비활성화할 수 있습니다: /sao)",
+        ["zh"] = "不支持的 SHOW 事件%s。请在 %s 的 Discord、GitHub 或 CurseForge 上报告。(您可以在选项中禁用此消息：/sao)",
+        ["zhTW"] = "不支援的 SHOW 事件%s。請在 %s 的 Discord、GitHub 或 CurseForge 上報告。(您可以在選項中停用此訊息：/sao)",
+    };
+    return string.format(tr(unsupportedShowEventTranslations), tostring(details), AddonName);
 end
