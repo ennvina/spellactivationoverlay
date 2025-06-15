@@ -21,7 +21,7 @@ local function migrateTo091(db)
         db.classes["MAGE"]["alert"][12536][0] = SAO.defaults.classes["MAGE"]["alert"][12536][0];
     end
 
-    SAO:Info(Module, "Migrated options from pre-0.9.1 to 0.9.1");
+    SAO:Info(Module, SAO:migratedOptions("0.9.1"));
 end
 
 -- Migrate from pre-091 to 091 or higher
@@ -36,7 +36,7 @@ local function migrateTo112(db)
         db.classes["ROGUE"]["glow"][riposte][riposte] = SAO.defaults.classes["ROGUE"]["glow"][riposte][riposte];
     end
 
-    SAO:Info(Module, "Migrated options from pre-1.1.2 to 1.1.2");
+    SAO:Info(Module, SAO:migratedOptions("1.1.2"));
 end
 
 local function transferOption(db, classFile, optionType, oldAuraID, oldNodeID, newAuraID, newNodeID)
@@ -64,7 +64,7 @@ local function migrateTo131(db)
     transferOption(db, "MAGE", "glow", fingersOfFrostWrath, iceLance, fingersOfFrostCata, iceLance);
     transferOption(db, "MAGE", "glow", fingersOfFrostWrath, deepFreeze, fingersOfFrostCata, deepFreeze);
 
-    SAO:Info(Module, "Migrated options from pre-1.3.1 to 1.3.1");
+    SAO:Info(Module, SAO:migratedOptions("1.3.1"));
 end
 
 -- Migrate from pre-140 to 140 or higher
@@ -81,7 +81,7 @@ local function migrateTo140(db)
     transferOption(db, "PRIEST", "glow", serendipityWrath, greaterHeal, serendipityCata, greaterHeal);
     transferOption(db, "PRIEST", "glow", serendipityWrath, prayerOfHealing, serendipityCata, prayerOfHealing);
 
-    SAO:Info(Module, "Migrated options from pre-1.4.0 to 1.4.0");
+    SAO:Info(Module, SAO:migratedOptions("1.4.0"));
 end
 
 -- Migrate from pre-143 to 143 or higher
@@ -94,7 +94,7 @@ local function migrateTo143(db)
     local flashHealNoMana = 101062;
     transferOption(db, "PRIEST", "glow", surgeOfLightWrath, flashHeal, surgeOfLightCata, flashHealNoMana);
 
-    SAO:Info(Module, "Migrated options from pre-1.4.3 to 1.4.3");
+    SAO:Info(Module, SAO:migratedOptions("1.4.3"));
 end
 
 -- Migrate from pre-250 to 250 or higher
@@ -108,7 +108,7 @@ local function migrateTo250(db)
     transferOption(db, "PRIEST", "alert", surgeOfLightCata, 0, surgeOfLightMoP, 0);
     transferOption(db, "PRIEST", "glow", surgeOfLightCata, flashHealNoMana, surgeOfLightMoP, flashHeal);
 
-    SAO:Info(Module, "Migrated options from pre-2.5.0 to 2.5.0");
+    SAO:Info(Module, SAO:migratedOptions("2.5.0"));
 end
 
 -- Load database and use default values if needed

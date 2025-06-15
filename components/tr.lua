@@ -73,6 +73,23 @@ function SAO:translateDebuff()
     return tr(debuffTranslations);
 end
 
+-- Translate "Migrated options from pre-{version} to {version}"
+function SAO:migratedOptions(version)
+    local migratedTranslations = {
+        ["en"] = "Migrated options from pre-%s to %s",
+        ["de"] = "Optionen von vor %s auf %s migriert",
+        ["fr"] = "Options migrées de la version pré-%s vers %s",
+        ["es"] = "Opciones migradas de la versión previa a %s a %s",
+        ["ru"] = "Параметры перенесены с версии до %s на %s",
+        ["it"] = "Opzioni migrate da pre-%s a %s",
+        ["pt"] = "Opções migradas de pré-%s para %s",
+        ["ko"] = "%s 이전 버전에서 %s로 옵션이 마이그레이션되었습니다",
+        ["zh"] = "从%s之前的版本迁移到%s的选项",
+        ["zhTW"] = "從%s之前的版本遷移到%s的選項",
+    };
+    return string.format(tr(migratedTranslations), version, version);
+end
+
 -- Get the "Responsive Mode" localized text
 function SAO:responsiveMode()
     local responsiveTranslations = {
