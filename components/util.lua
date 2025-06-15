@@ -94,6 +94,27 @@ function SAO:HasReport()
     return SpellActivationOverlayDB and SpellActivationOverlayDB.report ~= false; -- Default to true
 end
 
+function SAO:ReportUnkownEffect(prefix, spellID, texture, positions, scale, r, g, b)
+    if self:CanReport() and self:HasReport() and spellID and not self:GetBucketBySpellID(spellID) and not self:IsAka(spellID) then
+        if not self.UnknownNativeEffects then
+            self.UnknownNativeEffects = {}
+        end
+        if not self.UnknownNativeEffects[spellID] then
+            local text = "Unsupported SHOW event";
+            text = text..", spell="..tostring(spellID).." ("..(GetSpellInfo(spellID) or "unknown spell")..")"
+            text = text..", tex="..tostring(texture);
+            text = text..", pos="..((type(positions) == 'string') and ("'"..positions.."'") or tostring(positions));
+            text = text..", scale="..tostring(scale);
+            text = text..", rgb=("..tostring(r).." "..tostring(g).." "..tostring(b)..")";
+            text = text..". Please report it to the SpellActivationOverlay Discord, GitHub or CurseForge";
+            text = text..". (you can disable this message in options: /sao)";
+            self:Info(prefix, text);
+
+            self.UnknownNativeEffects[spellID] = true;
+        end
+    end
+end
+
 --[[
     Global Cooldown
 ]]
