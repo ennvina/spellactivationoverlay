@@ -28,6 +28,7 @@
         "SpellActivationOverlayContainerFrame",
         "SpellActivationOverlayDB",
         "SpellActivationOverlayOptionsPanel",
+        "SpellActivationOverlayOptionsPanelBuild",
         "SpellActivationOverlayOptionsPanelDisableConditionButton",
         "SpellActivationOverlayOptionsPanelGlowingButtons",
         "SpellActivationOverlayOptionsPanelSpellAlertDebugButton",
