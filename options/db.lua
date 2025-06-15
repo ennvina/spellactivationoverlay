@@ -229,7 +229,10 @@ function SAO.AskQuestions(self)
     and C_CVar.GetCVarInfo(displayGameSaoVar) ~= nil -- Can only operate if the variable is supported
     and C_CVar.GetCVarBool(displayGameSaoVar) -- Bother asking only if the game alert is enabled
     and SpellActivationOverlayDB.alert.enabled -- Only ask if the alert is enabled
-    and SpellActivationOverlayDB.questions.disableGameAlert == nil -- Do not ask if the user already answered
+    and (
+        SpellActivationOverlayDB.questions.disableGameAlert == nil -- Ask if the user has not answered yet
+        or SpellActivationOverlayDB.questions.disableGameAlert == "yes" -- Ask again if the user already answered "yes"
+        )
     then
         local optionSequence = string.format(
             "%s > %s > %s",
@@ -238,16 +241,26 @@ function SAO.AskQuestions(self)
             SPELL_ALERT_OPACITY
         );
         StaticPopupDialogs["SAO_DISABLE_GAME_ALERT"] = {
-            text = SAO:spellAlertConflicts(),
+            text = "",
             button1 = YES,
             button2 = NO,
+            OnShow = function(self)
+                if self.data.answered == "yes" then
+                    -- Player already answered "yes" but the option came back
+                    -- This can happen if the player disabled the game's spell alert, then re-enabled it
+                    self.text:SetText(SAO:spellAlertConflictsAgain());
+                else
+                    -- Player has not answered yet
+                    self.text:SetText(SAO:spellAlertConflicts());
+                end
+            end,
             OnAccept = function(self)
                 SetCVar(displayGameSaoVar, false);
-                SpellActivationOverlayDB.questions.disableGameAlert = { answer = "yes" };
+                SpellActivationOverlayDB.questions.disableGameAlert = "yes";
                 SAO:Info(Module, SAO:gameSpellAlertsDisabled().."\n"..SAO:gameSpellAlertsChangeLater(optionSequence));
             end,
             OnCancel = function(self)
-                SpellActivationOverlayDB.questions.disableGameAlert = { answer = "no" };
+                SpellActivationOverlayDB.questions.disableGameAlert = "no";
                 SAO:Info(Module, SAO:gameSpellAlertsLeftAsIs().."\n"..SAO:gameSpellAlertsChangeLater(optionSequence));
             end,
             whileDead = true,
@@ -257,7 +270,7 @@ function SAO.AskQuestions(self)
             timeout = 0,
             preferredindex = STATICPOPUP_NUMDIALOGS
         };
-        StaticPopup_Show("SAO_DISABLE_GAME_ALERT");
+        StaticPopup_Show("SAO_DISABLE_GAME_ALERT", nil, nil, { answered = SpellActivationOverlayDB.questions.disableGameAlert });
     end
 end
 

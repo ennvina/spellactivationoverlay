@@ -296,6 +296,23 @@ function SAO:spellAlertConflicts()
     return string.format(tr(spellAlertConflictsTranslations), AddonName);
 end
 
+-- Translate "You previously chose to disable the game's spell alerts, and now they are back.\n\nDo you want to disable them again?"
+function SAO:spellAlertConflictsAgain()
+    local spellAlertConflictsAgainTranslations = {
+        ["en"] = "You previously chose to disable the game's spell alerts, and now they are back.\n\nDo you want to disable them again?",
+        ["de"] = "Sie haben sich zuvor entschieden, die Zauberwarnungen des Spiels zu deaktivieren, und jetzt sind sie wieder da.\n\nMöchten Sie sie erneut deaktivieren?",
+        ["fr"] = "Vous avez précédemment choisi de désactiver les alertes de sort du jeu, et maintenant elles sont de retour.\n\nVoulez-vous les désactiver à nouveau ?",
+        ["es"] = "Anteriormente elegiste desactivar las alertas de hechizo del juego, y ahora han vuelto.\n\n¿Deseas desactivarlas de nuevo?",
+        ["ru"] = "Вы ранее выбрали отключить игровые оповещения о заклинаниях, и теперь они снова появились.\n\nВы хотите отключить их снова?",
+        ["it"] = "Hai precedentemente scelto di disattivare gli avvisi sugli incantesimi del gioco, e ora sono tornati.\n\nVuoi disattivarli di nuovo?",
+        ["pt"] = "Você escolheu desativar os alertas de feitiço do jogo, e agora eles voltaram.\n\nVocê deseja desativá-los novamente?",
+        ["ko"] = "이전에 게임의 주문 경고를 비활성화하기로 선택했으며 이제 다시 나타났습니다.\n\n다시 비활성화하시겠습니까?",
+        ["zh"] = "您之前选择禁用游戏的法术警报，现在它们又回来了。\n\n您想再次禁用它们吗？",
+        ["zhTW"] = "您之前選擇停用遊戲的法術警報，現在它們又回來了。\n\n您想再次停用它們嗎？",
+    };
+    return tr(spellAlertConflictsAgainTranslations);
+end
+
 -- Translate "You chose to disable the game's spell alerts."
 function SAO:gameSpellAlertsDisabled()
     local gameSpellAlertsDisabledTranslations = {
