@@ -55,3 +55,18 @@ function SAO.IsProject(projectFlags)
         bit.band(projectFlags, SAO.MOP) ~= 0 and SAO.IsMoP()
     );
 end
+
+local projectNames = {
+    [WOW_PROJECT_CLASSIC or 2] = "Era",
+    [WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5] = "TBC",
+    [WOW_PROJECT_WRATH_CLASSIC or 11] = "Wrath",
+    [WOW_PROJECT_CATACLYSM_CLASSIC or 14] = "Cata",
+    [WOW_PROJECT_MISTS_CLASSIC or 19] = "MoP",
+};
+
+function SAO.GetProjectName()
+    if SAO.IsSoD() then
+        return "SoD"; -- Special case for SoD, which does not have a dedicated WOW_PROJECT_ID
+    end
+    return projectNames[WOW_PROJECT_ID] or "Unknown";
+end
