@@ -90,3 +90,15 @@ local projectNameForBuildID = {
 function SAO.GetFullProjectName(buildID)
     return projectNameForBuildID[buildID] or "Unknown";
 end
+
+local expectedBuildID = {
+    [WOW_PROJECT_CLASSIC or 2] = "vanilla",
+    [WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5] = "tbc",
+    [WOW_PROJECT_WRATH_CLASSIC or 11] = "wrath",
+    [WOW_PROJECT_CATACLYSM_CLASSIC or 14] = "cata",
+    [WOW_PROJECT_MISTS_CLASSIC or 19] = "mop",
+};
+
+function SAO.GetExpectedBuildID()
+    return expectedBuildID[WOW_PROJECT_ID] or "";
+end

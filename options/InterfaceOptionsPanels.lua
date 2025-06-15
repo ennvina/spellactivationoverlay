@@ -60,13 +60,28 @@ function SpellActivationOverlayOptionsPanel_Init(self)
         if xSaoBuild == "universal" or xSaoBuild == "dev" then
             build:SetText(titleText);
         else
+            -- Optimized build, must check compatibility
+            local addonBuild = SAO.GetFullProjectName(xSaoBuild);
+            local expectedBuild = SAO.GetFullProjectName(SAO.GetExpectedBuildID());
+            if addonBuild ~= expectedBuild then
+                titleText = WrapTextInColorCode(titleText, "ffff0000");
+                addonBuild = WrapTextInColorCode(addonBuild, "ffff0000");
+                expectedBuild = WrapTextInColorCode(expectedBuild, "ffff0000");
+                build:SetFontObject(GameFontNormalLarge);
+                SAO:Info("", SAO:compatibilityWarning(addonBuild, expectedBuild));
+            end
+
             local optimizedForText;
             if xSaoBuild == "vanilla" then
-                local addonBuild = SAO.GetFullProjectName(xSaoBuild);
-                optimizedForText = SAO:optimizedFor(BNET_FRIEND_TOOLTIP_WOW_CLASSIC);
+                if addonBuild == expectedBuild then
+                    optimizedForText = SAO:optimizedFor(BNET_FRIEND_TOOLTIP_WOW_CLASSIC);
+                else
+                    optimizedForText = SAO:optimizedFor(WrapTextInColorCode(BNET_FRIEND_TOOLTIP_WOW_CLASSIC, "ffff0000"));
+                end
             else
                 optimizedForText = SAO:optimizedFor(string.format(BNET_FRIEND_ZONE_WOW_CLASSIC, addonBuild));
             end
+
             build:SetText(titleText.."\n"..optimizedForText);
         end
     end

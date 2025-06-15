@@ -316,6 +316,23 @@ function SAO:optimizedFor(addonBuild)
     return string.format(tr(optimizedForTranslations), addonBuild);
 end
 
+-- Translate the following text:
+-- "You have installed the optimized build for {addonBuild} but the expected build is {expectedBuild}. Some effects may be missing for your class."
+function SAO:compatibilityWarning(addonBuild, expectedBuild)
+    local compatibilityWarningTranslations = {
+        ["en"] = "You have installed the optimized build for %s but the expected build is %s. Some effects may be missing for your class.",
+        ["de"] = "Sie haben die optimierte Version für %s installiert, aber die erwartete Version ist %s. Einige Effekte könnten für Ihre Klasse fehlen.",
+        ["fr"] = "Vous avez installé la version optimisée pour %s mais la version attendue est %s. Certains effets peuvent manquer pour votre classe.",
+        ["es"] = "Has instalado la versión optimizada para %s pero la versión esperada es %s. Algunos efectos pueden faltar para tu clase.",
+        ["ru"] = "Вы установили оптимизированную сборку для %s, но ожидаемая сборка - %s. Некоторые эффекты могут отсутствовать для вашего класса.",
+        ["it"] = "Hai installato la versione ottimizzata per %s ma la versione attesa è %s. Alcuni effetti potrebbero mancare per la tua classe.",
+        ["pt"] = "Você instalou a versão otimizada para %s, mas a versão esperada é %s. Alguns efeitos podem estar faltando para sua classe.",
+        ["ko"] = "%s에 최적화된 빌드를 설치했지만 예상 빌드는 %s입니다. 일부 효과가 클래스에 없을 수 있습니다.",
+        ["zh"] = "您已安装了针对 %s 的优化版本，但预期版本为 %s。您的职业可能缺少某些效果。",
+    };
+    return string.format(tr(compatibilityWarningTranslations), addonBuild, expectedBuild);
+end
+
 --[[
     Addon mode
 ]]
