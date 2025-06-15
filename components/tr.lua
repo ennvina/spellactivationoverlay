@@ -216,3 +216,38 @@ function SAO:compatibilityWarning(addonBuild, expectedBuild)
     };
     return string.format(tr(compatibilityWarningTranslations), addonBuild, expectedBuild);
 end
+
+-- Translate "unknown spell" (lowercase in most languages)
+function SAO:unknownSpell()
+    local unknownSpellTranslations = {
+        ["en"] = "unknown spell",
+        ["de"] = "unbekannter Zauber", -- German nouns are always capitalized
+        ["fr"] = "sort inconnu",
+        ["es"] = "hechizo desconocido",
+        ["ru"] = "неизвестное заклинание",
+        ["it"] = "incantesimo sconosciuto",
+        ["pt"] = "feitiço desconhecido",
+        ["ko"] = "알 수 없는 주문",
+        ["zh"] = "未知法术",
+        ["zhTW"] = "未知法術",
+    };
+    return tr(unknownSpellTranslations);
+end
+
+-- Translate the following text:
+-- "Unsupported SHOW event{details}. Please report it to the {AddonName} Discord, GitHub or CurseForge. (you can disable this message in options: /sao)"
+function SAO:unsupportedShowEvent(details)
+    local unsupportedShowEventTranslations = {
+        ["en"] = "Unsupported SHOW event%s. Please report it to the %s Discord, GitHub or CurseForge. (you can disable this message in options: /sao)",
+        ["de"] = "Nicht unterstütztes SHOW-Ereignis%s. Bitte melden Sie es im %s Discord, GitHub oder CurseForge. (Sie können diese Nachricht in den Optionen deaktivieren: /sao)",
+        ["fr"] = "Événement SHOW non pris en charge%s. Veuillez le signaler sur le Discord, GitHub ou CurseForge de %s. (vous pouvez désactiver ce message dans les options : /sao)",
+        ["es"] = "Evento SHOW no compatible%s. Por favor, repórtalo en el Discord, GitHub o CurseForge de %s. (puedes desactivar este mensaje en las opciones: /sao)",
+        ["ru"] = "Неподдерживаемое событие SHOW%s. Пожалуйста, сообщите об этом в Discord, GitHub или CurseForge %s. (вы можете отключить это сообщение в настройках: /sao)",
+        ["it"] = "Evento SHOW non supportato%s. Si prega di segnalarlo su Discord, GitHub o CurseForge di %s. (è possibile disattivare questo messaggio nelle opzioni: /sao)",
+        ["pt"] = "Evento SHOW não suportado%s. Por favor, relate-o no Discord, GitHub ou CurseForge do %s. (você pode desativar esta mensagem nas opções: /sao)",
+        ["ko"] = "지원되지 않는 SHOW 이벤트입니다%s. %s의 Discord, GitHub 또는 CurseForge에 보고해 주세요. (옵션에서 이 메시지를 비활성화할 수 있습니다: /sao)",
+        ["zh"] = "不支持的 SHOW 事件%s。请在 %s 的 Discord、GitHub 或 CurseForge 上报告。(您可以在选项中禁用此消息：/sao)",
+        ["zhTW"] = "不支援的 SHOW 事件%s。請在 %s 的 Discord、GitHub 或 CurseForge 上報告。(您可以在選項中停用此訊息：/sao)",
+    };
+    return string.format(tr(unsupportedShowEventTranslations), tostring(details), AddonName);
+end
