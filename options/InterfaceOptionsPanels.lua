@@ -111,6 +111,33 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     local classInfoLabel = SpellActivationOverlayOptionsPanelClassInfo;
     if SAO.CurrentClass then
         local className, classFile, classId = SAO.CurrentClass.Intrinsics[1], SAO.CurrentClass.Intrinsics[2], SAO.CurrentClass.Intrinsics[3];
+        local gradientColors;
+        if classFile == "PRIEST" then
+            -- Special case for Priest, use a different gradient
+            -- Because their class color is white, it is not possible to make it brighter
+            gradientColors = {
+                {r=0.8, g=0.8, b=0.8}, -- gray (start)
+                RAID_CLASS_COLORS[classFile], -- Priest white
+                {r=0.9, g=0.9, b=0.9}, -- gray (middle)
+                {r=0.7, g=0.7, b=0.7}, -- gray (end)
+            };
+        else
+            -- Gradient for all classes but Priest
+            local function mixColors(color1, color2, t)
+                return {
+                    r = color1.r * (1 - t) + color2.r * t,
+                    g = color1.g * (1 - t) + color2.g * t,
+                    b = color1.b * (1 - t) + color2.b * t,
+                };
+            end
+            local classColor = RAID_CLASS_COLORS[classFile];
+            gradientColors = {
+                classColor,
+                mixColors(classColor, {r=1, g=1, b=1}, 0.25), -- Moderately lighter
+                classColor,
+                mixColors(classColor, {r=0, g=0, b=0}, 0.15), -- Slightly darker
+            };
+        end
         local classIcons = {
             ["DEATHKNIGHT"] = "Interface/Icons/Spell_Deathknight_ClassIcon",
             ["DRUID"] = "Interface/Icons/ClassIcon_Druid",
@@ -125,7 +152,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
             ["WARRIOR"] = "Interface/Icons/ClassIcon_Warrior",
         };
         local classIcon = classIcons[classFile] or "Interface/Icons/INV_Misc_QuestionMark";
-        local classText = WrapTextInColor(className, RAID_CLASS_COLORS[classFile]);
+        local classText = SAO:gradientText(className, gradientColors);
         classInfoLabel:SetText(string.format("|T%s:16:16:0:0:512:512:32:480:32:480|t %s", classIcon, classText));
     else
         -- If CurrentClass is nil, it means the class is not supported
