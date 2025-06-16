@@ -53,7 +53,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
         end
     end
 
-    local build = SpellActivationOverlayOptionsPanelBuild;
+    local buildInfoLabel = SpellActivationOverlayOptionsPanelBuildInfo;
     local xSaoBuild = GetAddOnMetadata(AddonName, "X-SAO-Build");
     if type(xSaoBuild) == 'string' and #xSaoBuild > 0 then -- X-SAO-Build is defined only for the original SAO addon, not for other builds such as Necrosis
         local titleText = GetAddOnMetadata(AddonName, "Title");
@@ -69,7 +69,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
                     {r=0, g=0.3, b=1},   -- blue (end)
                 }
             );
-            build:SetText(titleText.."\n"..universalText);
+            buildInfoLabel:SetText(titleText.."\n"..universalText);
         elseif xSaoBuild == "dev" then
             -- Developer build is compatible with everything
             local buildForDevs = SAO:gradientText(
@@ -80,7 +80,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
                     {r=0, g=0.3, b=1}, -- blue (end)
                 }
             );
-            build:SetText(titleText.."\n"..buildForDevs);
+            buildInfoLabel:SetText(titleText.."\n"..buildForDevs);
         else
             -- Optimized build, must check compatibility
             local addonBuild = SAO.GetFullProjectName(xSaoBuild);
@@ -89,7 +89,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
                 titleText = WrapTextInColorCode(titleText, "ffff0000");
                 addonBuild = WrapTextInColorCode(addonBuild, "ffff0000");
                 expectedBuild = WrapTextInColorCode(expectedBuild, "ffff0000");
-                build:SetFontObject(GameFontNormalLarge);
+                buildInfoLabel:SetFontObject(GameFontNormalLarge);
                 SAO:Info("", SAO:compatibilityWarning(addonBuild, expectedBuild));
             end
 
@@ -104,8 +104,62 @@ function SpellActivationOverlayOptionsPanel_Init(self)
                 optimizedForText = SAO:optimizedFor(string.format(BNET_FRIEND_ZONE_WOW_CLASSIC, addonBuild));
             end
 
-            build:SetText(titleText.."\n"..optimizedForText);
+            buildInfoLabel:SetText(titleText.."\n"..optimizedForText);
         end
+    end
+
+    local classInfoLabel = SpellActivationOverlayOptionsPanelClassInfo;
+    if SAO.CurrentClass then
+        local className, classFile, classId = SAO.CurrentClass.Intrinsics[1], SAO.CurrentClass.Intrinsics[2], SAO.CurrentClass.Intrinsics[3];
+        local gradientColors;
+        if classFile == "PRIEST" then
+            -- Special case for Priest, use a different gradient
+            -- Because their class color is white, it is not possible to make it brighter
+            gradientColors = {
+                {r=0.8, g=0.8, b=0.8}, -- gray (start)
+                RAID_CLASS_COLORS[classFile], -- Priest white
+                {r=0.9, g=0.9, b=0.9}, -- gray (middle)
+                {r=0.7, g=0.7, b=0.7}, -- gray (end)
+            };
+        else
+            -- Gradient for all classes but Priest
+            local function mixColors(color1, color2, t)
+                return {
+                    r = color1.r * (1 - t) + color2.r * t,
+                    g = color1.g * (1 - t) + color2.g * t,
+                    b = color1.b * (1 - t) + color2.b * t,
+                };
+            end
+            local classColor = RAID_CLASS_COLORS[classFile];
+            gradientColors = {
+                classColor,
+                mixColors(classColor, {r=1, g=1, b=1}, 0.25), -- Moderately lighter
+                classColor,
+                mixColors(classColor, {r=0, g=0, b=0}, 0.15), -- Slightly darker
+            };
+        end
+        local classIcons = {
+            ["DEATHKNIGHT"] = "Interface/Icons/Spell_Deathknight_ClassIcon",
+            ["DRUID"] = "Interface/Icons/ClassIcon_Druid",
+            ["HUNTER"] = "Interface/Icons/ClassIcon_Hunter",
+            ["MAGE"] = "Interface/Icons/ClassIcon_Mage",
+            ["MONK"] = "Interface/Icons/ClassIcon_Monk",
+            ["PALADIN"] = "Interface/Icons/ClassIcon_Paladin",
+            ["PRIEST"] = "Interface/Icons/ClassIcon_Priest",
+            ["ROGUE"] = "Interface/Icons/ClassIcon_Rogue",
+            ["SHAMAN"] = "Interface/Icons/ClassIcon_Shaman",
+            ["WARLOCK"] = "Interface/Icons/ClassIcon_Warlock",
+            ["WARRIOR"] = "Interface/Icons/ClassIcon_Warrior",
+        };
+        local classIcon = classIcons[classFile] or "Interface/Icons/INV_Misc_QuestionMark";
+        local classText = SAO:gradientText(className, gradientColors);
+        classInfoLabel:SetText(string.format("|T%s:16:16:0:0:512:512:32:480:32:480|t %s", classIcon, classText));
+    else
+        -- If CurrentClass is nil, it means the class is not supported
+        -- We could get the class from UnitClass("player"), but that's not the point of this label
+        -- This label is supposed to reflect what was loaded for the current class
+        -- If the class is not supported, it does not make much sense to tell "here is what we've got for this class"
+        classInfoLabel:SetText("");
     end
 
     local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;

@@ -40,14 +40,16 @@ function SAO.AddOverlayOption(self, talentID, auraID, hash, talentSubText, varia
         local enabled = self:IsEnabled();
 
         -- Class text
-        local classColor;
-        if (enabled) then
-            classColor = select(4,GetClassColor(classFile));
-        else
-            local dimmedClassColor = CreateColor(0.5*RAID_CLASS_COLORS[classFile].r, 0.5*RAID_CLASS_COLORS[classFile].g, 0.5*RAID_CLASS_COLORS[classFile].b);
-            classColor = dimmedClassColor:GenerateHexColor();
-        end
-        local text = WrapTextInColorCode(className, classColor);
+        local text = "";
+        -- No longer display the class name for each overlay
+        -- local classColor;
+        -- if (enabled) then
+        --     classColor = select(4,GetClassColor(classFile));
+        -- else
+        --     local dimmedClassColor = CreateColor(0.5*RAID_CLASS_COLORS[classFile].r, 0.5*RAID_CLASS_COLORS[classFile].g, 0.5*RAID_CLASS_COLORS[classFile].b);
+        --     classColor = dimmedClassColor:GenerateHexColor();
+        -- end
+        -- text = WrapTextInColorCode(className, classColor);
 
         -- Talent text
         text = text.." "..talentText;
