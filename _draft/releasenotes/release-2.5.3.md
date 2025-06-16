@@ -16,6 +16,11 @@ The Monk class is now supported!
 Spell Alerts
 - Combo Breaker: Blackout Kick
 - Combo Breaker: Tiger Palm
+### :rogue:  Rogue
+The Rogue class is now fully supported for Mists of Pandaria!
+
+Spell Alert
+- Blindside
 ## Bug Fixes
 ## Known Limitations
 ## Internationalization

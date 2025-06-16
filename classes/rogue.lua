@@ -150,13 +150,13 @@ local function customCLEU(self, ...)
     end
 end
 
-local function registerClass(self)
+local function useRiposte()
     -- Register Riposte as both an aura and a counter
     local riposte = 14251;
     -- Lazy evaluation for variants, because they will be initialized later on
     local riposteOverlayOption = { variants = function() return RiposteHandler.alertVariants end }
     local riposteButtonOption = { variants = function() return RiposteHandler.variants end }
-    self:CreateEffect(
+    SAO:CreateEffect(
         "riposte",
         SAO.ERA + SAO.TBC + SAO.WRATH,
         riposte,
@@ -169,10 +169,12 @@ local function registerClass(self)
             buttonOption = riposteButtonOption,
         }
     );
+end
 
+local function useMurderousIntent()
     local backstab = 53;
     local murderousIntent = 14158;
-    self:CreateEffect(
+    SAO:CreateEffect(
         "murderous_intent",
         SAO.CATA,
         murderousIntent,
@@ -183,11 +185,14 @@ local function registerClass(self)
             button = backstab,
         }
     );
+end
 
+local function useCutthroat()
     local ambush = 8676;
     local cutthroatBuff = 462707;
     local cutthroatRune = 424980;
-    self:CreateEffect(
+
+    SAO:CreateEffect(
         "cutthroat",
         SAO.SOD,
         cutthroatBuff,
@@ -197,12 +202,34 @@ local function registerClass(self)
             overlay = { texture = "white_tiger", position = "Left + Right (Flipped)" },
             button = ambush,
         }
-    )
+    );
+end
+
+local function useBlindside()
+    local blindsideBuff = 121153;
+    local blindsideTalent = 121152;
+
+    SAO:CreateEffect(
+        "blindside",
+        SAO.MOP,
+        blindsideBuff,
+        "aura",
+        {
+            talent = blindsideTalent,
+            overlay = { texture = "sudden_death", position = "Left + Right (Flipped)" },
+        }
+    );
+end
+
+local function registerClass(self)
+    useRiposte();
+    useMurderousIntent();
+    useCutthroat();
+    useBlindside();
 end
 
 SAO.Class["ROGUE"] = {
     ["Register"] = registerClass,
     ["PLAYER_LOGIN"] = customLogin,
     ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
-    IsDisabled = SAO.IsMoP(),
 }

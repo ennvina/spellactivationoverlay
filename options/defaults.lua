@@ -556,6 +556,9 @@ SAO.defaults = {
                 [462707] = { -- Cutthroat (Season of Discovery)
                     [0] = true,
                 },
+                [121153] = { -- Blindside (Mists of Pandaria)
+                    [0] = true,
+                },
             },
             glow = {
                 [14158] = { -- Murderous Intent (not an actual buff) (Cataclysm)
