@@ -445,16 +445,21 @@ local function useRagingBlow()
 end
 
 local function useSuddenDeath()
-    local suddenDeathBuff = SAO.IsSoD() and 440114 or 52437;
-    local suddenDeathTalent = SAO.IsSoD() and 440113 or 29723;
-
     SAO:CreateEffect(
         "sudden_death",
         SAO.SOD + SAO.WRATH + SAO.CATA,
-        suddenDeathBuff,
+        {
+            [SAO.SOD] = 440114,
+            [SAO.WRATH] = 52437,
+            [SAO.CATA] = 52437,
+        },
         "aura",
         {
-            talent = suddenDeathTalent,
+            talent = {
+                [SAO.SOD] = 440113,
+                [SAO.WRATH] = 29723,
+                [SAO.CATA] = 29723,
+            },
             overlay = { texture = "sudden_death", position = "Left + Right (Flipped)" },
             buttons = {
                 [SAO.SOD] = execute,
@@ -533,15 +538,21 @@ end
 
 local function useBloodsurge()
     -- Quick note: the ability is spelled "Bloodsurge" in Wrath+ and "Blood Surge" in Season of Discovery
-    local bloodsurgeBuff = SAO.IsSoD() and 413399 or 46916;
-    local bloodsurgeTalent = SAO.IsSoD() and 413380 or 46913;
-
     SAO:CreateEffect(
         "bloodsurge",
         SAO.SOD + SAO.WRATH + SAO.CATA,
-        bloodsurgeBuff,
+        {
+            [SAO.SOD] = 413399,
+            [SAO.WRATH] = 46916,
+            [SAO.CATA] = 46916,
+        },
         "aura",
         {
+            -- talent = {
+            --     [SAO.SOD] = 413380,
+            --     [SAO.WRATH] = 46913,
+            --     [SAO.CATA] = 46913,
+            -- },
             overlays = {
                 [SAO.SOD+SAO.WRATH] = { texture = "blood_surge", position = "Top" },
                 [SAO.CATA] = { texture = "blood_surge", position = "Left + Right (Flipped)" }, -- Left/Right because texture orientation has changed
@@ -552,16 +563,21 @@ local function useBloodsurge()
 end
 
 local function useSwordAndBoard()
-    local swordAndBoardBuff = SAO.IsSoD() and 426979 or 50227;
-    local swordAndBoardTalent = SAO.IsSoD() and 426978 or 46951;
-
     SAO:CreateEffect(
         "sword_and_board",
         SAO.SOD + SAO.WRATH + SAO.CATA,
-        swordAndBoardBuff,
+        {
+            [SAO.SOD] = 426979,
+            [SAO.WRATH] = 50227,
+            [SAO.CATA] = 50227,
+        },
         "aura",
         {
-            talent = swordAndBoardTalent,
+            talent = {
+                [SAO.SOD] = 426978,
+                [SAO.WRATH] = 46951, -- Rank 1
+                [SAO.CATA] = 46951, -- Rank 1
+            },
             overlay = { texture = "sword_and_board", position = "Left + Right (Flipped)" },
             button = shieldSlam,
         }
