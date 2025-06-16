@@ -593,6 +593,23 @@ local function useSwordAndBoard()
     );
 end
 
+local function useUltimatum()
+    local ultimatumBuff = 122510;
+    local ultimatumTalent = 122509;
+
+    SAO:CreateEffect(
+        "ultimatum",
+        SAO.SOD + SAO.WRATH + SAO.CATA,
+        ultimatumBuff,
+        "aura",
+        {
+            talent = ultimatumTalent,
+            overlay = { texture = "ultimatum", position = "Top" },
+            -- buttons = { heroicStrike, cleave }, -- Buttons already glowing natively
+        }
+    );
+end
+
 local function useIncite()
     local inciteBuff = 86627;
     local inciteTalent = 50685; -- Rank 1
@@ -658,6 +675,7 @@ local function registerClass(self)
 
     -- Protection
     useSwordAndBoard();
+    useUltimatum();
     useIncite();
 
     -- Talents

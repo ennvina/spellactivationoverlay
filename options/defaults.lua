@@ -753,6 +753,9 @@ SAO.defaults = {
                 [402911]= { -- Raging Blow (Season of Discovery)
                     [0] = true,
                 },
+                [122510]= { -- Ultimatum (Mists of Pandaria)
+                    [0] =  true,
+                }
             },
             glow = {
                 [7384] = { -- Overpower
