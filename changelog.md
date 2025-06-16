@@ -15,6 +15,7 @@ Unsupported Spell Alerts (Mists of Pandaria)
 New Spell Alerts
 - Monk's Combo Breaker: Blackout Kick
 - Monk's Combo Breaker: Tiger Palm
+- Rogue's Blindside
 
 Internationalization
 - Traditional Chinese (zh-TW) is now fully supported

@@ -205,10 +205,27 @@ local function useCutthroat()
     );
 end
 
+local function useBlindside()
+    local blindsideBuff = 121153;
+    local blindsideTalent = 121152;
+
+    SAO:CreateEffect(
+        "blindside",
+        SAO.MOP,
+        blindsideBuff,
+        "aura",
+        {
+            talent = blindsideTalent,
+            overlay = { texture = "sudden_death", position = "Left + Right (Flipped)" },
+        }
+    );
+end
+
 local function registerClass(self)
     useRiposte();
     useMurderousIntent();
     useCutthroat();
+    useBlindside();
 end
 
 SAO.Class["ROGUE"] = {
