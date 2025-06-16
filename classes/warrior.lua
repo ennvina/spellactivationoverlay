@@ -471,6 +471,11 @@ local function useSuddenDeath()
 end
 
 local function useBladestorm()
+    if SAO.IsProject(SAO.MOP_AND_ONWARD) then
+        -- Not interested in Bladestorm in Mists of Pandaria and later
+        return;
+    end
+
     local bladestorm = 46924;
 
     -- Bladestorm texture orientation depends on race and gender
@@ -496,6 +501,10 @@ local function useBladestorm()
         [10] = { nil, ccw, cw  }, -- Blood Elf
         [11] = { nil, ccw, ccw }, -- Draenei
         [22] = { nil, ccw, ccw }, -- Worgen
+        -- Pandaren not included, because Bladestorm is not supported in Mists of Pandaria and later
+        -- [24] = { nil, ccw, ccw }, -- Pandaren (Neutral)
+        -- [25] = { nil, ccw, ccw }, -- Pandaren (Alliance)
+        -- [26] = { nil, ccw, ccw }, -- Pandaren (Horde)
     };
     if not positions[race] then
         SAO:Error(Module, "Unknown race "..tostring((UnitRace("player"))));
