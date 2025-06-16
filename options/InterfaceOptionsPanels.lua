@@ -108,6 +108,33 @@ function SpellActivationOverlayOptionsPanel_Init(self)
         end
     end
 
+    local classInfoLabel = SpellActivationOverlayOptionsPanelClassInfo;
+    if SAO.CurrentClass then
+        local className, classFile, classId = SAO.CurrentClass.Intrinsics[1], SAO.CurrentClass.Intrinsics[2], SAO.CurrentClass.Intrinsics[3];
+        local classIcons = {
+            ["DEATHKNIGHT"] = "Interface/Icons/Spell_Deathknight_ClassIcon",
+            ["DRUID"] = "Interface/Icons/ClassIcon_Druid",
+            ["HUNTER"] = "Interface/Icons/ClassIcon_Hunter",
+            ["MAGE"] = "Interface/Icons/ClassIcon_Mage",
+            ["MONK"] = "Interface/Icons/ClassIcon_Monk",
+            ["PALADIN"] = "Interface/Icons/ClassIcon_Paladin",
+            ["PRIEST"] = "Interface/Icons/ClassIcon_Priest",
+            ["ROGUE"] = "Interface/Icons/ClassIcon_Rogue",
+            ["SHAMAN"] = "Interface/Icons/ClassIcon_Shaman",
+            ["WARLOCK"] = "Interface/Icons/ClassIcon_Warlock",
+            ["WARRIOR"] = "Interface/Icons/ClassIcon_Warrior",
+        };
+        local classIcon = classIcons[classFile] or "Interface/Icons/INV_Misc_QuestionMark";
+        local classText = WrapTextInColor(className, RAID_CLASS_COLORS[classFile]);
+        classInfoLabel:SetText(string.format("|T%s:16:16:0:0:512:512:32:480:32:480|t %s", classIcon, classText));
+    else
+        -- If CurrentClass is nil, it means the class is not supported
+        -- We could get the class from UnitClass("player"), but that's not the point of this label
+        -- This label is supposed to reflect what was loaded for the current class
+        -- If the class is not supported, it does not make much sense to tell "here is what we've got for this class"
+        classInfoLabel:SetText("");
+    end
+
     local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
     opacitySlider.Text:SetText(SPELL_ALERT_OPACITY);
     _G[opacitySlider:GetName().."Low"]:SetText(OFF);
