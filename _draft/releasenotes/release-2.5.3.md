@@ -1,6 +1,8 @@
 # SpellActivationOverlay 2.5.3
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.5.3
 ## General
+### SpellActivationOverlay vs. SpellActivationOverlay
+The game's spell alert options are now checked at start (Mists of Pandaria). When you log in for the first time, you will be asked to disable the game's spell alert to avoid conflicts. Considering the game's spell alerts currently have many issues, it is best to disable them for now.
 ### Contribution
 Starting today, up until the pre-patch of Mists of Pandaria, spell alerts that are seen in-game but unknown to the addon will be reported to the game chat.
 

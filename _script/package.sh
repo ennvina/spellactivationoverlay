@@ -266,7 +266,8 @@ thrill_of_the_hunt_1
 thrill_of_the_hunt_2
 thrill_of_the_hunt_3
 tooth_and_claw
-white_tiger)
+white_tiger
+rkm128)
 prunetex "${TEXTURES_NOT_FOR_WRATH[@]}"
 
 zipproject wrath "$VERSION_TOC_VERSION"
@@ -296,7 +297,8 @@ rime
 sudden_doom
 thrill_of_the_hunt_1
 thrill_of_the_hunt_2
-thrill_of_the_hunt_3)
+thrill_of_the_hunt_3
+rkm128)
 prunetex "${TEXTURES_NOT_FOR_VANILLA[@]}"
 
 zipproject vanilla "$VERSION_TOC_VERSION"
@@ -330,7 +332,7 @@ thrill_of_the_hunt_3
 tooth_and_claw
 white_tiger
 $(texbelow 511469 450914 450915)
-)
+rkm128)
 prunetex "${TEXTURES_NOT_FOR_CATA[@]}"
 
 SOUNDS_NOT_FOR_CATA=(UI_PowerAura_Generic)
@@ -439,7 +441,8 @@ thrill_of_the_hunt_1
 thrill_of_the_hunt_2
 thrill_of_the_hunt_3
 tooth_and_claw
-white_tiger)
+white_tiger
+rkm128)
 prunetex "${TEXTURES_NOT_FOR_NECROSIS[@]}"
 
 dos2unix "*.lua" "*.xml"

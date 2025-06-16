@@ -2,6 +2,11 @@
 
 #### v2.5.3 (2025-06-xx)
 
+SpellActivationOverlay vs. SpellActivationOverlay
+- The game's spell alert options are now checked at start (Mists of Pandaria)
+- You will be asked to disable the game's spell alert to avoid conflicts
+- With the current state of the game, it is best to disable them for now
+
 Unsupported Spell Alerts (Mists of Pandaria)
 - A message is displayed when detecting an unsupported spell alert
 - You are encouraged to report them, thank you in advance for your help :)
