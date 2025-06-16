@@ -53,7 +53,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
         end
     end
 
-    local build = SpellActivationOverlayOptionsPanelBuild;
+    local buildInfoLabel = SpellActivationOverlayOptionsPanelBuildInfo;
     local xSaoBuild = GetAddOnMetadata(AddonName, "X-SAO-Build");
     if type(xSaoBuild) == 'string' and #xSaoBuild > 0 then -- X-SAO-Build is defined only for the original SAO addon, not for other builds such as Necrosis
         local titleText = GetAddOnMetadata(AddonName, "Title");
@@ -69,7 +69,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
                     {r=0, g=0.3, b=1},   -- blue (end)
                 }
             );
-            build:SetText(titleText.."\n"..universalText);
+            buildInfoLabel:SetText(titleText.."\n"..universalText);
         elseif xSaoBuild == "dev" then
             -- Developer build is compatible with everything
             local buildForDevs = SAO:gradientText(
@@ -80,7 +80,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
                     {r=0, g=0.3, b=1}, -- blue (end)
                 }
             );
-            build:SetText(titleText.."\n"..buildForDevs);
+            buildInfoLabel:SetText(titleText.."\n"..buildForDevs);
         else
             -- Optimized build, must check compatibility
             local addonBuild = SAO.GetFullProjectName(xSaoBuild);
@@ -89,7 +89,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
                 titleText = WrapTextInColorCode(titleText, "ffff0000");
                 addonBuild = WrapTextInColorCode(addonBuild, "ffff0000");
                 expectedBuild = WrapTextInColorCode(expectedBuild, "ffff0000");
-                build:SetFontObject(GameFontNormalLarge);
+                buildInfoLabel:SetFontObject(GameFontNormalLarge);
                 SAO:Info("", SAO:compatibilityWarning(addonBuild, expectedBuild));
             end
 
@@ -104,7 +104,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
                 optimizedForText = SAO:optimizedFor(string.format(BNET_FRIEND_ZONE_WOW_CLASSIC, addonBuild));
             end
 
-            build:SetText(titleText.."\n"..optimizedForText);
+            buildInfoLabel:SetText(titleText.."\n"..optimizedForText);
         end
     end
 

@@ -5,11 +5,22 @@
   <Frame name="SpellActivationOverlayOptionsPanel" hidden="true" parent="UIParent">
     <Layers>
       <Layer level="ARTWORK">
-        <FontString name="$parentBuild" text="" inherits="GameFontNormal" justifyH="CENTER" justifyV="CENTER">
+        <FontString name="$parentBuildInfo" text="" inherits="GameFontNormal" justifyH="CENTER" justifyV="CENTER">
           <Anchors>
             <Anchor point="BOTTOMRIGHT">
               <Offset>
                 <AbsDimension x="-16" y="32"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+      <Layer level="ARTWORK">
+        <FontString name="$parentClassInfo" text="" inherits="GameFontNormalLarge" justifyH="CENTER" justifyV="CENTER">
+          <Anchors>
+            <Anchor point="BOTTOM" relativeTo="$parentBuildInfo" relativePoint="TOP">
+              <Offset>
+                <AbsDimension x="0" y="8"/>
               </Offset>
             </Anchor>
           </Anchors>
