@@ -483,6 +483,30 @@ local function useSuddenDeath()
     );
 end
 
+local function useTasteForBlood()
+    local hash0Stacks = SAO:HashNameFromStacks(0);
+    local hash5Stacks = SAO:HashNameFromStacks(5);
+
+    SAO:CreateEffect(
+        "taste_for_blood",
+        SAO.MOP,
+        60503, -- Taste for Blood (buff)
+        "aura",
+        {
+            talent = 56636, -- Taste for Blood (passive)
+            overlays = {
+                default = { texture = "bandits_guile", position = "Left + Right (Flipped)", option = false },
+                { stacks = 1, position = "Left", option = { setupHash = hash0Stacks, testHash = hash5Stacks } },
+                { stacks = 2 },
+                { stacks = 3 },
+                { stacks = 4 },
+                { stacks = 5 },
+            },
+            button = overpower,
+        }
+    );
+end
+
 local function useBladestorm()
     if SAO.IsProject(SAO.MOP_AND_ONWARD) then
         -- Not interested in Bladestorm in Mists of Pandaria and later
@@ -680,6 +704,7 @@ local function registerClass(self)
 
     -- Arms
     useSuddenDeath();
+    useTasteForBlood();
     useBladestorm();
 
     -- Fury

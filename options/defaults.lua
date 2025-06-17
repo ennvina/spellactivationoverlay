@@ -753,6 +753,9 @@ SAO.defaults = {
                 [402911]= { -- Raging Blow (Season of Discovery)
                     [0] = true,
                 },
+                [60503] = { -- Taste for Blood (Mists of Pandaria)
+                    [0] = true, -- any stacks
+                },
                 [122510]= { -- Ultimatum (Mists of Pandaria)
                     [0] =  true,
                 }
@@ -813,6 +816,9 @@ SAO.defaults = {
                     [34428] = true, -- Victory Rush
                     [103840]= true, -- Impending Victory
                 },
+                [60503] = { -- Taste for Blood (Mists of Pandaria)
+                    [7384] = false, -- Overpower
+                }
             },
         },
     }
