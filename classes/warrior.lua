@@ -389,7 +389,7 @@ end
 local function useOverpower()
     SAO:CreateEffect(
         "overpower",
-        SAO.ALL_PROJECTS,
+        SAO.ALL_PROJECTS - SAO.MOP_AND_ONWARD, -- Already glowing natively in Mists of Pandaria and later
         overpower,
         "counter",
         {   -- Lazy evaluation for variants, because they are created later on
@@ -401,7 +401,7 @@ end
 local function useExecute()
     SAO:CreateEffect(
         "execute",
-        SAO.ALL_PROJECTS,
+        SAO.ALL_PROJECTS - SAO.MOP_AND_ONWARD, -- Already glowing natively in Mists of Pandaria and later
         execute,
         "counter",
         {   -- Lazy evaluation for variants, because they are created later on
@@ -413,7 +413,7 @@ end
 local function useRevenge()
     SAO:CreateEffect(
         "revenge",
-        SAO.ALL_PROJECTS,
+        SAO.ALL_PROJECTS - SAO.MOP_AND_ONWARD, -- Already glowing natively in Mists of Pandaria and later
         revenge,
         "counter",
         {   -- Lazy evaluation for variants, because they are created later on
