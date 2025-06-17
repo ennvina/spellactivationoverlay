@@ -425,9 +425,19 @@ end
 local function useVictoryRush()
     SAO:CreateEffect(
         "victory_rush",
-        SAO.ALL_PROJECTS - SAO.ERA, -- includes SAO.SOD, then SAO.TBC and later
+        SAO.ALL_PROJECTS - SAO.ERA - SAO.MOP_AND_ONWARD, -- includes SAO.SOD, then SAO.TBC and later,
+                                                         -- except for Mists of Pandaria and later where we track a buff instead
         victoryRush,
         "counter"
+    );
+    SAO:CreateEffect(
+        "victory_rush",
+        SAO.MOP_AND_ONWARD,
+        32216, -- Victorious (buff)
+        "aura",
+        {
+            buttons = { victoryRush, impendingVictory },
+        }
     );
 end
 

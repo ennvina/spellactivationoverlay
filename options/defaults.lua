@@ -809,6 +809,10 @@ SAO.defaults = {
                 [426979] = { -- Sword and Board (Season of Discovery)
                     [23922] = true, -- Shield Slam
                 },
+                [32216] = { -- Victorious (Mists of Pandaria)
+                    [34428] = true, -- Victory Rush
+                    [103840]= true, -- Impending Victory
+                },
             },
         },
     }
