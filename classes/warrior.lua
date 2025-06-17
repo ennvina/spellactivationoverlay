@@ -19,6 +19,7 @@ local revenge = 6572;
 local shieldSlam = 23922;
 local slam = 1464;
 local victoryRush = SAO.IsSoD() and 402927 or 34428;
+local impendingVictory = 103840;
 
 local function easyAs123(option)
     return option == "stance:1/2/3";
