@@ -789,7 +789,7 @@ SAO.defaults = {
                 },
                 [52437] = { -- Sudden Death (Wrath+)
                     [5308] = true, -- Execute (not for Cata)
-                    [86346]= true, -- Colossus Smash (Cataclysm)
+                    [86346]= true, -- Colossus Smash (Cataclysm+)
                 },
                 [440114] = { -- Sudden Death (Season of Discovery)
                     [5308] = true, -- Execute

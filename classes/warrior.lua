@@ -447,11 +447,12 @@ end
 local function useSuddenDeath()
     SAO:CreateEffect(
         "sudden_death",
-        SAO.SOD + SAO.WRATH + SAO.CATA,
+        SAO.SOD + SAO.WRATH_AND_ONWARD,
         {
             [SAO.SOD] = 440114,
             [SAO.WRATH] = 52437,
             [SAO.CATA] = 52437,
+            [SAO.MOP] = 52437,
         },
         "aura",
         {
@@ -459,6 +460,7 @@ local function useSuddenDeath()
                 [SAO.SOD] = 440113,
                 [SAO.WRATH] = 29723,
                 [SAO.CATA] = 29723,
+                [SAO.MOP] = 29725,
             },
             overlay = { texture = "sudden_death", position = "Left + Right (Flipped)" },
             buttons = {
