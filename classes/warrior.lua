@@ -612,7 +612,7 @@ local function useUltimatum()
 
     SAO:CreateEffect(
         "ultimatum",
-        SAO.SOD + SAO.WRATH + SAO.CATA,
+        SAO.MOP,
         ultimatumBuff,
         "aura",
         {
