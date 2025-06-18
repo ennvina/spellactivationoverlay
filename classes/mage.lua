@@ -910,12 +910,14 @@ local function loadOptions(self)
     elseif self.IsWrath() then
         self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuffWrath, iceLance);
         self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuffWrath, deepFreeze);
-        self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, iceLance);
-        self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, deepFreeze);
     elseif self.IsCata() then
         self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuffCata, iceLance);
         self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuffCata, deepFreeze);
+    end
+    if self.IsProject(SAO.TBC_AND_ONWARD) then
         self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, iceLance);
+    end
+    if self.IsProject(SAO.WRATH_AND_ONWARD) then
         self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, deepFreeze);
     end
 end
