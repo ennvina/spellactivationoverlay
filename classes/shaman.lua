@@ -271,6 +271,9 @@ local function registerClass(self)
         maelstromWeaponBuff,
         "aura",
         {
+            aka = {
+                [SAO.MOP] = 60349, -- Maelstrom
+            },
             talent = maelstromWeaponTalent,
             overlays = {
                 { stacks = 1, texture = "maelstrom_weapon_1", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
