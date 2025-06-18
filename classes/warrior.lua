@@ -495,7 +495,7 @@ local function useTasteForBlood()
         {
             talent = 56636, -- Taste for Blood (passive)
             overlays = {
-                default = { texture = "bandits_guile", position = "Left + Right (Flipped)", option = false },
+                default = { texture = "bandits_guile", position = "Left + Right (Flipped)", level = 4, scale = 0.9, option = false },
                 { stacks = 1, position = "Left", option = { setupHash = hash0Stacks, testHash = hash5Stacks } },
                 { stacks = 2 },
                 { stacks = 3 },
