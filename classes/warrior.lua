@@ -437,6 +437,7 @@ local function useVictoryRush()
         32216, -- Victorious (buff)
         "aura",
         {
+            overlay = { texture = "serendipity", position = "Top", level = 4, scale = 0.9, color = { 255, 32, 32 } },
             buttons = { victoryRush, impendingVictory },
         }
     );

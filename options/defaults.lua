@@ -753,6 +753,9 @@ SAO.defaults = {
                 [402911]= { -- Raging Blow (Season of Discovery)
                     [0] = true,
                 },
+                [32216] = { -- Victorious (Mists of Pandaria)
+                    [0] = true,
+                },
                 [60503] = { -- Taste for Blood (Mists of Pandaria)
                     [0] = true, -- any stacks
                 },
@@ -791,8 +794,8 @@ SAO.defaults = {
                     [845] = true, -- Cleave
                 },
                 [52437] = { -- Sudden Death (Wrath+)
-                    [5308] = true, -- Execute (not for Cata)
-                    [86346]= true, -- Colossus Smash (Cataclysm+)
+                    [5308]  = true, -- Execute (not for Cata)
+                    [86346] = true, -- Colossus Smash (Cataclysm+)
                 },
                 [440114] = { -- Sudden Death (Season of Discovery)
                     [5308] = true, -- Execute
@@ -813,8 +816,8 @@ SAO.defaults = {
                     [23922] = true, -- Shield Slam
                 },
                 [32216] = { -- Victorious (Mists of Pandaria)
-                    [34428] = true, -- Victory Rush
-                    [103840]= true, -- Impending Victory
+                    [34428]  = true, -- Victory Rush
+                    [103840] = true, -- Impending Victory
                 },
                 [60503] = { -- Taste for Blood (Mists of Pandaria)
                     [7384] = false, -- Overpower
