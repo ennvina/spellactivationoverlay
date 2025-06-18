@@ -739,7 +739,7 @@ SAO.defaults = {
                     [0] = true,
                 },
                 [46916] = { -- Bloodsurge (Wrath+)
-                    [0] = true, -- any stacks (up to 2 stacks with tier 10)
+                    [0] = true, -- any stacks (up to 2 stacks with tier 10, up to 3 stacks with Mists of Pandaria)
                 },
                 [413399] = { -- Bloodsurge (Season of Discovery)
                     [0] = true,
@@ -804,7 +804,8 @@ SAO.defaults = {
                     [5308] = true, -- Execute
                 },
                 [46916] = { -- Bloodsurge (Wrath+)
-                    [1464] = true, -- Slam
+                    [1464]   = true, -- Slam (Wrath, Cataclysm)
+                    -- [100130] = true, -- Wild Strike (Mists of Pandaria+)
                 },
                 [413399] = { -- Bloodsurge (Season of Discovery)
                     [1464] = true, -- Slam

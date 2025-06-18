@@ -13,13 +13,14 @@ local cleave = 845;
 local colossusSmash = 86346;
 local execute = 5308;
 local heroicStrike = 78;
+local impendingVictory = 103840;
 local overpower = 7384;
 local ragingBlowSoD = 402911;
 local revenge = 6572;
 local shieldSlam = 23922;
 local slam = 1464;
 local victoryRush = SAO.IsSoD() and 402927 or 34428;
-local impendingVictory = 103840;
+local wildStrike = 100130;
 
 local function easyAs123(option)
     return option == "stance:1/2/3";
@@ -585,26 +586,39 @@ end
 
 local function useBloodsurge()
     -- Quick note: the ability is spelled "Bloodsurge" in Wrath+ and "Blood Surge" in Season of Discovery
+    local hash0Stacks = SAO:HashNameFromStacks(0);
+    local hash3Stacks = SAO:HashNameFromStacks(3);
+
     SAO:CreateEffect(
         "bloodsurge",
-        SAO.SOD + SAO.WRATH + SAO.CATA,
+        SAO.SOD + SAO.WRATH_AND_ONWARD,
         {
-            [SAO.SOD] = 413399,
+            [SAO.SOD]   = 413399,
             [SAO.WRATH] = 46916,
-            [SAO.CATA] = 46916,
+            [SAO.CATA]  = 46916,
+            [SAO.MOP]   = 46916,
         },
         "aura",
         {
-            -- talent = {
-            --     [SAO.SOD] = 413380,
-            --     [SAO.WRATH] = 46913,
-            --     [SAO.CATA] = 46913,
-            -- },
+            talent = {
+                [SAO.SOD]   = 413380,
+                [SAO.WRATH] = 46913,
+                [SAO.CATA]  = 46913,
+                [SAO.MOP]   = 46915,
+            },
             overlays = {
                 [SAO.SOD+SAO.WRATH] = { texture = "blood_surge", position = "Top" },
                 [SAO.CATA] = { texture = "blood_surge", position = "Left + Right (Flipped)" }, -- Left/Right because texture orientation has changed
+                [SAO.MOP]  = {
+                    { stacks = 1, texture = "blood_surge", position = "Left",                   option = false },
+                    { stacks = 2, texture = "blood_surge", position = "Left + Right (Flipped)", option = false },
+                    { stacks = 3, texture = "blood_surge", position = "Left + Right (Flipped)", option = { setupHash = hash0Stacks, testHash = hash3Stacks } },
+                },
             },
-            button = slam,
+            buttons = {
+                [SAO.SOD+SAO.WRATH+SAO.CATA] = slam,
+                -- [SAO.MOP] = wildStrike, -- Already glowing natively in Mists of Pandaria and later
+            },
         }
     );
 end
