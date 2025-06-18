@@ -739,7 +739,7 @@ SAO.defaults = {
                     [0] = true,
                 },
                 [46916] = { -- Bloodsurge (Wrath+)
-                    [0] = true, -- any stacks (up to 2 stacks with tier 10)
+                    [0] = true, -- any stacks (up to 2 stacks with tier 10, up to 3 stacks with Mists of Pandaria)
                 },
                 [413399] = { -- Bloodsurge (Season of Discovery)
                     [0] = true,
@@ -753,6 +753,15 @@ SAO.defaults = {
                 [402911]= { -- Raging Blow (Season of Discovery)
                     [0] = true,
                 },
+                [32216] = { -- Victorious (Mists of Pandaria)
+                    [0] = true,
+                },
+                [60503] = { -- Taste for Blood (Mists of Pandaria)
+                    [0] = true, -- any stacks
+                },
+                [122510]= { -- Ultimatum (Mists of Pandaria)
+                    [0] =  true,
+                }
             },
             glow = {
                 [7384] = { -- Overpower
@@ -785,8 +794,8 @@ SAO.defaults = {
                     [845] = true, -- Cleave
                 },
                 [52437] = { -- Sudden Death (Wrath+)
-                    [5308] = true, -- Execute (not for Cata)
-                    [86346]= true, -- Colossus Smash (Cataclysm)
+                    [5308]  = true, -- Execute (not for Cata)
+                    [86346] = true, -- Colossus Smash (Cataclysm+)
                 },
                 [440114] = { -- Sudden Death (Season of Discovery)
                     [5308] = true, -- Execute
@@ -795,7 +804,8 @@ SAO.defaults = {
                     [5308] = true, -- Execute
                 },
                 [46916] = { -- Bloodsurge (Wrath+)
-                    [1464] = true, -- Slam
+                    [1464]   = true, -- Slam (Wrath, Cataclysm)
+                    -- [100130] = true, -- Wild Strike (Mists of Pandaria+)
                 },
                 [413399] = { -- Bloodsurge (Season of Discovery)
                     [1464] = true, -- Slam
@@ -806,6 +816,13 @@ SAO.defaults = {
                 [426979] = { -- Sword and Board (Season of Discovery)
                     [23922] = true, -- Shield Slam
                 },
+                [32216] = { -- Victorious (Mists of Pandaria)
+                    [34428]  = true, -- Victory Rush
+                    [103840] = true, -- Impending Victory
+                },
+                [60503] = { -- Taste for Blood (Mists of Pandaria)
+                    [7384] = false, -- Overpower
+                }
             },
         },
     }

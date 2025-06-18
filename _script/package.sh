@@ -352,7 +352,6 @@ TEXTURES_NOT_FOR_MOP=(
 arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
-bandits_guile
 echo_of_the_elements
 eclipse_moon
 eclipse_sun
