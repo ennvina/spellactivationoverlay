@@ -626,21 +626,26 @@ end
 local function useSwordAndBoard()
     SAO:CreateEffect(
         "sword_and_board",
-        SAO.SOD + SAO.WRATH + SAO.CATA,
+        SAO.SOD + SAO.WRATH_AND_ONWARD,
         {
-            [SAO.SOD] = 426979,
+            [SAO.SOD]   = 426979,
             [SAO.WRATH] = 50227,
-            [SAO.CATA] = 50227,
+            [SAO.CATA]  = 50227,
+            [SAO.MOP]   = 50227,
         },
         "aura",
         {
             talent = {
-                [SAO.SOD] = 426978,
+                [SAO.SOD]   = 426978,
                 [SAO.WRATH] = 46951, -- Rank 1
-                [SAO.CATA] = 46951, -- Rank 1
+                [SAO.CATA]  = 46951, -- Rank 1
+                [SAO.MOP]   = 46953,
             },
             overlay = { texture = "sword_and_board", position = "Left + Right (Flipped)" },
-            button = shieldSlam,
+            buttons = {
+                [SAO.SOD + SAO.WRATH + SAO.CATA] = shieldSlam,
+                -- [SAO.MOP] = shieldSlam, -- Already glowing natively in Mists of Pandaria and later
+            },
         }
     );
 end
