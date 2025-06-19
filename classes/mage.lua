@@ -296,12 +296,25 @@ local FrozenHandler = {
             self:activate();
         end
 
-        SAO:RegisterGlowIDs({
-            self.ice_lance[1],
-            self.ice_lance_sod[1],
-            self.deep_freeze[1],
-            self.deep_freeze_sod[1],
-        });
+        if SAO.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH) then
+            -- Up until Wrath, players could have several versions of the same spell
+            -- So we need to register spells based on their names, not their IDs
+            SAO:RegisterGlowIDs({
+                (GetSpellInfo(self.ice_lance[1])),
+                (GetSpellInfo(self.ice_lance_sod[1])),
+                (GetSpellInfo(self.deep_freeze[1])),
+                (GetSpellInfo(self.deep_freeze_sod[1])),
+            });
+        else
+            --assert(SAO.IsProject(SAO.CATA_AND_ONWARD))
+            -- Starting from Cataclysm, the spell ID is enough to identify the spell
+            SAO:RegisterGlowIDs({
+                self.ice_lance[1],
+                self.ice_lance_sod[1],
+                self.deep_freeze[1],
+                self.deep_freeze_sod[1],
+            });
+        end
 
         self.initialized = true;
     end,
