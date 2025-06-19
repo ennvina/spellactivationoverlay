@@ -4,6 +4,12 @@
 ### Options Panel
 The class name is displayed at one place in the options panel, instead of each time for each spell alert and each glowing button.
 ## Classes
+### :mage~1:  Mage
+Removed Glowing Buttons
+- Ice Lance\*, during Fingers of Frost (Mists of Pandaria)
+- Deep Freeze\*, during Fingers of Frost (Mists of Pandaria)
+
+\* These buttons are already glowing by the game client. Please note, it only concerns Fingers of Frost. Ice Lance and Deep Freeze will continue to glow for the Freeze debuff, because the game client does not glow Ice Lance nor Deep Freeze in this case.
 ### :warrior:  Warrior
 The Warrior class is now fully supported for Mists of Pandaria!
 
@@ -43,6 +49,8 @@ Warriors should no longer get invited to report the following unsupported effect
 ## Contributors
 Shout-out to our amazing contributors
 - Jumpsuitpally for sending feedback about Mage
+- LeBonkkers for also sending feedback about Mage
+- Optimizer2347 for reporting an unsupported effect
 Thanks!
 
 As always, the latest release is available on [CurseForge](https://www.curseforge.com/wow/addons/spellactivationoverlay) / [GitHub](https://github.com/ennvina/spellactivationoverlay/releases/latest) / [Discord](https://discord.com/channels/1013194771969355858/1379111832207228938)

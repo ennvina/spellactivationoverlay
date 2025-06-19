@@ -296,6 +296,13 @@ local FrozenHandler = {
             self:activate();
         end
 
+        SAO:RegisterGlowIDs({
+            self.ice_lance[1],
+            self.ice_lance_sod[1],
+            self.deep_freeze[1],
+            self.deep_freeze_sod[1],
+        });
+
         self.initialized = true;
     end,
 
@@ -610,14 +617,14 @@ local function useFingersOfFrost()
         fingersOfFrostBuff,
         "aura",
         {
+            aka = {
+                [SAO.MOP] = 126084, -- Fingers of Frost (second charge)
+            },
             overlays = { -- Slightly bigger to avoid overlap with Arcane Missiles, and slightly dimmer to compensate
                 { stacks = 1, texture = "frozen_fingers", position = "Left",                   scale = 1.1, color = { 222, 222, 222 }, option = false },
                 { stacks = 2, texture = "frozen_fingers", position = "Left + Right (Flipped)", scale = 1.1, color = { 222, 222, 222 }, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
             },
-            buttons = {
-                FrozenHandler.ice_lance[1],
-                FrozenHandler.deep_freeze[1],
-            },
+            -- buttons = { FrozenHandler.ice_lance[1], FrozenHandler.deep_freeze[1], }, -- Already glowing natively
         }
     );
 end
