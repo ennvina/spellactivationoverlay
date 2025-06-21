@@ -37,6 +37,8 @@ Removed Glowing Buttons\*\*
 ### :mage~1:  Mage
 The Freeze effect would always glow Ice Lance and Deep Freeze (Mists of Pandaria). Options for their respective buttons have been added.
 ### :shaman:  Shaman
+Animations of Fulmination (Cataclysm, Mists of Pandaria) and Rolling Thunder (Season of Discovery) are now on par with other animations.
+
 Shamans should no longer get invited to report unsupported effect Maelstrom (Mists of Pandaria).
 ### :warrior:  Warrior
 Warriors should no longer get invited to report the following unsupported effects (Mists of Pandaria):
@@ -48,6 +50,7 @@ Warriors should no longer get invited to report the following unsupported effect
 ## Miscellaneous
 ## Contributors
 Shout-out to our amazing contributors
+- Amanthuul for helping once again with Shaman, this class wouldn't be the same without you :person_bowing:
 - Jumpsuitpally for sending feedback about Mage
 - LeBonkkers for also sending feedback about Mage
 - Optimizer2347 for reporting an unsupported effect

@@ -159,13 +159,12 @@ local function registerClass(self)
 
     -- Set up variables for Fulmination (Cataclysm and onward) and Rolling Thunder (Season of Discovery)
     local earthShock = 8042;
-    local lithtningShield = self.IsSoD() and {324, 325, 905, 945, 8134, 10431, 10432} or 324;  -- Lightning Shield (buff, all 7 variants for Season of Discovery, one variant otherwise)
-    
+
     -- Fulmination (Cataclysm and onward)
     SAO:CreateEffect(
         "fulmination",
         SAO.CATA_AND_ONWARD,
-        lithtningShield,
+        324, -- Lightning Shield
         "aura",
         {
             aka = 95774, -- Fulmination! (buff)
@@ -174,19 +173,19 @@ local function registerClass(self)
             overlays = {
                 default = { texture = "fulmination", position = "Top" },
                 [SAO.CATA] = {
-                    { scale=0.5, stacks = 6, pulse = false, },
-                    { scale=0.6, stacks = 7, pulse = false, },
-                    { scale=0.7, stacks = 8, pulse = false, },
-                    { scale=0.8, stacks = 9, pulse = true,  },
+                    { scale = 0.5, stacks = 6, pulse = false, },
+                    { scale = 0.6, stacks = 7, pulse = false, },
+                    { scale = 0.7, stacks = 8, pulse = false, },
+                    { scale = 0.8, stacks = 9, pulse = true,  },
                 },
                 [SAO.MOP] = {
-                    { scale=0.8, stacks = 7, },
+                    { scale = 0.8, stacks = 7, },
                 },
             },
             buttons = {
                 default = { spellID = earthShock },
                 [SAO.CATA] = { stacks = 9 },
-                [SAO.MOP] =  { stacks = 7 }, 
+                [SAO.MOP] =  { stacks = 7 },
             },
         }
     );
@@ -195,26 +194,19 @@ local function registerClass(self)
     SAO:CreateLinkedEffects(
         "rolling_thunder",
         SAO.SOD,
-        lithtningShield,
+        { 324, 325, 905, 945, 8134, 10431, 10432 }, -- Lightning Shield (ranks 1-7)
         "aura",
         {
-            talent =  432056, -- Rolling Thunder rune
+            talent =  432056, -- Rolling Thunder (rune)
+            requireTalent = true, -- Rune must be equipped, otherwise we would get false positives with Lightning Shield, which is available to every Shaman
             combatOnly = true,
             overlays = {
                 default = { texture = "fulmination", position = "Top" },
-                { scale=0.6, stacks = 7, pulse = false, },
-                { scale=0.7, stacks = 8, pulse = false, },
-                { scale=0.8, stacks = 9, pulse = true,  },
+                { scale = 0.6, stacks = 7, pulse = false, },
+                { scale = 0.7, stacks = 8, pulse = false, },
+                { scale = 0.8, stacks = 9, pulse = true,  },
             },
-            buttons = {{ spellID = earthShock, stacks = 9 },},
-            handlers = {{
-                onAboutToApplyHash = function(hashCalculator)
-                    local RollingThunderEquipped = (C_Engraving and SAO:IsSpellLearned(432056)); -- Checking if Rolling Thunder rune is equipped
-                    if not RollingThunderEquipped then
-                        hashCalculator:setAuraStacks(0);
-                    end
-                end,
-            },},
+            button = { stacks = 9, spellID = earthShock },
         }
     );
 
