@@ -169,6 +169,18 @@ local function useSurgeOfLight()
     end
 end
 
+local function useHolyWordChastise()
+    SAO:CreateEffect(
+        "hw_castise",
+        SAO.MOP,
+        88625, -- Holy Word: Chastise
+        "counter",
+        {
+            combatOnly = true,
+        }
+    );
+end
+
 local function useShadowform()
     SAO:CreateEffect(
         "shadowform",
@@ -314,6 +326,7 @@ local function registerClass(self)
     -- Holy
     useSerendipity();
     useSurgeOfLight(); -- Introduced in Curning Crusade, a talent in Mists of Pandaria
+    useHolyWordChastise();
 
     -- Shadow
     useShadowWordDeath();

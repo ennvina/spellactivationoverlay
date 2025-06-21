@@ -546,6 +546,9 @@ SAO.defaults = {
                 [81292] = { -- Glyph of Mind Spike (Mists of Pandaria)
                     [8092] = true,
                 },
+                [88625] = { -- Holy Word: Chastise (Mists of Pandaria)
+                    [88625] = false,
+                },
             },
         },
         ["ROGUE"] = {

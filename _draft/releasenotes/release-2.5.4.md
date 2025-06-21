@@ -10,6 +10,11 @@ Removed Glowing Buttons
 - Deep Freeze\*, during Fingers of Frost (Mists of Pandaria)
 
 \* These buttons are already glowing by the game client. Please note, it only concerns Fingers of Frost. Ice Lance and Deep Freeze will continue to glow for the Freeze debuff, because the game client does not glow Ice Lance nor Deep Freeze in this case.
+### :priest:  Priest
+New Glowing Button
+- Holy Word: Chastise\*\* (Mists of Pandaria)
+
+\*\* This button is disabled by default. Its intended use is for damage Priests who want to cast HW:Chastise on cooldown and don't know when the cooldown is reset thanks to Chakra: Chastise.
 ### :warrior:  Warrior
 The Warrior class is now fully supported for Mists of Pandaria!
 
@@ -51,8 +56,8 @@ Warriors should no longer get invited to report the following unsupported effect
 ## Contributors
 Shout-out to our amazing contributors
 - Amanthuul for helping once again with Shaman, this class wouldn't be the same without you :person_bowing:
+- TeamRemix for sending lots of feedback and test new effects for Priest
 - Jumpsuitpally for sending feedback about Mage
-- LeBonkkers for also sending feedback about Mage
 - Optimizer2347 for reporting an unsupported effect
 Thanks!
 
