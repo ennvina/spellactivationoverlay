@@ -25,8 +25,6 @@ local function registerClass(self)
     local hash2Stacks = self:HashNameFromStacks(2);
     local hash4Stacks = self:HashNameFromStacks(4);
     local hash6Stacks = self:HashNameFromStacks(6);
-    local hash7Stacks = self:HashNameFromStacks(7);
-    local hash8Stacks = self:HashNameFromStacks(8);
     local hash9Stacks = self:HashNameFromStacks(9);
 
     -- Elemental Focus has 2 charges on TBC, Wrath and Cataclysm
@@ -159,75 +157,66 @@ local function registerClass(self)
         }
     );
 
-    -- Fulmination (Cataclysm and onward)
+    -- Set up variables for Fulmination (Cataclysm and onward) and Rolling Thunder (Season of Discovery)
     local earthShock = 8042;
-    if self.IsProject(SAO.CATA_AND_ONWARD) then
-        local lithtningShield = 324;  -- Lightning Shield (buff)
-        SAO:CreateEffect(
-            "fulmination",
-            SAO.CATA_AND_ONWARD,
-            lithtningShield,
-            "aura",
-            {
-                aka = 95774, -- Fulmination! (buff)
-                talent = 88767, -- Fulmination (passive)
-                combatOnly = true,
-                overlays = {
-                    default = { texture = "fulmination", position = "Top" },
-                    [SAO.CATA] = {
-                        {scale=0.5, stacks = 6, option = { setupHash = hash6Stacks, testHash = hash6Stacks }, pulse = false, },
-                        {scale=0.6, stacks = 7, option = { setupHash = hash7Stacks, testHash = hash7Stacks }, pulse = false, },
-                        {scale=0.7, stacks = 8, option = { setupHash = hash8Stacks, testHash = hash8Stacks }, pulse = false, },
-                        {scale=0.8, stacks = 9, option = { setupHash = hash9Stacks, testHash = hash9Stacks }, pulse = true,  },
-                    },
-                    [SAO.MOP] = {
-                        {scale=0.8, stacks = 7, option = { setupHash = hash7Stacks, testHash = hash7Stacks } },
-                    },
+    local lithtningShield = self.IsSoD() and {324, 325, 905, 945, 8134, 10431, 10432} or 324;  -- Lightning Shield (buff, all 7 variants for Season of Discovery, one variant otherwise)
+    
+    -- Fulmination (Cataclysm and onward)
+    SAO:CreateEffect(
+        "fulmination",
+        SAO.CATA_AND_ONWARD,
+        lithtningShield,
+        "aura",
+        {
+            aka = 95774, -- Fulmination! (buff)
+            talent = 88767, -- Fulmination (passive)
+            combatOnly = true,
+            overlays = {
+                default = { texture = "fulmination", position = "Top" },
+                [SAO.CATA] = {
+                    { scale=0.5, stacks = 6, pulse = false, },
+                    { scale=0.6, stacks = 7, pulse = false, },
+                    { scale=0.7, stacks = 8, pulse = false, },
+                    { scale=0.8, stacks = 9, pulse = true,  },
                 },
-                buttons = {
-                    default = { spellID = earthShock },
-                    [SAO.CATA] = { stacks = 9 },
-                    [SAO.MOP] =  { stacks = 7}, 
+                [SAO.MOP] = {
+                    { scale=0.8, stacks = 7, },
                 },
-            }
-        );
-    end
+            },
+            buttons = {
+                default = { spellID = earthShock },
+                [SAO.CATA] = { stacks = 9 },
+                [SAO.MOP] =  { stacks = 7 }, 
+            },
+        }
+    );
 
     -- Rolling Thunder (Season of Discovery)
-    if self.IsSoD() then 
-        local lithtningShield = {324, 325, 905, 945, 8134, 10431, 10432} -- Lightning Shield (buff), all 7 variants for Season of Discovery
-        SAO:CreateLinkedEffects(
-            "rolling_thunder",
-            SAO.SOD,
-            lithtningShield,
-            "aura",
-            {
-                talent =  432056, -- Rolling Thunder rune
-                combatOnly = true,
-                overlays = {
-                    default = { texture = "fulmination", position = "Top" },
-                    [SAO.SOD] = {
-                        {scale=0.6, stacks = 7, option = { setupHash = hash7Stacks, testHash = hash7Stacks }, pulse = false, },
-                        {scale=0.7, stacks = 8, option = { setupHash = hash8Stacks, testHash = hash8Stacks }, pulse = false, },
-                        {scale=0.8, stacks = 9, option = { setupHash = hash9Stacks, testHash = hash9Stacks }, pulse = true, },
-                    },
-                },
-                buttons = {
-                    [SAO.SOD] = { spellID = earthShock, stacks = 9 },
-                },
-                handlers = {
-                    [SAO.SOD] = {
-                        onAboutToApplyHash = function(hashCalculator)
-                            local RollingThunderEquipped = (C_Engraving and SAO:IsSpellLearned(432056)); -- Checking if Rolling Thunder rune is equipped
-                            if not RollingThunderEquipped then
-                                hashCalculator:setAuraStacks(0);
-                            end
-                        end,
-                    },
-                },
-            }
-        );
-    end
+    SAO:CreateLinkedEffects(
+        "rolling_thunder",
+        SAO.SOD,
+        lithtningShield,
+        "aura",
+        {
+            talent =  432056, -- Rolling Thunder rune
+            combatOnly = true,
+            overlays = {
+                default = { texture = "fulmination", position = "Top" },
+                { scale=0.6, stacks = 7, pulse = false, },
+                { scale=0.7, stacks = 8, pulse = false, },
+                { scale=0.8, stacks = 9, pulse = true,  },
+            },
+            buttons = {{ spellID = earthShock, stacks = 9 },},
+            handlers = {{
+                onAboutToApplyHash = function(hashCalculator)
+                    local RollingThunderEquipped = (C_Engraving and SAO:IsSpellLearned(432056)); -- Checking if Rolling Thunder rune is equipped
+                    if not RollingThunderEquipped then
+                        hashCalculator:setAuraStacks(0);
+                    end
+                end,
+            },},
+        }
+    );
 
     if self.IsWrath() then
         -- Healing Trance / Soul Preserver
