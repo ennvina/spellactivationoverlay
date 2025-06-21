@@ -1,154 +1,5 @@
 local AddonName, SAO = ...
 
--- Optimize frequent calls
-local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
-local UnitGUID = UnitGUID
-
--- Detect Rolling Thunder stacks
-local RollingThunderHandler = {
-    -- Constants
-    lightningShield = {324, 325, 905, 945, 8134, 10431, 10432},
-    fakeSpellID = 324+1000000, -- For option testing
-
-    -- Constants that will be initialized at init()
-    lightningShieldSpellIDs = {},
-    earthShockSpells = {},
-    -- Variables
-    initialized = false,
-    glowtimer = nil,
-
-    -- Methods
-    init = function(self)
-        -- Fetch spell name of Earth Shock
-        -- Instead, we could hardcode the list of spell IDs of all ranks, but the spell name is fine
-        table.insert(self.earthShockSpells, (GetSpellInfo(8042)));
-
-        -- Keep spell ID of Lightning Shield ranks only for ranks known at the current expansion
-        for _, id in pairs(self.lightningShield) do
-            local name = GetSpellInfo(id);
-            if name then
-                self.lightningShieldSpellIDs[id] = true;
-            end
-        end
-        self:addSpellIDCandidates(self.lightningShield);
-
-        self.initialized = true;
-    end,
-
-    addSpellIDCandidates = function(self, ids)
-    end,
-
-    cleu = function(self)
-        local _, event, _, _, _, _, _, destGUID, _, _, _, _, _, _, _, stacks = CombatLogGetCurrentEventInfo()
-
-        -- Event must relate to the player
-        if (not destGUID) or (destGUID ~= UnitGUID("player")) then return end
-
-        -- Event must be about spell auras
-        if (event:sub(0,11) ~= "SPELL_AURA_") then return end
-
-        local spellID, spellName = select(12, CombatLogGetCurrentEventInfo());
-        local stackThreshold = SAO:IsCata() and 6 or 7; -- 6 or more for Cata, 7 or more for SoD, 7 for MoP
-        if (self.lightningShieldSpellIDs[spellID]) then
-            if (event == "SPELL_AURA_APPLIED_DOSE") or (event == "SPELL_AURA_REMOVED_DOSE") then
-            -- Deactivating old overlays and activating new one when Lightning Shield stack is gained or lost
-                self:deactivate();
-                if stacks >= stackThreshold then
-                    self:activate(stacks);
-                end
-            end
-            if (event == "SPELL_AURA_REMOVED") then
-                self:deactivate();
-            end
-        end
-    end,
-
-    activate = function(self, lightningShieldStacks)
-        -- SAO
-        local staticShockEquipped = C_Engraving and C_Engraving.IsRuneEquipped(49679);
-        if staticShockEquipped then
-            return;
-        end
-        local saoOption = SAO:GetOverlayOptions(324);
-        local hasSAO = not saoOption or type(saoOption[lightningShieldStacks]) == "nil" or saoOption[lightningShieldStacks];
-        if (hasSAO) then
-            local scale = 0.5 + 0.1 * (lightningShieldStacks - 6); -- 50%, 60%, 70%, 80% for Cataclysm or 60%, 70%, 80% for Season of Discovery
-            local pulse = lightningShieldStacks == 9 or nil;
-            if SAO:IsMoP() then
-                scale = 0.8 --80% for Mists of Pandaria
-                pulse = lightningShieldStacks == 7 or nil;
-            end
-            SAO:ActivateOverlay(lightningShieldStacks, 324, SAO.TexName["fulmination"], "Top", scale, 255, 255, 255, pulse, pulse);
-        end
-
-        -- GABs
-        local gabOption = SAO:GetGlowingOptions(324);
-        local hasESGAB = not gabOption or type(gabOption[324]) == "nil" or gabOption[324];
-        if (hasESGAB and (hasSAO or lightningShieldStacks == 9)) then
-            SAO:AddGlow(324, self.earthShockSpells); -- First arg is option ID, second arg is spell ID list
-        end
-    end,
-
-    deactivate = function(self)
-        -- SAO
-        SAO:DeactivateOverlay(324);
-
-        -- GAB
-        SAO:RemoveGlow(324);
-    end,
-}
-
--- Must deactivate Rolling Thunder if the rune is lost on wrists
--- Must activate Rolling Thunder after logging or changing runes, if the rune is present on wrists and if there are 7 or more charges or Lightning Shield
--- This function does not re-activate the effect if already activated
-local function checkRollingThunderRuneAndLightningSieldStacks(self, ...)
-    if not RollingThunderHandler.initialized then
-        return;
-    end
-
-    local RollingThunderEquipped = (C_Engraving and SAO:IsSpellLearned(432056));
-    if not (RollingThunderEquipped or SAO.IsProject(SAO.CATA_AND_ONWARD)) then
-        RollingThunderHandler:deactivate();
-    else
-        -- C_UnitAuras is currently available for Classic Era and Cataclysm only
-        -- Fortunately, RollingThunderHandler is used only on Season of Discovery and Cataclysm
-        local aura = C_UnitAuras.GetAuraDataBySpellName("player", GetSpellInfo(324));
-        local stackThreshold = SAO:IsCata() and 6 or 7; -- 6 or more for Cata, 7 or more for SoD
-        if aura and aura.applications >= stackThreshold and not SAO:GetBucketBySpellID(RollingThunderHandler.fakeSpellID):isDisplayed() then
-            RollingThunderHandler:activate(aura.applications);
-        end
-    end
-end
-
-local function rollingThunderCombatCheck(combat)
-    local TimetoLingerGlow = 2.5; -- Buttons glows temporarily for 2.5 secs
-    if not combat then RollingThunderHandler.glowtimer = C_Timer.NewTimer(
-        TimetoLingerGlow,
-        function() RollingThunderHandler:deactivate(); end
-    )
-    end
-    if combat then
-        if RollingThunderHandler.glowtimer then
-            RollingThunderHandler.glowtimer:Cancel();
-            RollingThunderHandler.glowtimer = nil;
-        end
-        checkRollingThunderRuneAndLightningSieldStacks();
-    end
-end
-
-local function deactivateRollingThunderGlow(self, ...)
-    rollingThunderCombatCheck(false);
-end
-
-local function activateRollingThunderGlow(self, ...)
-    rollingThunderCombatCheck(true);
-end
-
-local function customCLEU(self, ...)
-    if RollingThunderHandler.initialized then
-        RollingThunderHandler:cleu();
-    end
-end
 
 -- Check if Maelstrom Weapon effect should pulse at 5 stacks
 -- This question only applies to 5 stacks, because the answer is obvious for other stacks
@@ -176,7 +27,7 @@ local function registerClass(self)
     local hash6Stacks = self:HashNameFromStacks(6);
     local hash9Stacks = self:HashNameFromStacks(9);
 
-   -- Elemental Focus has 2 charges on TBC, Wrath and Cataclysm
+    -- Elemental Focus has 2 charges on TBC, Wrath and Cataclysm
     -- TBC/Wrath use echo_of_the_elements texture, with scale of 100%
     -- Cataclysm uses cleaner texture, with scale of 150%
     self:CreateEffect(
@@ -271,6 +122,9 @@ local function registerClass(self)
         maelstromWeaponBuff,
         "aura",
         {
+            aka = {
+                [SAO.MOP] = 60349, -- Maelstrom
+            },
             talent = maelstromWeaponTalent,
             overlays = {
                 { stacks = 1, texture = "maelstrom_weapon_1", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
@@ -303,26 +157,66 @@ local function registerClass(self)
         }
     );
 
-    if self.IsCata() then
-        -- Initializing Rolling Thunder handler for Fulmination in Cataclysm
-        if (not RollingThunderHandler.initialized) then
-            RollingThunderHandler:init();
-        end
-        for lightningShieldStacks=6,9 do
-            local auraName = "fulmination_"..lightningShieldStacks;
-            local scale = 0.5 + 0.1 * (lightningShieldStacks - 6); -- 50%, 60%, 70%, 80% for Cataclysm
-            local pulse = lightningShieldStacks == 9;
-            self:RegisterAura(auraName, lightningShieldStacks, RollingThunderHandler.fakeSpellID, "fulmination", "Top", scale, 255, 255, 255, pulse, RollingThunderHandler.earthShockSpells);
-        end
-    end
+    -- Set up variables for Fulmination (Cataclysm and onward) and Rolling Thunder (Season of Discovery)
+    local earthShock = 8042;
+    local lithtningShield = self.IsSoD() and {324, 325, 905, 945, 8134, 10431, 10432} or 324;  -- Lightning Shield (buff, all 7 variants for Season of Discovery, one variant otherwise)
+    
+    -- Fulmination (Cataclysm and onward)
+    SAO:CreateEffect(
+        "fulmination",
+        SAO.CATA_AND_ONWARD,
+        lithtningShield,
+        "aura",
+        {
+            aka = 95774, -- Fulmination! (buff)
+            talent = 88767, -- Fulmination (passive)
+            combatOnly = true,
+            overlays = {
+                default = { texture = "fulmination", position = "Top" },
+                [SAO.CATA] = {
+                    { scale=0.5, stacks = 6, pulse = false, },
+                    { scale=0.6, stacks = 7, pulse = false, },
+                    { scale=0.7, stacks = 8, pulse = false, },
+                    { scale=0.8, stacks = 9, pulse = true,  },
+                },
+                [SAO.MOP] = {
+                    { scale=0.8, stacks = 7, },
+                },
+            },
+            buttons = {
+                default = { spellID = earthShock },
+                [SAO.CATA] = { stacks = 9 },
+                [SAO.MOP] =  { stacks = 7 }, 
+            },
+        }
+    );
 
-    if self.IsMoP() then
-        -- Initializing Rolling Thunder handler for Fulmination in Mists of Pandaria
-        if (not RollingThunderHandler.initialized) then
-            RollingThunderHandler:init();
-        end
-            self:RegisterAura("fulmination", 7, RollingThunderHandler.fakeSpellID, "fulmination", "Top", 0.8, 255, 255, 255, true, RollingThunderHandler.earthShockSpells);
-    end
+    -- Rolling Thunder (Season of Discovery)
+    SAO:CreateLinkedEffects(
+        "rolling_thunder",
+        SAO.SOD,
+        lithtningShield,
+        "aura",
+        {
+            talent =  432056, -- Rolling Thunder rune
+            combatOnly = true,
+            overlays = {
+                default = { texture = "fulmination", position = "Top" },
+                { scale=0.6, stacks = 7, pulse = false, },
+                { scale=0.7, stacks = 8, pulse = false, },
+                { scale=0.8, stacks = 9, pulse = true,  },
+            },
+            buttons = {{ spellID = earthShock, stacks = 9 },},
+            handlers = {{
+                onAboutToApplyHash = function(hashCalculator)
+                    local RollingThunderEquipped = (C_Engraving and SAO:IsSpellLearned(432056)); -- Checking if Rolling Thunder rune is equipped
+                    if not RollingThunderEquipped then
+                        hashCalculator:setAuraStacks(0);
+                    end
+                end,
+            },},
+        }
+    );
 
     if self.IsWrath() then
         -- Healing Trance / Soul Preserver
@@ -335,11 +229,6 @@ local function registerClass(self)
     end
 
     if self.IsSoD() then
-
-        -- Initializing Rolling Thunder handler for Season of Discovery
-        if (not RollingThunderHandler.initialized) then
-            RollingThunderHandler:init();
-        end
 
         local moltenBlastSoD = 425339;
         self:CreateEffect(
@@ -392,12 +281,6 @@ local function registerClass(self)
         self:RegisterAura("power_surge_sod", 0, powerSurgeSoDBuff, powerSurgeRightTextureFunc, "Right (Flipped)", 1, 255, 255, 255, true, powerSurgeSpells);
         self:RegisterAura("elemental_focus", 0, elementalFocusBuff, elementalFocusLeftTextureFunc, "Left", 1, 255, 255, 255, false);
         self:RegisterAura("elemental_focus", 0, elementalFocusBuff, "echo_of_the_elements", "Right (Flipped)", 1, 255, 255, 255, false);
-        for lightningShieldStacks=7,9 do
-            local auraName = "rolling_thunder_"..lightningShieldStacks;
-            local scale = 0.5 + 0.1 * (lightningShieldStacks - 6); -- 60%, 70%, 80% for Season of Discovery
-            local pulse = lightningShieldStacks == 9;
-            self:RegisterAura(auraName, lightningShieldStacks, RollingThunderHandler.fakeSpellID, "fulmination", "Top", scale, 255, 255, 255, pulse, RollingThunderHandler.earthShockSpells);
-        end
 
         SAO:CreateEffect(
             "power_surge_sod_heal",
@@ -414,7 +297,6 @@ end
 
 local function loadOptions(self)
     local chainLightning = 421;
-    local chainHeal = 1064;
 
     local elementalFocusBuff = 16246;
     local elementalFocusTalent = 16164;
@@ -423,56 +305,25 @@ local function loadOptions(self)
     local lavaBurstSoD = 408490;
     local powerSurgeSoDBuff = 415105;
     local powerSurgeSoD = 415100;
-    local lightningShield = 324;
-    local rollingThunderSoD = 432056;
-    local earthShock = 8042;
-
-    --Cataclysm
-    local fulminationTalentCata = 88766;
-
-    local sevenToNineStacks = self:NbStacks(7, 9);
-    local sixToNineStacks = self:NbStacks(6, 9);
 
     if self.IsEra() then
         -- Elemental Focus has 1 charge on Classic Era
         self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff);
     end
 
-    if self.IsMoP() then
-        self:AddOverlayOption(fulminationTalentCata, lightningShield, self:HashNameFromStacks(7), nil, nil, nil, RollingThunderHandler.fakeSpellID);
-    end
-    if self.IsCata() then
-        self:AddOverlayOption(fulminationTalentCata, lightningShield, self:HashNameFromStacks(6), nil, nil, nil, RollingThunderHandler.fakeSpellID);
-        self:AddOverlayOption(fulminationTalentCata, lightningShield, self:HashNameFromStacks(7), nil, nil, nil, RollingThunderHandler.fakeSpellID);
-        self:AddOverlayOption(fulminationTalentCata, lightningShield, self:HashNameFromStacks(8), nil, nil, nil, RollingThunderHandler.fakeSpellID);
-        self:AddOverlayOption(fulminationTalentCata, lightningShield, self:HashNameFromStacks(9), nil, nil, nil, RollingThunderHandler.fakeSpellID);
-    end
     if self.IsWrath() then
         self:AddSoulPreserverOverlayOption(60515); -- 60515 = Shaman buff
     elseif self.IsSoD() then
         self:AddOverlayOption(powerSurgeSoD, powerSurgeSoDBuff, nil, DAMAGER);
-        self:AddOverlayOption(rollingThunderSoD, lightningShield, self:HashNameFromStacks(7), nil, nil, nil, RollingThunderHandler.fakeSpellID);
-        self:AddOverlayOption(rollingThunderSoD, lightningShield, self:HashNameFromStacks(8), nil, nil, nil, RollingThunderHandler.fakeSpellID);
-        self:AddOverlayOption(rollingThunderSoD, lightningShield, self:HashNameFromStacks(9), nil, nil, nil, RollingThunderHandler.fakeSpellID);
     end
 
-    if self.IsMoP() then
-        self:AddGlowingOption(fulminationTalentCata, lightningShield, earthShock, nil, nil, nil, self:HashNameFromStacks(7));
-    elseif self.IsCata() then
-        self:AddGlowingOption(fulminationTalentCata, lightningShield, earthShock, sixToNineStacks);
-    elseif self.IsSoD() then
+    if self.IsSoD() then
         self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, chainLightning, DAMAGER);
         self:AddGlowingOption(powerSurgeSoD, powerSurgeSoDBuff, lavaBurstSoD, DAMAGER);
-        self:AddGlowingOption(rollingThunderSoD, lightningShield, earthShock, sevenToNineStacks);
     end
 end
 
 SAO.Class["SHAMAN"] = {
     ["Register"] = registerClass,
     ["LoadOptions"] = loadOptions,
-    ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
-    ["SPELLS_CHANGED"] = checkRollingThunderRuneAndLightningSieldStacks,
-    ["PLAYER_REGEN_ENABLED"] = deactivateRollingThunderGlow,
-    ["PLAYER_REGEN_DISABLED"] = activateRollingThunderGlow,
-    ["PLAYER_LOGIN"] = deactivateRollingThunderGlow,
 }
