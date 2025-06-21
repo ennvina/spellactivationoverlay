@@ -296,6 +296,26 @@ local FrozenHandler = {
             self:activate();
         end
 
+        if SAO.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH) then
+            -- Up until Wrath, players could have several versions of the same spell
+            -- So we need to register spells based on their names, not their IDs
+            SAO:RegisterGlowIDs({
+                (GetSpellInfo(self.ice_lance[1])),
+                (GetSpellInfo(self.ice_lance_sod[1])),
+                (GetSpellInfo(self.deep_freeze[1])),
+                (GetSpellInfo(self.deep_freeze_sod[1])),
+            });
+        else
+            --assert(SAO.IsProject(SAO.CATA_AND_ONWARD))
+            -- Starting from Cataclysm, the spell ID is enough to identify the spell
+            SAO:RegisterGlowIDs({
+                self.ice_lance[1],
+                self.ice_lance_sod[1],
+                self.deep_freeze[1],
+                self.deep_freeze_sod[1],
+            });
+        end
+
         self.initialized = true;
     end,
 
@@ -610,14 +630,14 @@ local function useFingersOfFrost()
         fingersOfFrostBuff,
         "aura",
         {
+            aka = {
+                [SAO.MOP] = 126084, -- Fingers of Frost (second charge)
+            },
             overlays = { -- Slightly bigger to avoid overlap with Arcane Missiles, and slightly dimmer to compensate
                 { stacks = 1, texture = "frozen_fingers", position = "Left",                   scale = 1.1, color = { 222, 222, 222 }, option = false },
                 { stacks = 2, texture = "frozen_fingers", position = "Left + Right (Flipped)", scale = 1.1, color = { 222, 222, 222 }, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
             },
-            buttons = {
-                FrozenHandler.ice_lance[1],
-                FrozenHandler.deep_freeze[1],
-            },
+            -- buttons = { FrozenHandler.ice_lance[1], FrozenHandler.deep_freeze[1], }, -- Already glowing natively
         }
     );
 end
@@ -910,12 +930,14 @@ local function loadOptions(self)
     elseif self.IsWrath() then
         self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuffWrath, iceLance);
         self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuffWrath, deepFreeze);
-        self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, iceLance);
-        self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, deepFreeze);
     elseif self.IsCata() then
         self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuffCata, iceLance);
         self:AddGlowingOption(fingersOfFrostTalent, fingersOfFrostBuffCata, deepFreeze);
+    end
+    if self.IsProject(SAO.TBC_AND_ONWARD) then
         self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, iceLance);
+    end
+    if self.IsProject(SAO.WRATH_AND_ONWARD) then
         self:AddGlowingOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, deepFreeze);
     end
 end
