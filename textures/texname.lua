@@ -29,6 +29,8 @@ local mapping =
     ["449489"] 	= "Frozen Fingers",
     ["467696"] 	= "Fulmination",
     ["460831"] 	= "Fury of Stormrage",
+    -- Yellow-ish version of Fury of Stormrage, for Holy spells
+    ["30000006"]	= "Fury of Stormrage Yellow",
     ["450917"] 	= "GenericArc 01",
     ["450918"] 	= "GenericArc 02",
     ["450919"] 	= "GenericArc 03",

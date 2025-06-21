@@ -466,7 +466,7 @@ SAO.defaults = {
                     [3] = true,  -- 3 stacks
                     [0] = false, -- any stacks but 3
                 },
-                [63735] = { -- Serendipity (Cataclysm)
+                [63735] = { -- Serendipity (Cataclysm+)
                     [1] = nil, -- set to nil to simplify DB migration, from Serendipity at 0 stacks
                     [2] = nil, -- set to nil to simplify DB migration, from Serendipity at 3 stacks
                 },

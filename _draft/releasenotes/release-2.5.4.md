@@ -11,6 +11,11 @@ Removed Glowing Buttons
 
 \* These buttons are already glowing by the game client. Please note, it only concerns Fingers of Frost. Ice Lance and Deep Freeze will continue to glow for the Freeze debuff, because the game client does not glow Ice Lance nor Deep Freeze in this case.
 ### :priest:  Priest
+New Spell Alert
+- Serendipity\* (Mists of Pandaria)
+
+\* The Serendipity texture used is Cataclysm is now used for the Divine Insight effect, which matches the reference client of Mists of Pandaria. Another texture has been selected for the Serendipity effect in Mists of Pandaria.
+
 New Glowing Button
 - Holy Word: Chastise\*\* (Mists of Pandaria)
 
