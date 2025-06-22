@@ -25,8 +25,11 @@ New Spell Alerts
 - Eye of Kilrogg
 - Nightfall\* (Mists of Pandaria)
 - Soulburn (Mists of Pandaria)
+- Molten Core\*\* (Mists of Pandaria)
 
 \* Nightfall no longer grants a free instant Shadow Bolt. Therefore, there is no Glowing Button for Nightfall in Mists of Pandaria.
+
+\*\* Switches to the green version of Molten Core if the Warlock has switched to Fel-infused spells.
 
 New Glowing Buttons
 - Drain Soul (Mists of Pandaria)

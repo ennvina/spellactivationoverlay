@@ -676,11 +676,14 @@ SAO.defaults = {
                 [34936] = { -- Backlash (TBC+)
                     [0] = true,
                 },
-                [71165] = { -- Molten Core (Wrath+)
+                [71165] = { -- Molten Core (Wrath, Cataclysm)
                     [0] = true, -- any stacks
                 },
-                [63167] = { -- Decimation (Wrath+)
+                [63167] = { -- Decimation (Wrath, Cataclysm)
                     [0] = true,
+                },
+                [122355] = { -- Molten Core (Mists of Pandaria)
+                    [0] = true, -- any stacks
                 },
                 [440873] = { -- Decimation (Season of Discovery)
                     [0] = true,

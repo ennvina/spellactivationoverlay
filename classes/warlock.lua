@@ -223,6 +223,70 @@ local function useMoltenCore(self)
         registerMoltenCore(self, 2); -- 2/3 talent points
         registerMoltenCore(self, 3); -- 3/3 talent points
     end
+
+    if SAO.IsMoP() then
+        local hash0Stacks = self:HashNameFromStacks(0);
+        local hash2Stacks = self:HashNameFromStacks(2);
+
+        local moltenCoreOrange = 122355;
+        local moltenCoreGreen = 140074;
+
+        local handler = {
+            onAboutToApplyHash = function(hashCalculator)
+                -- Cap at 2 stacks, that's enough for the purpose of selecting visuals
+                -- And it removes weird re-animations, sounds, etc. when going from e.g. 2 to 3 charges
+                local mustRefresh = false;
+
+                local currentStacks = hashCalculator:getAuraStacks();
+                if type(currentStacks) == 'number' and currentStacks > 2 then
+                    hashCalculator:setAuraStacks(2);
+                    if hashCalculator.lastAuraStacks ~= currentStacks then
+                        mustRefresh = true;
+                    end
+                end
+                hashCalculator.lastAuraStacks = currentStacks;
+
+                return mustRefresh;
+            end,
+        };
+
+        self:CreateEffect(
+            "molten_core",
+            SAO.MOP,
+            moltenCoreOrange, -- Molten Core (buff), from either Decimation (passive) or Molten Core (passive); yes, this is confusing
+            "aura",
+            {
+                aka = 126090, -- Molten Core (2nd charge)
+                overlays = {
+                    default = { texture = "molten_core", option = false },
+                    { stacks = 1, position = "Left" },
+                    { stacks = 2, position = "Left + Right (Flipped)", option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
+                },
+                -- button = soulFire, -- Already glowing natively
+                handler = handler,
+            }
+        );
+
+        self:CreateEffect(
+            "molten_core_red",
+            SAO.MOP,
+            moltenCoreGreen, -- Molten Core Green
+            "aura",
+            {
+                aka = 140075, -- Molten Core Green (2nd charge)
+                overlays = {
+                    default = { texture = "molten_core_green", option = false },
+                    { stacks = 1, position = "Left" },
+                    { stacks = 2, position = "Left + Right (Flipped)" }, -- No option for green, will use option from non-green Molten Core
+                },
+                -- button = soulFire, -- Already glowing natively
+                handler = handler,
+            }
+        );
+
+        self:AddOverlayLink(moltenCoreOrange, moltenCoreGreen);
+        -- self:AddGlowingLink(moltenCoreOrange, moltenCoreGreen); -- No glowing buttons
+    end
 end
 
 local function registerDecimation(self, rank)

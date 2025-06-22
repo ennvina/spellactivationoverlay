@@ -118,9 +118,10 @@ SAO.Bucket = {
 
     applyHash = function(self)
         self.hashCalculatorToApply.hash = self.hashCalculator.hash;
+        local alwaysRefresh = false;
         if self.onAboutToApplyHash then
             -- Possibly change the hash about do be applied right before applying it
-            self.onAboutToApplyHash(self.hashCalculatorToApply);
+            alwaysRefresh = self.onAboutToApplyHash(self.hashCalculatorToApply);
         end
 
         if SAO:HasDebug() or SAO:HasTrace(Module) then
@@ -163,6 +164,9 @@ SAO.Bucket = {
 
         -- Get out if the hash to display is the same as the hash currently displayed
         if self.currentHash == self.hashCalculatorToApply.hash then
+            if alwaysRefresh then
+                self:refresh();
+            end
             return;
         end
 
