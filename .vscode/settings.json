@@ -130,6 +130,7 @@
         "UnitGUID",
         "UnitHealth",
         "UnitHealthMax",
+        "UnitIsUnit",
         "UnitLevel",
         "UnitPower",
         "UnitRace",

@@ -1,4 +1,5 @@
 local AddonName, SAO = ...
+local Module = "warlock"
 
 -- Optimize frequent calls
 local GetTalentTabInfo = GetTalentTabInfo
@@ -23,6 +24,10 @@ local soulFire = 6353;
 local moltenCoreBuff = { 47383, 71162, 71165 };
 local decimationBuff = { 63165, 63167 };
 local backdraftBuff = { 54274, 54276, 54277 };
+
+-- Mists of Pandaria buffs for Molten Core
+local moltenCoreOrange = 122355;
+local moltenCoreGreen = 140074;
 
 local requiresDrainSoulHandler = SAO.IsWrath() or SAO.IsCata();
 
@@ -228,9 +233,6 @@ local function useMoltenCore(self)
         local hash0Stacks = self:HashNameFromStacks(0);
         local hash2Stacks = self:HashNameFromStacks(2);
 
-        local moltenCoreOrange = 122355;
-        local moltenCoreGreen = 140074;
-
         local handler = {
             onAboutToApplyHash = function(hashCalculator)
                 -- Cap at 2 stacks, that's enough for the purpose of selecting visuals
@@ -286,6 +288,28 @@ local function useMoltenCore(self)
 
         self:AddOverlayLink(moltenCoreOrange, moltenCoreGreen);
         -- self:AddGlowingLink(moltenCoreOrange, moltenCoreGreen); -- No glowing buttons
+    end
+end
+
+-- Fix issue with the 10th stack of Molten Core not getting a proper SPELL_AURA_REFRESH
+local function unitAura(self, unitTarget, updateInfo)
+    if UnitIsUnit(unitTarget, "player") then
+        if updateInfo and updateInfo.updatedAuraInstanceIDs then
+            for _, id in ipairs(updateInfo.updatedAuraInstanceIDs) do
+                local auraData = C_UnitAuras.GetAuraDataByAuraInstanceID("player", id);
+
+                if auraData -- Has aura information? (should always be valid at this point)
+                and (auraData.spellId == moltenCoreOrange or auraData.spellId == moltenCoreGreen) -- Does it concern Molten Core?
+                and auraData.applications >= 10 -- Have we reached the 10th stack?
+                then
+                    local bucket = self:GetBucketBySpellID(auraData.spellId);
+                    if bucket then
+                        bucket:refresh();
+                        self:Debug(Module, string.format("Refreshing the %sth stack of %s", tostring(auraData.applications), tostring(auraData.spellId)));
+                    end
+                end
+            end
+        end
     end
 end
 
@@ -465,4 +489,5 @@ SAO.Class["WARLOCK"] = {
     ["PLAYER_TARGET_CHANGED"] = requiresDrainSoulHandler and retarget or nil,
     ["UNIT_HEALTH"] = requiresDrainSoulHandler and unitHealth or nil,
     ["UNIT_HEALTH_FREQUENT"] = requiresDrainSoulHandler and unitHealthFrequent or nil,
+    ["UNIT_AURA"] = SAO.IsMoP() and unitAura or nil,
 }
