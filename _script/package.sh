@@ -254,6 +254,7 @@ arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
 fulmination
+fury_of_stormrage_yellow
 maelstrom_weapon_6
 maelstrom_weapon_7
 maelstrom_weapon_8
@@ -285,15 +286,16 @@ CLASSES_NOT_FOR_VANILLA=(deathknight monk)
 pruneclass "${CLASSES_NOT_FOR_VANILLA[@]}"
 
 TEXTURES_NOT_FOR_VANILLA=(
+art_of_war
+backlash
+daybreak
+fury_of_stormrage_yellow
 master_marksman
 molten_core
-art_of_war
-shooting_stars
-daybreak
-backlash
-predatory_swiftness
 killing_machine
+predatory_swiftness
 rime
+shooting_stars
 sudden_doom
 thrill_of_the_hunt_1
 thrill_of_the_hunt_2
@@ -319,6 +321,7 @@ arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
 fulmination
+fury_of_stormrage_yellow
 maelstrom_weapon_6
 maelstrom_weapon_7
 maelstrom_weapon_8
@@ -406,6 +409,7 @@ feral_omenofclarity
 frozen_fingers
 fulmination
 fury_of_stormrage
+fury_of_stormrage_yellow
 genericarc_02
 genericarc_05
 high_tide

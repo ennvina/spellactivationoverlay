@@ -28,6 +28,9 @@ end
 /run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, nil)
 /run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 12536, "Interface\\Addons\\SpellActivationOverlay\\textures\\GenericArc_02", "Left + Right (Flipped)", 1.5, 192, 192, 192, false, nil)
 
+/run S="SpellActivationOverlay";n=nil;f=function(i,t,s,l,c)_G[S.."_ShowOverlay"](_G[S.."AddonFrame"],i,"Interface/AddOns/"..S.."/textures/"..t,"TOP",s,c,c,c,n,n,n,n,n,n,n,{level=l})end; f(1,"serendipity",1,3,255) f(2,"fury_of_stormrage_yellow",1.2,2,222)
+
+
 /run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Brain_Freeze", "Left + Right (CW)", 1, 255, 255, 255, true, nil)
 
 /run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 222222, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles_3", "Left + Right (Flipped)", 1, 255, 255, 64, true)

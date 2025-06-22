@@ -39,12 +39,12 @@ local function useSerendipity()
             63735, -- Serendipity (buff)
             "aura",
             {
-                -- Do not display serendipity overlay, to avoid conflict with Divine Insight
                 -- In Mists of Pandaria, the Serendipity texture was used by Divine Insight, not by Serendipity
-                -- overlays = {
-                --     { stacks = 1, texture = "serendipity", position = "Top", scale = 0.7, pulse = false },
-                --     { stacks = 2, texture = "serendipity", position = "Top", scale = 1.0, pulse = true },
-                -- },
+                overlays = {
+                    default = { texture = "fury_of_stormrage_yellow", position = "Top", level = 2 }, -- Lower priority to be below Divine Insight
+                    { stacks = 1, scale = 1.1, pulse = false },
+                    { stacks = 2, scale = 1.2, pulse = true },
+                },
                 buttons = {
                     default = { stacks = 2 },
                     [SAO.MOP] = { greaterHeal, prayerOfHealing },
@@ -167,6 +167,18 @@ local function useSurgeOfLight()
             }
         );
     end
+end
+
+local function useHolyWordChastise()
+    SAO:CreateEffect(
+        "hw_castise",
+        SAO.MOP,
+        88625, -- Holy Word: Chastise
+        "counter",
+        {
+            combatOnly = true,
+        }
+    );
 end
 
 local function useShadowform()
@@ -314,6 +326,7 @@ local function registerClass(self)
     -- Holy
     useSerendipity();
     useSurgeOfLight(); -- Introduced in Curning Crusade, a talent in Mists of Pandaria
+    useHolyWordChastise();
 
     -- Shadow
     useShadowWordDeath();
