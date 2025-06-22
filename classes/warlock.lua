@@ -6,6 +6,10 @@ local UnitCanAttack = UnitCanAttack
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
+local WARLOCK_SPEC_AFFLICTION = SAO.TALENT.SPEC_1;
+local WARLOCK_SPEC_DEMONOLOGY = SAO.TALENT.SPEC_2;
+local WARLOCK_SPEC_DESTRUCTION = SAO.TALENT.SPEC_3;
+
 local chaosBolt = 50796;
 local drainSoul = 1120;
 local felFlame = 77799;
@@ -19,6 +23,8 @@ local soulFire = 6353;
 local moltenCoreBuff = { 47383, 71162, 71165 };
 local decimationBuff = { 63165, 63167 };
 local backdraftBuff = { 54274, 54276, 54277 };
+
+local requiresDrainSoulHandler = SAO.IsWrath() or SAO.IsCata();
 
 --[[
     DrainSoulHandler evaluates when the Drain Soul button should glow
@@ -80,37 +86,17 @@ local DrainSoulHandler = {
 }
 
 local function customLogin(self, ...)
-    if self.IsWrath() or self.IsCata() then
-        -- Drain Soul is empowered on low health enemies only in Wrath Classic and Cataclysm Classic
-        local spellName = GetSpellInfo(drainSoul);
-        if (spellName) then
-            -- Must register glowing buttons manually, because Drain Soul is not registered by an aura/counter/etc.
-            self:RegisterGlowIDs({ spellName });
-            local allSpellIDs = self:GetSpellIDsByName(spellName);
-            for _, oneSpellID in ipairs(allSpellIDs) do
-                self:AwakeButtonsBySpellID(oneSpellID);
-            end
-            -- Initialize handler
-            DrainSoulHandler:init(drainSoul, spellName);
+    -- Drain Soul is empowered on low health enemies only in Wrath Classic and Cataclysm Classic
+    local spellName = GetSpellInfo(drainSoul);
+    if (spellName) then
+        -- Must register glowing buttons manually, because Drain Soul is not registered by an aura/counter/etc.
+        self:RegisterGlowIDs({ spellName });
+        local allSpellIDs = self:GetSpellIDsByName(spellName);
+        for _, oneSpellID in ipairs(allSpellIDs) do
+            self:AwakeButtonsBySpellID(oneSpellID);
         end
-    elseif self.IsSoD() then
-        -- No need to use the DrainSoulHandler for Season of Discovery
-        -- The goal of the handler is to let players choose for which spec(s) Drain Soul will glow
-        -- This allows to ask the players explicitly what they want, because we cannot always guess correctly
-        -- But in Season of Discovery, there is a rune which dedicated to improve Drain Soul
-        -- The rune answers implicitly, thus we don't need to ask players, hence the absence of handler
-        self:CreateEffect(
-            "drain_soul",
-            SAO.SOD,
-            drainSoul,
-            "execute",
-            {
-                execThreshold = 20,
-                requireTalent = true,
-                talent = 403511, -- Soul Siphon (rune)
-                button = drainSoul,
-            }
-        );
+        -- Initialize handler
+        DrainSoulHandler:init(drainSoul, spellName);
     end
 end
 
@@ -130,6 +116,24 @@ local function unitHealthFrequent(self, unitID)
     if self:IsResponsiveMode() then
         unitHealth(self, unitID);
     end
+end
+
+local function useDrainSoul(self)
+    self:CreateEffect(
+        "drain_soul",
+        SAO.SOD + SAO.MOP_AND_ONWARD,
+        drainSoul,
+        "execute",
+        {
+            execThreshold = 20,
+            requireTalent = SAO.IsSoD(), -- No need for a talent in Mists of Pandaria because Drain Soul is available to Affliction warlocks only
+            talent = {
+                [SAO.SOD] = 403511, -- Soul Siphon (rune)
+                -- [SAO.MOP_AND_ONWARD] = WARLOCK_SPEC_AFFLICTION, -- Affliction (spec) -- See comment in requireTalent
+            },
+            button = drainSoul,
+        }
+    );
 end
 
 local function useNightfall(self)
@@ -314,6 +318,9 @@ local function useFelSpark(self)
 end
 
 local function registerClass(self)
+    -- Baseline
+    useDrainSoul(self);
+
     -- Affliction
     useNightfall(self); -- a.k.a. Shadow Trance
 
@@ -340,9 +347,9 @@ end
 SAO.Class["WARLOCK"] = {
     ["Register"] = registerClass,
     ["LoadOptions"] = loadOptions,
-    ["PLAYER_LOGIN"] = customLogin,
-    ["PLAYER_TARGET_CHANGED"] = retarget,
-    ["UNIT_HEALTH"] = unitHealth,
-    ["UNIT_HEALTH_FREQUENT"] = unitHealthFrequent,
-    IsDisabled = SAO.IsMoP(),
+    -- Events used by DrainSoulHandler
+    ["PLAYER_LOGIN"] = requiresDrainSoulHandler and customLogin or nil,
+    ["PLAYER_TARGET_CHANGED"] = requiresDrainSoulHandler and retarget or nil,
+    ["UNIT_HEALTH"] = requiresDrainSoulHandler and unitHealth or nil,
+    ["UNIT_HEALTH_FREQUENT"] = requiresDrainSoulHandler and unitHealthFrequent or nil,
 }

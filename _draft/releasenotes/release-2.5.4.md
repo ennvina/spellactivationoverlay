@@ -20,6 +20,9 @@ New Glowing Button
 - Holy Word: Chastise\*\* (Mists of Pandaria)
 
 \*\* This button is disabled by default. Its intended use is for damage Priests who want to cast HW:Chastise on cooldown and don't know when the cooldown is reset thanks to Chakra: Chastise.
+### :warlock:  Warlock
+New Glowing Buttons
+- Drain Soul (Mists of Pandaria)
 ### :warrior:  Warrior
 The Warrior class is now fully supported for Mists of Pandaria!
 
