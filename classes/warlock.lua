@@ -137,16 +137,24 @@ local function useDrainSoul(self)
 end
 
 local function useNightfall(self)
+    local SAO_UP_UNTIL_CATA = SAO.ERA + SAO.TBC + SAO.WRATH + SAO.CATA;
     self:CreateEffect(
         "nightfall",
         SAO.ALL_PROJECTS,
         17941, -- Shadow Trance (buff)
         "aura",
         {
-            talent = 18094, -- Nightfall (talent)
-            overlay = { texture = "nightfall", position = "Left + Right (Flipped)" },
+            talent = {
+                [SAO_UP_UNTIL_CATA] = 18094, -- Nightfall (talent)
+                [SAO.MOP] = 108558, -- Nightfall (passive)
+            },
+            overlays = {
+                default = { texture = "nightfall", position = "Left + Right (Flipped)" },
+                [SAO_UP_UNTIL_CATA] = { pulse = true },
+                [SAO.MOP_AND_ONWARD] = { pulse = false, scale = 0.8, level = 4 },
+            },
             buttons = {
-                [SAO.ALL_PROJECTS] = shadowBolt,
+                [SAO_UP_UNTIL_CATA] = shadowBolt,
                 [SAO.SOD] = shadowCleave,
             },
         }

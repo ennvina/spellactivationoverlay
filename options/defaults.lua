@@ -697,7 +697,7 @@ SAO.defaults = {
                     [17877] = true, -- Shadowburn
                 },
                 [17941] = { -- Nightfall
-                    [686] = true, -- Shadow Bolt
+                    [686] = true, -- Shadow Bolt (up until Cataclysm)
                     [403841] = true, -- Shadow Cleave (Season of Discovery)
                 },
                 [71165] = { -- Molten Core (Wrath+)

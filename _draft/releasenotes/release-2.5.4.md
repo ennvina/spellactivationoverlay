@@ -21,6 +21,11 @@ New Glowing Button
 
 \*\* This button is disabled by default. Its intended use is for damage Priests who want to cast HW:Chastise on cooldown and don't know when the cooldown is reset thanks to Chakra: Chastise.
 ### :warlock:  Warlock
+New Spell Alerts
+- Nightfall\* (Mists of Pandaria)
+
+\* Nightfall no longer grants a free instant Shadow Bolt. Therefore, there is no Glowing Button for Nightfall in Mists of Pandaria.
+
 New Glowing Buttons
 - Drain Soul (Mists of Pandaria)
 ### :warrior:  Warrior
