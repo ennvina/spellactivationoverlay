@@ -136,6 +136,18 @@ local function useDrainSoul(self)
     );
 end
 
+local function useEyeOfKilrogg(self)
+    self:CreateEffect(
+        "eye_of_kilrogg",
+        SAO.ALL_PROJECTS,
+        126, -- Eye of Kilrogg (buff)
+        "aura",
+        {
+            overlay = { texture = "generictop_01", position = "Top", color = { 64, 255, 64 }, pulse = false },
+        }
+    );
+end
+
 local function useNightfall(self)
     local SAO_UP_UNTIL_CATA = SAO.ERA + SAO.TBC + SAO.WRATH + SAO.CATA;
     self:CreateEffect(
@@ -328,6 +340,7 @@ end
 local function registerClass(self)
     -- Baseline
     useDrainSoul(self);
+    useEyeOfKilrogg(self);
 
     -- Affliction
     useNightfall(self); -- a.k.a. Shadow Trance

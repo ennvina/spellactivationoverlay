@@ -667,6 +667,9 @@ SAO.defaults = {
         },
         ["WARLOCK"] = {
             alert = {
+                [126] = { -- Eye of Kilrogg
+                    [0] = true,
+                },
                 [17941] = { -- Nightfall
                     [0] = true,
                 },
