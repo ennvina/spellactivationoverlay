@@ -24,6 +24,7 @@ New Glowing Button
 New Spell Alerts
 - Eye of Kilrogg
 - Nightfall\* (Mists of Pandaria)
+- Soulburn (Mists of Pandaria)
 
 \* Nightfall no longer grants a free instant Shadow Bolt. Therefore, there is no Glowing Button for Nightfall in Mists of Pandaria.
 

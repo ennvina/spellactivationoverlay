@@ -173,6 +173,19 @@ local function useNightfall(self)
     );
 end
 
+local function useSoulburn(self)
+    self:CreateEffect(
+        "soulburn",
+        SAO.MOP,
+        74434, -- Soulburn (buff)
+        "aura",
+        {
+            overlay = { texture = "surge_of_darkness", position = "Left + Right (Flipped)", pulse = false, scale = 1.1, color = { 200, 200, 200 } },
+            -- buttons = { ... }, -- Buttons already glowing natively
+        }
+    );
+end
+
 local function registerMoltenCore(self, rank)
     local moltenCoreName = { "molten_core_low", "molten_core_medium", "molten_core_high" };
     local overlayOption = (rank == 3) and { setupHash = SAO:HashNameFromStacks(0), testHash = SAO:HashNameFromStacks(3) };
@@ -344,6 +357,7 @@ local function registerClass(self)
 
     -- Affliction
     useNightfall(self); -- a.k.a. Shadow Trance
+    useSoulburn(self);
 
     -- Demonology
     useMoltenCore(self);

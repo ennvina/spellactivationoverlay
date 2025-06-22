@@ -691,6 +691,9 @@ SAO.defaults = {
                 [89937] = { -- Fel Spark (Cataclysm)
                     [0] = true, -- any stacks
                 },
+                [74434] = { -- Soulburn (Mists of Pandaria)
+                    [0] = true,
+                },
             },
             glow = {
                 [1120] = { -- Drain Soul (Season of Discovery, Wrath+)
