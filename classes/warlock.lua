@@ -327,6 +327,19 @@ local function useDecimation(self)
     end
 end
 
+local function useDemonicRebirth(self)
+    self:CreateEffect(
+        "demonic_rebirth",
+        SAO.MOP,
+        88448, -- Demonic Rebirth
+        "aura",
+        {
+            overlay = { texture = "dark_transformation", position = "Top", scale = 1.2, color = { 222, 222, 222 }, level = 2 },
+            -- buttons = { ... }, -- All buttons of summons are already glowing natively
+        }
+    );
+end
+
 local function registerBackdraft(self, rank)
     local backdraftName = { "backdraft_low", "backdraft_medium", "backdraft_high" };
 
@@ -426,6 +439,7 @@ local function registerClass(self)
     -- Demonology
     useMoltenCore(self);
     useDecimation(self);
+    useDemonicRebirth(self);
 
     -- Destruction
     useBackdraft(self);

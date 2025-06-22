@@ -697,6 +697,9 @@ SAO.defaults = {
                 [74434] = { -- Soulburn (Mists of Pandaria)
                     [0] = true,
                 },
+                [88448] = { -- Demonic Rebirth (Mists of Pandaria)
+                    [0] = true,
+                },
             },
             glow = {
                 [1120] = { -- Drain Soul (Season of Discovery, Wrath+)
