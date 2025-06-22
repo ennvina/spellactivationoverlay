@@ -58,6 +58,9 @@ Warriors should no longer get invited to report the following unsupported effect
 - Ultimatum
 ## Known Limitations
 ## Miscellaneous
+Overlays are never displayed after 60 seconds of leaving combat, up from 30 seconds.
+
+_Developer's Note: The 30-second limit was introduced a while ago as a security against infinite overlays, especially Mage's Heating Up which had no duration in Wrath of the Lich King. Since then, the new combat-only feature has been introduced to mitigate these situations, and should be favored over the 30-second limit. A maximum duration is still kept 'just in case', but it is set to a longer time to allow out-of-combat effects that last for more than 30 seconds, such as Warlock's Eye of Kilrogg._
 ## Contributors
 Shout-out to our amazing contributors
 - Amanthuul for helping once again with Shaman, this class wouldn't be the same without you :person_bowing:
