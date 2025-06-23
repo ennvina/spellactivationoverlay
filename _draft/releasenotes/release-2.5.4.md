@@ -28,11 +28,17 @@ New Spell Alerts
 - Molten Core\*\*\* (Mists of Pandaria)
 - Demonic Rebirth (Mists of Pandaria)
 - Backlash\*\*\* (Mists of Pandaria)
+- Fire and Brimstone\*\* (Mists of Pandaria)
 
 New Glowing Buttons
 - Drain Soul, when the target has 20% health of less (Mists of Pandaria)
 - Incinerate\*\*, during Backdraft (Mists of Pandaria)
 - Chaos Bolt\*\*, during Backdraft (Mists of Pandaria)
+- Incinerate\*\*, during Fire and Brimstone (Mists of Pandaria)
+- Immolate\*\*, during Fire and Brimstone (Mists of Pandaria)
+- Conflagrate\*\*, during Fire and Brimstone (Mists of Pandaria)
+- Curse of the Elements\*\*, during Fire and Brimstone (Mists of Pandaria)
+- Curse of Enfeeblement\*\*, during Fire and Brimstone (Mists of Pandaria)
 
 \* Nightfall no longer grants a free instant Shadow Bolt. Therefore, there is no Glowing Button for Nightfall in Mists of Pandaria.
 

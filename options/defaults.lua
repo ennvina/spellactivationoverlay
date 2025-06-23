@@ -700,6 +700,9 @@ SAO.defaults = {
                 [88448] = { -- Demonic Rebirth (Mists of Pandaria)
                     [0] = true,
                 },
+                [108683] = { -- Fire and Brimstone (Mists of Pandaria)
+                    [0] = false,
+                },
             },
             glow = {
                 [1120] = { -- Drain Soul (Season of Discovery, Wrath+)
@@ -740,6 +743,13 @@ SAO.defaults = {
                 },
                 [89937] = { -- Fel Spark (Cataclysm)
                     [77799]  = true, -- Fel Flame
+                },
+                [108683] = { -- Fire and Brimstone (Mists of Pandaria)
+                    [108685] = false, -- Conflagrate + Fire and Brimstone
+                    [109468] = false, -- Curse of Enfeeblement + Fire and Brimstone
+                    [104225] = false, -- Curse of the Elements +  + Fire and Brimstone
+                    [108686] = false, -- Immolate + Fire and Brimstone
+                    [114654] = false, -- Incinerate + Fire and Brimstone
                 },
             },
         },

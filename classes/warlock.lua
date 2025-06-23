@@ -13,10 +13,15 @@ local WARLOCK_SPEC_DESTRUCTION = SAO.TALENT.SPEC_3;
 
 local chaosBoltCata = 50796;
 local chaosBoltMoP = 116858;
+local conflagrateFAB = 108685;
+local curseElementsFAB = 104225;
+local curseEnfeeblementFAB = 109468;
 local drainSoul = 1120;
 local felFlame = 77799;
 local felSpark = 89937;
+local immolateFAB = 108686;
 local incinerate = 29722;
+local incinerateFAB = 114654;
 local shadowBolt = 686;
 local shadowburn = 17877;
 local shadowCleave = 403841;
@@ -503,6 +508,19 @@ local function useEmpoweredImp(self)
     );
 end
 
+local function useFireAndBrimstone(self)
+    self:CreateEffect(
+        "fire_and_brimstone",
+        SAO.MOP,
+        108683, -- Fire and Bromstone (buff)
+        "aura",
+        {
+            overlay = { texture = "imp_empowerment", position = "Left + Right (Flipped)", level = 1, pulse = false, scale = 1.1, color = { 222, 222, 222 } },
+            buttons = { immolateFAB, incinerateFAB, conflagrateFAB, curseElementsFAB, curseEnfeeblementFAB },
+        }
+    );
+end
+
 local function useFelSpark(self)
     self:CreateEffect(
         "fel_spark",
@@ -539,6 +557,7 @@ local function registerClass(self)
     useShadowburn(self);
     useBacklash(self);
     useEmpoweredImp(self);
+    useFireAndBrimstone(self);
 
     -- Tier 11
     useFelSpark(self);
