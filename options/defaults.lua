@@ -695,7 +695,7 @@ SAO.defaults = {
                     [0] = true, -- any stacks
                 },
                 [74434] = { -- Soulburn (Mists of Pandaria)
-                    [0] = true,
+                    [0] = false,
                 },
                 [88448] = { -- Demonic Rebirth (Mists of Pandaria)
                     [0] = true,

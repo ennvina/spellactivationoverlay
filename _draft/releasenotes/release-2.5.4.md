@@ -24,21 +24,21 @@ New Glowing Button
 New Spell Alerts
 - Eye of Kilrogg
 - Nightfall\* (Mists of Pandaria)
-- Soulburn (Mists of Pandaria)
-- Molten Core\*\* (Mists of Pandaria)
+- Soulburn\*\* (Mists of Pandaria)
+- Molten Core\*\*\* (Mists of Pandaria)
 - Demonic Rebirth (Mists of Pandaria)
-- Backlash\*\* (Mists of Pandaria)
-
-\* Nightfall no longer grants a free instant Shadow Bolt. Therefore, there is no Glowing Button for Nightfall in Mists of Pandaria.
-
-\*\* Switches to the green version of Molten Core if the Warlock has switched to Fel-infused spells.
+- Backlash\*\*\* (Mists of Pandaria)
 
 New Glowing Buttons
 - Drain Soul, when the target has 20% health of less (Mists of Pandaria)
-- Incinerate\*\*\*, during Backdraft (Mists of Pandaria)
-- Chaos Bolt\*\*\*, during Backdraft (Mists of Pandaria)
+- Incinerate\*\*, during Backdraft (Mists of Pandaria)
+- Chaos Bolt\*\*, during Backdraft (Mists of Pandaria)
 
-\*\*\* As in Cataclysm, the option is disabled by default to remove clutter. Because the effect is guaranteed after Conflagrate is cast, there is no real surprise that makes it worth telling players 'hey, you just got lucky and have a proc', hence the incentive of glowing this button is much more limited than e.g. glowing Incinerate during Backlash.
+\* Nightfall no longer grants a free instant Shadow Bolt. Therefore, there is no Glowing Button for Nightfall in Mists of Pandaria.
+
+\*\* Disabled by default to remove clutter.
+
+\*\*\* Switches to the green version if the Warlock has switched to Fel-infused spells.
 ### :warrior:  Warrior
 The Warrior class is now fully supported for Mists of Pandaria!
 

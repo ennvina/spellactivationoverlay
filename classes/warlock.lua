@@ -187,7 +187,7 @@ local function useSoulburn(self)
         74434, -- Soulburn (buff)
         "aura",
         {
-            overlay = { texture = "surge_of_darkness", position = "Left + Right (Flipped)", pulse = false, scale = 1.1, color = { 200, 200, 200 } },
+            overlay = { texture = "shadow_word_insanity", position = "Left + Right (Flipped)", level = 1, pulse = false, scale = 1.1, color = { 222, 222, 222 } },
             -- buttons = { ... }, -- Buttons already glowing natively
         }
     );
