@@ -20,6 +20,33 @@ New Glowing Button
 - Holy Word: Chastise\*\* (Mists of Pandaria)
 
 \*\* This button is disabled by default. Its intended use is for damage Priests who want to cast HW:Chastise on cooldown and don't know when the cooldown is reset thanks to Chakra: Chastise.
+### :warlock:  Warlock
+The Warlock class is now fully supported for Mists of Pandaria!
+
+New Spell Alerts
+- Eye of Kilrogg
+- Nightfall\* (Mists of Pandaria)
+- Soulburn\*\* (Mists of Pandaria)
+- Molten Core\*\*\* (Mists of Pandaria)
+- Demonic Rebirth (Mists of Pandaria)
+- Backlash\*\*\* (Mists of Pandaria)
+- Fire and Brimstone\*\* (Mists of Pandaria)
+
+New Glowing Buttons
+- Drain Soul, when the target has 20% health of less (Mists of Pandaria)
+- Incinerate\*\*, during Backdraft (Mists of Pandaria)
+- Chaos Bolt\*\*, during Backdraft (Mists of Pandaria)
+- Incinerate\*\*, during Fire and Brimstone (Mists of Pandaria)
+- Immolate\*\*, during Fire and Brimstone (Mists of Pandaria)
+- Conflagrate\*\*, during Fire and Brimstone (Mists of Pandaria)
+- Curse of the Elements\*\*, during Fire and Brimstone (Mists of Pandaria)
+- Curse of Enfeeblement\*\*, during Fire and Brimstone (Mists of Pandaria)
+
+\* Nightfall no longer grants a free instant Shadow Bolt. Therefore, there is no Glowing Button for Nightfall in Mists of Pandaria.
+
+\*\* Disabled by default to remove clutter.
+
+\*\*\* Switches to the green version if the Warlock has switched to Fel-infused spells.
 ### :warrior:  Warrior
 The Warrior class is now fully supported for Mists of Pandaria!
 
@@ -58,6 +85,9 @@ Warriors should no longer get invited to report the following unsupported effect
 - Ultimatum
 ## Known Limitations
 ## Miscellaneous
+Overlays are never displayed after 60 seconds of leaving combat, up from 30 seconds.
+
+_Developer's Note: The 30-second limit was introduced a while ago as a security against infinite overlays, especially Mage's Heating Up which had no duration in Wrath of the Lich King. Since then, the new combat-only feature has been introduced to mitigate these situations, and should be favored over the 30-second limit. A maximum duration is still kept 'just in case', but it is set to a longer time to allow out-of-combat effects that last for more than 30 seconds, such as Warlock's Eye of Kilrogg._
 ## Contributors
 Shout-out to our amazing contributors
 - Amanthuul for helping once again with Shaman, this class wouldn't be the same without you :person_bowing:

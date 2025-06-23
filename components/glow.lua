@@ -505,12 +505,30 @@ function SAO.AddGlow(self, spellID, glowIDs, hashData)
 end
 
 -- Remove the glow effect for action buttons matching any of the given spell IDs
-function SAO.RemoveGlow(self, spellID)
+-- Can limit the removal to a list of glowIDs (optional, if missing then all buttons of spellID will be un-glowed)
+function SAO.RemoveGlow(self, spellID, glowIDs)
     local consumedGlowSpellIDs = {};
+
+    local onlyTheseGlowIDs;
+    if type(glowIDs) == 'table' then
+        onlyTheseGlowIDs = {};
+        for _, glowID in ipairs(glowIDs) do
+            if (type(glowID) == "number") then
+                -- glowID is a direct spell identifier
+                onlyTheseGlowIDs[glowID] = true;
+            elseif (type(glowID) == "string") then
+                -- glowID is a spell name: find spell identifiers and then parse them
+                local glowSpellIDs = self:GetSpellIDsByName(glowID);
+                for _, glowSpellID in ipairs(glowSpellIDs) do
+                    onlyTheseGlowIDs[glowSpellID] = true;
+                end
+            end
+        end
+    end
 
     -- First, gather each glowSpellID attached to spellID
     for glowSpellID, triggerSpellIDs in pairs(self.GlowingSpells) do
-        if (triggerSpellIDs[spellID]) then
+        if triggerSpellIDs[spellID] and (not onlyTheseGlowIDs or onlyTheseGlowIDs[glowSpellID]) then
             -- spellID is attached to this glowSpellID
             -- Gather how many triggers are attached to the same glowSpellID (spellID included)
             local count = 0;

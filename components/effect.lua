@@ -72,6 +72,7 @@ local Module = "effect"
         end,
         onAboutToApplyHash = function(hashCalculator) -- Called right before setting hash for display/hide, possibly altering the hash
             hashCalculator:setAuraStacks(math.max(hashCalculator:getAuraStacks(), 5));
+            return false; -- Return true if the display should be refreshed even if the hash does not change
         end,
     }}, -- Although rare, multiple handlers are possible
 }
@@ -101,7 +102,7 @@ local hasPlayerLoggedIn = false;
 
 local function doesUseName(useNameProp)
     if useNameProp == nil then
-        return SAO.IsCata() == false;
+        return SAO.IsProject(SAO.CATA_AND_ONWARD) == false;
     else
         return useNameProp == true;
     end

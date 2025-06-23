@@ -1,4 +1,5 @@
 local AddonName, SAO = ...
+local Module = "warlock"
 
 -- Optimize frequent calls
 local GetTalentTabInfo = GetTalentTabInfo
@@ -6,19 +7,36 @@ local UnitCanAttack = UnitCanAttack
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
-local chaosBolt = 50796;
+local WARLOCK_SPEC_AFFLICTION = SAO.TALENT.SPEC_1;
+local WARLOCK_SPEC_DEMONOLOGY = SAO.TALENT.SPEC_2;
+local WARLOCK_SPEC_DESTRUCTION = SAO.TALENT.SPEC_3;
+
+local chaosBoltCata = 50796;
+local chaosBoltMoP = 116858;
+local conflagrateFAB = 108685;
+local curseElementsFAB = 104225;
+local curseEnfeeblementFAB = 109468;
 local drainSoul = 1120;
 local felFlame = 77799;
 local felSpark = 89937;
+local immolateFAB = 108686;
 local incinerate = 29722;
+local incinerateFAB = 114654;
 local shadowBolt = 686;
 local shadowburn = 17877;
 local shadowCleave = 403841;
 local soulFire = 6353;
 
+-- Pre-MoP buffs
 local moltenCoreBuff = { 47383, 71162, 71165 };
 local decimationBuff = { 63165, 63167 };
 local backdraftBuff = { 54274, 54276, 54277 };
+
+-- Mists of Pandaria buffs
+local moltenCoreOrange = 122355;
+local moltenCoreGreen = 140074;
+
+local requiresDrainSoulHandler = SAO.IsWrath() or SAO.IsCata();
 
 --[[
     DrainSoulHandler evaluates when the Drain Soul button should glow
@@ -80,37 +98,17 @@ local DrainSoulHandler = {
 }
 
 local function customLogin(self, ...)
-    if self.IsWrath() or self.IsCata() then
-        -- Drain Soul is empowered on low health enemies only in Wrath Classic and Cataclysm Classic
-        local spellName = GetSpellInfo(drainSoul);
-        if (spellName) then
-            -- Must register glowing buttons manually, because Drain Soul is not registered by an aura/counter/etc.
-            self:RegisterGlowIDs({ spellName });
-            local allSpellIDs = self:GetSpellIDsByName(spellName);
-            for _, oneSpellID in ipairs(allSpellIDs) do
-                self:AwakeButtonsBySpellID(oneSpellID);
-            end
-            -- Initialize handler
-            DrainSoulHandler:init(drainSoul, spellName);
+    -- Drain Soul is empowered on low health enemies only in Wrath Classic and Cataclysm Classic
+    local spellName = GetSpellInfo(drainSoul);
+    if (spellName) then
+        -- Must register glowing buttons manually, because Drain Soul is not registered by an aura/counter/etc.
+        self:RegisterGlowIDs({ spellName });
+        local allSpellIDs = self:GetSpellIDsByName(spellName);
+        for _, oneSpellID in ipairs(allSpellIDs) do
+            self:AwakeButtonsBySpellID(oneSpellID);
         end
-    elseif self.IsSoD() then
-        -- No need to use the DrainSoulHandler for Season of Discovery
-        -- The goal of the handler is to let players choose for which spec(s) Drain Soul will glow
-        -- This allows to ask the players explicitly what they want, because we cannot always guess correctly
-        -- But in Season of Discovery, there is a rune which dedicated to improve Drain Soul
-        -- The rune answers implicitly, thus we don't need to ask players, hence the absence of handler
-        self:CreateEffect(
-            "drain_soul",
-            SAO.SOD,
-            drainSoul,
-            "execute",
-            {
-                execThreshold = 20,
-                requireTalent = true,
-                talent = 403511, -- Soul Siphon (rune)
-                button = drainSoul,
-            }
-        );
+        -- Initialize handler
+        DrainSoulHandler:init(drainSoul, spellName);
     end
 end
 
@@ -132,19 +130,70 @@ local function unitHealthFrequent(self, unitID)
     end
 end
 
+local function useDrainSoul(self)
+    self:CreateEffect(
+        "drain_soul",
+        SAO.SOD + SAO.MOP_AND_ONWARD,
+        drainSoul,
+        "execute",
+        {
+            execThreshold = 20,
+            requireTalent = SAO.IsSoD(), -- No need for a talent in Mists of Pandaria because Drain Soul is available to Affliction warlocks only
+            talent = {
+                [SAO.SOD] = 403511, -- Soul Siphon (rune)
+                -- [SAO.MOP_AND_ONWARD] = WARLOCK_SPEC_AFFLICTION, -- Affliction (spec) -- See comment in requireTalent
+            },
+            button = drainSoul,
+        }
+    );
+end
+
+local function useEyeOfKilrogg(self)
+    self:CreateEffect(
+        "eye_of_kilrogg",
+        SAO.ALL_PROJECTS,
+        126, -- Eye of Kilrogg (buff)
+        "aura",
+        {
+            overlay = { texture = "generictop_01", position = "Top", color = { 64, 255, 64 }, pulse = false },
+        }
+    );
+end
+
 local function useNightfall(self)
+    local SAO_UP_UNTIL_CATA = SAO.ERA + SAO.TBC + SAO.WRATH + SAO.CATA;
     self:CreateEffect(
         "nightfall",
         SAO.ALL_PROJECTS,
         17941, -- Shadow Trance (buff)
         "aura",
         {
-            talent = 18094, -- Nightfall (talent)
-            overlay = { texture = "nightfall", position = "Left + Right (Flipped)" },
+            talent = {
+                [SAO_UP_UNTIL_CATA] = 18094, -- Nightfall (talent)
+                [SAO.MOP] = 108558, -- Nightfall (passive)
+            },
+            overlays = {
+                default = { texture = "nightfall", position = "Left + Right (Flipped)" },
+                [SAO_UP_UNTIL_CATA] = { pulse = true },
+                [SAO.MOP_AND_ONWARD] = { pulse = false, scale = 0.8, level = 4 },
+            },
             buttons = {
-                [SAO.ALL_PROJECTS] = shadowBolt,
+                [SAO_UP_UNTIL_CATA] = shadowBolt,
                 [SAO.SOD] = shadowCleave,
             },
+        }
+    );
+end
+
+local function useSoulburn(self)
+    self:CreateEffect(
+        "soulburn",
+        SAO.MOP,
+        74434, -- Soulburn (buff)
+        "aura",
+        {
+            overlay = { texture = "shadow_word_insanity", position = "Left + Right (Flipped)", level = 1, pulse = false, scale = 1.1, color = { 222, 222, 222 } },
+            -- buttons = { ... }, -- Buttons already glowing natively
         }
     );
 end
@@ -186,6 +235,89 @@ local function useMoltenCore(self)
         registerMoltenCore(self, 2); -- 2/3 talent points
         registerMoltenCore(self, 3); -- 3/3 talent points
     end
+
+    if SAO.IsMoP() then
+        local hash0Stacks = self:HashNameFromStacks(0);
+        local hash2Stacks = self:HashNameFromStacks(2);
+
+        local handler = {
+            onAboutToApplyHash = function(hashCalculator)
+                -- Cap at 2 stacks, that's enough for the purpose of selecting visuals
+                -- And it removes weird re-animations, sounds, etc. when going from e.g. 2 to 3 charges
+                local mustRefresh = false;
+
+                local currentStacks = hashCalculator:getAuraStacks();
+                if type(currentStacks) == 'number' and currentStacks > 2 then
+                    hashCalculator:setAuraStacks(2);
+                    if hashCalculator.lastAuraStacks ~= currentStacks then
+                        mustRefresh = true;
+                    end
+                end
+                hashCalculator.lastAuraStacks = currentStacks;
+
+                return mustRefresh;
+            end,
+        };
+
+        self:CreateEffect(
+            "molten_core",
+            SAO.MOP,
+            moltenCoreOrange, -- Molten Core (buff), from either Decimation (passive) or Molten Core (passive); yes, this is confusing
+            "aura",
+            {
+                aka = 126090, -- Molten Core (2nd charge)
+                overlays = {
+                    default = { texture = "molten_core", option = false },
+                    { stacks = 1, position = "Left" },
+                    { stacks = 2, position = "Left + Right (Flipped)", option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
+                },
+                -- button = soulFire, -- Already glowing natively
+                handler = handler,
+            }
+        );
+
+        self:CreateEffect(
+            "molten_core_red",
+            SAO.MOP,
+            moltenCoreGreen, -- Molten Core Green
+            "aura",
+            {
+                aka = 140075, -- Molten Core Green (2nd charge)
+                overlays = {
+                    default = { texture = "molten_core_green", option = false },
+                    { stacks = 1, position = "Left" },
+                    { stacks = 2, position = "Left + Right (Flipped)" }, -- No option for green, will use option from non-green Molten Core
+                },
+                -- button = soulFire, -- Already glowing natively
+                handler = handler,
+            }
+        );
+
+        self:AddOverlayLink(moltenCoreOrange, moltenCoreGreen);
+        -- self:AddGlowingLink(moltenCoreOrange, moltenCoreGreen); -- No glowing buttons
+    end
+end
+
+-- Fix issue with the 10th stack of Molten Core not getting a proper SPELL_AURA_REFRESH
+local function unitAura(self, unitTarget, updateInfo)
+    if UnitIsUnit(unitTarget, "player") then
+        if updateInfo and updateInfo.updatedAuraInstanceIDs then
+            for _, id in ipairs(updateInfo.updatedAuraInstanceIDs) do
+                local auraData = C_UnitAuras.GetAuraDataByAuraInstanceID("player", id);
+
+                if auraData -- Has aura information? (should always be valid at this point)
+                and (auraData.spellId == moltenCoreOrange or auraData.spellId == moltenCoreGreen) -- Does it concern Molten Core?
+                and auraData.applications >= 10 -- Have we reached the 10th stack?
+                then
+                    local bucket = self:GetBucketBySpellID(auraData.spellId);
+                    if bucket then
+                        bucket:refresh();
+                        self:Debug(Module, string.format("Refreshing the %dth stack of %d", auraData.applications, auraData.spellId));
+                    end
+                end
+            end
+        end
+    end
 end
 
 local function registerDecimation(self, rank)
@@ -226,6 +358,19 @@ local function useDecimation(self)
     end
 end
 
+local function useDemonicRebirth(self)
+    self:CreateEffect(
+        "demonic_rebirth",
+        SAO.MOP,
+        88448, -- Demonic Rebirth
+        "aura",
+        {
+            overlay = { texture = "dark_transformation", position = "Top", scale = 1.2, color = { 222, 222, 222 }, level = 2 },
+            -- buttons = { ... }, -- All buttons of summons are already glowing natively
+        }
+    );
+end
+
 local function registerBackdraft(self, rank)
     local backdraftName = { "backdraft_low", "backdraft_medium", "backdraft_high" };
 
@@ -238,7 +383,7 @@ local function registerBackdraft(self, rank)
             talent = 47258, -- Backdraft (talent)
             buttons = {
                 default = { option = (rank == 3) },
-                [SAO.CATA] = { shadowBolt, incinerate, chaosBolt },
+                [SAO.CATA] = { shadowBolt, incinerate, chaosBoltCata },
             },
         }
     );
@@ -254,6 +399,47 @@ local function useBackdraft(self)
         registerBackdraft(self, 1); -- 1/3 talent point
         registerBackdraft(self, 2); -- 2/3 talent points
         registerBackdraft(self, 3); -- 3/3 talent points
+    else
+        self:CreateEffect(
+            "backdraft",
+            SAO.MOP,
+            117828, -- Backdraft (buff)
+            "aura",
+            {
+                talent = 117896, -- Backdraft (passive)
+                buttons = {
+                    { stacks = 0, spellID = incinerate }, -- stacks == 0 to remove confusion from options, but in practice it will use stacks == 1
+                    { stacks = 3, spellID = chaosBoltMoP },
+                },
+                handler = {
+                    onAboutToApplyHash = function(hashCalculator)
+                        -- 1 or 2 -> 1 stack
+                        -- 3 or more -> 3 stacks
+                        -- This helps selecting the right visuals without multiplying too much buttons = { ... }
+                        -- It also reduces the risk of having weird flickers when transitioning
+                        local mustRefresh = false;
+
+                        local currentStacks = hashCalculator:getAuraStacks();
+
+                        if type(currentStacks) == 'number' then
+                            if currentStacks == 2 then
+                                hashCalculator:setAuraStacks(1);
+                            elseif currentStacks > 3 then
+                                hashCalculator:setAuraStacks(3);
+                            end
+
+                            if hashCalculator.lastAuraStacks ~= currentStacks then
+                                mustRefresh = true;
+                            end
+                        end
+
+                        hashCalculator.lastAuraStacks = currentStacks;
+
+                        return mustRefresh;
+                    end,
+                },
+            }
+        );
     end
 end
 
@@ -267,17 +453,43 @@ local function useShadowburn(self)
 end
 
 local function useBacklash(self)
+    local backlashOrange = 34936;
+    local backlashGreen = 140076;
+
     self:CreateEffect(
         "backlash",
-        SAO.TBC + SAO.WRATH + SAO.CATA,
-        34936, -- Backlash (buff)
+        SAO.TBC + SAO.WRATH + SAO.CATA + SAO.MOP,
+        backlashOrange, -- Backlash (buff)
         "aura",
         {
-            talent = 34935, -- Backlash (talent)
+            talent = {
+                [SAO.TBC + SAO.WRATH + SAO.CATA] = 34935, -- Backlash (talent)
+                [SAO.MOP] = 108563, -- Backlash (passive)
+            },
             overlay = { texture = "backlash", position = "Top" },
-            buttons = { shadowBolt, incinerate },
+            buttons = {
+                [SAO.TBC + SAO.WRATH + SAO.CATA] = { shadowBolt, incinerate },
+--                [SAO.MOP] = incinerate, -- Already glowing natively
+            },
         }
     );
+
+    if SAO.IsMoP() then
+        self:CreateEffect(
+            "backlash_green",
+            SAO.MOP,
+            backlashGreen, -- Backlash (buff)
+            "aura",
+            {
+                talent = 108563, -- Backlash (passive)
+                overlay = { texture = "backlash_green", position = "Top", option = false }, -- No option for green, will use option from non-green Backlash
+--                button = incinerate, -- Already glowing natively
+            }
+        );
+
+        self:AddOverlayLink(backlashOrange, backlashGreen);
+        -- self:AddGlowingLink(backlashOrange, backlashGreen); -- No glowing buttons
+    end
 end
 
 local function useEmpoweredImp(self)
@@ -292,6 +504,19 @@ local function useEmpoweredImp(self)
             buttons = {
                 [SAO.CATA] = soulFire,
             }
+        }
+    );
+end
+
+local function useFireAndBrimstone(self)
+    self:CreateEffect(
+        "fire_and_brimstone",
+        SAO.MOP,
+        108683, -- Fire and Bromstone (buff)
+        "aura",
+        {
+            overlay = { texture = "imp_empowerment", position = "Left + Right (Flipped)", level = 1, pulse = false, scale = 1.1, color = { 222, 222, 222 } },
+            buttons = { immolateFAB, incinerateFAB, conflagrateFAB, curseElementsFAB, curseEnfeeblementFAB },
         }
     );
 end
@@ -314,18 +539,25 @@ local function useFelSpark(self)
 end
 
 local function registerClass(self)
+    -- Baseline
+    useDrainSoul(self);
+    useEyeOfKilrogg(self);
+
     -- Affliction
     useNightfall(self); -- a.k.a. Shadow Trance
+    useSoulburn(self);
 
     -- Demonology
     useMoltenCore(self);
     useDecimation(self);
+    useDemonicRebirth(self);
 
     -- Destruction
     useBackdraft(self);
     useShadowburn(self);
     useBacklash(self);
     useEmpoweredImp(self);
+    useFireAndBrimstone(self);
 
     -- Tier 11
     useFelSpark(self);
@@ -340,9 +572,11 @@ end
 SAO.Class["WARLOCK"] = {
     ["Register"] = registerClass,
     ["LoadOptions"] = loadOptions,
-    ["PLAYER_LOGIN"] = customLogin,
-    ["PLAYER_TARGET_CHANGED"] = retarget,
-    ["UNIT_HEALTH"] = unitHealth,
-    ["UNIT_HEALTH_FREQUENT"] = unitHealthFrequent,
-    IsDisabled = SAO.IsMoP(),
+    -- Events used by DrainSoulHandler
+    ["PLAYER_LOGIN"] = requiresDrainSoulHandler and customLogin or nil,
+    ["PLAYER_TARGET_CHANGED"] = requiresDrainSoulHandler and retarget or nil,
+    ["UNIT_HEALTH"] = requiresDrainSoulHandler and unitHealth or nil,
+    ["UNIT_HEALTH_FREQUENT"] = requiresDrainSoulHandler and unitHealthFrequent or nil,
+    -- Event used to fix the 10th stack of Molten Core; will be pointless when the addon will read all auras from UNIT_AURA
+    ["UNIT_AURA"] = SAO.IsMoP() and unitAura or nil,
 }

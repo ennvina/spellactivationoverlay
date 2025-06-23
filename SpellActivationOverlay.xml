@@ -124,7 +124,7 @@
 					</AnimationGroup>
 					<AnimationGroup name="$parentLeavingCombatAnim" parentKey="combatAnimOut" setToFinalAlpha="true">
 						<Alpha order="1" duration="0.2"  fromAlpha="1"   toAlpha="0.5"/>
-						<Alpha order="2" duration="27.8" fromAlpha="0.5" toAlpha="0.5"/>
+						<Alpha order="2" duration="57.8" fromAlpha="0.5" toAlpha="0.5"/>
 						<Alpha order="3" duration="2"    fromAlpha="0.5" toAlpha="0"/>
 						<Scripts>
 							<OnPlay function="SpellActivationOverlayFrame_OnLeaveCombat"/>
