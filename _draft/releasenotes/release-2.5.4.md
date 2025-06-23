@@ -33,7 +33,10 @@ New Spell Alerts
 \*\* Switches to the green version of Molten Core if the Warlock has switched to Fel-infused spells.
 
 New Glowing Buttons
-- Drain Soul (Mists of Pandaria)
+- Drain Soul, when the target has 20% health of less (Mists of Pandaria)
+- Incinerate\*\*\*, during Backdraft (Mists of Pandaria)
+
+\*\*\* As in Cataclysm, the option is disabled by default to remove clutter. Because the effect is guaranteed after Conflagrate is cast, there is no real surprise that makes it worth telling players 'hey, you just got lucky and have a proc', hence the incentive of glowing this button is much more limited than e.g. glowing Incinerate during Backlash.
 ### :warrior:  Warrior
 The Warrior class is now fully supported for Mists of Pandaria!
 

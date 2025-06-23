@@ -727,6 +727,9 @@ SAO.defaults = {
                     [29722] = false, -- Incinerate
                     [50796] = false, -- Chaos Bolt
                 },
+                [117828] = { -- Backdraft (Mists of Pandaria)
+                    [29722] = false, -- Incinerate
+                },
                 [34936] = { -- Backlash (TBC+)
                     [686]   = true, -- Shadow Bolt
                     [29722] = true, -- Incinerate

@@ -21,11 +21,12 @@ local shadowburn = 17877;
 local shadowCleave = 403841;
 local soulFire = 6353;
 
+-- Pre-MoP buffs
 local moltenCoreBuff = { 47383, 71162, 71165 };
 local decimationBuff = { 63165, 63167 };
 local backdraftBuff = { 54274, 54276, 54277 };
 
--- Mists of Pandaria buffs for Molten Core
+-- Mists of Pandaria buffs
 local moltenCoreOrange = 122355;
 local moltenCoreGreen = 140074;
 
@@ -392,6 +393,17 @@ local function useBackdraft(self)
         registerBackdraft(self, 1); -- 1/3 talent point
         registerBackdraft(self, 2); -- 2/3 talent points
         registerBackdraft(self, 3); -- 3/3 talent points
+    else
+        self:CreateEffect(
+            "backdraft",
+            SAO.MOP,
+            117828, -- Backdraft (buff)
+            "aura",
+            {
+                talent = 117896, -- Backdraft (passive)
+                button = incinerate,
+            }
+        );
     end
 end
 
