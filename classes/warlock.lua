@@ -312,7 +312,7 @@ local function unitAura(self, unitTarget, updateInfo)
                     local bucket = self:GetBucketBySpellID(auraData.spellId);
                     if bucket then
                         bucket:refresh();
-                        self:Debug(Module, string.format("Refreshing the %sth stack of %s", tostring(auraData.applications), tostring(auraData.spellId)));
+                        self:Debug(Module, string.format("Refreshing the %dth stack of %d", auraData.applications, auraData.spellId));
                     end
                 end
             end
@@ -577,5 +577,6 @@ SAO.Class["WARLOCK"] = {
     ["PLAYER_TARGET_CHANGED"] = requiresDrainSoulHandler and retarget or nil,
     ["UNIT_HEALTH"] = requiresDrainSoulHandler and unitHealth or nil,
     ["UNIT_HEALTH_FREQUENT"] = requiresDrainSoulHandler and unitHealthFrequent or nil,
+    -- Event used to fix the 10th stack of Molten Core; will be pointless when the addon will read all auras from UNIT_AURA
     ["UNIT_AURA"] = SAO.IsMoP() and unitAura or nil,
 }
