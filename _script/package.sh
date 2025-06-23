@@ -240,6 +240,7 @@ then
 fi
 
 # Release wrath version
+release_wrath() {
 WRATH_BUILD_VERSION=30403
 mkproject wrath $WRATH_BUILD_VERSION 40abff achievement_boss_lichking 64 "Wrath of the Lich King"
 
@@ -274,8 +275,10 @@ prunetex "${TEXTURES_NOT_FOR_WRATH[@]}"
 zipproject wrath "$VERSION_TOC_VERSION"
 
 cdup
+}
 
 # Release vanilla version
+release_vanilla() {
 VANILLA_BUILD_VERSION=11507
 mkproject vanilla $VANILLA_BUILD_VERSION ffffff inv_misc_food_31 32 "Classic Era and Season of Discovery"
 
@@ -306,8 +309,10 @@ prunetex "${TEXTURES_NOT_FOR_VANILLA[@]}"
 zipproject vanilla "$VERSION_TOC_VERSION"
 
 cdup
+}
 
 # Release cata version
+release_cata() {
 CATA_BUILD_VERSION=40402
 mkproject cata $CATA_BUILD_VERSION db550d achievment_boss_madnessofdeathwing 64 "Cataclysm"
 
@@ -344,8 +349,10 @@ prunesound "${SOUNDS_NOT_FOR_CATA[@]}"
 zipproject cata "$VERSION_TOC_VERSION"
 
 cdup
+}
 
 # Release mop version
+release_mop() {
 MOP_BUILD_VERSION=50500
 mkproject mop $MOP_BUILD_VERSION 00ff96 achievement_character_pandaren_female 64 "Mists of Pandaria"
 
@@ -374,8 +381,10 @@ prunesound "${SOUNDS_NOT_FOR_MOP[@]}"
 zipproject mop "$VERSION_TOC_VERSION"
 
 cdup
+}
 
 # Release Necrosis version
+release_necrosis() {
 NECROSIS_BUILD_VERSION=40402 # Version does not matter, toc will not be used
 mkproject necrosis $NECROSIS_BUILD_VERSION 8787ed spell_shadow_abominationexplosion 64 "Necrosis"
 
@@ -485,3 +494,10 @@ replacecode 'Add[oO]ns\\\\NecrosisSpellActivationOverlay' 'AddOns\\\\Necrosis\\\
 zipproject necrosis "$VERSION_TOC_VERSION"
 
 cdup
+}
+
+release_vanilla
+release_wrath
+release_cata
+release_mop
+release_necrosis
