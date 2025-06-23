@@ -11,7 +11,8 @@ local WARLOCK_SPEC_AFFLICTION = SAO.TALENT.SPEC_1;
 local WARLOCK_SPEC_DEMONOLOGY = SAO.TALENT.SPEC_2;
 local WARLOCK_SPEC_DESTRUCTION = SAO.TALENT.SPEC_3;
 
-local chaosBolt = 50796;
+local chaosBoltCata = 50796;
+local chaosBoltMoP = 116858;
 local drainSoul = 1120;
 local felFlame = 77799;
 local felSpark = 89937;
@@ -377,7 +378,7 @@ local function registerBackdraft(self, rank)
             talent = 47258, -- Backdraft (talent)
             buttons = {
                 default = { option = (rank == 3) },
-                [SAO.CATA] = { shadowBolt, incinerate, chaosBolt },
+                [SAO.CATA] = { shadowBolt, incinerate, chaosBoltCata },
             },
         }
     );
@@ -401,7 +402,37 @@ local function useBackdraft(self)
             "aura",
             {
                 talent = 117896, -- Backdraft (passive)
-                button = incinerate,
+                buttons = {
+                    { stacks = 0, spellID = incinerate }, -- stacks == 0 to remove confusion from options, but in practice it will use stacks == 1
+                    { stacks = 3, spellID = chaosBoltMoP },
+                },
+                handler = {
+                    onAboutToApplyHash = function(hashCalculator)
+                        -- 1 or 2 -> 1 stack
+                        -- 3 or more -> 3 stacks
+                        -- This helps selecting the right visuals without multiplying too much buttons = { ... }
+                        -- It also reduces the risk of having weird flickers when transitioning
+                        local mustRefresh = false;
+
+                        local currentStacks = hashCalculator:getAuraStacks();
+
+                        if type(currentStacks) == 'number' then
+                            if currentStacks == 2 then
+                                hashCalculator:setAuraStacks(1);
+                            elseif currentStacks > 3 then
+                                hashCalculator:setAuraStacks(3);
+                            end
+
+                            if hashCalculator.lastAuraStacks ~= currentStacks then
+                                mustRefresh = true;
+                            end
+                        end
+
+                        hashCalculator.lastAuraStacks = currentStacks;
+
+                        return mustRefresh;
+                    end,
+                },
             }
         );
     end

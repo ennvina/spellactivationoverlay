@@ -147,7 +147,7 @@ SAO.Display = {
 
     hideButtons = function(self)
         if #self.buttons > 0 then
-            SAO:RemoveGlow(self.spellID);
+            SAO:RemoveGlow(self.spellID, self.buttons);
         end
     end,
 

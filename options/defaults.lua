@@ -729,6 +729,7 @@ SAO.defaults = {
                 },
                 [117828] = { -- Backdraft (Mists of Pandaria)
                     [29722] = false, -- Incinerate
+                    [116858] = false, -- Chaos Bolt (new spell ID in Mists of Pandaria)
                 },
                 [34936] = { -- Backlash (TBC+)
                     [686]   = true, -- Shadow Bolt (TBC - Cataclysm)
