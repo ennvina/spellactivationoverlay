@@ -731,7 +731,7 @@ SAO.defaults = {
                     [29722] = false, -- Incinerate
                 },
                 [34936] = { -- Backlash (TBC+)
-                    [686]   = true, -- Shadow Bolt
+                    [686]   = true, -- Shadow Bolt (TBC - Cataclysm)
                     [29722] = true, -- Incinerate
                 },
                 [47283] = { -- Empowered Imp (Cataclysm)

@@ -419,13 +419,19 @@ end
 local function useBacklash(self)
     self:CreateEffect(
         "backlash",
-        SAO.TBC + SAO.WRATH + SAO.CATA,
+        SAO.TBC + SAO.WRATH + SAO.CATA + SAO.MOP,
         34936, -- Backlash (buff)
         "aura",
         {
-            talent = 34935, -- Backlash (talent)
+            talent = {
+                [SAO.TBC + SAO.WRATH + SAO.CATA] = 34935, -- Backlash (talent)
+                [SAO.MOP] = 108563, -- Backlash (passive)
+            },
             overlay = { texture = "backlash", position = "Top" },
-            buttons = { shadowBolt, incinerate },
+            buttons = {
+                [SAO.TBC + SAO.WRATH + SAO.CATA] = { shadowBolt, incinerate },
+--                [SAO.MOP] = incinerate, -- Already glowing natively
+            },
         }
     );
 end

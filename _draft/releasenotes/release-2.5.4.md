@@ -27,6 +27,7 @@ New Spell Alerts
 - Soulburn (Mists of Pandaria)
 - Molten Core\*\* (Mists of Pandaria)
 - Demonic Rebirth (Mists of Pandaria)
+- Backlash (Mists of Pandaria)
 
 \* Nightfall no longer grants a free instant Shadow Bolt. Therefore, there is no Glowing Button for Nightfall in Mists of Pandaria.
 
