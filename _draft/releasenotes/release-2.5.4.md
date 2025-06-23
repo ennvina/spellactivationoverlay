@@ -21,6 +21,8 @@ New Glowing Button
 
 \*\* This button is disabled by default. Its intended use is for damage Priests who want to cast HW:Chastise on cooldown and don't know when the cooldown is reset thanks to Chakra: Chastise.
 ### :warlock:  Warlock
+The Warlock class is now fully supported for Mists of Pandaria!
+
 New Spell Alerts
 - Eye of Kilrogg
 - Nightfall\* (Mists of Pandaria)
