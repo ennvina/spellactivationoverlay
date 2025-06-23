@@ -83,7 +83,6 @@ Warriors should no longer get invited to report the following unsupported effect
 - Bloodsurge
 - Sword and Board
 - Ultimatum
-## Known Limitations
 ## Miscellaneous
 Overlays are never displayed after 60 seconds of leaving combat, up from 30 seconds.
 
@@ -94,6 +93,7 @@ Shout-out to our amazing contributors
 - TeamRemix for sending lots of feedback and test new effects for Priest
 - Jumpsuitpally for sending feedback about Mage
 - Optimizer2347 for reporting an unsupported effect
+
 Thanks!
 
 As always, the latest release is available on [CurseForge](https://www.curseforge.com/wow/addons/spellactivationoverlay) / [GitHub](https://github.com/ennvina/spellactivationoverlay/releases/latest) / [Discord](https://discord.com/channels/1013194771969355858/1379111832207228938)

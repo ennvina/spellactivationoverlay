@@ -1,5 +1,52 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.5.4 (2025-06-23)
+
+Thank you to our amazing contributors for sending feedback. Thanks!
+- Amanthuul
+- TeamRemix
+- Jumpsuitpally
+- Optimizer2347
+
+Options Panel
+- The class name is now displayed once in the options panel
+
+New Spell Alerts
+- Warlock's Eye of Kilrogg
+- Warlock's Nightfall (Mists of Pandaria)
+- Warlock's Soulburn (Mists of Pandaria)
+- Warlock's Molten Core (Mists of Pandaria)
+- Warlock's Demonic Rebirth (Mists of Pandaria)
+- Warlock's Backlash (Mists of Pandaria)
+- Warlock's Fire and Brimstone (Mists of Pandaria)
+- Warrior's Victory Rush (Mists of Pandaria)
+- Warrior's Taste for Blood (Mists of Pandaria)
+- Warrior's Sudden Death (Mists of Pandaria)
+- Warrior's Bloodsurge (Mists of Pandaria)
+- Warrior's Sword and Board (Mists of Pandaria)
+- Warrior's Ultimatum (Mists of Pandaria)
+
+New Glowing Buttons
+- Warlocks's Drain Soul, when the target has 20% health of less (MoP)
+- Warlocks's Incinerate, during Backdraft (Mists of Pandaria)
+- Warlocks's Chaos Bolt, during Backdraft (Mists of Pandaria)
+- Warlocks's Incinerate, during Fire and Brimstone (Mists of Pandaria)
+- Warlocks's Immolate, during Fire and Brimstone (Mists of Pandaria)
+- Warlocks's Conflagrate, during Fire and Brimstone (Mists of Pandaria)
+- Warlocks's Curse of the Elements, during Fire and Brimstone (MoP)
+- Warlocks's Curse of Enfeeblement, during Fire and Brimstone (MoP)
+- Warrior's Overpower, during Taste for Blood (Mists of Pandaria)
+- Warrior's Victory Rush, during Victorious (Mists of Pandaria)
+- Warrior's Impending Victory, during Victorious (Mists of Pandaria)
+
+Bug Fixes
+- Restored options to disable buttons of Mage's Freeze (Mists of Pandaria)
+- Fixed animations of Shaman's Fulmination (Cataclysm, Mists of Pandaria)
+- Fixed animations of Shaman's Rolling Thunder (Season of Discovery)
+
+Miscellaneous
+- Spell alerts disappear after leaving combat for more than 60 secs, up from 30
+
 #### v2.5.3 (2025-06-17)
 
 SpellActivationOverlay vs. SpellActivationOverlay
