@@ -448,10 +448,13 @@ local function useShadowburn(self)
 end
 
 local function useBacklash(self)
+    local backlashOrange = 34936;
+    local backlashGreen = 140076;
+
     self:CreateEffect(
         "backlash",
         SAO.TBC + SAO.WRATH + SAO.CATA + SAO.MOP,
-        34936, -- Backlash (buff)
+        backlashOrange, -- Backlash (buff)
         "aura",
         {
             talent = {
@@ -465,6 +468,23 @@ local function useBacklash(self)
             },
         }
     );
+
+    if SAO.IsMoP() then
+        self:CreateEffect(
+            "backlash_green",
+            SAO.MOP,
+            backlashGreen, -- Backlash (buff)
+            "aura",
+            {
+                talent = 108563, -- Backlash (passive)
+                overlay = { texture = "backlash_green", position = "Top", option = false }, -- No option for green, will use option from non-green Backlash
+--                button = incinerate, -- Already glowing natively
+            }
+        );
+
+        self:AddOverlayLink(backlashOrange, backlashGreen);
+        -- self:AddGlowingLink(backlashOrange, backlashGreen); -- No glowing buttons
+    end
 end
 
 local function useEmpoweredImp(self)
