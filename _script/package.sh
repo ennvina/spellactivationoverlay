@@ -496,8 +496,37 @@ zipproject necrosis "$VERSION_TOC_VERSION"
 cdup
 }
 
+# Release universal version
+release_universal() {
+UNIVERSAL_BUILD_VERSION=50500 # Same as latest Classic version, currently Mists of Pandaria Classic
+mkproject universal $UNIVERSAL_BUILD_VERSION c845fa spell_arcane_portalstormwind 32 "Universal"
+
+echo -n "Generatic TOC files for each flavor..."
+PROJECTS=(
+"vanilla Vanilla"
+# "tbc TBC"
+"wrath Wrath"
+"cata Cata"
+"mop Mists"
+)
+addon_name=SpellActivationOverlay
+for project in "${PROJECTS[@]}"; do
+    read flavor suffix <<< "$project"
+    build_version=$(grep -i '^##[[:space:]]*interface:' "../${flavor}/${addon_name}/${addon_name}.toc" | grep -o '[0-9].*[^[:space:]]')
+    [ -z "$build_version" ] && bye "Cannot read Interface version from '$flavor'"
+    cp "./${addon_name}/${addon_name}.toc" "./${addon_name}/${addon_name}_${suffix}.toc" || bye "Cannot generate TOC file for '$flavor'"
+    sed -i s/'^## Interface:.*'/"## Interface: $build_version"/ "./${addon_name}/${addon_name}_${suffix}.toc" || bye "Cannot update version of $flavor TOC file"
+done
+echo
+
+zipproject universal "$VERSION_TOC_VERSION"
+
+cdup
+}
+
 release_vanilla
 release_wrath
 release_cata
 release_mop
+release_universal
 release_necrosis
