@@ -215,14 +215,14 @@ zipproject() {
 
     echo -n "Zipping $flavor directory..."
     local filename=SpellActivationOverlay-"$version"${3:+-}$3-${flavor}.zip
-    "$CWD"/zip -9 -r -q "$filename" SpellActivationOverlay || bye "Cannot zip $flavor directory"
+    "$CWD"/zip.exe -9 -r -q "$filename" SpellActivationOverlay || bye "Cannot zip $flavor directory"
     echo
-    explorer . # || bye "Cannot open explorer to $flavor directory"
+    explorer.exe . # || bye "Cannot open explorer to $flavor directory"
 }
 
 # Retrieve version and check consistency
 cdup
-VERSION_TOC_VERSION=$(grep -i '^##[[:space:]]*version:' ./SpellActivationOverlay.toc | grep -o '[0-9].*')
+VERSION_TOC_VERSION=$(grep -i '^##[[:space:]]*version:' ./SpellActivationOverlay.toc | grep -o '[0-9].*[^[:space:]]')
 VERSION_TOC_TITLE=$(grep -i '^##[[:space:]]*title:' ./SpellActivationOverlay.toc | grep -o '|c........[0-9].*|r' | grep -o '[0-9]\.[^|]*')
 VERSION_CHANGELOG=$(grep -m1 -o '^#### v[^[:space:]]*' ./changelog.md | grep -o '[0-9].*')
 if [ -z "$VERSION_TOC_VERSION" ] || [[ "$VERSION_TOC_VERSION" =~ \n ]] \
@@ -240,6 +240,7 @@ then
 fi
 
 # Release wrath version
+release_wrath() {
 WRATH_BUILD_VERSION=30403
 mkproject wrath $WRATH_BUILD_VERSION 40abff achievement_boss_lichking 64 "Wrath of the Lich King"
 
@@ -274,8 +275,10 @@ prunetex "${TEXTURES_NOT_FOR_WRATH[@]}"
 zipproject wrath "$VERSION_TOC_VERSION"
 
 cdup
+}
 
 # Release vanilla version
+release_vanilla() {
 VANILLA_BUILD_VERSION=11507
 mkproject vanilla $VANILLA_BUILD_VERSION ffffff inv_misc_food_31 32 "Classic Era and Season of Discovery"
 
@@ -306,8 +309,10 @@ prunetex "${TEXTURES_NOT_FOR_VANILLA[@]}"
 zipproject vanilla "$VERSION_TOC_VERSION"
 
 cdup
+}
 
 # Release cata version
+release_cata() {
 CATA_BUILD_VERSION=40402
 mkproject cata $CATA_BUILD_VERSION db550d achievment_boss_madnessofdeathwing 64 "Cataclysm"
 
@@ -344,8 +349,10 @@ prunesound "${SOUNDS_NOT_FOR_CATA[@]}"
 zipproject cata "$VERSION_TOC_VERSION"
 
 cdup
+}
 
 # Release mop version
+release_mop() {
 MOP_BUILD_VERSION=50500
 mkproject mop $MOP_BUILD_VERSION 00ff96 achievement_character_pandaren_female 64 "Mists of Pandaria"
 
@@ -374,8 +381,10 @@ prunesound "${SOUNDS_NOT_FOR_MOP[@]}"
 zipproject mop "$VERSION_TOC_VERSION"
 
 cdup
+}
 
 # Release Necrosis version
+release_necrosis() {
 NECROSIS_BUILD_VERSION=40402 # Version does not matter, toc will not be used
 mkproject necrosis $NECROSIS_BUILD_VERSION 8787ed spell_shadow_abominationexplosion 64 "Necrosis"
 
@@ -485,3 +494,39 @@ replacecode 'Add[oO]ns\\\\NecrosisSpellActivationOverlay' 'AddOns\\\\Necrosis\\\
 zipproject necrosis "$VERSION_TOC_VERSION"
 
 cdup
+}
+
+# Release universal version
+release_universal() {
+UNIVERSAL_BUILD_VERSION=50500 # Same as latest Classic version, currently Mists of Pandaria Classic
+mkproject universal $UNIVERSAL_BUILD_VERSION c845fa spell_arcane_portalstormwind 32 "Universal"
+
+echo -n "Generatic TOC files for each flavor..."
+PROJECTS=(
+"vanilla Vanilla"
+# "tbc TBC"
+"wrath Wrath"
+"cata Cata"
+"mop Mists"
+)
+addon_name=SpellActivationOverlay
+for project in "${PROJECTS[@]}"; do
+    read flavor suffix <<< "$project"
+    build_version=$(grep -i '^##[[:space:]]*interface:' "../${flavor}/${addon_name}/${addon_name}.toc" | grep -o '[0-9].*[^[:space:]]')
+    [ -z "$build_version" ] && bye "Cannot read Interface version from '$flavor'"
+    cp "./${addon_name}/${addon_name}.toc" "./${addon_name}/${addon_name}_${suffix}.toc" || bye "Cannot generate TOC file for '$flavor'"
+    sed -i s/'^## Interface:.*'/"## Interface: $build_version"/ "./${addon_name}/${addon_name}_${suffix}.toc" || bye "Cannot update version of $flavor TOC file"
+done
+echo
+
+zipproject universal "$VERSION_TOC_VERSION"
+
+cdup
+}
+
+release_vanilla
+release_wrath
+release_cata
+release_mop
+release_universal
+release_necrosis
