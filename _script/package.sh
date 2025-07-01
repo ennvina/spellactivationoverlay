@@ -263,6 +263,7 @@ maelstrom_weapon_9
 maelstrom_weapon_10
 monk_serpent
 raging_blow
+shadow_word_insanity
 sudden_doom
 thrill_of_the_hunt_1
 thrill_of_the_hunt_2
@@ -298,6 +299,7 @@ molten_core
 killing_machine
 predatory_swiftness
 rime
+shadow_word_insanity
 shooting_stars
 sudden_doom
 thrill_of_the_hunt_1

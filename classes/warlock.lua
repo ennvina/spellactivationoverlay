@@ -188,7 +188,7 @@ end
 local function useSoulburn(self)
     self:CreateEffect(
         "soulburn",
-        SAO.MOP,
+        SAO.CATA + SAO.MOP,
         74434, -- Soulburn (buff)
         "aura",
         {

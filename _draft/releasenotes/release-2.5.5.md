@@ -13,9 +13,9 @@ Cons:
 
 Specific flavors will still be available. In fact, they are still recommended, especially when playing a unique flavor.
 ## Classes
-### :class:  Class
+### :warlock:  Warlock
 New Spell Alerts
-- 
+- Soulburn (Cataclysm)
 New Glowing Buttons
 - 
 ## Bug Fixes
