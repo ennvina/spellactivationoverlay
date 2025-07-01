@@ -16,6 +16,7 @@ Specific flavors will still be available. In fact, they are still recommended, e
 ### :warlock:  Warlock
 New Spell Alerts
 - Soulburn (Cataclysm)
+- Demonic Rebirth (Cataclysm)
 New Glowing Buttons
 - 
 ## Bug Fixes
