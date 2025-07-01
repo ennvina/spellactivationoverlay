@@ -188,7 +188,7 @@ end
 local function useSoulburn(self)
     self:CreateEffect(
         "soulburn",
-        SAO.MOP,
+        SAO.CATA + SAO.MOP,
         74434, -- Soulburn (buff)
         "aura",
         {
@@ -361,7 +361,7 @@ end
 local function useDemonicRebirth(self)
     self:CreateEffect(
         "demonic_rebirth",
-        SAO.MOP,
+        SAO.CATA + SAO.MOP,
         88448, -- Demonic Rebirth
         "aura",
         {

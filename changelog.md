@@ -1,5 +1,18 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.5.5 (2025-07-01)
+
+There is now a Universal build that works for all flavors: Era, Cataclysm, etc.
+Players are still encouraged to install optimized build for each flavor
+Universal is provided for convenience to players who install addons manually
+
+New Spell Alerts
+- Soulburn (Cataclysm)
+- Demonic Rebirth (Cataclysm)
+
+Miscellaneous
+- The addon's license has been updated
+
 #### v2.5.4 (2025-06-23)
 
 Thank you to our amazing contributors for sending feedback. Thanks!
