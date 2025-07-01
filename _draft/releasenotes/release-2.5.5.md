@@ -17,14 +17,7 @@ Specific flavors will still be available. In fact, they are still recommended, e
 New Spell Alerts
 - Soulburn (Cataclysm)
 - Demonic Rebirth (Cataclysm)
-New Glowing Buttons
-- 
-## Bug Fixes
-## Known Limitations
 ## Miscellaneous
-## Contributors
-Shout-out to our amazing contributors
-- 
-Thanks!
+The addon's license has been updated.
 
 As always, the latest release is available on [CurseForge](https://www.curseforge.com/wow/addons/spellactivationoverlay) / [GitHub](https://github.com/ennvina/spellactivationoverlay/releases/latest) / [Discord](https://discord.com/channels/1013194771969355858/1379111832207228938)
