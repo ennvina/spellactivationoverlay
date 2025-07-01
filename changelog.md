@@ -2,7 +2,7 @@
 
 #### v2.5.5 (2025-07-01)
 
-There now a _Universal_ build that works for all flavors: Era, Cataclysm, etc.
+There is now a Universal build that works for all flavors: Era, Cataclysm, etc.
 Players are still encouraged to install optimized build for each flavor
 Universal is provided for convenience to players who install addons manually
 

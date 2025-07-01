@@ -1,7 +1,7 @@
 # SpellActivationOverlay 2.5.5
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.5.5
 ## General
-There now a _Universal_ build that works for all flavors: Era, Cataclysm, etc.
+There is now a _Universal_ build that works for all flavors: Era, Cataclysm, etc.
 
 Pros:
 - Download only one build and use it everywhere
