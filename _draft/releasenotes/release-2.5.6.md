@@ -13,9 +13,10 @@ Druids no longer get error from loading Eclipse Moon and Eclipse Sun textures at
 ### :hunter:  Hunter
 The following abilities would not always glow
 - Counterattack (Era, TBC, Wrath)
+- Kill Shot (Wrath)
 - Mongoose Bite (Era, TBC)
 
-This issue happens only if all the following conditions are met at the same time
+This issue happened only if all the following conditions were met at the same time
 - The ability is Rank 2 or higher
 - The Hunter has reloaded their interface after learning Rank 2
 - The "Show all spell ranks" option is disabled in the Spellbook
@@ -25,7 +26,7 @@ The following spells would not always glow
 - Hammer of Wrath (Era, TBC, Wrath)
 - Holy Shock (Era, TBC, Wrath)
 
-This issue happens only if all the following conditions are met at the same time
+This issue happened only if all the following conditions were met at the same time
 - The spell is Rank 2 or higher
 - The Paladin has reloaded their interface after learning Rank 2
 - The "Show all spell ranks" option is disabled in the Spellbook
@@ -35,10 +36,10 @@ The following abilities would not always glow
 - Warrior's Overpower (Era, TBC)
 - Warrior's Revenge (Era, TBC, Wrath)
 
-This issue happens only if all the following conditions are met at the same time
+This issue happened only if all the following conditions were met at the same time
 - The ability is Rank 2 or higher
 - The Warrior has reloaded their interface after learning Rank 2
-- The respective options are setup to the exclusive stance(s) they can be cast in
+- The respective options are setup to the exclusive stance(s) the ability can be cast in
 
 As an example of the latter condition, Overpower could fail to glow if its option was set to "Battle Stance only" and would correctly glow if the option was set to "All stances".
 ## Known Limitations

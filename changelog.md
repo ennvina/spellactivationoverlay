@@ -16,6 +16,7 @@ Bug Fixes
 
 Here is the complete list of counters affected by the latter issue
 - Hunter's Counterattack (Era, TBC, Wrath)
+- Hunter's Kill Shot (Wrath)
 - Hunter's Mongoose Bite (Era, TBC)
 - Paladin's Exorcism (Era, TBC, Wrath)
 - Paladin's Hammer of Wrath (Era, TBC, Wrath)
