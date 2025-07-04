@@ -1,5 +1,7 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.5.6 (2025-07-xx)
+
 #### v2.5.5 (2025-07-01)
 
 There is now a Universal build that works for all flavors: Era, Cataclysm, etc.
