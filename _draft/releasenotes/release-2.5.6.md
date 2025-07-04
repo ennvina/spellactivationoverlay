@@ -8,6 +8,8 @@ New Spell Alerts
 New Glowing Buttons
 - 
 ## Bug Fixes
+### :druid:  Druid
+Druids no longer get error from loading Eclipse Moon and Eclipse Sun textures at start (Mists of Pandaria).
 ## Known Limitations
 ## Miscellaneous
 ## Contributors

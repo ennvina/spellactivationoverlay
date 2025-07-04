@@ -2,6 +2,9 @@
 
 #### v2.5.6 (2025-07-xx)
 
+Bug Fixes
+- Druids no longer get Eclipse textures errors at start (Mists of Pandaria)
+
 #### v2.5.5 (2025-07-01)
 
 There is now a Universal build that works for all flavors: Era, Cataclysm, etc.

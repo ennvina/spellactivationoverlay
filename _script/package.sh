@@ -365,8 +365,6 @@ arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
 echo_of_the_elements
-eclipse_moon
-eclipse_sun
 maelstrom_weapon_6
 maelstrom_weapon_7
 maelstrom_weapon_8
