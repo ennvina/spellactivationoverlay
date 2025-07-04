@@ -2,6 +2,11 @@
 
 #### v2.5.6 (2025-07-xx)
 
+Thank you to our amazing contributors for reporting issues. Thanks!
+- jokke and mistik911 for reporting the Warrior's Overpower issue
+- Adal4 for reporting the Paladin's The Art of War issue
+- Amanthuul and kakukembo for reporting the Druid's Eclipse issue
+
 New Spell Alerts
 - Paladin's The Art of War (Mists of Pandaria)
 

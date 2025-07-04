@@ -1,5 +1,7 @@
 # SpellActivationOverlay 2.5.6
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.5.6
+
+This release fixes a couple of minor issues for Mists of Pandaria, and a major issue for Classic Era that popped up out of nowhere.
 ## General
 ## Classes
 ### :paladin:  Paladin
@@ -43,7 +45,9 @@ As an example of the latter condition, Overpower could fail to glow if its optio
 ## Miscellaneous
 ## Contributors
 Shout-out to our amazing contributors
-- 
+- jokke and mistik911 for reporting the Warrior's Overpower issue
+- Adal4 for reporting the Paladin's The Art of War issue
+- Amanthuul and kakukembo for reporting the Druid's Eclipse issue
 Thanks!
 
 As always, the latest release is available on [CurseForge](https://www.curseforge.com/wow/addons/spellactivationoverlay) / [GitHub](https://github.com/ennvina/spellactivationoverlay/releases/latest) / [Discord](https://discord.com/channels/1013194771969355858/1379111832207228938)
