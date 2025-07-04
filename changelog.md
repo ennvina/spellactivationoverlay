@@ -2,6 +2,9 @@
 
 #### v2.5.6 (2025-07-xx)
 
+New Spell Alerts
+- Paladin's The Art of War (Mists of Pandaria)
+
 Bug Fixes
 - Druids no longer get Eclipse textures errors at start (Mists of Pandaria)
 
