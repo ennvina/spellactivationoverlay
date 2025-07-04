@@ -7,6 +7,17 @@ New Spell Alerts
 
 Bug Fixes
 - Druids no longer get Eclipse textures errors at start (Mists of Pandaria)
+- Counters would not always glow at Rank 2 and higher (Era, TBC, Wrath)
+
+Here is the complete list of counters affected by the latter issue
+- Hunter's Counterattack (Era, TBC, Wrath)
+- Hunter's Mongoose Bite (Era, TBC)
+- Paladin's Exorcism (Era, TBC, Wrath)
+- Paladin's Hammer of Wrath (Era, TBC, Wrath)
+- Paladin's Holy Shock (Era, TBC, Wrath)
+- Warrior's Execute (Era, TBC, Wrath)
+- Warrior's Overpower (Era, TBC)
+- Warrior's Revenge (Era, TBC, Wrath)
 
 #### v2.5.5 (2025-07-01)
 

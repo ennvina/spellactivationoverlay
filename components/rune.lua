@@ -11,7 +11,7 @@ local function addRuneMapping(rune)
     local runeID = rune.skillLineAbilityID;
     for _, spellID in pairs(rune.learnedAbilitySpellIDs) do
         if runeMapping[spellID] ~= runeID then
-            SAO:Debug(Module, "Spell "..(GetSpellInfo(spellID) or "x").." ("..spellID..") is learned by rune "..runeID);
+            SAO:Debug(Module, (GetSpellInfo(spellID) or "x").." ("..spellID..") from rune "..runeID);
             runeMapping[spellID] = runeID;
         end
     end

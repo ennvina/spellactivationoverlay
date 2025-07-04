@@ -104,10 +104,19 @@ function SAO.IsSpellIdentical(self, spellID, spellName, referenceID)
     end
 end
 
+local canHaveMultipleRanks = SAO.IsProject(SAO.ALL_PROJECTS - SAO.CATA_AND_ONWARD);
 -- Test if the player is capable of casting a specific spell
 function SAO.IsSpellLearned(self, spellID)
     if IsSpellKnownOrOverridesKnown(spellID) then
         return true;
+    end
+    if canHaveMultipleRanks then
+        local spellName = GetSpellInfo(spellID);
+        for _, spellID in ipairs(self.SpellIDsByName[spellName] or {}) do
+            if IsSpellKnownOrOverridesKnown(spellID) then
+                return true;
+            end
+        end
     end
     return false;
 end
