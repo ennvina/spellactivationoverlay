@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.5.6 (2025-07-xx)
+#### v2.5.6 (2025-07-05)
 
 Thank you to our amazing contributors for reporting issues. Thanks!
 - jokke and mistik911 for reporting the Warrior's Overpower issue
