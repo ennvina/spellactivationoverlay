@@ -37,8 +37,8 @@ local function useHolyPowerTracker()
         local texture = "surge_of_light";
         local scale = 0.4 + 0.1*hp; -- 50%, 60%, 70%
         local pulse = hp == 3;
-        tinsert(overlays, { holyPower = hp, texture = texture, position = "Left (vFlipped)", scale = scale, pulse = pulse });
-        tinsert(overlays, { holyPower = hp, texture = texture, position = "Right (180)",     scale = scale, pulse = pulse, option = false });
+        tinsert(overlays, { holyPower = hp, texture = texture, position = "Left (vFlipped)", level = 4, scale = scale, pulse = pulse });
+        tinsert(overlays, { holyPower = hp, texture = texture, position = "Right (180)",     level = 4, scale = scale, pulse = pulse, option = false });
     end
 
     SAO:CreateEffect(
@@ -227,26 +227,6 @@ local function useCrusade()
     );
 end
 
-local function registerArtOfWar(name, project, buff, glowingButtons, defaultOverlay, defaultButton)
-    SAO:CreateEffect(
-        name,
-        project,
-        buff,
-        "aura",
-        {
-            talent = 53486, -- The Art of War (talent)
-            overlays = {
-                default = defaultOverlay,
-                [project] = { texture = "art_of_war", position = "Left + Right (Flipped)" },
-            },
-            buttons = {
-                default = defaultButton,
-                [project] = glowingButtons,
-            },
-        }
-    );
-end
-
 local function useDivinePurpose()
     SAO:CreateEffect(
         "divine_purpose",
@@ -267,6 +247,26 @@ local function useDivinePurpose()
     );
 end
 
+local function registerArtOfWar(name, project, buff, glowingButtons, defaultOverlay, defaultButton)
+    SAO:CreateEffect(
+        name,
+        project,
+        buff,
+        "aura",
+        {
+            talent = 53486, -- The Art of War (talent)
+            overlays = {
+                default = defaultOverlay,
+                [project] = { texture = "art_of_war", position = "Left + Right (Flipped)" },
+            },
+            buttons = {
+                default = defaultButton,
+                [project] = glowingButtons,
+            },
+        }
+    );
+end
+
 local function useArtOfWar()
     if SAO.IsWrath() then
         local artOfWarBuff1 = 53489;
@@ -280,10 +280,24 @@ local function useArtOfWar()
 
         -- 2/2 talent points
         registerArtOfWar("art_of_war_high", SAO.WRATH, artOfWarBuff2, { flashOfLight, exorcism });
-    elseif SAO.IsCata() then
-        local artOfWarBuff = 59578;
-
-        registerArtOfWar("art_of_war", SAO.CATA, artOfWarBuff, { exorcism });
+    elseif SAO.IsProject(SAO.CATA_AND_ONWARD) then
+        SAO:CreateEffect(
+            "art_of_war",
+            SAO.CATA_AND_ONWARD,
+            59578, -- The Art of War (buff)
+            "aura",
+            {
+                talent = {
+                    [SAO.CATA] = 53486, -- The Art of War (talent)
+                    [SAO.MOP_AND_ONWARD] = 87138, -- The Art of War (passive)
+                },
+                overlay = { texture = "art_of_war", position = "Left + Right (Flipped)" },
+                buttons = {
+                    [SAO.CATA] = exorcism,
+                    -- [SAO.MOP_AND_ONWARD] = exorcism, -- Button already glowing natively by the game client
+                },
+            }
+        );
     end
 end
 
