@@ -364,19 +364,19 @@ function SAO:gameSpellAlertsChangeLater(optionSequence)
     return string.format(tr(gameSpellAlertsChangeLaterTranslations), optionSequence);
 end
 
--- Translate "Keep the game's native spell alerts"
-function SAO:doNotAskDisableGameAlerts()
-    local doNotAskDisableGameAlertsTranslations = {
-        ["en"] = "Keep the game's native spell alerts",
-        ["de"] = "Die nativen Zauberwarnungen des Spiels beibehalten",
-        ["fr"] = "Conserver les alertes de sort natives du jeu",
-        ["es"] = "Mantener las alertas de hechizo nativas del juego",
-        ["ru"] = "Сохранить родные оповещения о заклинаниях игры",
-        ["it"] = "Mantenere gli avvisi sugli incantesimi nativi del gioco",
-        ["pt"] = "Manter os alertas de feitiço nativos do jogo",
-        ["ko"] = "게임의 기본 주문 경고 유지",
-        ["zh"] = "保留游戏的原生法术警报",
-        ["zhTW"] = "保留遊戲的原生法術警報",
+-- Translate "Detect conflicts with the game's spell alerts"
+function SAO:askToDisableGameAlerts()
+    local askToDisableGameAlertsTranslations = {
+        ["en"] = "Detect conflicts with the game's spell alerts",
+        ["de"] = "Konflikte mit den Zauberwarnungen des Spiels erkennen",
+        ["fr"] = "Détecter les conflits avec les alertes de sort du jeu",
+        ["es"] = "Detectar conflictos con las alertas de hechizo del juego",
+        ["ru"] = "Обнаружить конфликты с игровыми оповещениями о заклинаниях",
+        ["it"] = "Rileva conflitti con gli avvisi sugli incantesimi del gioco",
+        ["pt"] = "Detectar conflitos com os alertas de feitiço do jogo",
+        ["ko"] = "게임의 주문 경고와의 충돌 감지",
+        ["zh"] = "检测与游戏法术警报的冲突",
+        ["zhTW"] = "檢測與遊戲法術警報的衝突",
     };
-    return tr(doNotAskDisableGameAlertsTranslations);
+    return tr(askToDisableGameAlertsTranslations);
 end

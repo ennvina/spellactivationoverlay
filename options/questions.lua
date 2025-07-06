@@ -16,6 +16,7 @@ Each question object has the following structure:
     isRelevantNow = function(self) return true end, -- Boolean. Does it make sense to ask the question now?
     mayAskAtStart = function(self) return true end, -- Boolean. Should we ask the question when the database is loaded?
     ask = function(self) ... end, -- Function to actually ask the question
+    cancel = function(self) ... end, -- Function to cancel the question if currently being asked
 }
 ]]
 local questions = {}
@@ -77,12 +78,12 @@ addQuestion(SAO.QUESTIONS.DISABLE_GAME_ALERT, {
                 OnAccept = function(self)
                     SetCVar(displayGameSaoVar, false);
                     SpellActivationOverlayDB.questions.disableGameAlert = "yes";
-                    SpellActivationOverlayOptionsPanelSpellAlertDontAskDisableGameAlertButton:SetChecked(false);
+                    SpellActivationOverlayOptionsPanelSpellAlertAskDisableGameAlertButton:SetChecked(true);
                     SAO:Info(Module, SAO:gameSpellAlertsDisabled().."\n"..SAO:gameSpellAlertsChangeLater(optionSequence));
                 end,
                 OnCancel = function(self)
                     SpellActivationOverlayDB.questions.disableGameAlert = "no";
-                    SpellActivationOverlayOptionsPanelSpellAlertDontAskDisableGameAlertButton:SetChecked(true);
+                    SpellActivationOverlayOptionsPanelSpellAlertAskDisableGameAlertButton:SetChecked(false);
                     SAO:Info(Module, SAO:gameSpellAlertsLeftAsIs().."\n"..SAO:gameSpellAlertsChangeLater(optionSequence));
                 end,
                 whileDead = true,
@@ -96,25 +97,41 @@ addQuestion(SAO.QUESTIONS.DISABLE_GAME_ALERT, {
 
         StaticPopup_Show(self.props.staticPopupDialog, nil, nil, { answered = SpellActivationOverlayDB.questions.disableGameAlert });
     end,
+
+    cancel = function(self)
+        if StaticPopupDialogs[self.props.staticPopupDialog] then
+            StaticPopup_Hide(self.props.staticPopupDialog);
+        end
+    end,
 });
 
 -- Ask a question manually
 function SAO:AskQuestion(questionID, askEvenIfIrrelevantNow)
     if not SAO:GetDatabaseLoadingState().loaded then
-        SAO:Error(Module, "Cannot ask question with ID %s because the database is not loaded", questionID);
+        SAO:Error(Module, "Cannot ask question with ID %s because the database is not loaded", tostring(questionID));
         return;
     end
 
     local question = questions[questionID];
     if question then
         if not question:isPossible() then
-            SAO:Warn(Module, "Question with ID %s should not be asked", questionID);
+            SAO:Warn(Module, "Question with ID %s should not be asked", tostring(questionID));
         end
         if askEvenIfIrrelevantNow or question:isRelevantNow() then
             question:ask();
         end
     else
-        SAO:Error(Module, "Question with ID %s does not exist", questionID);
+        SAO:Error(Module, "Cannot ask a question with unknown ID %s", tostring(questionID));
+    end
+end
+
+-- Cancel a question if it is currently being asked
+function SAO:CancelQuestion(questionID)
+    local question = questions[questionID];
+    if question then
+        question:cancel();
+    else
+        SAO:Error(Module, "Cannot cancel a question with unknown ID %s", tostring(questionID));
     end
 end
 

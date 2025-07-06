@@ -216,7 +216,7 @@
           </PostClick>
         </Scripts>
       </CheckButton>
-      <CheckButton name="$parentSpellAlertDontAskDisableGameAlertButton" inherits="InterfaceOptionsCheckButtonTemplate">
+      <CheckButton name="$parentSpellAlertAskDisableGameAlertButton" inherits="InterfaceOptionsCheckButtonTemplate">
         <Anchors>
           <Anchor point="BOTTOMLEFT" relativeTo="$parentSpellAlertResponsiveButton" relativePoint="BOTTOMLEFT">
             <Offset>
