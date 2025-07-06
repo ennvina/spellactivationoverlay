@@ -33,6 +33,7 @@
         "SpellActivationOverlayOptionsPanelDisableConditionButton",
         "SpellActivationOverlayOptionsPanelGlowingButtons",
         "SpellActivationOverlayOptionsPanelSpellAlertDebugButton",
+        "SpellActivationOverlayOptionsPanelSpellAlertDontAskDisableGameAlertButton",
         "SpellActivationOverlayOptionsPanelSpellAlertLabel",
         "SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider",
         "SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider",

@@ -70,6 +70,7 @@ classes\warrior.lua
 
 options\defaults.lua
 options\db.lua
+options\questions.lua
 options\variables.lua
 options\InterfaceOptionsPanels.lua
 options\InterfaceOptionsPanels.xml

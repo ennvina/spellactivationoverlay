@@ -2,6 +2,15 @@
 
 #### v2.5.7 (2025-07-xx)
 
+Options Panel
+- In Mists of Pandaria, players are asked to disable game's spell alerts
+- This question is answered at first start and the addon remembers the answer
+- If the player disabled game's spell alerts, the addon will re-check later
+- But if the player asked to keep them, the question is gone forever
+- There is now a checkbox in the Options Panel to check again at each start
+- Checking at each start will *not* necessarily ask the question every time
+- It will only ask the question again when the addon detects a conflict
+
 #### v2.5.6 (2025-07-05)
 
 Thank you to our amazing contributors for reporting issues. Thanks!

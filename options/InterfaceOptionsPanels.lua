@@ -279,6 +279,19 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     responsiveButton.Text:SetText(SAO:responsiveMode());
     responsiveButton:SetChecked(SpellActivationOverlayDB.responsiveMode == true);
 
+    local dontAskDisableGameAlertButton = SpellActivationOverlayOptionsPanelSpellAlertDontAskDisableGameAlertButton;
+    dontAskDisableGameAlertButton.Text:SetText(SAO:doNotAskDisableGameAlerts());
+    dontAskDisableGameAlertButton:SetChecked(SpellActivationOverlayDB.questions and SpellActivationOverlayDB.questions.disableGameAlert == "no");
+    dontAskDisableGameAlertButton.OnValueChanged = function(self, checked)
+        SpellActivationOverlayDB.questions = SpellActivationOverlayDB.questions or {};
+        if checked then
+            SpellActivationOverlayDB.questions.disableGameAlert = "no";
+        else
+            SpellActivationOverlayDB.questions.disableGameAlert = nil; -- Reset the question, so it will be asked again
+            SAO:AskQuestion(SAO.QUESTIONS.DISABLE_GAME_ALERT);
+        end
+    end
+
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     glowingButtonCheckbox.Text:SetText("Glowing Buttons");
     glowingButtonCheckbox.initialValue = SpellActivationOverlayDB.glow.enabled;

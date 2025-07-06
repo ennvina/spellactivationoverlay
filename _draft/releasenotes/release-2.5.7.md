@@ -1,6 +1,10 @@
 # SpellActivationOverlay 2.5.7
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.5.7
 ## General
+### Options Panel
+Players who opted out to disable the game's spell alerts can choose to ask the question again (Mists of Pandaria). If you would close the dialog box by mistake and would like to answer the question
+- open the Options Panel, either by going to Options > AddOns > SpellActivationOverlay, or by typing `/sao`
+- uncheck the combo box named "Keep the game's native spell alerts"
 ## Classes
 ### :class:  Class
 New Spell Alerts

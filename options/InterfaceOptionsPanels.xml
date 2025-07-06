@@ -9,7 +9,7 @@
           <Anchors>
             <Anchor point="BOTTOMRIGHT">
               <Offset>
-                <AbsDimension x="-16" y="32"/>
+                <AbsDimension x="-16" y="56"/>
               </Offset>
             </Anchor>
           </Anchors>
@@ -212,6 +212,22 @@
               SpellActivationOverlayDB.responsiveMode = true;
             else
               SpellActivationOverlayDB.responsiveMode = nil;
+            end
+          </PostClick>
+        </Scripts>
+      </CheckButton>
+      <CheckButton name="$parentSpellAlertDontAskDisableGameAlertButton" inherits="InterfaceOptionsCheckButtonTemplate">
+        <Anchors>
+          <Anchor point="BOTTOMLEFT" relativeTo="$parentSpellAlertResponsiveButton" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="20"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <PostClick>
+            if (self.OnValueChanged) then
+              self:OnValueChanged(self:GetChecked());
             end
           </PostClick>
         </Scripts>
