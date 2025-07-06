@@ -14,6 +14,7 @@ New Glowing Buttons
 ## Bug Fixes
 ## Known Limitations
 ## Miscellaneous
+All checkboxes are now translated at the bottom of the Options Panel.
 ## Contributors
 Shout-out to our amazing contributors
 - 

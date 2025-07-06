@@ -11,6 +11,9 @@ Options Panel
 - Checking at each start will *not* necessarily ask the question every time
 - It will only ask the question again when the addon detects a conflict
 
+Miscellaneous
+- All checkboxes are now translated at the bottom of the Options Panel
+
 #### v2.5.6 (2025-07-05)
 
 Thank you to our amazing contributors for reporting issues. Thanks!
