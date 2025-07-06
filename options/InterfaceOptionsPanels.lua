@@ -269,7 +269,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
 
     local reportButton = SpellActivationOverlayOptionsPanelSpellAlertReportButton;
     if SAO:CanReport() then
-        reportButton.Text:SetText("Report unsupported effects to Chatbox");
+        reportButton.Text:SetText(SAO:reportUnsupportedOverlays());
         reportButton:SetChecked(SpellActivationOverlayDB.report ~= false); -- Default to true
     else
         reportButton:Hide();

@@ -279,6 +279,23 @@ function SAO:unsupportedShowEvent(details)
     return string.format(tr(unsupportedShowEventTranslations), tostring(details), AddonName);
 end
 
+-- Translate "Report unsupported effects to Chatbox"
+function SAO:reportUnsupportedOverlays()
+    local reportUnsupportedOverlaysTranslations = {
+        ["en"] = "Report unsupported effects to Chatbox",
+        ["de"] = "Nicht unterstützte Effekte im Chatfenster melden",
+        ["fr"] = "Signaler les effets non pris en charge dans le tchat",
+        ["es"] = "Informar efectos no compatibles en el chat",
+        ["ru"] = "Сообщить о неподдерживаемых эффектах в чате",
+        ["it"] = "Segnala effetti non supportati nella chat",
+        ["pt"] = "Relatar efeitos não suportados no chat",
+        ["ko"] = "지원되지 않는 효과를 채팅창에 보고하기",
+        ["zh"] = "在聊天框中报告不支持的效果",
+        ["zhTW"] = "在聊天框中報告不支援的效果",
+    };
+    return tr(reportUnsupportedOverlaysTranslations);
+end
+
 -- Translate "{AddonName} spell alerts may conflict with the ones from the game.\n\nDo you want to disable the game's spell alerts?",
 function SAO:spellAlertConflicts()
     local spellAlertConflictsTranslations = {
