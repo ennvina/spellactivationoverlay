@@ -264,7 +264,7 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     SAO:MarkTexture(testTextureTop);
 
     local debugButton = SpellActivationOverlayOptionsPanelSpellAlertDebugButton;
-    debugButton.Text:SetText("Write Debug to Chatbox");
+    debugButton.Text:SetText(SAO:optionDebugToChatbox());
     debugButton:SetChecked(SpellActivationOverlayDB.debug == true);
 
     local reportButton = SpellActivationOverlayOptionsPanelSpellAlertReportButton;

@@ -244,6 +244,23 @@ function SAO:compatibilityWarning(addonBuild, expectedBuild)
     return string.format(tr(compatibilityWarningTranslations), addonBuild, expectedBuild);
 end
 
+-- Translate "Write debug to the chatbox (in English)"
+function SAO:optionDebugToChatbox()
+    local optionDebugToChatboxTranslations = {
+        ["en"] = "Write debug to the chatbox",
+        ["de"] = "Debug in den Chat schreiben (auf Englisch)",
+        ["fr"] = "Écrire le débogage dans le tchat (en anglais)",
+        ["es"] = "Escribir depuración en el chat (en inglés)",
+        ["ru"] = "Выводить отладочную в чат (на английском)",
+        ["it"] = "Scrivi il debug nella chat (in inglese)",
+        ["pt"] = "Escrever depuração no chat (em inglês)",
+        ["ko"] = "디버그를 채팅창에 작성하기 (영어로)",
+        ["zh"] = "将调试信息写入聊天框（英文）",
+        ["zhTW"] = "將除錯資訊寫入聊天框（英文）",
+    };
+    return tr(optionDebugToChatboxTranslations);
+end
+
 -- Translate "unknown spell" (lowercase in most languages)
 function SAO:unknownSpell()
     local unknownSpellTranslations = {
