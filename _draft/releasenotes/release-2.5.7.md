@@ -9,6 +9,10 @@ Players who opted out to disable the game's spell alerts can choose to ask the q
 ### :monk:  Monk
 New Spell Alert
 - Vital Mists (Mists of Pandaria)
+
+Updated Spell Alerts
+- Blackout Kick is now only displayed right (Mists of Pandaria)
+- Tiger Palm is now green-ish and displayed left (Mists of Pandaria)
 ## Bug Fixes
 ## Known Limitations
 ## Miscellaneous

@@ -9,7 +9,7 @@ local function useComboBreakerBlackoutKick()
         116768, -- Combo Breaker: Blackout Kick (buff)
         "aura",
         {
-            overlay = { texture = "monk_tiger", position = "Left + Right (Flipped)" },
+            overlay = { texture = "monk_tiger", position = "Right (Flipped)" },
         }
     );
 end
@@ -21,7 +21,7 @@ local function useComboBreakerTigerPalm()
         118864, -- Combo Breaker: Tiger Palm
         "aura",
         {
-            overlay = { texture = "monk_tiger", position = "Left + Right (Flipped)" },
+            overlay = { texture = "monk_tiger", position = "Left", color = { 0, 255, 127 } },
         }
     );
 end

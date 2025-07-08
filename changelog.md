@@ -14,6 +14,10 @@ Options Panel
 New Spell Alert
 - Monk's Vital Mists (Mists of Pandaria)
 
+Updated Spell Alerts
+- Monk's Blackout Kick is now only displayed right (Mists of Pandaria)
+- Monk's Tiger Palm is now green-ish and displayed left (Mists of Pandaria)
+
 Miscellaneous
 - All checkboxes are now translated at the bottom of the Options Panel
 
