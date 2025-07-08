@@ -6,11 +6,9 @@ Players who opted out to disable the game's spell alerts can choose to ask the q
 - open the Options Panel, either by going to Options > AddOns > SpellActivationOverlay, or by typing `/sao`
 - check the combo box named "Detect conflicts with the game's spell alerts"
 ## Classes
-### :class:  Class
-New Spell Alerts
-- 
-New Glowing Buttons
-- 
+### :monk:  Monk
+New Spell Alert
+- Vital Mists (Mists of Pandaria)
 ## Bug Fixes
 ## Known Limitations
 ## Miscellaneous

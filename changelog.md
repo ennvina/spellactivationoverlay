@@ -11,6 +11,9 @@ Options Panel
 - Checking at each start will *not* necessarily ask the question every time
 - It will only ask the question again when the addon detects a conflict
 
+New Spell Alert
+- Monk's Vital Mists (Mists of Pandaria)
+
 Miscellaneous
 - All checkboxes are now translated at the bottom of the Options Panel
 
@@ -21,7 +24,7 @@ Thank you to our amazing contributors for reporting issues. Thanks!
 - Adal4 for reporting the Paladin's The Art of War issue
 - Amanthuul and kakukembo for reporting the Druid's Eclipse issue
 
-New Spell Alerts
+New Spell Alert
 - Paladin's The Art of War (Mists of Pandaria)
 
 Bug Fixes

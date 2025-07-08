@@ -26,9 +26,24 @@ local function useComboBreakerTigerPalm()
     );
 end
 
+local function useVitalMists()
+    SAO:CreateEffect(
+        "vital_mists",
+        SAO.MOP,
+        118674, -- Vital Mists (buff)
+        "aura",
+        {
+            aka = 122107, -- Vital Mists
+            overlay = { stacks = 5, texture = "monk_serpent", position = "Left + Right (Flipped)" },
+        }
+    );
+end
+
 local function registerClass(self)
     useComboBreakerBlackoutKick();
     useComboBreakerTigerPalm();
+
+    useVitalMists();
 end
 
 SAO.Class["MONK"] = {
