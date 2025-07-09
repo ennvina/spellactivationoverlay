@@ -31,8 +31,10 @@ Removed Glowing Buttons
 - Avenger's Shield, during Grand Crusader (Mists of Pandaria)
 
 _Developer's Note: These buttons are already glowing by the game client. When players unchecked such buttons in the addon's options panel, it was confusing because the buttons were still glowing even though the player asked explicitly not to. Since the addon cannot prevent the game client from glowing buttons, the wise choice is to simply remove these buttons from the addon._
-
 ## Bug Fixes
+Text from the lower-right box of the Options Panel could display characters incorrectly, usually as small rectangles. This affected the so-called _non-ASCII characters_, such as:
+- letters with accents or other diacritics: á, ê, ñ, ç...
+- non-Latin characters: д, й, 일, 文...
 ## Known Limitations
 ## Miscellaneous
 All checkboxes are now translated at the bottom of the Options Panel.

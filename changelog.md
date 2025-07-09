@@ -35,6 +35,10 @@ Removed Glowing Buttons\*\*
 
 \*\* These buttons are already glowing by the game client
 
+Bug Fixes
+- Text from the lower-right box of the Options Panel could display squares
+- This affected non-ASCII characters e.g., accents or non-Latin characters
+
 Miscellaneous
 - All checkboxes are now translated at the bottom of the Options Panel
 
