@@ -14,6 +14,14 @@ Updated Spell Alerts
 - Blackout Kick is now only displayed right (Mists of Pandaria)
 - Tiger Palm is now green-ish and displayed left (Mists of Pandaria)
 ### :paladin:  Paladin
+Updated Spell Alerts
+- Infusion of Light now uses Daybreak visuals (Mists of Pandaria)
+- Daybreak now uses Sun-like visuals (Mists of Pandaria)
+
+Infusion of Light now matches the reference client. The Daybreak effect needed other visuals to avoid confusion with Infusion of Light.
+
+_Developer's Note: Historically, the game has been inconsistent between texture names and effects, and Paladin is one of the most affected classes by this issue. Let's hope these new visuals will not cause too much confusion among our dearest purple plate wearers._
+
 Removed Glowing Buttons
 - Hammer of Wrath (Mists of Pandaria)
 - Holy Shock, during Daybreak (Mists of Pandaria)

@@ -20,8 +20,12 @@ New Spell Alert
 Updated Spell Alerts
 - Monk's Blackout Kick is now only displayed right (Mists of Pandaria)
 - Monk's Tiger Palm is now green-ish and displayed left (Mists of Pandaria)
+- Paladin's Infusion of Light now uses Daybreak visuals\* (Mists of Pandaria)
+- Paladin's Daybreak now uses Sun-like visuals\* (Mists of Pandaria)
 
-Removed Glowing Buttons\*
+\* With these changes, Infusion of Light now matches the reference client
+
+Removed Glowing Buttons\*\*
 - Paladin's Hammer of Wrath (Mists of Pandaria)
 - Paladin's Holy Shock, during Daybreak (Mists of Pandaria)
 - Paladin's Divine Light, during Infusion of Light (Mists of Pandaria)
@@ -29,7 +33,7 @@ Removed Glowing Buttons\*
 - Paladin's Holy Radiance, during Infusion of Light (Mists of Pandaria)
 - Paladin's Avenger's Shield, during Grand Crusader (Mists of Pandaria)
 
-\* These buttons are already glowing by the game client
+\*\* These buttons are already glowing by the game client
 
 Miscellaneous
 - All checkboxes are now translated at the bottom of the Options Panel
