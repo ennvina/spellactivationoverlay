@@ -35,12 +35,15 @@ _Developer's Note: These buttons are already glowing by the game client. When pl
 Text from the lower-right box of the Options Panel could display characters incorrectly, usually as small rectangles. This affected the so-called _non-ASCII characters_, such as:
 - letters with accents or other diacritics: á, ê, ñ, ç...
 - non-Latin characters: д, й, 일, 文...
+
+Unknown effect detection could sometimes display reports for effects that were actually known (Mists of Pandaria).
 ## Known Limitations
 ## Miscellaneous
 All checkboxes are now translated at the bottom of the Options Panel.
 ## Contributors
 Shout-out to our amazing contributors
 - Jumpsuitpally for sending feedback about Paladin and Monk
+- Bruni for reporting an issue that triggered false positive unknown effects
 
 Thanks!
 

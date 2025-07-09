@@ -94,8 +94,14 @@ function SAO:HasReport()
     return SpellActivationOverlayDB and SpellActivationOverlayDB.report ~= false; -- Default to true
 end
 
-function SAO:ReportUnkownEffect(prefix, spellID, texture, positions, scale, r, g, b)
-    if self:CanReport() and self:HasReport() and spellID and not self:GetBucketBySpellID(spellID) and not self:IsAka(spellID) then
+function SAO:ReportUnknownEffect(prefix, spellID, texture, positions, scale, r, g, b)
+    if self:CanReport() -- Does the project support reporting?
+    and self:HasReport() -- Has the player enabled the report option?
+    and self:AreEffectsInitialized() -- Are effects initialized? If not, we are probably still logging in, and the following conditions will yield false positives
+    and spellID -- Is the spellID valid? It should always be valid in theory, but the game client sometimes messes up
+    and not self:GetBucketBySpellID(spellID) -- Do we have a bucket for this spellID? If not, then the effect is unknown
+    and not self:IsAka(spellID) -- Is the spellID an a.k.a. spell? If so, then the spellID is a shortcut for another bucket, which means this spellID is supported
+    then
         if not self.UnknownNativeEffects then
             self.UnknownNativeEffects = {}
         end

@@ -804,6 +804,11 @@ function SAO:RegisterPendingEffectsAfterPlayerLoggedIn()
     pendingEffects = {};
 end
 
+function SAO:AreEffectsInitialized()
+    -- This does not really tell if effects are initialized, but in theory, this variable should be equivalent
+    return hasPlayerLoggedIn;
+end
+
 function SAO:AddEffectOptions()
     for _, effect in ipairs(registeredEffects) do
         local talent = effect.talent;

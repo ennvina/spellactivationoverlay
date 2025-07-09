@@ -2,8 +2,9 @@
 
 #### v2.5.7 (2025-07-xx)
 
-Thank you to our amazing contributors for reporting issues. Thanks!
+Thank you to our amazing contributors for helping out. Thanks!
 - Jumpsuitpally for sending feedback about Paladin and Monk
+- Bruni for reporting an issue that triggered false positive unknown effects
 
 Options Panel
 - In Mists of Pandaria, players are asked to disable game's spell alerts
@@ -38,6 +39,7 @@ Removed Glowing Buttons\*\*
 Bug Fixes
 - Text from the lower-right box of the Options Panel could display squares
 - This affected non-ASCII characters e.g., accents or non-Latin characters
+- Known effects should no longer be reported as unknown (Mists of Pandaria)
 
 Miscellaneous
 - All checkboxes are now translated at the bottom of the Options Panel
