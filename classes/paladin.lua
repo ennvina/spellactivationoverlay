@@ -58,7 +58,7 @@ end
 local function useHammerOfWrath()
     SAO:CreateEffect(
         "how",
-        SAO.ALL_PROJECTS,
+        SAO.ALL_PROJECTS - SAO.MOP_AND_ONWARD, -- Already glowing natively by the game client in Mists of Pandaria and onward
         how,
         "counter"
     );
@@ -150,7 +150,7 @@ local function useInfusionOfLight()
             {
                 talent = infusionOfLightTalent,
                 overlay = { texture = "denounce", position = "Top" },
-                buttons = { holyLight, divineLight, holyRadiance },
+                -- buttons = { holyLight, divineLight, holyRadiance }, -- Buttons already glowing natively by the game client
             }
         );
     else
@@ -192,7 +192,10 @@ local function useDaybreak()
             action = holyShock,
             actionUsable = true,
             overlay = { texture = "daybreak", position ="Left + Right (Flipped)" },
-            button = holyShock,
+            buttons = {
+                [SAO.CATA] = holyShock,
+                -- [SAO.MOP_AND_ONWARD] = holyShock, -- Button already glowing natively by the game client
+            }
         }
     );
 end
@@ -209,7 +212,10 @@ local function useGrandCrusader()
                 [SAO.MOP_AND_ONWARD] = 85043,
             },
             overlay = { texture = "grand_crusader", position = "Left + Right (Flipped)" },
-            button = avengersShield,
+            buttons = {
+                [SAO.CATA] = avengersShield,
+                -- [SAO.MOP_AND_ONWARD] = avengersShield, -- Button already glowing natively by the game client
+            },
         }
     );
 end

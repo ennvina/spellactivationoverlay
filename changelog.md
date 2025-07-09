@@ -2,6 +2,9 @@
 
 #### v2.5.7 (2025-07-xx)
 
+Thank you to our amazing contributors for reporting issues. Thanks!
+- Jumpsuitpally for sending feedback about Paladin and Monk
+
 Options Panel
 - In Mists of Pandaria, players are asked to disable game's spell alerts
 - This question is answered at first start and the addon remembers the answer
@@ -17,6 +20,16 @@ New Spell Alert
 Updated Spell Alerts
 - Monk's Blackout Kick is now only displayed right (Mists of Pandaria)
 - Monk's Tiger Palm is now green-ish and displayed left (Mists of Pandaria)
+
+Removed Glowing Buttons\*
+- Paladin's Hammer of Wrath (Mists of Pandaria)
+- Paladin's Holy Shock, during Daybreak (Mists of Pandaria)
+- Paladin's Divine Light, during Infusion of Light (Mists of Pandaria)
+- Paladin's Holy Light, during Infusion of Light (Mists of Pandaria)
+- Paladin's Holy Radiance, during Infusion of Light (Mists of Pandaria)
+- Paladin's Avenger's Shield, during Grand Crusader (Mists of Pandaria)
+
+\* These buttons are already glowing by the game client
 
 Miscellaneous
 - All checkboxes are now translated at the bottom of the Options Panel
