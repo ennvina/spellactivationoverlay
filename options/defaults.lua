@@ -347,6 +347,9 @@ SAO.defaults = {
                 [118864] = { -- Combo Breaker: Tiger Palm
                     [0] = true,
                 },
+                [118674] = { -- Vital Mists
+                    [5] = true,
+                },
             },
             glow = {
             },

@@ -94,8 +94,14 @@ function SAO:HasReport()
     return SpellActivationOverlayDB and SpellActivationOverlayDB.report ~= false; -- Default to true
 end
 
-function SAO:ReportUnkownEffect(prefix, spellID, texture, positions, scale, r, g, b)
-    if self:CanReport() and self:HasReport() and spellID and not self:GetBucketBySpellID(spellID) and not self:IsAka(spellID) then
+function SAO:ReportUnknownEffect(prefix, spellID, texture, positions, scale, r, g, b)
+    if self:CanReport() -- Does the project support reporting?
+    and self:HasReport() -- Has the player enabled the report option?
+    and self:AreEffectsInitialized() -- Are effects initialized? If not, we are probably still logging in, and the following conditions will yield false positives
+    and spellID -- Is the spellID valid? It should always be valid in theory, but the game client sometimes messes up
+    and not self:GetBucketBySpellID(spellID) -- Do we have a bucket for this spellID? If not, then the effect is unknown
+    and not self:IsAka(spellID) -- Is the spellID an a.k.a. spell? If so, then the spellID is a shortcut for another bucket, which means this spellID is supported
+    then
         if not self.UnknownNativeEffects then
             self.UnknownNativeEffects = {}
         end
@@ -142,7 +148,36 @@ end
 -- Usage: SAO:gradientText("YOLO", { {r=1, g=0, b=0}, {r=0, g=0, b=1} })
 -- There must be at least two characters in the text and at least two colors in the colors table
 function SAO:gradientText(text, colors)
-    local len = #text;
+    -- Helper to iterate UTF-8 codepoints
+    local function utf8_iter(str)
+        local pos = 1;
+        local len = #str;
+        return function()
+            if pos > len then return nil; end
+            local c = str:byte(pos);
+            local bytes;
+            if c < 0x80 then
+                bytes = 1;
+            elseif c < 0xE0 then
+                bytes = 2;
+            elseif c < 0xF0 then
+                bytes = 3;
+            else
+                bytes = 4;
+            end
+            local char = str:sub(pos, pos + bytes - 1);
+            pos = pos + bytes;
+            return char;
+        end
+    end
+
+    -- Collect codepoints from UTF-8 string
+    local chars = {};
+    for ch in utf8_iter(text) do
+        table.insert(chars, ch);
+    end
+    local len = #chars;
+
     local result = "";
     for i = 1, len do
         local t = (i-1)/(len-1);
@@ -164,7 +199,7 @@ function SAO:gradientText(text, colors)
         local g = c1.g + (c2.g-c1.g)*localT;
         local b = c1.b + (c2.b-c1.b)*localT;
         local hex = string.format("%02x%02x%02x", r*255, g*255, b*255);
-        result = result .. "|cff" .. hex .. text:sub(i,i) .. "|r";
+        result = result .. "|cff" .. hex .. chars[i] .. "|r";
     end
     return result;
 end

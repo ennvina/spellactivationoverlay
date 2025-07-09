@@ -264,12 +264,12 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     SAO:MarkTexture(testTextureTop);
 
     local debugButton = SpellActivationOverlayOptionsPanelSpellAlertDebugButton;
-    debugButton.Text:SetText("Write Debug to Chatbox");
+    debugButton.Text:SetText(SAO:optionDebugToChatbox());
     debugButton:SetChecked(SpellActivationOverlayDB.debug == true);
 
     local reportButton = SpellActivationOverlayOptionsPanelSpellAlertReportButton;
     if SAO:CanReport() then
-        reportButton.Text:SetText("Report unsupported effects to Chatbox");
+        reportButton.Text:SetText(SAO:reportUnsupportedOverlays());
         reportButton:SetChecked(SpellActivationOverlayDB.report ~= false); -- Default to true
     else
         reportButton:Hide();
@@ -278,6 +278,20 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     local responsiveButton = SpellActivationOverlayOptionsPanelSpellAlertResponsiveButton;
     responsiveButton.Text:SetText(SAO:responsiveMode());
     responsiveButton:SetChecked(SpellActivationOverlayDB.responsiveMode == true);
+
+    local askDisableGameAlertButton = SpellActivationOverlayOptionsPanelSpellAlertAskDisableGameAlertButton;
+    askDisableGameAlertButton.Text:SetText(SAO:askToDisableGameAlerts());
+    askDisableGameAlertButton:SetChecked(not SpellActivationOverlayDB.questions or SpellActivationOverlayDB.questions.disableGameAlert ~= "no");
+    askDisableGameAlertButton.OnValueChanged = function(self, checked)
+        SpellActivationOverlayDB.questions = SpellActivationOverlayDB.questions or {};
+        if checked then
+            SpellActivationOverlayDB.questions.disableGameAlert = nil; -- Reset the question, so it will be asked again
+            SAO:AskQuestion(SAO.QUESTIONS.DISABLE_GAME_ALERT);
+        else
+            SpellActivationOverlayDB.questions.disableGameAlert = "no";
+            SAO:CancelQuestion(SAO.QUESTIONS.DISABLE_GAME_ALERT);
+        end
+    end
 
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     glowingButtonCheckbox.Text:SetText("Glowing Buttons");
