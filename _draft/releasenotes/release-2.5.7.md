@@ -44,6 +44,7 @@ All checkboxes are now translated at the bottom of the Options Panel.
 Shout-out to our amazing contributors
 - Jumpsuitpally for sending feedback about Paladin and Monk
 - Bruni for reporting an issue that triggered false positive unknown effects
+- omeletteman91 for reporting an unsupported effect
 
 Thanks!
 

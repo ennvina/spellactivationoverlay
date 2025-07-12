@@ -5,6 +5,7 @@
 Thank you to our amazing contributors for helping out. Thanks!
 - Jumpsuitpally for sending feedback about Paladin and Monk
 - Bruni for reporting an issue that triggered false positive unknown effects
+- omeletteman91 for reporting an unsupported effect
 
 Options Panel
 - In Mists of Pandaria, players are asked to disable game's spell alerts
