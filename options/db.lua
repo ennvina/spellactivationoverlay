@@ -111,9 +111,20 @@ local function migrateTo250(db)
     SAO:Info(Module, SAO:migratedOptions("2.5.0"));
 end
 
+-- Migrate from pre-257 to 257 or higher
+local function migrateTo257(db)
+
+    -- Shaman's Lava Burst glowing button should be disabled by default starting from Mists of Pandaria
+    if SAO.IsProject(SAO.MOP_AND_ONWARD) then
+        db.classes["SHAMAN"]["glow"][51505][51505] = false; -- 51505 = Lava Burst
+    end
+
+    SAO:Info(Module, SAO:migratedOptions("2.5.7"));
+end
+
 -- Load database and use default values if needed
 function SAO.LoadDB(self)
-    local currentversion = 250;
+    local currentversion = 257;
     local db = SpellActivationOverlayDB or {};
 
     if not db.alert then
@@ -210,6 +221,9 @@ function SAO.LoadDB(self)
     end
     if not db.version or db.version < 250 then
         migrateTo250(db);
+    end
+    if not db.version or db.version < 257 then
+        migrateTo257(db);
     end
 
     db.version = currentversion;

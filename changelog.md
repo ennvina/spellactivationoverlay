@@ -4,7 +4,7 @@
 
 Thank you to our amazing contributors for helping out. Thanks!
 - Jumpsuitpally for sending feedback about Paladin and Monk
-- Krablord for sending feedback about Rogue
+- Krablord for sending feedback about Rogue and Shaman
 - Bruni for reporting an issue that triggered false positive unknown effects
 - omeletteman91 for reporting an unsupported effect
 
@@ -28,8 +28,9 @@ Updated Spell Alerts
 
 \* With these changes, Infusion of Light now matches the reference client
 
-New Glowing Button
+New Glowing Buttons
 - Rogue's Dispatch, when the target has less than 35% hp (Mists of Pandaria)
+- Shaman's Lava Burst, as combat-only counter (Mists of Pandaria)
 
 Removed Glowing Buttons\*\*
 - Paladin's Hammer of Wrath (Mists of Pandaria)

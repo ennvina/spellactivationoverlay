@@ -73,6 +73,23 @@ function SAO:translateDebuff()
     return tr(debuffTranslations);
 end
 
+-- Get the "when castable" localized text
+function SAO:whenCastable()
+    local whenCastableTranslations = {
+        ["en"] = "when castable",
+        ["de"] = "wenn zauberbar",
+        ["fr"] = "dès que lançable",
+        ["es"] = "cuando se pueda lanzar",
+        ["ru"] = "когда можно применить",
+        ["it"] = "quando lanciabile",
+        ["pt"] = "quando lançável",
+        ["ko"] = "시전 가능할 때",
+        ["zh"] = "可施放时",
+        ["zhTW"] = "可施放時",
+    };
+    return tr(whenCastableTranslations);
+end
+
 -- Translate "Migrated options from pre-{version} to {version}"
 function SAO:migratedOptions(version)
     local migratedTranslations = {

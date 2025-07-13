@@ -34,6 +34,9 @@ _Developer's Note: These buttons are already glowing by the game client. When pl
 ### :rogue:  Rogue
 New Glowing Button
 - Dispatch, when the target has less than 35% health (Mists of Pandaria)
+### :shaman:  Shaman
+New Glowing Button
+- Lava Burst, as combat-only counter (Mists of Pandaria)
 ## Bug Fixes
 Text from the lower-right box of the Options Panel could display characters incorrectly, usually as small rectangles. This affected the so-called _non-ASCII characters_, such as:
 - letters with accents or other diacritics: á, ê, ñ, ç...
@@ -46,7 +49,7 @@ All checkboxes are now translated at the bottom of the Options Panel.
 ## Contributors
 Shout-out to our amazing contributors
 - Jumpsuitpally for sending feedback about Paladin and Monk
-- Krablord for sending feedback about Rogue
+- Krablord for sending feedback about Rogue and Shaman
 - Bruni for reporting an issue that triggered false positive unknown effects
 - omeletteman91 for reporting an unsupported effect
 
