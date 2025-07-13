@@ -280,17 +280,27 @@ function SpellActivationOverlayOptionsPanel_Init(self)
     responsiveButton:SetChecked(SpellActivationOverlayDB.responsiveMode == true);
 
     local askDisableGameAlertButton = SpellActivationOverlayOptionsPanelSpellAlertAskDisableGameAlertButton;
-    askDisableGameAlertButton.Text:SetText(SAO:askToDisableGameAlerts());
-    askDisableGameAlertButton:SetChecked(not SpellActivationOverlayDB.questions or SpellActivationOverlayDB.questions.disableGameAlert ~= "no");
-    askDisableGameAlertButton.OnValueChanged = function(self, checked)
-        SpellActivationOverlayDB.questions = SpellActivationOverlayDB.questions or {};
-        if checked then
-            SpellActivationOverlayDB.questions.disableGameAlert = nil; -- Reset the question, so it will be asked again
-            SAO:AskQuestion(SAO.QUESTIONS.DISABLE_GAME_ALERT);
-        else
-            SpellActivationOverlayDB.questions.disableGameAlert = "no";
-            SAO:CancelQuestion(SAO.QUESTIONS.DISABLE_GAME_ALERT);
+    if SAO:IsQuestionPossible(SAO.QUESTIONS.DISABLE_GAME_ALERT) then
+        askDisableGameAlertButton:Show();
+
+        askDisableGameAlertButton.Text:SetText(SAO:askToDisableGameAlerts());
+        askDisableGameAlertButton:SetChecked(not SpellActivationOverlayDB.questions or SpellActivationOverlayDB.questions.disableGameAlert ~= "no");
+        askDisableGameAlertButton.OnValueChanged = function(self, checked)
+            SpellActivationOverlayDB.questions = SpellActivationOverlayDB.questions or {};
+            if checked then
+                SpellActivationOverlayDB.questions.disableGameAlert = nil; -- Reset the question, so it will be asked again
+                SAO:AskQuestion(SAO.QUESTIONS.DISABLE_GAME_ALERT);
+            else
+                SpellActivationOverlayDB.questions.disableGameAlert = "no";
+                SAO:CancelQuestion(SAO.QUESTIONS.DISABLE_GAME_ALERT);
+            end
         end
+    else
+        askDisableGameAlertButton:Hide();
+
+        -- Offset the Build Info panel because we just saved some space by hiding the Ask Disable Game Alert button
+        local anchorBuildInfo = { SpellActivationOverlayOptionsPanelBuildInfo:GetPoint(1) }
+        SpellActivationOverlayOptionsPanelBuildInfo:SetPoint(anchorBuildInfo[1], anchorBuildInfo[2], anchorBuildInfo[3], anchorBuildInfo[4], anchorBuildInfo[5] - 24)
     end
 
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;

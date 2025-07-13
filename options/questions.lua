@@ -105,6 +105,17 @@ addQuestion(SAO.QUESTIONS.DISABLE_GAME_ALERT, {
     end,
 });
 
+-- Check if the question is possible
+function SAO:IsQuestionPossible(questionID)
+    local question = questions[questionID];
+    if question then
+        return question:isPossible();
+    else
+        SAO:Error(Module, "Cannot check if question with ID %s is possible because it is unknown", tostring(questionID));
+        return false;
+    end
+end
+
 -- Ask a question manually
 function SAO:AskQuestion(questionID, askEvenIfIrrelevantNow)
     if not SAO:GetDatabaseLoadingState().loaded then
