@@ -31,6 +31,9 @@ Removed Glowing Buttons
 - Avenger's Shield, during Grand Crusader (Mists of Pandaria)
 
 _Developer's Note: These buttons are already glowing by the game client. When players unchecked such buttons in the addon's options panel, it was confusing because the buttons were still glowing even though the player asked explicitly not to. Since the addon cannot prevent the game client from glowing buttons, the wise choice is to simply remove these buttons from the addon._
+### :rogue:  Rogue
+New Glowing Button
+- Dispatch, when the target has less than 35% health (Mists of Pandaria)
 ## Bug Fixes
 Text from the lower-right box of the Options Panel could display characters incorrectly, usually as small rectangles. This affected the so-called _non-ASCII characters_, such as:
 - letters with accents or other diacritics: á, ê, ñ, ç...
@@ -43,6 +46,7 @@ All checkboxes are now translated at the bottom of the Options Panel.
 ## Contributors
 Shout-out to our amazing contributors
 - Jumpsuitpally for sending feedback about Paladin and Monk
+- Krablord for sending feedback about Rogue
 - Bruni for reporting an issue that triggered false positive unknown effects
 - omeletteman91 for reporting an unsupported effect
 

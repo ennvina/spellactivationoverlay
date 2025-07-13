@@ -576,6 +576,9 @@ SAO.defaults = {
                 [462707] = { -- Cutthroat (Season of Discovery)
                     [8676] = true, -- Ambush
                 },
+                [111240] = { -- Dispatch (Mists of Pandaria)
+                    [111240] = false, -- Dispatch
+                },
             },
         },
         ["SHAMAN"] = {

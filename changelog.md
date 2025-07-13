@@ -4,6 +4,7 @@
 
 Thank you to our amazing contributors for helping out. Thanks!
 - Jumpsuitpally for sending feedback about Paladin and Monk
+- Krablord for sending feedback about Rogue
 - Bruni for reporting an issue that triggered false positive unknown effects
 - omeletteman91 for reporting an unsupported effect
 
@@ -26,6 +27,9 @@ Updated Spell Alerts
 - Paladin's Daybreak now uses Sun-like visuals\* (Mists of Pandaria)
 
 \* With these changes, Infusion of Light now matches the reference client
+
+New Glowing Button
+- Rogue's Dispatch, when the target has less than 35% hp (Mists of Pandaria)
 
 Removed Glowing Buttons\*\*
 - Paladin's Hammer of Wrath (Mists of Pandaria)
@@ -110,7 +114,7 @@ New Spell Alerts
 - Warrior's Ultimatum (Mists of Pandaria)
 
 New Glowing Buttons
-- Warlocks's Drain Soul, when the target has 20% health of less (MoP)
+- Warlocks's Drain Soul, when the target has 20% health or less (MoP)
 - Warlocks's Incinerate, during Backdraft (Mists of Pandaria)
 - Warlocks's Chaos Bolt, during Backdraft (Mists of Pandaria)
 - Warlocks's Incinerate, during Fire and Brimstone (Mists of Pandaria)
