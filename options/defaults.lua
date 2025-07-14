@@ -188,6 +188,9 @@ SAO.defaults = {
                 [34720] = { -- Thrill of the Hunt (Mists of Pandaria)
                     [0] = true, -- any stacks
                 },
+                [19615] = { -- Frenzy (Mists of Pandaria)
+                    [5] = true,
+                },
             },
             glow = {
                 [53351] = { -- Kill Shot (Wrath+)

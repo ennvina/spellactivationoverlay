@@ -6,7 +6,8 @@ Thank you to our amazing contributors for helping out. Thanks!
 - Jumpsuitpally for sending feedback about Paladin and Monk
 - Krablord for sending feedback about Rogue and Shaman
 - Bruni for reporting an issue that triggered false positive unknown effects
-- omeletteman91 for reporting an unsupported effect
+- omeletteman91, Adal4 and Yume for reporting unsupported effects
+- Fractale for helping on resolving an unsupported effect
 
 Options Panel
 - In Mists of Pandaria, players are asked to disable game's spell alerts
@@ -17,7 +18,8 @@ Options Panel
 - Checking at each start will *not* necessarily ask the question every time
 - It will only ask the question again when the addon detects a conflict
 
-New Spell Alert
+New Spell Alerts
+- Hunter's Focus Fire (Mists of Pandaria)
 - Monk's Vital Mists (Mists of Pandaria)
 
 Updated Spell Alerts

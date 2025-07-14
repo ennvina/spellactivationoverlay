@@ -66,6 +66,21 @@ local function useKillingStreak()
     );
 end
 
+local function useFocusFire()
+    SAO:CreateEffect(
+        "focus_fire",
+        SAO.MOP,
+        19615, -- Frenzy (buff)
+        "aura",
+        {
+            aka = 88843, -- Focus Fire! (placeholder spell for the overlay)
+            talent = 82692, -- Focus Fire (ability)
+            overlay = { stacks = 5, texture = "focus_fire", position = "Left + Right (Flipped)" },
+            -- button = focusFire, -- Button already glowing natively
+        }
+    );
+end
+
 local function useImprovedSteadyShot()
     local improvedSteadyShotBuff = 53220;
     local improvedSteadyShotTalent = 53221;
@@ -259,6 +274,7 @@ local function registerClass(self)
 
     -- Beast Mastery
     useKillingStreak();
+    useFocusFire();
 
     -- Marksmanship
     useImprovedSteadyShot(); -- Improved Steady Shot, formerly Master Marksman

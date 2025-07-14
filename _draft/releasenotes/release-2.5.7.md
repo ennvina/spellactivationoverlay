@@ -6,6 +6,9 @@ Players who opted out to disable the game's spell alerts can choose to ask the q
 - open the Options Panel, either by going to Options > AddOns > SpellActivationOverlay, or by typing `/sao`
 - check the combo box named "Detect conflicts with the game's spell alerts"
 ## Classes
+### :hunter:  Hunter
+New Spell Alert
+- Focus Fire (Mists of Pandaria)
 ### :monk:  Monk
 New Spell Alert
 - Vital Mists (Mists of Pandaria)
@@ -63,7 +66,8 @@ Shout-out to our amazing contributors
 - Krablord for sending feedback about Rogue and Shaman
 - Krablord and Amanthuul for hunting ghosts
 - Bruni for reporting an issue that triggered false positive unknown effects
-- omeletteman91 for reporting an unsupported effect
+- omeletteman91, Adal4 and Yume for reporting unsupported effects
+- Fractale for helping on resolving an unsupported effect
 
 Thanks!
 
