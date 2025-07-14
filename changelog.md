@@ -48,6 +48,16 @@ Bug Fixes
 - Known effects should no longer be reported as unknown (Mists of Pandaria)
 - In very rare cases, glowing a button could trigger a Lua error
 
+Ghosts\*\*\* Busted
+- Hunter's Mongoose Bite (Classic Era, The Burning Crusade)
+- Hunter's Flanking Strike (Season of Discovery)
+- Shaman's Rolling Thunder (Classic Era, The Burning Crusade)
+- Shaman's Molten Blast (Season of Discovery)
+- Shaman's Fulmination (Cataclysm, Mists of Pandaria)
+- Shaman's Lava Surge (Cataclysm, Mists of Pandaria)
+
+\*\*\*A Ghost is an overlay that fades out then reappears out of nowhere
+
 Miscellaneous
 - All checkboxes are now translated at the bottom of the Options Panel
 

@@ -45,12 +45,23 @@ Text from the lower-right box of the Options Panel could display characters inco
 Unknown effect detection could sometimes display reports for effects that were actually known (Mists of Pandaria).
 
 In very rare cases, glowing a button could trigger a Lua error. The cause is not known for sure, but the Lua error should no longer happen, and a more explicit warning will be reported instead. As always, make sure to report errors and warning so we can investigate. Thank you :)
+## Ghostbusters
+A ghost overlay is an overlay that fades out, then reappears out of nowhere, and fades out again later. This section lists which ghosts have been _busted_.
+### :hunter:  Hunter
+- Mongoose Bite (Classic Era, The Burning Crusade)
+- Flanking Strike (Season of Discovery)
+### :shaman:  Shaman
+- Rolling Thunder (Classic Era, The Burning Crusade)
+- Molten Blast (Season of Discovery)
+- Fulmination (Cataclysm, Mists of Pandaria)
+- Lava Surge (Cataclysm, Mists of Pandaria)
 ## Miscellaneous
 All checkboxes are now translated at the bottom of the Options Panel.
 ## Contributors
 Shout-out to our amazing contributors
 - Jumpsuitpally for sending feedback about Paladin and Monk
 - Krablord for sending feedback about Rogue and Shaman
+- Krablord and Amanthuul for hunting ghosts
 - Bruni for reporting an issue that triggered false positive unknown effects
 - omeletteman91 for reporting an unsupported effect
 
