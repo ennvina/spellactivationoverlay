@@ -46,6 +46,7 @@ Bug Fixes
 - Text from the lower-right box of the Options Panel could display squares
 - This affected non-ASCII characters e.g., accents or non-Latin characters
 - Known effects should no longer be reported as unknown (Mists of Pandaria)
+- In very rare cases, glowing a button could trigger a Lua error
 
 Miscellaneous
 - All checkboxes are now translated at the bottom of the Options Panel

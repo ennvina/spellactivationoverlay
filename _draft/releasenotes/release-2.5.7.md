@@ -43,7 +43,8 @@ Text from the lower-right box of the Options Panel could display characters inco
 - non-Latin characters: д, й, 일, 文...
 
 Unknown effect detection could sometimes display reports for effects that were actually known (Mists of Pandaria).
-## Known Limitations
+
+In very rare cases, glowing a button could trigger a Lua error. The cause is not known for sure, but the Lua error should no longer happen, and a more explicit warning will be reported instead. As always, make sure to report errors and warning so we can investigate. Thank you :)
 ## Miscellaneous
 All checkboxes are now translated at the bottom of the Options Panel.
 ## Contributors
