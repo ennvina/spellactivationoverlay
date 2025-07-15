@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.5.7 (2025-07-xx)
+#### v2.5.7 (2025-07-15)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - Jumpsuitpally for sending feedback about Paladin and Monk
