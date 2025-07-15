@@ -9,7 +9,7 @@
           <Anchors>
             <Anchor point="BOTTOMRIGHT">
               <Offset>
-                <AbsDimension x="-16" y="32"/>
+                <AbsDimension x="-16" y="56"/>
               </Offset>
             </Anchor>
           </Anchors>
@@ -202,7 +202,7 @@
         <Anchors>
           <Anchor point="BOTTOMLEFT" relativeTo="$parentSpellAlertDebugButton" relativePoint="BOTTOMLEFT">
             <Offset>
-              <AbsDimension x="256" y="0"/>
+              <AbsDimension x="300" y="0"/>
             </Offset>
           </Anchor>
         </Anchors>
@@ -212,6 +212,22 @@
               SpellActivationOverlayDB.responsiveMode = true;
             else
               SpellActivationOverlayDB.responsiveMode = nil;
+            end
+          </PostClick>
+        </Scripts>
+      </CheckButton>
+      <CheckButton name="$parentSpellAlertAskDisableGameAlertButton" inherits="InterfaceOptionsCheckButtonTemplate">
+        <Anchors>
+          <Anchor point="BOTTOMLEFT" relativeTo="$parentSpellAlertResponsiveButton" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="20"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <PostClick>
+            if (self.OnValueChanged) then
+              self:OnValueChanged(self:GetChecked());
             end
           </PostClick>
         </Scripts>
@@ -300,7 +316,7 @@
         </FontString>
       </Layer>
       <Layer level="ARTWORK">
-        <FontString name="$parentSpellAlertNone" text="" inherits="GameFontHighlight" justifyH="LEFT" justifyV="TOP" parentKey="glowNone">
+        <FontString name="$parentGlowingButtonNone" text="" inherits="GameFontHighlight" justifyH="LEFT" justifyV="TOP" parentKey="glowNone">
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentGlowingButtons" relativePoint="BOTTOMLEFT">
               <Offset>

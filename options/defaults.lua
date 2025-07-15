@@ -188,6 +188,9 @@ SAO.defaults = {
                 [34720] = { -- Thrill of the Hunt (Mists of Pandaria)
                     [0] = true, -- any stacks
                 },
+                [19615] = { -- Frenzy (Mists of Pandaria)
+                    [5] = true,
+                },
             },
             glow = {
                 [53351] = { -- Kill Shot (Wrath+)
@@ -346,6 +349,9 @@ SAO.defaults = {
                 },
                 [118864] = { -- Combo Breaker: Tiger Palm
                     [0] = true,
+                },
+                [118674] = { -- Vital Mists
+                    [5] = true,
                 },
             },
             glow = {
@@ -572,6 +578,9 @@ SAO.defaults = {
                 },
                 [462707] = { -- Cutthroat (Season of Discovery)
                     [8676] = true, -- Ambush
+                },
+                [111240] = { -- Dispatch (Mists of Pandaria)
+                    [111240] = false, -- Dispatch
                 },
             },
         },

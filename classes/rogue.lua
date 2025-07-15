@@ -221,11 +221,27 @@ local function useBlindside()
     );
 end
 
+local function useDispatch()
+    local dispatch = 111240;
+
+    SAO:CreateEffect(
+        "dispatch",
+        SAO.MOP_AND_ONWARD,
+        dispatch,
+        "execute",
+        {
+            execThreshold = 35,
+            button = dispatch,
+        }
+    );
+end
+
 local function registerClass(self)
     useRiposte();
     useMurderousIntent();
     useCutthroat();
     useBlindside();
+    useDispatch();
 end
 
 SAO.Class["ROGUE"] = {

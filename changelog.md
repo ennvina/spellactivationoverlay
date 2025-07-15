@@ -1,5 +1,68 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.5.7 (2025-07-xx)
+
+Thank you to our amazing contributors for helping out. Thanks!
+- Jumpsuitpally for sending feedback about Paladin and Monk
+- Krablord for sending feedback about Rogue and Shaman
+- Bruni for reporting an issue that triggered false positive unknown effects
+- omeletteman91, Adal4, Yume and Nait292 for reporting unsupported effects
+- Fractale for helping on resolving an unsupported effect
+
+Options Panel
+- In Mists of Pandaria, players are asked to disable game's spell alerts
+- This question is answered at first start and the addon remembers the answer
+- If the player disabled game's spell alerts, the addon will re-check later
+- But if the player asked to keep them, the question is gone forever
+- There is now a checkbox in the Options Panel to check again at each start
+- Checking at each start will *not* necessarily ask the question every time
+- It will only ask the question again when the addon detects a conflict
+
+New Spell Alerts
+- Hunter's Focus Fire (Mists of Pandaria)
+- Monk's Vital Mists (Mists of Pandaria)
+
+Updated Spell Alerts
+- Monk's Blackout Kick is now only displayed right (Mists of Pandaria)
+- Monk's Tiger Palm is now green-ish and displayed left (Mists of Pandaria)
+- Paladin's Infusion of Light now uses Daybreak visuals\* (Mists of Pandaria)
+- Paladin's Daybreak now uses Sun-like visuals\* (Mists of Pandaria)
+
+\* With these changes, Infusion of Light now matches the reference client
+
+New Glowing Buttons
+- Rogue's Dispatch, when the target has less than 35% hp (Mists of Pandaria)
+- Shaman's Lava Burst, as combat-only counter (Mists of Pandaria)
+
+Removed Glowing Buttons\*\*
+- Paladin's Hammer of Wrath (Mists of Pandaria)
+- Paladin's Holy Shock, during Daybreak (Mists of Pandaria)
+- Paladin's Divine Light, during Infusion of Light (Mists of Pandaria)
+- Paladin's Holy Light, during Infusion of Light (Mists of Pandaria)
+- Paladin's Holy Radiance, during Infusion of Light (Mists of Pandaria)
+- Paladin's Avenger's Shield, during Grand Crusader (Mists of Pandaria)
+
+\*\* These buttons are already glowing by the game client
+
+Bug Fixes
+- Text from the lower-right box of the Options Panel could display squares
+- This affected non-ASCII characters e.g., accents or non-Latin characters
+- Known effects should no longer be reported as unknown (Mists of Pandaria)
+- In very rare cases, glowing a button could trigger a Lua error
+
+Ghosts\*\*\* Busted
+- Hunter's Mongoose Bite (Classic Era, The Burning Crusade)
+- Hunter's Flanking Strike (Season of Discovery)
+- Shaman's Rolling Thunder  (Season of Discovery, The Burning Crusade)
+- Shaman's Molten Blast (Season of Discovery)
+- Shaman's Fulmination (Cataclysm, Mists of Pandaria)
+- Shaman's Lava Surge (Cataclysm, Mists of Pandaria)
+
+\*\*\*A Ghost is an overlay that fades out then reappears out of nowhere
+
+Miscellaneous
+- All checkboxes are now translated at the bottom of the Options Panel
+
 #### v2.5.6 (2025-07-05)
 
 Thank you to our amazing contributors for reporting issues. Thanks!
@@ -7,7 +70,7 @@ Thank you to our amazing contributors for reporting issues. Thanks!
 - Adal4 for reporting the Paladin's The Art of War issue
 - Amanthuul and kakukembo for reporting the Druid's Eclipse issue
 
-New Spell Alerts
+New Spell Alert
 - Paladin's The Art of War (Mists of Pandaria)
 
 Bug Fixes
@@ -65,7 +128,7 @@ New Spell Alerts
 - Warrior's Ultimatum (Mists of Pandaria)
 
 New Glowing Buttons
-- Warlocks's Drain Soul, when the target has 20% health of less (MoP)
+- Warlocks's Drain Soul, when the target has 20% health or less (MoP)
 - Warlocks's Incinerate, during Backdraft (Mists of Pandaria)
 - Warlocks's Chaos Bolt, during Backdraft (Mists of Pandaria)
 - Warlocks's Incinerate, during Fire and Brimstone (Mists of Pandaria)

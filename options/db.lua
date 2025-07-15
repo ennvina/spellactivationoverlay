@@ -111,9 +111,20 @@ local function migrateTo250(db)
     SAO:Info(Module, SAO:migratedOptions("2.5.0"));
 end
 
+-- Migrate from pre-257 to 257 or higher
+local function migrateTo257(db)
+
+    -- Shaman's Lava Burst glowing button should be disabled by default starting from Mists of Pandaria
+    if SAO.IsProject(SAO.MOP_AND_ONWARD) then
+        db.classes["SHAMAN"]["glow"][51505][51505] = false; -- 51505 = Lava Burst
+    end
+
+    SAO:Info(Module, SAO:migratedOptions("2.5.7"));
+end
+
 -- Load database and use default values if needed
 function SAO.LoadDB(self)
-    local currentversion = 250;
+    local currentversion = 257;
     local db = SpellActivationOverlayDB or {};
 
     if not db.alert then
@@ -211,6 +222,9 @@ function SAO.LoadDB(self)
     if not db.version or db.version < 250 then
         migrateTo250(db);
     end
+    if not db.version or db.version < 257 then
+        migrateTo257(db);
+    end
 
     db.version = currentversion;
     SpellActivationOverlayDB = db;
@@ -222,65 +236,31 @@ function SAO.LoadDB(self)
     end
 end
 
--- Ask questions after the database is loaded
-function SAO.AskQuestions(self)
-    local displayGameSaoVar = "displaySpellActivationOverlays";
-    if SAO.IsProject(SAO.MOP_AND_ONWARD) -- Issue starts with Mists of Pandaria
-    and C_CVar.GetCVarInfo(displayGameSaoVar) ~= nil -- Can only operate if the variable is supported
-    and C_CVar.GetCVarBool(displayGameSaoVar) -- Bother asking only if the game alert is enabled
-    and SpellActivationOverlayDB.alert.enabled -- Only ask if the alert is enabled
-    and (
-        SpellActivationOverlayDB.questions.disableGameAlert == nil -- Ask if the user has not answered yet
-        or SpellActivationOverlayDB.questions.disableGameAlert == "yes" -- Ask again if the user already answered "yes"
-        )
-    then
-        local optionSequence = string.format(
-            "%s > %s > %s",
-            OPTIONS,
-            COMBAT_LABEL,
-            SPELL_ALERT_OPACITY
-        );
-        StaticPopupDialogs["SAO_DISABLE_GAME_ALERT"] = {
-            text = "",
-            button1 = YES,
-            button2 = NO,
-            OnShow = function(self)
-                if self.data.answered == "yes" then
-                    -- Player already answered "yes" but the option came back
-                    -- This can happen if the player disabled the game's spell alert, then re-enabled it
-                    self.text:SetText(SAO:spellAlertConflictsAgain());
-                else
-                    -- Player has not answered yet
-                    self.text:SetText(SAO:spellAlertConflicts());
-                end
-            end,
-            OnAccept = function(self)
-                SetCVar(displayGameSaoVar, false);
-                SpellActivationOverlayDB.questions.disableGameAlert = "yes";
-                SAO:Info(Module, SAO:gameSpellAlertsDisabled().."\n"..SAO:gameSpellAlertsChangeLater(optionSequence));
-            end,
-            OnCancel = function(self)
-                SpellActivationOverlayDB.questions.disableGameAlert = "no";
-                SAO:Info(Module, SAO:gameSpellAlertsLeftAsIs().."\n"..SAO:gameSpellAlertsChangeLater(optionSequence));
-            end,
-            whileDead = true,
-            customAlertIcon = "Interface/Addons/SpellActivationOverlay/textures/rkm128",
-            hideOnEscape = true,
-            noCancelOnEscape = true,
-            timeout = 0,
-            preferredindex = STATICPOPUP_NUMDIALOGS
-        };
-        StaticPopup_Show("SAO_DISABLE_GAME_ALERT", nil, nil, { answered = SpellActivationOverlayDB.questions.disableGameAlert });
-    end
-end
-
 -- Utility frame dedicated to react to variable loading
 local loader = CreateFrame("Frame", "SpellActivationOverlayDBLoader");
+local loadingState = {
+    loaded = false,
+    questionsAsked = false,
+    variablesApplied = false,
+    optionsPanelInitialized = false,
+};
 loader:RegisterEvent("VARIABLES_LOADED");
 loader:SetScript("OnEvent", function (self, event)
     SAO:LoadDB();
-    SAO:AskQuestions();
+    loadingState.loaded = true;
+
+    SAO:AskQuestionsAtStart();
+    loadingState.questionsAsked = true;
+
     SAO:ApplyAllVariables();
+    loadingState.variablesApplied = true;
+
     SpellActivationOverlayOptionsPanel_Init(SAO.OptionsPanel);
+    loadingState.optionsPanelInitialized = true;
+
     loader:UnregisterEvent("VARIABLES_LOADED");
 end);
+
+function SAO:GetDatabaseLoadingState()
+    return loadingState;
+end

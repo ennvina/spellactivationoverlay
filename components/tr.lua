@@ -73,6 +73,23 @@ function SAO:translateDebuff()
     return tr(debuffTranslations);
 end
 
+-- Get the "when castable" localized text
+function SAO:whenCastable()
+    local whenCastableTranslations = {
+        ["en"] = "when castable",
+        ["de"] = "wenn zauberbar",
+        ["fr"] = "dès que lançable",
+        ["es"] = "cuando se pueda lanzar",
+        ["ru"] = "когда можно применить",
+        ["it"] = "quando lanciabile",
+        ["pt"] = "quando lançável",
+        ["ko"] = "시전 가능할 때",
+        ["zh"] = "可施放时",
+        ["zhTW"] = "可施放時",
+    };
+    return tr(whenCastableTranslations);
+end
+
 -- Translate "Migrated options from pre-{version} to {version}"
 function SAO:migratedOptions(version)
     local migratedTranslations = {
@@ -244,6 +261,23 @@ function SAO:compatibilityWarning(addonBuild, expectedBuild)
     return string.format(tr(compatibilityWarningTranslations), addonBuild, expectedBuild);
 end
 
+-- Translate "Write debug to the chatbox (in English)"
+function SAO:optionDebugToChatbox()
+    local optionDebugToChatboxTranslations = {
+        ["en"] = "Write debug to the chatbox",
+        ["de"] = "Debug in den Chat schreiben (auf Englisch)",
+        ["fr"] = "Écrire le débogage dans le tchat (en anglais)",
+        ["es"] = "Escribir depuración en el chat (en inglés)",
+        ["ru"] = "Выводить отладочную в чат (на английском)",
+        ["it"] = "Scrivi il debug nella chat (in inglese)",
+        ["pt"] = "Escrever depuração no chat (em inglês)",
+        ["ko"] = "디버그를 채팅창에 작성하기 (영어로)",
+        ["zh"] = "将调试信息写入聊天框（英文）",
+        ["zhTW"] = "將除錯資訊寫入聊天框（英文）",
+    };
+    return tr(optionDebugToChatboxTranslations);
+end
+
 -- Translate "unknown spell" (lowercase in most languages)
 function SAO:unknownSpell()
     local unknownSpellTranslations = {
@@ -277,6 +311,23 @@ function SAO:unsupportedShowEvent(details)
         ["zhTW"] = "不支援的 SHOW 事件%s。請在 %s 的 Discord、GitHub 或 CurseForge 上報告。(您可以在選項中停用此訊息：/sao)",
     };
     return string.format(tr(unsupportedShowEventTranslations), tostring(details), AddonName);
+end
+
+-- Translate "Report unsupported effects to Chatbox"
+function SAO:reportUnsupportedOverlays()
+    local reportUnsupportedOverlaysTranslations = {
+        ["en"] = "Report unsupported effects to Chatbox",
+        ["de"] = "Nicht unterstützte Effekte im Chatfenster melden",
+        ["fr"] = "Signaler les effets non pris en charge dans le tchat",
+        ["es"] = "Informar efectos no compatibles en el chat",
+        ["ru"] = "Сообщить о неподдерживаемых эффектах в чате",
+        ["it"] = "Segnala effetti non supportati nella chat",
+        ["pt"] = "Relatar efeitos não suportados no chat",
+        ["ko"] = "지원되지 않는 효과를 채팅창에 보고하기",
+        ["zh"] = "在聊天框中报告不支持的效果",
+        ["zhTW"] = "在聊天框中報告不支援的效果",
+    };
+    return tr(reportUnsupportedOverlaysTranslations);
 end
 
 -- Translate "{AddonName} spell alerts may conflict with the ones from the game.\n\nDo you want to disable the game's spell alerts?",
@@ -362,4 +413,21 @@ function SAO:gameSpellAlertsChangeLater(optionSequence)
         ["zhTW"] = "請記住，您可以稍後在遊戲的介面選項中更改此設置，位於 %s 下。",
     };
     return string.format(tr(gameSpellAlertsChangeLaterTranslations), optionSequence);
+end
+
+-- Translate "Detect conflicts with the game's spell alerts"
+function SAO:askToDisableGameAlerts()
+    local askToDisableGameAlertsTranslations = {
+        ["en"] = "Detect conflicts with the game's spell alerts",
+        ["de"] = "Konflikte mit den Zauberwarnungen des Spiels erkennen",
+        ["fr"] = "Détecter les conflits avec les alertes de sort du jeu",
+        ["es"] = "Detectar conflictos con las alertas de hechizo del juego",
+        ["ru"] = "Обнаружить конфликты с игровыми оповещениями о заклинаниях",
+        ["it"] = "Rileva conflitti con gli avvisi sugli incantesimi del gioco",
+        ["pt"] = "Detectar conflitos com os alertas de feitiço do jogo",
+        ["ko"] = "게임의 주문 경고와의 충돌 감지",
+        ["zh"] = "检测与游戏法术警报的冲突",
+        ["zhTW"] = "檢測與遊戲法術警報的衝突",
+    };
+    return tr(askToDisableGameAlertsTranslations);
 end

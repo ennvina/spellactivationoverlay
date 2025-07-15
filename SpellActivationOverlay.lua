@@ -173,7 +173,7 @@ function SpellActivationOverlay_OnEvent(self, event, ...)
 	if ( event == "SPELL_ACTIVATION_OVERLAY_SHOW" ) then
 		local spellID, texture, positions, scale, r, g, b = ...;
 		SAO:Debug(Module, "Received native SPELL_ACTIVATION_OVERLAY_SHOW with spell ID "..tostring(spellID)..", texture "..tostring(texture)..", positions '"..tostring(positions).."', scale "..tostring(scale)..", (r g b) = ("..tostring(r).." "..tostring(g).." "..tostring(b)..")");
-		SAO:ReportUnkownEffect(Module, spellID, texture, positions, scale, r, g, b);
+		SAO:ReportUnknownEffect(Module, spellID, texture, positions, scale, r, g, b);
 		-- if ( GetCVarBool("displaySpellActivationOverlays") ) then 
 		-- 	SpellActivationOverlay_ShowAllOverlays(self, spellID, texture, positions, scale, r, g, b, true)
 		-- end

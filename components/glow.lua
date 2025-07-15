@@ -86,7 +86,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
     end,
 
     SpellInfo = function(self, glowID)
-        return tostring(glowID).." ("..tostring(GetSpellInfo(glowID))..")";
+        return tostring(glowID).." ("..tostring(GetSpellInfo(glowID) or nil)..")";
     end,
 
     ParamName = function(self, frame, glowID)
@@ -429,7 +429,16 @@ function SAO.AddGlowNumber(self, spellID, glowID)
         self.GlowingSpells[glowID] = { [spellID] = true };
         for _, frame in pairs(actionButtons or {}) do
             if (not SpellActivationOverlayDB or not SpellActivationOverlayDB.glow or SpellActivationOverlayDB.glow.enabled) then
-                EnableGlow(frame, frame.__sao and frame.__sao.GetGlowID(), "direct activation");
+                if not frame.__sao then
+                    self:Debug(Module, "Action Button "..tostring(frame:GetName()).." does not have __sao, glow may fail");
+                elseif not frame.__sao.GetGlowID() then
+                    self:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a nil __sao.GetGlowID, glow may fail");
+                elseif not frame.__sao.lastGlowID then
+                    self:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a nil __sao.lastGlowID, glow may fail");
+                elseif frame.__sao.GetGlowID() ~= frame.__sao.lastGlowID then
+                    self:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a different __sao.GetGlowID ("..tostring(frame.__sao.GetGlowID())..") vs. __sao.lastGlowID ("..tostring(frame.__sao.lastGlowID).."), glow may fail");
+                end
+                EnableGlow(frame, frame.__sao and (frame.__sao.GetGlowID() or frame.__sao.lastGlowID) or glowID, "direct activation");
             end
         end
     end

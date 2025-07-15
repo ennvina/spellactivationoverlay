@@ -92,7 +92,8 @@
 									<OnPlay function="SpellActivationOverlayTexture_OnCombatAnimOutPlay"/>
 								</Scripts>
 							</Translation>
-							<Translation duration="25" order="2" offsetX="0" offsetY="0" parentKey="point2"/>
+							<!-- The final translation should last longer than combatAnimIn + combatAnimOut + transition durations -->
+							<Translation duration="100" order="2" offsetX="0" offsetY="0" parentKey="point2"/> <!-- 100 should be enough, for now -->
 						</AnimationGroup>
 					</Animations>
 				</MaskTexture>

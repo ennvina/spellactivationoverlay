@@ -125,6 +125,9 @@ local function useSurgeOfLight()
         },
         "aura",
         {
+            aka = {
+                [SAO.MOP] = 128654, -- Surge of Light (2nd charge)
+            },
             talent = {
                 [SAO.SOD] = 431664,
                 [SAO.TBC+SAO.WRATH] = 33150,
@@ -157,7 +160,7 @@ local function useSurgeOfLight()
             87160,
             "aura",
             {
-                aka = 126083, -- a.k.a. 126083 (Surge of Darkness), fake buff used by the game to display an overlay of the second stack
+                aka = 126083, -- Surge of Darkness (2nd charge)
                 talent = 87160, -- Surge of Darkness (spell), do not set 109186 (From Darkness, Comes Light) which is confusing with Surge of Light
                 overlays = {
                     { stacks = 1, texture = "surge_of_darkness", position = "Left", option = false },
