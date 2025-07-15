@@ -54,7 +54,7 @@ A ghost overlay is an overlay that fades out, then reappears out of nowhere, and
 - Mongoose Bite (Classic Era, The Burning Crusade)
 - Flanking Strike (Season of Discovery)
 ### :shaman:  Shaman
-- Rolling Thunder (Classic Era, The Burning Crusade)
+- Rolling Thunder  (Season of Discovery, The Burning Crusade)
 - Molten Blast (Season of Discovery)
 - Fulmination (Cataclysm, Mists of Pandaria)
 - Lava Surge (Cataclysm, Mists of Pandaria)
@@ -66,7 +66,7 @@ Shout-out to our amazing contributors
 - Krablord for sending feedback about Rogue and Shaman
 - Krablord and Amanthuul for hunting ghosts
 - Bruni for reporting an issue that triggered false positive unknown effects
-- omeletteman91, Adal4 and Yume for reporting unsupported effects
+- omeletteman91, Adal4, Yume and Nait292 for reporting unsupported effects
 - Fractale for helping on resolving an unsupported effect
 
 Thanks!

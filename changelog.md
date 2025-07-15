@@ -6,7 +6,7 @@ Thank you to our amazing contributors for helping out. Thanks!
 - Jumpsuitpally for sending feedback about Paladin and Monk
 - Krablord for sending feedback about Rogue and Shaman
 - Bruni for reporting an issue that triggered false positive unknown effects
-- omeletteman91, Adal4 and Yume for reporting unsupported effects
+- omeletteman91, Adal4, Yume and Nait292 for reporting unsupported effects
 - Fractale for helping on resolving an unsupported effect
 
 Options Panel
@@ -53,7 +53,7 @@ Bug Fixes
 Ghosts\*\*\* Busted
 - Hunter's Mongoose Bite (Classic Era, The Burning Crusade)
 - Hunter's Flanking Strike (Season of Discovery)
-- Shaman's Rolling Thunder (Classic Era, The Burning Crusade)
+- Shaman's Rolling Thunder  (Season of Discovery, The Burning Crusade)
 - Shaman's Molten Blast (Season of Discovery)
 - Shaman's Fulmination (Cataclysm, Mists of Pandaria)
 - Shaman's Lava Surge (Cataclysm, Mists of Pandaria)
