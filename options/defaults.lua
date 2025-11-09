@@ -863,7 +863,19 @@ SAO.defaults = {
                 }
             },
         },
-    }
+    },
+    shared = {
+        alert = {
+            [92572] = { -- Leap of Faith (Priest) (Cataclysm+)
+                [0] = true,
+            },
+            [110724] = { -- Leap of Faith (Druid) (Mists of Pandaria)
+                [0] = true,
+            },
+        },
+        glow = {
+        },
+    },
 }
 
 if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then

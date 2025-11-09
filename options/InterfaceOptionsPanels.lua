@@ -507,8 +507,10 @@ function SpellActivationOverlayOptionsPanel_OnShow(self)
         return;
     end
 
-    if SAO.CurrentClass and type(SAO.CurrentClass.LoadOptions) == 'function' then
-        SAO.CurrentClass.LoadOptions(SAO);
+    for _, classDef in ipairs({ SAO.CurrentClass, SAO.SharedClass }) do -- Iteration may fail if CurrentClass is nil and SharedClass is not, but this shouldn't happen
+        if classDef and type(classDef.LoadOptions) == 'function' then
+            classDef.LoadOptions(SAO);
+        end
     end
 
     SAO:AddEffectOptions();

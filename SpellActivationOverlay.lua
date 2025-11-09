@@ -39,11 +39,14 @@ function SpellActivationOverlay_OnLoad(self)
 	if class and not class.IsDisabled then
 		class.Intrinsics = { className, classFile, classId };
 		SAO.CurrentClass = class;
+		SAO.SharedClass = SAO.Class["__SHARED"];
 
 		-- Keys of the class other than "Intrinsics", "Register" and "LoadOptions" are expected to be event names
-		for key, _ in pairs(class) do
-			if (key ~= "Intrinsics" and key ~= "Register" and key ~= "LoadOptions" and key ~= "IsDisabled") then
-				self:RegisterEvent(key);
+		for _, classDef in ipairs({ SAO.CurrentClass, SAO.SharedClass }) do
+			for key, _ in pairs(classDef or {}) do
+				if (key ~= "Intrinsics" and key ~= "Register" and key ~= "LoadOptions" and key ~= "IsDisabled") then
+					self:RegisterEvent(key);
+				end
 			end
 		end
 	else

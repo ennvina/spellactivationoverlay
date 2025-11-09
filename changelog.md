@@ -1,5 +1,20 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.6.0-rc1 (2025-07-15)
+
+Thank you to our amazing contributors for helping out. Thanks!
+- Yume and Amanthuul for helping on the unorthodox Leap of Faith
+
+This release introduces a new type of Spell Alert: Shared Spell Alerts
+- Usually, Spell Alerts are exclusive to the player's class toolkit
+- For example, Hot Streak is a Mage alert, and only Mages can have it
+- Shared Spell Alerts, on the other hand, are available to all classes
+- For example, Leap of Faith is cast by Priests but anyone can be the recipient
+
+New Shared Spell Alerts
+- Priest's Leap of Faith (Mists of Pandaria)
+- Druid's Leap of Faith (Mists of Pandaria)
+
 #### v2.5.7 (2025-07-15)
 
 Thank you to our amazing contributors for helping out. Thanks!
