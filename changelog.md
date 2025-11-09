@@ -1,5 +1,15 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.6.0-rc2 (2025-08-06)
+
+New Spell Alert
+- Warlock's Mannoroth's Fury (Mists of Pandaria)
+
+New Glowing Buttons
+- Warlock's Hellfire during Mannoroth's Fury (Mists of Pandaria)
+- Warlock's Rain of Fire during Mannoroth's Fury (Mists of Pandaria)
+- Warlock's Seed of Corruption during Mannoroth's Fury (Mists of Pandaria)
+
 #### v2.6.0-rc1 (2025-07-22)
 
 Thank you to our amazing contributors for helping out. Thanks!
