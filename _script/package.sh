@@ -383,6 +383,36 @@ zipproject mop "$VERSION_TOC_VERSION"
 cdup
 }
 
+# Release mop PTR version
+release_mop_ptr() {
+MOP_BUILD_VERSION=50503
+mkproject mop-ptr $MOP_BUILD_VERSION 1c51c5 achievement_boss_leishen 64 "Mists of Pandaria PTR"
+
+prunecopyright Cataclysm Pandaria
+
+TEXTURES_NOT_FOR_MOP=(
+arcane_missiles_1
+arcane_missiles_2
+arcane_missiles_3
+echo_of_the_elements
+maelstrom_weapon_6
+maelstrom_weapon_7
+maelstrom_weapon_8
+maelstrom_weapon_9
+maelstrom_weapon_10
+raging_blow
+$(texbelow 898423 450914 450915)
+)
+prunetex "${TEXTURES_NOT_FOR_MOP[@]}"
+
+SOUNDS_NOT_FOR_MOP=(UI_PowerAura_Generic)
+prunesound "${SOUNDS_NOT_FOR_MOP[@]}"
+
+zipproject mop "$VERSION_TOC_VERSION"
+
+cdup
+}
+
 # Release Necrosis version
 release_necrosis() {
 NECROSIS_BUILD_VERSION=40402 # Version does not matter, toc will not be used
@@ -528,5 +558,6 @@ release_vanilla
 release_wrath
 release_cata
 release_mop
+release_mop_ptr
 release_universal
 release_necrosis

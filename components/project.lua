@@ -71,8 +71,25 @@ function SAO.GetFlavorName()
     return flavorNames[WOW_PROJECT_ID] or "Unknown";
 end
 
--- buildID is an internal code, such as universal, vanilla, tbc, ...
--- This is supposed to be the same as the suffix of package names
+-- buildID is an internal code, such as universal, vanilla, tbc, mop-ptr, ...
+-- The main part is supposed to be the same as the suffix of package names
+-- The secondary part (after dash) is optional
+local function splitBuildID(buildID)
+    if type(buildID) ~= "string" then
+        return nil, nil;
+    end
+
+    -- If buildID is "mop-ptr", return "mop", "ptr"
+    local dashIndex = string.find(buildID, "-");
+    if dashIndex then
+        local a = string.sub(buildID, 1, dashIndex - 1);
+        local b = string.sub(buildID, dashIndex + 1);
+        return a, b;
+    else
+        return buildID, nil;
+    end
+end
+
 local projectNameForBuildID = {
     universal = "*",
     vanilla   = EXPANSION_NAME0 or "Classic",
@@ -88,7 +105,16 @@ local projectNameForBuildID = {
 };
 
 function SAO.GetFullProjectName(buildID)
-    return projectNameForBuildID[buildID] or "Unknown";
+    return projectNameForBuildID[select(1, splitBuildID(buildID))] or "Unknown";
+end
+
+local subProjectNameForBuildID = {
+    ptr  = "PTR",
+    beta = "Beta",
+};
+
+function SAO.GetSubProjectName(buildID)
+    return subProjectNameForBuildID[select(2, splitBuildID(buildID))]; -- Returns nil if not found
 end
 
 local expectedBuildID = {
