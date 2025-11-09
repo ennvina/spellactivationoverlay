@@ -48,7 +48,7 @@ mkproject() {
     echo
     echo "==== ${flavor^^} ===="
     echo -n "Creating $flavor project..."
-    rm -rf ./_release/"$flavor" || bye "Cannot clean wrath directory"
+    rm -rf ./_release/"$flavor" || bye "Cannot clean $flavor directory"
     mkdir -p ./_release/"$flavor"/SpellActivationOverlay || bye "Cannot create $flavor directory"
     cp -R changelog.md LICENSE SpellActivationOverlay.* classes components libs options sounds textures variables ./_release/"$flavor"/SpellActivationOverlay/ || bye "Cannot copy $flavor files"
     cd ./_release/"$flavor" || bye "Cannot cd to $flavor directory"
@@ -280,7 +280,7 @@ cdup
 
 # Release vanilla version
 release_vanilla() {
-VANILLA_BUILD_VERSION=11507
+VANILLA_BUILD_VERSION=11508
 mkproject vanilla $VANILLA_BUILD_VERSION ffffff inv_misc_food_31 32 "Classic Era and Season of Discovery"
 
 VARIABLES_NOT_FOR_VANILLA=(holypower nativesao)
@@ -355,7 +355,7 @@ cdup
 
 # Release mop version
 release_mop() {
-MOP_BUILD_VERSION=50500
+MOP_BUILD_VERSION=50502
 mkproject mop $MOP_BUILD_VERSION 00ff96 achievement_character_pandaren_female 64 "Mists of Pandaria"
 
 prunecopyright Cataclysm Pandaria
