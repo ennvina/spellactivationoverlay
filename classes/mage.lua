@@ -610,6 +610,7 @@ local function useArcaneMissiles()
             arcaneMissilesBuff,
             "aura",
             {
+                aka = 79808, -- Arcane Missiles! (second charge)
                 overlays = {
                     { stacks = 1, texture = "arcane_missiles", position = "Left", option = false },
                     { stacks = 2, texture = "arcane_missiles", position = "Left + Right (Flipped)", option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
@@ -617,6 +618,23 @@ local function useArcaneMissiles()
                 button = arcaneMissiles,
             }
         );
+    end
+end
+
+local function useArcaneBlast()
+    if SAO.IsSoD() then
+        local arcaneBlastSoDBuff = 400573;
+        local arcaneMissiles = 5143;
+        local arcaneExplosion = 1449;
+        -- local arcaneHealingSpellTBD = ...; -- @todo add healing spell that resets stacks, which might exist, according to the in-game tooltip
+        local resettingSpells = { (GetSpellInfo(arcaneMissiles)), (GetSpellInfo(arcaneExplosion)) };
+        for nbStacks=1,4 do
+            local scale = nbStacks == 4 and 1.2 or 0.6; -- 60%, 60%, 60%, 120%
+            local pulse = nbStacks == 4;
+            local glowIDs = nbStacks == 4 and resettingSpells or nil;
+            local texture = ({ "arcane_missiles_1", "arcane_missiles_2", "arcane_missiles_3", "arcane_missiles" })[nbStacks];
+            SAO:RegisterAura("arcane_blast_sod", nbStacks, arcaneBlastSoDBuff, texture, "Left + Right (Flipped)", scale, 255, 255, 255, pulse, glowIDs);
+        end
     end
 end
 
@@ -771,20 +789,7 @@ local function registerArcane(self)
         self:RegisterAura("clearcasting", 0, 12536, clearcastingVariants.textureFunc, "Left + Right (Flipped)", 1.5, 192, 192, 192, false);
     end
 
-    if self.IsSoD() then
-        local arcaneBlastSoDBuff = 400573;
-        local arcaneMissiles = 5143;
-        local arcaneExplosion = 1449;
-        -- local arcaneHealingSpellTBD = ...; -- @todo add healing spell that resets stacks, which might exist, according to the in-game tooltip
-        local resettingSpells = { (GetSpellInfo(arcaneMissiles)), (GetSpellInfo(arcaneExplosion)) };
-        for nbStacks=1,4 do
-            local scale = nbStacks == 4 and 1.2 or 0.6; -- 60%, 60%, 60%, 120%
-            local pulse = nbStacks == 4;
-            local glowIDs = nbStacks == 4 and resettingSpells or nil;
-            local texture = ({ "arcane_missiles_1", "arcane_missiles_2", "arcane_missiles_3", "arcane_missiles" })[nbStacks];
-            self:RegisterAura("serendipity_sod", nbStacks, arcaneBlastSoDBuff, texture, "Left + Right (Flipped)", scale, 255, 255, 255, pulse, glowIDs);
-        end
-    end
+    useArcaneBlast();
 end
 
 local function registerClass(self)
