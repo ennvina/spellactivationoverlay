@@ -408,7 +408,7 @@ prunetex "${TEXTURES_NOT_FOR_MOP[@]}"
 SOUNDS_NOT_FOR_MOP=(UI_PowerAura_Generic)
 prunesound "${SOUNDS_NOT_FOR_MOP[@]}"
 
-zipproject mop "$VERSION_TOC_VERSION"
+zipproject mop-ptr "$VERSION_TOC_VERSION"
 
 cdup
 }
