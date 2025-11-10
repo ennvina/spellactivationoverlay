@@ -48,7 +48,7 @@ mkproject() {
     echo
     echo "==== ${flavor^^} ===="
     echo -n "Creating $flavor project..."
-    rm -rf ./_release/"$flavor" || bye "Cannot clean wrath directory"
+    rm -rf ./_release/"$flavor" || bye "Cannot clean $flavor directory"
     mkdir -p ./_release/"$flavor"/SpellActivationOverlay || bye "Cannot create $flavor directory"
     cp -R changelog.md LICENSE SpellActivationOverlay.* classes components libs options sounds textures variables ./_release/"$flavor"/SpellActivationOverlay/ || bye "Cannot copy $flavor files"
     cd ./_release/"$flavor" || bye "Cannot cd to $flavor directory"
@@ -280,7 +280,7 @@ cdup
 
 # Release vanilla version
 release_vanilla() {
-VANILLA_BUILD_VERSION=11507
+VANILLA_BUILD_VERSION=11508
 mkproject vanilla $VANILLA_BUILD_VERSION ffffff inv_misc_food_31 32 "Classic Era and Season of Discovery"
 
 VARIABLES_NOT_FOR_VANILLA=(holypower nativesao)
@@ -355,8 +355,38 @@ cdup
 
 # Release mop version
 release_mop() {
-MOP_BUILD_VERSION=50500
+MOP_BUILD_VERSION=50502
 mkproject mop $MOP_BUILD_VERSION 00ff96 achievement_character_pandaren_female 64 "Mists of Pandaria"
+
+prunecopyright Cataclysm Pandaria
+
+TEXTURES_NOT_FOR_MOP=(
+arcane_missiles_1
+arcane_missiles_2
+arcane_missiles_3
+echo_of_the_elements
+maelstrom_weapon_6
+maelstrom_weapon_7
+maelstrom_weapon_8
+maelstrom_weapon_9
+maelstrom_weapon_10
+raging_blow
+$(texbelow 898423 450914 450915)
+)
+prunetex "${TEXTURES_NOT_FOR_MOP[@]}"
+
+SOUNDS_NOT_FOR_MOP=(UI_PowerAura_Generic)
+prunesound "${SOUNDS_NOT_FOR_MOP[@]}"
+
+zipproject mop "$VERSION_TOC_VERSION"
+
+cdup
+}
+
+# Release mop PTR version
+release_mop_ptr() {
+MOP_BUILD_VERSION=50503
+mkproject mop-ptr $MOP_BUILD_VERSION 1c51c5 achievement_boss_leishen 64 "Mists of Pandaria PTR"
 
 prunecopyright Cataclysm Pandaria
 
@@ -528,5 +558,6 @@ release_vanilla
 release_wrath
 release_cata
 release_mop
+release_mop_ptr
 release_universal
 release_necrosis

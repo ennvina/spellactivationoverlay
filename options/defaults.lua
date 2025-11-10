@@ -709,6 +709,9 @@ SAO.defaults = {
                 [88448] = { -- Demonic Rebirth (Mists of Pandaria)
                     [0] = true,
                 },
+                [108508] = { -- Mannoroth's Fury (Mists of Pandaria)
+                    [0] = false,
+                },
                 [108683] = { -- Fire and Brimstone (Mists of Pandaria)
                     [0] = false,
                 },
@@ -752,6 +755,11 @@ SAO.defaults = {
                 },
                 [89937] = { -- Fel Spark (Cataclysm)
                     [77799]  = true, -- Fel Flame
+                },
+                [108508] = { -- Mannoroth's Fury (Mists of Pandaria)
+                    [1949] = false, -- Hellfire
+                    [27285] = false, -- Seed of Corruption
+                    [104232] = false, -- Rain of Fire
                 },
                 [108683] = { -- Fire and Brimstone (Mists of Pandaria)
                     [108685] = false, -- Conflagrate + Fire and Brimstone

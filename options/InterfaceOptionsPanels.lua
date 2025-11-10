@@ -104,6 +104,11 @@ function SpellActivationOverlayOptionsPanel_Init(self)
                 optimizedForText = SAO:optimizedFor(string.format(BNET_FRIEND_ZONE_WOW_CLASSIC, addonBuild));
             end
 
+            local subProjectName = SAO.GetSubProjectName(xSaoBuild);
+            if subProjectName then
+                optimizedForText = optimizedForText .. " (" .. subProjectName .. ")";
+            end
+
             buildInfoLabel:SetText(titleText.."\n"..optimizedForText);
         end
     end
