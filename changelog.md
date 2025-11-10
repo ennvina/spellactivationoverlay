@@ -1,9 +1,10 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.6.0-rc1 (2025-07-15)
+#### v2.6.0-rc1 (2025-07-22)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - Yume and Amanthuul for helping on the unorthodox Leap of Faith
+- Fractale, luitzifa and Valto for reporting an unsupported effect
 
 This release introduces a new type of Spell Alert: Shared Spell Alerts
 - Usually, Spell Alerts are exclusive to the player's class toolkit
