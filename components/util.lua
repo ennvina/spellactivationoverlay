@@ -15,6 +15,7 @@ local GetSpellCooldown = GetSpellCooldown
 local GetSpellInfo = GetSpellInfo
 local GetSpellTabInfo = GetSpellTabInfo
 local GetTalentInfo = GetTalentInfo
+local GetTalentTabInfo = GetTalentTabInfo
 local GetTime = GetTime
 local UnitAura = UnitAura
 local UnitClassBase = UnitClassBase
@@ -337,18 +338,33 @@ end
     Returns nil if no talent is found with this name e.g., in the wrong expansion
 ]]
 function SAO:GetTalentByName(talentName)
-    if self.IsMoP() then
+    if self.IsProject(SAO.MOP_AND_ONWARD) then
         for tier = 1, MAX_NUM_TALENT_TIERS do
             for column = 1, NUM_TALENT_COLUMNS do
                 local talentInfo = GetTalentInfo({ tier=tier, column=column });
                 if talentInfo and talentInfo.name == talentName then
                     local rank = talentInfo.selected and 1 or 0; -- Use talentInfo.known, if .selected is unreliable
-                    local maxRank = talentInfo.maxRank
-                    return rank, maxRank, tier, column
+                    local maxRank = talentInfo.maxRank;
+                    return rank, maxRank, tier, column;
+                end
+            end
+        end
+    elseif C_SpecializationInfo and C_SpecializationInfo.GetTalentInfo then
+        -- Revamped pre-MoP talent API (introduced in Classic Era patch 1.15.8)
+        assert(GetTalentInfo == C_SpecializationInfo.GetTalentInfo);
+        for tab = 1, GetNumTalentTabs() do
+            local nbTabs = GetNumTalents(tab)
+            for index = 1, nbTabs do
+                local talentInfo = GetTalentInfo({ specializationIndex = tab, talentIndex = index });
+                if talentInfo and talentInfo.name == talentName then
+                    local rank = talentInfo.selected and 1 or 0; -- Use talentInfo.known, if .selected is unreliable
+                    local maxRank = talentInfo.maxRank;
+                    return rank, maxRank, tab, index;
                 end
             end
         end
     else
+        -- Legacy code (Classic Era up to 1.15.7, and pre-Anniversary TBC/Wrath/Cataclysm)
         for tab = 1, GetNumTalentTabs() do
             for index = 1, GetNumTalents(tab) do
                 local name, iconTexture, tier, column, rank, maxRank, isExceptional, available = GetTalentInfo(tab, index);
@@ -368,11 +384,37 @@ end
     Return a number, or nil if the talent is not found
 ]]
 function SAO:GetNbTalentPoints(i, j)
-    if self.IsMoP() then
+    if self.IsProject(SAO.MOP_AND_ONWARD) then
         local talentInfo = GetTalentInfo({ tier=i, column=j });
         return talentInfo and talentInfo.selected and 1 or 0;
+    elseif C_SpecializationInfo and C_SpecializationInfo.GetTalentInfo then
+        -- Revamped pre-MoP talent API
+        assert(GetTalentInfo == C_SpecializationInfo.GetTalentInfo);
+        local talentInfo = GetTalentInfo({ specializationIndex = i, talentIndex = j });
+        return talentInfo and talentInfo.selected and 1 or 0;
     else
+        -- Legacy code
         return (select(5, GetTalentInfo(i, j)));
+    end
+end
+
+--[[
+    Get the number of points the player has spent on a specific talent tab
+    - for Era-Cataclysm, this counts points spent in e.g. Arcane tree, Fire tree, etc.
+    - for MoP+, this counting does not make sense anymore, as talents are no longer grouped in trees
+]]
+function SAO:GetTotalPointsInTree(specIndex)
+    if self.IsProject(SAO.MOP_AND_ONWARD) then
+        -- No more talent trees in MoP+
+        self:Error(Module, "Getting total points in tree for specIndex "..tostring(specIndex).." but no talent trees exist in MoP+");
+        return nil;
+    elseif GetSpecializationInfo then
+        -- Revamped pre-MoP talent API
+        return (select(7, GetSpecializationInfo(specIndex)));
+    else
+        -- Legacy code
+        local selector = SAO.IsCata() and 5 or 3;
+        return (select(selector, GetTalentTabInfo(specIndex)));
     end
 end
 
@@ -431,16 +473,30 @@ function SAO:GetNbSpecs()
     return GetNumSpecializationsForClassID(select(2, UnitClassBase("player")));
 end
 
+-- Get the name of a specialization by its index or tab
+function SAO:GetSpecName(specIndex)
+    if SAO.IsProject(SAO.MOP_AND_ONWARD) == false then
+        return (select(2, GetSpecializationInfo(specIndex)));
+    elseif GetSpecializationInfo then
+        -- Revamped pre-MoP talent API
+        return (select(2, GetSpecializationInfo(specIndex)));
+    else
+        -- Legacy code
+        local selector = SAO.IsCata() and 2 or 1;
+        return (select(selector, GetTalentTabInfo(specIndex)));
+    end
+end
+
 -- Get a function that retrieves the name of the specialization
 -- It returns a function that must be invoked explicitly, e.g. SAO:GetSpecNameFunction(1)()
 -- The reason for that is that specializations are not queriable at start
 -- Returns nil for flavors that do not support Specializations
 function SAO:GetSpecNameFunction(specIndex)
-    if not C_SpecializationInfo then
+    if not GetSpecializationInfo then
         return nil;
     end
     return function()
-        return select(2, C_SpecializationInfo.GetSpecializationInfo(specIndex));
+        return (select(2, GetSpecializationInfo(specIndex)));
     end;
 end
 

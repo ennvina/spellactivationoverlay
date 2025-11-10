@@ -66,13 +66,14 @@ addQuestion(SAO.QUESTIONS.DISABLE_GAME_ALERT, {
                 button1 = YES,
                 button2 = NO,
                 OnShow = function(self)
+                    local textSetter = self.text or self;
                     if self.data.answered == "yes" then
                         -- Player already answered "yes" but the option came back
                         -- This can happen if the player disabled the game's spell alert, then re-enabled it
-                        self.text:SetText(SAO:spellAlertConflictsAgain());
+                        textSetter:SetText(SAO:spellAlertConflictsAgain());
                     else
                         -- Player has not answered yet
-                        self.text:SetText(SAO:spellAlertConflicts());
+                        textSetter:SetText(SAO:spellAlertConflicts());
                     end
                 end,
                 OnAccept = function(self)

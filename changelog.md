@@ -1,5 +1,17 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.6.0 (2025-11-10)
+
+Thank you to our amazing contributors for helping out. Thanks!
+- Jokke and Cowmance for reporting Classic Era issues at start
+
+Bump in TOC file for routine updates (Classic Era, Mists of Pandaria)
+Bump in TOC file for Throne of Thunder (Mists of Pandaria PTR)
+
+Bug Fixes
+- Checking talents triggered an error (Classic Era)
+- The question asked at start triggered an error (Mists of Pandaria PTR)
+
 #### v2.6.0-rc2 (2025-08-06)
 
 New Spell Alert
