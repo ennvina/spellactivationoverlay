@@ -207,6 +207,22 @@ local function usePredatoryStrikes()
     );
 end
 
+local function useMangle()
+    SAO:CreateEffect(
+        "mangle",
+        SAO.MOP,
+        93622, -- Mangle! (buff)
+        "aura",
+        {
+            overlay = { texture = "berserk", position = "Top", scale = 0.9, level = 4, option = { subText = SAO:GetSpecNameFunction(3) } }, -- 3 == Guardian
+            buttons = {
+                spell = 33878, -- Mangle (Bear)
+                default = { option = { talentSubText = SAO:GetSpecNameFunction(3) } }, -- 3 == Guardian
+            },
+        }
+    );
+end
+
 local function useToothAndClaw()
     SAO:CreateEffect(
         "tooth_and_claw",
@@ -538,6 +554,7 @@ local function registerClass(self)
     useToothAndClaw();
     useDreamOfCenarius();
     usePredatoryStrikes(); -- a.k.a. Predatory Swiftness
+    useMangle();
     useOmenOfClarity(); -- MoP+
     useSwiftbloom();  -- SoD Scarlet Enclave Resto 2pc
 
