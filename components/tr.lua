@@ -30,6 +30,22 @@ function SAO:OnlyFor(item)
     return string.format(RACE_CLASS_ONLY, item);
 end
 
+-- From {class}
+function SAO:FromClass(classFile)
+    local classColor = select(4, GetClassColor(classFile));
+
+    local className = classFile; -- Default name in case lookup fails
+    for i = 1, GetNumClasses() do
+        local _className, _classFile = GetClassInfo(i);
+        if classFile == _classFile then
+            className = _className;
+            break;
+        end
+    end
+
+    return string.format("%s %s", FROM, WrapTextInColorCode(className, classColor));
+end
+
 --[[
     Explicit translations
 ]]
