@@ -52,7 +52,7 @@ SAO.defaults = {
                 [96171] = { -- Will of the Necropolis (Cataclysm+)
                     [48982] = true, -- Rune Tap
                 },
-                [101568] = { -- Glyph of Dark Succor (MoP)
+                [101568] = { -- Glyph of Dark Succor (Mists of Pandaria)
                     [49998] = true, -- Death Strike
                 },
             }
@@ -841,7 +841,7 @@ SAO.defaults = {
                 [86627] = { -- Incite (Cataclysm)
                     [78]  = true, -- Heroic Strike
                 },
-                [122016] = { -- Glyph of Incite (MoP)
+                [122016] = { -- Glyph of Incite (Mists of Pandaria)
                     [78]  = true, -- Heroic Strike
                     [845] = true, -- Cleave
                 },

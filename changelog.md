@@ -3,10 +3,10 @@
 #### v2.6.0 (2025-11-10)
 
 Thank you to our amazing contributors for helping out. Thanks!
-- Jokke and Cowmance for reporting Classic Era issues at start
+- Jokke, COI3RA79 and Cowmance for reporting Classic Era issues at start
 
 Bump in TOC file for routine updates (Classic Era, Mists of Pandaria)
-Bump in TOC file for Throne of Thunder (Mists of Pandaria PTR)
+Bump in TOC file for Throne of Thunder patch (Mists of Pandaria PTR)
 
 New Spell Alert
 - Druid's Mangle! (Mists of Pandaria)
@@ -15,7 +15,7 @@ New Glowing Button
 - Druid's Mangle (Bear form), during Mangle! (Mists of Pandaria)
 
 Bug Fixes
-- Checking talents triggered an error (Classic Era)
+- Checking talents at start triggered an error (Classic Era)
 - The question asked at start triggered an error (Mists of Pandaria PTR)
 
 #### v2.6.0-rc2 (2025-08-06)
@@ -32,7 +32,7 @@ New Glowing Buttons
 
 Thank you to our amazing contributors for helping out. Thanks!
 - Yume and Amanthuul for helping on the unorthodox Leap of Faith
-- Fractale, luitzifa and Valto for reporting an unsupported effect
+- Fractale, luitzifa, bambitten and Valto for reporting unsupported effects
 
 This release introduces a new type of Spell Alert: Shared Spell Alerts
 - Usually, Spell Alerts are exclusive to the player's class toolkit
