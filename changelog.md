@@ -8,6 +8,12 @@ Thank you to our amazing contributors for helping out. Thanks!
 Bump in TOC file for routine updates (Classic Era, Mists of Pandaria)
 Bump in TOC file for Throne of Thunder (Mists of Pandaria PTR)
 
+New Spell Alert
+- Druid's Mangle! (Mists of Pandaria)
+
+New Glowing Button
+- Druid's Mangle (Bear form), during Mangle! (Mists of Pandaria)
+
 Bug Fixes
 - Checking talents triggered an error (Classic Era)
 - The question asked at start triggered an error (Mists of Pandaria PTR)

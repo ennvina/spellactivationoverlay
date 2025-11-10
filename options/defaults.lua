@@ -98,6 +98,9 @@ SAO.defaults = {
                 [81093] = { -- Fury of Stormrage (Cataclysm)
                     [0] = true,
                 },
+                [93622] = { -- Mangle! (Mists of Pandaria)
+                    [0] = true,
+                },
                 [414800]= { -- Fury of Stormrage (Season of Discovery)
                     [0] = true,
                 },
@@ -117,6 +120,9 @@ SAO.defaults = {
                 },
                 [5176] = { -- Wrath (Season of Discovery, Wrath+)
                     [5176] = true, -- Wrath
+                },
+                [93622] = { -- Mangle! (Mists of Pandaria)
+                    [33878] = true, -- Mangle (Bear form)
                 },
                 [93400] = { -- Shooting Stars (Cataclysm+)
                     [78674] = true, -- Starsurge
