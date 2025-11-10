@@ -1,8 +1,8 @@
 ## Interface: 50502
-## Title: |TInterface/Icons/Spell_Frost_Stun:16:16:0:0:512:512:64:448:64:448|t SpellActivationOverlay |cff66bbff2.6.0-rc1|r |TInterface/Icons/trade_engineering:16:16:0:0:512:512:32:480:32:480|t
+## Title: |TInterface/Icons/Spell_Frost_Stun:16:16:0:0:512:512:64:448:64:448|t SpellActivationOverlay |cff66bbff2.6.0|r |TInterface/Icons/trade_engineering:16:16:0:0:512:512:32:480:32:480|t
 ## Notes: Display overlays and glow buttons to improve your gameplay!
 ## Author: Vinny/Ennvina
-## Version: 2.6.0-rc1
+## Version: 2.6.0
 ## SavedVariables: SpellActivationOverlayDB
 ## X-SAO-Build: dev
 
