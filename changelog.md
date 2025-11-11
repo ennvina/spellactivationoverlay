@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.6.1 (2025-11-xx)
+
+This release is focused on optimizing code
+- Messages for developers are no longer called in non-developer builds
+
 #### v2.6.0 (2025-11-10)
 
 Thank you to our amazing contributors for helping out. Thanks!

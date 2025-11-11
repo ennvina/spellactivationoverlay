@@ -560,13 +560,13 @@ function SAO.RemoveGlow(self, spellID, glowIDs)
             local actionButtons = self.ActionButtons[glowSpellID];
             for _, frame in pairs(actionButtons or {}) do
                 DisableGlow(frame, glowSpellID, "direct deactivation");
-                if SAO:HasTrace(Module) then
-                    local oldGlowID, newGlowID = glowSpellID, (frame.__sao and frame.__sao.GetGlowID());
-                    local frameName = tostring(frame and frame.GetName and frame:GetName());
-                    if oldGlowID ~= newGlowID then
-                        SAO:Trace(Module, "RemoveGlow deactivates button "..frameName.." which had glowID "..tostring(oldGlowID).." but its glow ID is now "..tostring(newGlowID));
-                    end
-                end
+--[[SAO:Trace]] if SAO:HasTrace(Module) then
+--[[SAO:Trace]]     local oldGlowID, newGlowID = glowSpellID, (frame.__sao and frame.__sao.GetGlowID());
+--[[SAO:Trace]]     local frameName = tostring(frame and frame.GetName and frame:GetName());
+--[[SAO:Trace]]     if oldGlowID ~= newGlowID then
+--[[SAO:Trace]]         SAO:Trace(Module, "RemoveGlow deactivates button "..frameName.." which had glowID "..tostring(oldGlowID).." but its glow ID is now "..tostring(newGlowID));
+--[[SAO:Trace]]     end
+--[[SAO:Trace]] end
             end
         end
     end
