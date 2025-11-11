@@ -313,7 +313,7 @@ local function unitAura(self, unitTarget, updateInfo)
                     local bucket = self:GetBucketBySpellID(auraData.spellId);
                     if bucket then
                         bucket:refresh();
-                        self:Debug(Module, string.format("Refreshing the %dth stack of %d", auraData.applications, auraData.spellId));
+                        SAO:Debug(Module, string.format("Refreshing the %dth stack of %d", auraData.applications, auraData.spellId));
                     end
                 end
             end

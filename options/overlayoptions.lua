@@ -16,10 +16,10 @@ function SAO.AddOverlayOption(self, talentID, auraID, hash, talentSubText, varia
     local talentText = self:GetTalentText(talentID);
     if not talentText or (not self:IsFakeSpell(auraID) and not GetSpellInfo(auraID)) then
         if not talentText then
-            self:Debug(Module, "Skipping overlay option of talentID "..tostring(talentID).." because the spell does not exist");
+            SAO:Debug(Module, "Skipping overlay option of talentID "..tostring(talentID).." because the spell does not exist");
         end
         if not self:IsFakeSpell(auraID) and not GetSpellInfo(auraID) then
-            self:Debug(Module, "Skipping overlay option of auraID "..tostring(auraID).." because the spell does not exist (and is not a fake spell)");
+            SAO:Debug(Module, "Skipping overlay option of auraID "..tostring(auraID).." because the spell does not exist (and is not a fake spell)");
         end
         return;
     end
