@@ -173,3 +173,122 @@ function SAO.ADDON_LOADED(self, addOnName, containsBindings)
         warnedSaoVsNecrosis = true;
     end
 end
+
+-- List of events directly handled by SpellActivationOverlayFrame, as initially intended by Blizzard
+-- Each event handler must have the signature: function(self, event, ...) where self is SpellActivationOverlayFrame
+local DirectFrameEventHandlers = {}
+
+if SAO.IsProject(SAO.CATA_AND_ONWARD) then
+	--[[
+		Dead code because these events do not exist in Classic Era, BC Classic, nor Wrath Classic
+		Also, the "displaySpellActivationOverlays" console variable does not exist
+		-- Update with upcoming Cataclysm --
+		Must look into it for Cataclysm Classic, because these events should occur once again
+		But we have added a few parameters since then - must add missing parameters if needed
+		For now, we simply write debug information to try to confirm these events are emitted
+	]]
+
+	DirectFrameEventHandlers["SPELL_ACTIVATION_OVERLAY_SHOW"] = function(self, event, ...)
+		local spellID, texture, positions, scale, r, g, b = ...;
+		SAO:Debug(Module, "Received native SPELL_ACTIVATION_OVERLAY_SHOW with spell ID "..tostring(spellID)..", texture "..tostring(texture)..", positions '"..tostring(positions).."', scale "..tostring(scale)..", (r g b) = ("..tostring(r).." "..tostring(g).." "..tostring(b)..")");
+		SAO:ReportUnknownEffect(Module, spellID, texture, positions, scale, r, g, b);
+		-- if ( GetCVarBool("displaySpellActivationOverlays") ) then 
+		-- 	SpellActivationOverlay_ShowAllOverlays(self, spellID, texture, positions, scale, r, g, b, true)
+		-- end
+	end
+
+	DirectFrameEventHandlers["SPELL_ACTIVATION_OVERLAY_HIDE"] = function(self, event, ...)
+		local spellID = ...;
+		if spellID then
+			SAO:Debug(Module, "Received native SPELL_ACTIVATION_OVERLAY_HIDE with spell ID "..tostring(spellID));
+		end
+		-- if spellID then
+		-- 	SpellActivationOverlay_HideOverlays(self, spellID);
+		-- else
+		-- 	SpellActivationOverlay_HideAllOverlays(self);
+		-- end
+	end
+end
+
+DirectFrameEventHandlers["PLAYER_REGEN_DISABLED"] = function(self, event, ...)
+	if not self.disableDimOutOfCombat and event == "PLAYER_REGEN_DISABLED" and self.inPseudoCombat ~= true then
+		self.combatAnimOut:Stop();	--In case we're in the process of animating this out.
+		self.combatAnimIn:Play();
+		for _, overlay in ipairs(self.combatOnlyOverlays) do
+			overlay.combat.animOut:Stop();
+			SpellActivationOverlayFrame_PlayCombatAnimIn(overlay.combat.animIn);
+		end
+	end
+end
+
+DirectFrameEventHandlers["PLAYER_REGEN_ENABLED"] = function(self, event, ...)
+	if not self.disableDimOutOfCombat and event == "PLAYER_REGEN_ENABLED" and self.inPseudoCombat ~= false then
+		self.combatAnimIn:Stop();	--In case we're in the process of animating this out.
+		self.combatAnimOut:Play();
+		for _, overlay in ipairs(self.combatOnlyOverlays) do
+			overlay.combat.animIn:Stop();
+			SpellActivationOverlayFrame_PlayCombatAnimOut(overlay.combat.animOut);
+		end
+	end
+end
+
+SAO.CentralizedEventDispatcher = {}
+
+function SAO:InitializeEventDispatcher()
+    local isEventPair = function(event, handler)
+        -- An event name is a string with all capital letters and underscores only
+        return type(handler) == 'function' and type(event) == 'string' and event:match("^[A-Z_]+$") ~= nil;
+    end
+
+    -- func is a function with the signature: function(frame, self, event, ...)
+    -- where frame is SpellActivationOverlayFrame, and self is SAO
+    local addDispatcher = function(event, func)
+        if not self.CentralizedEventDispatcher[event] then
+            self.CentralizedEventDispatcher[event] = {};
+        end
+        tinsert(self.CentralizedEventDispatcher[event], func);
+    end
+
+    -- Events that were originally handled directly in SpellActivationOverlayFrame_OnEvent
+    for event, handler in pairs(DirectFrameEventHandlers) do
+        if isEventPair(event, handler) then
+            local func = function(frame, self, event, ...)
+                handler(frame, event, ...);
+            end
+            addDispatcher(event, func);
+        end
+    end
+
+    -- Global events
+    for event, handler in pairs(SAO) do
+        if isEventPair(event, handler) then
+            local func = function(frame, self, event, ...)
+                handler(self, ...);
+            end
+            addDispatcher(event, func);
+        end
+    end
+
+    -- Variable events
+    for event, handlers in pairs(SAO.VariableEventProxy) do
+        for _, var in ipairs(handlers) do
+            local handler = var.event[event];
+            if isEventPair(event, handler) then
+                local func = function(frame, self, event, ...)
+                    handler(...);
+                end
+                addDispatcher(event, func);
+            end
+        end
+    end
+
+    -- Class-specific events
+    for event, handler in pairs(SAO.CurrentClass or {}) do
+        if isEventPair(event, handler) then
+            local func = function(frame, self, event, ...)
+                handler(self, ...);
+            end
+            addDispatcher(event, func);
+        end
+    end
+end

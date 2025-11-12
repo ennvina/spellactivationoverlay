@@ -83,6 +83,8 @@ function SpellActivationOverlay_OnLoad(self)
 			end
 		end
 	end
+	-- Can initialize event dispatcher now because all event handlers must have been registered by now
+	SAO:InitializeEventDispatcher();
 end
 
 function SpellActivationOverlay_OnChangeGeometry(self)
@@ -161,87 +163,13 @@ function SpellActivationOverlay_OnChangeSoundToggle(self)
 	end
 end
 
--- List of events directly handled by SpellActivationOverlayFrame, in the OnEvent function a few lines below
-local DirectFrameEventHandlers = {}
-
-if SAO.IsProject(SAO.CATA_AND_ONWARD) then
-	--[[
-		Dead code because these events do not exist in Classic Era, BC Classic, nor Wrath Classic
-		Also, the "displaySpellActivationOverlays" console variable does not exist
-		-- Update with upcoming Cataclysm --
-		Must look into it for Cataclysm Classic, because these events should occur once again
-		But we have added a few parameters since then - must add missing parameters if needed
-		For now, we simply write debug information to try to confirm these events are emitted
-	]]
-
-	DirectFrameEventHandlers["SPELL_ACTIVATION_OVERLAY_SHOW"] = function(self, event, ...)
-		local spellID, texture, positions, scale, r, g, b = ...;
-		SAO:Debug(Module, "Received native SPELL_ACTIVATION_OVERLAY_SHOW with spell ID "..tostring(spellID)..", texture "..tostring(texture)..", positions '"..tostring(positions).."', scale "..tostring(scale)..", (r g b) = ("..tostring(r).." "..tostring(g).." "..tostring(b)..")");
-		SAO:ReportUnknownEffect(Module, spellID, texture, positions, scale, r, g, b);
-		-- if ( GetCVarBool("displaySpellActivationOverlays") ) then 
-		-- 	SpellActivationOverlay_ShowAllOverlays(self, spellID, texture, positions, scale, r, g, b, true)
-		-- end
-	end
-
-	DirectFrameEventHandlers["SPELL_ACTIVATION_OVERLAY_HIDE"] = function(self, event, ...)
-		local spellID = ...;
-		if spellID then
-			SAO:Debug(Module, "Received native SPELL_ACTIVATION_OVERLAY_HIDE with spell ID "..tostring(spellID));
-		end
-		-- if spellID then
-		-- 	SpellActivationOverlay_HideOverlays(self, spellID);
-		-- else
-		-- 	SpellActivationOverlay_HideAllOverlays(self);
-		-- end
-	end
-end
-
-DirectFrameEventHandlers["PLAYER_REGEN_DISABLED"] = function(self, event, ...)
-	if not self.disableDimOutOfCombat and event == "PLAYER_REGEN_DISABLED" and self.inPseudoCombat ~= true then
-		self.combatAnimOut:Stop();	--In case we're in the process of animating this out.
-		self.combatAnimIn:Play();
-		for _, overlay in ipairs(self.combatOnlyOverlays) do
-			overlay.combat.animOut:Stop();
-			SpellActivationOverlayFrame_PlayCombatAnimIn(overlay.combat.animIn);
-		end
-	end
-end
-
-DirectFrameEventHandlers["PLAYER_REGEN_ENABLED"] = function(self, event, ...)
-	if not self.disableDimOutOfCombat and event == "PLAYER_REGEN_ENABLED" and self.inPseudoCombat ~= false then
-		self.combatAnimIn:Stop();	--In case we're in the process of animating this out.
-		self.combatAnimOut:Play();
-		for _, overlay in ipairs(self.combatOnlyOverlays) do
-			overlay.combat.animIn:Stop();
-			SpellActivationOverlayFrame_PlayCombatAnimOut(overlay.combat.animOut);
-		end
-	end
-end
-
 function SpellActivationOverlay_OnEvent(self, event, ...)
 	SAO:TraceThrottled(event, Module, "SpellActivationOverlay_OnEvent "..tostring(event));
-	if not event then
-		return; -- Happens very rarely, but when it does, we'd better off exiting early
-	end
-
-	-- Events that were originally handled directly in SpellActivationOverlayFrame_OnEvent
-	if DirectFrameEventHandlers[event] then
-		DirectFrameEventHandlers[event](self, event, ...);
-	end
-
-	-- Global events
-	if SAO[event] then
-		SAO[event](SAO, ...);
-	end
-
-	-- Variable events
-	for _, var in ipairs(SAO.VariableEventProxy[event] or {}) do
-		var.event[event](...);
-	end
-
-	-- Class-specific events
-	if (SAO.CurrentClass and SAO.CurrentClass[event]) then
-		SAO.CurrentClass[event](SAO, ...);
+	local dispatcher = SAO.CentralizedEventDispatcher[event];
+	if dispatcher then
+		for _, func in ipairs(dispatcher) do
+			func(self, SAO, event, ...);
+		end
 	end
 end
 
