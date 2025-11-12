@@ -575,6 +575,59 @@ function SAO:HashNameFromStacks(stacks)
 end
 
 --[[
+    Event Management
+]]
+
+local eventHandlers = {};
+
+local function getHandlerName(handler)
+    return handler.GetName and tostring(handler:GetName()) or tostring(handler);
+end
+
+local function getFromDescription(from)
+    if type(from) == 'string' then
+        return " from "..from;
+    else
+        return "";
+    end
+end
+
+function SAO:RegisterEventHandler(handler, event, from)
+    if false or -- Uncomment one of the following events to see how performance is affected
+--    event == "COMBAT_LOG_EVENT_UNFILTERED" or
+--    event == "SPELL_UPDATE_USABLE" or
+    false then
+        self:Warn(Module, "Refusing to register handler for " ..tostring(event).. " for "..getHandlerName(handler)..getFromDescription(from));
+        return;
+    end
+    if not eventHandlers then
+        eventHandlers = {};
+    end
+    if not eventHandlers[event] then
+        eventHandlers[event] = {};
+    end
+    table.insert(eventHandlers[event], handler);
+    handler:RegisterEvent(event);
+    SAO:Debug(Module, "Handling event "..tostring(event).." for "..getHandlerName(handler)..getFromDescription(from));
+end
+
+function SAO:UnregisterEventHandler(handler, event, from)
+    local found = false;
+    for i, h in ipairs(eventHandlers[event] or {}) do
+        if h == handler then
+            table.remove(eventHandlers[event], i);
+            handler:UnregisterEvent(event);
+            SAO:Debug(Module, "Un-handling event "..tostring(event).." for "..getHandlerName(handler)..getFromDescription(from));
+            found = true;
+            break;
+        end
+    end
+    if not found then
+        SAO:Warn(Module, "Could not unregister event "..tostring(event).." for "..getHandlerName(handler)..getFromDescription(from));
+    end
+end
+
+--[[
     GlowInterface generalizes how to invoke custom glowing buttons
 
     Inheritance is done by the bind function, then init must be called e.g.

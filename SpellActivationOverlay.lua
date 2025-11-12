@@ -45,7 +45,7 @@ function SpellActivationOverlay_OnLoad(self)
 		for _, classDef in ipairs({ SAO.CurrentClass, SAO.SharedClass }) do
 			for key, _ in pairs(classDef or {}) do
 				if (key ~= "Intrinsics" and key ~= "Register" and key ~= "LoadOptions" and key ~= "IsDisabled") then
-					self:RegisterEvent(key);
+					SAO:RegisterEventHandler(self, key, "Main init: Class custom events");
 				end
 			end
 		end
@@ -63,24 +63,24 @@ function SpellActivationOverlay_OnLoad(self)
 	if ( SAO.IsCata() ) then
 		-- These events do not exist in Classic Era, Burning Crusade Classic, nor Wrath Classic
 		-- They have yet to be confirmed for Cataclysm, but they could (should?) exist
-		self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_SHOW");
-		self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_HIDE");
+		SAO:RegisterEventHandler(self, "SPELL_ACTIVATION_OVERLAY_SHOW", "Main init");
+		SAO:RegisterEventHandler(self, "SPELL_ACTIVATION_OVERLAY_HIDE", "Main init");
 	end
 --	self:RegisterUnitEvent("UNIT_AURA", "player");
-	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
-	self:RegisterEvent("PLAYER_ENTERING_WORLD");
-	self:RegisterEvent("PLAYER_REGEN_ENABLED");
-	self:RegisterEvent("PLAYER_REGEN_DISABLED");
-	self:RegisterEvent("SPELLS_CHANGED");
-	self:RegisterEvent("LEARNED_SPELL_IN_TAB");
-	self:RegisterEvent("LOADING_SCREEN_DISABLED");
-	self:RegisterEvent("PLAYER_LOGIN");
-	self:RegisterEvent("ADDON_LOADED");
+	SAO:RegisterEventHandler(self, "COMBAT_LOG_EVENT_UNFILTERED", "Main init");
+	SAO:RegisterEventHandler(self, "PLAYER_ENTERING_WORLD", "Main init");
+	SAO:RegisterEventHandler(self, "PLAYER_REGEN_ENABLED", "Main init");
+	SAO:RegisterEventHandler(self, "PLAYER_REGEN_DISABLED", "Main init");
+	SAO:RegisterEventHandler(self, "SPELLS_CHANGED", "Main init");
+	SAO:RegisterEventHandler(self, "LEARNED_SPELL_IN_TAB", "Main init");
+	SAO:RegisterEventHandler(self, "LOADING_SCREEN_DISABLED", "Main init");
+	SAO:RegisterEventHandler(self, "PLAYER_LOGIN", "Main init");
+	SAO:RegisterEventHandler(self, "ADDON_LOADED", "Main init");
 	for _, var in pairs(SAO.Variables) do
 		if type(var.event.isRequired) == 'function' and var.event.isRequired()
 		or type(var.event.isRequired) == 'boolean' and var.event.isRequired then
 			for _, eventName in ipairs(var.event.names) do
-				self:RegisterEvent(eventName);
+				SAO:RegisterEventHandler(self, eventName, "Main init: Variable "..var.core);
 			end
 		end
 	end
