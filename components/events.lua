@@ -110,26 +110,12 @@ function SAO.LOADING_SCREEN_DISABLED(self, ...)
     self:CheckManuallyAllBuckets();
 end
 
-function SAO.PLAYER_ENTERING_WORLD(self, ...)
-    C_Timer.NewTimer(1, function()
-        self:CheckAllCounterActions();
-    end);
-end
-
-function SAO.SPELL_UPDATE_USABLE(self, ...)
-    self:CheckAllCounterActions();
-end
-
 function SAO.PLAYER_REGEN_ENABLED(self, ...)
-    self:CheckAllCounterActions(true);
-
     local inCombat = false; -- Cannot rely on InCombatLockdown() at this point
     self:ForEachBucket(function(bucket) bucket:checkCombat(inCombat) end);
 end
 
 function SAO.PLAYER_REGEN_DISABLED(self, ...)
-    self:CheckAllCounterActions(true);
-
     local inCombat = true; -- Cannot rely on InCombatLockdown() at this point
     self:ForEachBucket(function(bucket) bucket:checkCombat(inCombat) end);
 end
