@@ -406,7 +406,10 @@ local function HookStanceBar_UpdateState()
         SAO:UpdateActionButton(button);
     end
 end
-hooksecurefunc("StanceBar_UpdateState", HookStanceBar_UpdateState);
+if select(2, UnitClass("player")) == "PRIEST" then
+    -- Only Priests require hooking to StanceBar_UpdateState, for Shadowform
+    hooksecurefunc("StanceBar_UpdateState", HookStanceBar_UpdateState);
+end
 
 -- Awake dormant buttons associated to a spellID
 function SAO.AwakeButtonsBySpellID(self, spellID)

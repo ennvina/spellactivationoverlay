@@ -4,6 +4,7 @@
 
 This release is focused on optimizing code
 - Messages for developers are no longer called in non-developer builds
+- Improved performance for classes with several stances, such as Druid
 
 #### v2.6.0 (2025-11-10)
 
