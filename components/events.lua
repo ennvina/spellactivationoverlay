@@ -173,12 +173,3 @@ function SAO.ADDON_LOADED(self, addOnName, containsBindings)
         warnedSaoVsNecrosis = true;
     end
 end
-
--- Event receiver
-function SAO.OnEvent(self, event, ...)
-    if self[event] then
-        self[event](self, ...);
-    end
-    SAO.VariableEventProxy:OnEvent(event, ...);
-    self:InvokeClassEvent(event, ...)
-end

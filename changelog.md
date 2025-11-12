@@ -6,6 +6,7 @@ This release is focused on optimizing code
 - Messages for developers are no longer called in non-developer builds
 - Improved performance for classes with several stances, such as Druid
 - The deprecated Counter system, used in pre-2.0, has been terminated
+- Less CPU is used to dispatch game events to intended recipients
 
 #### v2.6.0 (2025-11-10)
 
