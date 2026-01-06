@@ -380,7 +380,9 @@ local function HookActionButton_Update(button)
     end
     SAO:UpdateActionButton(button);
 end
-hooksecurefunc("ActionButton_Update", HookActionButton_Update);
+if not SAO.IsTBC() then -- UI has changed in TBC Classic Anniversary, avoid hooking ActionButton_Update for now
+    hooksecurefunc("ActionButton_Update", HookActionButton_Update);
+end
 
 -- Grab buttons in the stance bar
 local function HookStanceBar_UpdateState()
@@ -408,7 +410,9 @@ local function HookStanceBar_UpdateState()
 end
 if select(2, UnitClass("player")) == "PRIEST" then
     -- Only Priests require hooking to StanceBar_UpdateState, for Shadowform
-    hooksecurefunc("StanceBar_UpdateState", HookStanceBar_UpdateState);
+    if not SAO.IsTBC() then -- UI has changed in TBC Classic Anniversary, but Shadow Priests do not even have 'stances' anyway
+        hooksecurefunc("StanceBar_UpdateState", HookStanceBar_UpdateState);
+    end
 end
 
 -- Awake dormant buttons associated to a spellID
