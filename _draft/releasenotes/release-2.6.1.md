@@ -21,6 +21,8 @@ New Glowing Button
 Mongoose Bite should now always trigger as intended (Classic Era).
 ### :rogue:  Rogue
 Riposte should now trigger as intended (Classic Era).
+## Known Limitations
+Glowing buttons currently do not work (The Burning Crusade). This does not affect other expansions.
 ## Miscellaneous
 The addon underwent major performance improvements. Loading times should be identical but CPU usage is much lower. Overall, the addon uses 2x less CPU in 25-man raids. See images below which compare a full-length Un'sok heroic encounter in a 25-man raid from a warlock point of view (lower is better). Improvements may vary based on the situation such as player class, raid size, and encounter, but performance should always be better when comparing the same situation before and after this update.
 
