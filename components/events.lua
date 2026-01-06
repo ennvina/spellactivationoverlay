@@ -133,6 +133,12 @@ function SAO.LEARNED_SPELL_IN_TAB(self, ...)
     self:LearnNewSpell(spellID);
 end
 
+-- LEARNED_SPELL_IN_SKILL_LINE from patch 11.0.0, arrived in TBC Classic Anniversary
+function SAO.LEARNED_SPELL_IN_SKILL_LINE(self, ...)
+    local spellID, skillInfoIndex, isGuildPerkSpell = ...;
+    self:LearnNewSpell(spellID);
+end
+
 local warnedSaoVsNecrosis = false;
 function SAO.ADDON_LOADED(self, addOnName, containsBindings)
     if warnedSaoVsNecrosis then
