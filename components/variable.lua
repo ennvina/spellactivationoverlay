@@ -311,10 +311,4 @@ SAO.VariableImporter = {
     end,
 }
 
-SAO.VariableEventProxy = {
-    OnEvent = function(self, event, ...)
-        for _, var in ipairs(self[event] or {}) do
-            var.event[event](...);
-        end
-    end,
-}
+SAO.VariableEventProxy = {}

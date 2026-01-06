@@ -4,13 +4,6 @@ local AddonName, SAO = ...
 -- Each class defines its own stuff in their <classname>.lua
 SAO.Class = {}
 
--- Event receiver
-function SAO.InvokeClassEvent(self, event, ...)
-    if (self.CurrentClass and self.CurrentClass[event]) then
-        self.CurrentClass[event](self, ...);
-    end
-end
-
 -- Special class "shared" for effects that can be acquired by classes other than the player
 SAO.Class["__SHARED"] = {
     ["Register"] = function(self)

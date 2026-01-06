@@ -246,8 +246,8 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
 
 if SAO.IsProject(SAO.CATA_AND_ONWARD) then
     local GlowEngineFrame = CreateFrame("Frame", "SpellActivationOverlayGlowEngineFrame");
-    GlowEngineFrame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW");
-    GlowEngineFrame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE");
+    SAO:RegisterEventHandler(GlowEngineFrame, "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW", "Static initializer: "..Module);
+    SAO:RegisterEventHandler(GlowEngineFrame, "SPELL_ACTIVATION_OVERLAY_GLOW_HIDE", "Static initializer: "..Module);
     GlowEngineFrame:SetScript("OnEvent", function (self, event, spellID)
         if event == "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW" then
             GlowEngine:BeginNativeGlow(spellID);
@@ -406,7 +406,10 @@ local function HookStanceBar_UpdateState()
         SAO:UpdateActionButton(button);
     end
 end
-hooksecurefunc("StanceBar_UpdateState", HookStanceBar_UpdateState);
+if select(2, UnitClass("player")) == "PRIEST" then
+    -- Only Priests require hooking to StanceBar_UpdateState, for Shadowform
+    hooksecurefunc("StanceBar_UpdateState", HookStanceBar_UpdateState);
+end
 
 -- Awake dormant buttons associated to a spellID
 function SAO.AwakeButtonsBySpellID(self, spellID)

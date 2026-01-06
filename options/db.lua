@@ -255,7 +255,7 @@ local loadingState = {
     variablesApplied = false,
     optionsPanelInitialized = false,
 };
-loader:RegisterEvent("VARIABLES_LOADED");
+SAO:RegisterEventHandler(loader, "VARIABLES_LOADED", "Static initializer: "..Module);
 loader:SetScript("OnEvent", function (self, event)
     SAO:LoadDB();
     loadingState.loaded = true;

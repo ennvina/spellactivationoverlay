@@ -59,7 +59,7 @@ function SAO:HasTrace(prefix)
     return SpellActivationOverlayDB and SpellActivationOverlayDB.trace and SpellActivationOverlayDB.trace[prefix];
 end
 
-function SAO.Trace(self, prefix, msg, ...)
+function SAO.Trace(self, prefix, msg, ...) -- Defined as SAO.Trace instead of --SAO:Trace to dodge line removal during packaging
     if SpellActivationOverlayDB and SpellActivationOverlayDB.trace and SpellActivationOverlayDB.trace[prefix] then
         print(WrapTextInColorCode("{"..ShortAddonName.."@"..GetTime().."} -"..prefix.."- "..msg, "FFAAFFCC"), ...);
     end
@@ -77,7 +77,7 @@ function SAO.LogPersistent(self, prefix, msg)
 end
 
 local timeOfLastTrace = {}
-function SAO.TraceThrottled(self, key, prefix, ...)
+function SAO.TraceThrottled(self, key, prefix, ...) -- Defined as SAO.TraceThrottled instead of --SAO:TraceThrottled to dodge line removal during packaging
     key = tostring(key)..tostring(prefix);
     if not timeOfLastTrace[key] or GetTime() > timeOfLastTrace[key]+1 then
         self:Trace(prefix, ...);
@@ -572,6 +572,59 @@ function SAO:HashNameFromStacks(stacks)
     local hash = self.Hash:new();
     hash:setAuraStacks(stacks);
     return hash:toString();
+end
+
+--[[
+    Event Management
+]]
+
+local eventHandlers = {};
+
+local function getHandlerName(handler)
+    return handler.GetName and tostring(handler:GetName()) or tostring(handler);
+end
+
+local function getFromDescription(from)
+    if type(from) == 'string' then
+        return " from "..from;
+    else
+        return "";
+    end
+end
+
+function SAO:RegisterEventHandler(handler, event, from)
+    if false or -- Uncomment one of the following events to see how performance is affected
+--    event == "COMBAT_LOG_EVENT_UNFILTERED" or
+--    event == "SPELL_UPDATE_USABLE" or
+    false then
+        self:Warn(Module, "Refusing to register handler for " ..tostring(event).. " for "..getHandlerName(handler)..getFromDescription(from));
+        return;
+    end
+    if not eventHandlers then
+        eventHandlers = {};
+    end
+    if not eventHandlers[event] then
+        eventHandlers[event] = {};
+    end
+    table.insert(eventHandlers[event], handler);
+    handler:RegisterEvent(event);
+    SAO:Debug(Module, "Handling event "..tostring(event).." for "..getHandlerName(handler)..getFromDescription(from));
+end
+
+function SAO:UnregisterEventHandler(handler, event, from)
+    local found = false;
+    for i, h in ipairs(eventHandlers[event] or {}) do
+        if h == handler then
+            table.remove(eventHandlers[event], i);
+            handler:UnregisterEvent(event);
+            SAO:Debug(Module, "Un-handling event "..tostring(event).." for "..getHandlerName(handler)..getFromDescription(from));
+            found = true;
+            break;
+        end
+    end
+    if not found then
+        SAO:Warn(Module, "Could not unregister event "..tostring(event).." for "..getHandlerName(handler)..getFromDescription(from));
+    end
 end
 
 --[[

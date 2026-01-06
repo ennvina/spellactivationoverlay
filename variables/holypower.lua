@@ -61,11 +61,11 @@ if SAO.IsProject(requiredProject) and isPlayerClassValid then
         canUseHolyPower = true;
     else
         local levelTracker = CreateFrame("Frame", "SpellActivationOverlayHolyPowerLevelTracker");
-        levelTracker:RegisterEvent("PLAYER_LEVEL_UP");
+        SAO:RegisterEventHandler(levelTracker, "PLAYER_LEVEL_UP", "Static initializer: "..Module);
         levelTracker:SetScript("OnEvent", function (self, event, level)
             if level >= minimumLevel then
                 canUseHolyPower = true;
-                levelTracker:UnregisterEvent("PLAYER_LEVEL_UP");
+                SAO:UnregisterEventHandler(levelTracker, "PLAYER_LEVEL_UP", "OnEvent: "..Module);
                 levelTracker = nil;
                 SAO:CheckManuallyAllBuckets(SAO.TRIGGER_HOLY_POWER);
             end

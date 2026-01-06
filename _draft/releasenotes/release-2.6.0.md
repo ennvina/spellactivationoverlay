@@ -1,9 +1,9 @@
 # SpellActivationOverlay 2.6
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.6
 
-This release bumps TOC files, fixes a couple issues, and introduced a new type of Spell Alert.
+This release bumps TOC files, fixes a couple of issues, and introduced a new type of Spell Alert.
 ## General
-## Spell Alerts
+### Spell Alerts
 This release introduces a new type of Spell Alert: Shared Spell Alerts
 - Usually, Spell Alerts are exclusive to the player's class toolkit
 - For example, Hot Streak is a Mage alert, and only Mages can have it

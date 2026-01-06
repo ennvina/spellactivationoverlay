@@ -24,10 +24,10 @@ libs\LibButtonGlow-1.0\LibButtonGlow-1.0.lua
 #@end-no-lib-strip@
 
 components\project.lua
+components\util.lua
 
 components\aura.lua
 components\bucket.lua
-components\counter.lua
 components\display.lua
 components\effect.lua
 components\events.lua
@@ -41,7 +41,6 @@ components\sound.lua
 components\spell.lua
 components\tr.lua
 components\trigger.lua
-components\util.lua
 components\variable.lua
 
 variables\actionusable.lua
