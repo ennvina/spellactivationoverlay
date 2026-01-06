@@ -93,7 +93,8 @@ local function useSerendipity()
             end
         end
 
-        -- Healing Trance / Soul Preserver
+        -- Items
+        SAO:RegisterAuraEyeOfGruul("eye_of_gruul_priest", 37706); -- 37706 = Priest buff
         SAO:RegisterAuraSoulPreserver("soul_preserver_priest", 60514); -- 60514 = Priest buff
 
     elseif SAO.IsSoD() then

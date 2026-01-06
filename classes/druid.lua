@@ -582,7 +582,8 @@ local function registerClass(self)
         useElunesWrathOfElune("wrath_of_elune", 46833); -- PvP season 5-6-7-8
         useElunesWrathOfElune("elunes_wrath", 64823); -- PvE tier 8
 
-        -- Healing Trance / Soul Preserver
+        -- Items
+        self:RegisterAuraEyeOfGruul("eye_of_gruul_druid", 37721); -- 37721 = Druid buff
         self:RegisterAuraSoulPreserver("soul_preserver_druid", 60512); -- 60512 = Druid buff
 
         -- Mark textures that aren't marked automatically
