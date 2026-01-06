@@ -19,6 +19,13 @@ function SAO.RegisterAuraSoulPreserver(self, label, spellID)
     end
 end
 
+function SAO.AddEyeOfGruulOverlayOption(self, spellID)
+    if self.IsTBC() then
+        -- Spell is specific to each class, item is the same for everyone
+        self:AddItemOverlayOption(spellID, 28823);
+    end
+end
+
 function SAO.AddSoulPreserverOverlayOption(self, spellID)
     if self.IsWrath() then
         -- Spell is specific to each class, item is the same for everyone
