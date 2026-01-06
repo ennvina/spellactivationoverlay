@@ -706,6 +706,9 @@ SAO.defaults = {
                 [47283] = { -- Empowered Imp (Wrath+)
                     [0] = true,
                 },
+                [86211] = { -- Soul Swap (Mists of Pandaria)
+                    [0] = true,
+                },
                 [89937] = { -- Fel Spark (Cataclysm)
                     [0] = true, -- any stacks
                 },
@@ -758,6 +761,9 @@ SAO.defaults = {
                 },
                 [47283] = { -- Empowered Imp (Cataclysm)
                     [6353]  = true, -- Soul Fire
+                },
+                [86211] = { -- Soul Swap (Mists of Pandaria)
+                    [86121]  = true, -- Soul Swap
                 },
                 [89937] = { -- Fel Spark (Cataclysm)
                     [77799]  = true, -- Fel Flame

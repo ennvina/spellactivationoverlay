@@ -28,6 +28,7 @@ local shadowburn = 17877;
 local shadowCleave = 403841;
 local seedOfCorruption = 27285;
 local soulFire = 6353;
+local soulSwap = 86121;
 
 -- Pre-MoP buffs
 local moltenCoreBuff = { 47383, 71162, 71165 };
@@ -195,6 +196,19 @@ local function useSoulburn(self)
         {
             overlay = { texture = "shadow_word_insanity", position = "Left + Right (Flipped)", level = 2, pulse = false, scale = 1.1, color = { 222, 222, 222 } },
             -- buttons = { ... }, -- Buttons already glowing natively
+        }
+    );
+end
+
+local function useSoulSwap(self)
+    self:CreateEffect(
+        "soul_swap",
+        SAO.MOP,
+        86211, -- Soul Swap (buff)
+        "aura",
+        {
+            overlay = { texture = "sudden_doom", position = "Left + Right (Flipped)", scale = 1.25 },
+            button = soulSwap,
         }
     );
 end
@@ -563,6 +577,7 @@ local function registerClass(self)
     -- Affliction
     useNightfall(self); -- a.k.a. Shadow Trance
     useSoulburn(self);
+    useSoulSwap(self);
 
     -- Demonology
     useMoltenCore(self);
