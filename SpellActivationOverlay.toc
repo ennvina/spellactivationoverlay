@@ -13,7 +13,6 @@
 ## Notes-zhTW: 顯示覆蓋和發光按鈕以改善您的遊戲體驗！
 ## Author: Vinny/Ennvina
 ## Version: 2.6.1
-## LoadOnDemand: 0
 ## SavedVariables: SpellActivationOverlayDB
 ## X-SAO-Build: dev
 ## X-Curse-Project-ID: 649417
