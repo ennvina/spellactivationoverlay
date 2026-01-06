@@ -2,6 +2,8 @@
 
 #### v2.6.1 (2026-01-xx)
 
+Bump in TOC file for Throne of Thunder patch (Mists of Pandaria)
+
 This release is focused on optimizing code
 - Messages for developers are no longer called in non-developer builds
 - Improved performance for classes with several stances, such as Druid
