@@ -2,6 +2,10 @@
 
 #### v2.6.1 (2026-01-xx)
 
+Thank you to our amazing contributors for helping out. Thanks!
+- COl3RA79 and user_lomdxj6j146bfugc for reporting the Riposte issue
+- lecrabby for reporting the Mongoose Bite issue
+
 Bump in TOC file for Throne of Thunder patch (Mists of Pandaria)
 
 This release is focused on optimizing code

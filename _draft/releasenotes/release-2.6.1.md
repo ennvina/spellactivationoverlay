@@ -27,7 +27,7 @@ The addon underwent major performance improvements. Loading times should be iden
 The addon's description, seen in the game's addon selection page, has been translated in all languages. Feel free to report mistakes.
 ## Contributors
 Shout-out to our amazing contributors
-- COl3RA79 and user_lomdxj6j146bfugc for reporting the Ripose issue
+- COl3RA79 and user_lomdxj6j146bfugc for reporting the Riposte issue
 - lecrabby for reporting the Mongoose Bite issue
 Thanks!
 
