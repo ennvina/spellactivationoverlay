@@ -1,10 +1,22 @@
-## Interface: 50502
+## Interface: 50503
 ## Title: |TInterface/Icons/Spell_Frost_Stun:16:16:0:0:512:512:64:448:64:448|t SpellActivationOverlay |cff66bbff2.6.1|r |TInterface/Icons/trade_engineering:16:16:0:0:512:512:32:480:32:480|t
 ## Notes: Display overlays and glow buttons to improve your gameplay!
+## Notes-deDE: Zeigt Overlays und leuchtende Schaltflächen zur Verbesserung Ihres Gameplays an!
+## Notes-frFR: Affiche des overlays et illumine des boutons pour améliorer votre expérience de jeu !
+## Notes-esES: ¡Muestra overlays y resalta botones para mejorar su experiencia de juego!
+## Notes-esMX: ¡Muestra overlays y resalta botones para mejorar su experiencia de juego!
+## Notes-ruRU: Отображает наложения и подсвечивает кнопки для улучшения игрового процесса!
+## Notes-itIT: Visualizza overlays e pulsanti luminosi per migliorare la sua esperienza di gioco!
+## Notes-ptBR: Exibe overlays e destaca botões para melhorar sua experiência de jogo!
+## Notes-koKR: 오버레이 및 빛나는 버튼을 표시하여 게임 플레이를 향상시킵니다!
+## Notes-zhCN: 显示覆盖和发光按钮以改善您的游戏体验！
+## Notes-zhTW: 顯示覆蓋和發光按鈕以改善您的遊戲體驗！
 ## Author: Vinny/Ennvina
 ## Version: 2.6.1
+## LoadOnDemand: 0
 ## SavedVariables: SpellActivationOverlayDB
 ## X-SAO-Build: dev
+## X-Curse-Project-ID: 649417
 
 # SpellActivationOverlay.lua, SpellActivationOverlay.xml and all textures were created by Blizzard Entertainment, Inc.
 #
