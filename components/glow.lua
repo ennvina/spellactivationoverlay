@@ -430,13 +430,13 @@ function SAO.AddGlowNumber(self, spellID, glowID)
         for _, frame in pairs(actionButtons or {}) do
             if (not SpellActivationOverlayDB or not SpellActivationOverlayDB.glow or SpellActivationOverlayDB.glow.enabled) then
                 if not frame.__sao then
-                    self:Debug(Module, "Action Button "..tostring(frame:GetName()).." does not have __sao, glow may fail");
+                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." does not have __sao, glow may fail");
                 elseif not frame.__sao.GetGlowID() then
-                    self:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a nil __sao.GetGlowID, glow may fail");
+                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a nil __sao.GetGlowID, glow may fail");
                 elseif not frame.__sao.lastGlowID then
-                    self:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a nil __sao.lastGlowID, glow may fail");
+                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a nil __sao.lastGlowID, glow may fail");
                 elseif frame.__sao.GetGlowID() ~= frame.__sao.lastGlowID then
-                    self:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a different __sao.GetGlowID ("..tostring(frame.__sao.GetGlowID())..") vs. __sao.lastGlowID ("..tostring(frame.__sao.lastGlowID).."), glow may fail");
+                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a different __sao.GetGlowID ("..tostring(frame.__sao.GetGlowID())..") vs. __sao.lastGlowID ("..tostring(frame.__sao.lastGlowID).."), glow may fail");
                 end
                 EnableGlow(frame, frame.__sao and (frame.__sao.GetGlowID() or frame.__sao.lastGlowID) or glowID, "direct activation");
             end
@@ -560,13 +560,13 @@ function SAO.RemoveGlow(self, spellID, glowIDs)
             local actionButtons = self.ActionButtons[glowSpellID];
             for _, frame in pairs(actionButtons or {}) do
                 DisableGlow(frame, glowSpellID, "direct deactivation");
-                if SAO:HasTrace(Module) then
-                    local oldGlowID, newGlowID = glowSpellID, (frame.__sao and frame.__sao.GetGlowID());
-                    local frameName = tostring(frame and frame.GetName and frame:GetName());
-                    if oldGlowID ~= newGlowID then
-                        SAO:Trace(Module, "RemoveGlow deactivates button "..frameName.." which had glowID "..tostring(oldGlowID).." but its glow ID is now "..tostring(newGlowID));
-                    end
-                end
+--[[SAO:Trace]] if SAO:HasTrace(Module) then
+--[[SAO:Trace]]     local oldGlowID, newGlowID = glowSpellID, (frame.__sao and frame.__sao.GetGlowID());
+--[[SAO:Trace]]     local frameName = tostring(frame and frame.GetName and frame:GetName());
+--[[SAO:Trace]]     if oldGlowID ~= newGlowID then
+--[[SAO:Trace]]         SAO:Trace(Module, "RemoveGlow deactivates button "..frameName.." which had glowID "..tostring(oldGlowID).." but its glow ID is now "..tostring(newGlowID));
+--[[SAO:Trace]]     end
+--[[SAO:Trace]] end
             end
         end
     end

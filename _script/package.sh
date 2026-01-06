@@ -18,11 +18,25 @@ cdup() {
 # Remove stuff dedicated to developers to optimize archive size and speed up the addon
 prunedev() {
     echo -n "Removing developer-specific code..."
+
+    # Remove dev variables
     FILES_TO_REMOVE=(variables/_template.lua)
     for filetoremove in "${FILES_TO_REMOVE[@]}"
     do
         rm -f SpellActivationOverlay/"$filetoremove" || bye "Cannot remove file $filetoremove"
     done
+
+    # Remove trace calls in code
+    PATHS_WITH_TRACE_CODE=(SpellActivationOverlay/SpellActivationOverlay.lua SpellActivationOverlay/components/)
+    find "${PATHS_WITH_TRACE_CODE[@]}" -type f -name '*.lua' -print0 |
+        while read -r -d '' filename
+        do
+            if grep -q 'SAO:Trace' "$filename"
+            then
+                sed -i '/SAO:Trace/d' "$filename" || bye "Cannot remove trace code from $filename"
+            fi
+        done
+
     echo
 }
 

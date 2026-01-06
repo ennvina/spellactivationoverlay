@@ -16,10 +16,10 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
     local talentText = talentID and self:GetTalentText(talentID);
     if (talentID and not talentText) or (not self:IsFakeSpell(glowID) and not GetSpellInfo(glowID)) then
         if talentID and not talentText then
-            self:Debug(Module, "Skipping glowing option of talentID "..tostring(talentID).." because the spell does not exist");
+            SAO:Debug(Module, "Skipping glowing option of talentID "..tostring(talentID).." because the spell does not exist");
         end
         if not self:IsFakeSpell(glowID) and not GetSpellInfo(glowID) then
-            self:Debug(Module, "Skipping glowing option of glowID "..tostring(glowID).." because the spell does not exist (and is not a fake spell)");
+            SAO:Debug(Module, "Skipping glowing option of glowID "..tostring(glowID).." because the spell does not exist (and is not a fake spell)");
         end
         return;
     end
@@ -51,7 +51,7 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
             end
             text = text.." +";
         elseif (talentID and talentID == glowID and talentSubText) then
-            self:Debug(Module, "Glowing option of glowID "..tostring(glowID).." has talent sub-text '"..talentSubText.."' but the text will be discarded because talentID matches glowID");
+            SAO:Debug(Module, "Glowing option of glowID "..tostring(glowID).." has talent sub-text '"..talentSubText.."' but the text will be discarded because talentID matches glowID");
         end
 
         -- Spell text

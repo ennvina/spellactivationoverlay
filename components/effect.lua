@@ -794,7 +794,7 @@ end
 
 function SAO:RegisterPendingEffectsAfterPlayerLoggedIn()
     if hasPlayerLoggedIn then
-        self:Debug(Module, "Received PLAYER_LOGIN twice in the same session");
+        SAO:Debug(Module, "Received PLAYER_LOGIN twice in the same session");
     end
     hasPlayerLoggedIn = true;
 
