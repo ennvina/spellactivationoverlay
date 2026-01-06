@@ -16,6 +16,9 @@ New Spell Alert
 New Glowing Button
 - Warlock's Soul Swap: Exhale, during Soul Swap (Mists of Pandaria)
 
+Bug Fixes
+- Hunter's Mongoose Bite should now always trigger as intended (Classic Era)
+
 #### v2.6.0 (2025-11-10)
 
 Thank you to our amazing contributors for helping out. Thanks!
