@@ -42,7 +42,6 @@ local function useMongooseBite()
         mongooseBite,
         "counter",
         {
-            useName = false,
             combatOnly = true,
             overlay = { texture = "bandits_guile", position = "Top (CW)", scale = 1.1 },
         }

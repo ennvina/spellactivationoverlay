@@ -320,7 +320,8 @@ local function registerClass(self)
     useMoltenBlast(self);
     usePowerSurge(self);
 
-    -- Healing Trance / Soul Preserver (Wrath only)
+    -- Items
+    self:RegisterAuraEyeOfGruul("eye_of_gruul_shaman", 37722); -- 37722 = Shaman buff
     self:RegisterAuraSoulPreserver("soul_preserver_shaman", 60515); -- 60515 = Shaman buff
 end
 

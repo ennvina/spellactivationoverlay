@@ -291,6 +291,49 @@
           </Button>
         </Frames>
       </Frame>
+      <Frame name="$parentGlowOffBlockingFrame" parentKey="glowOff" setAllPoints="false" frameLevel="50" enableMouse="true" hidden="true">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentGlowingButtons" relativePoint="TOPLEFT">
+            <Offset>
+              <AbsDimension x="-16" y="0"/>
+            </Offset>
+          </Anchor>
+          <Anchor point="BOTTOMRIGHT" relativeTo="$parentSpellAlertAskDisableGameAlertButton" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="96" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="ARTWORK" textureSubLevel="1">
+            <Texture setAllPoints="true" file="Interface/ContainerFrame/UI-Icon-QuestBang">
+              <Color r="1" g="1" b="1" a="0.5"/>
+            </Texture>
+          </Layer>
+          <Layer level="ARTWORK" textureSubLevel="2">
+            <Texture setAllPoints="true">
+              <Color r="0" g="0" b="0" a="0.75"/>
+            </Texture>
+          </Layer>
+          <Layer level="ARTWORK" textureSubLevel="3">
+            <FontString name="$parentGlowOffLabelReason" parentKey="reason" setAllPoints="true" text="Glowing Buttons are not available in this build and shall be fixed at a later date. Thank you for your understanding." inherits="SystemFont_Shadow_Huge1" justifyH="CENTER" justifyV="CENTER">
+              <Color r="0.8" g="0.8" b="0.8" a="1"/>
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
+                  <Offset>
+                    <AbsDimension x="64" y="-64"/>
+                  </Offset>
+                </Anchor>
+                <Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT">
+                  <Offset>
+                    <AbsDimension x="-64" y="64"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
     </Frames>
     <Layers>
       <Layer level="ARTWORK">

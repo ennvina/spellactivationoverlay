@@ -6,6 +6,8 @@ local GetShapeshiftForm = GetShapeshiftForm
 local GetSpellInfo = GetSpellInfo
 local UnitGUID = UnitGUID
 
+local canHaveEclipse = SAO.IsProject(SAO.SOD + SAO.WRATH_AND_ONWARD);
+
 local omenSpellID = 16870;
 local omenSpellIDFeral = 135700;
 local lunarSpellID = SAO.IsSoD() and 408255 or 48518;
@@ -582,7 +584,8 @@ local function registerClass(self)
         useElunesWrathOfElune("wrath_of_elune", 46833); -- PvP season 5-6-7-8
         useElunesWrathOfElune("elunes_wrath", 64823); -- PvE tier 8
 
-        -- Healing Trance / Soul Preserver
+        -- Items
+        self:RegisterAuraEyeOfGruul("eye_of_gruul_druid", 37721); -- 37721 = Druid buff
         self:RegisterAuraSoulPreserver("soul_preserver_druid", 60512); -- 60512 = Druid buff
 
         -- Mark textures that aren't marked automatically
@@ -606,14 +609,18 @@ local function loadOptions(self)
         local lunarEclipseTalent = lunarSpellID; -- Not really a talent
         local solarEclipseTalent = solarSpellID; -- Not really a talent
 
-        self:AddOverlayOption(lunarEclipseTalent, lunarSpellID, 0, nil, nil, nil, lunarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
-        self:AddOverlayOption(solarEclipseTalent, solarSpellID, 0, nil, nil, nil, solarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
-        self:AddOverlayOption(omenOfClarityTalent, omenSpellID, 0, nil, nil, nil,  omenSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
+        if canHaveEclipse then
+            self:AddOverlayOption(lunarEclipseTalent, lunarSpellID, 0, nil, nil, nil, lunarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
+            self:AddOverlayOption(solarEclipseTalent, solarSpellID, 0, nil, nil, nil, solarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
+            self:AddOverlayOption(omenOfClarityTalent, omenSpellID, 0, nil, nil, nil,  omenSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
+        end
         self:AddEyeOfGruulOverlayOption(37721); -- 37721 = Druid buff
         self:AddSoulPreserverOverlayOption(60512); -- 60512 = Druid buff
 
-        self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
-        self:AddGlowingOption(solarEclipseTalent, wrath, wrath);
+        if canHaveEclipse then
+            self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
+            self:AddGlowingOption(solarEclipseTalent, wrath, wrath);
+        end
     end
 end
 

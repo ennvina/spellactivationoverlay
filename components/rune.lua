@@ -27,7 +27,7 @@ local function initRuneMapping()
             foundRune = true;
         end
     end
-    SAO:Trace(Module, "initRuneMapping foundRune == "..tostring(foundRune));
+    --SAO:Trace(Module, "initRuneMapping foundRune == "..tostring(foundRune));
     runeMapping.initialized = foundRune;
 end
 

@@ -53,6 +53,12 @@ function SpellActivationOverlayOptionsPanel_Init(self)
         end
     end
 
+    if not shutdownCategory and SAO.IsTBC() then
+        SpellActivationOverlayOptionsPanel.glowOff:Show();
+    else
+        SpellActivationOverlayOptionsPanel.glowOff:Hide();
+    end
+
     local buildInfoLabel = SpellActivationOverlayOptionsPanelBuildInfo;
     local xSaoBuild = GetAddOnMetadata(AddonName, "X-SAO-Build");
     if type(xSaoBuild) == 'string' and #xSaoBuild > 0 then -- X-SAO-Build is defined only for the original SAO addon, not for other builds such as Necrosis

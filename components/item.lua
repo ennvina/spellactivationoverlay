@@ -13,9 +13,19 @@ function SAO.AddItemOverlayOption(self, spellID, itemID)
     self:AddOverlayOption(spellID, spellID, 0, itemText);
 end
 
+local function registerHealingTranc(self, label, spellID)
+    self:RegisterAura(label, 0, spellID, "genericarc_05", "Left + Right (Flipped)", 1.5, 192, 192, 192, false);
+end
+
+function SAO.RegisterAuraEyeOfGruul(self, label, spellID)
+    if self.IsTBC() then
+        registerHealingTranc(self, label, spellID);
+    end
+end
+
 function SAO.RegisterAuraSoulPreserver(self, label, spellID)
     if self.IsWrath() then
-        self:RegisterAura(label, 0, spellID, "genericarc_05", "Left + Right (Flipped)", 1.5, 192, 192, 192, false);
+        registerHealingTranc(self, label, spellID);
     end
 end
 

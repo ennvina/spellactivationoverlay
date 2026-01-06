@@ -2,6 +2,10 @@
 
 #### v2.6.1 (2026-01-xx)
 
+Thank you to our amazing contributors for helping out. Thanks!
+- COl3RA79 and user_lomdxj6j146bfugc for reporting the Riposte issue
+- lecrabby for reporting the Mongoose Bite issue
+
 Bump in TOC file for Throne of Thunder patch (Mists of Pandaria)
 
 This release is focused on optimizing code
@@ -15,6 +19,10 @@ New Spell Alert
 
 New Glowing Button
 - Warlock's Soul Swap: Exhale, during Soul Swap (Mists of Pandaria)
+
+Bug Fixes
+- Hunter's Mongoose Bite should now always trigger as intended (Classic Era)
+- Rogue's Riposte should now trigger as intended (Classic Era)
 
 #### v2.6.0 (2025-11-10)
 

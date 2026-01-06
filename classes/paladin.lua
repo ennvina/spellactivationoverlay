@@ -341,6 +341,7 @@ local function registerClass(self)
     useHolySpender("eternal_flame", eternalFlame, SAO.MOP_AND_ONWARD);
 
     -- Items
+    self:RegisterAuraEyeOfGruul("eye_of_gruul_paladin", 37723); -- 37723 = Paladin buff
     self:RegisterAuraSoulPreserver("soul_preserver_paladin", 60513); -- 60513 = Paladin buff
 
     -- Holy
