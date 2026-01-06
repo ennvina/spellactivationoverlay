@@ -92,6 +92,9 @@ SAO.defaults = {
                 [69369] = { -- Predatory Strikes (Wrath, Cataclysm) / Predatory Swiftness (Mists of Pandaria)
                     [0] = true,
                 },
+                [37721] = { -- Healing Trance / Eye of Gruul (TBC)
+                    [0] = false,
+                },
                 [60512] = { -- Healing Trance / Soul Preserver (Wrath)
                     [0] = false,
                 },
@@ -371,6 +374,9 @@ SAO.defaults = {
                 [59578] = { -- The Art of War (2/2) (Wrath+)
                     [0] = true,
                 },
+                [37723] = { -- Healing Trance / Eye of Gruul (TBC)
+                    [0] = false,
+                },
                 [60513] = { -- Healing Trance / Soul Preserver (Wrath)
                     [0] = false,
                 },
@@ -481,6 +487,9 @@ SAO.defaults = {
                 [63735] = { -- Serendipity (Cataclysm+)
                     [1] = nil, -- set to nil to simplify DB migration, from Serendipity at 0 stacks
                     [2] = nil, -- set to nil to simplify DB migration, from Serendipity at 3 stacks
+                },
+                [37706] = { -- Healing Trance / Eye of Gruul (TBC)
+                    [0] = false,
                 },
                 [60514] = { -- Healing Trance / Soul Preserver (Wrath)
                     [0] = false,
@@ -619,6 +628,9 @@ SAO.defaults = {
                 },
                 [432041] = { -- Tidal Waves (Season of Discovery)
                     [0] = false, -- any stacks
+                },
+                [37722] = { -- Healing Trance / Eye of Gruul (TBC)
+                    [0] = false,
                 },
                 [60515] = { -- Healing Trance / Soul Preserver (Wrath)
                     [0] = false,

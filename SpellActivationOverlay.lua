@@ -71,7 +71,11 @@ function SpellActivationOverlay_OnLoad(self)
 	SAO:RegisterEventHandler(self, "PLAYER_REGEN_ENABLED", "Main init");
 	SAO:RegisterEventHandler(self, "PLAYER_REGEN_DISABLED", "Main init");
 	SAO:RegisterEventHandler(self, "SPELLS_CHANGED", "Main init");
-	SAO:RegisterEventHandler(self, "LEARNED_SPELL_IN_TAB", "Main init");
+	if SAO.IsTBC() then
+		SAO:RegisterEventHandler(self, "LEARNED_SPELL_IN_SKILL_LINE", "Main init");
+	else
+		SAO:RegisterEventHandler(self, "LEARNED_SPELL_IN_TAB", "Main init");
+	end
 	SAO:RegisterEventHandler(self, "LOADING_SCREEN_DISABLED", "Main init");
 	SAO:RegisterEventHandler(self, "PLAYER_LOGIN", "Main init");
 	SAO:RegisterEventHandler(self, "ADDON_LOADED", "Main init");

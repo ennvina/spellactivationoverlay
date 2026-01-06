@@ -292,6 +292,46 @@ zipproject wrath "$VERSION_TOC_VERSION"
 cdup
 }
 
+# Release TBC version
+release_tbc() {
+TBC_BUILD_VERSION=20505
+mkproject tbc $TBC_BUILD_VERSION 2da203 achievement_dungeon_outland_dungeonmaster 64 "The Burning Crusade"
+
+VARIABLES_NOT_FOR_TBC=(holypower nativesao)
+prunevar "${VARIABLES_NOT_FOR_TBC[@]}"
+
+CLASSES_NOT_FOR_TBC=(deathknight monk)
+pruneclass "${CLASSES_NOT_FOR_TBC[@]}"
+
+#@TODO: verify textures
+TEXTURES_NOT_FOR_TBC=(
+arcane_missiles_1
+arcane_missiles_2
+arcane_missiles_3
+fulmination
+fury_of_stormrage_yellow
+maelstrom_weapon_6
+maelstrom_weapon_7
+maelstrom_weapon_8
+maelstrom_weapon_9
+maelstrom_weapon_10
+monk_serpent
+raging_blow
+shadow_word_insanity
+sudden_doom
+thrill_of_the_hunt_1
+thrill_of_the_hunt_2
+thrill_of_the_hunt_3
+tooth_and_claw
+white_tiger
+rkm128)
+prunetex "${TEXTURES_NOT_FOR_TBC[@]}"
+
+zipproject tbc-beta "$VERSION_TOC_VERSION"
+
+cdup
+}
+
 # Release vanilla version
 release_vanilla() {
 VANILLA_BUILD_VERSION=11508
@@ -369,7 +409,7 @@ cdup
 
 # Release mop version
 release_mop() {
-MOP_BUILD_VERSION=50502
+MOP_BUILD_VERSION=50503
 mkproject mop $MOP_BUILD_VERSION 00ff96 achievement_character_pandaren_female 64 "Mists of Pandaria"
 
 prunecopyright Cataclysm Pandaria
@@ -393,36 +433,6 @@ SOUNDS_NOT_FOR_MOP=(UI_PowerAura_Generic)
 prunesound "${SOUNDS_NOT_FOR_MOP[@]}"
 
 zipproject mop "$VERSION_TOC_VERSION"
-
-cdup
-}
-
-# Release mop PTR version
-release_mop_ptr() {
-MOP_BUILD_VERSION=50503
-mkproject mop-ptr $MOP_BUILD_VERSION 1c51c5 achievement_boss_leishen 64 "Mists of Pandaria PTR"
-
-prunecopyright Cataclysm Pandaria
-
-TEXTURES_NOT_FOR_MOP=(
-arcane_missiles_1
-arcane_missiles_2
-arcane_missiles_3
-echo_of_the_elements
-maelstrom_weapon_6
-maelstrom_weapon_7
-maelstrom_weapon_8
-maelstrom_weapon_9
-maelstrom_weapon_10
-raging_blow
-$(texbelow 898423 450914 450915)
-)
-prunetex "${TEXTURES_NOT_FOR_MOP[@]}"
-
-SOUNDS_NOT_FOR_MOP=(UI_PowerAura_Generic)
-prunesound "${SOUNDS_NOT_FOR_MOP[@]}"
-
-zipproject mop-ptr "$VERSION_TOC_VERSION"
 
 cdup
 }
@@ -569,9 +579,9 @@ cdup
 }
 
 release_vanilla
+release_tbc
 release_wrath
 release_cata
 release_mop
-release_mop_ptr
 release_universal
 release_necrosis

@@ -361,7 +361,9 @@ local function loadOptions(self)
     local twoStacks = self:NbStacks(2);
     local threeStacks = self:NbStacks(3);
 
-    if self.IsProject(SAO.WRATH + SAO.CATA) then
+    if self.IsTBC() then
+        self:AddEyeOfGruulOverlayOption(37706); -- 37706 = Priest buff
+    elseif self.IsProject(SAO.WRATH + SAO.CATA) then
         if self.IsWrath() then
             self:AddOverlayOption(serendipityTalent, serendipityBuff3, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks
             self:AddOverlayOption(serendipityTalent, serendipityBuff3, self:HashNameFromStacks(3)); -- setup 3 stacks
