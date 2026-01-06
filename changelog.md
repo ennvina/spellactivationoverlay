@@ -18,6 +18,7 @@ New Glowing Button
 
 Bug Fixes
 - Hunter's Mongoose Bite should now always trigger as intended (Classic Era)
+- Rogue's Riposte should now trigger as intended (Classic Era)
 
 #### v2.6.0 (2025-11-10)
 
