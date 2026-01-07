@@ -344,25 +344,40 @@ prunevar "${VARIABLES_NOT_FOR_TBC[@]}"
 CLASSES_NOT_FOR_TBC=(deathknight monk)
 pruneclass "${CLASSES_NOT_FOR_TBC[@]}"
 
-#@TODO: verify textures
 TEXTURES_NOT_FOR_TBC=(
+arcane_missiles
 arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
+art_of_war
+blood_surge
+daybreak
 fulmination
-fury_of_stormrage_yellow
+fury_of_stormrage
+high_tide
+impact
+killing_machine
+lock_and_load
+maelstrom_weapon
+maelstrom_weapon_1
+maelstrom_weapon_2
+maelstrom_weapon_3
+maelstrom_weapon_4
 maelstrom_weapon_6
 maelstrom_weapon_7
 maelstrom_weapon_8
 maelstrom_weapon_9
 maelstrom_weapon_10
+master_marksman
+molten_core
 monk_serpent
+predatory_swiftness
 raging_blow
-shadow_word_insanity
+rime
+shooting_stars
+sudden_death
 sudden_doom
-thrill_of_the_hunt_1
-thrill_of_the_hunt_2
-thrill_of_the_hunt_3
+sword_and_board
 tooth_and_claw
 white_tiger
 rkm128)
