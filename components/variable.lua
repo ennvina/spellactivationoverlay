@@ -182,6 +182,14 @@ SAO.Variable = {
             end
         end
 
+        -- Add a dependency importer directly to the bucket class declaration
+        if var.import and var.import.dependency and var.import.dependency.prepareBucket then
+            SAO.Bucket["import"..var.core] = function(bucket, value)
+                var.import.dependency.prepareBucket(bucket, value);
+                bucket.trigger:manualCheck(var.trigger.flag);
+            end
+        end
+
         SAO.HashStringifier:register(
             var.order,
             var.hash.mask,
