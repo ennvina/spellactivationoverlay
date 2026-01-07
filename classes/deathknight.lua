@@ -19,6 +19,9 @@ local icyTouch = 45477;
 local obliterate = 49020;
 local runeStrike = 56815;
 local runeTap = 48982;
+local soulReaper = 130736;
+local bloodTap = 45529;
+local bloodCharge = 114851;
 
 local function useRuneStrike()
     SAO:CreateEffect(
@@ -183,6 +186,67 @@ local function useDarkSuccor()
     );
 end
 
+local function useBloodTap(self)
+    if SAO.IsMoP() then
+    
+        local handler = {
+            onAboutToApplyHash = function(hashCalculator)
+                -- Cap at 5 stacks, that's enough for the purpose of selecting visuals
+                local mustRefresh = false;
+
+                local currentStacks = hashCalculator:getAuraStacks();
+                if type(currentStacks) == 'number' and currentStacks > 5 then
+                    hashCalculator:setAuraStacks(5);
+                    if hashCalculator.lastAuraStacks ~= currentStacks then
+                        mustRefresh = true;
+                    end
+                end
+                hashCalculator.lastAuraStacks = currentStacks;
+
+                return mustRefresh;
+            end,
+        };
+
+        SAO:CreateEffect(
+            "blood_tap",
+            SAO.MOP,
+            bloodCharge,
+            "aura",
+            {
+                button = { stacks = 5, spellID = bloodTap},
+                handler = handler,
+            }
+        );
+    end
+end
+
+local soulReaperTreshold = function()
+        -- Count the number of items currently equipped from DK T15 set
+        local t15Items = { 95825, 96569, 95225, 95826, 96570, 95226, 96571, 95227, 95827, 95828, 96572, 95228, 96573, 95829, 95229 }
+        local nbT15Items = SAO:GetNbItemsEquipped(t15Items);
+
+        if nbT15Items < 4 then
+            -- If the DK does not have the DK's T15 4pc, Soul Reaper should be pressed at <35% target's HP\
+            return 35;
+        else
+            -- If the DK has at least 4 pieces of DK's T15, Soul Reaper should be pressed at <45% target's HP
+            return 45;
+        end
+end
+
+local function useSoulReaper(self)
+    SAO:CreateEffect(
+        "drain_soul",
+        SAO.MOP_AND_ONWARD,
+        soulReaper, -- Soul Reaper
+        "execute",
+        {
+            execThreshold = soulReaperTreshold(),
+            button = soulReaper,
+        }
+    );
+end
+
 local function registerClass(self)
     -- Counters
     useRuneStrike();
@@ -199,6 +263,12 @@ local function registerClass(self)
     -- Unholy
     useDarkTransformation();
     useSuddenDoom();
+
+    --Talents
+    useBloodTap();
+
+    --Baseline
+    useSoulReaper();
 
     -- Glyphs
     useDarkSuccor();

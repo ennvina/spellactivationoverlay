@@ -55,6 +55,12 @@ SAO.defaults = {
                 [101568] = { -- Glyph of Dark Succor (Mists of Pandaria)
                     [49998] = true, -- Death Strike
                 },
+                [114851] = { -- Blood Charge (MoP)
+                    [45529] = true, -- Blood Tap
+                },   
+                [130736] = { -- Soul Reaper (MoP)
+                    [130736] = true,
+                },
             }
         },
         ["DRUID"] = {
