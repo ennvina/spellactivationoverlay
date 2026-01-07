@@ -300,7 +300,7 @@
           </Anchor>
           <Anchor point="BOTTOMRIGHT" relativeTo="$parentSpellAlertAskDisableGameAlertButton" relativePoint="TOPRIGHT">
             <Offset>
-              <AbsDimension x="96" y="0"/>
+              <AbsDimension x="16" y="0"/>
             </Offset>
           </Anchor>
         </Anchors>

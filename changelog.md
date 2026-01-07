@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.6.2 (2026-01-07)
+
+Bug Fixes
+- The addon should no longer cause Lua errors at start
+
 #### v2.6.1 (2026-01-06)
 
 Thank you to our amazing contributors for helping out. Thanks!
