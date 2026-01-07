@@ -26,15 +26,45 @@ prunedev() {
         rm -f SpellActivationOverlay/"$filetoremove" || bye "Cannot remove file $filetoremove"
     done
 
-    # Remove trace calls in code
-    PATHS_WITH_TRACE_CODE=(SpellActivationOverlay/SpellActivationOverlay.lua SpellActivationOverlay/components/)
-    find "${PATHS_WITH_TRACE_CODE[@]}" -type f -name '*.lua' -print0 |
+    # Remove developer-specific calls in code
+    PATHS_WITH_DEV_CODE=(SpellActivationOverlay/SpellActivationOverlay.lua SpellActivationOverlay/components/)
+    find "${PATHS_WITH_DEV_CODE[@]}" -type f -name '*.lua' -print0 |
         while read -r -d '' filename
         do
+            # Remove SAO:Trace calls
             if grep -q 'SAO:Trace' "$filename"
             then
                 sed -i '/SAO:Trace/d' "$filename" || bye "Cannot remove trace code from $filename"
             fi
+
+            # Remove DEV_ONLY blocks
+            if grep -q 'BEGIN_DEV_ONLY' "$filename"
+            then
+                sed -i '/BEGIN_DEV_ONLY/,/END_DEV_ONLY/d' "$filename" || bye "Cannot remove developer-specific code block from $filename"
+            fi
+            if grep -q 'DEV_ONLY' "$filename"
+            then
+                sed -i '/DEV_ONLY/d' "$filename" || bye "Cannot remove developer-specific code from $filename"
+            fi
+        done
+
+    # Pseudo-minify by removing things like comments and blank lines
+    # Must be done after removing DEV_ONLY blocks to avoid removing comments that would contain DEV_ONLY markers
+    find "SpellActivationOverlay/" -type f -name '*.lua' -print0 |
+        while read -r -d '' filename
+        do
+            # Remove comment-only blocks
+            sed -i '/^[[:space:]]*--\[\[/,/[[:space:]]*\]\]/d' "$filename" || bye "Cannot remove comment blocks from $filename"
+            # Remove comment-only lines
+            sed -i '/^[[:space:]]*--/d' "$filename" || bye "Cannot remove comments from $filename"
+            # Remove end-of-line comments, except in strings; assumes no multi-line strings and no -- in single-quote strings
+            sed -i 's/[[:space:]]*--[^"]*$//' "$filename" || bye "Cannot remove end-of-line comments from $filename"
+            # Remove blank lines
+            sed -i '/^[[:space:]]*$/d' "$filename" || bye "Cannot remove blank lines from $filename"
+            # Remove leading and trailing spaces
+            sed -i 's/^[[:space:]]*//;s/[[:space:]]*$//' "$filename" || bye "Cannot trim spaces from $filename"
+            # Remove trailing semicolons
+            sed -i 's/;[[:space:]]*$//' "$filename" || bye "Cannot remove trailing semicolons from $filename"
         done
 
     echo

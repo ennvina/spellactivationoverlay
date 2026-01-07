@@ -39,6 +39,7 @@ end
 
 SAO.Variable = {
     register = function(self, var)
+        --[[BEGIN_DEV_ONLY]]
         check(var, "order", 'number'); -- Unique number
         -- This order must be stable over patches, because it is used to index saved variables
         -- Only the order must be stable: if x < y in patch A, then x must be < y in patch B
@@ -148,6 +149,7 @@ SAO.Variable = {
                 error("Variables "..getName(var).." and "..getName(var2).." overlap their hash mask "..x1.." vs. "..x2);
             end
         end
+        --[[END_DEV_ONLY]]
 
         SAO.TriggerNames[var.trigger.flag] = var.trigger.name;
         SAO.TriggerFlags[var.trigger.name] = var.trigger.flag;

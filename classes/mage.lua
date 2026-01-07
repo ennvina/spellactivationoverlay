@@ -260,7 +260,7 @@ local FrozenHandler = {
     fakeSpellID = 5276+1000000, -- For option testing
 
     saoTexture = "frozen_fingers",
-    saoPosition = SAO.IsCata() and "Top" or "Top (CW)"; -- Re-orient in Cataclysm because former effect had different orientation
+    saoPosition = SAO.IsCata() and "Top" or "Top (CW)", -- Re-orient in Cataclysm because former effect had different orientation
     saoScaleFactor = (SAO.IsEra() or SAO.IsTBC()) and 1 or 0.75, -- Scaling down on Wrath and Cataclysm because of conflict
 
     -- Constants that will be initialized at init()

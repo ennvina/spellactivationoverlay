@@ -471,6 +471,7 @@ end
 -- Add a spell ID to the a.k.a. list, and warn if it conflicts with either an existing bucket or an existing a.k.a.
 local function addAKA(effectName, akaSpellID)
     -- Check if the spellID is already registered in the a.k.a. list
+    --[[BEGIN_DEV_ONLY]]
     local existingEffectName = AKAs[akaSpellID];
     if existingEffectName then
         if existingEffectName ~= effectName then
@@ -478,8 +479,10 @@ local function addAKA(effectName, akaSpellID)
         end
         return;
     end
+    --[[END_DEV_ONLY]]
     AKAs[akaSpellID] = effectName;
 
+    --[[BEGIN_DEV_ONLY]]
     -- Check if the spellID is valid
     if type(akaSpellID) ~= 'number' or akaSpellID <= 0 or not GetSpellInfo(akaSpellID) then
         SAO:Warn(Module, "Adding a.k.a. with invalid spellID "..tostring(akaSpellID).." for effect "..effectName);
@@ -492,8 +495,10 @@ local function addAKA(effectName, akaSpellID)
         SAO:Warn(Module, "Adding a.k.a. spellID "..tostring(akaSpellID).." for effect "..effectName.." which is already registered in bucket "..bucket.description);
         return;
     end
+    --[[END_DEV_ONLY]]
 end
 
+--[[BEGIN_DEV_ONLY]]
 -- Check that the Native Optimized Effect is valid
 local function checkNativeEffect(effect)
     -- Check of basic properties
@@ -542,8 +547,6 @@ local function checkNativeEffect(effect)
     for _, akaSpellID in ipairs(effect.aka or {}) do
         if akaSpellID == effect.spellID then
             SAO:Warn(Module, "Effect "..effect.name.." has a.k.a. spellID "..tostring(akaSpellID).." which is the same as its main spellID");
-        else
-            addAKA(effect.name, akaSpellID);
         end
     end
     local existingEffectNameOfAka = AKAs[effect.spellID];
@@ -656,6 +659,7 @@ local function checkNativeEffect(effect)
 
     return true;
 end
+--[[END_DEV_ONLY]]
 
 local function RegisterNativeEffectNow(self, effect)
     local bucket, created = self.BucketManager:getOrCreateBucket(effect.name, effect.spellID);
@@ -730,7 +734,7 @@ local function RegisterNativeEffectNow(self, effect)
         end
     end
 
-    self.BucketManager:checkIntegrity(bucket); -- Optional, but better safe than sorry
+    self.BucketManager:checkIntegrity(bucket); -- Optional, but better safe than sorry --[[DEV_ONLY]]
 
     for _, handler in ipairs(effect.handlers or {}) do
         if type(handler) ~= 'table' then
@@ -773,8 +777,12 @@ local function RegisterNativeEffectNow(self, effect)
 end
 
 function SAO:RegisterNativeEffect(effect)
-    if not checkNativeEffect(effect) then
+    if not checkNativeEffect(effect) then --[[BEGIN_DEV_ONLY]]
         return;
+    end --[[END_DEV_ONLY]]
+
+    for _, akaSpellID in ipairs(effect.aka or {}) do
+        addAKA(effect.name, akaSpellID);
     end
 
     if not self.IsProject(effect.project) then
@@ -884,6 +892,7 @@ local EffectClassConstructors = {
     @param register (optional) Register the effect automatically after creation; default is true
 ]]
 function SAO:CreateEffect(name, project, spellID, class, props, register)
+    --[[BEGIN_DEV_ONLY]]
     if type(name) ~= 'string' or name == '' then
         self:Error(Module, "Creating effect with invalid name "..tostring(name));
         return nil;
@@ -916,6 +925,7 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
         self:Error(Module, "Creating effect "..name.." with invalid handlers "..tostring(props.handlers));
         return nil;
     end
+    --[[END_DEV_ONLY]]
 
     if not self.IsProject(project) then
         return;
