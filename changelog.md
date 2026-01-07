@@ -2,6 +2,12 @@
 
 #### v2.6.3 (2026-01-xx)
 
+This release optimizes code size
+- The addon loads slightly faster
+- The addon uses slightly less memory
+- Packages are slightly smaller to download
+- Gains are about 5-15% depending on game flavor and player class
+
 #### v2.6.2 (2026-01-07)
 
 Bug Fixes
