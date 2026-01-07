@@ -74,6 +74,11 @@ local Module = "effect"
             hashCalculator:setAuraStacks(math.max(hashCalculator:getAuraStacks(), 5));
             return false; -- Return true if the display should be refreshed even if the hash does not change
         end,
+        onVariableChanged = {
+            AuraStacks = function(hashCalculator, oldValue, newValue, bucket)
+                print("Aura stacks changed from "..tostring(oldValue).." to "..tostring(newValue).." for "..bucket.name);
+            end,
+        },
     }}, -- Although rare, multiple handlers are possible
 }
 
@@ -329,6 +334,7 @@ local function addOneHandler(handlers, handlerConfig, project, default, triggers
         onRegister = handlerConfig.onRegister or default.onRegister,
         onRepeat = handlerConfig.onRepeat or default.onRepeat,
         onAboutToApplyHash = handlerConfig.onAboutToApplyHash or default.onAboutToApplyHash,
+        onVariableChanged = handlerConfig.onVariableChanged or default.onVariableChanged,
     }
 
     table.insert(handlers, handler);
@@ -745,6 +751,7 @@ local function RegisterNativeEffectNow(self, effect)
                 and handlerKey ~= "onRegister"
                 and handlerKey ~= "onRepeat"
                 and handlerKey ~= "onAboutToApplyHash"
+                and handlerKey ~= "onVariableChanged"
                 then
                     self:Warn(Module, "Adding unknown handler "..tostring(handlerKey).." for effect "..tostring(effect.name));
                 end
@@ -765,6 +772,22 @@ local function RegisterNativeEffectNow(self, effect)
                     self:Warn(Module, "Registering several handlers of onAboutToApplyHash for effect "..tostring(effect.name));
                 end
                 bucket.onAboutToApplyHash = handler.onAboutToApplyHash;
+            end
+
+            if type(handler.onVariableChanged) == 'table' then
+                bucket.onVariableChanged = bucket.onVariableChanged or {};
+                for varName, func in pairs(handler.onVariableChanged) do
+                    if type(func) ~= 'function' then
+                        self:Warn(Module, "Registering invalid onVariableChanged handler for variable "..tostring(varName).." for effect "..tostring(effect.name));
+                    elseif not SAO.Hash["set"..varName] then
+                        self:Warn(Module, "Registering onVariableChanged handler for unknown variable "..tostring(varName).." for effect "..tostring(effect.name));
+                    else
+                        if bucket.onVariableChanged[varName] then
+                            self:Warn(Module, "Registering several onVariableChanged handlers for variable "..tostring(varName).." for effect "..tostring(effect.name));
+                        end
+                        bucket.onVariableChanged[varName] = func;
+                    end
+                end
             end
         end
     end
