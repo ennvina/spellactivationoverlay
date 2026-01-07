@@ -70,6 +70,20 @@ prunedev() {
     echo
 }
 
+# Creae the base project directory, that will be copied for each flavor
+mkbaseproject() {
+    echo -n "Creating base project..."
+    rm -rf ./_release/base || bye "Cannot clean base directory"
+    mkdir -p ./_release/base/SpellActivationOverlay || bye "Cannot create base directory"
+    cp -R changelog.md LICENSE SpellActivationOverlay.* classes components libs options sounds textures variables ./_release/base/SpellActivationOverlay/ || bye "Cannot copy base files"
+    echo
+
+    # Always prune dev by default
+    cd ./_release/base || bye "Cannot cd to base directory"
+    prunedev
+    cdup
+}
+
 # Create a project directory and copy all addon files to it.
 # Remove existing project directory, if any.
 # Current directory (cd) ends up in the new directory.
@@ -94,15 +108,12 @@ mkproject() {
     echo -n "Creating $flavor project..."
     rm -rf ./_release/"$flavor" || bye "Cannot clean $flavor directory"
     mkdir -p ./_release/"$flavor"/SpellActivationOverlay || bye "Cannot create $flavor directory"
-    cp -R changelog.md LICENSE SpellActivationOverlay.* classes components libs options sounds textures variables ./_release/"$flavor"/SpellActivationOverlay/ || bye "Cannot copy $flavor files"
+    cp -R ./_release/base/SpellActivationOverlay ./_release/"$flavor"/ || bye "Cannot copy base files to $flavor"
     cd ./_release/"$flavor" || bye "Cannot cd to $flavor directory"
     sed -i s/'^## Interface:.*'/"## Interface: $build_version"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update version of $flavor TOC file"
     sed -i s%'^\(##[[:space:]]*Title:.*|c\)\(........\)\([0-9][^|]*\)|r |T[^|]*|t'%'\1'"$flavor_color"'\3|r '"$flavor_icon"% SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update title of $flavor TOC file"
     sed -i s/'^## X-SAO-Build:.*'/"## X-SAO-Build: $flavor"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update X-SAO-Build of $flavor TOC file"
     echo
-
-    # Always prune dev by default
-    prunedev
 }
 
 # Remove copyright of given expansions because the addon does not embed texture for these expansions
@@ -608,6 +619,7 @@ zipproject universal "$VERSION_TOC_VERSION"
 cdup
 }
 
+mkbaseproject
 release_vanilla
 release_tbc
 release_wrath
