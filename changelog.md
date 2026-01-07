@@ -1,5 +1,7 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.6.3 (2026-01-xx)
+
 #### v2.6.2 (2026-01-07)
 
 Bug Fixes
