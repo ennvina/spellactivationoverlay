@@ -33,7 +33,7 @@ SAO.Bucket = {
             displayedHash = nil,
             currentHash = nil,
             hashCalculator = SAO.Hash:new(), -- Hash that reflects real state of the game
-            hashCalculatorToApply = SAO.Hash:new(); -- Hash that holds virtual situation we want to display
+            hashCalculatorToApply = SAO.Hash:new(), -- Hash that holds virtual situation we want to display
             -- hashCalculator and hashCalculatorToApply may differ if and only if there is an onAboutToApplyHash handler
 
             -- Constant for more efficient debugging
@@ -330,6 +330,7 @@ SAO.BucketManager = {
         return bucket, created;
     end,
 
+--[[BEGIN_DEV_ONLY]]
     checkIntegrity = function(self, bucket)
         if bucket.trigger.required == 0 then
             SAO:Warn(Module, "Effect "..bucket.description.." does not depend on any trigger");
@@ -349,6 +350,7 @@ SAO.BucketManager = {
             end
         end
     end,
+--[[END_DEV_ONLY]]
 }
 
 function SAO:GetBucketByName(name)

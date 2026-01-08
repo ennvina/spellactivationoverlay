@@ -26,18 +26,62 @@ prunedev() {
         rm -f SpellActivationOverlay/"$filetoremove" || bye "Cannot remove file $filetoremove"
     done
 
-    # Remove trace calls in code
-    PATHS_WITH_TRACE_CODE=(SpellActivationOverlay/SpellActivationOverlay.lua SpellActivationOverlay/components/)
-    find "${PATHS_WITH_TRACE_CODE[@]}" -type f -name '*.lua' -print0 |
+    # Remove developer-specific calls in code
+    PATHS_WITH_DEV_CODE=(SpellActivationOverlay/SpellActivationOverlay.lua SpellActivationOverlay/components/)
+    find "${PATHS_WITH_DEV_CODE[@]}" -type f -name '*.lua' -print0 |
         while read -r -d '' filename
         do
+            # Remove SAO:Trace calls
             if grep -q 'SAO:Trace' "$filename"
             then
                 sed -i '/SAO:Trace/d' "$filename" || bye "Cannot remove trace code from $filename"
             fi
+
+            # Remove DEV_ONLY blocks
+            if grep -q 'BEGIN_DEV_ONLY' "$filename"
+            then
+                sed -i '/BEGIN_DEV_ONLY/,/END_DEV_ONLY/d' "$filename" || bye "Cannot remove developer-specific code block from $filename"
+            fi
+            if grep -q 'DEV_ONLY' "$filename"
+            then
+                sed -i '/DEV_ONLY/d' "$filename" || bye "Cannot remove developer-specific code from $filename"
+            fi
+        done
+
+    # Pseudo-minify by removing things like comments and blank lines
+    # Must be done after removing DEV_ONLY blocks to avoid removing comments that would contain DEV_ONLY markers
+    find "SpellActivationOverlay/" -type f -name '*.lua' -print0 |
+        while read -r -d '' filename
+        do
+            # Remove comment-only blocks
+            sed -i '/^[[:space:]]*--\[\[/,/[[:space:]]*\]\]/d' "$filename" || bye "Cannot remove comment blocks from $filename"
+            # Remove comment-only lines
+            sed -i '/^[[:space:]]*--/d' "$filename" || bye "Cannot remove comments from $filename"
+            # Remove end-of-line comments, except in strings; assumes no multi-line strings and no -- in single-quote strings
+            sed -i 's/[[:space:]]*--[^"]*$//' "$filename" || bye "Cannot remove end-of-line comments from $filename"
+            # Remove blank lines
+            sed -i '/^[[:space:]]*$/d' "$filename" || bye "Cannot remove blank lines from $filename"
+            # Remove leading and trailing spaces
+            sed -i 's/^[[:space:]]*//;s/[[:space:]]*$//' "$filename" || bye "Cannot trim spaces from $filename"
+            # Remove trailing semicolons
+            sed -i 's/;[[:space:]]*$//' "$filename" || bye "Cannot remove trailing semicolons from $filename"
         done
 
     echo
+}
+
+# Creae the base project directory, that will be copied for each flavor
+mkbaseproject() {
+    echo -n "Creating base project..."
+    rm -rf ./_release/base || bye "Cannot clean base directory"
+    mkdir -p ./_release/base/SpellActivationOverlay || bye "Cannot create base directory"
+    cp -R changelog.md LICENSE SpellActivationOverlay.* classes components libs options sounds textures variables ./_release/base/SpellActivationOverlay/ || bye "Cannot copy base files"
+    echo
+
+    # Always prune dev by default
+    cd ./_release/base || bye "Cannot cd to base directory"
+    prunedev
+    cdup
 }
 
 # Create a project directory and copy all addon files to it.
@@ -64,15 +108,12 @@ mkproject() {
     echo -n "Creating $flavor project..."
     rm -rf ./_release/"$flavor" || bye "Cannot clean $flavor directory"
     mkdir -p ./_release/"$flavor"/SpellActivationOverlay || bye "Cannot create $flavor directory"
-    cp -R changelog.md LICENSE SpellActivationOverlay.* classes components libs options sounds textures variables ./_release/"$flavor"/SpellActivationOverlay/ || bye "Cannot copy $flavor files"
+    cp -R ./_release/base/SpellActivationOverlay ./_release/"$flavor"/ || bye "Cannot copy base files to $flavor"
     cd ./_release/"$flavor" || bye "Cannot cd to $flavor directory"
     sed -i s/'^## Interface:.*'/"## Interface: $build_version"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update version of $flavor TOC file"
     sed -i s%'^\(##[[:space:]]*Title:.*|c\)\(........\)\([0-9][^|]*\)|r |T[^|]*|t'%'\1'"$flavor_color"'\3|r '"$flavor_icon"% SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update title of $flavor TOC file"
     sed -i s/'^## X-SAO-Build:.*'/"## X-SAO-Build: $flavor"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update X-SAO-Build of $flavor TOC file"
     echo
-
-    # Always prune dev by default
-    prunedev
 }
 
 # Remove copyright of given expansions because the addon does not embed texture for these expansions
@@ -303,25 +344,40 @@ prunevar "${VARIABLES_NOT_FOR_TBC[@]}"
 CLASSES_NOT_FOR_TBC=(deathknight monk)
 pruneclass "${CLASSES_NOT_FOR_TBC[@]}"
 
-#@TODO: verify textures
 TEXTURES_NOT_FOR_TBC=(
+arcane_missiles
 arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
+art_of_war
+blood_surge
+daybreak
 fulmination
-fury_of_stormrage_yellow
+fury_of_stormrage
+high_tide
+impact
+killing_machine
+lock_and_load
+maelstrom_weapon
+maelstrom_weapon_1
+maelstrom_weapon_2
+maelstrom_weapon_3
+maelstrom_weapon_4
 maelstrom_weapon_6
 maelstrom_weapon_7
 maelstrom_weapon_8
 maelstrom_weapon_9
 maelstrom_weapon_10
+master_marksman
+molten_core
 monk_serpent
+predatory_swiftness
 raging_blow
-shadow_word_insanity
+rime
+shooting_stars
+sudden_death
 sudden_doom
-thrill_of_the_hunt_1
-thrill_of_the_hunt_2
-thrill_of_the_hunt_3
+sword_and_board
 tooth_and_claw
 white_tiger
 rkm128)
@@ -578,6 +634,7 @@ zipproject universal "$VERSION_TOC_VERSION"
 cdup
 }
 
+mkbaseproject
 release_vanilla
 release_tbc
 release_wrath
