@@ -27,7 +27,11 @@ prunedev() {
     done
 
     # Remove developer-specific calls in code
+    echo -ne " \033[s" # Save cursor position
     PATHS_WITH_DEV_CODE=(SpellActivationOverlay/SpellActivationOverlay.lua SpellActivationOverlay/components/)
+    NB_PATHS_WITH_DEV_CODE=$(find "${PATHS_WITH_DEV_CODE[@]}" -type f -name '*.lua' -printf . | wc -c)
+    NB_FILES_PROCESSED=0
+    echo -n "[1/2] 0/${NB_PATHS_WITH_DEV_CODE}"
     find "${PATHS_WITH_DEV_CODE[@]}" -type f -name '*.lua' -print0 |
         while read -r -d '' filename
         do
@@ -46,19 +50,27 @@ prunedev() {
             then
                 sed -i '/DEV_ONLY/d' "$filename" || bye "Cannot remove developer-specific code from $filename"
             fi
+
+            echo -ne "\033[u[1/2] $((++NB_FILES_PROCESSED))/${NB_PATHS_WITH_DEV_CODE}"
         done
 
     # Pseudo-minify by removing things like comments and blank lines
     # Must be done after removing DEV_ONLY blocks to avoid removing comments that would contain DEV_ONLY markers
+    NB_PATHS_TO_MINIFY=$(find "SpellActivationOverlay/" -type f -name '*.lua' -printf . | wc -c)
+    NB_FILES_PROCESSED=0
+    echo -ne "\033[u"; printf "%$((8 + 2 * ${#NB_PATHS_WITH_DEV_CODE}))s" ""; echo -ne "\033[u" # Erase former progress line
+    echo -n "0/${NB_PATHS_TO_MINIFY}"
     find "SpellActivationOverlay/" -type f -name '*.lua' -print0 |
         while read -r -d '' filename
         do
             # Remove comment-only blocks
             sed -i '/^[[:space:]]*--\[\[/,/[[:space:]]*\]\]/d' "$filename" || bye "Cannot remove comment blocks from $filename"
+
             # Remove comment-only lines and blank lines
             COMMENT_ONLY_LINE='^[[:space:]]*--.*$'
             BLANK_LINE='^[[:space:]]*$'
             sed -i "/$COMMENT_ONLY_LINE/d;/$BLANK_LINE/d" "$filename" || bye "Cannot remove comments and blank lines from $filename"
+
             # Remove end-of-line comments, except in strings; assumes no multi-line strings and no -- in single-quote strings
             # Also remove leading spaces, trailing spaces, and trailing semicolons
             EOL_COMMENT='[[:space:]]*--[^"]*$'
@@ -66,6 +78,8 @@ prunedev() {
             TRAILING_SPACES='[[:space:]]*$'
             TRAILING_SEMICOLON=';[[:space:]]*$'
             sed -i "s/$EOL_COMMENT//;s/$LEADING_SPACES//;s/$TRAILING_SPACES//;s/$TRAILING_SEMICOLON//" "$filename" || bye "Cannot remove syntactic sugar from $filename"
+
+            echo -ne "\033[u[2/2] $((++NB_FILES_PROCESSED))/${NB_PATHS_TO_MINIFY}"
         done
 
     echo
