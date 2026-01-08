@@ -170,11 +170,23 @@ SAO.Variable = {
             if bucket.currentState["current"..var.core] == value then
                 return;
             end
+            local oldValue = bucket.currentState["current"..var.core];
             bucket.currentState["current"..var.core] = value;
             bucket.trigger:inform(var.trigger.flag);
             bucket.hashCalculator["set"..var.core](bucket.hashCalculator, value, bucket);
+            if bucket.onVariableChanged and bucket.onVariableChanged[var.core] then
+                bucket.onVariableChanged[var.core](bucket.hashCalculator, oldValue, value, bucket);
+            end
             if bucket.trigger:isFullyInformed() then
                 bucket:applyHash();
+            end
+        end
+
+        -- Add a dependency importer directly to the bucket class declaration
+        if var.import and var.import.dependency and var.import.dependency.prepareBucket then
+            SAO.Bucket["import"..var.core] = function(bucket, value)
+                var.import.dependency.prepareBucket(bucket, value);
+                bucket.trigger:manualCheck(var.trigger.flag);
             end
         end
 
