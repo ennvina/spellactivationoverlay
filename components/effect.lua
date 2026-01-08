@@ -329,6 +329,18 @@ local function addOneButton(buttons, buttonConfig, project, default, triggers)
 end
 
 local function addOneHandler(handlers, handlerConfig, project, default, triggers)
+    --[[BEGIN_DEV_ONLY]]
+    for handlerKey, _ in pairs(handlerConfig) do
+        if  handlerKey ~= "onRegister"
+        and handlerKey ~= "onRepeat"
+        and handlerKey ~= "onAboutToApplyHash"
+        and handlerKey ~= "onVariableChanged"
+        then
+            SAO:Warn(Module, "Adding unknown handler "..tostring(handlerKey));
+        end
+    end
+    --[[END_DEV_ONLY]]
+
     local handler = {
         project = project,
         onRegister = handlerConfig.onRegister or default.onRegister,
@@ -744,8 +756,9 @@ local function RegisterNativeEffectNow(self, effect)
 
     for _, handler in ipairs(effect.handlers or {}) do
         if type(handler) ~= 'table' then
-            self:Warn(Module, "Adding handler of wrong type "..type(handler).." for effect "..tostring(effect.name));
+            self:Warn(Module, "Registering handler of wrong type "..type(handler).." for effect "..tostring(effect.name));
         elseif not handler.project or self.IsProject(handler.project) then
+            --[[BEGIN_DEV_ONLY]]
             for handlerKey, _ in pairs(handler) do
                 if handlerKey ~= "project"
                 and handlerKey ~= "onRegister"
@@ -753,9 +766,10 @@ local function RegisterNativeEffectNow(self, effect)
                 and handlerKey ~= "onAboutToApplyHash"
                 and handlerKey ~= "onVariableChanged"
                 then
-                    self:Warn(Module, "Adding unknown handler "..tostring(handlerKey).." for effect "..tostring(effect.name));
+                    self:Warn(Module, "Registering unknown handler "..tostring(handlerKey).." for effect "..tostring(effect.name));
                 end
             end
+            --[[END_DEV_ONLY]]
 
             if type(handler.onRegister) == 'function' then
                 handler.onRegister(bucket);
