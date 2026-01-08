@@ -1,4 +1,5 @@
 local AddonName, SAO = ...
+local Module = "deathknight"
 
 local DK_SPEC_BLOOD = SAO.TALENT.SPEC_1;
 local DK_SPEC_FROST = SAO.TALENT.SPEC_2;
@@ -220,32 +221,43 @@ local function useBloodTap(self)
     end
 end
 
-local soulReaperTreshold = function()
-        -- Count the number of items currently equipped from DK T15 set
-        local t15Items = { 95825, 96569, 95225, 95826, 96570, 95226, 96571, 95227, 95827, 95828, 96572, 95228, 96573, 95829, 95229 }
-        local nbT15Items = SAO:GetNbItemsEquipped(t15Items);
+SAO:CreateEffect(
+    "soul_reaper",
+    SAO.MOP_AND_ONWARD,
+    soulReaper, -- Soul Reaper
+    "execute",
+    {
+        execThreshold = 35, -- default execute threshold
 
-        if nbT15Items < 4 then
-            -- If the DK does not have the DK's T15 4pc, Soul Reaper should be pressed at <35% target's HP\
-            return 35;
-        else
-            -- If the DK has at least 4 pieces of DK's T15, Soul Reaper should be pressed at <45% target's HP
-            return 45;
-        end
-end
+        useItemSet = true,
+        itemSet = { -- Execute threshold will changed when the DK has at least 4 pieces of DK's T15
+            items = { 95825, 96569, 95225, 95826, 96570, 95226, 96571, 95227, 95827, 95828, 96572, 95228, 96573, 95829, 95229 },
+            minimum = 4,
+        },
 
-local function useSoulReaper(self)
-    SAO:CreateEffect(
-        "drain_soul",
-        SAO.MOP_AND_ONWARD,
-        soulReaper, -- Soul Reaper
-        "execute",
-        {
-            execThreshold = soulReaperTreshold(),
-            button = soulReaper,
-        }
-    );
-end
+        buttons = {
+            -- Button must glow with or without the item set, as long as the target is in execute range
+            -- The trick is to set a default button, then explicitly state 'with' and 'without' item set
+            default = { spellID = soulReaper },
+            { itemSetEquipped = true },
+            { itemSetEquipped = false, option = false }, -- Disable option to avoid duplication in options panel
+        },
+
+        handler = {
+            onVariableChanged = {
+                ItemSetEquipped = function(hashCalculator, oldValue, newValue, bucket)
+                    if newValue == true then
+                        SAO:Debug(Module, "Soul Reaper execute threshold increased to 45% thanks to item set");
+                        bucket:importExecute(45);
+                    else
+                        SAO:Debug(Module, "Soul Reaper execute threshold restored to 35% due to item set removal");
+                        bucket:importExecute(35);
+                    end
+                end,
+            },
+        },
+    }
+);
 
 local function registerClass(self)
     -- Counters
@@ -266,9 +278,6 @@ local function registerClass(self)
 
     --Talents
     useBloodTap();
-
-    --Baseline
-    useSoulReaper();
 
     -- Glyphs
     useDarkSuccor();
