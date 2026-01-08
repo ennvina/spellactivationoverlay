@@ -39,6 +39,7 @@ end
 
 SAO.Variable = {
     register = function(self, var)
+        --[[BEGIN_DEV_ONLY]]
         check(var, "order", 'number'); -- Unique number
         -- This order must be stable over patches, because it is used to index saved variables
         -- Only the order must be stable: if x < y in patch A, then x must be < y in patch B
@@ -148,6 +149,7 @@ SAO.Variable = {
                 error("Variables "..getName(var).." and "..getName(var2).." overlap their hash mask "..x1.." vs. "..x2);
             end
         end
+        --[[END_DEV_ONLY]]
 
         SAO.TriggerNames[var.trigger.flag] = var.trigger.name;
         SAO.TriggerFlags[var.trigger.name] = var.trigger.flag;
@@ -168,11 +170,23 @@ SAO.Variable = {
             if bucket.currentState["current"..var.core] == value then
                 return;
             end
+            local oldValue = bucket.currentState["current"..var.core];
             bucket.currentState["current"..var.core] = value;
             bucket.trigger:inform(var.trigger.flag);
             bucket.hashCalculator["set"..var.core](bucket.hashCalculator, value, bucket);
+            if bucket.onVariableChanged and bucket.onVariableChanged[var.core] then
+                bucket.onVariableChanged[var.core](bucket.hashCalculator, oldValue, value, bucket);
+            end
             if bucket.trigger:isFullyInformed() then
                 bucket:applyHash();
+            end
+        end
+
+        -- Add a dependency importer directly to the bucket class declaration
+        if var.import and var.import.dependency and var.import.dependency.prepareBucket then
+            SAO.Bucket["import"..var.core] = function(bucket, value)
+                var.import.dependency.prepareBucket(bucket, value);
+                bucket.trigger:manualCheck(var.trigger.flag);
             end
         end
 
