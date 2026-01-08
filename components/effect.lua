@@ -773,43 +773,43 @@ local function RegisterNativeEffectNow(self, effect)
 
             if type(handler.onRegister) == 'function' then
                 handler.onRegister(bucket);
-            elseif handler.onRegister ~= nil then
-                self:Warn(Module, "Registering invalid onRegister handler for effect "..tostring(effect.name).."; handler should be a function");
+            elseif handler.onRegister ~= nil then --[[DEV_ONLY]]
+                self:Warn(Module, "Registering invalid onRegister handler for effect "..tostring(effect.name).."; handler should be a function"); --[[DEV_ONLY]]
             end
 
             if type(handler.onRepeat) == 'function' then
                 C_Timer.NewTicker(1, function()
                     handler.onRepeat(bucket);
                 end);
-            elseif handler.onRepeat ~= nil then
-                self:Warn(Module, "Registering invalid onRepeat handler for effect "..tostring(effect.name).."; handler should be a function");
+            elseif handler.onRepeat ~= nil then --[[DEV_ONLY]]
+                self:Warn(Module, "Registering invalid onRepeat handler for effect "..tostring(effect.name).."; handler should be a function"); --[[DEV_ONLY]]
             end
 
             if type(handler.onAboutToApplyHash) == 'function' then
-                if bucket.onAboutToApplyHash then
+                if bucket.onAboutToApplyHash then --[[BEGIN_DEV_ONLY]]
                     self:Warn(Module, "Registering several handlers of onAboutToApplyHash for effect "..tostring(effect.name));
-                end
+                end --[[END_DEV_ONLY]]
                 bucket.onAboutToApplyHash = handler.onAboutToApplyHash;
-            elseif handler.onAboutToApplyHash ~= nil then
-                self:Warn(Module, "Registering invalid onAboutToApplyHash handler for effect "..tostring(effect.name).."; handler should be a function");
+            elseif handler.onAboutToApplyHash ~= nil then --[[DEV_ONLY]]
+                self:Warn(Module, "Registering invalid onAboutToApplyHash handler for effect "..tostring(effect.name).."; handler should be a function"); --[[DEV_ONLY]]
             end
 
             if type(handler.onVariableChanged) == 'table' then
                 bucket.onVariableChanged = bucket.onVariableChanged or {};
                 for varName, func in pairs(handler.onVariableChanged) do
-                    if not SAO.Hash["set"..varName] then
+                    if not SAO.Hash["set"..varName] then --[[BEGIN_DEV_ONLY]]
                         self:Warn(Module, "Registering onVariableChanged sub-handler for unknown variable "..tostring(varName).." for effect "..tostring(effect.name).."; please use a variable 'core' name");
                     elseif type(func) ~= 'function' then
                         self:Warn(Module, "Registering invalid onVariableChanged sub-handler for variable "..tostring(varName).." for effect "..tostring(effect.name).."; sub-handler should be a function");
                     else
                         if bucket.onVariableChanged[varName] then
                             self:Warn(Module, "Registering several onVariableChanged sub-handlers for variable "..tostring(varName).." for effect "..tostring(effect.name));
-                        end
+                        end --[[END_DEV_ONLY]]
                         bucket.onVariableChanged[varName] = func;
-                    end
+                    end --[[DEV_ONLY]]
                 end
-            elseif handler.onVariableChanged ~= nil then
-                self:Warn(Module, "Registering invalid onVariableChanged handler for effect "..tostring(effect.name).."; handler should be a table");
+            elseif handler.onVariableChanged ~= nil then --[[DEV_ONLY]]
+                self:Warn(Module, "Registering invalid onVariableChanged handler for effect "..tostring(effect.name).."; handler should be a table"); --[[DEV_ONLY]]
             end
         end
     end
