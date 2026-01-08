@@ -55,16 +55,17 @@ prunedev() {
         do
             # Remove comment-only blocks
             sed -i '/^[[:space:]]*--\[\[/,/[[:space:]]*\]\]/d' "$filename" || bye "Cannot remove comment blocks from $filename"
-            # Remove comment-only lines
-            sed -i '/^[[:space:]]*--/d' "$filename" || bye "Cannot remove comments from $filename"
+            # Remove comment-only lines and blank lines
+            COMMENT_ONLY_LINE='^[[:space:]]*--.*$'
+            BLANK_LINE='^[[:space:]]*$'
+            sed -i "/$COMMENT_ONLY_LINE/d;/$BLANK_LINE/d" "$filename" || bye "Cannot remove comments and blank lines from $filename"
             # Remove end-of-line comments, except in strings; assumes no multi-line strings and no -- in single-quote strings
-            sed -i 's/[[:space:]]*--[^"]*$//' "$filename" || bye "Cannot remove end-of-line comments from $filename"
-            # Remove blank lines
-            sed -i '/^[[:space:]]*$/d' "$filename" || bye "Cannot remove blank lines from $filename"
-            # Remove leading and trailing spaces
-            sed -i 's/^[[:space:]]*//;s/[[:space:]]*$//' "$filename" || bye "Cannot trim spaces from $filename"
-            # Remove trailing semicolons
-            sed -i 's/;[[:space:]]*$//' "$filename" || bye "Cannot remove trailing semicolons from $filename"
+            # Also remove leading spaces, trailing spaces, and trailing semicolons
+            EOL_COMMENT='[[:space:]]*--[^"]*$'
+            LEADING_SPACES='^[[:space:]]*'
+            TRAILING_SPACES='[[:space:]]*$'
+            TRAILING_SEMICOLON=';[[:space:]]*$'
+            sed -i "s/$EOL_COMMENT//;s/$LEADING_SPACES//;s/$TRAILING_SPACES//;s/$TRAILING_SEMICOLON//" "$filename" || bye "Cannot remove syntactic sugar from $filename"
         done
 
     echo
