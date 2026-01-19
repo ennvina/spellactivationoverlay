@@ -55,6 +55,15 @@
         "SlashCmdList",
         // WoW global objects
         "Enum",
+        "Item",
+        "MainActionBar",
+        "MultiBar5",
+        "MultiBar6",
+        "MultiBar7",
+        "MultiBarBottomLeft",
+        "MultiBarBottomRight",
+        "MultiBarLeft",
+        "MultiBarRight",
         "WorldFrame",
         // WoW UI helpers
         "ActionButton_HideOverlayGlow",
@@ -88,6 +97,7 @@
         "C_Engraving",
         "C_Item",
         "C_SpecializationInfo",
+        "C_SpellBook",
         "C_Timer",
         "C_UnitAuras",
         "CombatLogGetCurrentEventInfo",

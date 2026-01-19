@@ -105,14 +105,20 @@ function SAO.AddOption(self, optionType, auraID, id, subValues, applyTextFunc, t
 
     cb.ApplyParentEnabling = function()
         -- Enable/disable the checkbox if the parent (i.e. main option) is enabled or not
+        local retryApplyText;
         if (SpellActivationOverlayDB[optionType].enabled) then
             cb:SetEnabled(true);
-            cb:ApplyText();
+            retryApplyText = cb:ApplyText();
             setSelectBoxEnabled(sb, true);
         else
             cb:SetEnabled(false);
-            cb:ApplyText();
+            retryApplyText = cb:ApplyText();
             setSelectBoxEnabled(sb, false);
+        end
+        if type(retryApplyText) == 'function' then
+            retryApplyText(function()
+                cb:ApplyText(); -- Do not care about retryApplyText the second time
+            end);
         end
     end
 

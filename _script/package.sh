@@ -108,6 +108,7 @@ mkbaseproject() {
 # $4 = flavor icon
 # $5 = flavor icon margin
 # $6 = (unused) flavor full name
+# $7 = flag to unset the prefix icon in the title
 mkproject() {
     local flavor=$1
     local build_version=$2
@@ -117,6 +118,7 @@ mkproject() {
     local flavor_icon_coord_max=$((512 - $flavor_icon_margin))
     local flavor_icon='|TInterface\/Icons\/'"$4:16:16:0:0:512:512:$flavor_icon_coord_min:$flavor_icon_coord_max:$flavor_icon_coord_min:$flavor_icon_coord_max|t"
     local flavor_fullname=$6
+    local flavor_noprefixicon=$7
 
     echo
     echo "==== ${flavor^^} ===="
@@ -128,6 +130,10 @@ mkproject() {
     sed -i s/'^## Interface:.*'/"## Interface: $build_version"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update version of $flavor TOC file"
     sed -i s%'^\(##[[:space:]]*Title:.*|c\)\(........\)\([0-9][^|]*\)|r |T[^|]*|t'%'\1'"$flavor_color"'\3|r '"$flavor_icon"% SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update title of $flavor TOC file"
     sed -i s/'^## X-SAO-Build:.*'/"## X-SAO-Build: $flavor"/ SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot update X-SAO-Build of $flavor TOC file"
+    if [ -n "$flavor_noprefixicon" ]
+    then
+        sed -i 's/|T[^|]*Spell_Frost_Stun[^|]*|t[[:space:]]*//' SpellActivationOverlay/SpellActivationOverlay.toc || bye "Cannot remove prefix icon from title of $flavor TOC file"
+    fi
     echo
 }
 
@@ -351,7 +357,7 @@ cdup
 # Release TBC version
 release_tbc() {
 TBC_BUILD_VERSION=20505
-mkproject tbc $TBC_BUILD_VERSION 2da203 achievement_dungeon_outland_dungeonmaster 64 "The Burning Crusade"
+mkproject tbc $TBC_BUILD_VERSION 2da203 achievement_dungeon_outland_dungeonmaster 64 "The Burning Crusade" true
 
 VARIABLES_NOT_FOR_TBC=(holypower nativesao)
 prunevar "${VARIABLES_NOT_FOR_TBC[@]}"
