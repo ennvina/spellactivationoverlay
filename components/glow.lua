@@ -407,13 +407,14 @@ if SAO.IsTBC() then -- UI has changed in TBC Classic Anniversary
     };
     for index, actionBar in ipairs(actionBars) do
         if not actionBar then --[[BEGIN_DEV_ONLY]]
-            DevTools_Dump("Missing action bar in TBC Anniversary: "..tostring(index));
+            SAO:Error(Module, "Missing action bar in TBC Anniversary: "..tostring(index));
         end --[[END_DEV_ONLY]]
         for _, actionButton in ipairs(actionBar and actionBar.actionButtons or {}) do
             hooksecurefunc(actionButton, "Update", HookActionButton_Update);
         end
     end
 else
+    -- In other flavors of WoW Classic, there is a single entry point that updates all native ActionButton instances
     hooksecurefunc("ActionButton_Update", HookActionButton_Update);
 end
 
