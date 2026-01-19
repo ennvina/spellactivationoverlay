@@ -1,4 +1,5 @@
 local AddonName, SAO = ...
+local Module = "deathknight"
 
 local DK_SPEC_BLOOD = SAO.TALENT.SPEC_1;
 local DK_SPEC_FROST = SAO.TALENT.SPEC_2;
@@ -19,6 +20,9 @@ local icyTouch = 45477;
 local obliterate = 49020;
 local runeStrike = 56815;
 local runeTap = 48982;
+local soulReaper = 130736;
+local bloodTap = 45529;
+local bloodCharge = 114851;
 
 local function useRuneStrike()
     SAO:CreateEffect(
@@ -183,6 +187,78 @@ local function useDarkSuccor()
     );
 end
 
+local function useBloodTap(self)
+    if SAO.IsMoP() then
+    
+        local handler = {
+            onAboutToApplyHash = function(hashCalculator)
+                -- Cap at 5 stacks, that's enough for the purpose of selecting visuals
+                local mustRefresh = false;
+
+                local currentStacks = hashCalculator:getAuraStacks();
+                if type(currentStacks) == 'number' and currentStacks > 5 then
+                    hashCalculator:setAuraStacks(5);
+                    if hashCalculator.lastAuraStacks ~= currentStacks then
+                        mustRefresh = true;
+                    end
+                end
+                hashCalculator.lastAuraStacks = currentStacks;
+
+                return mustRefresh;
+            end,
+        };
+
+        SAO:CreateEffect(
+            "blood_tap",
+            SAO.MOP,
+            bloodCharge,
+            "aura",
+            {
+                button = { stacks = 5, spellID = bloodTap},
+                handler = handler,
+            }
+        );
+    end
+end
+
+SAO:CreateEffect(
+    "soul_reaper",
+    SAO.MOP_AND_ONWARD,
+    soulReaper, -- Soul Reaper
+    "execute",
+    {
+        execThreshold = 35, -- default execute threshold
+
+        useItemSet = true,
+        itemSet = { -- Execute threshold will changed when the DK has at least 4 pieces of DK's T15
+            items = { 95825, 96569, 95225, 95826, 96570, 95226, 96571, 95227, 95827, 95828, 96572, 95228, 96573, 95829, 95229 },
+            minimum = 4,
+        },
+
+        buttons = {
+            -- Button must glow with or without the item set, as long as the target is in execute range
+            -- The trick is to set a default button, then explicitly state 'with' and 'without' item set
+            default = { spellID = soulReaper },
+            { itemSetEquipped = true },
+            { itemSetEquipped = false, option = false }, -- Disable option to avoid duplication in options panel
+        },
+
+        handler = {
+            onVariableChanged = {
+                ItemSetEquipped = function(hashCalculator, oldValue, newValue, bucket)
+                    if newValue == true then
+                        SAO:Debug(Module, "Soul Reaper execute threshold increased to 45% thanks to item set");
+                        bucket:importExecute(45);
+                    else
+                        SAO:Debug(Module, "Soul Reaper execute threshold restored to 35% due to item set removal");
+                        bucket:importExecute(35);
+                    end
+                end,
+            },
+        },
+    }
+);
+
 local function registerClass(self)
     -- Counters
     useRuneStrike();
@@ -199,6 +275,9 @@ local function registerClass(self)
     -- Unholy
     useDarkTransformation();
     useSuddenDoom();
+
+    --Talents
+    useBloodTap();
 
     -- Glyphs
     useDarkSuccor();
