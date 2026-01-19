@@ -1,5 +1,8 @@
 local AddonName, SAO = ...
 
+-- Optimize frequent calls
+local GetItemInfo = C_Item and C_Item.GetItemInfo or GetItemInfo
+
 -- Get icon and label of an item
 function SAO.GetItemText(self, itemID)
     local name,_,_,_,_,_,_,_,_,icon = GetItemInfo(itemID);

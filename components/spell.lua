@@ -4,6 +4,14 @@ local AddonName, SAO = ...
 local GetSpellInfo = GetSpellInfo
 local IsSpellKnownOrOverridesKnown = IsSpellKnownOrOverridesKnown
 
+-- Deprecation workaround
+-- https://www.townlong-yak.com/framexml/64133/Blizzard_DeprecatedSpellBook/Deprecated_SpellBook.lua#22
+if C_SpellBook and C_SpellBook.IsSpellInBook then
+    IsSpellKnownOrOverridesKnown = function(spellID)
+        return C_SpellBook.IsSpellInBook(spellID, false, true);
+    end
+end
+
 -- List of spell IDs sharing the same name
 -- key = spell name, value = list of spell IDs
 -- The list is a cache of calls to GetSpellIDsByName

@@ -96,6 +96,7 @@
         "C_Engraving",
         "C_Item",
         "C_SpecializationInfo",
+        "C_SpellBook",
         "C_Timer",
         "C_UnitAuras",
         "CombatLogGetCurrentEventInfo",
