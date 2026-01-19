@@ -380,7 +380,40 @@ local function HookActionButton_Update(button)
     end
     SAO:UpdateActionButton(button);
 end
-if not SAO.IsTBC() then -- UI has changed in TBC Classic Anniversary, avoid hooking ActionButton_Update for now
+if SAO.IsTBC() then -- UI has changed in TBC Classic Anniversary
+    local actionBars = {
+        -- https://www.townlong-yak.com/framexml/anniversary/Blizzard_ActionBar/MainActionBar.xml
+        MainActionBar,
+
+        -- https://www.townlong-yak.com/framexml/anniversary/Blizzard_ActionBar/MultiActionBars.xml
+        MultiBarLeft,
+        MultiBarRight,
+        MultiBarBottomLeft,
+        MultiBarBottomRight,
+        MultiBar5,
+        MultiBar6,
+        MultiBar7,
+
+        -- Other bar candidates (not tested yet)
+
+        -- https://www.townlong-yak.com/framexml/anniversary/Blizzard_ActionBar/StanceBar.xml
+        -- StanceBar,
+
+        -- https://www.townlong-yak.com/framexml/anniversary/Blizzard_ActionBar/PossessActionBar.xml
+        -- PossessActionBar,
+
+        -- https://www.townlong-yak.com/framexml/anniversary/Blizzard_ActionBar/PetActionBar.xml
+        -- PetActionBar,
+    };
+    for index, actionBar in ipairs(actionBars) do
+        if not actionBar then --[[BEGIN_DEV_ONLY]]
+            DevTools_Dump("Missing action bar in TBC Anniversary: "..tostring(index));
+        end --[[END_DEV_ONLY]]
+        for _, actionButton in ipairs(actionBar and actionBar.actionButtons or {}) do
+            hooksecurefunc(actionButton, "Update", HookActionButton_Update);
+        end
+    end
+else
     hooksecurefunc("ActionButton_Update", HookActionButton_Update);
 end
 

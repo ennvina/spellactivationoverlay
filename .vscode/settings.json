@@ -55,6 +55,14 @@
         "SlashCmdList",
         // WoW global objects
         "Enum",
+        "MainActionBar",
+        "MultiBar5",
+        "MultiBar6",
+        "MultiBar7",
+        "MultiBarBottomLeft",
+        "MultiBarBottomRight",
+        "MultiBarLeft",
+        "MultiBarRight",
         "WorldFrame",
         // WoW UI helpers
         "ActionButton_HideOverlayGlow",
