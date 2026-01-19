@@ -12,8 +12,21 @@ function SAO.GetItemText(self, itemID)
 end
 
 function SAO.AddItemOverlayOption(self, spellID, itemID)
-    local itemText = self:GetItemText(itemID);
-    self:AddOverlayOption(spellID, spellID, 0, itemText);
+    local itemTextFunc = function()
+        local itemText = self:GetItemText(itemID);
+        if itemText then
+            -- If item is cached, return text immediately
+            return itemText;
+        else
+            -- If item is not cached, request load and return a function to retry later
+            -- In practice, the game will retrieve it instantly, but we still need to wait for the load callback
+            local item = Item:CreateFromItemID(itemID);
+            return function(callback)
+                item:ContinueOnItemLoad(callback);
+            end
+        end
+    end;
+    self:AddOverlayOption(spellID, spellID, 0, itemTextFunc);
 end
 
 local function registerHealingTranc(self, label, spellID)

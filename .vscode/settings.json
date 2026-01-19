@@ -55,6 +55,7 @@
         "SlashCmdList",
         // WoW global objects
         "Enum",
+        "Item",
         "MainActionBar",
         "MultiBar5",
         "MultiBar6",
