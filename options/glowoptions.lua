@@ -28,6 +28,7 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
     local classFile = self.CurrentClass.Intrinsics[2];
 
     local applyTextFunc = function(self)
+        local retryApplyText = nil;
         local enabled = self:IsEnabled();
 
         -- Class text
@@ -46,7 +47,14 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
         local spellName, spellIcon;
         if (talentID and talentID ~= glowID) then
             text = text.." "..talentText;
-            if (talentSubText) then
+            if type(talentSubText) == 'function' then
+                local evalTalentSubText = talentSubText();
+                if type(evalTalentSubText) == 'string' then
+                    text = text.." ("..evalTalentSubText..")";
+                else
+                    retryApplyText = evalTalentSubText;
+                end
+            elseif type(talentSubText) == 'string' then
                 text = text.." ("..talentSubText..")";
             end
             text = text.." +";
@@ -79,6 +87,8 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
         else
             self.Text:SetTextColor(0.5, 0.5, 0.5);
         end
+
+        return retryApplyText;
     end
 
     local testFunc = function(start)
