@@ -404,7 +404,7 @@ white_tiger
 rkm128)
 prunetex "${TEXTURES_NOT_FOR_TBC[@]}"
 
-zipproject tbc-beta "$VERSION_TOC_VERSION"
+zipproject tbc "$VERSION_TOC_VERSION"
 
 cdup
 }
