@@ -1,5 +1,5 @@
-# SpellActivationOverlay 2.7.0
-@here I am pleased to announce the newest release of SpellActivationOverlay, version 2.7.0
+# SpellActivationOverlay 2.7
+@here I am pleased to announce the newest release of SpellActivationOverlay, version 2.7
 
 This marks the official release for The Burning Crusade Classic Anniversary :shinto_shrine:  Are you prepared?
 ## General
@@ -59,7 +59,7 @@ In the options panel, the Spell Alert option for Healing Trance (The Burning Cru
 ### :shaman:  Shaman
 In the options panel, the Spell Alert option for Healing Trance (The Burning Crusade, Wrath) now always display the item text next to it.
 ## Known Limitations
-- Sliders in the options panel have no background ruler (The Burning Crusade)
+Sliders in the options panel have no background ruler (The Burning Crusade)
 ## Miscellaneous
 This release optimizes code size, which have a few positive side effects
 - The addon loads slightly faster
