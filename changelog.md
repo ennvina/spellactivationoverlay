@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.7.0 (2026-01-xx)
+#### v2.7.0 (2026-01-20)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - @Amanthuul my man, for adding Death Knights effects to Mists of Pandaria
@@ -58,6 +58,9 @@ Bug Fixes
 - Item text\* is now always displayed in options (The Burning Crusade, Wrath)
 
 \* Currently supported items are Eye of Gruul (TBC) and Soul Preserver (Wrath)
+
+Known Limitations
+- Sliders in the options panel have no background ruler (The Burning Crusade)
 
 #### v2.6.2 (2026-01-07)
 
