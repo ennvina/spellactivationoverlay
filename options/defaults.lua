@@ -55,11 +55,13 @@ SAO.defaults = {
                 [101568] = { -- Glyph of Dark Succor (Mists of Pandaria)
                     [49998] = true, -- Death Strike
                 },
-                [114851] = { -- Blood Charge (MoP)
+                [114851] = { -- Blood Charge (Mists of Pandaria)
                     [45529] = true, -- Blood Tap
-                },   
-                [130736] = { -- Soul Reaper (MoP)
-                    [130736] = true,
+                },
+                [130736] = { -- Soul Reaper (Mists of Pandaria)
+                    [114866] = true, -- Soul Reaper (Blood)
+                    [130735] = true, -- Soul Reaper (Frost)
+                    [130736] = true, -- Soul Reaper (Unholy)
                 },
             }
         },
