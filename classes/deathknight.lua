@@ -224,6 +224,15 @@ local function useBloodTap(self)
 end
 
 local function useSoulReaper()
+    local buttons = {};
+    local addSoulReaperButton = function(spellID, spec)
+        table.insert(buttons, { spellID = spellID, itemSetEquipped = true, option = { spellSubText = SAO:GetSpecNameFunction(spec), hideTalentText = true } });
+        table.insert(buttons, { spellID = spellID, itemSetEquipped = false, option = false }); -- Disable option to avoid duplication in options panel
+    end;
+    addSoulReaperButton(soulReaperBlood, 1); -- 1 == Blood
+    addSoulReaperButton(soulReaperFrost, 2); -- 2 == Frost
+    addSoulReaperButton(soulReaperUnholy, 3); -- 3 == Unholy
+
     SAO:CreateEffect(
         "soul_reaper",
         SAO.MOP_AND_ONWARD,
@@ -238,17 +247,7 @@ local function useSoulReaper()
                 minimum = 4,
             },
 
-            buttons = {
-                -- @todo Factorize the mess below
-                { spellID = soulReaperBlood, itemSetEquipped = true, option = { spellSubText = SAO:GetSpecNameFunction(1), hideTalentText = true } }, -- 1 == Blood
-                { spellID = soulReaperBlood, itemSetEquipped = false, option = false }, -- Disable option to avoid duplication in options panel
-
-                { spellID = soulReaperFrost, itemSetEquipped = true, option = { spellSubText = SAO:GetSpecNameFunction(2), hideTalentText = true } }, -- 2 == Frost
-                { spellID = soulReaperFrost, itemSetEquipped = false, option = false }, -- Disable option to avoid duplication in options panel
-
-                { spellID = soulReaperUnholy, itemSetEquipped = true, option = { spellSubText = SAO:GetSpecNameFunction(3), hideTalentText = true } }, -- 3 == Unholy
-                { spellID = soulReaperUnholy, itemSetEquipped = false, option = false }, -- Disable option to avoid duplication in options panel
-            },
+            buttons = buttons,
 
             handler = {
                 onVariableChanged = {
