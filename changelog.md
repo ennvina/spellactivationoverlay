@@ -2,6 +2,9 @@
 
 #### v2.7.0 (2026-01-xx)
 
+Thank you to our amazing contributors for helping out. Thanks!
+- @Amanthuul my man, for adding Death Knights effects to Mists of Pandaria
+
 Introducing The Burning Crusade flavor!
 - The addon has pretty advanced support at the moment
 - Make sure to report issues and suggest ideas, thank you :)
@@ -42,6 +45,13 @@ This release optimizes code size
 - The addon uses slightly less memory
 - Packages are slightly smaller to download
 - Gains are about 5-15% depending on game flavor and player class
+
+New Glowing Buttons
+- Death Knight's Blood Tap, with 5+ charges of Blood Charge (Mists of Pandaria)
+- Death Knight's Soul Reaper, when the target has low hp (Mists of Pandaria)
+- There are three Soul Reaper options - one for each spec
+- By default, Soul Reaper's execute threshold is 35% of the target's health
+- Soul Reaper's execute threshold increases to 45% with the tier 15 set bonus
 
 Bug Fixes
 - Glowing Buttons are now functional (The Burning Crusade)
