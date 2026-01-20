@@ -10,9 +10,10 @@ local Module = "option"
 -- spellSubText is a string describing the specificity of this option, appended to spell text
 -- variants optional variant object that tells which are sub-options and how to use them
 -- hash optional hash, used to describe what the display is expected to depend on
+-- alwaysHideTalentText if true, the option will be hidden even when the talent does not match the glowID
 -- @note Options must be linked asap, not during loadOptions() which would be loaded only when the options panel is opened
 -- By linking options as soon as possible, before their respective RegisterAura() calls, options can be used by initial triggers, if any
-function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText, variants, hash) -- @todo use hash and testHash like overlay options
+function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText, variants, hash, alwaysHideTalentText) -- @todo use hash and testHash like overlay options
     local talentText = talentID and self:GetTalentText(talentID);
     if (talentID and not talentText) or (not self:IsFakeSpell(glowID) and not GetSpellInfo(glowID)) then
         if talentID and not talentText then
@@ -45,7 +46,7 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
 
         -- Talent text
         local spellName, spellIcon;
-        if (talentID and talentID ~= glowID) then
+        if (talentID and talentID ~= glowID and not alwaysHideTalentText) then
             text = text.." "..talentText;
             if type(talentSubText) == 'function' then
                 local evalTalentSubText = talentSubText();
@@ -58,7 +59,7 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
                 text = text.." ("..talentSubText..")";
             end
             text = text.." +";
-        elseif (talentID and talentID == glowID and talentSubText) then
+        elseif (talentID and talentID == glowID and talentSubText and not alwaysHideTalentText) then
             SAO:Debug(Module, "Glowing option of glowID "..tostring(glowID).." has talent sub-text '"..talentSubText.."' but the text will be discarded because talentID matches glowID");
         end
 

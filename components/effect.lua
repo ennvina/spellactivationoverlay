@@ -898,6 +898,7 @@ function SAO:AddEffectOptions()
                     local spellSubText = button.option.spellSubText;
                     local variants = button.option.variants;
                     local hashName = self.Hash:new(button.hash):toString();
+                    local alwaysHideTalentText = button.option.hideTalentText;
                     if type(talentSubText) == 'function' then
                         talentSubText = talentSubText();
                     end
@@ -907,10 +908,10 @@ function SAO:AddEffectOptions()
                     if type(variants) == 'function' then
                         variants = variants();
                     end
-                    self:AddGlowingOption(talent, buff, spellID, talentSubText, spellSubText, variants, hashName);
+                    self:AddGlowingOption(talent, buff, spellID, talentSubText, spellSubText, variants, hashName, alwaysHideTalentText);
                 else
                     local hashName = self.Hash:new(button.hash):toString();
-                    self:AddGlowingOption(talent, buff, spellID, nil, nil, nil, hashName);
+                    self:AddGlowingOption(talent, buff, spellID, nil, nil, nil, hashName, nil);
                 end
             end
         end
