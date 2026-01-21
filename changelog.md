@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.7.1 (2026-01-xx)
+#### v2.7.1 (2026-01-21)
 
 Support for Titan Reforged: Wrath
 - It uses the Wrath Classic flavor
