@@ -2,6 +2,11 @@
 
 #### v2.7.1 (2026-01-xx)
 
+Support for Titan Reforged: Wrath
+- It uses the Wrath Classic flavor
+- Since testing on Titan Reforged servers is complicated, support is limited
+- Make sure to report issues, thank you :)
+
 Bug Fixes
 - Universal build now includes The Burning Crusade
 - Universal build should no longer appear as an 'out of date addon'
