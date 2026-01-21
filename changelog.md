@@ -2,6 +2,10 @@
 
 #### v2.7.1 (2026-01-xx)
 
+Bug Fixes
+- Universal build should no longer appear as an 'out of date addon'
+- Developer build should no longer appear as an 'out of date addon'
+
 #### v2.7.0 (2026-01-20)
 
 Thank you to our amazing contributors for helping out. Thanks!

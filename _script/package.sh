@@ -318,7 +318,7 @@ fi
 # Release wrath version
 release_wrath() {
 WRATH_BUILD_VERSION=30403
-mkproject wrath $WRATH_BUILD_VERSION 40abff achievement_boss_lichking 64 "Wrath of the Lich King"
+mkproject wrath "$WRATH_BUILD_VERSION" 40abff achievement_boss_lichking 64 "Wrath of the Lich King"
 
 VARIABLES_NOT_FOR_WRATH=(holypower nativesao)
 prunevar "${VARIABLES_NOT_FOR_WRATH[@]}"
@@ -357,7 +357,7 @@ cdup
 # Release TBC version
 release_tbc() {
 TBC_BUILD_VERSION=20505
-mkproject tbc $TBC_BUILD_VERSION 2da203 achievement_dungeon_outland_dungeonmaster 64 "The Burning Crusade" true
+mkproject tbc "$TBC_BUILD_VERSION" 2da203 achievement_dungeon_outland_dungeonmaster 64 "The Burning Crusade" true
 
 VARIABLES_NOT_FOR_TBC=(holypower nativesao)
 prunevar "${VARIABLES_NOT_FOR_TBC[@]}"
@@ -412,7 +412,7 @@ cdup
 # Release vanilla version
 release_vanilla() {
 VANILLA_BUILD_VERSION=11508
-mkproject vanilla $VANILLA_BUILD_VERSION ffffff inv_misc_food_31 32 "Classic Era and Season of Discovery"
+mkproject vanilla "$VANILLA_BUILD_VERSION" ffffff inv_misc_food_31 32 "Classic Era and Season of Discovery"
 
 VARIABLES_NOT_FOR_VANILLA=(holypower nativesao)
 prunevar "${VARIABLES_NOT_FOR_VANILLA[@]}"
@@ -447,7 +447,7 @@ cdup
 # Release cata version
 release_cata() {
 CATA_BUILD_VERSION=40402
-mkproject cata $CATA_BUILD_VERSION db550d achievment_boss_madnessofdeathwing 64 "Cataclysm"
+mkproject cata "$CATA_BUILD_VERSION" db550d achievment_boss_madnessofdeathwing 64 "Cataclysm"
 
 prunecopyright Cataclysm
 
@@ -487,7 +487,7 @@ cdup
 # Release mop version
 release_mop() {
 MOP_BUILD_VERSION=50503
-mkproject mop $MOP_BUILD_VERSION 00ff96 achievement_character_pandaren_female 64 "Mists of Pandaria"
+mkproject mop "$MOP_BUILD_VERSION" 00ff96 achievement_character_pandaren_female 64 "Mists of Pandaria"
 
 prunecopyright Cataclysm Pandaria
 
@@ -516,8 +516,8 @@ cdup
 
 # Release Necrosis version
 release_necrosis() {
-NECROSIS_BUILD_VERSION=40402 # Version does not matter, toc will not be used
-mkproject necrosis $NECROSIS_BUILD_VERSION 8787ed spell_shadow_abominationexplosion 64 "Necrosis"
+NECROSIS_BUILD_VERSION=00000 # Version does not matter, toc will not be used
+mkproject necrosis "$NECROSIS_BUILD_VERSION" 8787ed spell_shadow_abominationexplosion 64 "Necrosis"
 
 CLASSES_NOT_FOR_NECROSIS=(
 deathknight
@@ -629,8 +629,8 @@ cdup
 
 # Release universal version
 release_universal() {
-UNIVERSAL_BUILD_VERSION=50500 # Same as latest Classic version, currently Mists of Pandaria Classic
-mkproject universal $UNIVERSAL_BUILD_VERSION c845fa spell_arcane_portalstormwind 32 "Universal"
+UNIVERSAL_BUILD_VERSION="$VANILLA_BUILD_VERSION, $TBC_BUILD_VERSION, $WRATH_BUILD_VERSION, $CATA_BUILD_VERSION, $MOP_BUILD_VERSION"
+mkproject universal "$UNIVERSAL_BUILD_VERSION" c845fa spell_arcane_portalstormwind 32 "Universal"
 
 echo -n "Generatic TOC files for each flavor..."
 PROJECTS=(
