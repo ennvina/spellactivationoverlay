@@ -3,6 +3,7 @@
 #### v2.7.1 (2026-01-xx)
 
 Bug Fixes
+- Universal build now includes The Burning Crusade
 - Universal build should no longer appear as an 'out of date addon'
 - Developer build should no longer appear as an 'out of date addon'
 

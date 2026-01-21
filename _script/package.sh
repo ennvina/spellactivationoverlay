@@ -635,7 +635,7 @@ mkproject universal "$UNIVERSAL_BUILD_VERSION" c845fa spell_arcane_portalstormwi
 echo -n "Generatic TOC files for each flavor..."
 PROJECTS=(
 "vanilla Vanilla"
-# "tbc TBC"
+"tbc TBC"
 "wrath Wrath"
 "cata Cata"
 "mop Mists"
