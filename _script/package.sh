@@ -317,7 +317,7 @@ fi
 
 # Release wrath version
 release_wrath() {
-WRATH_BUILD_VERSION="30403, 38000"
+WRATH_BUILD_VERSION="30405, 38000"
 mkproject wrath "$WRATH_BUILD_VERSION" 40abff achievement_boss_lichking 64 "Wrath of the Lich King"
 
 VARIABLES_NOT_FOR_WRATH=(holypower nativesao)
