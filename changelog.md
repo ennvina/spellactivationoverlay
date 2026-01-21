@@ -1,5 +1,16 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.7.1 (2026-01-xx)
+
+Support for Titan Reforged: Wrath
+- It uses the Wrath Classic flavor
+- Since testing on Titan Reforged servers is complicated, support is limited
+- Make sure to report issues, thank you :)
+
+Bug Fixes
+- Universal build is no longer seen as 'out of date' (The Burning Crusade)
+- Developer build is no longer seen as 'out of date' (Era, TBC, Wrath, Cata)
+
 #### v2.7.0 (2026-01-20)
 
 Thank you to our amazing contributors for helping out. Thanks!
