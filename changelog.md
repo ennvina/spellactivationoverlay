@@ -8,9 +8,8 @@ Support for Titan Reforged: Wrath
 - Make sure to report issues, thank you :)
 
 Bug Fixes
-- Universal build now includes The Burning Crusade
-- Universal build should no longer appear as an 'out of date addon'
-- Developer build should no longer appear as an 'out of date addon'
+- Universal build is no longer seen as 'out of date' (The Burning Crusade)
+- Developer build is no longer seen as 'out of date' (Era, TBC, Wrath, Cata)
 
 #### v2.7.0 (2026-01-20)
 
