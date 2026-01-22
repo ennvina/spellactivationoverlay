@@ -514,6 +514,32 @@ zipproject mop "$VERSION_TOC_VERSION"
 cdup
 }
 
+# Release retail version
+release_retail() {
+RETAIL_BUILD_VERSION=120000
+mkproject retail "$RETAIL_BUILD_VERSION" 2266c5 inv_ability_voidweaverpriest_entropicrift 64 "Retail"
+
+prunecopyright Cataclysm Pandaria Draenor
+
+TEXTURES_NOT_FOR_RETAIL=(
+maelstrom_weapon_6
+maelstrom_weapon_7
+maelstrom_weapon_8
+maelstrom_weapon_9
+maelstrom_weapon_10
+$(texbelow 30000000 450914 450915)
+)
+prunetex "${TEXTURES_NOT_FOR_RETAIL[@]}"
+
+# Do not remove sound in Retail; the file exists but has no volume
+#SOUNDS_NOT_FOR_RETAIL=(UI_PowerAura_Generic)
+#prunesound "${SOUNDS_NOT_FOR_RETAIL[@]}"
+
+zipproject retail "$VERSION_TOC_VERSION"
+
+cdup
+}
+
 # Release Necrosis version
 release_necrosis() {
 NECROSIS_BUILD_VERSION=00000 # Version does not matter, toc will not be used
@@ -629,7 +655,7 @@ cdup
 
 # Release universal version
 release_universal() {
-UNIVERSAL_BUILD_VERSION="$VANILLA_BUILD_VERSION, $TBC_BUILD_VERSION, $WRATH_BUILD_VERSION, $CATA_BUILD_VERSION, $MOP_BUILD_VERSION"
+UNIVERSAL_BUILD_VERSION="$VANILLA_BUILD_VERSION, $TBC_BUILD_VERSION, $WRATH_BUILD_VERSION, $CATA_BUILD_VERSION, $MOP_BUILD_VERSION, $RETAIL_BUILD_VERSION"
 mkproject universal "$UNIVERSAL_BUILD_VERSION" c845fa spell_arcane_portalstormwind 32 "Universal"
 
 echo -n "Generatic TOC files for each flavor..."
@@ -639,6 +665,7 @@ PROJECTS=(
 "wrath Wrath"
 "cata Cata"
 "mop Mists"
+"retail Mainline"
 )
 addon_name=SpellActivationOverlay
 for project in "${PROJECTS[@]}"; do
@@ -661,5 +688,6 @@ release_tbc
 release_wrath
 release_cata
 release_mop
+release_retail
 release_universal
 release_necrosis
