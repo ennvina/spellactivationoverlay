@@ -46,6 +46,23 @@ function SAO.IsRetail()
     return WOW_PROJECT_ID == WOW_PROJECT_MAINLINE;
 end
 
+local hasMidnightUI = nil;
+function SAO.HasMidnightUI()
+    if hasMidnightUI ~= nil then
+        return hasMidnightUI;
+    end
+
+    local buildInfo = tonumber((select(2, GetBuildInfo())));
+    hasMidnightUI = (SAO.IsTBC() and buildInfo >= 65295)
+                 or (SAO.IsRetail() and LE_EXPANSION_LEVEL_CURRENT >= LE_EXPANSION_MIDNIGHT);
+
+    return hasMidnightUI;
+end
+
+function SAO.HasMidnightEvents()
+    return SAO.IsRetail() and LE_EXPANSION_LEVEL_CURRENT >= LE_EXPANSION_MIDNIGHT;
+end
+
 function SAO.IsProject(projectFlags)
     if type(projectFlags) ~= 'number' then
         SAO:Debug(Module, "Checking project against invalid flags "..tostring(projectFlags));

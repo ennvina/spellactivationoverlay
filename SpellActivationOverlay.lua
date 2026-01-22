@@ -71,7 +71,7 @@ function SpellActivationOverlay_OnLoad(self)
 	SAO:RegisterEventHandler(self, "PLAYER_REGEN_ENABLED", "Main init");
 	SAO:RegisterEventHandler(self, "PLAYER_REGEN_DISABLED", "Main init");
 	SAO:RegisterEventHandler(self, "SPELLS_CHANGED", "Main init");
-	if SAO.IsTBC() then
+	if SAO.HasMidnightUI() then -- HasMidnightUI instead of HasMinightEvents because somehow TBC Anniversary has the new event below
 		SAO:RegisterEventHandler(self, "LEARNED_SPELL_IN_SKILL_LINE", "Main init");
 	else
 		SAO:RegisterEventHandler(self, "LEARNED_SPELL_IN_TAB", "Main init");
