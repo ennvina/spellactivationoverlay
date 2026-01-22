@@ -2,8 +2,6 @@ local AddonName, SAO = ...
 local Module = "actionusable"
 
 -- Optimize frequent calls
-local GetSpellCooldown = GetSpellCooldown
-local GetSpellPowerCost = GetSpellPowerCost
 local IsUsableSpell = IsUsableSpell
 
 -- Action usable or not
@@ -77,7 +75,7 @@ SAO.Variable:register({
                 return;
             end
 
-            local start, duration, enabled, modRate = GetSpellCooldown(spellID);
+            local start, duration = SAO:GetSpellCooldown(spellID);
             if type(start) ~= "number" then
                 -- Spell not available
                 bucket:setActionUsable(false);
@@ -92,7 +90,7 @@ SAO.Variable:register({
 
             -- Non-mana spells and abilities should always be considered usable, regardless of player's current resources
             local costsMana = false;
-            for _, spellCost in ipairs(GetSpellPowerCost(spellID) or {}) do
+            for _, spellCost in ipairs(SAO:GetSpellPowerCost(spellID) or {}) do
                 if spellCost.name == "MANA" then
                     costsMana = true;
                     break;
@@ -156,7 +154,7 @@ SAO.Variable:register({
             default = function(effect) return effect.spellID end,
             prepareBucket = function(bucket, value)
                 bucket.actionSpellID = value;
-                if not GetSpellInfo(value) then
+                if not SAO:DoesSpellExist(value) then
                     SAO:Warn(Module, bucket.description.." requires action usable with spell "..value..", but the spell does not exist");
                 end
             end,

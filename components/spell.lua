@@ -1,7 +1,11 @@
 local AddonName, SAO = ...
 
 -- Optimize frequent calls
-local GetSpellInfo = GetSpellInfo
+local GetSpellCooldownLegacy = GetSpellCooldown
+local GetSpellCooldownModern = C_Spell and C_Spell.GetSpellCooldown
+local GetSpellInfoLegacy = GetSpellInfo
+local GetSpellInfoModern = C_Spell and C_Spell.GetSpellInfo
+local GetSpellPowerCost = C_Spell and C_Spell.GetSpellPowerCost or GetSpellPowerCost -- Unlike functions like GetSpellInfo, this one is identical between Legacy and Modern
 local IsSpellKnownOrOverridesKnown = IsSpellKnownOrOverridesKnown
 
 -- Deprecation workaround
@@ -17,6 +21,67 @@ end
 -- The list is a cache of calls to GetSpellIDsByName
 -- The list will evolve automatically when the player learns new spells
 SAO.SpellIDsByName = {}
+
+-- Check if a spell exists for a given spell ID
+-- Returns true if the spell exists, false otherwise
+function SAO:DoesSpellExist(spellID)
+    if GetSpellInfoModern then
+        local spellInfo = GetSpellInfoModern(spellID);
+        return spellInfo ~= nil;
+    end
+
+    local spellName = GetSpellInfoLegacy(spellID);
+    return spellName ~= nil;
+end
+
+-- Get the spell name for a given spell ID
+-- Returns the spell name, or defaultName if the spell does not exist
+function SAO:GetSpellName(spellID, defaultName)
+    if GetSpellInfoModern then
+        local spellInfo = GetSpellInfoModern(spellID);
+        return spellInfo and spellInfo.name or defaultName;
+    end
+
+    local spellName = GetSpellInfoLegacy(spellID);
+    return spellName or defaultName;
+end
+
+-- Get the in-game string representing spell icon and name for a given spell ID
+function SAO:GetSpellIconAndText(spellID)
+    if GetSpellInfoModern then
+        local spellInfo = GetSpellInfoModern(spellID);
+        if spellInfo then
+            local spellName, spellIcon = spellInfo.name, spellInfo.iconID;
+            return "|T"..spellIcon..":0|t "..spellName;
+        end
+        return nil;
+    end
+
+    local spellName, _, spellIcon = GetSpellInfoLegacy(spellID);
+    if spellName then
+        return "|T"..spellIcon..":0|t "..spellName;
+    end
+    return nil;
+end
+
+-- Get the cooldown start time and duration for a given spell ID
+function SAO:GetSpellCooldown(spellID)
+    if GetSpellCooldownModern then
+        local cooldownInfo = GetSpellCooldownModern(spellID);
+        if cooldownInfo == nil then
+            return nil, nil;
+        end
+        return cooldownInfo.startTime, cooldownInfo.duration;
+    end
+
+    local startTime, duration = GetSpellCooldownLegacy(spellID);
+    return startTime, duration;
+end
+
+-- Get the power cost table for a given spell ID
+function SAO:GetSpellPowerCost(spellID)
+    return GetSpellPowerCost(spellID);
+end
 
 -- Returns the list of spell IDs for a given name
 -- Returns an empty list {} if the spell is not found in the spellbook
@@ -50,20 +115,20 @@ function SAO.RefreshSpellIDsByName(self, name, awaken)
 end
 
 -- Update the spell cache when a new spell is learned
-function SAO.LearnNewSpell(self, spellID)
-    local name = GetSpellInfo(spellID);
-    if (not name) then
+function SAO:LearnNewSpell(spellID)
+    local name = self:GetSpellName(spellID);
+    if not name then
         return;
     end
 
     local cached = self.SpellIDsByName[name];
-    if (not cached) then
+    if not cached then
         -- Not interested in untracked spells
         return;
     end
 
     for _, id in ipairs(cached) do
-        if (id == spellID) then
+        if id == spellID then
             -- Spell ID already cached
             return
         end
@@ -87,22 +152,22 @@ end
 -- @param spellID spell ID from CLEU
 -- @param spellName spell name from CLEU
 -- @param referenceID spell ID of the spell we want to compare with CLEU
-function SAO.IsSpellIdentical(self, spellID, spellName, referenceID)
+function SAO:IsSpellIdentical(spellID, spellName, referenceID)
     if spellID ~= 0 then
         return spellID == referenceID
     else
-        return spellName == GetSpellInfo(referenceID)
+        return spellName == self:GetSpellName(referenceID)
     end
 end
 
 local canHaveMultipleRanks = SAO.IsProject(SAO.ALL_PROJECTS - SAO.CATA_AND_ONWARD);
 -- Test if the player is capable of casting a specific spell
-function SAO.IsSpellLearned(self, spellID)
+function SAO:IsSpellLearned(spellID)
     if IsSpellKnownOrOverridesKnown(spellID) then
         return true;
     end
     if canHaveMultipleRanks then
-        local spellName = GetSpellInfo(spellID);
+        local spellName = self:GetSpellName(spellID);
         for _, spellID in ipairs(self.SpellIDsByName[spellName] or {}) do
             if IsSpellKnownOrOverridesKnown(spellID) then
                 return true;

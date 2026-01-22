@@ -101,8 +101,8 @@ local DrainSoulHandler = {
 
 local function customLogin(self, ...)
     -- Drain Soul is empowered on low health enemies only in Wrath Classic and Cataclysm Classic
-    local spellName = GetSpellInfo(drainSoul);
-    if (spellName) then
+    local spellName = self:GetSpellName(drainSoul);
+    if spellName then
         -- Must register glowing buttons manually, because Drain Soul is not registered by an aura/counter/etc.
         self:RegisterGlowIDs({ spellName });
         local allSpellIDs = self:GetSpellIDsByName(spellName);

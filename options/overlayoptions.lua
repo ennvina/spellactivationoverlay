@@ -1,5 +1,4 @@
 local AddonName, SAO = ...
-
 local Module = "option"
 
 -- Add a checkbox for an overlay
@@ -14,11 +13,11 @@ local Module = "option"
 -- By linking options as soon as possible, before their respective RegisterAura() calls, options can be used by initial triggers, if any
 function SAO.AddOverlayOption(self, talentID, auraID, hash, talentSubText, variants, testHash, testAuraID)
     local talentText = self:GetTalentText(talentID);
-    if not talentText or (not self:IsFakeSpell(auraID) and not GetSpellInfo(auraID)) then
+    if not talentText or (not self:IsFakeSpell(auraID) and not self:DoesSpellExist(auraID)) then
         if not talentText then
             SAO:Debug(Module, "Skipping overlay option of talentID "..tostring(talentID).." because the spell does not exist");
         end
-        if not self:IsFakeSpell(auraID) and not GetSpellInfo(auraID) then
+        if not self:IsFakeSpell(auraID) and not self:DoesSpellExist(auraID) then
             SAO:Debug(Module, "Skipping overlay option of auraID "..tostring(auraID).." because the spell does not exist (and is not a fake spell)");
         end
         return;

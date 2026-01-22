@@ -5,7 +5,6 @@ local Module = "glow"
 --local ActionButton_HideOverlayGlow = ActionButton_HideOverlayGlow -- Native glow disabled to avoid taints
 --local ActionButton_ShowOverlayGlow = ActionButton_ShowOverlayGlow -- Native glow disabled to avoid taints
 local GetNumShapeshiftForms = GetNumShapeshiftForms
-local GetSpellInfo = GetSpellInfo
 local HasAction = HasAction
 
 --[[
@@ -86,7 +85,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
     end,
 
     SpellInfo = function(self, glowID)
-        return tostring(glowID).." ("..tostring(GetSpellInfo(glowID) or nil)..")";
+        return tostring(glowID).." ("..tostring(SAO:GetSpellName(glowID))..")";
     end,
 
     ParamName = function(self, frame, glowID)
@@ -503,11 +502,11 @@ local function isGlowingOptionEnabled(glowingOptions, glowID, hashData)
             return glowingOptions[glowID];
         end
     else
-        local glowSpellName = (type(glowID) == "number") and GetSpellInfo(glowID) or glowID;
+        local glowSpellName = (type(glowID) == "number") and SAO:GetSpellName(glowID) or glowID;
 
         if optionIndex and type(glowingOptions[optionIndex]) == 'table' then
             for optionSpellID, optionEnabled in pairs(glowingOptions[optionIndex]) do
-                if (GetSpellInfo(optionSpellID) == glowSpellName) then
+                if SAO:GetSpellName(optionSpellID) == glowSpellName then
                     return optionEnabled;
                 end
             end
@@ -515,7 +514,7 @@ local function isGlowingOptionEnabled(glowingOptions, glowID, hashData)
 
         if legacyAllowed then
             for optionSpellID, optionEnabled in pairs(glowingOptions) do
-                if (type(optionSpellID) == 'number' and GetSpellInfo(optionSpellID) == glowSpellName) then
+                if type(optionSpellID) == 'number' and SAO:GetSpellName(optionSpellID) == glowSpellName then
                     return optionEnabled;
                 end
             end

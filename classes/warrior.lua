@@ -325,7 +325,7 @@ local function customLogin(self, ...)
         return;
     end
 
-    local overpowerName = GetSpellInfo(overpower);
+    local overpowerName = self:GetSpellName(overpower);
     if overpowerName then
         -- Overpower is used for OverpowerHandler, detecting when the target dodges
         OverpowerHandler:init(overpower, overpowerName);
@@ -340,12 +340,12 @@ local function customLogin(self, ...)
         end
     end
 
-    local revengeName = GetSpellInfo(revenge);
+    local revengeName = self:GetSpellName(revenge);
     if revengeName then
         RevengeHandler:init(revenge, revengeName);
     end
 
-    local executeName = GetSpellInfo(execute);
+    local executeName = self:GetSpellName(execute);
     if executeName then
         ExecuteHandler:init(execute, executeName);
     end

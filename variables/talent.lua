@@ -181,7 +181,7 @@ SAO.Variable:register({
                 end
 
                 -- Positive values have to be a talent's spell ID
-                local talentName = GetSpellInfo(value);
+                local talentName = SAO:GetSpellName(value);
                 local _, _, i, j = SAO:GetTalentByName(talentName);
                 if type(i) == 'number' and type(j) == 'number' then
                     if SAO.IsMoP() then

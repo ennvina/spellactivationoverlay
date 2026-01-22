@@ -137,9 +137,9 @@ local function customLogin(self, ...)
     end
 
     local riposteSpellID = 14251;
-    local riposteSpellName = GetSpellInfo(riposteSpellID);
+    local riposteSpellName = SAO:GetSpellName(riposteSpellID);
 
-    if (riposteSpellName) then
+    if riposteSpellName then
         RiposteHandler:init(riposteSpellID, riposteSpellName);
     end
 end

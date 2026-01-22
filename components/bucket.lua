@@ -20,6 +20,7 @@ SAO.RegisteredBucketsBySpellID = {}
 -- A stack count of non-zero means "for a specific number of stacks"
 SAO.Bucket = {
     create = function(self, name, spellID)
+        local spellName = SAO:GetSpellName(spellID);
         local bucket = {
             name = name, -- Name should be unique amongst buckets
 
@@ -37,7 +38,7 @@ SAO.Bucket = {
             -- hashCalculator and hashCalculatorToApply may differ if and only if there is an onAboutToApplyHash handler
 
             -- Constant for more efficient debugging
-            description = name.." ("..spellID..(GetSpellInfo(spellID) and " = "..GetSpellInfo(spellID) or "")..")",
+            description = name.." ("..spellID..(spellName and (" = "..spellName) or "")..")",
         };
         bucket.trigger = SAO.Trigger:new(bucket);
         -- Initialize current state with unattainable values
@@ -312,7 +313,7 @@ SAO.BucketManager = {
 
             -- Cannot guarantee we can track spell ID on Classic Era, but can always track spell name
             if SAO.IsEra() and not SAO:IsFakeSpell(spellID) then
-                local spellName = GetSpellInfo(spellID);
+                local spellName = SAO:GetSpellName(spellID);
                 if spellName then
                     local conflictingBucket = SAO.RegisteredBucketsBySpellID[spellName];
                     if conflictingBucket then

@@ -1,5 +1,4 @@
 local AddonName, SAO = ...
-
 local Module = "option"
 
 -- Add a checkbox for a glowing button
@@ -15,11 +14,11 @@ local Module = "option"
 -- By linking options as soon as possible, before their respective RegisterAura() calls, options can be used by initial triggers, if any
 function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText, variants, hash, alwaysHideTalentText) -- @todo use hash and testHash like overlay options
     local talentText = talentID and self:GetTalentText(talentID);
-    if (talentID and not talentText) or (not self:IsFakeSpell(glowID) and not GetSpellInfo(glowID)) then
+    if (talentID and not talentText) or (not self:IsFakeSpell(glowID) and not self:DoesSpellExist(glowID)) then
         if talentID and not talentText then
             SAO:Debug(Module, "Skipping glowing option of talentID "..tostring(talentID).." because the spell does not exist");
         end
-        if not self:IsFakeSpell(glowID) and not GetSpellInfo(glowID) then
+        if not self:IsFakeSpell(glowID) and not self:DoesSpellExist(glowID) then
             SAO:Debug(Module, "Skipping glowing option of glowID "..tostring(glowID).." because the spell does not exist (and is not a fake spell)");
         end
         return;
@@ -45,8 +44,7 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
         -- text = WrapTextInColorCode(className, classColor);
 
         -- Talent text
-        local spellName, spellIcon;
-        if (talentID and talentID ~= glowID and not alwaysHideTalentText) then
+        if talentID and talentID ~= glowID and not alwaysHideTalentText then
             text = text.." "..talentText;
             if type(talentSubText) == 'function' then
                 local evalTalentSubText = talentSubText();
@@ -59,14 +57,14 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
                 text = text.." ("..talentSubText..")";
             end
             text = text.." +";
-        elseif (talentID and talentID == glowID and talentSubText and not alwaysHideTalentText) then
+        elseif talentID and talentID == glowID and talentSubText and not alwaysHideTalentText then
             SAO:Debug(Module, "Glowing option of glowID "..tostring(glowID).." has talent sub-text '"..talentSubText.."' but the text will be discarded because talentID matches glowID");
         end
 
         -- Spell text
-        spellName, _, spellIcon = GetSpellInfo(glowID);
-        text = text.." |T"..spellIcon..":0|t "..spellName;
-        if (spellSubText) then
+        local spellIconAndText = SAO:GetSpellIconAndText(glowID);
+        text = text.." "..spellIconAndText;
+        if spellSubText then
             text = text.." ("..spellSubText..")";
         end
 
@@ -95,7 +93,7 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
     local testFunc = function(start)
         local fakeOffset = 42000000;
         if (start) then
-            self:AddGlow(fakeOffset+spellID, { (GetSpellInfo(glowID)) });
+            self:AddGlow(fakeOffset+spellID, { SAO:GetSpellName(glowID) });
         else
             self:RemoveGlow(fakeOffset+spellID);
         end
