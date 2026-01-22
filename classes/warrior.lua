@@ -749,5 +749,5 @@ SAO.Class["WARRIOR"] = {
     ["PLAYER_LOGIN"] = customLogin,
     ["PLAYER_TARGET_CHANGED"] = retarget,
     ["UNIT_HEALTH"] = unitHealth,
-    ["UNIT_HEALTH_FREQUENT"] = unitHealthFrequent,
+    ["UNIT_HEALTH_FREQUENT"] = (not SAO.HasMidnightEvents()) and unitHealthFrequent or nil,
 }

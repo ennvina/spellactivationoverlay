@@ -955,7 +955,7 @@ SAO.Class["MAGE"] = {
     ["CHARACTER_POINTS_CHANGED"] = recheckTalents,
     ["PLAYER_TARGET_CHANGED"] = retarget,
     ["UNIT_HEALTH"] = unitHealth,
-    ["UNIT_HEALTH_FREQUENT"] = unitHealthFrequent,
+    ["UNIT_HEALTH_FREQUENT"] = (not SAO.HasMidnightEvents()) and unitHealthFrequent or nil,
     [SAO.IsWrath() and "PLAYER_TALENT_UPDATE" or "CHARACTER_POINTS_CHANGED"] = recheckTalents, -- Event changed in Wrath
     ["RUNE_UPDATED"] = SAO.IsSoD() and recheckTalents or nil,
 }

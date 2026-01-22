@@ -121,7 +121,7 @@ SAO.Variable:register({
 
     event = {
         isRequired = true,
-        names = { "PLAYER_TARGET_CHANGED", "UNIT_HEALTH", "UNIT_HEALTH_FREQUENT" },
+        names = SAO.HasMidnightEvents() and { "PLAYER_TARGET_CHANGED", "UNIT_HEALTH" } or { "PLAYER_TARGET_CHANGED", "UNIT_HEALTH", "UNIT_HEALTH_FREQUENT" },
         PLAYER_TARGET_CHANGED = function()
             if not UnitExists("target") or not UnitCanAttack("player", "target") then
                 local buckets = SAO:GetBucketsByTrigger(SAO.TRIGGER_EXECUTE);
@@ -137,11 +137,11 @@ SAO.Variable:register({
                 SAO:CheckManuallyAllBuckets(SAO.TRIGGER_EXECUTE);
             end
         end,
-        UNIT_HEALTH_FREQUENT = function(unitID)
+        UNIT_HEALTH_FREQUENT = (not SAO.HasMidnightEvents()) and function(unitID)
             if unitID == "target" and SAO:IsResponsiveMode() then
                 SAO:CheckManuallyAllBuckets(SAO.TRIGGER_EXECUTE);
             end
-        end
+        end or nil,
     },
 
     condition = {
