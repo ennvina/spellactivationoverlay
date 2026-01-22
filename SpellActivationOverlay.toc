@@ -1,4 +1,4 @@
-## Interface: 11508, 20505, 30405, 38000, 40402, 50503
+## Interface: 11508, 20505, 30405, 38000, 40402, 50503, 120000
 ## Title: |TInterface/Icons/Spell_Frost_Stun:16:16:0:0:512:512:64:448:64:448|t SpellActivationOverlay |cff66bbff2.7.1|r |TInterface/Icons/trade_engineering:16:16:0:0:512:512:32:480:32:480|t
 ## Notes: Display overlays and glow buttons to improve your gameplay!
 ## Notes-deDE: Zeigt Overlays und leuchtende Schaltflächen zur Verbesserung Ihres Gameplays an!

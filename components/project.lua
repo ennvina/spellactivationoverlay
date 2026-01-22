@@ -11,7 +11,8 @@ SAO.CATA   = 0x1000
 SAO.MOP    = 0x2000
 SAO.WOD    = 0x4000
 SAO.LEGION = 0x8000
-SAO.ALL_PROJECTS = SAO.ERA + SAO.SOD + SAO.TBC + SAO.WRATH + SAO.CATA + SAO.MOP -- + SAO.WOD + SAO.LEGION
+SAO.RETAIL = 0x10000000
+SAO.ALL_PROJECTS = SAO.ERA + SAO.SOD + SAO.TBC + SAO.WRATH + SAO.CATA + SAO.MOP --[[+ SAO.WOD + SAO.LEGION]] + SAO.RETAIL
 SAO.TBC_AND_ONWARD   = SAO.ALL_PROJECTS - (SAO.ERA + SAO.SOD)
 SAO.WRATH_AND_ONWARD = SAO.ALL_PROJECTS - (SAO.ERA + SAO.SOD + SAO.TBC)
 SAO.CATA_AND_ONWARD  = SAO.ALL_PROJECTS - (SAO.ERA + SAO.SOD + SAO.TBC + SAO.WRATH)
@@ -41,6 +42,10 @@ function SAO.IsSoD()
     return WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and C_Engraving and C_Engraving.IsEngravingEnabled()
 end
 
+function SAO.IsRetail()
+    return WOW_PROJECT_ID == WOW_PROJECT_MAINLINE;
+end
+
 function SAO.IsProject(projectFlags)
     if type(projectFlags) ~= 'number' then
         SAO:Debug(Module, "Checking project against invalid flags "..tostring(projectFlags));
@@ -52,7 +57,9 @@ function SAO.IsProject(projectFlags)
         bit.band(projectFlags, SAO.TBC) ~= 0 and SAO.IsTBC() or
         bit.band(projectFlags, SAO.WRATH) ~= 0 and SAO.IsWrath() or
         bit.band(projectFlags, SAO.CATA) ~= 0 and SAO.IsCata() or
-        bit.band(projectFlags, SAO.MOP) ~= 0 and SAO.IsMoP()
+        bit.band(projectFlags, SAO.MOP) ~= 0 and SAO.IsMoP() or
+        --
+        bit.band(projectFlags, SAO.RETAIL) ~= 0 and SAO.IsRetail()
     );
 end
 
@@ -62,6 +69,7 @@ local flavorNames = {
     [WOW_PROJECT_WRATH_CLASSIC or 11] = "Wrath",
     [WOW_PROJECT_CATACLYSM_CLASSIC or 14] = "Cata",
     [WOW_PROJECT_MISTS_CLASSIC or 19] = "MoP",
+    [WOW_PROJECT_MAINLINE or 1] = "Retail",
 };
 
 function SAO.GetFlavorName()
@@ -102,6 +110,7 @@ local projectNameForBuildID = {
     -- bfa       = EXPANSION_NAME7 or "Battle for Azeroth",
     -- sl        = EXPANSION_NAME8 or "Shadowlands",
     -- df        = EXPANSION_NAME9 or "Dragonflight",
+    retail    = _G["EXPANSION_NAME"..(LE_EXPANSION_LEVEL_CURRENT or 99)] or "Retail",
 };
 
 function SAO.GetFullProjectName(buildID)
@@ -123,6 +132,8 @@ local expectedBuildID = {
     [WOW_PROJECT_WRATH_CLASSIC or 11] = "wrath",
     [WOW_PROJECT_CATACLYSM_CLASSIC or 14] = "cata",
     [WOW_PROJECT_MISTS_CLASSIC or 19] = "mop",
+    --
+    [WOW_PROJECT_MAINLINE or 1] = "retail",
 };
 
 function SAO.GetExpectedBuildID()
