@@ -471,13 +471,13 @@ function SAO.AddGlowNumber(self, spellID, glowID)
         for _, frame in pairs(actionButtons or {}) do
             if (not SpellActivationOverlayDB or not SpellActivationOverlayDB.glow or SpellActivationOverlayDB.glow.enabled) then
                 if not frame.__sao then
-                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." does not have __sao, glow may fail");
+                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." does not have __sao, ".."glow may fail");
                 elseif not frame.__sao.GetGlowID() then
-                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a nil __sao.GetGlowID, glow may fail");
+                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a nil __sao.GetGlowID, ".."glow may fail");
                 elseif not frame.__sao.lastGlowID then
-                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a nil __sao.lastGlowID, glow may fail");
+                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a nil __sao.lastGlowID, ".."glow may fail");
                 elseif frame.__sao.GetGlowID() ~= frame.__sao.lastGlowID then
-                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a different __sao.GetGlowID ("..tostring(frame.__sao.GetGlowID())..") vs. __sao.lastGlowID ("..tostring(frame.__sao.lastGlowID).."), glow may fail");
+                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a different __sao.GetGlowID ("..tostring(frame.__sao.GetGlowID())..") vs. __sao.lastGlowID ("..tostring(frame.__sao.lastGlowID).."), ".."glow may fail");
                 end
                 EnableGlow(frame, frame.__sao and (frame.__sao.GetGlowID() or frame.__sao.lastGlowID) or glowID, "direct activation");
             end
@@ -623,7 +623,7 @@ local function warnOutdatedLBG()
     local text = "[|cffa2f3ff"..AddonName.."|r] One of your addons uses an old version of LibButtonGlow. "
                .."|cffff0000Please consider updating your addons|r. "
                .."Glowing buttons have been |cffff8040temporarily disabled|r to prevent issues. "
-               .."(note: the Glowing Buttons option can still be enabled, but it will have no effect until the faulty addon is up-to-date)";
+               .."(note: the Glowing Buttons option can still be enabled, ".."but it will have no effect until the faulty addon is up-to-date)";
     print(text);
 
     warnedOutdatedLBG = true

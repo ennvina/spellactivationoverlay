@@ -546,7 +546,7 @@ SAO.defaults = {
                 [114255] = { -- Surge of Light (Mists of Pandaria)
                     [2061] = nil, -- Flash Heal, set to nil to simplify DB migration
                 },
-                [87160] = {  -- Mind Melt (Cataclysm), Surge of Darkness (Mists of Pandaria)
+                [87160] = { -- Mind Melt (Cataclysm), Surge of Darkness (Mists of Pandaria)
                     [8092]  = true, -- Mind Blast (Cataclysm)
                     [73510] = true, -- Mind Spike (Mists of Pandaria)
                 },
@@ -564,12 +564,12 @@ SAO.defaults = {
                     [2060] = true, -- Greater Heal
                     [596]  = true, -- Prayer of Healing
                 },
-                [431666] = {  -- Surge of Light (Season of Discovery)
+                [431666] = { -- Surge of Light (Season of Discovery)
                     [585]    = true, -- Smite
                     [2061]   = true, -- Flash Heal
                     [401937] = true, -- Binding Heal
                 },
-                [431655] = {  -- Mind Spike (Season of Discovery)
+                [431655] = { -- Mind Spike (Season of Discovery)
                     [8092] = true, -- Mind Blast
                 },
                 [81292] = { -- Glyph of Mind Spike (Mists of Pandaria)
@@ -609,13 +609,13 @@ SAO.defaults = {
         },
         ["SHAMAN"] = {
             alert = {
-                [16246] = {  -- Elemental Focus
+                [16246] = { -- Elemental Focus
                     [0] = true,
                 },
-                [415105] = {  -- Power Surge (Season of Discovery)
+                [415105] = { -- Power Surge (Season of Discovery)
                     [0] = true,
                 },
-                [51505] = {  -- Lava Burst, for Lava Surge (Cataclysm)
+                [51505] = { -- Lava Burst, for Lava Surge (Cataclysm)
                     [0] = true,
                 },
                 [77762] = { -- Lava Surge (Mists of Pandaria)
@@ -673,14 +673,14 @@ SAO.defaults = {
                     [1064]  = false, -- Chain Heal
                     [408490] = false, -- Lava Burst (Season of Discovery)
                 },
-                [415105] = {  -- Power Surge (Season of Discovery)
+                [415105] = { -- Power Surge (Season of Discovery)
                     [421]   = false, -- Chain Lightning
                     [408490] = false, -- Lava Burst (Season of Discovery)
                 },
                 [468526] = { -- Power Surge Healing proc (Season of Discovery)
                     [1064] = false,  -- Chain Heal
                 },
-                [51505] = {  -- Lava Burst, for Lava Surge (Cataclysm)
+                [51505] = { -- Lava Burst, for Lava Surge (Cataclysm)
                     [51505] = true,
                 },
                 [53390] = { -- Tidal Waves (Wrath+)
@@ -695,7 +695,7 @@ SAO.defaults = {
                 [425339]= { -- Molten Blast (Season of Discovery)
                     [425339] = true, -- Molten Blast (Season of Discovery)
                 },
-                [324]= {  -- Lightning Shield, for Rolling Thunder (Season of Discovery) / Fulmination (Cataclysm+)
+                [324]= { -- Lightning Shield, for Rolling Thunder (Season of Discovery) / Fulmination (Cataclysm+)
                     [8042] = true, -- Earth Shock, for for Rolling Thunder (Season of Discovery) / Fulmination (Cataclysm+)
                 },
             },
@@ -796,7 +796,7 @@ SAO.defaults = {
                 [108683] = { -- Fire and Brimstone (Mists of Pandaria)
                     [108685] = false, -- Conflagrate + Fire and Brimstone
                     [109468] = false, -- Curse of Enfeeblement + Fire and Brimstone
-                    [104225] = false, -- Curse of the Elements +  + Fire and Brimstone
+                    [104225] = false, -- Curse of the Elements + Fire and Brimstone
                     [108686] = false, -- Immolate + Fire and Brimstone
                     [114654] = false, -- Incinerate + Fire and Brimstone
                 },
@@ -838,7 +838,7 @@ SAO.defaults = {
                     [0] = true, -- any stacks
                 },
                 [122510]= { -- Ultimatum (Mists of Pandaria)
-                    [0] =  true,
+                    [0] = true,
                 }
             },
             glow = {

@@ -317,7 +317,7 @@ SAO.BucketManager = {
                 if spellName then
                     local conflictingBucket = SAO.RegisteredBucketsBySpellID[spellName];
                     if conflictingBucket then
-                        SAO:Debug(Module, "Registering spells with different spell IDs ("..conflictingBucket.name.." uses spell ID "..conflictingBucket.spellID.." vs. "..bucket.name.." uses spell ID "..bucket.spellID..") but sharing the same spell name '"..spellName.."', this might cause issues");
+                        SAO:Debug(Module, "Registering spells with different spell IDs ("..conflictingBucket.name.." uses spell ID "..conflictingBucket.spellID.." vs. "..bucket.name.." uses spell ID "..bucket.spellID..") but sharing the same spell name '"..spellName.."', ".."this might cause issues");
                     end
                     SAO.RegisteredBucketsBySpellID[spellName] = bucket; -- Share pointer
                 else

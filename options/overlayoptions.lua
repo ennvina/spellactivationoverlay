@@ -89,7 +89,7 @@ function SAO.AddOverlayOption(self, talentID, auraID, hash, talentSubText, varia
         end
         local bucket = self:GetBucketBySpellID(registeredSpellID);
         if (not bucket) then
-            SAO:Debug("preview", "Trying to preview overlay with spell ID "..tostring(registeredSpellID).." but it is not registered, or its registration failed");
+            SAO:Debug("preview", "Trying to preview overlay with spell ID "..tostring(registeredSpellID).." but it is not registered, ".."or its registration failed");
             return;
         end
 

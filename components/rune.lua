@@ -74,7 +74,7 @@ if SAO.IsSoD() then
             if runeMapping.initialized then
                 -- Rune found: yay! No need for this timer anymore
                 self:Cancel();
-                SAO:Debug(Module, "Found at least one rune, stopping regular checks now");
+                SAO:Debug(Module, "Found at least one rune, ".."stopping regular checks now");
             else
                 SAO:Debug(Module, "No rune was found during regular check");
             end

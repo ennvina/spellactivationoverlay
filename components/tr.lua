@@ -161,12 +161,12 @@ end
 function SAO:disabledClass()
     local unsupportedClassTranslations = {
         ["en"] = "Disabled class %s while development is in progress.\nPlease come back soon :)",
-        ["de"] = "Deaktivierte Klasse %s, während der Entwicklungsphase.\nBitte kommen Sie bald wieder :)",
+        ["de"] = "Deaktivierte Klasse %s, ".."während der Entwicklungsphase.\nBitte kommen Sie bald wieder :)",
         ["fr"] = "Classe %s désactivée pendant que le développement est en cours.\nRevenez bientôt :)",
         ["es"] = "Clase %s desactivada mientras el desarrollo está en curso.\nVuelva pronto :)",
-        ["ru"] = "Класс %s отключен на время разработки.\nПожалуйста, вернитесь в ближайшее время :)",
+        ["ru"] = "Класс %s отключен на время разработки.\nПожалуйста, ".."вернитесь в ближайшее время :)",
         ["it"] = "La classe %s è stata disabilitata mentre lo sviluppo è in corso.\nSi prega di tornare presto :)",
-        ["pt"] = "Classe %s desativada enquanto o desenvolvimento está em andamento.\nPor favor, volte em breve :)",
+        ["pt"] = "Classe %s desativada enquanto o desenvolvimento está em andamento.\nPor favor, ".."volte em breve :)",
         ["ko"] = "개발이 진행되는 동안 %s 클래스를 사용할 수 없습니다.\n곧 다시 돌아와주세요 :)",
         ["zh"] = "开发过程中禁用了%s类。请尽快回来 :)",
         ["zhTW"] = "開發過程中禁用了%s類。請儘快回來 :)",
@@ -212,7 +212,7 @@ end
 function SAO:disableWhenInstalled(addon)
     local disableWhenInstalledTranslations = {
         ["en"] = "Disable when %s is installed",
-        ["de"] = "Deaktivieren, wenn %s installiert ist",
+        ["de"] = "Deaktivieren, ".."wenn %s installiert ist",
         ["fr"] = "Désactiver lorsque %s est installé",
         ["es"] = "Desactivar cuando %s está instalado",
         ["ru"] = "Отключить при установке %s",
@@ -264,12 +264,12 @@ end
 function SAO:compatibilityWarning(addonBuild, expectedBuild)
     local compatibilityWarningTranslations = {
         ["en"] = "You have installed the optimized build for %s but the expected build is %s. Some effects may be missing for your class.",
-        ["de"] = "Sie haben die optimierte Version für %s installiert, aber die erwartete Version ist %s. Einige Effekte könnten für Ihre Klasse fehlen.",
+        ["de"] = "Sie haben die optimierte Version für %s installiert, ".."aber die erwartete Version ist %s. Einige Effekte könnten für Ihre Klasse fehlen.",
         ["fr"] = "Vous avez installé la version optimisée pour %s mais la version attendue est %s. Certains effets peuvent manquer pour votre classe.",
         ["es"] = "Has instalado la versión optimizada para %s pero la versión esperada es %s. Algunos efectos pueden faltar para tu clase.",
-        ["ru"] = "Вы установили оптимизированную сборку для %s, но ожидаемая сборка - %s. Некоторые эффекты могут отсутствовать для вашего класса.",
+        ["ru"] = "Вы установили оптимизированную сборку для %s, ".."но ожидаемая сборка - %s. Некоторые эффекты могут отсутствовать для вашего класса.",
         ["it"] = "Hai installato la versione ottimizzata per %s ma la versione attesa è %s. Alcuni effetti potrebbero mancare per la tua classe.",
-        ["pt"] = "Você instalou a versão otimizada para %s, mas a versão esperada é %s. Alguns efeitos podem estar faltando para sua classe.",
+        ["pt"] = "Você instalou a versão otimizada para %s, ".."mas a versão esperada é %s. Alguns efeitos podem estar faltando para sua classe.",
         ["ko"] = "%s에 최적화된 빌드를 설치했지만 예상 빌드는 %s입니다. 일부 효과가 클래스에 없을 수 있습니다.",
         ["zh"] = "您已安装了针对 %s 的优化版本，但预期版本为 %s。您的职业可能缺少某些效果。",
         ["zhTW"] = "您已安裝針對 %s 的最佳化版本，但預期版本為 %s。您的職業可能缺少某些效果。",
@@ -315,14 +315,14 @@ end
 -- "Unsupported SHOW event{details}. Please report it to the {AddonName} Discord, GitHub or CurseForge. (you can disable this message in options: /sao)"
 function SAO:unsupportedShowEvent(details)
     local unsupportedShowEventTranslations = {
-        ["en"] = "Unsupported SHOW event%s. Please report it to the %s Discord, GitHub or CurseForge. (you can disable this message in options: /sao)",
-        ["de"] = "Nicht unterstütztes SHOW-Ereignis%s. Bitte melden Sie es im %s Discord, GitHub oder CurseForge. (Sie können diese Nachricht in den Optionen deaktivieren: /sao)",
-        ["fr"] = "Événement SHOW non pris en charge%s. Veuillez le signaler sur le Discord, GitHub ou CurseForge de %s. (vous pouvez désactiver ce message dans les options : /sao)",
-        ["es"] = "Evento SHOW no compatible%s. Por favor, repórtalo en el Discord, GitHub o CurseForge de %s. (puedes desactivar este mensaje en las opciones: /sao)",
-        ["ru"] = "Неподдерживаемое событие SHOW%s. Пожалуйста, сообщите об этом в Discord, GitHub или CurseForge %s. (вы можете отключить это сообщение в настройках: /sao)",
-        ["it"] = "Evento SHOW non supportato%s. Si prega di segnalarlo su Discord, GitHub o CurseForge di %s. (è possibile disattivare questo messaggio nelle opzioni: /sao)",
-        ["pt"] = "Evento SHOW não suportado%s. Por favor, relate-o no Discord, GitHub ou CurseForge do %s. (você pode desativar esta mensagem nas opções: /sao)",
-        ["ko"] = "지원되지 않는 SHOW 이벤트입니다%s. %s의 Discord, GitHub 또는 CurseForge에 보고해 주세요. (옵션에서 이 메시지를 비활성화할 수 있습니다: /sao)",
+        ["en"] = "Unsupported SHOW event%s. Please report it to the %s Discord, ".."GitHub or CurseForge. (you can disable this message in options: /sao)",
+        ["de"] = "Nicht unterstütztes SHOW-Ereignis%s. Bitte melden Sie es im %s Discord, ".."GitHub oder CurseForge. (Sie können diese Nachricht in den Optionen deaktivieren: /sao)",
+        ["fr"] = "Événement SHOW non pris en charge%s. Veuillez le signaler sur le Discord, ".."GitHub ou CurseForge de %s. (vous pouvez désactiver ce message dans les options : /sao)",
+        ["es"] = "Evento SHOW no compatible%s. Por favor, ".."repórtalo en el Discord, ".."GitHub o CurseForge de %s. (puedes desactivar este mensaje en las opciones: /sao)",
+        ["ru"] = "Неподдерживаемое событие SHOW%s. Пожалуйста, ".."сообщите об этом в Discord, ".."GitHub или CurseForge %s. (вы можете отключить это сообщение в настройках: /sao)",
+        ["it"] = "Evento SHOW non supportato%s. Si prega di segnalarlo su Discord, ".."GitHub o CurseForge di %s. (è possibile disattivare questo messaggio nelle opzioni: /sao)",
+        ["pt"] = "Evento SHOW não suportado%s. Por favor, ".."relate-o no Discord, ".."GitHub ou CurseForge do %s. (você pode desativar esta mensagem nas opções: /sao)",
+        ["ko"] = "지원되지 않는 SHOW 이벤트입니다%s. %s의 Discord, ".."GitHub 또는 CurseForge에 보고해 주세요. (옵션에서 이 메시지를 비활성화할 수 있습니다: /sao)",
         ["zh"] = "不支持的 SHOW 事件%s。请在 %s 的 Discord、GitHub 或 CurseForge 上报告。(您可以在选项中禁用此消息：/sao)",
         ["zhTW"] = "不支援的 SHOW 事件%s。請在 %s 的 Discord、GitHub 或 CurseForge 上報告。(您可以在選項中停用此訊息：/sao)",
     };
@@ -366,13 +366,13 @@ end
 -- Translate "You previously chose to disable the game's spell alerts, and now they are back.\n\nDo you want to disable them again?"
 function SAO:spellAlertConflictsAgain()
     local spellAlertConflictsAgainTranslations = {
-        ["en"] = "You previously chose to disable the game's spell alerts, and now they are back.\n\nDo you want to disable them again?",
-        ["de"] = "Sie haben sich zuvor entschieden, die Zauberwarnungen des Spiels zu deaktivieren, und jetzt sind sie wieder da.\n\nMöchten Sie sie erneut deaktivieren?",
-        ["fr"] = "Vous avez précédemment choisi de désactiver les alertes de sort du jeu, et maintenant elles sont de retour.\n\nVoulez-vous les désactiver à nouveau ?",
-        ["es"] = "Anteriormente elegiste desactivar las alertas de hechizo del juego, y ahora han vuelto.\n\n¿Deseas desactivarlas de nuevo?",
-        ["ru"] = "Вы ранее выбрали отключить игровые оповещения о заклинаниях, и теперь они снова появились.\n\nВы хотите отключить их снова?",
-        ["it"] = "Hai precedentemente scelto di disattivare gli avvisi sugli incantesimi del gioco, e ora sono tornati.\n\nVuoi disattivarli di nuovo?",
-        ["pt"] = "Você escolheu desativar os alertas de feitiço do jogo, e agora eles voltaram.\n\nVocê deseja desativá-los novamente?",
+        ["en"] = "You previously chose to disable the game's spell alerts, ".."and now they are back.\n\nDo you want to disable them again?",
+        ["de"] = "Sie haben sich zuvor entschieden, ".."die Zauberwarnungen des Spiels zu deaktivieren, ".."und jetzt sind sie wieder da.\n\nMöchten Sie sie erneut deaktivieren?",
+        ["fr"] = "Vous avez précédemment choisi de désactiver les alertes de sort du jeu, ".."et maintenant elles sont de retour.\n\nVoulez-vous les désactiver à nouveau ?",
+        ["es"] = "Anteriormente elegiste desactivar las alertas de hechizo del juego, ".."y ahora han vuelto.\n\n¿Deseas desactivarlas de nuevo?",
+        ["ru"] = "Вы ранее выбрали отключить игровые оповещения о заклинаниях, ".."и теперь они снова появились.\n\nВы хотите отключить их снова?",
+        ["it"] = "Hai precedentemente scelto di disattivare gli avvisi sugli incantesimi del gioco, ".."e ora sono tornati.\n\nVuoi disattivarli di nuovo?",
+        ["pt"] = "Você escolheu desativar os alertas de feitiço do jogo, ".."e agora eles voltaram.\n\nVocê deseja desativá-los novamente?",
         ["ko"] = "이전에 게임의 주문 경고를 비활성화하기로 선택했으며 이제 다시 나타났습니다.\n\n다시 비활성화하시겠습니까?",
         ["zh"] = "您之前选择禁用游戏的法术警报，现在它们又回来了。\n\n您想再次禁用它们吗？",
         ["zhTW"] = "您之前選擇停用遊戲的法術警報，現在它們又回來了。\n\n您想再次停用它們嗎？",
@@ -384,7 +384,7 @@ end
 function SAO:gameSpellAlertsDisabled()
     local gameSpellAlertsDisabledTranslations = {
         ["en"] = "You chose to disable the game's spell alerts.",
-        ["de"] = "Sie haben sich entschieden, die Zauberwarnungen des Spiels zu deaktivieren.",
+        ["de"] = "Sie haben sich entschieden, ".."die Zauberwarnungen des Spiels zu deaktivieren.",
         ["fr"] = "Vous avez choisi de désactiver les alertes de sort du jeu.",
         ["es"] = "Has elegido desactivar las alertas de hechizo del juego.",
         ["ru"] = "Вы выбрали отключить игровые оповещения о заклинаниях.",
@@ -401,7 +401,7 @@ end
 function SAO:gameSpellAlertsLeftAsIs()
     local gameSpellAlertsLeftAsIsTranslations = {
         ["en"] = "You chose to leave the game's spell alerts as they are.",
-        ["de"] = "Sie haben sich entschieden, die Zauberwarnungen des Spiels so zu belassen, wie sie sind.",
+        ["de"] = "Sie haben sich entschieden, ".."die Zauberwarnungen des Spiels so zu belassen, wie sie sind.",
         ["fr"] = "Vous avez choisi de laisser les alertes de sort du jeu telles qu'elles sont.",
         ["es"] = "Has elegido dejar las alertas de hechizo del juego como están.",
         ["ru"] = "Вы выбрали оставить игровые оповещения о заклинаниях как есть.",
@@ -417,13 +417,13 @@ end
 -- Translate "Remember that you can change this later in the game's interface options, under {optionSequence}"
 function SAO:gameSpellAlertsChangeLater(optionSequence)
     local gameSpellAlertsChangeLaterTranslations = {
-        ["en"] = "Remember that you can change this later in the game's interface options, under %s",
-        ["de"] = "Denken Sie daran, dass Sie dies später in den Schnittstellenoptionen des Spiels unter %s ändern können.",
-        ["fr"] = "N'oubliez pas que vous pouvez modifier cela plus tard dans les options d'interface du jeu, sous %s",
-        ["es"] = "Recuerda que puedes cambiar esto más tarde en las opciones de interfaz del juego, bajo %s",
-        ["ru"] = "Помните, что вы можете изменить это позже в параметрах интерфейса игры, в разделе %s",
-        ["it"] = "Ricorda che puoi modificare questo in seguito nelle opzioni dell'interfaccia di gioco, sotto %s",
-        ["pt"] = "Lembre-se de que você pode mudar isso mais tarde nas opções de interface do jogo, em %s",
+        ["en"] = "Remember that you can change this later in the game's interface options, ".."under %s",
+        ["de"] = "Denken Sie daran, ".."dass Sie dies später in den Schnittstellenoptionen des Spiels unter %s ändern können.",
+        ["fr"] = "N'oubliez pas que vous pouvez modifier cela plus tard dans les options d'interface du jeu, ".."sous %s",
+        ["es"] = "Recuerda que puedes cambiar esto más tarde en las opciones de interfaz del juego, ".."bajo %s",
+        ["ru"] = "Помните, ".."что вы можете изменить это позже в параметрах интерфейса игры, ".."в разделе %s",
+        ["it"] = "Ricorda che puoi modificare questo in seguito nelle opzioni dell'interfaccia di gioco, ".."sotto %s",
+        ["pt"] = "Lembre-se de que você pode mudar isso mais tarde nas opções de interface do jogo, ".."em %s",
         ["ko"] = "나중에 %s에서 게임의 인터페이스 옵션에서 이를 변경할 수 있음을 기억하십시오.",
         ["zh"] = "请记住，您可以稍后在游戏的界面选项中更改此设置，位于 %s 下。",
         ["zhTW"] = "請記住，您可以稍後在遊戲的介面選項中更改此設置，位於 %s 下。",

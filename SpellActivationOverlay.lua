@@ -396,7 +396,7 @@ end
 function SpellActivationOverlay_DumpCombatOnlyOverlays()
 	SAO:Info(Module, "Listing combat-only overlays ("..#SAO.Frame.combatOnlyOverlays.." item"..(#SAO.Frame.combatOnlyOverlays == 1 and "" or "s")..")");
 	for i, overlay in pairs(SAO.Frame.combatOnlyOverlays) do
-		SAO:Info(Module, "combat-only-overlay["..i.."] location == "..overlay.position..", spell ID = "..overlay.spellID.." "..SAO:GetSpellName(overlay.spellID, ""));
+		SAO:Info(Module, "combat-only-overlay["..i.."] location == "..overlay.position..", ".."spell ID == "..overlay.spellID.." "..SAO:GetSpellName(overlay.spellID, ""));
 	end
 end
 

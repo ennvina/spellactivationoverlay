@@ -106,12 +106,12 @@ function SAO:ReportUnknownEffect(prefix, spellID, texture, positions, scale, r, 
         end
         if not self.UnknownNativeEffects[spellID] then
             local text = "";
-            text = text..", flavor="..tostring(self.GetFlavorName());
-            text = text..", spell="..tostring(spellID).." ("..self:GetSpellName(spellID, "unknown spell")..")"
-            text = text..", tex="..tostring(texture);
-            text = text..", pos="..((type(positions) == 'string') and ("'"..positions.."'") or tostring(positions));
-            text = text..", scale="..tostring(scale);
-            text = text..", rgb=("..tostring(r).." "..tostring(g).." "..tostring(b)..")";
+            text = text..", ".."flavor="..tostring(self.GetFlavorName());
+            text = text..", ".."spell="..tostring(spellID).." ("..self:GetSpellName(spellID, "unknown spell")..")"
+            text = text..", ".."tex="..tostring(texture);
+            text = text..", ".."pos="..((type(positions) == 'string') and ("'"..positions.."'") or tostring(positions));
+            text = text..", ".."scale="..tostring(scale);
+            text = text..", ".."rgb=("..tostring(r).." "..tostring(g).." "..tostring(b)..")";
             self:Info(prefix, SAO:unsupportedShowEvent(text));
 
             self.UnknownNativeEffects[spellID] = true;

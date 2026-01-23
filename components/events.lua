@@ -174,7 +174,7 @@ function SAO.ADDON_LOADED(self, addOnName, containsBindings)
             end
         else
             self:Info("==", "You have installed Necrosis and SpellActivationOverlay at the same time.")
-            self:Info("==", "Because you are playing "..className..", Necrosis is not necessary.");
+            self:Info("==", "Because you are playing "..className..", ".."Necrosis is not necessary.");
         end
         warnedSaoVsNecrosis = true;
     end
@@ -196,7 +196,7 @@ if SAO.IsProject(SAO.CATA_AND_ONWARD) then
 
 	DirectFrameEventHandlers["SPELL_ACTIVATION_OVERLAY_SHOW"] = function(self, event, ...)
 		local spellID, texture, positions, scale, r, g, b = ...;
-		SAO:Debug(Module, "Received native SPELL_ACTIVATION_OVERLAY_SHOW with spell ID "..tostring(spellID)..", texture "..tostring(texture)..", positions '"..tostring(positions).."', scale "..tostring(scale)..", (r g b) = ("..tostring(r).." "..tostring(g).." "..tostring(b)..")");
+		SAO:Debug(Module, "Received native SPELL_ACTIVATION_OVERLAY_SHOW with spell ID "..tostring(spellID)..", ".."texture "..tostring(texture)..", ".."positions '"..tostring(positions).."', ".."scale "..tostring(scale)..", ".."(r g b) = ("..tostring(r).." "..tostring(g).." "..tostring(b)..")");
 		SAO:ReportUnknownEffect(Module, spellID, texture, positions, scale, r, g, b);
 		-- if ( GetCVarBool("displaySpellActivationOverlays") ) then 
 		-- 	SpellActivationOverlay_ShowAllOverlays(self, spellID, texture, positions, scale, r, g, b, true)

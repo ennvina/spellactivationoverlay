@@ -155,7 +155,7 @@ SAO.Variable:register({
             prepareBucket = function(bucket, value)
                 bucket.actionSpellID = value;
                 if not SAO:DoesSpellExist(value) then
-                    SAO:Warn(Module, bucket.description.." requires action usable with spell "..value..", but the spell does not exist");
+                    SAO:Warn(Module, bucket.description.." requires action usable with spell "..value..", ".."but the spell does not exist");
                 end
             end,
         },
