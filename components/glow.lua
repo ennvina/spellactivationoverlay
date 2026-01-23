@@ -582,7 +582,7 @@ function SAO.RemoveGlow(self, spellID, glowIDs)
             -- spellID is attached to this glowSpellID
             -- Gather how many triggers are attached to the same glowSpellID (spellID included)
             local count = 0;
-            for _, _  in pairs(triggerSpellIDs) do
+            for _, _ in pairs(triggerSpellIDs) do
                 count = count+1;
             end
             consumedGlowSpellIDs[glowSpellID] = count;

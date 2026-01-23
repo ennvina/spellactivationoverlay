@@ -224,7 +224,7 @@ local function useFulmination(self)
         { 324, 325, 905, 945, 8134, 10431, 10432 }, -- Lightning Shield (ranks 1-7)
         "aura",
         {
-            talent =  432056, -- Rolling Thunder (rune)
+            talent = 432056, -- Rolling Thunder (rune)
             requireTalent = true, -- Rune must be equipped, otherwise we would get false positives with Lightning Shield, which is available to every Shaman
             combatOnly = true,
             overlays = {

@@ -36,7 +36,7 @@ function SAO:Error(prefix, msg, ...)
 end
 
 function SAO:Warn(prefix, msg, ...)
-    print(WrapTextInColor("!"..ShortAddonName.."!  -"..prefix.."- "..msg, WARNING_FONT_COLOR), ...);
+    print(WrapTextInColor("!"..ShortAddonName.."! -"..prefix.."- "..msg, WARNING_FONT_COLOR), ...);
 end
 
 function SAO:Info(prefix, msg, ...)

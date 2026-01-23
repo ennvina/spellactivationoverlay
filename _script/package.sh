@@ -77,7 +77,8 @@ prunedev() {
             LEADING_SPACES='^[[:space:]]*'
             TRAILING_SPACES='[[:space:]]*$'
             TRAILING_SEMICOLON=';[[:space:]]*$'
-            sed -i "s/$EOL_COMMENT//;s/$LEADING_SPACES//;s/$TRAILING_SPACES//;s/$TRAILING_SEMICOLON//" "$filename" || bye "Cannot remove syntactic sugar from $filename"
+            MULTIPLE_SPACES='[[:space:]]\{2,\}'
+            sed -i "s/$EOL_COMMENT//;s/$LEADING_SPACES//;s/$TRAILING_SPACES//;s/$TRAILING_SEMICOLON//;s/$MULTIPLE_SPACES/ /g" "$filename" || bye "Cannot remove syntactic sugar from $filename"
 
             echo -ne "\033[u[2/2] $((++NB_FILES_PROCESSED))/${NB_PATHS_TO_MINIFY}"
         done

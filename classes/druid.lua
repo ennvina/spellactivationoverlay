@@ -161,7 +161,7 @@ local function useSwiftbloom()
     SAO:CreateEffect(
         "swiftbloom",
         SAO.SOD,
-        1226035,  -- Swiftbloom (buff)
+        1226035, -- Swiftbloom (buff)
         "aura",
         {
             overlay = { texture = "fury_of_stormrage", position = "Top", scale = 0.7, color = { 255, 60, 255 } },
@@ -557,7 +557,7 @@ local function registerClass(self)
     usePredatoryStrikes(); -- a.k.a. Predatory Swiftness
     useMangle();
     useOmenOfClarity(); -- MoP+
-    useSwiftbloom();  -- SoD Scarlet Enclave Resto 2pc
+    useSwiftbloom(); -- SoD Scarlet Enclave Resto 2pc
 
     if not SAO.IsProject(SAO.MOP_AND_ONWARD) then -- Pre-MoP
         -- Track Eclipses with a custom CLEU function, so that eclipses can coexist with Omen of Clarity
