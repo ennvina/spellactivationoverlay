@@ -271,19 +271,21 @@ function SAO:HasPlayerAuraBySpellID(id)
     end
 end
 
+-- Returns the number of stacks of a player aura by spellID, or nil if the aura is not present
+-- Also returns the auraInstanceID if available, nil otherwise
 function SAO:GetPlayerAuraStacksBySpellID(id)
     if GetPlayerAuraBySpellID then
         local aura = GetPlayerAuraBySpellID(id);
         if aura then
-            return aura.applications;
+            return aura.applications, aura.auraInstanceID;
         end
     else
         local exists, _, count = FindPlayerAuraByID(id);
         if exists then
-            return count;
+            return count, nil;
         end
     end
-    return nil;
+    return nil, nil;
 end
 
 function SAO:GetPlayerAuraDurationExpirationTimBySpellIdOrName(spellIdOrName)

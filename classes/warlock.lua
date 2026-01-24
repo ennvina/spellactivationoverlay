@@ -613,5 +613,5 @@ SAO.Class["WARLOCK"] = {
     ["UNIT_HEALTH"] = requiresDrainSoulHandler and unitHealth or nil,
     ["UNIT_HEALTH_FREQUENT"] = requiresDrainSoulHandler and (not SAO.HasMidnightEvents()) and unitHealthFrequent or nil,
     -- Event used to fix the 10th stack of Molten Core; will be pointless when the addon will read all auras from UNIT_AURA
-    ["UNIT_AURA"] = SAO.IsMoP() and unitAura or nil,
+    ["UNIT_AURA"] = SAO.IsMoP() and SAO.AURASTACKS.LEGACY and unitAura or nil, -- Deprecated, but kept while Modern Aura Stacks system is being tested
 }

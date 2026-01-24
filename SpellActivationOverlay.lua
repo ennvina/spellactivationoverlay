@@ -65,8 +65,6 @@ function SpellActivationOverlay_OnLoad(self)
 		SAO:RegisterEventHandler(self, "SPELL_ACTIVATION_OVERLAY_SHOW", "Main init");
 		SAO:RegisterEventHandler(self, "SPELL_ACTIVATION_OVERLAY_HIDE", "Main init");
 	end
---	self:RegisterUnitEvent("UNIT_AURA", "player");
-	SAO:RegisterEventHandler(self, "COMBAT_LOG_EVENT_UNFILTERED", "Main init");
 	SAO:RegisterEventHandler(self, "PLAYER_REGEN_ENABLED", "Main init");
 	SAO:RegisterEventHandler(self, "PLAYER_REGEN_DISABLED", "Main init");
 	SAO:RegisterEventHandler(self, "SPELLS_CHANGED", "Main init");

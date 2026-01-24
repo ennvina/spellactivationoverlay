@@ -359,9 +359,9 @@ function SAO:GetBucketByName(name)
 end
 
 function SAO:GetBucketBySpellID(spellID)
-    if type(spellID) ~= 'number' then
+    if type(spellID) ~= 'number' then --[[BEGIN_DEV_ONLY]]
         SAO:Warn(Module, "Asking a bucket with spell ID "..tostring(spellID).." which is of type "..type(spellID).." instead of type number");
-    end
+    end --[[END_DEV_ONLY]]
     return self.RegisteredBucketsBySpellID[spellID];
 end
 
