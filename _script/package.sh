@@ -345,6 +345,7 @@ TEXTURES_NOT_FOR_WRATH=(
 arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
+echo_of_the_elements
 fulmination
 fury_of_stormrage_yellow
 maelstrom_weapon_6
@@ -388,8 +389,10 @@ arcane_missiles_3
 art_of_war
 blood_surge
 daybreak
+echo_of_the_elements
 fulmination
 fury_of_stormrage
+fury_of_stormrage_yellow
 high_tide
 impact
 killing_machine
@@ -410,10 +413,14 @@ monk_serpent
 predatory_swiftness
 raging_blow
 rime
+shadow_word_insanity
 shooting_stars
 sudden_death
 sudden_doom
 sword_and_board
+thrill_of_the_hunt_1
+thrill_of_the_hunt_2
+thrill_of_the_hunt_3
 tooth_and_claw
 white_tiger
 rkm128)
@@ -439,7 +446,9 @@ TEXTURES_NOT_FOR_VANILLA=(
 art_of_war
 backlash
 daybreak
+echo_of_the_elements
 fury_of_stormrage_yellow
+genericarc_04
 master_marksman
 molten_core
 killing_machine
@@ -537,6 +546,7 @@ mkproject retail "$RETAIL_BUILD_VERSION" 2266c5 inv_ability_voidweaverpriest_ent
 prunecopyright Cataclysm Pandaria Draenor
 
 TEXTURES_NOT_FOR_RETAIL=(
+fury_of_stormrage_yellow
 maelstrom_weapon_6
 maelstrom_weapon_7
 maelstrom_weapon_8
