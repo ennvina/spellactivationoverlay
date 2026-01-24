@@ -57,7 +57,7 @@ function SAO:HasTrace(prefix)
     return SpellActivationOverlayDB and SpellActivationOverlayDB.trace and SpellActivationOverlayDB.trace[prefix];
 end
 
-function SAO:Trace(prefix, msg, ...) -- Defined as SAO.Trace instead of SAO : Trace to dodge line removal during packaging
+function SAO.Trace(self, prefix, msg, ...) -- Defined as SAO.Trace instead of SAO : Trace to dodge line removal during packaging
     if SpellActivationOverlayDB and SpellActivationOverlayDB.trace and SpellActivationOverlayDB.trace[prefix] then
         print(WrapTextInColorCode("{"..ShortAddonName.."@"..GetTime().."} -"..prefix.."- "..msg, "FFAAFFCC"), ...);
     end
@@ -75,7 +75,7 @@ function SAO:LogPersistent(prefix, msg)
 end
 
 local timeOfLastTrace = {}
-function SAO:TraceThrottled(key, prefix, ...) -- Defined as SAO.TraceThrottled instead of SAO : TraceThrottled to dodge line removal during packaging
+function SAO.TraceThrottled(self, key, prefix, ...) -- Defined as SAO.TraceThrottled instead of SAO : TraceThrottled to dodge line removal during packaging
     key = tostring(key)..tostring(prefix);
     if not timeOfLastTrace[key] or GetTime() > timeOfLastTrace[key]+1 then
         self:Trace(prefix, ...);
