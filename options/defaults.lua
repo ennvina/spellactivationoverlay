@@ -620,6 +620,9 @@ SAO.defaults = {
                 [16246] = { -- Elemental Focus
                     [0] = true,
                 },
+                [43339] = { -- Shamanistic Focus (TBC-Cataclysm)
+                    [0] = false,
+                },
                 [415105] = { -- Power Surge (Season of Discovery)
                     [0] = true,
                 },
@@ -662,6 +665,11 @@ SAO.defaults = {
                 },
             },
             glow = {
+                [43339] = { -- Shamanistic Focus (TBC-Cataclysm)
+                    [8042] = false, -- Earth Shock
+                    [8050] = false, -- Flame Shock
+                    [8056] = false, -- Frost Shock
+                },
                 [53817] = { -- Maelstrom Weapon (Wrath+)
                     [403]    = false, -- Lightning Bolt
                     [421]    = false, -- Chain Lightning

@@ -4,14 +4,19 @@
 
 Thank you to our amazing contributors for helping out. Thanks!
 - Nezzey and catpokemon for suggesting Priest's Clearcasting effect
+- simgr0 for suggesting Shaman's Shamanistic Focus
 
 New Spell Alerts
 - Priest's Clearcasting (The Burning Crusade)
+- Shaman's Shamanistic Focus (The Burning Crusade, Wrath, Cataclysm)
 
 New Glowing Buttons
 - Priest's Binding Heal, during Clearcasting (The Burning Crusade)
 - Priest's Flash Heal, during Clearcasting (The Burning Crusade)
 - Priest's Greater Heal, during Clearcasting (The Burning Crusade)
+- Shaman's Earth Shock, during Shamanistic Focus (TBC, Wrath, Cata)
+- Shaman's Flame Shock, during Shamanistic Focus (TBC, Wrath, Cata)
+- Shaman's Frost Shock, during Shamanistic Focus (TBC, Wrath, Cata)
 
 Updated Spell Alerts
 - Shaman's Elemental Focus visuals are now consistent

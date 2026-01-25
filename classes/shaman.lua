@@ -4,6 +4,8 @@ local chainHeal = 1064;
 local chainLightning = 421;
 local earthShock = 8042;
 local elementalBlast = 117014;
+local flameShock = 8050;
+local frostShock = 8056;
 local greaterHealingWave = 77472;
 local healingRain = 73920;
 local healingSurge = 8004;
@@ -37,6 +39,21 @@ local function useElementalFocus(self)
         -- On non-SoD Era, Elemental Focus is simply displayed Left and Right
         self:RegisterAura("elemental_focus", 0, 16246, "genericarc_05", "Left + Right (Flipped)", 1.25, 255, 255, 255, false);
     end
+end
+
+local function useShamanisticFocus(self)
+    self:CreateEffect(
+        "shamanistic_focus",
+        SAO.TBC + SAO.WRATH + SAO.CATA,
+        43339, -- Focused (buff)
+        "aura",
+        {
+            talent = 43338, -- Shamanistic Focus (talent)
+            -- Smaller than Elemental Focus and orange-ish to make it stand out
+            overlay = { texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.25, color = { 255, 128, 0 }, pulse = false },
+            buttons = { earthShock, flameShock, frostShock },
+        }
+    );
 end
 
 local function useLavaSurge(self)
@@ -305,6 +322,7 @@ end
 
 local function registerClass(self)
     useElementalFocus(self);
+    useShamanisticFocus(self);
     useLavaSurge(self);
     useTidalWaves(self);
     useMaelstromWeapon(self);
