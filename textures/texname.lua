@@ -143,7 +143,7 @@ function SAO.MarkTexture(self, texName)
   end
 end
 
--- List fetched from bash: cd textures && ls -1 *.blp | cut -d. -f1 | tr 'A-Z' 'a-z' | grep -vE '^(mask|maskzero|rkm128)$' | awk 'BEGIN{ print "local availableTextures = {" } {printf "  [\"%s\"] = true,\n", $0} END { print "}" }'
+-- List fetched from bash: cd textures && ls -1 *.blp | cut -d. -f1 | tr 'A-Z' 'a-z' | sort | grep -vE '^(icon64|mask|maskzero|rkm128)$' | awk 'BEGIN{ print "local availableTextures = {" } {printf "  [\"%s\"] = true,\n", $0} END { print "}" }'
 local availableTextures = {
   ["arcane_missiles"] = true,
   ["arcane_missiles_1"] = true,
@@ -162,8 +162,10 @@ local availableTextures = {
   ["frozen_fingers"] = true,
   ["fulmination"] = true,
   ["fury_of_stormrage"] = true,
+  ["fury_of_stormrage_yellow"] = true,
   ["genericarc_02"] = true,
   ["genericarc_05"] = true,
+  ["generictop_01"] = true,
   ["high_tide"] = true,
   ["hot_streak"] = true,
   ["imp_empowerment"] = true,
@@ -189,11 +191,15 @@ local availableTextures = {
   ["raging_blow"] = true,
   ["rime"] = true,
   ["serendipity"] = true,
+  ["shadow_word_insanity"] = true,
   ["shooting_stars"] = true,
   ["sudden_death"] = true,
   ["sudden_doom"] = true,
   ["surge_of_light"] = true,
   ["sword_and_board"] = true,
+  ["thrill_of_the_hunt_1"] = true,
+  ["thrill_of_the_hunt_2"] = true,
+  ["thrill_of_the_hunt_3"] = true,
   ["tooth_and_claw"] = true,
   ["white_tiger"] = true,
 }

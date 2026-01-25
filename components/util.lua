@@ -11,8 +11,6 @@ local GetNumSpellTabs = GetNumSpellTabs
 local GetNumTalents = GetNumTalents
 local GetNumTalentTabs = GetNumTalentTabs
 local GetSpellBookItemName = GetSpellBookItemName
-local GetSpellCooldown = GetSpellCooldown
-local GetSpellInfo = GetSpellInfo
 local GetSpellTabInfo = GetSpellTabInfo
 local GetTalentInfo = GetTalentInfo
 local GetTalentTabInfo = GetTalentTabInfo
@@ -33,15 +31,15 @@ local IsEquippedItem = C_Item and C_Item.IsEquippedItem
     Logging functions
 ]]
 
-function SAO.Error(self, prefix, msg, ...)
+function SAO:Error(prefix, msg, ...)
     print(WrapTextInColor("**"..ShortAddonName.."** -"..prefix.."- "..msg, RED_FONT_COLOR), ...);
 end
 
-function SAO.Warn(self, prefix, msg, ...)
-    print(WrapTextInColor("!"..ShortAddonName.."!  -"..prefix.."- "..msg, WARNING_FONT_COLOR), ...);
+function SAO:Warn(prefix, msg, ...)
+    print(WrapTextInColor("!"..ShortAddonName.."! -"..prefix.."- "..msg, WARNING_FONT_COLOR), ...);
 end
 
-function SAO.Info(self, prefix, msg, ...)
+function SAO:Info(prefix, msg, ...)
     print(WrapTextInColor(ShortAddonName.." -"..prefix.."- "..msg, LIGHTBLUE_FONT_COLOR), ...);
 end
 
@@ -49,7 +47,7 @@ function SAO:HasDebug()
     return SpellActivationOverlayDB and SpellActivationOverlayDB.debug;
 end
 
-function SAO.Debug(self, prefix, msg, ...)
+function SAO:Debug(prefix, msg, ...)
     if SpellActivationOverlayDB and SpellActivationOverlayDB.debug then
         print(WrapTextInColorCode("["..ShortAddonName.."@"..GetTime().."] -"..prefix.."- "..msg, "FFFFFFAA"), ...);
     end
@@ -65,7 +63,7 @@ function SAO.Trace(self, prefix, msg, ...) -- Defined as SAO.Trace instead of SA
     end
 end
 
-function SAO.LogPersistent(self, prefix, msg)
+function SAO:LogPersistent(prefix, msg)
     if SpellActivationOverlayDB then
         local line = "[@"..GetTime().."] :"..prefix..": "..msg;
         if not SpellActivationOverlayDB.logs then
@@ -108,12 +106,12 @@ function SAO:ReportUnknownEffect(prefix, spellID, texture, positions, scale, r, 
         end
         if not self.UnknownNativeEffects[spellID] then
             local text = "";
-            text = text..", flavor="..tostring(self.GetFlavorName());
-            text = text..", spell="..tostring(spellID).." ("..(GetSpellInfo(spellID) or "unknown spell")..")"
-            text = text..", tex="..tostring(texture);
-            text = text..", pos="..((type(positions) == 'string') and ("'"..positions.."'") or tostring(positions));
-            text = text..", scale="..tostring(scale);
-            text = text..", rgb=("..tostring(r).." "..tostring(g).." "..tostring(b)..")";
+            text = text..", ".."flavor="..tostring(self.GetFlavorName());
+            text = text..", ".."spell="..tostring(spellID).." ("..self:GetSpellName(spellID, "unknown spell")..")"
+            text = text..", ".."tex="..tostring(texture);
+            text = text..", ".."pos="..((type(positions) == 'string') and ("'"..positions.."'") or tostring(positions));
+            text = text..", ".."scale="..tostring(scale);
+            text = text..", ".."rgb=("..tostring(r).." "..tostring(g).." "..tostring(b)..")";
             self:Info(prefix, SAO:unsupportedShowEvent(text));
 
             self.UnknownNativeEffects[spellID] = true;
@@ -126,8 +124,8 @@ end
 ]]
 
 -- Get the Global Cooldown duration
-function SAO.GetGCD(self)
-    if self:IsEra() or self:IsTBC() then
+function SAO:GetGCD()
+    if self.IsEra() or self.IsTBC() then
         -- Most spells and abilities incur a 1.5-second Global Cooldown
         -- Some spells and abilities incur a 1-second cooldown, such as Shaman totems or most Rogue abilities
         -- But these are very hard to detect, requiring to catch the last spell/ability which triggered the GCD
@@ -135,7 +133,7 @@ function SAO.GetGCD(self)
         -- All in all, 1.5 shall be a good generic value for everyone
         return 1.5;
     else
-        local _, gcdDuration, _, _ = GetSpellCooldown(61304); -- 61304 is GCD SpellID, introduced in Wrath
+        local _, gcdDuration = self:GetSpellCooldown(61304); -- 61304 is GCD SpellID, introduced in Wrath
         -- gcdDuration will return the GCD duration if on GCD or 0 if not on GCD
         -- Returning 0 should not be an issue; who needs to compare ability CD with GCD when the player is not on GCD?
         return gcdDuration;
@@ -218,7 +216,7 @@ end
 ]]
 
 -- Utility function to assume times are identical or almost identical
-function SAO.IsTimeAlmostEqual(self, t1, t2, delta)
+function SAO:IsTimeAlmostEqual(t1, t2, delta)
 	return t1-delta < t2 and t2 < t1+delta;
 end
 
@@ -273,19 +271,21 @@ function SAO:HasPlayerAuraBySpellID(id)
     end
 end
 
+-- Returns the number of stacks of a player aura by spellID, or nil if the aura is not present
+-- Also returns the auraInstanceID if available, nil otherwise
 function SAO:GetPlayerAuraStacksBySpellID(id)
     if GetPlayerAuraBySpellID then
         local aura = GetPlayerAuraBySpellID(id);
         if aura then
-            return aura.applications;
+            return aura.applications, aura.auraInstanceID;
         end
     else
         local exists, _, count = FindPlayerAuraByID(id);
         if exists then
-            return count;
+            return count, nil;
         end
     end
-    return nil;
+    return nil, nil;
 end
 
 function SAO:GetPlayerAuraDurationExpirationTimBySpellIdOrName(spellIdOrName)
@@ -438,7 +438,7 @@ end
 -- Get text and icon for either a talent as spellID, or as spec bit-field
 function SAO:GetTalentText(talentID)
     if type(talentID) == 'number' and talentID < 0 then
-        if not self:IsMoP() then
+        if not self.IsMoP() then
             self:Error(Module, "Getting talent text for a negative talentID "..talentID.." but prior to the Mists of Pandaria specialization rework");
             return nil;
         end
@@ -459,12 +459,12 @@ function SAO:GetTalentText(talentID)
             return SPECIALIZATION..": "..text;
         end
     else
-        local spellName, _, spellIcon = GetSpellInfo(talentID);
-        if not spellName then
+        local spellIconAndText = self:GetSpellIconAndText(talentID);
+        if not spellIconAndText then
             self:Error(Module, "Unknown spell for talentID "..tostring(talentID));
             return nil;
         end
-        return "|T"..spellIcon..":0|t "..spellName;
+        return spellIconAndText;
     end
 end
 
@@ -501,11 +501,11 @@ function SAO:GetSpecNameFunction(specIndex)
 end
 
 -- Utility function to get the spell ID associated to an action
-function SAO.GetSpellIDByActionSlot(self, actionSlot)
+function SAO:GetSpellIDByActionSlot(actionSlot)
     local actionType, id, subType = GetActionInfo(actionSlot);
-    if (actionType == "spell") then
+    if actionType == "spell" then
         return id;
-    elseif (actionType == "macro") then
+    elseif actionType == "macro" then
         return GetMacroSpell(id);
     end
 end
@@ -514,14 +514,14 @@ end
 -- Spells are searched into the *current* spellbook, not through all available spells ever
 -- This means the returned list will be obsolete if e.g. new spells are learned afterwards or if the player re-specs
 -- @param spell Either the spell name (as string) or the spell ID (as number)
-function SAO.GetHomonymSpellIDs(self, spell)
+function SAO:GetHomonymSpellIDs(spell)
     local spellName;
-    if (type(spell) == "string") then
+    if type(spell) == "string" then
         spellName = spell;
-    elseif (type(spell) == "number") then
-        spellName = GetSpellInfo(spell);
+    elseif type(spell) == "number" then
+        spellName = self:GetSpellName(spell);
     end
-    if (not spellName) then
+    if not spellName then
         return {};
     end
 

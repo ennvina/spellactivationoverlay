@@ -55,7 +55,7 @@ local function useSerendipity()
         local serendipityBuff1 = 63731;
         local serendipityBuff2 = 63735;
         local serendipityBuff3 = 63734;
-        local ghAndPoh = { (GetSpellInfo(greaterHeal)), (GetSpellInfo(prayerOfHealing)) };
+        local ghAndPoh = { SAO:GetSpellName(greaterHeal), SAO:GetSpellName(prayerOfHealing) };
 
         -- Add option links during registerClass(), not during loadOptions() which would be loaded only when the options panel is opened
         -- Add option links before RegisterAura() calls, so that options they are used by initial triggers, if any
@@ -101,7 +101,7 @@ local function useSerendipity()
         local serendipityBuff = 413247;
         local lesserHeal = 2050;
         local heal = 2054;
-        local serendipityImprovedSpells = { (GetSpellInfo(lesserHeal)), (GetSpellInfo(heal)), (GetSpellInfo(greaterHeal)), (GetSpellInfo(prayerOfHealing)) };
+        local serendipityImprovedSpells = { SAO:GetSpellName(lesserHeal), SAO:GetSpellName(heal), SAO:GetSpellName(greaterHeal), SAO:GetSpellName(prayerOfHealing) };
         for nbStacks=1,3 do
             local scale = 0.4 + 0.2 * nbStacks; -- 60%, 80%, 100%
             local pulse = nbStacks == 3;
@@ -300,7 +300,7 @@ local function useMindSpike()
 -- Disabled because it must to track the target debuff, not the player buff, which requires new development
 --    if SAO.IsSoD() then
 --         local mindSpikeBuff = 431655;
---         local mindSpikeImprovedSpells = { (GetSpellInfo(mindBlast)) };
+--         local mindSpikeImprovedSpells = { SAO:GetSpellName(mindBlast) };
 --         for nbStacks=1,3 do
 --             local scale = 0.4 + 0.2 * nbStacks; -- 60%, 80%, 100%
 --             local pulse = nbStacks == 3;

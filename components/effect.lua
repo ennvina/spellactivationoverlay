@@ -502,7 +502,7 @@ local function addAKA(effectName, akaSpellID)
 
     --[[BEGIN_DEV_ONLY]]
     -- Check if the spellID is valid
-    if type(akaSpellID) ~= 'number' or akaSpellID <= 0 or not GetSpellInfo(akaSpellID) then
+    if type(akaSpellID) ~= 'number' or akaSpellID <= 0 or not SAO:DoesSpellExist(akaSpellID) then
         SAO:Warn(Module, "Adding a.k.a. with invalid spellID "..tostring(akaSpellID).." for effect "..effectName);
         return;
     end
@@ -727,7 +727,7 @@ local function RegisterNativeEffectNow(self, effect)
             local combatOnly = effect.combatOnly == true;
             local spellToAdd;
             if useName then
-                local spellName = GetSpellInfo(spellID);
+                local spellName = SAO:GetSpellName(spellID);
                 if not spellName then
                     self:Warn(Module, "Registering effect "..effect.name.." for button with unknown spellID "..tostring(spellID));
                     spellToAdd = spellID;

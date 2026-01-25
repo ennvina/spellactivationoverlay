@@ -1,5 +1,9 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.7.2 (2026-01-xx)
+
+This release optimizes code size a bit further than in 2.7.0
+
 #### v2.7.1 (2026-01-21)
 
 Support for Titan Reforged: Wrath
@@ -199,7 +203,7 @@ Bug Fixes
 Ghosts\*\*\* Busted
 - Hunter's Mongoose Bite (Classic Era, The Burning Crusade)
 - Hunter's Flanking Strike (Season of Discovery)
-- Shaman's Rolling Thunder  (Season of Discovery, The Burning Crusade)
+- Shaman's Rolling Thunder (Season of Discovery, The Burning Crusade)
 - Shaman's Molten Blast (Season of Discovery)
 - Shaman's Fulmination (Cataclysm, Mists of Pandaria)
 - Shaman's Lava Surge (Cataclysm, Mists of Pandaria)

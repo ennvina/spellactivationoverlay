@@ -2,7 +2,6 @@ local AddonName, SAO = ...
 local Module = "main"
 
 -- Optimize frequent calls
-local GetSpellInfo = GetSpellInfo
 local GetTime = GetTime
 local InCombatLockdown = InCombatLockdown
 
@@ -66,12 +65,10 @@ function SpellActivationOverlay_OnLoad(self)
 		SAO:RegisterEventHandler(self, "SPELL_ACTIVATION_OVERLAY_SHOW", "Main init");
 		SAO:RegisterEventHandler(self, "SPELL_ACTIVATION_OVERLAY_HIDE", "Main init");
 	end
---	self:RegisterUnitEvent("UNIT_AURA", "player");
-	SAO:RegisterEventHandler(self, "COMBAT_LOG_EVENT_UNFILTERED", "Main init");
 	SAO:RegisterEventHandler(self, "PLAYER_REGEN_ENABLED", "Main init");
 	SAO:RegisterEventHandler(self, "PLAYER_REGEN_DISABLED", "Main init");
 	SAO:RegisterEventHandler(self, "SPELLS_CHANGED", "Main init");
-	if SAO.IsTBC() then
+	if SAO.HasMidnightUI() then -- HasMidnightUI instead of HasMinightEvents because somehow TBC Anniversary has the new event below
 		SAO:RegisterEventHandler(self, "LEARNED_SPELL_IN_SKILL_LINE", "Main init");
 	else
 		SAO:RegisterEventHandler(self, "LEARNED_SPELL_IN_TAB", "Main init");
@@ -259,7 +256,7 @@ end
 
 function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, vFlip, hFlip, cw, autoPulse, forcePulsePlay, endTime, combatOnly, extra)
 	SAO:Trace(Module, "SpellActivationOverlay_ShowOverlay "..tostring(spellID).." "..position);
-	SAO:Debug(Module, "Starting Overlay at location "..position.." for spell ID "..spellID.." "..(GetSpellInfo(spellID) or "")..(endTime and (" for "..math.floor((type(endTime) == 'number' and endTime or endTime.endTime)-GetTime()+0.5).." secs") or ""));
+	SAO:Debug(Module, "Starting Overlay at location "..position.." for spell ID "..spellID.." "..SAO:GetSpellName(spellID, "")..(endTime and (" for "..math.floor((type(endTime) == 'number' and endTime or endTime.endTime)-GetTime()+0.5).." secs") or ""));
 
 	if (SpellActivationOverlayDB and SpellActivationOverlayDB.alert and not SpellActivationOverlayDB.alert.enabled) then
 		-- Last chance to quit displaying the overlay, if the main overlay flag is disabled
@@ -397,7 +394,7 @@ end
 function SpellActivationOverlay_DumpCombatOnlyOverlays()
 	SAO:Info(Module, "Listing combat-only overlays ("..#SAO.Frame.combatOnlyOverlays.." item"..(#SAO.Frame.combatOnlyOverlays == 1 and "" or "s")..")");
 	for i, overlay in pairs(SAO.Frame.combatOnlyOverlays) do
-		SAO:Info(Module, "combat-only-overlay["..i.."] location == "..overlay.position..", spell ID = "..overlay.spellID.." "..(GetSpellInfo(overlay.spellID) or ""));
+		SAO:Info(Module, "combat-only-overlay["..i.."] location == "..overlay.position..", ".."spell ID == "..overlay.spellID.." "..SAO:GetSpellName(overlay.spellID, ""));
 	end
 end
 
@@ -430,7 +427,7 @@ function SpellActivationOverlay_HideOverlays(self, spellID)
 	if ( overlayList ) then
 		for i=1, #overlayList do
 			local overlay = overlayList[i];
-			SAO:Debug(Module, "Hiding Overlay at location "..overlay.position.." for spell ID "..overlay.spellID.." "..(GetSpellInfo(overlay.spellID) or ""));
+			SAO:Debug(Module, "Hiding Overlay at location "..overlay.position.." for spell ID "..overlay.spellID.." "..SAO:GetSpellName(overlay.spellID, ""));
 			overlay.pulse:Pause();
 			overlay.animOut:Play();
 		end
@@ -475,7 +472,7 @@ function SpellActivationOverlay_SetOverlayTimer(self, overlay, endTime)
 	end
 	overlay.endTime = endTime;
 
-	SAO:Debug(Module, "Setting Overlay Timer at location "..overlay.position.." for spell ID "..overlay.spellID.." "..(GetSpellInfo(overlay.spellID) or "")..(endTime and (" for "..math.floor(endTime-GetTime()+0.5).." secs") or " without time"));
+	SAO:Debug(Module, "Setting Overlay Timer at location "..overlay.position.." for spell ID "..overlay.spellID.." "..SAO:GetSpellName(overlay.spellID, "")..(endTime and (" for "..math.floor(endTime-GetTime()+0.5).." secs") or " without time"));
 
 	local offset = startTime and (GetTime() - startTime) or 0;
 	local duration = endTime - GetTime() + offset - 0.1; -- Subtract 0.1 to account for final shrink
@@ -520,7 +517,7 @@ end
 
 function SpellActivationOverlayTexture_TerminateOverlay(overlay)
 	SAO:Trace(Module, "SpellActivationOverlayTexture_TerminateOverlay "..tostring(overlay));
-	SAO:Debug(Module, "Terminating Overlay at location "..overlay.position.." for spell ID "..overlay.spellID.." "..(GetSpellInfo(overlay.spellID) or ""));
+	SAO:Debug(Module, "Terminating Overlay at location "..overlay.position.." for spell ID "..overlay.spellID.." "..SAO:GetSpellName(overlay.spellID, ""));
 
 	local overlayParent = overlay:GetParent();
 
@@ -619,7 +616,7 @@ function SpellActivationOverlayTexture_ShowCombatMask(anim)
 	combat:SetTexture("Interface/Addons/SpellActivationOverlay/textures/maskzero");
 
 	local overlay = combat:GetParent();
-	SAO:Debug(Module, "Showing combat mask for Overlay at location "..overlay.position.." for spell ID "..overlay.spellID.." "..(GetSpellInfo(overlay.spellID) or ""));
+	SAO:Debug(Module, "Showing combat mask for Overlay at location "..overlay.position.." for spell ID "..overlay.spellID.." "..SAO:GetSpellName(overlay.spellID, ""));
 end
 
 function SpellActivationOverlayTexture_HideCombatMask(anim)
@@ -629,7 +626,7 @@ function SpellActivationOverlayTexture_HideCombatMask(anim)
 	combat:SetTexture("");
 
 	local overlay = combat:GetParent();
-	SAO:Debug(Module, "Hiding combat mask for Overlay at location "..overlay.position.." for spell ID "..overlay.spellID.." "..(GetSpellInfo(overlay.spellID) or ""));
+	SAO:Debug(Module, "Hiding combat mask for Overlay at location "..overlay.position.." for spell ID "..overlay.spellID.." "..SAO:GetSpellName(overlay.spellID, ""));
 end
 
 function SpellActivationOverlayTexture_OnCombatAnimInPlay(animIn)

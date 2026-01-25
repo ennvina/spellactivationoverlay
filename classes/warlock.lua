@@ -101,8 +101,8 @@ local DrainSoulHandler = {
 
 local function customLogin(self, ...)
     -- Drain Soul is empowered on low health enemies only in Wrath Classic and Cataclysm Classic
-    local spellName = GetSpellInfo(drainSoul);
-    if (spellName) then
+    local spellName = self:GetSpellName(drainSoul);
+    if spellName then
         -- Must register glowing buttons manually, because Drain Soul is not registered by an aura/counter/etc.
         self:RegisterGlowIDs({ spellName });
         local allSpellIDs = self:GetSpellIDsByName(spellName);
@@ -611,7 +611,7 @@ SAO.Class["WARLOCK"] = {
     ["PLAYER_LOGIN"] = requiresDrainSoulHandler and customLogin or nil,
     ["PLAYER_TARGET_CHANGED"] = requiresDrainSoulHandler and retarget or nil,
     ["UNIT_HEALTH"] = requiresDrainSoulHandler and unitHealth or nil,
-    ["UNIT_HEALTH_FREQUENT"] = requiresDrainSoulHandler and unitHealthFrequent or nil,
+    ["UNIT_HEALTH_FREQUENT"] = requiresDrainSoulHandler and (not SAO.HasMidnightEvents()) and unitHealthFrequent or nil,
     -- Event used to fix the 10th stack of Molten Core; will be pointless when the addon will read all auras from UNIT_AURA
-    ["UNIT_AURA"] = SAO.IsMoP() and unitAura or nil,
+    ["UNIT_AURA"] = SAO.IsMoP() and SAO.AURASTACKS.LEGACY and unitAura or nil, -- Deprecated, but kept while Modern Aura Stacks system is being tested
 }

@@ -184,7 +184,7 @@ SAO.Display = {
     end,
 
     refresh = function(self)
-        SAO:Debug(Module, "Refreshing aura of "..self.spellID.." "..(GetSpellInfo(self.spellID) or ""));
+        SAO:Debug(Module, "Refreshing aura of "..self.spellID.." "..SAO:GetSpellName(self.spellID, ""));
         SAO:RefreshOverlayTimer(self.spellID);
     end,
 

@@ -2,7 +2,6 @@ local AddonName, SAO = ...
 local Module = "rune"
 
 -- Optimize frequent calls
-local GetSpellInfo = GetSpellInfo
 local InCombatLockdown = InCombatLockdown
 
 -- Map between spell ID and rune ID
@@ -11,7 +10,7 @@ local function addRuneMapping(rune)
     local runeID = rune.skillLineAbilityID;
     for _, spellID in pairs(rune.learnedAbilitySpellIDs) do
         if runeMapping[spellID] ~= runeID then
-            SAO:Debug(Module, (GetSpellInfo(spellID) or "x").." ("..spellID..") from rune "..runeID);
+            SAO:Debug(Module, SAO:GetSpellName(spellID, "x").." ("..spellID..") from rune "..runeID);
             runeMapping[spellID] = runeID;
         end
     end
@@ -75,7 +74,7 @@ if SAO.IsSoD() then
             if runeMapping.initialized then
                 -- Rune found: yay! No need for this timer anymore
                 self:Cancel();
-                SAO:Debug(Module, "Found at least one rune, stopping regular checks now");
+                SAO:Debug(Module, "Found at least one rune, ".."stopping regular checks now");
             else
                 SAO:Debug(Module, "No rune was found during regular check");
             end

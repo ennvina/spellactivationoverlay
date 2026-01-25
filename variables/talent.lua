@@ -170,7 +170,7 @@ SAO.Variable:register({
 
                     local specs = SAO:GetSpecsFromTalent(value);
                     if not specs or #specs == 0 then
-                        SAO:Error(Module, bucket.description.." requires specialization "..value..", but it cannot be mapped to an actual specialization"); return;
+                        SAO:Error(Module, bucket.description.." requires specialization "..value..", ".."but it cannot be mapped to an actual specialization"); return;
                     elseif #specs == 1 then
                         bucket.talentSpec = specs[1];
                     else
@@ -181,7 +181,7 @@ SAO.Variable:register({
                 end
 
                 -- Positive values have to be a talent's spell ID
-                local talentName = GetSpellInfo(value);
+                local talentName = SAO:GetSpellName(value);
                 local _, _, i, j = SAO:GetTalentByName(talentName);
                 if type(i) == 'number' and type(j) == 'number' then
                     if SAO.IsMoP() then
@@ -217,7 +217,7 @@ SAO.Variable:register({
                                     -- Not found after retrying several times, bummer.
                                     bucket.talentRuneRetryTicker:Cancel();
                                     SAO:Error(Module, bucket.description.." requires talent or rune "..value..(talentName and " ("..talentName..")" or "")..
-                                                        ", but it cannot be found, neither in the talent tree nor in the rune set");
+                                                        ", ".."but it cannot be found, neither in the talent tree nor in the rune set");
                                 end
                             end
                         );
@@ -225,7 +225,7 @@ SAO.Variable:register({
                     return;
                 end
 
-                SAO:Error(Module, bucket.description.." requires talent "..value..(talentName and " ("..talentName..")" or "")..", but it cannot be found in the talent tree");
+                SAO:Error(Module, bucket.description.." requires talent "..value..(talentName and " ("..talentName..")" or "")..", ".."but it cannot be found in the talent tree");
             end,
         },
         classes = {

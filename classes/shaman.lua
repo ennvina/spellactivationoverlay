@@ -224,7 +224,7 @@ local function useFulmination(self)
         { 324, 325, 905, 945, 8134, 10431, 10432 }, -- Lightning Shield (ranks 1-7)
         "aura",
         {
-            talent =  432056, -- Rolling Thunder (rune)
+            talent = 432056, -- Rolling Thunder (rune)
             requireTalent = true, -- Rune must be equipped, otherwise we would get false positives with Lightning Shield, which is available to every Shaman
             combatOnly = true,
             overlays = {
@@ -263,8 +263,8 @@ local function usePowerSurge(self)
     local powerSurgeSoDBuff = 415105;
     local powerSurgeSoDHealBuff = 468526;
     local powerSurgeSpells = {
-        (GetSpellInfo(chainLightning)),
-        (GetSpellInfo(lavaBurstSoD)),
+        self:GetSpellName(chainLightning),
+        self:GetSpellName(lavaBurstSoD),
     }
 
     -- If Power Surge is enabled but not Elemental Focus, display Power Surge Left and Right
@@ -273,7 +273,7 @@ local function usePowerSurge(self)
     -- PS. 'enabled' means the option is enabled and the talent/rune is equipped
     local elementalFocusBuff = 16246;
     local elementalFocusTalent = 16164;
-    local _, _, efTalentTab, efTalentIndex = SAO:GetTalentByName(GetSpellInfo(elementalFocusTalent));
+    local _, _, efTalentTab, efTalentIndex = SAO:GetTalentByName(self:GetSpellName(elementalFocusTalent));
     local powerSurgeSoDRune = 48829;
 
     local powerSurgeRightTextureFunc = function()

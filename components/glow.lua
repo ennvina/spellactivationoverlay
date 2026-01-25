@@ -5,7 +5,6 @@ local Module = "glow"
 --local ActionButton_HideOverlayGlow = ActionButton_HideOverlayGlow -- Native glow disabled to avoid taints
 --local ActionButton_ShowOverlayGlow = ActionButton_ShowOverlayGlow -- Native glow disabled to avoid taints
 local GetNumShapeshiftForms = GetNumShapeshiftForms
-local GetSpellInfo = GetSpellInfo
 local HasAction = HasAction
 
 --[[
@@ -86,7 +85,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
     end,
 
     SpellInfo = function(self, glowID)
-        return tostring(glowID).." ("..tostring(GetSpellInfo(glowID) or nil)..")";
+        return tostring(glowID).." ("..tostring(SAO:GetSpellName(glowID))..")";
     end,
 
     ParamName = function(self, frame, glowID)
@@ -380,7 +379,7 @@ local function HookActionButton_Update(button)
     end
     SAO:UpdateActionButton(button);
 end
-if SAO.IsTBC() then -- UI has changed in TBC Classic Anniversary
+if SAO.HasMidnightUI() then -- UI has changed in Midnight; applies to TBC Classic Anniversary as well
     local actionBars = {
         -- https://www.townlong-yak.com/framexml/anniversary/Blizzard_ActionBar/MainActionBar.xml
         MainActionBar,
@@ -444,7 +443,8 @@ local function HookStanceBar_UpdateState()
 end
 if select(2, UnitClass("player")) == "PRIEST" then
     -- Only Priests require hooking to StanceBar_UpdateState, for Shadowform
-    if not SAO.IsTBC() then -- UI has changed in TBC Classic Anniversary, but Shadow Priests do not even have 'stances' anyway
+    if not SAO.HasMidnightUI() then -- UI has changed in Midnight; applies to TBC Classic Anniversary as well
+        -- Note: Shadow Priests do not have 'stances' in TBC, but we might need to fix it for Retail
         hooksecurefunc("StanceBar_UpdateState", HookStanceBar_UpdateState);
     end
 end
@@ -471,13 +471,13 @@ function SAO.AddGlowNumber(self, spellID, glowID)
         for _, frame in pairs(actionButtons or {}) do
             if (not SpellActivationOverlayDB or not SpellActivationOverlayDB.glow or SpellActivationOverlayDB.glow.enabled) then
                 if not frame.__sao then
-                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." does not have __sao, glow may fail");
+                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." does not have __sao, ".."glow may fail");
                 elseif not frame.__sao.GetGlowID() then
-                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a nil __sao.GetGlowID, glow may fail");
+                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a nil __sao.GetGlowID, ".."glow may fail");
                 elseif not frame.__sao.lastGlowID then
-                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a nil __sao.lastGlowID, glow may fail");
+                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a nil __sao.lastGlowID, ".."glow may fail");
                 elseif frame.__sao.GetGlowID() ~= frame.__sao.lastGlowID then
-                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a different __sao.GetGlowID ("..tostring(frame.__sao.GetGlowID())..") vs. __sao.lastGlowID ("..tostring(frame.__sao.lastGlowID).."), glow may fail");
+                    SAO:Debug(Module, "Action Button "..tostring(frame:GetName()).." has a different __sao.GetGlowID ("..tostring(frame.__sao.GetGlowID())..") vs. __sao.lastGlowID ("..tostring(frame.__sao.lastGlowID).."), ".."glow may fail");
                 end
                 EnableGlow(frame, frame.__sao and (frame.__sao.GetGlowID() or frame.__sao.lastGlowID) or glowID, "direct activation");
             end
@@ -502,11 +502,11 @@ local function isGlowingOptionEnabled(glowingOptions, glowID, hashData)
             return glowingOptions[glowID];
         end
     else
-        local glowSpellName = (type(glowID) == "number") and GetSpellInfo(glowID) or glowID;
+        local glowSpellName = (type(glowID) == "number") and SAO:GetSpellName(glowID) or glowID;
 
         if optionIndex and type(glowingOptions[optionIndex]) == 'table' then
             for optionSpellID, optionEnabled in pairs(glowingOptions[optionIndex]) do
-                if (GetSpellInfo(optionSpellID) == glowSpellName) then
+                if SAO:GetSpellName(optionSpellID) == glowSpellName then
                     return optionEnabled;
                 end
             end
@@ -514,7 +514,7 @@ local function isGlowingOptionEnabled(glowingOptions, glowID, hashData)
 
         if legacyAllowed then
             for optionSpellID, optionEnabled in pairs(glowingOptions) do
-                if (type(optionSpellID) == 'number' and GetSpellInfo(optionSpellID) == glowSpellName) then
+                if type(optionSpellID) == 'number' and SAO:GetSpellName(optionSpellID) == glowSpellName then
                     return optionEnabled;
                 end
             end
@@ -582,7 +582,7 @@ function SAO.RemoveGlow(self, spellID, glowIDs)
             -- spellID is attached to this glowSpellID
             -- Gather how many triggers are attached to the same glowSpellID (spellID included)
             local count = 0;
-            for _, _  in pairs(triggerSpellIDs) do
+            for _, _ in pairs(triggerSpellIDs) do
                 count = count+1;
             end
             consumedGlowSpellIDs[glowSpellID] = count;
@@ -623,7 +623,7 @@ local function warnOutdatedLBG()
     local text = "[|cffa2f3ff"..AddonName.."|r] One of your addons uses an old version of LibButtonGlow. "
                .."|cffff0000Please consider updating your addons|r. "
                .."Glowing buttons have been |cffff8040temporarily disabled|r to prevent issues. "
-               .."(note: the Glowing Buttons option can still be enabled, but it will have no effect until the faulty addon is up-to-date)";
+               .."(note: the Glowing Buttons option can still be enabled, ".."but it will have no effect until the faulty addon is up-to-date)";
     print(text);
 
     warnedOutdatedLBG = true

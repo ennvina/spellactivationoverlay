@@ -3,7 +3,6 @@ local Module = "mage"
 
 -- Optimize frequent calls
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
-local GetSpellInfo = GetSpellInfo
 local UnitCanAttack = UnitCanAttack
 local UnitDebuff = UnitDebuff
 local UnitExists = UnitExists
@@ -12,10 +11,15 @@ local UnitHealth = UnitHealth
 
 local clearcastingVariants; -- Lazy init in lazyCreateClearcastingVariants()
 
+local arcaneExplosion = 1449;
 local arcaneMissiles = 5143;
+local fireball = 133;
 local fireBlast = 2136;
+local flamestrike = 2120;
 local frostfireBolt = 44614;
+local frostfireBoltSoD = 401502;
 local infernoBlast = 108853; -- Replaces Fire Blast in Mists of Pandaria
+local spellfrostBoltSoD = 412532;
 local pyroblast = 11366; -- Pyroblast, the base Pyro spell
 local pyroblastBang = 92315; -- Pyroblast!, a specific spell for instant Pyro introduced in Cataclysm
 
@@ -33,18 +37,18 @@ local HotStreakHandler = {}
 
 -- Initialize constants
 HotStreakHandler.init = function(self, talentName)
-    local fire_blast = { 2136, 2137, 2138, 8412, 8413, 10197, 10199, 27078, 27079, 42872, 42873 }
-    local fire_blast_sod = { 400618, 400619, 400616, 400620, 400621, 400622, 400623 } -- Improved by Overheat rune
-    local fireball = { 133, 143, 145, 3140, 8400, 8401, 8402, 10148, 10149, 10150, 10151, 25306, 27070, 38692, 42832, 42833 }
-    local frostfire_bolt = { frostfireBolt, 47610 }
-    local frostfire_bolt_sod = { 401502 }
-    -- local living_bomb = { 44457, 55359, 55360 } this is the DOT effect, which we do NOT want
-    local living_bomb = { 44461, 55361, 55362 }
-    -- local living_bomb_sod = { 400613 } this is the DOT effect, which we do NOT want
-    local living_bomb_sod = { 401731 }
-    local scorch = { 2948, 8444, 8445, 8446, 10205, 10206, 10207, 27073, 27074, 42858, 42859 }
-    local pyroblast_cata = { pyroblast }
-    local balefire_bolt_sod = { 428878 }
+    local fire_blast_ids = { 2136, 2137, 2138, 8412, 8413, 10197, 10199, 27078, 27079, 42872, 42873 }
+    local fire_blast_sod_ids = { 400618, 400619, 400616, 400620, 400621, 400622, 400623 } -- Improved by Overheat rune
+    local fireball_ids = { 133, 143, 145, 3140, 8400, 8401, 8402, 10148, 10149, 10150, 10151, 25306, 27070, 38692, 42832, 42833 }
+    local frostfire_bolt_ids = { frostfireBolt, 47610 }
+    local frostfire_bolt_sod_ids = { 401502 }
+    -- local living_bomb_ids = { 44457, 55359, 55360 } this is the DOT effect, which we do NOT want
+    local living_bomb_ids = { 44461, 55361, 55362 }
+    -- local living_bomb_sod_ids = { 400613 } this is the DOT effect, which we do NOT want
+    local living_bomb_sod_ids = { 401731 }
+    local scorch_ids = { 2948, 8444, 8445, 8446, 10205, 10206, 10207, 27073, 27074, 42858, 42859 }
+    local pyroblast_cata_ids = { pyroblast }
+    local balefire_bolt_sod_ids = { 428878 }
 
     self.spells = {}
     local function addSpellPack(spellPack)
@@ -52,19 +56,19 @@ HotStreakHandler.init = function(self, talentName)
             self.spells[spellID] = true;
         end
     end
-    addSpellPack(fire_blast);
-    addSpellPack(fire_blast_sod);
-    addSpellPack(fireball);
-    addSpellPack(frostfire_bolt);
-    addSpellPack(frostfire_bolt_sod);
-    addSpellPack(scorch);
+    addSpellPack(fire_blast_ids);
+    addSpellPack(fire_blast_sod_ids);
+    addSpellPack(fireball_ids);
+    addSpellPack(frostfire_bolt_ids);
+    addSpellPack(frostfire_bolt_sod_ids);
+    addSpellPack(scorch_ids);
     if SAO.IsCata() then
-        addSpellPack(pyroblast_cata);
+        addSpellPack(pyroblast_cata_ids);
     else
-        addSpellPack(living_bomb);
-        addSpellPack(living_bomb_sod);
+        addSpellPack(living_bomb_ids);
+        addSpellPack(living_bomb_sod_ids);
     end
-    addSpellPack(balefire_bolt_sod);
+    addSpellPack(balefire_bolt_sod_ids);
 
     local _, _, tab, index = SAO:GetTalentByName(talentName);
     if (tab and index) then
@@ -300,10 +304,10 @@ local FrozenHandler = {
             -- Up until Wrath, players could have several versions of the same spell
             -- So we need to register spells based on their names, not their IDs
             SAO:RegisterGlowIDs({
-                (GetSpellInfo(self.ice_lance[1])),
-                (GetSpellInfo(self.ice_lance_sod[1])),
-                (GetSpellInfo(self.deep_freeze[1])),
-                (GetSpellInfo(self.deep_freeze_sod[1])),
+                SAO:GetSpellName(self.ice_lance[1]),
+                SAO:GetSpellName(self.ice_lance_sod[1]),
+                SAO:GetSpellName(self.deep_freeze[1]),
+                SAO:GetSpellName(self.deep_freeze_sod[1]),
             });
         else
             --assert(SAO.IsProject(SAO.CATA_AND_ONWARD))
@@ -321,7 +325,7 @@ local FrozenHandler = {
 
     addSpellIDCandidates = function(self, ids)
         for _, id in pairs(ids) do
-            local name = GetSpellInfo(id);
+            local name = SAO:GetSpellName(id);
             if name then
                 self.allSpellIDs[id] = true;
                 self.allSpellNames[name] = true;
@@ -495,11 +499,11 @@ local function customLogin(self, ...)
         -- Invalidate hotStreakSpellName to avoid using HotStreakHandler, which is deprecated from Mists of Pandaria
         hotStreakSpellName = nil;
     elseif SAO.IsSoD() then
-        hotStreakSpellName = GetSpellInfo(hotStreakSoDSpellID);
+        hotStreakSpellName = self:GetSpellName(hotStreakSoDSpellID);
     elseif SAO.IsCata() then
-        hotStreakSpellName = GetSpellInfo(improvedHotStreakSpellID);
+        hotStreakSpellName = self:GetSpellName(improvedHotStreakSpellID);
     else
-        hotStreakSpellName = GetSpellInfo(hotStreakSpellID);
+        hotStreakSpellName = self:GetSpellName(hotStreakSpellID);
     end
     if (hotStreakSpellName) then
         HotStreakHandler:init(hotStreakSpellName);
@@ -627,7 +631,7 @@ local function useArcaneBlast()
         local arcaneMissiles = 5143;
         local arcaneExplosion = 1449;
         -- local arcaneHealingSpellTBD = ...; -- @todo add healing spell that resets stacks, which might exist, according to the in-game tooltip
-        local resettingSpells = { (GetSpellInfo(arcaneMissiles)), (GetSpellInfo(arcaneExplosion)) };
+        local resettingSpells = { SAO:GetSpellName(arcaneMissiles), SAO:GetSpellName(arcaneExplosion) };
         for nbStacks=1,4 do
             local scale = nbStacks == 4 and 1.2 or 0.6; -- 60%, 60%, 60%, 120%
             local pulse = nbStacks == 4;
@@ -701,16 +705,16 @@ end
 local function registerFire(self)
     useImpact();
     if self.IsWrath() then
-        self:RegisterAura("firestarter", 0, 54741, "impact", "Top", 0.8, 255, 255, 255, true, { (GetSpellInfo(2120)) }); -- May conflict with Impact location
+        self:RegisterAura("firestarter", 0, 54741, "impact", "Top", 0.8, 255, 255, 255, true, { self:GetSpellName(flamestrike) }); -- May conflict with Impact location
     end
     if self.IsSoD() then
-        self:RegisterAura("hot_streak_full", 0, hotStreakSoDSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(pyroblast)) });
+        self:RegisterAura("hot_streak_full", 0, hotStreakSoDSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { self:GetSpellName(pyroblast) });
     elseif self.IsCata() then
         self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { pyroblastBang });
     elseif self.IsMoP() then
         useHeatingUpAndHotStreak();
     else
-        self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(pyroblast)) });
+        self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { self:GetSpellName(pyroblast) });
     end
     if not self.IsMoP() then
         self:RegisterAura("hot_streak_half", 0, heatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255, false); -- Does not exist, but define it for option testing
@@ -726,15 +730,15 @@ end
 
 local function registerFrost(self)
     if self.IsSoD() then
-        local iceLanceAndDeepFreezeSoD = { (GetSpellInfo(FrozenHandler.ice_lance_sod[1])), (GetSpellInfo(FrozenHandler.deep_freeze_sod[1])) };
+        local iceLanceAndDeepFreezeSoD = { self:GetSpellName(FrozenHandler.ice_lance_sod[1]), self:GetSpellName(FrozenHandler.deep_freeze_sod[1]) };
         self:RegisterAura("fingers_of_frost_1_sod", 1, 400670, "frozen_fingers", "Left", 1, 255, 255, 255, true, iceLanceAndDeepFreezeSoD);
         self:RegisterAura("fingers_of_frost_2_sod", 2, 400670, "frozen_fingers", "Left + Right (Flipped)", 1, 255, 255, 255, true, iceLanceAndDeepFreezeSoD);
     elseif self.IsWrath() then
-        local iceLanceAndDeepFreeze = { (GetSpellInfo(FrozenHandler.ice_lance[1])), (GetSpellInfo(FrozenHandler.deep_freeze[1])) };
+        local iceLanceAndDeepFreeze = { self:GetSpellName(FrozenHandler.ice_lance[1]), self:GetSpellName(FrozenHandler.deep_freeze[1]) };
         self:RegisterAura("fingers_of_frost_1", 1, 74396, "frozen_fingers", "Left", 1, 255, 255, 255, true, iceLanceAndDeepFreeze);
         self:RegisterAura("fingers_of_frost_2", 2, 74396, "frozen_fingers", "Left + Right (Flipped)", 1, 255, 255, 255, true, iceLanceAndDeepFreeze);
     elseif self.IsCata() then
-        local iceLanceAndDeepFreeze = { (GetSpellInfo(FrozenHandler.ice_lance[1])), (GetSpellInfo(FrozenHandler.deep_freeze[1])) };
+        local iceLanceAndDeepFreeze = { self:GetSpellName(FrozenHandler.ice_lance[1]), self:GetSpellName(FrozenHandler.deep_freeze[1]) };
          -- Slightly bigger to avoid overlap with Arcane Missiles, and slightly dimmer to compensate
         -- self:RegisterAura("fingers_of_frost_0", 0, 44544, "frozen_fingers", "Left (CCW)", 1.1, 222, 222, 222, true, iceLanceAndDeepFreeze);
         self:RegisterAura("fingers_of_frost_1", 1, 44544, "frozen_fingers", "Left (CCW)", 1.1, 222, 222, 222, true, iceLanceAndDeepFreeze);
@@ -749,11 +753,11 @@ local function registerFrost(self)
         self:RegisterAura("freeze", 0, FrozenHandler.fakeSpellID, FrozenHandler.saoTexture, "Top", FrozenHandler.saoScaleFactor, 255, 255, 255, false);
     end
     if self.IsSoD() then
-        self:RegisterAura("brain_freeze", 0, 400730, "brain_freeze", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(412532)), (GetSpellInfo(401502)) });
+        self:RegisterAura("brain_freeze", 0, 400730, "brain_freeze", "Top", 1, 255, 255, 255, true, { self:GetSpellName(fireball), self:GetSpellName(spellfrostBoltSoD), self:GetSpellName(frostfireBoltSoD) });
     elseif self.IsWrath() then
-        self:RegisterAura("brain_freeze", 0, 57761, "brain_freeze", "Top", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(frostfireBolt)) });
+        self:RegisterAura("brain_freeze", 0, 57761, "brain_freeze", "Top", 1, 255, 255, 255, true, { self:GetSpellName(fireball), self:GetSpellName(frostfireBolt) });
     elseif self.IsCata() then
-        self:RegisterAura("brain_freeze", 0, 57761, "brain_freeze", "Top (CW)", 1, 255, 255, 255, true, { (GetSpellInfo(133)), (GetSpellInfo(frostfireBolt)) });
+        self:RegisterAura("brain_freeze", 0, 57761, "brain_freeze", "Top (CW)", 1, 255, 255, 255, true, { self:GetSpellName(fireball), self:GetSpellName(frostfireBolt) });
     elseif self.IsMoP() then
         useBrainFreeze();
     end
@@ -763,9 +767,9 @@ local function registerArcane(self)
     useArcaneMissiles();
     if self.IsSoD() then
     	-- Blue-ish, slightly smaller, to avoid confusion and overlap with Arcane Blast
-        self:RegisterAura("missile_barrage", 0, 400589, "arcane_missiles", "Left + Right (Flipped)", 0.8, 103, 184, 238, true, { (GetSpellInfo(5143)) });
+        self:RegisterAura("missile_barrage", 0, 400589, "arcane_missiles", "Left + Right (Flipped)", 0.8, 103, 184, 238, true, { self:GetSpellName(arcaneMissiles) });
     elseif self.IsWrath() then
-        self:RegisterAura("missile_barrage", 0, 44401, "arcane_missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, { (GetSpellInfo(5143)) });
+        self:RegisterAura("missile_barrage", 0, 44401, "arcane_missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, { self:GetSpellName(arcaneMissiles) });
     end
     if self.IsCata() then
         local arcanePotency1 = 57529;
@@ -834,11 +838,6 @@ local function loadOptions(self)
     local missileBarrageSoDRune = 400588;
     local missileBarrageSoDBuff = 400589;
 
-    local arcaneExplosion = 1449;
-    local flamestrike = 2120;
-    local fireball = 133;
-    local frostfireBoltSoD = 401502;
-    local spellfrostBoltSoD = 412532;
     local iceLance = FrozenHandler.ice_lance[1];
     local iceLanceSoD = FrozenHandler.ice_lance_sod[1];
     local deepFreeze = FrozenHandler.deep_freeze[1];
@@ -846,9 +845,9 @@ local function loadOptions(self)
 
     local heatingUpDetails = self:translateHeatingUp();
 
-    -- local spellName, _, spellIcon = GetSpellInfo(pyroblast);
+    -- local spellName, _, spellIcon = self:GetSpellName(pyroblast);
     -- local hotStreakDetails = string.format(LFG_READY_CHECK_PLAYER_IS_READY, "|T"..spellIcon..":0|t "..spellName):gsub("%.", "");
-    local hotStreakDetails = self.IsSoD() and GetSpellInfo(hotStreakSoDBuff) or GetSpellInfo(hotStreakBuff);
+    local hotStreakDetails = self.IsSoD() and self:GetSpellName(hotStreakSoDBuff) or self:GetSpellName(hotStreakBuff);
 
     -- local hotStreakHeatingUpDetails = string.format("%s+%s", heatingUpDetails, hotStreakDetails);
     local hotStreakHeatingUpDetails = string.format("%s %s", STATUS_TEXT_BOTH, ACTION_SPELL_AURA_APPLIED_DOSE);
@@ -955,7 +954,7 @@ SAO.Class["MAGE"] = {
     ["CHARACTER_POINTS_CHANGED"] = recheckTalents,
     ["PLAYER_TARGET_CHANGED"] = retarget,
     ["UNIT_HEALTH"] = unitHealth,
-    ["UNIT_HEALTH_FREQUENT"] = unitHealthFrequent,
+    ["UNIT_HEALTH_FREQUENT"] = (not SAO.HasMidnightEvents()) and unitHealthFrequent or nil,
     [SAO.IsWrath() and "PLAYER_TALENT_UPDATE" or "CHARACTER_POINTS_CHANGED"] = recheckTalents, -- Event changed in Wrath
     ["RUNE_UPDATED"] = SAO.IsSoD() and recheckTalents or nil,
 }

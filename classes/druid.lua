@@ -3,7 +3,6 @@ local AddonName, SAO = ...
 -- Optimize frequent calls
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local GetShapeshiftForm = GetShapeshiftForm
-local GetSpellInfo = GetSpellInfo
 local UnitGUID = UnitGUID
 
 local canHaveEclipse = SAO.IsProject(SAO.SOD + SAO.WRATH_AND_ONWARD);
@@ -162,7 +161,7 @@ local function useSwiftbloom()
     SAO:CreateEffect(
         "swiftbloom",
         SAO.SOD,
-        1226035,  -- Swiftbloom (buff)
+        1226035, -- Swiftbloom (buff)
         "aura",
         {
             overlay = { texture = "fury_of_stormrage", position = "Top", scale = 0.7, color = { 255, 60, 255 } },
@@ -361,7 +360,7 @@ local function updateSAOs(self)
     local mustActivateLunar = lunarCache and (not lunarOptions or type(lunarOptions[0]) == "nil" or lunarOptions[0]);
     local mustActivateSolar = solarCache and (not solarOptions or type(solarOptions[0]) == "nil" or solarOptions[0]);
 
-    if self:IsSoD() then
+    if self.IsSoD() then
         -- Season of Discovery
         local leftImage, rightImage = '', '';
         local leftSpell, rightSpell = nil, nil;
@@ -414,7 +413,7 @@ local function updateSAOTimers(self)
     local mustActivateLunar = lunarCache and (not lunarOptions or type(lunarOptions[0]) == "nil" or lunarOptions[0]);
     local mustActivateSolar = solarCache and (not solarOptions or type(solarOptions[0]) == "nil" or solarOptions[0]);
 
-    if self:IsSoD() then
+    if self.IsSoD() then
         -- Season of Discovery
         local leftSpell, rightSpell = nil, nil;
         if (mayActivateOmen) then
@@ -452,7 +451,7 @@ local function updateGABs(self)
     if (lunarCache ~= glowingStarfire) then
         local starfireSpellID = 2912;
         if (lunarCache) then
-            self:AddGlow(starfireSpellID, { (GetSpellInfo(starfireSpellID)) });
+            self:AddGlow(starfireSpellID, { SAO:GetSpellName(starfireSpellID) });
             glowingStarfire = true;
         else
             self:RemoveGlow(starfireSpellID);
@@ -463,7 +462,7 @@ local function updateGABs(self)
     if (solarCache ~= glowingWrath) then
         local wrathSpellID = 5176;
         if (solarCache) then
-            self:AddGlow(wrathSpellID, { (GetSpellInfo(wrathSpellID)) });
+            self:AddGlow(wrathSpellID, { SAO:GetSpellName(wrathSpellID) });
             glowingWrath = true;
         else
             self:RemoveGlow(wrathSpellID);
@@ -474,7 +473,7 @@ local function updateGABs(self)
     -- if ((lunarCache or solarCache) ~= glowingStarsurge) then
     --     local starsurgeSpellID = 78674;
     --     if (lunarCache or solarCache) then
-    --         self:AddGlow(starsurgeSpellID, { (GetSpellInfo(starsurgeSpellID)) });
+    --         self:AddGlow(starsurgeSpellID, { SAO:GetSpellName(starsurgeSpellID) });
     --         glowingStarsurge = true;
     --     else
     --         self:RemoveGlow(starsurgeSpellID);
@@ -558,7 +557,7 @@ local function registerClass(self)
     usePredatoryStrikes(); -- a.k.a. Predatory Swiftness
     useMangle();
     useOmenOfClarity(); -- MoP+
-    useSwiftbloom();  -- SoD Scarlet Enclave Resto 2pc
+    useSwiftbloom(); -- SoD Scarlet Enclave Resto 2pc
 
     if not SAO.IsProject(SAO.MOP_AND_ONWARD) then -- Pre-MoP
         -- Track Eclipses with a custom CLEU function, so that eclipses can coexist with Omen of Clarity
@@ -574,9 +573,9 @@ local function registerClass(self)
         self:RegisterAura("omen_of_clarity", 0, 16870+1000000, "natures_grace", "Left + Right (Flipped)", 1, 255, 255, 255, true); -- Fake spell ID, for option testing
 
         -- Register glow IDs for glowing buttons, namely Starfire, Wrath and Starsurge
-        self:RegisterGlowIDs({ (GetSpellInfo(starfire)), (GetSpellInfo(wrath)) });
+        self:RegisterGlowIDs({ SAO:GetSpellName(starfire), SAO:GetSpellName(wrath) });
         -- if self.IsCata() then
-        --     local starsurge = GetSpellInfo(78674);
+        --     local starsurge = SAO:GetSpellName(78674);
         --     self:RegisterGlowIDs({ starsurge });
         -- end
 

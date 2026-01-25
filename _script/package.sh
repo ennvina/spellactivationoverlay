@@ -32,27 +32,26 @@ prunedev() {
     NB_PATHS_WITH_DEV_CODE=$(find "${PATHS_WITH_DEV_CODE[@]}" -type f -name '*.lua' -printf . | wc -c)
     NB_FILES_PROCESSED=0
     echo -n "[1/2] 0/${NB_PATHS_WITH_DEV_CODE}"
-    find "${PATHS_WITH_DEV_CODE[@]}" -type f -name '*.lua' -print0 |
-        while read -r -d '' filename
-        do
-            # Remove SAO:Trace calls
-            if grep -q 'SAO:Trace' "$filename"
-            then
-                sed -i '/SAO:Trace/d' "$filename" || bye "Cannot remove trace code from $filename"
-            fi
+    while read -r -d '' filename
+    do
+        # Remove SAO:Trace calls
+        if grep -q 'SAO:Trace' "$filename"
+        then
+            sed -i '/SAO:Trace/d' "$filename" || bye "Cannot remove trace code from $filename"
+        fi
 
-            # Remove DEV_ONLY blocks
-            if grep -q 'BEGIN_DEV_ONLY' "$filename"
-            then
-                sed -i '/BEGIN_DEV_ONLY/,/END_DEV_ONLY/d' "$filename" || bye "Cannot remove developer-specific code block from $filename"
-            fi
-            if grep -q 'DEV_ONLY' "$filename"
-            then
-                sed -i '/DEV_ONLY/d' "$filename" || bye "Cannot remove developer-specific code from $filename"
-            fi
+        # Remove DEV_ONLY blocks
+        if grep -q 'BEGIN_DEV_ONLY' "$filename"
+        then
+            sed -i '/BEGIN_DEV_ONLY/,/END_DEV_ONLY/d' "$filename" || bye "Cannot remove developer-specific code block from $filename"
+        fi
+        if grep -q 'DEV_ONLY' "$filename"
+        then
+            sed -i '/DEV_ONLY/d' "$filename" || bye "Cannot remove developer-specific code from $filename"
+        fi
 
-            echo -ne "\033[u[1/2] $((++NB_FILES_PROCESSED))/${NB_PATHS_WITH_DEV_CODE}"
-        done
+        echo -ne "\033[u[1/2] $((++NB_FILES_PROCESSED))/${NB_PATHS_WITH_DEV_CODE}"
+    done < <(find "${PATHS_WITH_DEV_CODE[@]}" -type f -name '*.lua' -print0)
 
     # Pseudo-minify by removing things like comments and blank lines
     # Must be done after removing DEV_ONLY blocks to avoid removing comments that would contain DEV_ONLY markers
@@ -60,27 +59,42 @@ prunedev() {
     NB_FILES_PROCESSED=0
     echo -ne "\033[u"; printf "%$((8 + 2 * ${#NB_PATHS_WITH_DEV_CODE}))s" ""; echo -ne "\033[u" # Erase former progress line
     echo -n "0/${NB_PATHS_TO_MINIFY}"
-    find "SpellActivationOverlay/" -type f -name '*.lua' -print0 |
-        while read -r -d '' filename
-        do
-            # Remove comment-only blocks
-            sed -i '/^[[:space:]]*--\[\[/,/[[:space:]]*\]\]/d' "$filename" || bye "Cannot remove comment blocks from $filename"
+    while read -r -d '' filename
+    do
+        # Remove comment-only blocks
+        sed -i '/^[[:space:]]*--\[\[/,/[[:space:]]*\]\]/d' "$filename" || bye "Cannot remove comment blocks from $filename"
 
-            # Remove comment-only lines and blank lines
-            COMMENT_ONLY_LINE='^[[:space:]]*--.*$'
-            BLANK_LINE='^[[:space:]]*$'
-            sed -i "/$COMMENT_ONLY_LINE/d;/$BLANK_LINE/d" "$filename" || bye "Cannot remove comments and blank lines from $filename"
+        # Remove comment-only lines and blank lines
+        COMMENT_ONLY_LINE='^[[:space:]]*--.*$'
+        BLANK_LINE='^[[:space:]]*$'
+        sed -i "/$COMMENT_ONLY_LINE/d;/$BLANK_LINE/d" "$filename" || bye "Cannot remove comments and blank lines from $filename"
 
-            # Remove end-of-line comments, except in strings; assumes no multi-line strings and no -- in single-quote strings
-            # Also remove leading spaces, trailing spaces, and trailing semicolons
-            EOL_COMMENT='[[:space:]]*--[^"]*$'
-            LEADING_SPACES='^[[:space:]]*'
-            TRAILING_SPACES='[[:space:]]*$'
-            TRAILING_SEMICOLON=';[[:space:]]*$'
-            sed -i "s/$EOL_COMMENT//;s/$LEADING_SPACES//;s/$TRAILING_SPACES//;s/$TRAILING_SEMICOLON//" "$filename" || bye "Cannot remove syntactic sugar from $filename"
+        # Remove end-of-line comments, except in strings; assumes no multi-line strings and no -- in single-quote strings
+        # Also remove leading spaces, trailing spaces, and trailing semicolons
+        # At last, replace multiple spaces with single space
+        EOL_COMMENT='[[:space:]]*--[^"]*$'
+        LEADING_SPACES='^[[:space:]]*'
+        TRAILING_SPACES='[[:space:]]*$'
+        TRAILING_SEMICOLON=';[[:space:]]*$'
+        MULTIPLE_SPACES='[[:space:]]\{2,\}'
+        sed -i "s/$EOL_COMMENT//;s/$LEADING_SPACES//;s/$TRAILING_SPACES//;s/$TRAILING_SEMICOLON//;s/$MULTIPLE_SPACES/ /g" "$filename" || bye "Cannot remove syntactic sugar from $filename"
 
-            echo -ne "\033[u[2/2] $((++NB_FILES_PROCESSED))/${NB_PATHS_TO_MINIFY}"
-        done
+        # Lua-specific optimizations
+        # Replace 'local varname = nil'
+        LOCAL_NIL_ASSIGNMENT='s/\(local[[:space:]]*\w*\)[[:space:]]*=[[:space:]]*nil\b/\1/g'
+        # Replace ' ~= ' with '~=' and ' = ' with '='
+        INEQUALITY_SIGN='s/[[:space:]]*~=[[:space:]]*/~=/g'
+        EQUALITY_SIGN='s/[[:space:]]*=[[:space:]]*/=/g'
+        # Replace ', ' with ',' except when the last whitespace is immediately followed by double quote
+        COMMA_SPACE='s/,[[:space:]][[:space:]]*\([^"]\)/,\1/g'
+        # Replace ') then' with ')then' and ') do' with ')do'
+        BRACES_THEN='s/)[[:space:]][[:space:]]*then/)then/g;s/)[[:space:]][[:space:]]*do/)do/g'
+        # Replace '( ' with '(' and ' )' with ')' and '{ ' with '{' and ' }' with '}'
+        BRACES_SPACE='s/([[:space:]][[:space:]]*/(/g;s/[[:space:]][[:space:]]*)/)/g;s/{[[:space:]][[:space:]]*/{/g;s/[[:space:]][[:space:]]*}/}/g'
+        sed -i "$LOCAL_NIL_ASSIGNMENT;$INEQUALITY_SIGN;$EQUALITY_SIGN;$COMMA_SPACE;$BRACES_THEN;$BRACES_SPACE" "$filename" || bye "Cannot optimize Lua syntax in $filename"
+
+        echo -ne "\033[u[2/2] $((++NB_FILES_PROCESSED))/${NB_PATHS_TO_MINIFY}"
+    done < <(find "SpellActivationOverlay/" -type f -name '*.lua' -print0)
 
     echo
 }
@@ -260,19 +274,20 @@ toc2xml() {
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 EOF
     local nlines=0
-    sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' "$tocfile" |
-        grep -Eo '^[[:alnum:]\./\\-]*.(lua|xml)$' |
-        tr '\\' / |
-        while read f
-        do
-            if [[ "$f" =~ \.lua$ ]]
-            then
-                printf '\t<Script file="%s"/>\n' "$f" || bye "Cannot write XML file"
-            else
-                printf '\t<Include file="%s"/>\n' "$f" || bye "Cannot write XML file"
-            fi
-            ((++nlines))
-        done >> "$xmlfile"
+    while read f
+    do
+        if [[ "$f" =~ \.lua$ ]]
+        then
+            printf '\t<Script file="%s"/>\n' "$f" || bye "Cannot write XML file"
+        else
+            printf '\t<Include file="%s"/>\n' "$f" || bye "Cannot write XML file"
+        fi
+        ((++nlines))
+    done >> "$xmlfile" < <(
+        sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' "$tocfile" |
+            grep -Eo '^[[:alnum:]\./\\-]*.(lua|xml)$' |
+            tr '\\' /
+        )
     [ $(wc -l "$xmlfile" | grep -Eo '^[0-9]+') -gt 0 ] || bye "No lines written to XML file"
 cat >> "$xmlfile" <<EOF
 </Ui>
@@ -330,6 +345,7 @@ TEXTURES_NOT_FOR_WRATH=(
 arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
+echo_of_the_elements
 fulmination
 fury_of_stormrage_yellow
 maelstrom_weapon_6
@@ -373,8 +389,10 @@ arcane_missiles_3
 art_of_war
 blood_surge
 daybreak
+echo_of_the_elements
 fulmination
 fury_of_stormrage
+fury_of_stormrage_yellow
 high_tide
 impact
 killing_machine
@@ -395,10 +413,14 @@ monk_serpent
 predatory_swiftness
 raging_blow
 rime
+shadow_word_insanity
 shooting_stars
 sudden_death
 sudden_doom
 sword_and_board
+thrill_of_the_hunt_1
+thrill_of_the_hunt_2
+thrill_of_the_hunt_3
 tooth_and_claw
 white_tiger
 rkm128)
@@ -424,7 +446,9 @@ TEXTURES_NOT_FOR_VANILLA=(
 art_of_war
 backlash
 daybreak
+echo_of_the_elements
 fury_of_stormrage_yellow
+genericarc_04
 master_marksman
 molten_core
 killing_machine
@@ -510,6 +534,35 @@ SOUNDS_NOT_FOR_MOP=(UI_PowerAura_Generic)
 prunesound "${SOUNDS_NOT_FOR_MOP[@]}"
 
 zipproject mop "$VERSION_TOC_VERSION"
+
+cdup
+}
+
+# Release retail version
+release_retail() {
+RETAIL_BUILD_VERSION=120000
+mkproject retail "$RETAIL_BUILD_VERSION" 2266c5 inv_ability_voidweaverpriest_entropicrift 64 "Retail"
+
+#prunecopyright Cataclysm Pandaria Draenor
+# Do not remove Cataclysm copyright, because we use a sound file introduced in Cataclysm
+prunecopyright Pandaria Draenor
+
+TEXTURES_NOT_FOR_RETAIL=(
+fury_of_stormrage_yellow
+maelstrom_weapon_6
+maelstrom_weapon_7
+maelstrom_weapon_8
+maelstrom_weapon_9
+maelstrom_weapon_10
+$(texbelow 30000000 450914 450915)
+)
+prunetex "${TEXTURES_NOT_FOR_RETAIL[@]}"
+
+# Do not remove sound in Retail; the file exists but has no volume
+#SOUNDS_NOT_FOR_RETAIL=(UI_PowerAura_Generic)
+#prunesound "${SOUNDS_NOT_FOR_RETAIL[@]}"
+
+zipproject retail-alpha "$VERSION_TOC_VERSION"
 
 cdup
 }
@@ -629,7 +682,7 @@ cdup
 
 # Release universal version
 release_universal() {
-UNIVERSAL_BUILD_VERSION="$VANILLA_BUILD_VERSION, $TBC_BUILD_VERSION, $WRATH_BUILD_VERSION, $CATA_BUILD_VERSION, $MOP_BUILD_VERSION"
+UNIVERSAL_BUILD_VERSION="$VANILLA_BUILD_VERSION, $TBC_BUILD_VERSION, $WRATH_BUILD_VERSION, $CATA_BUILD_VERSION, $MOP_BUILD_VERSION, $RETAIL_BUILD_VERSION"
 mkproject universal "$UNIVERSAL_BUILD_VERSION" c845fa spell_arcane_portalstormwind 32 "Universal"
 
 echo -n "Generatic TOC files for each flavor..."
@@ -639,6 +692,7 @@ PROJECTS=(
 "wrath Wrath"
 "cata Cata"
 "mop Mists"
+"retail Mainline"
 )
 addon_name=SpellActivationOverlay
 for project in "${PROJECTS[@]}"; do
@@ -661,5 +715,6 @@ release_tbc
 release_wrath
 release_cata
 release_mop
+release_retail
 release_universal
 release_necrosis

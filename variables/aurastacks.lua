@@ -1,6 +1,22 @@
 local AddonName, SAO = ...
 local Module = "aurastacks"
 
+-- Global variables
+-- For now, enforce Legacy on WoW Classic, because Modern mode requires more testing
+-- It is safe to assume Retail players want the Modern mode, because Legacy is unusable there
+SAO.AURASTACKS = {
+    LEGACY = not SAO.IsRetail(),
+    MODERN = SAO.IsRetail(),
+};
+--[[BEGIN_DEV_ONLY]]
+-- Developers will test Modern mode on Classic, when supported
+SAO.AURASTACKS = {
+    LEGACY = C_UnitAuras == nil,
+    MODERN = C_UnitAuras ~= nil,
+};
+--[[END_DEV_ONLY]]
+assert(SAO.AURASTACKS.LEGACY ~= SAO.AURASTACKS.MODERN); -- Exactly one of these modes must be active
+
 -- Aura stacks
 --  if stacks >= 0 then
 --      if stackAgnostic then
@@ -14,6 +30,9 @@ local HASH_AURA_ANY    = 2
 local HASH_AURA_ZERO   = HASH_AURA_ANY
 local HASH_AURA_MAX    = HASH_AURA_ZERO + 10 -- Allow no more than 10 stacks
 local HASH_AURA_MASK   = 0xF
+
+-- map between aura instance ID and bucket (Modern mode only)
+local bucketsByAuraInstanceID = {};
 
 SAO.Variable:register({
     order = 1,
@@ -95,7 +114,7 @@ SAO.Variable:register({
     bucket = {
         impossibleValue = -1,
         fetchAndSet = function(bucket)
-            local auraStacks = SAO:GetPlayerAuraStacksBySpellID(bucket.spellID);
+            local auraStacks, auraInstanceID = SAO:GetPlayerAuraStacksBySpellID(bucket.spellID);
             if auraStacks ~= nil then
                 if bucket.stackAgnostic then
                     bucket:setAuraStacks(0);
@@ -105,13 +124,164 @@ SAO.Variable:register({
             else
                 bucket:setAuraStacks(nil);
             end
+            if SAO.AURASTACKS.MODERN then -- Additional handling to optimize Modern mode
+                bucket.lastKnownAuraStacks = auraStacks; -- Store raw value, because bucket:getAuraStacks() is unreliable if stackAgnostic is set
+                bucket.auraInstanceID = auraInstanceID;
+                if auraInstanceID ~= nil then
+                    bucketsByAuraInstanceID[auraInstanceID] = bucket;
+                end
+            end
         end,
     },
 
     event = {
         isRequired = true,
-        names = { "COMBAT_LOG_EVENT_UNFILTERED" },
-        -- COMBAT_LOG_EVENT_UNFILTERED = function(...) -- Special case: handled by events.lua
+        names = SAO.AURASTACKS.MODERN and { "UNIT_AURA" } or { "COMBAT_LOG_EVENT_UNFILTERED" },
+
+        -- Legacy aura handling via CLEU
+        COMBAT_LOG_EVENT_UNFILTERED = SAO.AURASTACKS.LEGACY and function(...)
+            local _, event, _, _, _, _, _, destGUID = CombatLogGetCurrentEventInfo();
+
+            if ( (event:sub(0,11) == "SPELL_AURA_") and (destGUID == UnitGUID("player")) ) then
+                -- Events starting with SPELL_AURA e.g., SPELL_AURA_APPLIED
+                -- This should be invoked only if the buff is done on the player i.e., UnitGUID("player") == destGUID
+                local spellID, spellName = select(12, CombatLogGetCurrentEventInfo());
+
+                --[[ Aura event chart
+
+                For un-stackable auras:
+                - "SPELL_AURA_APPLIED" = buff is being applied now
+                - "SPELL_AURA_REMOVED" = buff is being removed now
+
+                For stackable auras:
+                - "SPELL_AURA_APPLIED" = first stack applied
+                - "SPELL_AURA_APPLIED_DOSE" = second stack applied or beyond
+                - "SPELL_AURA_REMOVED_DOSE" = removed a stack, but there is at least one stack left
+                - "SPELL_AURA_REMOVED" = removed last remaining stack
+
+                For any aura:
+                - "SPELL_AURA_REFRESH" = buff is refreshed, usually the remaining time is reset to its max duration
+                ]]
+                local auraApplied = event:sub(0,18) == "SPELL_AURA_APPLIED"; -- includes "SPELL_AURA_APPLIED" and "SPELL_AURA_APPLIED_DOSE"
+                local auraRemovedLast = event == "SPELL_AURA_REMOVED";
+                local auraRemovedDose = event == "SPELL_AURA_REMOVED_DOSE";
+                local auraRefresh = event == "SPELL_AURA_REFRESH";
+                if not auraApplied and not auraRemovedLast and not auraRemovedDose and not auraRefresh then
+                    return; -- Not an event we're interested in
+                end
+
+                -- Use the game's aura from CLEU to find its corresponding aura item in SAO, if any
+                local bucket;
+                bucket, spellID = SAO:GetBucketBySpellIDOrSpellName(spellID, spellName);
+                if not bucket then
+                    -- This spell is not tracked by SAO
+                    return;
+                end
+                if not bucket.trigger:reactsWith(SAO.TRIGGER_AURA) then
+                    -- This spell ignores aura-based triggers
+                    return;
+                end
+
+                -- Handle unique case first: aura refresh
+                if (auraRefresh) then
+                    bucket:refresh();
+                    -- Can return now, because SPELL_AURA_REFRESH is used only to refresh timer
+                    return;
+                end
+
+                -- Now, we are in a situation where we either got a buff (SPELL_AURA_APPLIED*) or lost it (SPELL_AURA_REMOVED*)
+
+                if (auraRemovedLast) then
+                    bucket:setAuraStacks(nil); -- nil means "not currently holding any stacks"
+                    -- Can return now, because SPELL_AURA_REMOVED resets everything
+                    return;
+                end
+
+                --[[ Now, we are in a situation where either:
+                    - we got a buff (SPELL_AURA_APPLIED*)
+                    - or we lost a stack but still have the buff (SPELL_AURA_REMOVED_DOSE)
+                    Either way, the player currently has the buff or debuff
+                ]]
+
+                local stacks = 0; -- Number of stacks of the aura, unless the aura is stack-agnostic (see below)
+                if not bucket.stackAgnostic then
+                    -- To handle stackable auras, we must find the aura (ugh!) to get its number of stacks
+                    -- In an ideal world, we would use a stack count from the combat log which, unfortunately, is unavailable
+                    if event ~= "SPELL_AURA_REMOVED" then -- No need to find aura with complete removal: the buff is not there anymore
+                        stacks = SAO:GetPlayerAuraStacksBySpellID(spellID) or 0;
+                    end
+                    -- For the record, stacks will always be 0 for stack-agnostic auras, even if the aura actually has stacks
+                    -- This is an optimization that prevents the above call of GetPlayerAuraStacksBySpellID, which has a significant cost
+                end
+
+                --[[ Aura is enabled, either because:
+                    - it was added now (SPELL_AURA_APPLIED)
+                    - or was upgraded (SPELL_AURA_APPLIED_DOSE)
+                    - or was downgraded but still visible (SPELL_AURA_REMOVED_DOSE)
+                ]]
+                bucket:setAuraStacks(stacks);
+            end
+        end or nil,
+
+        -- Modern aura handling via UNIT_AURA
+        UNIT_AURA = SAO.AURASTACKS.MODERN and function(unitTarget, updateInfo)
+            if not UnitIsUnit(unitTarget, "player") then
+                return;
+            end
+
+            -- Special case, should happen once per login or per loading screen at best
+            if updateInfo.isFullUpdate then
+                SAO:Debug(Module, "Full aura update detected, rechecking all buckets");
+                SAO:CheckManuallyAllBuckets(SAO.TRIGGER_AURA);
+                return;
+            end
+
+            for _, auraInstanceID in ipairs(updateInfo.updatedAuraInstanceIDs or {}) do
+                local bucket = bucketsByAuraInstanceID[auraInstanceID];
+                if bucket then
+                    SAO:Trace(Module, "Updating bucket "..tostring(bucket.bucketName).." due to update of aura instance ID "..tostring(auraInstanceID));
+                    local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, auraInstanceID);
+                    assert(type(aura) == 'table' and aura.auraInstanceID == auraInstanceID);
+                    if bucket.lastKnownAuraStacks ~= aura.applications then
+                        SAO:Trace(Module, "Bucket "..tostring(bucket.bucketName).." aura stacks changed from "..tostring(bucket.lastKnownAuraStacks).." to "..tostring(aura.applications));
+                        bucket:setAuraStacks(bucket.stackAgnostic and 0 or aura.applications);
+                        bucket.lastKnownAuraStacks = aura.applications;
+                    else
+                        SAO:Trace(Module, "Bucket "..tostring(bucket.bucketName).." aura stacks remain unchanged at "..tostring(bucket.lastKnownAuraStacks));
+                        bucket:refresh();
+                    end
+                end
+            end
+
+            for _, auraInstanceID in ipairs(updateInfo.removedAuraInstanceIDs or {}) do
+                local bucket = bucketsByAuraInstanceID[auraInstanceID];
+                if bucket then
+                    SAO:Trace(Module, "Updating bucket "..tostring(bucket.bucketName).." due to removal of aura instance ID "..tostring(auraInstanceID));
+                    bucket:setAuraStacks(nil);
+                    bucket.lastKnownAuraStacks = nil;
+                    bucketsByAuraInstanceID[auraInstanceID] = nil;
+                end
+            end
+
+            for _, aura in ipairs(updateInfo.addedAuras or {}) do
+                local bucket = SAO:GetBucketBySpellID(aura.spellId);
+                if bucket then
+                    if bucketsByAuraInstanceID[aura.auraInstanceID] then --[[BEGIN_DEV_ONLY]]
+                        SAO:Warn(Module,
+                            "Associating the (supposedly) newfound aura instance ID "..tostring(aura.auraInstanceID)
+                            .." to bucket "..bucket.description
+                            ..", ".."but this aura instance ID is already associated with bucket "..bucketsByAuraInstanceID[aura.auraInstanceID].description
+                        );
+                    end --[[END_DEV_ONLY]]
+                    local auraInstanceID = aura.auraInstanceID;
+                    SAO:Trace(Module, "Updating bucket "..tostring(bucket.bucketName).." due to addition of aura instance ID "..tostring(auraInstanceID));
+                    bucket:setAuraStacks(bucket.stackAgnostic and 0 or aura.applications);
+                    bucket.lastKnownAuraStacks = aura.applications;
+                    bucket.auraInstanceID = auraInstanceID;
+                    bucketsByAuraInstanceID[auraInstanceID] = bucket;
+                end
+            end
+        end or nil,
     },
 
     condition = {

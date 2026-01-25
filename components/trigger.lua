@@ -100,7 +100,7 @@ SAO.Trigger = {
 
     manualCheck = function(self, flags)
         if bit.band(self.required, flags) == 0 then
-            SAO:Warn(Module, "Checking manually a trigger "..tostring(flags).." which does not meet requirements of  "..self.parent.description);
+            SAO:Warn(Module, "Checking manually a trigger "..tostring(flags).." which does not meet requirements of "..self.parent.description);
             return;
         end
 

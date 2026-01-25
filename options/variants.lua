@@ -112,7 +112,7 @@ end
 function SAO.SpellVariantValue(self, spellIDs)
     return self:StringVariantValue(spellIDs, "spell:",
     function(spellID)
-        return (select(1, GetSpellInfo(spellID)));
+        return SAO:GetSpellName(spellID);
     end);
 end
 
@@ -156,7 +156,7 @@ function SAO.StanceVariantValue(self, stances)
     return self:StringVariantValue(stances, "stance:",
     function(stance)
         if ClassStance[classFile] and ClassStance[classFile][stance] then
-            return select(1, GetSpellInfo(ClassStance[classFile][stance]));
+            return SAO:GetSpellName(ClassStance[classFile][stance]);
         end
         return UNKNOWN;
     end);

@@ -131,15 +131,10 @@ local RiposteHandler = {
 local function customLogin(self, ...)
     -- Initialization on PLAYER_LOGIN event because the talent tree may not be available before
 
-    if self.IsCata() then
-        -- Riposte not available for Cataclysm
-        return;
-    end
-
     local riposteSpellID = 14251;
-    local riposteSpellName = GetSpellInfo(riposteSpellID);
+    local riposteSpellName = SAO:GetSpellName(riposteSpellID);
 
-    if (riposteSpellName) then
+    if riposteSpellName then
         RiposteHandler:init(riposteSpellID, riposteSpellName);
     end
 end
@@ -244,8 +239,10 @@ local function registerClass(self)
     useDispatch();
 end
 
+local hasRiposte = SAO.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH);
+
 SAO.Class["ROGUE"] = {
     ["Register"] = registerClass,
-    ["PLAYER_LOGIN"] = customLogin,
-    ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
+    ["PLAYER_LOGIN"] = hasRiposte and customLogin or nil,
+    ["COMBAT_LOG_EVENT_UNFILTERED"] = hasRiposte and customCLEU or nil,
 }

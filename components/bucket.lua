@@ -20,6 +20,7 @@ SAO.RegisteredBucketsBySpellID = {}
 -- A stack count of non-zero means "for a specific number of stacks"
 SAO.Bucket = {
     create = function(self, name, spellID)
+        local spellName = SAO:GetSpellName(spellID);
         local bucket = {
             name = name, -- Name should be unique amongst buckets
 
@@ -37,7 +38,7 @@ SAO.Bucket = {
             -- hashCalculator and hashCalculatorToApply may differ if and only if there is an onAboutToApplyHash handler
 
             -- Constant for more efficient debugging
-            description = name.." ("..spellID..(GetSpellInfo(spellID) and " = "..GetSpellInfo(spellID) or "")..")",
+            description = name.." ("..spellID..(spellName and (" = "..spellName) or "")..")",
         };
         bucket.trigger = SAO.Trigger:new(bucket);
         -- Initialize current state with unattainable values
@@ -312,11 +313,11 @@ SAO.BucketManager = {
 
             -- Cannot guarantee we can track spell ID on Classic Era, but can always track spell name
             if SAO.IsEra() and not SAO:IsFakeSpell(spellID) then
-                local spellName = GetSpellInfo(spellID);
+                local spellName = SAO:GetSpellName(spellID);
                 if spellName then
                     local conflictingBucket = SAO.RegisteredBucketsBySpellID[spellName];
                     if conflictingBucket then
-                        SAO:Debug(Module, "Registering spells with different spell IDs ("..conflictingBucket.name.." uses spell ID "..conflictingBucket.spellID.." vs. "..bucket.name.." uses spell ID "..bucket.spellID..") but sharing the same spell name '"..spellName.."', this might cause issues");
+                        SAO:Debug(Module, "Registering spells with different spell IDs ("..conflictingBucket.name.." uses spell ID "..conflictingBucket.spellID.." vs. "..bucket.name.." uses spell ID "..bucket.spellID..") but sharing the same spell name '"..spellName.."', ".."this might cause issues");
                     end
                     SAO.RegisteredBucketsBySpellID[spellName] = bucket; -- Share pointer
                 else
@@ -358,9 +359,9 @@ function SAO:GetBucketByName(name)
 end
 
 function SAO:GetBucketBySpellID(spellID)
-    if type(spellID) ~= 'number' then
+    if type(spellID) ~= 'number' then --[[BEGIN_DEV_ONLY]]
         SAO:Warn(Module, "Asking a bucket with spell ID "..tostring(spellID).." which is of type "..type(spellID).." instead of type number");
-    end
+    end --[[END_DEV_ONLY]]
     return self.RegisteredBucketsBySpellID[spellID];
 end
 
