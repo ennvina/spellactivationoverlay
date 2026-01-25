@@ -1,5 +1,9 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.7.2 (2026-01-xx)
+
+This release optimizes code size a bit further than in 2.7.0
+
 #### v2.7.1 (2026-01-21)
 
 Support for Titan Reforged: Wrath
