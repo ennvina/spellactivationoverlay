@@ -2,6 +2,21 @@
 
 #### v2.7.2 (2026-01-xx)
 
+Thank you to our amazing contributors for helping out. Thanks!
+- Nezzey and catpokemon for suggesting Priest's Clearcasting effect
+
+New Spell Alerts
+- Priest's Clearcasting (The Burning Crusade)
+
+New Glowing Buttons
+- Priest's Binding Heal, during Clearcasting (The Burning Crusade)
+- Priest's Flash Heal, during Clearcasting (The Burning Crusade)
+- Priest's Greater Heal, during Clearcasting (The Burning Crusade)
+
+Updated Spell Alerts
+- Shaman's Elemental Focus visuals are now consistent
+- Healing Trance visuals have been updated (The Burning Crusade, Wrath)
+
 This release optimizes code size a bit further than in 2.7.0
 
 #### v2.7.1 (2026-01-21)
