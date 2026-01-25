@@ -18,9 +18,7 @@ local function useElementalFocus(self)
     local hash0Stacks = self:HashNameFromStacks(0);
     local hash2Stacks = self:HashNameFromStacks(2);
 
-    -- Elemental Focus has 2 charges on TBC, Wrath and Cataclysm
-    -- TBC/Wrath use echo_of_the_elements texture, with scale of 100%
-    -- Cataclysm uses cleaner texture, with scale of 150%
+    -- Elemental Focus has 2 charges on TBC and beyond
     self:CreateEffect(
         "elemental_focus",
         SAO.TBC_AND_ONWARD,
@@ -29,21 +27,15 @@ local function useElementalFocus(self)
         {
             talent = 16164, -- Elemental Focus (talent)
             overlays = {
-                [SAO.TBC+SAO.WRATH] = {
-                    { stacks = 1, texture = "echo_of_the_elements", position = "Left", scale = 1, pulse = false, option = false },
-                    { stacks = 2, texture = "echo_of_the_elements", position = "Left + Right (Flipped)", scale = 1, pulse = false, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
-                },
-                [SAO.CATA_AND_ONWARD] = {
-                    { stacks = 1, texture = "genericarc_05", position = "Left", scale = 1.5, pulse = false, option = false },
-                    { stacks = 2, texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.5, pulse = false, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
-                }
+                { stacks = 1, texture = "genericarc_05", position = "Left", scale = 1.5, pulse = false, option = false },
+                { stacks = 2, texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.5, pulse = false, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
             },
         }
     );
 
     if self.IsEra() and not self.IsSoD() then
         -- On non-SoD Era, Elemental Focus is simply displayed Left and Right
-        self:RegisterAura("elemental_focus", 0, 16246, "echo_of_the_elements", "Left + Right (Flipped)", 1, 255, 255, 255, false);
+        self:RegisterAura("elemental_focus", 0, 16246, "genericarc_05", "Left + Right (Flipped)", 1.25, 255, 255, 255, false);
     end
 end
 
@@ -291,13 +283,13 @@ local function usePowerSurge(self)
         if hasPowerSurgeOption and canProcPowerSurge then
             return;
         end
-        return self.TexName["echo_of_the_elements"];
+        return self.TexName["genericarc_05"];
     end
 
-    self:RegisterAura("power_surge_sod", 0, powerSurgeSoDBuff, "imp_empowerment", "Left", 1, 255, 255, 255, true, powerSurgeSpells);
-    self:RegisterAura("power_surge_sod", 0, powerSurgeSoDBuff, powerSurgeRightTextureFunc, "Right (Flipped)", 1, 255, 255, 255, true, powerSurgeSpells);
-    self:RegisterAura("elemental_focus", 0, elementalFocusBuff, elementalFocusLeftTextureFunc, "Left", 1, 255, 255, 255, false);
-    self:RegisterAura("elemental_focus", 0, elementalFocusBuff, "echo_of_the_elements", "Right (Flipped)", 1, 255, 255, 255, false);
+    self:RegisterAura("power_surge_sod", 0, powerSurgeSoDBuff, "imp_empowerment", "Left", 1.25, 255, 255, 255, true, powerSurgeSpells);
+    self:RegisterAura("power_surge_sod", 0, powerSurgeSoDBuff, powerSurgeRightTextureFunc, "Right (Flipped)", 1.25, 255, 255, 255, true, powerSurgeSpells);
+    self:RegisterAura("elemental_focus", 0, elementalFocusBuff, elementalFocusLeftTextureFunc, "Left", 1.25, 255, 255, 255, false);
+    self:RegisterAura("elemental_focus", 0, elementalFocusBuff, "genericarc_05", "Right (Flipped)", 1.25, 255, 255, 255, false);
 
     SAO:CreateEffect(
         "power_surge_sod_heal",
