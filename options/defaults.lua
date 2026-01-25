@@ -479,6 +479,9 @@ SAO.defaults = {
                 [33151] = {  -- Surge of Light (TBC - Wrath)
                     [0] = true,
                 },
+                [34754] = {  -- Clearcasting (TBC)
+                    [0] = true,
+                },
                 [88688] = {  -- Surge of Light (Cataclysm)
                     [0] = true,
                 },
@@ -539,6 +542,11 @@ SAO.defaults = {
                 [33151] = { -- Surge of Light (TBC - Wrath)
                     [585]  = true, -- Smite
                     [2061] = true, -- Flash Heal (not for TBC)
+                },
+                [34754] = {  -- Clearcasting (TBC)
+                    [2061]  = true, -- Flash Heal
+                    [32546] = true, -- Binding Heal
+                    [2060]  = true, -- Greater Heal
                 },
                 [88688] = { -- Surge of Light (Cataclysm+)
                     [101062] = nil, -- Flash Heal (no mana), set to nil to simplify DB migration
