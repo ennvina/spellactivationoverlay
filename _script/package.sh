@@ -543,7 +543,9 @@ release_retail() {
 RETAIL_BUILD_VERSION=120000
 mkproject retail "$RETAIL_BUILD_VERSION" 2266c5 inv_ability_voidweaverpriest_entropicrift 64 "Retail"
 
-prunecopyright Cataclysm Pandaria Draenor
+#prunecopyright Cataclysm Pandaria Draenor
+# Do not remove Cataclysm copyright, because we use a sound file introduced in Cataclysm
+prunecopyright Pandaria Draenor
 
 TEXTURES_NOT_FOR_RETAIL=(
 fury_of_stormrage_yellow
@@ -560,7 +562,7 @@ prunetex "${TEXTURES_NOT_FOR_RETAIL[@]}"
 #SOUNDS_NOT_FOR_RETAIL=(UI_PowerAura_Generic)
 #prunesound "${SOUNDS_NOT_FOR_RETAIL[@]}"
 
-zipproject retail "$VERSION_TOC_VERSION"
+zipproject retail-alpha "$VERSION_TOC_VERSION"
 
 cdup
 }
