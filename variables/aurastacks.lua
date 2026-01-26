@@ -14,8 +14,11 @@ SAO.AURASTACKS = {
     LEGACY = C_UnitAuras == nil,
     MODERN = C_UnitAuras ~= nil,
 };
---[[END_DEV_ONLY]]
 assert(SAO.AURASTACKS.LEGACY ~= SAO.AURASTACKS.MODERN); -- Exactly one of these modes must be active
+if SAO.AURASTACKS.MODERN and not SAO.IsRetail() then
+    SAO:Info(Module, "You are currently testing the Modern AuraStacks mode. Enjoy!");
+end
+--[[END_DEV_ONLY]]
 
 -- Aura stacks
 --  if stacks >= 0 then
