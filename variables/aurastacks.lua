@@ -126,6 +126,7 @@ SAO.Variable:register({
             end
             if SAO.AURASTACKS.MODERN then -- Additional handling to optimize Modern mode
                 bucket.lastKnownAuraStacks = auraStacks; -- Store raw value, because bucket:getAuraStacks() is unreliable if stackAgnostic is set
+                bucket.lastTimeUnitAuraEvent = nil;
                 bucket.auraInstanceID = auraInstanceID;
                 if auraInstanceID ~= nil then
                     bucketsByAuraInstanceID[auraInstanceID] = bucket;
@@ -236,19 +237,53 @@ SAO.Variable:register({
                 return;
             end
 
+            local addAura = function(auraInstanceID, aura, bucket)
+                SAO:Trace(Module, "Associating aura instance ID "..tostring(auraInstanceID).." to bucket "..bucket.name);
+                bucket:setAuraStacks(bucket.stackAgnostic and 0 or aura.applications);
+                bucket.lastKnownAuraStacks = aura.applications;
+                bucket.auraInstanceID = auraInstanceID;
+                bucketsByAuraInstanceID[auraInstanceID] = bucket;
+                bucket.lastTimeUnitAuraEvent = GetTime();
+            end
+
+            local removeAura = function(auraInstanceID, bucket)
+                SAO:Trace(Module, "Removing association of aura instance ID "..tostring(auraInstanceID).." from bucket "..bucket.name);
+                bucket:setAuraStacks(nil);
+                bucket.lastKnownAuraStacks = nil;
+                bucket.auraInstanceID = nil;
+                bucketsByAuraInstanceID[auraInstanceID] = nil;
+                bucket.lastTimeUnitAuraEvent = GetTime();
+            end
+
+            local updateAura = function(auraInstanceID, aura, bucket)
+                SAO:Trace(Module, "Updating aura instance ID "..tostring(auraInstanceID).." for bucket "..bucket.name);
+                if bucket.lastKnownAuraStacks ~= aura.applications then
+                    SAO:Trace(Module, "Bucket "..tostring(bucket.name).." aura stacks changed from "..tostring(bucket.lastKnownAuraStacks).." to "..tostring(aura.applications));
+                    bucket:setAuraStacks(bucket.stackAgnostic and 0 or aura.applications);
+                    bucket.lastKnownAuraStacks = aura.applications;
+                else
+                    SAO:Trace(Module, "Bucket "..tostring(bucket.name).." aura stacks remain unchanged at "..tostring(bucket.lastKnownAuraStacks));
+                    bucket:refresh();
+                end
+                bucket.lastTimeUnitAuraEvent = GetTime();
+            end
+
+
             for _, auraInstanceID in ipairs(updateInfo.updatedAuraInstanceIDs or {}) do
                 local bucket = bucketsByAuraInstanceID[auraInstanceID];
                 if bucket then
-                    SAO:Trace(Module, "Updating bucket "..tostring(bucket.bucketName).." due to update of aura instance ID "..tostring(auraInstanceID));
-                    local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, auraInstanceID);
-                    assert(type(aura) == 'table' and aura.auraInstanceID == auraInstanceID);
-                    if bucket.lastKnownAuraStacks ~= aura.applications then
-                        SAO:Trace(Module, "Bucket "..tostring(bucket.bucketName).." aura stacks changed from "..tostring(bucket.lastKnownAuraStacks).." to "..tostring(aura.applications));
-                        bucket:setAuraStacks(bucket.stackAgnostic and 0 or aura.applications);
-                        bucket.lastKnownAuraStacks = aura.applications;
+                    if bucket.lastTimeUnitAuraEvent == GetTime() then
+                        SAO:Trace(Module, "Skipping UNIT_AURA update of bucket "..tostring(bucket.name).." and aura instance ID "..tostring(auraInstanceID));
                     else
-                        SAO:Trace(Module, "Bucket "..tostring(bucket.bucketName).." aura stacks remain unchanged at "..tostring(bucket.lastKnownAuraStacks));
-                        bucket:refresh();
+                        SAO:Trace(Module, "Trying to update aura instance ID "..tostring(auraInstanceID).." for bucket "..bucket.name);
+                        local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, auraInstanceID);
+                        if not aura then
+                            -- Known Issue: sometimes the game client tells the aura is updates, while in reality it has been removed
+                            -- @todo Check if the game is sending an aura removal at the same time, and if so, ignore this update
+                            removeAura(auraInstanceID, bucket);
+                        else
+                            updateAura(auraInstanceID, aura, bucket);
+                        end
                     end
                 end
             end
@@ -256,29 +291,29 @@ SAO.Variable:register({
             for _, auraInstanceID in ipairs(updateInfo.removedAuraInstanceIDs or {}) do
                 local bucket = bucketsByAuraInstanceID[auraInstanceID];
                 if bucket then
-                    SAO:Trace(Module, "Updating bucket "..tostring(bucket.bucketName).." due to removal of aura instance ID "..tostring(auraInstanceID));
-                    bucket:setAuraStacks(nil);
-                    bucket.lastKnownAuraStacks = nil;
-                    bucketsByAuraInstanceID[auraInstanceID] = nil;
+                    if bucket.lastTimeUnitAuraEvent == GetTime() then
+                        SAO:Trace(Module, "Skipping UNIT_AURA removal of bucket "..tostring(bucket.name).." and aura instance ID "..tostring(auraInstanceID));
+                    else
+                        SAO:Trace(Module, "Removing association of aura instance ID "..tostring(auraInstanceID).." from bucket "..bucket.name);
+                        removeAura(auraInstanceID, bucket);
+                    end
                 end
             end
 
             for _, aura in ipairs(updateInfo.addedAuras or {}) do
                 local bucket = SAO:GetBucketBySpellID(aura.spellId);
-                if bucket then
-                    if bucketsByAuraInstanceID[aura.auraInstanceID] then --[[BEGIN_DEV_ONLY]]
-                        SAO:Warn(Module,
-                            "Associating the (supposedly) newfound aura instance ID "..tostring(aura.auraInstanceID)
-                            .." to bucket "..bucket.description
-                            ..", ".."but this aura instance ID is already associated with bucket "..bucketsByAuraInstanceID[aura.auraInstanceID].description
-                        );
-                    end --[[END_DEV_ONLY]]
-                    local auraInstanceID = aura.auraInstanceID;
-                    SAO:Trace(Module, "Updating bucket "..tostring(bucket.bucketName).." due to addition of aura instance ID "..tostring(auraInstanceID));
-                    bucket:setAuraStacks(bucket.stackAgnostic and 0 or aura.applications);
-                    bucket.lastKnownAuraStacks = aura.applications;
-                    bucket.auraInstanceID = auraInstanceID;
-                    bucketsByAuraInstanceID[auraInstanceID] = bucket;
+                if bucket and bucket.trigger:reactsWith(SAO.TRIGGER_AURA) then
+                    if bucket.lastTimeUnitAuraEvent == GetTime() then
+                        SAO:Trace(Module, "Skipping UNIT_AURA addition of bucket "..tostring(bucket.name).." and aura instance ID "..tostring(aura.auraInstanceID));
+                    else
+                        local auraInstanceID = aura.auraInstanceID;
+                        SAO:Trace(Module, "Found new aura instance ID "..tostring(auraInstanceID).." for bucket "..bucket.name);
+                        if bucketsByAuraInstanceID[auraInstanceID] then --[[BEGIN_DEV_ONLY]]
+                            SAO:Warn(Module, "Associating the (supposedly) newfound aura instance ID "..tostring(auraInstanceID).." to bucket "..bucket.name
+                                ..", ".."but this aura instance ID is already associated with bucket "..bucketsByAuraInstanceID[auraInstanceID].name);
+                        end --[[END_DEV_ONLY]]
+                        addAura(auraInstanceID, aura, bucket);
+                    end
                 end
             end
         end or nil,
