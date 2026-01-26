@@ -294,7 +294,6 @@ SAO.Variable:register({
                     if bucket.lastTimeUnitAuraEvent == GetTime() then
                         SAO:Trace(Module, "Skipping UNIT_AURA removal of bucket "..tostring(bucket.name).." and aura instance ID "..tostring(auraInstanceID));
                     else
-                        SAO:Trace(Module, "Removing association of aura instance ID "..tostring(auraInstanceID).." from bucket "..bucket.name);
                         removeAura(auraInstanceID, bucket);
                     end
                 end
@@ -307,7 +306,6 @@ SAO.Variable:register({
                         SAO:Trace(Module, "Skipping UNIT_AURA addition of bucket "..tostring(bucket.name).." and aura instance ID "..tostring(aura.auraInstanceID));
                     else
                         local auraInstanceID = aura.auraInstanceID;
-                        SAO:Trace(Module, "Found new aura instance ID "..tostring(auraInstanceID).." for bucket "..bucket.name);
                         if bucketsByAuraInstanceID[auraInstanceID] then --[[BEGIN_DEV_ONLY]]
                             SAO:Warn(Module, "Associating the (supposedly) newfound aura instance ID "..tostring(auraInstanceID).." to bucket "..bucket.name
                                 ..", ".."but this aura instance ID is already associated with bucket "..bucketsByAuraInstanceID[auraInstanceID].name);
