@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.7.2 (2026-01-xx)
+#### v2.7.2 (2026-02-03)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - Nezzey and catpokemon for suggesting Priest's Clearcasting effect
