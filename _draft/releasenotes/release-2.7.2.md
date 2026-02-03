@@ -29,6 +29,8 @@ Elemental Focus visuals are now consistent across expansions and across Clearcas
 
 _Developer's Note: Elemental Focus visuals of Cataclysm and beyond have not changed. Visuals of Classic Era, The Burning Crusade and Wrath are now on par with Cataclysm. Some Shamans may feel that the new visuals are now a bit dull on these flavors. On the other hand, Shamans playing across several flavors should welcome this change, because visuals will be much less confusing when switching between expansions._
 ## Bug Fixes
+### Glowing Buttons
+Buttons should glow as intended with Dominos action bars (The Burning Crusade).
 ## Known Limitations
 ## Miscellaneous
 This release optimizes code size a bit further than in 2.7.0.
@@ -36,6 +38,7 @@ This release optimizes code size a bit further than in 2.7.0.
 Shout-out to our amazing contributors
 - Nezzey and catpokemon for suggesting Priest's Clearcasting effect
 - simgr0 for suggesting Shaman's Shamanistic Focus
+- cottycotty for reporting the Dominos issue
 Thanks!
 
 As always, the latest release is available on [CurseForge](https://www.curseforge.com/wow/addons/spellactivationoverlay) / [GitHub](https://github.com/ennvina/spellactivationoverlay/releases/latest) / [Discord](https://discord.com/channels/1013194771969355858/1379111832207228938)

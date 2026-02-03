@@ -644,6 +644,7 @@ binder:SetScript("OnEvent", function()
     local LAB_GE = LibStub("LibActionButton-1.0-GE", true);
     local LBG, LBGversion = LibStub("LibButtonGlow-1.0", true);
     local LCG = LibStub("LibCustomGlow-1.0", true);
+    local Dominos = LibStub("AceAddon-3.0", true) and LibStub("AceAddon-3.0", true):GetAddon("Dominos", true);
 
     local buttonUpdateFunc = function(libGlow, event, self)
         if (self._state_type ~= "action") then
@@ -737,6 +738,18 @@ binder:SetScript("OnEvent", function()
     -- Support for AzeriteUI5's LibActionButton
     if (LAB_GE) then
         LAB_GE:RegisterCallback("OnButtonUpdate", LAB_GEButtonUpdateFunc)
+    end
+
+    -- Support for Dominos (Midnight UI only e.g., TBC Classic Anniversary)
+    if (Dominos and SAO.HasMidnightUI()) then
+        for i=1, Dominos:NumBars() do
+            local bar = _G["DominosFrame"..i];
+            if bar and bar.buttons then
+                for _, button in pairs(bar.buttons) do
+                    hooksecurefunc(button, "Update", HookActionButton_Update);
+                end
+            end
+        end
     end
 
     binder:UnregisterEvent("PLAYER_LOGIN");
