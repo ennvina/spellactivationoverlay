@@ -585,6 +585,8 @@ shaman
 warrior)
 pruneclass "${CLASSES_NOT_FOR_NECROSIS[@]}"
 
+# Unlike other flavors, icon64 is removed
+# The icon64 is used only in TOC file, but Necrosis has its own TOC file and icon
 TEXTURES_NOT_FOR_NECROSIS=(
 arcane_missiles
 arcane_missiles_1
@@ -593,7 +595,6 @@ arcane_missiles_3
 art_of_war
 bandits_guile
 blood_surge
-brain_freeze
 daybreak
 echo_of_the_elements
 eclipse_moon
@@ -607,6 +608,7 @@ genericarc_02
 genericarc_05
 high_tide
 hot_streak
+icon64
 impact
 killing_machine
 lock_and_load
