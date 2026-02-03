@@ -4,13 +4,17 @@ local PRIEST_SPEC_DISCIPLINE = SAO.TALENT.SPEC_1;
 local PRIEST_SPEC_HOLY = SAO.TALENT.SPEC_2;
 local PRIEST_SPEC_SHADOW = SAO.TALENT.SPEC_3;
 
-local bindingHeal = 401937;
+local bindingHeal = SAO.IsSoD() and 401937 or 32546;
 local devouringPlague = 2944;
 local flashHeal = 2061;
 local flashHealNoMana = 101062;
+local greaterHeal = 2060;
+local heal = 2054;
 local innerFire = 588;
+local lesserHeal = 2050;
 local mindBlast = 8092;
 local mindSpike = 73510;
+local prayerOfHealing = 596;
 local shadowform = 15473;
 local smite = 585;
 local swDeath = 32379;
@@ -29,9 +33,6 @@ local function useInnerFire()
 end
 
 local function useSerendipity()
-    local greaterHeal = 2060;
-    local prayerOfHealing = 596;
-
     if SAO.IsMoP() then
         SAO:CreateEffect(
             "serendipity",
@@ -99,8 +100,6 @@ local function useSerendipity()
 
     elseif SAO.IsSoD() then
         local serendipityBuff = 413247;
-        local lesserHeal = 2050;
-        local heal = 2054;
         local serendipityImprovedSpells = { SAO:GetSpellName(lesserHeal), SAO:GetSpellName(heal), SAO:GetSpellName(greaterHeal), SAO:GetSpellName(prayerOfHealing) };
         for nbStacks=1,3 do
             local scale = 0.4 + 0.2 * nbStacks; -- 60%, 80%, 100%
@@ -171,6 +170,19 @@ local function useSurgeOfLight()
             }
         );
     end
+end
+
+local function useClearcasting()
+    SAO:CreateEffect(
+        "clearcasting",
+        SAO.TBC,
+        34754, -- Clearcasting
+        "aura",
+        {
+            overlay = { texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.5, color = { 192, 192, 192 }, pulse = false },
+            buttons = { flashHeal, bindingHeal, greaterHeal },
+        }
+    );
 end
 
 local function useHolyWordChastise()
@@ -329,7 +341,8 @@ local function registerClass(self)
 
     -- Holy
     useSerendipity();
-    useSurgeOfLight(); -- Introduced in Curning Crusade, a talent in Mists of Pandaria
+    useSurgeOfLight(); -- Introduced in Burning Crusade, a talent in Mists of Pandaria
+    useClearcasting();
     useHolyWordChastise();
 
     -- Shadow
@@ -345,11 +358,6 @@ local function registerClass(self)
 end
 
 local function loadOptions(self)
-    local lesserHeal = 2050;
-    local heal = 2054;
-    local greaterHeal = 2060;
-    local prayerOfHealing = 596;
-
 --     local mindSpikeSoDBuff = 431655;
 --     local mindSpikeSoDRune = 431662;
 

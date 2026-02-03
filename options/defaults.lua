@@ -479,6 +479,9 @@ SAO.defaults = {
                 [33151] = {  -- Surge of Light (TBC - Wrath)
                     [0] = true,
                 },
+                [34754] = {  -- Clearcasting (TBC)
+                    [0] = true,
+                },
                 [88688] = {  -- Surge of Light (Cataclysm)
                     [0] = true,
                 },
@@ -539,6 +542,11 @@ SAO.defaults = {
                 [33151] = { -- Surge of Light (TBC - Wrath)
                     [585]  = true, -- Smite
                     [2061] = true, -- Flash Heal (not for TBC)
+                },
+                [34754] = {  -- Clearcasting (TBC)
+                    [2061]  = true, -- Flash Heal
+                    [32546] = true, -- Binding Heal
+                    [2060]  = true, -- Greater Heal
                 },
                 [88688] = { -- Surge of Light (Cataclysm+)
                     [101062] = nil, -- Flash Heal (no mana), set to nil to simplify DB migration
@@ -612,6 +620,9 @@ SAO.defaults = {
                 [16246] = { -- Elemental Focus
                     [0] = true,
                 },
+                [43339] = { -- Shamanistic Focus (TBC-Cataclysm)
+                    [0] = false,
+                },
                 [415105] = { -- Power Surge (Season of Discovery)
                     [0] = true,
                 },
@@ -654,6 +665,11 @@ SAO.defaults = {
                 },
             },
             glow = {
+                [43339] = { -- Shamanistic Focus (TBC-Cataclysm)
+                    [8042] = false, -- Earth Shock
+                    [8050] = false, -- Flame Shock
+                    [8056] = false, -- Frost Shock
+                },
                 [53817] = { -- Maelstrom Weapon (Wrath+)
                     [403]    = false, -- Lightning Bolt
                     [421]    = false, -- Chain Lightning

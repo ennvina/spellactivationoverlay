@@ -143,6 +143,8 @@ function SAO.MarkTexture(self, texName)
   end
 end
 
+--[[BEGIN_DEV_ONLY]]
+
 -- List fetched from bash: cd textures && ls -1 *.blp | cut -d. -f1 | tr 'A-Z' 'a-z' | sort | grep -vE '^(icon64|mask|maskzero|rkm128)$' | awk 'BEGIN{ print "local availableTextures = {" } {printf "  [\"%s\"] = true,\n", $0} END { print "}" }'
 local availableTextures = {
   ["arcane_missiles"] = true,
@@ -164,6 +166,7 @@ local availableTextures = {
   ["fury_of_stormrage"] = true,
   ["fury_of_stormrage_yellow"] = true,
   ["genericarc_02"] = true,
+  ["genericarc_04"] = true,
   ["genericarc_05"] = true,
   ["generictop_01"] = true,
   ["high_tide"] = true,
@@ -395,3 +398,5 @@ function SAO_DB_LookForAllTextures(output)
     print("SAO_DB_DetectExistingMarkedTextures() "..WrapTextInColorCode("Pending ("..#fileDataIDs..")...", "FFFFFF00"));
   end
 end
+
+--[[END_DEV_ONLY]]
