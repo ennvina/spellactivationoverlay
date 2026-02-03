@@ -5,6 +5,7 @@
 Thank you to our amazing contributors for helping out. Thanks!
 - Nezzey and catpokemon for suggesting Priest's Clearcasting effect
 - simgr0 for suggesting Shaman's Shamanistic Focus
+- cottycotty for reporting the Dominos issue
 
 New Spell Alerts
 - Priest's Clearcasting (The Burning Crusade)
@@ -21,6 +22,9 @@ New Glowing Buttons
 Updated Spell Alerts
 - Shaman's Elemental Focus visuals are now consistent
 - Healing Trance visuals have been updated (The Burning Crusade, Wrath)
+
+Bug Fixes
+- Buttons should glow as intended with Dominos (The Burning Crusade)
 
 This release optimizes code size a bit further than in 2.7.0
 
