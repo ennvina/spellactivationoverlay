@@ -8,10 +8,13 @@ local exorcism = 879;
 local flashOfLight = 19750;
 local holyLight = 635;
 local holyRadiance = 82327;
+local holyShield = 20925;
 local holyShock = 20473;
 local how = 24275;
 local inquisition = 84963;
 local lightOfDawn = 85222;
+local righteousFury = 25780;
+local sealOfRighteousness = 21084;
 local shieldOfTheRighteous = 53600;
 local templarsVerdict = 85256;
 local wordOfGlory = 85673;
@@ -322,6 +325,65 @@ local function useSupplication()
     );
 end
 
+local function useMissingAuraReminder(name, project, auraSpellID, glowSpellID, combatOnly)
+    local spellName = SAO:GetSpellName(auraSpellID);
+    local spellIDs = spellName and SAO:GetHomonymSpellIDs(spellName) or {};
+    if #spellIDs == 0 then
+        spellIDs = { auraSpellID };
+    end
+    table.sort(spellIDs);
+
+    local reminderHandler = {
+        onRepeat = function(bucket)
+            -- Aura reminders can desync on some Classic clients, force a periodic aura state refresh
+            bucket.trigger:manualCheck(SAO.TRIGGER_AURA);
+        end,
+    };
+
+    local props = {
+        requireAura = true,
+        combatOnly = combatOnly == true,
+        button = { stacks = -1, spellID = glowSpellID or auraSpellID, useName = true },
+        handler = reminderHandler,
+    };
+
+    if #spellIDs == 1 then
+        SAO:CreateEffect(name, project, spellIDs[1], "aura", props);
+    else
+        SAO:CreateLinkedEffects(name, project, spellIDs, "aura", props);
+    end
+end
+
+local function useSealOfRighteousnessReminder()
+    useMissingAuraReminder(
+        "seal_of_righteousness_reminder",
+        SAO.ALL_PROJECTS - SAO.CATA_AND_ONWARD,
+        sealOfRighteousness,
+        sealOfRighteousness,
+        false
+    );
+end
+
+local function useRighteousFuryReminder()
+    useMissingAuraReminder(
+        "righteous_fury_reminder",
+        SAO.ALL_PROJECTS - SAO.MOP_AND_ONWARD,
+        righteousFury,
+        righteousFury,
+        false
+    );
+end
+
+local function useHolyShieldReminder()
+    useMissingAuraReminder(
+        "holy_shield_reminder",
+        SAO.ALL_PROJECTS - SAO.CATA_AND_ONWARD,
+        holyShield,
+        holyShield,
+        false
+    );
+end
+
 local function registerClass(self)
     -- Holy Power tracking
     useHolyPowerTracker();
@@ -351,6 +413,8 @@ local function registerClass(self)
 
     -- Protection
     useGrandCrusader();
+    useHolyShieldReminder();
+    useRighteousFuryReminder();
 
     -- Retribution
     useCrusade();
@@ -359,6 +423,7 @@ local function registerClass(self)
 
     -- Passive abilities
     useSupplication();
+    useSealOfRighteousnessReminder();
 end
 
 local function loadOptions(self)
