@@ -347,11 +347,9 @@ local function useMissingAuraReminder(name, project, auraSpellID, glowSpellID, c
         handler = reminderHandler,
     };
 
-    if #spellIDs == 1 then
-        SAO:CreateEffect(name, project, spellIDs[1], "aura", props);
-    else
-        SAO:CreateLinkedEffects(name, project, spellIDs, "aura", props);
-    end
+    -- Track only the highest learned rank.
+    -- Linked rank effects would keep lower-rank "missing aura" buckets active and force glows permanently.
+    SAO:CreateEffect(name, project, spellIDs[#spellIDs], "aura", props);
 end
 
 local function useSealOfRighteousnessReminder()
