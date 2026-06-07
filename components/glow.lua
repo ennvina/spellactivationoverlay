@@ -379,7 +379,7 @@ local function HookActionButton_Update(button)
     end
     SAO:UpdateActionButton(button);
 end
-if SAO.HasMidnightUI() then -- UI has changed in Midnight; applies to TBC Classic Anniversary as well
+if SAO.HasMidnightUI() then
     local actionBars = {
         -- https://www.townlong-yak.com/framexml/anniversary/Blizzard_ActionBar/MainActionBar.xml
         MainActionBar,
@@ -443,7 +443,7 @@ local function HookStanceBar_UpdateState()
 end
 if select(2, UnitClass("player")) == "PRIEST" then
     -- Only Priests require hooking to StanceBar_UpdateState, for Shadowform
-    if not SAO.HasMidnightUI() then -- UI has changed in Midnight; applies to TBC Classic Anniversary as well
+    if not SAO.HasMidnightUI() then
         -- Note: Shadow Priests do not have 'stances' in TBC, but we might need to fix it for Retail
         hooksecurefunc("StanceBar_UpdateState", HookStanceBar_UpdateState);
     end
