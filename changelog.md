@@ -1,5 +1,7 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.7.3 (2026-06-xx)
+
 #### v2.7.2 (2026-02-03)
 
 Thank you to our amazing contributors for helping out. Thanks!
