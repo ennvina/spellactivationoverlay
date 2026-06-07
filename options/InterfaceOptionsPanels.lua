@@ -509,7 +509,13 @@ function SpellActivationOverlayOptionsPanel_OnLoad(self)
     self.default = defaultFunc;
     self.applyAll = applyAllFunc; -- not a callback used by Blizzard's InterfaceOptions_AddCategory, but used by us
 
-    InterfaceOptions_AddCategory(self);
+    if SAO.HasMidnightUI() then
+        local category, layout = Settings.RegisterCanvasLayoutCategory(self, self.name, self.name);
+        Settings.RegisterAddOnCategory(category);
+        self.category = category;
+    else
+        InterfaceOptions_AddCategory(self);
+    end
 
     SAO.OptionsPanel = self;
 end
@@ -547,8 +553,12 @@ if not iamNecrosis then
     SLASH_SAO1 = "/sao"
     SLASH_SAO2 = "/spellactivationoverlay"
     SlashCmdList.SAO = function(msg, editBox)
-        -- https://github.com/Stanzilla/WoWUIBugs/issues/89
-        InterfaceOptionsFrame_OpenToCategory(SAO.OptionsPanel);
-        InterfaceOptionsFrame_OpenToCategory(SAO.OptionsPanel);
+        if SAO.HasMidnightUI() then
+            Settings.OpenToCategory(SAO.OptionsPanel.category:GetID());
+        else
+            -- https://github.com/Stanzilla/WoWUIBugs/issues/89
+            InterfaceOptionsFrame_OpenToCategory(SAO.OptionsPanel);
+            InterfaceOptionsFrame_OpenToCategory(SAO.OptionsPanel);
+        end
     end
 end

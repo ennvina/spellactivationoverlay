@@ -1,5 +1,13 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.7.3 (2026-06-xx)
+
+Bump in TOC file for Siege of Orgrimmar patch (Mists of Pandaria)
+
+Bug Fixes
+- The addon should no longer cause Lua errors at start (MoP)
+- Opening the options panel should no longer cause Lua errors (MoP)
+
 #### v2.7.2 (2026-02-03)
 
 Thank you to our amazing contributors for helping out. Thanks!

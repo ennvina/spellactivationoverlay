@@ -4,7 +4,7 @@ local Module = "project"
 -- List of project flags, as bit field
 -- Start high enough to be able to index project flag to a list, and avoid confusion with traditional lists
 SAO.ERA    = 0x0100
-SAO.SOD    = 0x0200
+SAO.SOD    = 0x0200 -- Special case: Era effects are available to SoD, but not the other way around
 SAO.TBC    = 0x0400
 SAO.WRATH  = 0x0800
 SAO.CATA   = 0x1000
@@ -38,6 +38,11 @@ function SAO.IsMoP()
     return WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC;
 end
 
+function SAO.IsWoD()
+    return false; -- Unknown project ID for now
+    -- return WOW_PROJECT_ID == WOW_PROJECT_WARLORDS_CLASSIC;
+end
+
 function SAO.IsSoD()
     return WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and C_Engraving and C_Engraving.IsEngravingEnabled()
 end
@@ -46,6 +51,10 @@ function SAO.IsRetail()
     return WOW_PROJECT_ID == WOW_PROJECT_MAINLINE;
 end
 
+-- UI has changed in Midnight
+-- Also applies to WoW Classic:
+-- - TBC Classic Anniversary
+-- - MoP Classic, starting with SoO patch
 local hasMidnightUI = nil;
 function SAO.HasMidnightUI()
     if hasMidnightUI ~= nil then
@@ -53,7 +62,9 @@ function SAO.HasMidnightUI()
     end
 
     local buildInfo = tonumber((select(2, GetBuildInfo())));
-    hasMidnightUI = (SAO.IsTBC() and buildInfo >= 65295)
+    hasMidnightUI = (SAO.IsWoD()) -- Soon(tm)
+                 or (SAO.IsMoP() and buildInfo >= 68042) -- 68042 = first build number of MoP Classic SoO patch
+                 or (SAO.IsTBC() and buildInfo >= 65295) -- 65295 = first build number of TBC Classic Anniversary
                  or (SAO.IsRetail() and LE_EXPANSION_LEVEL_CURRENT >= LE_EXPANSION_MIDNIGHT);
 
     return hasMidnightUI;
@@ -75,6 +86,7 @@ function SAO.IsProject(projectFlags)
         bit.band(projectFlags, SAO.WRATH) ~= 0 and SAO.IsWrath() or
         bit.band(projectFlags, SAO.CATA) ~= 0 and SAO.IsCata() or
         bit.band(projectFlags, SAO.MOP) ~= 0 and SAO.IsMoP() or
+        bit.band(projectFlags, SAO.WOD) ~= 0 and SAO.IsWoD() or
         --
         bit.band(projectFlags, SAO.RETAIL) ~= 0 and SAO.IsRetail()
     );
@@ -86,6 +98,7 @@ local flavorNames = {
     [WOW_PROJECT_WRATH_CLASSIC or 11] = "Wrath",
     [WOW_PROJECT_CATACLYSM_CLASSIC or 14] = "Cata",
     [WOW_PROJECT_MISTS_CLASSIC or 19] = "MoP",
+--    [WOW_PROJECT_WARLODS_CLASSIC or xx] = "WoD",
     [WOW_PROJECT_MAINLINE or 1] = "Retail",
 };
 
@@ -149,6 +162,7 @@ local expectedBuildID = {
     [WOW_PROJECT_WRATH_CLASSIC or 11] = "wrath",
     [WOW_PROJECT_CATACLYSM_CLASSIC or 14] = "cata",
     [WOW_PROJECT_MISTS_CLASSIC or 19] = "mop",
+--    [WOW_PROJECT_WARLODS_CLASSIC or xx] = "wod",
     --
     [WOW_PROJECT_MAINLINE or 1] = "retail",
 };

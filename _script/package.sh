@@ -510,7 +510,7 @@ cdup
 
 # Release mop version
 release_mop() {
-MOP_BUILD_VERSION=50503
+MOP_BUILD_VERSION=50504
 mkproject mop "$MOP_BUILD_VERSION" 00ff96 achievement_character_pandaren_female 64 "Mists of Pandaria"
 
 prunecopyright Cataclysm Pandaria

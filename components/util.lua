@@ -593,6 +593,7 @@ local function getFromDescription(from)
 end
 
 function SAO:RegisterEventHandler(handler, event, from)
+    --[[BEGIN_DEV_ONLY]]
     if false or -- Uncomment one of the following events to see how performance is affected
 --    event == "COMBAT_LOG_EVENT_UNFILTERED" or
 --    event == "SPELL_UPDATE_USABLE" or
@@ -600,6 +601,7 @@ function SAO:RegisterEventHandler(handler, event, from)
         self:Warn(Module, "Refusing to register handler for " ..tostring(event).. " for "..getHandlerName(handler)..getFromDescription(from));
         return;
     end
+    --[[END_DEV_ONLY]]
     if not eventHandlers then
         eventHandlers = {};
     end
