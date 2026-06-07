@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.7.3 (2026-06-xx)
+#### v2.7.3 (2026-06-07)
 
 Bump in TOC file for Siege of Orgrimmar patch (Mists of Pandaria)
 
