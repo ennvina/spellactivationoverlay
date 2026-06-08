@@ -141,6 +141,7 @@
         "UnitCanAttack",
         "UnitClass",
         "UnitClassBase",
+        "UnitCreatureType",
         "UnitDebuff",
         "UnitExists",
         "UnitGUID",
