@@ -447,3 +447,20 @@ function SAO:askToDisableGameAlerts()
     };
     return tr(askToDisableGameAlertsTranslations);
 end
+
+-- Translate "This option is provided temporarily, until Blizzard manages to fix their issues"
+function SAO:temporaryOption()
+    local temporaryOptionTranslations = {
+        ["en"] = "This option is provided temporarily, until Blizzard manages to fix their issues.",
+        ["de"] = "Diese Option wird vorübergehend bereitgestellt, bis Blizzard es schafft, ihre Probleme zu beheben.",
+        ["fr"] = "Cette option est fournie temporairement, jusqu'à ce que Blizzard parvienne à résoudre leurs problèmes.",
+        ["es"] = "Esta opción se proporciona temporalmente, hasta que Blizzard logre solucionar sus problemas.",
+        ["ru"] = "Эта опция предоставляется временно, пока Blizzard не решит свои проблемы.",
+        ["it"] = "Questa opzione è fornita temporaneamente, fino a quando Blizzard non riesce a risolvere i suoi problemi.",
+        ["pt"] = "Esta opção é fornecida temporariamente, até que a Blizzard consiga resolver seus problemas.",
+        ["ko"] = "이 옵션은 블리자드가 문제를 해결할 때까지 임시로 제공됩니다.",
+        ["zh"] = "此选项是临时提供的，直到暴雪设法解决他们的问题。",
+        ["zhTW"] = "此選項是臨時提供的，直到暴雪設法解決他們的問題。",
+    };
+    return tr(temporaryOptionTranslations);
+end

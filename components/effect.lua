@@ -911,6 +911,14 @@ function SAO:AddEffectOptions()
                     local variants = button.option.variants;
                     local hashName = self.Hash:new(button.hash):toString();
                     local alwaysHideTalentText = button.option.hideTalentText;
+                    local isNative = button.option.isNative;
+                    local infoTooltip;
+                    if isNative then
+                        infoTooltip = {
+                            icon = 134153, -- "Inv_misc_head_dragon_01"
+                            text = SAO:temporaryOption(),
+                        };
+                    end
                     if type(talentSubText) == 'function' then
                         talentSubText = talentSubText();
                     end
@@ -920,10 +928,10 @@ function SAO:AddEffectOptions()
                     if type(variants) == 'function' then
                         variants = variants();
                     end
-                    self:AddGlowingOption(talent, buff, spellID, talentSubText, spellSubText, variants, hashName, alwaysHideTalentText);
+                    self:AddGlowingOption(talent, buff, spellID, talentSubText, spellSubText, variants, hashName, alwaysHideTalentText, infoTooltip);
                 else
                     local hashName = self.Hash:new(button.hash):toString();
-                    self:AddGlowingOption(talent, buff, spellID, nil, nil, nil, hashName, nil);
+                    self:AddGlowingOption(talent, buff, spellID, nil, nil, nil, hashName, nil, nil);
                 end
             end
         end

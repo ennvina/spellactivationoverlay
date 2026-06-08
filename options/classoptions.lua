@@ -92,7 +92,7 @@ local function createSelectBox(self, cb, classFile, optionType, auraID, id, subV
     return sb;
 end
 
-function SAO.AddOption(self, optionType, auraID, id, subValues, applyTextFunc, testFunc, firstAnchor)
+function SAO.AddOption(self, optionType, auraID, id, subValues, applyTextFunc, testFunc, firstAnchor, infoTooltip)
     local classFile = self.CurrentClass.Intrinsics[2];
     local cb = CreateFrame("CheckButton", nil, SpellActivationOverlayOptionsPanel, "InterfaceOptionsCheckButtonTemplate");
 
@@ -184,6 +184,26 @@ function SAO.AddOption(self, optionType, auraID, id, subValues, applyTextFunc, t
             cb:SetPoint("TOPLEFT", firstAnchor.frame, "BOTTOMLEFT", (firstAnchor.xOffset or 0) + 320, firstAnchor.yOffset or 0);
         end
         table.insert(SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType], cb);
+    end
+
+    if (infoTooltip) then
+        local infoIcon = CreateFrame("Frame", nil, cb);
+        infoIcon:SetPoint("TOP", cb, "TOP", 0, -2);
+        infoIcon:SetPoint("RIGHT", cb, "LEFT", -2, 0);
+        infoIcon:SetSize(16, 16);
+
+        local infoIconTexture = infoIcon:CreateTexture(nil, "OVERLAY");
+        infoIconTexture:SetAllPoints();
+        infoIconTexture:SetTexture(infoTooltip.icon);
+
+        infoIcon:SetScript("OnEnter", function()
+            GameTooltip:SetOwner(infoIcon, "ANCHOR_RIGHT");
+            GameTooltip:SetText(infoTooltip.text, nil, nil, nil, nil, true);
+            GameTooltip:Show();
+        end);
+        infoIcon:SetScript("OnLeave", function()
+            GameTooltip:Hide();
+        end);
     end
 
     return cb;
