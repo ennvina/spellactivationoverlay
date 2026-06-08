@@ -58,6 +58,7 @@ The following glowing buttons have been added temporarily
 - Warrior's Overpower
 - Warrior's Execute
 - Warrior's Revenge
+- Warrior's Raging Blow, while Enraged
 - Warrior's Wild Strike, during Bloodsurge
 - Warrior's Shield Slam, during Sword and Board
 - Warrior's Heroic Strike, during Ultimatum

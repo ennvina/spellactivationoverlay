@@ -15,6 +15,7 @@ local execute = 5308;
 local heroicStrike = 78;
 local impendingVictory = 103840;
 local overpower = 7384;
+local ragingBlow = 85288;
 local ragingBlowSoD = 402911;
 local revenge = 6572;
 local shieldSlam = 23922;
@@ -487,6 +488,37 @@ local function useVictoryRush()
 end
 
 local function useRagingBlow()
+    if false
+    or SAO.IsProject(SAO.MOP_AND_ONWARD) -- Keep this comment for isNative = true
+    then
+        SAO:CreateEffect(
+            "raging_blow",
+            SAO.MOP_AND_ONWARD, -- Already glowing natively in Mists of Pandaria and later
+            ragingBlow,
+            "counter",
+            {
+                buttonOption = { isNative = true }, -- Button already glowing natively by the game client
+
+                -- Trigger only in combat, to avoid false positives when the player is out of combat
+                -- and has the buff/debuff that allows Raging Blow to be cast
+                useCustom = true,
+                custom = {
+                    isActivated = function(bucket, state)
+                        return InCombatLockdown();
+                    end,
+                    events = {
+                        ["PLAYER_REGEN_ENABLED"] = function(bucket, state)
+                            bucket:setCustom(false);
+                        end,
+                        ["PLAYER_REGEN_DISABLED"] = function(bucket, state)
+                            bucket:setCustom(true);
+                        end,
+                    },
+                }
+            }
+        );
+    end
+
     -- Has a spell alert, unlike other Warrior 'counters'
     SAO:CreateEffect(
         "raging_blow",
