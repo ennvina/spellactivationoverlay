@@ -152,7 +152,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
 
         -- Then activate the glow, if not in conflict
         local isStartingGlow;
-        if self.NativeGlows[glowID] then
+        if self.NativeGlows[glowID] and not frame.__sao.DoesIgnoreNative() then
             -- Natively glowing, do not double-glow with SAO+Native
             SAO:Debug(Module, "BeginSAOGlow does not glow to prevent conflict with Native glow of "..self:ParamName(frame, glowID));
             isStartingGlow = false;
@@ -200,7 +200,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
         local saoGlowForGlowID = self.SAOGlows[glowID];
         if saoGlowForGlowID then
             for frame, isGlowingByUs in pairs(saoGlowForGlowID) do
-                if isGlowingByUs then
+                if isGlowingByUs and not frame.__sao.DoesIgnoreNative() then
                     -- Already glowing with SAO, disable SAO glow to prevent conflict
                     SAO:Debug(Module, "BeginNativeGlow un-glows SAO glowing button "..self:FrameName(frame, glowID));
                     self:EndGlowFinally(frame, true);
@@ -223,7 +223,7 @@ local GlowEngine = SAO.IsProject(SAO.CATA_AND_ONWARD) and {
         if saoGlowForGlowID then
             -- SAO glow was disabled to prevent conflict, but now that Native glow goes away, start SAO glow!
             for frame, isGlowingByUs in pairs(saoGlowForGlowID) do
-                if not isGlowingByUs then
+                if not isGlowingByUs and not frame.__sao.DoesIgnoreNative() then
                     SAO:Debug(Module, "EndNativeGlow allows to re-glow SAO glowing buttons "..self:FrameName(frame, glowID));
                     self:BeginGlowFinally(frame, true);
                     saoGlowForGlowID[frame] = true; -- Set frame as glowing by 'us'
@@ -376,6 +376,16 @@ local function HookActionButton_Update(button)
         button.__sao.DisableGlow = function()
             LBG.HideOverlayGlow(button);
         end
+        if SAO.IsMoP() then
+            -- Until Blizzard fixes it, we will act as if macro buttons ignore native events
+            button.__sao.DoesIgnoreNative = function()
+                return button.action and HasAction(button.action) and GetActionInfo(button.action) == 'macro';
+            end
+        else
+            button.__sao.DoesIgnoreNative = function()
+                return false;
+            end
+        end
     end
     SAO:UpdateActionButton(button);
 end
@@ -406,7 +416,7 @@ if SAO.HasMidnightUI() then
     };
     for index, actionBar in ipairs(actionBars) do
         if not actionBar then --[[BEGIN_DEV_ONLY]]
-            SAO:Error(Module, "Missing action bar in TBC Anniversary: "..tostring(index));
+            SAO:Error(Module, "Missing action bar: "..tostring(index));
         end --[[END_DEV_ONLY]]
         for _, actionButton in ipairs(actionBar and actionBar.actionButtons or {}) do
             hooksecurefunc(actionButton, "Update", HookActionButton_Update);
@@ -436,6 +446,16 @@ local function HookStanceBar_UpdateState()
             end
             button.__sao.DisableGlow = function()
                 LBG.HideOverlayGlow(button);
+            end
+            if SAO.IsMoP() then
+                -- Until Blizzard fixes it, we will act as if macro buttons ignore native events
+                button.__sao.DoesIgnoreNative = function()
+                    return button.action and HasAction(button.action) and GetActionInfo(button.action) == 'macro';
+                end
+            else
+                button.__sao.DoesIgnoreNative = function()
+                    return false;
+                end
             end
         end
         SAO:UpdateActionButton(button);
@@ -668,6 +688,9 @@ binder:SetScript("OnEvent", function()
             end
             self.__sao.DisableGlow = function()
                 libGlow.HideOverlayGlow(self);
+            end
+            self.__sao.DoesIgnoreNative = function()
+                return false;
             end
         end
         SAO:UpdateActionButton(self);
