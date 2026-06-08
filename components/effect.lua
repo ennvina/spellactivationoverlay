@@ -482,6 +482,18 @@ local function createNativeSAO(effect, props)
     return effect;
 end
 
+local function createCustom(effect, props)
+    if type(props) ~= 'table' then
+        SAO:Error(Module, "Creating a custom effect for "..tostring(effect.name).." requires a 'props' table");
+    end
+
+    importOverlays(effect, props);
+    importButtons(effect, props);
+    importHandlers(effect, props);
+
+    return effect;
+end
+
 --[[
     Functions for Native Optimized Effects (NOEs)
 ]]
@@ -927,6 +939,7 @@ local EffectClassConstructors = {
     ["counter"] = createCounter,
     ["execute"] = createExecute,
     ["native"] = createNativeSAO,
+    ["custom"] = createCustom,
 }
 
 --[[
