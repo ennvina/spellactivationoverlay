@@ -80,7 +80,28 @@ local function useExorcism()
         SAO.ALL_PROJECTS,
         exorcism,
         "counter",
-        { combatOnly = true }
+        {
+            combatOnly = true,
+
+            -- For Era and TBC, Exorcism can only be cast on Undead or Demon targets
+            useCustom = SAO.IsProject(SAO.ERA + SAO.TBC),
+            custom = {
+                isActivated = function(bucket, state)
+                    state.canAttack = UnitCanAttack("player", "target");
+
+                    local creatureType = select(2, UnitCreatureType("target"));
+                    state.isDemonOrUndead = creatureType == 3 or creatureType == 6; -- 3 = Demon, 6 = Undead
+
+                    return state.canAttack and state.isDemonOrUndead;
+                end,
+                events = {
+                    ["PLAYER_TARGET_CHANGED"] = function(bucket, state)
+                        local isActivated = bucket.custom.isActivated(bucket, state);
+                        bucket:setCustom(isActivated);
+                    end,
+                },
+            },
+        }
     );
 end
 

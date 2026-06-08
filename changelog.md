@@ -1,5 +1,11 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.7.4-beta (2026-06-xx)
+
+Bug Fixes
+- Paladin's Exorcism now triggers if the target is Demon or Undead (Era, TBC)
+- Previously, Exorcism triggered if the target was neither Demon nor Undead
+
 #### v2.7.3 (2026-06-07)
 
 Bump in TOC file for Siege of Orgrimmar patch (Mists of Pandaria)
