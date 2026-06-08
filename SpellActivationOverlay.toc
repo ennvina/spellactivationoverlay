@@ -68,6 +68,7 @@ components\variable.lua
 
 variables\actionusable.lua
 variables\aurastacks.lua
+variables\custom.lua
 variables\execute.lua
 variables\holypower.lua
 variables\itemset.lua
