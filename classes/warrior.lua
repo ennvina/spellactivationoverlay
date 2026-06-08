@@ -389,39 +389,81 @@ end
 
 
 local function useOverpower()
-    SAO:CreateEffect(
-        "overpower",
-        SAO.ALL_PROJECTS - SAO.MOP_AND_ONWARD, -- Already glowing natively in Mists of Pandaria and later
-        overpower,
-        "counter",
-        {   -- Lazy evaluation for variants, because they are created later on
-            buttonOption = not SAO.IsMoP() and { variants = function() return OverpowerHandler.variants end } or nil,
-        }
-    );
+    if false
+    or SAO.IsProject(SAO.MOP_AND_ONWARD) -- Keep this comment for isNative = true
+    then
+        SAO:CreateEffect(
+            "overpower",
+            SAO.MOP_AND_ONWARD, -- Already glowing natively in Mists of Pandaria and later
+            overpower,
+            "counter",
+            {
+                buttonOption = { isNative = true }, -- Button already glowing natively by the game client
+            }
+        );
+    else
+        SAO:CreateEffect(
+            "overpower",
+            SAO.ALL_PROJECTS - SAO.MOP_AND_ONWARD, -- Already glowing natively in Mists of Pandaria and later
+            overpower,
+            "counter",
+            {   -- Lazy evaluation for variants, because they are created later on
+                buttonOption = not SAO.IsMoP() and { variants = function() return OverpowerHandler.variants end } or nil,
+            }
+        );
+    end
 end
 
 local function useExecute()
-    SAO:CreateEffect(
-        "execute",
-        SAO.ALL_PROJECTS - SAO.MOP_AND_ONWARD, -- Already glowing natively in Mists of Pandaria and later
-        execute,
-        "counter",
-        {   -- Lazy evaluation for variants, because they are created later on
-            buttonOption = not SAO.IsMoP() and { variants = function() return ExecuteHandler.variants end } or nil,
-        }
-    );
+    if false
+    or SAO.IsProject(SAO.MOP_AND_ONWARD) -- Keep this comment for isNative = true
+    then
+        SAO:CreateEffect(
+            "execute",
+            SAO.MOP_AND_ONWARD, -- Already glowing natively in Mists of Pandaria and later
+            execute,
+            "counter",
+            {
+                buttonOption = { isNative = true }, -- Button already glowing natively by the game client
+            }
+        );
+    else
+        SAO:CreateEffect(
+            "execute",
+            SAO.ALL_PROJECTS - SAO.MOP_AND_ONWARD, -- Already glowing natively in Mists of Pandaria and later
+            execute,
+            "counter",
+            {   -- Lazy evaluation for variants, because they are created later on
+                buttonOption = not SAO.IsMoP() and { variants = function() return ExecuteHandler.variants end } or nil,
+            }
+        );
+    end
 end
 
 local function useRevenge()
-    SAO:CreateEffect(
-        "revenge",
-        SAO.ALL_PROJECTS - SAO.MOP_AND_ONWARD, -- Already glowing natively in Mists of Pandaria and later
-        revenge,
-        "counter",
-        {   -- Lazy evaluation for variants, because they are created later on
-            buttonOption = not SAO.IsMoP() and { variants = function() return RevengeHandler.variants end } or nil,
-        }
-    );
+    if false
+    or SAO.IsProject(SAO.MOP_AND_ONWARD) -- Keep this comment for isNative = true
+    then
+        SAO:CreateEffect(
+            "revenge",
+            SAO.MOP_AND_ONWARD, -- Already glowing natively in Mists of Pandaria and later
+            revenge,
+            "counter",
+            {
+                buttonOption = { isNative = true }, -- Button already glowing natively by the game client
+            }
+        );
+    else
+        SAO:CreateEffect(
+            "revenge",
+            SAO.ALL_PROJECTS - SAO.MOP_AND_ONWARD, -- Already glowing natively in Mists of Pandaria and later
+            revenge,
+            "counter",
+            {   -- Lazy evaluation for variants, because they are created later on
+                buttonOption = not SAO.IsMoP() and { variants = function() return RevengeHandler.variants end } or nil,
+            }
+        );
+    end
 end
 
 local function useVictoryRush()
@@ -617,7 +659,7 @@ local function useBloodsurge()
             },
             buttons = {
                 [SAO.SOD+SAO.WRATH+SAO.CATA] = slam,
-                -- [SAO.MOP] = wildStrike, -- Already glowing natively in Mists of Pandaria and later
+                [SAO.MOP] = { spellID = wildStrike, option = { isNative = true } }, -- Already glowing natively in Mists of Pandaria and later
             },
         }
     );
@@ -644,7 +686,7 @@ local function useSwordAndBoard()
             overlay = { texture = "sword_and_board", position = "Left + Right (Flipped)" },
             buttons = {
                 [SAO.SOD + SAO.WRATH + SAO.CATA] = shieldSlam,
-                -- [SAO.MOP] = shieldSlam, -- Already glowing natively in Mists of Pandaria and later
+                [SAO.MOP] = { spellID = shieldSlam, option = { isNative = true } }, -- Already glowing natively in Mists of Pandaria and later
             },
         }
     );
@@ -662,7 +704,7 @@ local function useUltimatum()
         {
             talent = ultimatumTalent,
             overlay = { texture = "ultimatum", position = "Top" },
-            -- buttons = { heroicStrike, cleave }, -- Buttons already glowing natively
+            buttons = { heroicStrike, cleave, default = { option = { isNative = true } } }, -- Buttons already glowing natively
         }
     );
 end

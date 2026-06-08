@@ -61,7 +61,7 @@ local function useShootingStars()
             overlay = { texture = "shooting_stars", position = "Top" },
             buttons = {
                 [SAO.CATA] = starsurge,
-                -- [SAO.MOP_AND_ONWARD] = starsurge, -- Button already glowing natively
+                [SAO.MOP_AND_ONWARD] = { starsurge, default = { option = { isNative = true } } }, -- Button already glowing natively
             },
         }
     );
@@ -76,7 +76,7 @@ local function useEclipse()
         {
             aka = 93431, -- Eclipse Visual (Lunar)
             overlay = { texture = "eclipse_moon", position = "Left" },
-            -- buttons = { moonfire, starfire }, -- Buttons already glowing natively
+            buttons = { moonfire, starfire, default = { option = { isNative = true } } }, -- Buttons already glowing natively
         }
     );
 
@@ -88,7 +88,7 @@ local function useEclipse()
         {
             aka = 93430, -- Eclipse Visual (Solar)
             overlay = { texture = "eclipse_sun", position = "Right (Flipped)" },
-            -- buttons = { wrath }, -- Button already glowing natively
+            button = { spellID = wrath, option = { isNative = true } }, -- Button already glowing natively
         }
     );
 end
@@ -233,7 +233,7 @@ local function useToothAndClaw()
         {
             talent = 135288, -- Tooth and Claw (passive)
             overlay = { texture = "ultimatum", position = "Top" },
-            -- button = maul, -- Button already glowing natively
+            button = { spellID = maul, option = { isNative = true } }, -- Button already glowing natively
         }
     );
 end
@@ -251,7 +251,7 @@ local function useDreamOfCenarius()
             overlay = { texture = "dark_tiger", position = "Left + Right (Flipped)", option = { subText = guardianNameFunc } },
             buttons = {
                 default = { option = { talentSubText = guardianNameFunc } },
-                -- [SAO.MOP] = { healingTouch, rebirth }, -- Buttons already glowing natively
+                [SAO.MOP] = { healingTouch, rebirth, default = { option = { isNative = true } } }, -- Buttons already glowing natively
             },
         }
     );

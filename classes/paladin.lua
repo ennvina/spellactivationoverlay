@@ -56,12 +56,26 @@ local function useHolyPowerTracker()
 end
 
 local function useHammerOfWrath()
-    SAO:CreateEffect(
-        "how",
-        SAO.ALL_PROJECTS - SAO.MOP_AND_ONWARD, -- Already glowing natively by the game client in Mists of Pandaria and onward
-        how,
-        "counter"
-    );
+    if false
+    or SAO.IsProject(SAO.MOP_AND_ONWARD) -- Keep this comment for isNative = true
+    then
+        SAO:CreateEffect(
+            "how",
+            SAO.MOP_AND_ONWARD, -- Already glowing natively by the game client in Mists of Pandaria and onward
+            how,
+            "counter",
+            {
+                buttonOption = { isNative = true }, -- Button already glowing natively by the game client
+            }
+        );
+    else
+        SAO:CreateEffect(
+            "how",
+            SAO.ALL_PROJECTS - SAO.MOP_AND_ONWARD, -- Already glowing natively by the game client in Mists of Pandaria and onward
+            how,
+            "counter"
+        );
+    end
 end
 
 local function useHolyShock()
@@ -171,7 +185,7 @@ local function useInfusionOfLight()
             {
                 talent = infusionOfLightTalent,
                 overlay = { texture = "daybreak", position = "Left + Right (Flipped)", option = { subText = SAO:RecentlyUpdated() } }, -- Updated 09-jul-2025
-                -- buttons = { holyLight, divineLight, holyRadiance }, -- Buttons already glowing natively by the game client
+                buttons = { holyLight, divineLight, holyRadiance, default = { option = { isNative = true } } }, -- Buttons already glowing natively by the game client
             }
         );
     else
@@ -218,7 +232,7 @@ local function useDaybreak()
             },
             buttons = {
                 [SAO.CATA] = holyShock,
-                -- [SAO.MOP_AND_ONWARD] = holyShock, -- Button already glowing natively by the game client
+                [SAO.MOP_AND_ONWARD] = { spellID = holyShock, option = { isNative = true } }, -- Button already glowing natively by the game client
             }
         }
     );
@@ -238,7 +252,7 @@ local function useGrandCrusader()
             overlay = { texture = "grand_crusader", position = "Left + Right (Flipped)" },
             buttons = {
                 [SAO.CATA] = avengersShield,
-                -- [SAO.MOP_AND_ONWARD] = avengersShield, -- Button already glowing natively by the game client
+                [SAO.MOP_AND_ONWARD] = { spellID = avengersShield, option = { isNative = true } }, -- Button already glowing natively by the game client
             },
         }
     );
@@ -324,7 +338,7 @@ local function useArtOfWar()
                 overlay = { texture = "art_of_war", position = "Left + Right (Flipped)" },
                 buttons = {
                     [SAO.CATA] = exorcism,
-                    -- [SAO.MOP_AND_ONWARD] = exorcism, -- Button already glowing natively by the game client
+                    [SAO.MOP_AND_ONWARD] = { spellID = exorcism, option = { isNative = true } }, -- Button already glowing natively by the game client
                 },
             }
         );

@@ -9,6 +9,7 @@ local counterattack = 19306;
 local distractingShot = 20736;
 local explosiveShot = 53301;
 local flankingStrike = 415320;
+local focusFire = 82692;
 local killCommand = 34026;
 local killShot = 53351;
 local mongooseBite = 1495;
@@ -73,9 +74,9 @@ local function useFocusFire()
         "aura",
         {
             aka = 88843, -- Focus Fire! (placeholder spell for the overlay)
-            talent = 82692, -- Focus Fire (ability)
+            talent = focusFire, -- Focus Fire (ability), identical to the spell ID of the ability
             overlay = { stacks = 5, texture = "focus_fire", position = "Left + Right (Flipped)" },
-            -- button = focusFire, -- Button already glowing natively
+            button = { stacks = 5, spellID = focusFire, option = { isNative = true } }, -- Button already glowing natively
         }
     );
 end
@@ -113,7 +114,7 @@ local function useMasterMarksman()
             overlay = { texture = "master_marksman", position = "Top" },
             buttons = {
                 [SAO.CATA] = aimedShotBang,
-                -- [SAO.MOP] = aimedShot, -- Button already glowing natively
+                [SAO.MOP] = { spellID = aimedShot, option = { isNative = true } }, -- Button already glowing natively
             }
         }
     );
@@ -145,7 +146,7 @@ local function useLockAndLoad()
                 [SAO.SOD] = nil, -- Don't glow buttons for Season of Discovery, there would be too many to suggest
                 [SAO.WRATH] = { arcaneShot, explosiveShot },
                 [SAO.CATA] = explosiveShot,
-                -- [SAO.MOP_AND_ONWARD] = explosiveShot, -- Button already glowing natively
+                [SAO.MOP_AND_ONWARD] = { spellID = explosiveShot, option = { isNative = true } }, -- Button already glowing natively
             },
         }
     );
@@ -164,7 +165,7 @@ local function useThrillOfTheHunt()
                 { stacks = 2, texture = "thrill_of_the_hunt_2", position = "Left + Right (Flipped)", pulse = false, option = false },
                 { stacks = 3, texture = "thrill_of_the_hunt_3", position = "Left + Right (Flipped)", pulse = true , option = { setupHash = SAO:HashNameFromStacks(0), testHash = SAO:HashNameFromStacks(3) } },
             },
-            -- buttons = { arcaneShot, multiShot }, -- Buttons already glowing natively
+            buttons = { arcaneShot, multiShot, default = { option = { isNative = true } } }, -- Buttons already glowing natively
         }
     );
 end
