@@ -2,6 +2,72 @@
 
 #### v2.7.4-beta (2026-06-xx)
 
+Thank you to our amazing contributors for helping out. Thanks!
+- Sofpokito for reporting Warrior issues and testing fixes
+- laynerz for reporting Mage issues with extensive screenshots
+- 떡반죽 for reporting DK, Warrior, Paladin, Monk and Druid issues
+- Moosi_13 for Priest, Warrior and Paladin issues
+- YoungChreezy for reporting Hunter issues
+
+A workaround has been implemented to fix an in-game glowing buttons issue
+
+This affects exclusively
+- the lastest Mists of Pandaria content (patch for Siege of Orgrimmar)
+- players using thhe default interface (not ElvUI, Bartender, Dominos, etc.)
+- players using spells and abilities inside macros
+
+Although the issue comes for Blizzard's game client, the addon can help
+Once Blizzard fixes their stuff, these options will be removed
+
+The following glowing buttons have been added temporarily
+- Death Knight's Howling Blast, during Rime
+- Death Knight's Icy Touch, during Rime
+- Death Knight's Frost Strike, during Killing Machine
+- Death Knight's Obliterate, during Killing Machine
+- Death Knight's Blood Boil, during Crimson Scourge
+- Death Knight's Dark Transformation
+- Death Knight's Death Coil, during Sudden Doom
+- Death Knight's Rune Tap, during Will of the Necropolis
+- Druid's Starsurge, during Shooting Stars
+- Druid's Moonfire, during Lunar Eclipse
+- Druid's Starfire, during Lunar Eclipse
+- Druid's Wrath, during Solar Eclipse
+- Druid's Maul, during Tooth and Claw
+- Druid's Healing Touch, during Dream of Cenarius (Bear)
+- Druid's Rebirth, during Dream of Cenarius (Bear)
+- Hunter's Focus Fire, while at 5 stacks
+- Hunter's Aimed Shot, while Master Marksman is at 5 stacks
+- Hunter's Explosive Shot, during Lock and Load
+- Hunter's Arcane Shot, during Thrill of the Hunt
+- Hunter's Multi Shot, during Thrill of the Hunt
+- Mage's Ice Lance, during Fingers of Frost
+- Mage's Deep Freeze, during Fingers of Frost
+- Mage's Frostfire Bolt, during Brain Freeze
+- Paladin's Hammer of Wrath
+- Paladin's Holy Light, during Infusion of Light
+- Paladin's Divine Light, during Infusion of Light
+- Paladin's Holy Radiance, during Infusion of Light
+- Paladin's Holy Shock, during Daybreak
+- Paladin's Avenger's Shield, during Grand Crusader
+- Paladin's Exorcism, during The Art of War
+- Priest's Mind Spike, during Surge of Darkness
+- Priest's Mind Blast, while Glyph of Mind Spike is at 2 stacks
+- Shaman's Lava Burst, during Lava Surge
+- Warlock's Soul Fire, during Molten Core
+- Warlock's Incinerate, during Backlash
+- Warrior's Overpower
+- Warrior's Execute
+- Warrior's Revenge
+- Warrior's Wild Strike, during Bloodsurge
+- Warrior's Shield Slam, during Sword and Board
+- Warrior's Heroic Strike, during Ultimatum
+- Warrior's Cleave, during Ultimatum
+
+Known Limitations
+- It is possible that the above fixes do not work exactly as the game client
+- These fixes already required a ton of work, doing better would be even worse
+- Again, this is a bandaid to help Blizzard, please don't shoot the medic :)
+
 Bug Fixes
 - Paladin's Exorcism now triggers if the target is Demon or Undead (Era, TBC)
 - Previously, Exorcism triggered if the target was neither Demon nor Undead
