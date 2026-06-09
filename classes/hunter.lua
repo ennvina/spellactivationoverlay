@@ -49,6 +49,18 @@ local function useMongooseBite()
     );
 end
 
+local function useKillCommand()
+    SAO:CreateEffect(
+        "kill_command",
+        SAO.TBC,
+        killCommand,
+        "counter",
+        {
+            overlay = { texture = "white_tiger", position = "Left + Right (Flipped)" },
+        }
+    );
+end
+
 local function useKillingStreak()
     local killingStreakBuff1 = 94006;
     local killingStreakBuff2 = 94007;
@@ -271,6 +283,9 @@ local function registerClass(self)
 
     -- Mongoose Bite, before Wrath because there is no longer a proc since Wrath
     useMongooseBite();
+
+    -- Kill Command, TBC only because the ability was reworked afterwards
+    useKillCommand();
 
     -- Beast Mastery
     useKillingStreak();
