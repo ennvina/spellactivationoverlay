@@ -422,7 +422,6 @@ thrill_of_the_hunt_1
 thrill_of_the_hunt_2
 thrill_of_the_hunt_3
 tooth_and_claw
-white_tiger
 rkm128)
 prunetex "${TEXTURES_NOT_FOR_TBC[@]}"
 

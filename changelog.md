@@ -11,13 +11,12 @@ Thank you to our amazing contributors for helping out. Thanks!
 
 A workaround has been implemented to fix an in-game glowing buttons issue
 
-This affects exclusively
-- the lastest Mists of Pandaria content (patch for Siege of Orgrimmar)
-- players using thhe default interface (not ElvUI, Bartender, Dominos, etc.)
-- players using spells and abilities inside macros
+The issue may affect players who match both following conditions
+- playing the Siege of Orgrimmar patch for Mists of Pandaria
+- binding spells and abilities inside macros
 
 Although the issue comes for Blizzard's game client, the addon can help
-Once Blizzard fixes their stuff, these options will be removed
+Once Blizzard fixes their stuff, these options shall be removed
 
 The following glowing buttons have been added temporarily
 - Death Knight's Howling Blast, during Rime
@@ -68,6 +67,12 @@ Known Limitations
 - It is possible that the above fixes do not work exactly as the game client
 - These fixes already required a ton of work, doing better would be even worse
 - Again, this is a bandaid to help Blizzard, please don't shoot the medic :)
+
+New Spell Alert
+- Hunter's Kill Command (The Burning Crusade)
+
+New Glowing Button
+- Hunter's Kill Command (The Burning Crusade)
 
 Bug Fixes
 - Paladin's Exorcism now triggers if the target is Demon or Undead (Era, TBC)

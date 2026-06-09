@@ -181,6 +181,9 @@ SAO.defaults = {
                 [1495] = { -- Mongoose Bite (Era, TBC)
                     [0] = true, -- Mongoose Bite
                 },
+                [34026] = { -- Kill Command (TBC)
+                    [0] = true, -- Kill Command
+                },
                 [53220] = { -- Improved Steady Shot (Wrath)
                     [0] = true,
                 },
@@ -210,6 +213,9 @@ SAO.defaults = {
                 },
             },
             glow = {
+                [34026] = { -- Kill Command (TBC)
+                    [34026] = true, -- Kill Command
+                },
                 [53351] = { -- Kill Shot (Wrath+)
                     [53351] = true, -- Kill Shot
                 },
