@@ -82,7 +82,7 @@ local function useLavaSurge(self)
             talent = 77756, -- Lava Surge (passive)
             combatOnly = true,
             overlay = { texture = "imp_empowerment", position = "Left + Right (Flipped)" },
-            -- button = lavaBurst -- Button already glowing by the game client
+            button = { spellID = lavaBurst, option = { isNative = true } }, -- Button already glowing by the game client
         }
     );
 

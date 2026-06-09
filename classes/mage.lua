@@ -659,7 +659,7 @@ local function useFingersOfFrost()
                 { stacks = 1, texture = "frozen_fingers", position = "Left",                   scale = 1.1, color = { 222, 222, 222 }, option = false },
                 { stacks = 2, texture = "frozen_fingers", position = "Left + Right (Flipped)", scale = 1.1, color = { 222, 222, 222 }, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
             },
-            -- buttons = { FrozenHandler.ice_lance[1], FrozenHandler.deep_freeze[1], }, -- Already glowing natively
+            buttons = { FrozenHandler.ice_lance[1], FrozenHandler.deep_freeze[1], default = { option = { isNative = true } } }, -- Already glowing natively
         }
     );
 end
@@ -673,7 +673,7 @@ local function useBrainFreeze()
         "aura",
         {
             overlay = { texture = "brain_freeze", position = "Top" },
-            button = frostfireBolt,
+            button = { spellID = frostfireBolt, option = { isNative = true } }, -- Already glowing natively
         }
     );
 end

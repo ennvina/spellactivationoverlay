@@ -10,9 +10,10 @@ local Module = "option"
 -- variants optional variant object that tells which are sub-options and how to use them
 -- hash optional hash, used to describe what the display is expected to depend on
 -- alwaysHideTalentText if true, the option will be hidden even when the talent does not match the glowID
+-- infoTooltip optional tooltip object to display an info icon with a tooltip next to the option
 -- @note Options must be linked asap, not during loadOptions() which would be loaded only when the options panel is opened
 -- By linking options as soon as possible, before their respective RegisterAura() calls, options can be used by initial triggers, if any
-function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText, variants, hash, alwaysHideTalentText) -- @todo use hash and testHash like overlay options
+function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, spellSubText, variants, hash, alwaysHideTalentText, infoTooltip) -- @todo use hash and testHash like overlay options
     local talentText = talentID and self:GetTalentText(talentID);
     if (talentID and not talentText) or (not self:IsFakeSpell(glowID) and not self:DoesSpellExist(glowID)) then
         if talentID and not talentText then
@@ -99,7 +100,16 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
         end
     end
 
-    self:AddOption("glow", spellID, glowID, type(variants) == 'table' and variants.values, applyTextFunc, testFunc, { frame = SpellActivationOverlayOptionsPanelGlowingButtons, xOffset = 16, yOffset = 2 });
+    self:AddOption(
+        "glow", -- option type
+        spellID, -- aura ID
+        glowID, -- ID
+        type(variants) == 'table' and variants.values, -- sub values
+        applyTextFunc, -- callback for applying text
+        testFunc, -- callback for testing the option
+        { frame = SpellActivationOverlayOptionsPanelGlowingButtons, xOffset = 16, yOffset = 2 }, -- first anchor
+        infoTooltip -- information tooltip
+    );
 end
 
 function SAO.AddGlowingLink(self, srcOption, dstOption)

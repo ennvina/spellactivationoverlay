@@ -166,7 +166,7 @@ local function useSurgeOfLight()
                     { stacks = 1, texture = "surge_of_darkness", position = "Left", option = false },
                     { stacks = 2, texture = "surge_of_darkness", position = "Left + Right (Flipped)", option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
                 },
-                button = mindSpike,
+                button = { spellID = mindSpike, option = { isNative = true } }, -- Button already glowing natively by the game client
             }
         );
     end
@@ -330,7 +330,7 @@ local function useGlyphOfMindSpike()
         "aura",
         {
             talent = 33371, -- Glyph of Mind Spike (glyph)
-            button = { stacks = 2, spellID = mindBlast },
+            button = { stacks = 2, spellID = mindBlast, option = { isNative = true } }, -- Button already glowing natively by the game client
         }
     );
 end

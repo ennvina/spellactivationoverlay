@@ -71,7 +71,7 @@ local function useRime()
             buttons = {
                 [SAO.WRATH] = howlingBlast,
                 [SAO.CATA] = { howlingBlast, icyTouch },
-                -- [SAO.MOP] = { howlingBlast, icyTouch }, -- Buttons already glowing natively
+                [SAO.MOP] = { howlingBlast, icyTouch, default = { option = { isNative = true } } }, -- Buttons already glowing natively
             },
         }
     );
@@ -92,7 +92,7 @@ local function useKillingMachine()
             buttons = {
                 [SAO.WRATH] = { icyTouch, frostStrike, howlingBlast },
                 [SAO.CATA] = { frostStrike, obliterate },
-                -- [SAO.MOP] = { frostStrike, obliterate }, -- Buttons already glowing natively
+                [SAO.MOP] = { frostStrike, obliterate, default = { option = { isNative = true } } }, -- Buttons already glowing natively
             },
         }
     );
@@ -112,7 +112,7 @@ local function useCrimsonScourge()
             overlay = { texture = "blood_boil", position = "Left + Right (Flipped)" },
             buttons = {
                 [SAO.CATA] = bloodBoil,
-                -- [SAO.MOP] = bloodBoil, -- Button already glowing natively
+                [SAO.MOP] = { spellID = bloodBoil, option = { isNative = true } }, -- Button already glowing natively
             },
         }
     );
@@ -128,7 +128,7 @@ local function useDarkTransformation()
             overlay = { texture = "dark_transformation", position = "Top" },
             buttons = {
                 [SAO.CATA] = darkTransformation,
-                -- [SAO.MOP] = darkTransformation, -- Button already glowing natively
+                [SAO.MOP] = { spellID = darkTransformation, option = { isNative = true } }, -- Button already glowing natively
             }
         }
     );
@@ -148,7 +148,7 @@ local function useSuddenDoom()
             overlay = { texture = "sudden_doom", position = "Left + Right (Flipped)" },
             buttons = {
                 [SAO.CATA] = deathCoil,
-                -- [SAO.MOP] = deathCoil, -- Button already glowing natively
+                [SAO.MOP] = { spellID = deathCoil, option = { isNative = true } }, -- Button already glowing natively
             },
         }
     );
@@ -168,7 +168,7 @@ local function useWotn()
             overlay = { texture = "necropolis", position = "Top" },
             buttons = {
                 [SAO.CATA] = runeTap,
-                -- [SAO.MOP] = runeTap, -- Button already glowing natively
+                [SAO.MOP] = { spellID = runeTap, option = { isNative = true } }, -- Button already glowing natively
             },
         }
     );

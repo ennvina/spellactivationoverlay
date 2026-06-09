@@ -102,6 +102,7 @@
         "C_Timer",
         "C_UnitAuras",
         "CombatLogGetCurrentEventInfo",
+        "GameTooltip",
         "GetActionInfo",
         "GetAddOnMetadata",
         "GetBuildInfo",

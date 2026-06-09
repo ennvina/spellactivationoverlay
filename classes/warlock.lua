@@ -286,7 +286,7 @@ local function useMoltenCore(self)
                     { stacks = 1, position = "Left" },
                     { stacks = 2, position = "Left + Right (Flipped)", option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
                 },
-                -- button = soulFire, -- Already glowing natively
+                button = { spellID = soulFire, option = { isNative = true } }, -- Already glowing natively
                 handler = handler,
             }
         );
@@ -303,7 +303,7 @@ local function useMoltenCore(self)
                     { stacks = 1, position = "Left" },
                     { stacks = 2, position = "Left + Right (Flipped)" }, -- No option for green, will use option from non-green Molten Core
                 },
-                -- button = soulFire, -- Already glowing natively
+                button = { spellID = soulFire, option = false }, -- Already glowing natively, should be option = { isNative = true } but option is false
                 handler = handler,
             }
         );
@@ -484,7 +484,7 @@ local function useBacklash(self)
             overlay = { texture = "backlash", position = "Top" },
             buttons = {
                 [SAO.TBC + SAO.WRATH + SAO.CATA] = { shadowBolt, incinerate },
---                [SAO.MOP] = incinerate, -- Already glowing natively
+                [SAO.MOP] = { spellID = incinerate, option = { isNative = true } }, -- Already glowing natively
             },
         }
     );
@@ -498,7 +498,7 @@ local function useBacklash(self)
             {
                 talent = 108563, -- Backlash (passive)
                 overlay = { texture = "backlash_green", position = "Top", option = false }, -- No option for green, will use option from non-green Backlash
---                button = incinerate, -- Already glowing natively
+                button = { spellID = incinerate, option = false }, -- Already glowing natively, should be option = { isNative = true } but option is false
             }
         );
 
