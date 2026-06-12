@@ -124,6 +124,11 @@ local function useExorcism()
                             bucket:setCustom(false);
                         end
                     end,
+                    [{"UNIT_FACTION", "target"}] = function(bucket, state, unitID)
+                        SAO:Trace(Module, "Target faction changed, updating Exorcism custom variable");
+                        state.canAttack = UnitCanAttack("player", "target");
+                        bucket:setCustom(state.canAttack and state.isDemonOrUndead and state.isAlive);
+                    end,
                 },
             },
         }
