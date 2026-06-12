@@ -340,22 +340,28 @@ local function useArtOfWar()
 
         -- 2/2 talent points
         registerArtOfWar("art_of_war_high", SAO.WRATH, artOfWarBuff2, { flashOfLight, exorcism });
-    elseif SAO.IsProject(SAO.CATA_AND_ONWARD) then
+    elseif SAO.IsCata() then
         SAO:CreateEffect(
             "art_of_war",
-            SAO.CATA_AND_ONWARD,
+            SAO.CATA,
             59578, -- The Art of War (buff)
             "aura",
             {
-                talent = {
-                    [SAO.CATA] = 53486, -- The Art of War (talent)
-                    [SAO.MOP_AND_ONWARD] = 87138, -- The Art of War (passive)
-                },
+                talent = 53486, -- The Art of War (talent)
                 overlay = { texture = "art_of_war", position = "Left + Right (Flipped)" },
-                buttons = {
-                    [SAO.CATA] = exorcism,
-                    [SAO.MOP_AND_ONWARD] = { spellID = exorcism, option = { isNative = true } }, -- Button already glowing natively by the game client
-                },
+                button = exorcism,
+            }
+        );
+    elseif SAO.IsProject(SAO.MOP_AND_ONWARD) then
+        SAO:CreateEffect(
+            "art_of_war",
+            SAO.MOP_AND_ONWARD,
+            59578, -- The Art of War (buff)
+            "native",
+            {
+                talent = 87138, -- The Art of War (passive)
+                overlay = { texture = "art_of_war", position = "Left + Right (Flipped)" },
+                button = { spellID = exorcism, option = { isNative = true } }, -- Button already glowing natively by the game client
             }
         );
     end

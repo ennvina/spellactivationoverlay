@@ -77,8 +77,9 @@ New Glowing Button
 - Hunter's Kill Command (The Burning Crusade)
 
 Bug Fixes
-- Paladin's Exorcism now triggers if the target is Demon or Undead (Era, TBC)
-- Previously, Exorcism triggered if the target was neither Demon nor Undead
+- Paladin's The Art of War now displays its Spell Alert (Mists of Pandaria)
+- Paladin's Exorcism now triggers if the target is Demon or Undead\* (Era, TBC)
+\* Previously, Exorcism triggered independently of the target's creature type
 
 #### v2.7.3 (2026-06-07)
 
