@@ -113,17 +113,47 @@ SAO.Variable:register({
                         state = {},
                     };
 
+                    local eventFunctions = {};
                     for eventName, eventFunc in pairs(custom.events) do
-                        frame:RegisterEvent(eventName);
+                        if type(eventFunc) ~= 'function' then --[[BEGIN_DEV_ONLY]]
+                            SAO:Error(Module, "Invalid event function for event "..tostring(eventName).." in custom variable of "..bucket.description);
+                        end --[[END_DEV_ONLY]]
+
+                        if type(eventName) == 'string' then
+
+                            -- Usual event
+                            frame:RegisterEvent(eventName);
+                            eventFunctions[eventName] = eventFunc;
+
+                        elseif type(eventName) == 'table' and type(eventName[1]) == 'string' and eventName[1]:upper():match("^UNIT_") then
+
+                            -- Unit event with unitID(s) to filter
+                            local realEventName = eventName[1];
+                            if type(frame.RegisterUnitEvent) == 'function' then
+                                -- RegisterUnitEvent is supported, use it
+                                frame:RegisterUnitEvent(realEventName, unpack(eventName, 2));
+                                eventFunctions[realEventName] = eventFunc;
+                            else
+                                -- RegisterUnitEvent is not supported, fallback to RegisterEvent and filter manually
+                                frame:RegisterEvent(realEventName);
+                                eventFunctions[realEventName] = function(bucket, state, unitID, ...)
+                                    for i = 2, #eventName do
+                                        if unitID == eventName[i] then
+                                            eventFunc(bucket, state, unitID, ...);
+                                            return; -- Stop after the first match, to avoid calling the function several times for the same event
+                                        end
+                                    end
+                                end;
+                            end
+
+                        else --[[DEV_ONLY]]
+                            SAO:Error(Module, "Invalid event name "..tostring(eventName).." in custom variable of "..bucket.description); --[[DEV_ONLY]]
+                        end
                     end
 
                     frame:SetScript("OnEvent", function(self, event, ...)
-                        local eventFunc = custom.events[event];
-                        if type(eventFunc) == 'function' then --[[DEV_ONLY]]
-                            eventFunc(bucket, custom.state, ...);
-                        else --[[BEGIN_DEV_ONLY]]
-                            SAO:Error(Module, "Invalid event function for event "..tostring(event).." in custom variable");
-                        end --[[END_DEV_ONLY]]
+                        local eventFunc = eventFunctions[event];
+                        eventFunc(bucket, custom.state, ...);
                     end);
 
                     bucket.custom = custom;
