@@ -1,12 +1,12 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.7.4-beta (2026-06-xx)
+#### v2.7.4 (2026-06-xx)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - Sofpokito for reporting Warrior issues and testing fixes
-- laynerz for reporting Mage issues with extensive screenshots
-- 떡반죽 for reporting DK, Warrior, Paladin, Monk and Druid issues
-- Moosi_13 for Priest, Warrior and Paladin issues
+- laynerz for reporting Mage issues with extensive screenshots and for testing
+- 떡반죽 for reporting DK, Warrior, Paladin, Monk and Druid issues and for testing
+- Moosi_13 for reporting Priest, Warrior and Paladin issues
 - YoungChreezy for reporting Hunter issues
 
 A workaround has been implemented to fix an in-game glowing buttons issue
