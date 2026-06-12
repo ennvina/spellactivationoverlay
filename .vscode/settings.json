@@ -148,6 +148,7 @@
         "UnitGUID",
         "UnitHealth",
         "UnitHealthMax",
+        "UnitIsDead",
         "UnitIsUnit",
         "UnitLevel",
         "UnitPower",
