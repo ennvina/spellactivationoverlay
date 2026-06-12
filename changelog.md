@@ -24,6 +24,7 @@ The following glowing buttons have been added temporarily
 - Death Knight's Frost Strike, during Killing Machine
 - Death Knight's Obliterate, during Killing Machine
 - Death Knight's Blood Boil, during Crimson Scourge
+- Death Knight's Death and Decay, during Crimson Scourge
 - Death Knight's Dark Transformation
 - Death Knight's Death Coil, during Sudden Doom
 - Death Knight's Rune Tap, during Will of the Necropolis

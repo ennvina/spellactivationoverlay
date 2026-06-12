@@ -12,6 +12,7 @@ local DK_STANCE_UNHOLY = 48265;
 local bloodBoil = 48721;
 local boneShield = 49222;
 local darkTransformation = 63560;
+local deathAndDecay = 43265;
 local deathCoil = 47541;
 local deathStrike = 49998;
 local frostStrike = 49143;
@@ -112,7 +113,7 @@ local function useCrimsonScourge()
             overlay = { texture = "blood_boil", position = "Left + Right (Flipped)" },
             buttons = {
                 [SAO.CATA] = bloodBoil,
-                [SAO.MOP] = { spellID = bloodBoil, option = { isNative = true } }, -- Button already glowing natively
+                [SAO.MOP] = { bloodBoil, deathAndDecay, default = { option = { isNative = true } } }, -- Button already glowing natively
             },
         }
     );
