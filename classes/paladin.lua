@@ -1,4 +1,5 @@
 local AddonName, SAO = ...
+local Module = "paladin"
 
 local avengersShield = 31935;
 local divineLight = 82326;
@@ -106,12 +107,27 @@ local function useExorcism()
                     local creatureType = select(2, UnitCreatureType("target"));
                     state.isDemonOrUndead = creatureType == 3 or creatureType == 6; -- 3 = Demon, 6 = Undead
 
-                    return state.canAttack and state.isDemonOrUndead;
+                    state.isAlive = not UnitIsDead("target")
+
+                    return state.canAttack and state.isDemonOrUndead and state.isAlive;
                 end,
                 events = {
                     ["PLAYER_TARGET_CHANGED"] = function(bucket, state)
+                        SAO:Trace(Module, "Target changed, updating Exorcism custom variable");
                         local isActivated = bucket.custom.isActivated(bucket, state);
                         bucket:setCustom(isActivated);
+                    end,
+                    [{"UNIT_HEALTH", "target"}] = function(bucket, state, unitID)
+                        if UnitIsDead("target") then
+                            SAO:Trace(Module, "Target died, resetting Exorcism custom variable");
+                            state.isAlive = false;
+                            bucket:setCustom(false);
+                        end
+                    end,
+                    [{"UNIT_FACTION", "target"}] = function(bucket, state, unitID)
+                        SAO:Trace(Module, "Target faction changed, updating Exorcism custom variable");
+                        state.canAttack = UnitCanAttack("player", "target");
+                        bucket:setCustom(state.canAttack and state.isDemonOrUndead and state.isAlive);
                     end,
                 },
             },
