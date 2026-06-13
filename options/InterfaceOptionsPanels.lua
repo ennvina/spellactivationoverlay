@@ -1,5 +1,6 @@
 local AddonName, SAO = ...
 local iamNecrosis = strlower(AddonName):sub(0,8) == "necrosis"
+local Module = "options"
 
 -- Optimize frequent calls
 local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
@@ -553,12 +554,34 @@ if not iamNecrosis then
     SLASH_SAO1 = "/sao"
     SLASH_SAO2 = "/spellactivationoverlay"
     SlashCmdList.SAO = function(msg, editBox)
-        if SAO.HasMidnightUI() then
-            Settings.OpenToCategory(SAO.OptionsPanel.category:GetID());
+        local openOptions = function()
+            if SAO.HasMidnightUI() then
+                Settings.OpenToCategory(SAO.OptionsPanel.category:GetID());
+            else
+                -- https://github.com/Stanzilla/WoWUIBugs/issues/89
+                InterfaceOptionsFrame_OpenToCategory(SAO.OptionsPanel);
+                InterfaceOptionsFrame_OpenToCategory(SAO.OptionsPanel);
+            end
+        end
+
+        local mustDelayIfInCombat = false;
+        if SAO.IsMoP() then
+            -- In MoP, the options panel cannot be opened while in combat since Siege of Orgrimmar patch
+            local buildInfo = tonumber((select(2, GetBuildInfo())));
+            mustDelayIfInCombat = buildInfo >= 68042; -- 68042 = first build number of MoP Classic SoO patch
+        end
+
+        if mustDelayIfInCombat and InCombatLockdown() then
+            if not SAO.OptionsPanel:IsVisible() then -- No need to delay if options panel is already visible
+                SAO:AddPendingOperation("ooc", function()
+                    if not SAO.OptionsPanel:IsVisible() then -- Second check, in case it has been shown in the meantime e.g., if the player spammed /sao
+                        openOptions();
+                    end
+                end);
+                SAO:Info(Module, SAO:openOptionsAfterLeavingCombat());
+            end
         else
-            -- https://github.com/Stanzilla/WoWUIBugs/issues/89
-            InterfaceOptionsFrame_OpenToCategory(SAO.OptionsPanel);
-            InterfaceOptionsFrame_OpenToCategory(SAO.OptionsPanel);
+            openOptions();
         end
     end
 end

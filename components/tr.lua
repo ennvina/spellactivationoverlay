@@ -464,3 +464,20 @@ function SAO:temporaryOption()
     };
     return tr(temporaryOptionTranslations);
 end
+
+-- Translate "Cannot open options panel while in combat. It will be opened automatically after leaving combat."
+function SAO:openOptionsAfterLeavingCombat()
+    local openOptionsAfterLeavingCombatTranslations = {
+        ["en"] = "Cannot open options panel while in combat. It will be opened automatically after leaving combat.",
+        ["de"] = "Kann das Optionsfenster während des Kampfes nicht öffnen. Es wird automatisch geöffnet, nachdem der Kampf verlassen wurde.",
+        ["fr"] = "Impossible d'ouvrir le panneau d'options pendant le combat. Il sera ouvert automatiquement après la fin du combat.",
+        ["es"] = "No se puede abrir el panel de opciones mientras estás en combate. Se abrirá automáticamente después de salir del combate.",
+        ["ru"] = "Невозможно открыть панель параметров во время боя. Она будет открыта автоматически после выхода из боя.",
+        ["it"] = "Impossibile aprire il pannello delle opzioni durante il combattimento. Si aprirà automaticamente dopo aver lasciato il combattimento.",
+        ["pt"] = "Não é possível abrir o painel de opções enquanto estiver em combate. Ele será aberto automaticamente após sair do combate.",
+        ["ko"] = "전투 중에는 옵션 패널을 열 수 없습니다. 전투를 떠난 후 자동으로 열립니다.",
+        ["zh"] = "无法在战斗中打开选项面板。离开战斗后将自动打开。",
+        ["zhTW"] = "無法在戰鬥中打開選項面板。離開戰鬥後將自動打開。",
+    };
+    return tr(openOptionsAfterLeavingCombatTranslations);
+end
