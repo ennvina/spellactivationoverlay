@@ -630,6 +630,44 @@ function SAO:UnregisterEventHandler(handler, event, from)
 end
 
 --[[
+    Pending Operations
+]]
+
+local pendingOperations = {
+    ooc = {}, -- Out of Combat operations, executed when the player leaves combat
+};
+
+function SAO:AddPendingOperation(category, func, ...)
+    if type(category) ~= "string" or pendingOperations[category] == nil then
+        self:Error(Module, "Invalid pending operation category "..tostring(category));
+    elseif type(func) ~= "function" then
+        self:Error(Module, "Invalid pending operation function "..tostring(func).." for category "..tostring(category));
+    else
+        table.insert(pendingOperations[category], { func=func, args={...} });
+    end
+end
+
+function SAO:ExecutePendingOperations(category)
+    if type(category) ~= "string" or pendingOperations[category] == nil then --[[BEGIN_DEV_ONLY]]
+        self:Error(Module, "Invalid pending operation category "..tostring(category));
+    else --[[END_DEV_ONLY]]
+        local operations = pendingOperations[category];
+        if operations.executing then
+            self:Warn(Module, "Recursive execution of pending operations for category "..tostring(category));
+            return;
+        end
+        operations.executing = true;
+
+        for _, op in ipairs(operations) do
+            op.func(unpack(op.args));
+        end
+
+        operations.executing = nil;
+        pendingOperations[category] = {};
+    end --[[DEV_ONLY]]
+end
+
+--[[
     GlowInterface generalizes how to invoke custom glowing buttons
 
     Inheritance is done by the bind function, then init must be called e.g.
