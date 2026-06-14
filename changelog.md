@@ -1,12 +1,12 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.7.4-beta (2026-06-xx)
+#### v2.7.4 (2026-06-xx)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - Sofpokito for reporting Warrior issues and testing fixes
-- laynerz for reporting Mage issues with extensive screenshots
-- 떡반죽 for reporting DK, Warrior, Paladin, Monk and Druid issues
-- Moosi_13 for Priest, Warrior and Paladin issues
+- laynerz for reporting Mage issues with extensive screenshots and for testing
+- 떡반죽 for reporting DK, Warrior, Paladin, Monk and Druid issues and for testing
+- Moosi_13 for reporting Priest, Warrior and Paladin issues
 - YoungChreezy for reporting Hunter issues
 
 A workaround has been implemented to fix an in-game glowing buttons issue
@@ -24,6 +24,7 @@ The following glowing buttons have been added temporarily
 - Death Knight's Frost Strike, during Killing Machine
 - Death Knight's Obliterate, during Killing Machine
 - Death Knight's Blood Boil, during Crimson Scourge
+- Death Knight's Death and Decay, during Crimson Scourge
 - Death Knight's Dark Transformation
 - Death Knight's Death Coil, during Sudden Doom
 - Death Knight's Rune Tap, during Will of the Necropolis
@@ -58,6 +59,7 @@ The following glowing buttons have been added temporarily
 - Warrior's Execute
 - Warrior's Revenge
 - Warrior's Raging Blow, while Enraged
+- Warrior's Colossus Smash, during Sudden Death
 - Warrior's Wild Strike, during Bloodsurge
 - Warrior's Shield Slam, during Sword and Board
 - Warrior's Heroic Strike, during Ultimatum
@@ -75,8 +77,9 @@ New Glowing Button
 - Hunter's Kill Command (The Burning Crusade)
 
 Bug Fixes
-- Paladin's Exorcism now triggers if the target is Demon or Undead (Era, TBC)
-- Previously, Exorcism triggered if the target was neither Demon nor Undead
+- Paladin's The Art of War now displays its Spell Alert (Mists of Pandaria)
+- Paladin's Exorcism now triggers if the target is Demon or Undead\* (Era, TBC)
+\* Previously, Exorcism triggered independently of the target's creature type
 
 #### v2.7.3 (2026-06-07)
 

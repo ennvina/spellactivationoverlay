@@ -554,6 +554,7 @@ local function useSuddenDeath()
                 [SAO.SOD] = execute,
                 [SAO.WRATH] = execute,
                 [SAO.CATA] = colossusSmash,
+                [SAO.MOP] = { spellID = colossusSmash, option = { isNative = true } }, -- Button already glowing natively
             },
         }
     );
