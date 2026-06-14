@@ -4,6 +4,9 @@
 
 The following glowing buttons have been added temporarily (Mists of Pandaria)
 - Priest's Shadow Word: Death
+- Priest's Power Word: Shield, during Divine Insight
+- Priest's Praryer of Mending, during Divine Insight
+- Priest's Mind Blast, during Divine Insight
 
 #### v2.7.4 (2026-06-14)
 

@@ -14,7 +14,9 @@ local innerFire = 588;
 local lesserHeal = 2050;
 local mindBlast = 8092;
 local mindSpike = 73510;
+local powerWordShield = 17;
 local prayerOfHealing = 596;
+local prayerOfMending = 33076;
 local shadowform = 15473;
 local smite = 585;
 local swDeath = 32379;
@@ -260,19 +262,19 @@ local function useDivineInsight()
             spec = "discipline",
             buff = 123266,
             texture = "serendipity",
---            button = powerWordShield,
+            button = powerWordShield,
         },
         {
             spec = "holy",
             buff = 123267,
             texture = "serendipity",
---            button = prayerOfMending,
+            button = prayerOfMending,
         },
         {
             spec = "shadow",
             buff = 124430,
             texture = "shadow_of_death",
---            button = mindBlast,
+            button = mindBlast,
         },
     };
 
@@ -290,7 +292,7 @@ local function useDivineInsight()
             "aura",
             {
                 overlay = { texture = divineInsight.texture, position = "Top", option = { subText = subText } },
---                button = { spellID = divineInsight.button, option = { talentSubText = subText } },
+                button = { spellID = divineInsight.button, option = { talentSubText = subText, isNative = true } },
             }
         );
     end
