@@ -711,11 +711,28 @@ cdup
 }
 
 mkbaseproject
-release_vanilla
-release_tbc
-release_wrath
-release_cata
-release_mop
-release_retail
-release_universal
-release_necrosis
+# If no argument is passed, release all flavors; otherwise, release only the flavors passed as arguments
+if [ $# -eq 0 ]; then
+    release_vanilla
+    release_tbc
+    release_wrath
+    release_cata
+    release_mop
+    release_retail
+    release_universal
+    release_necrosis
+else
+    for flavor in "$@"; do
+        case $flavor in
+            vanilla) release_vanilla ;;
+            tbc) release_tbc ;;
+            wrath) release_wrath ;;
+            cata) release_cata ;;
+            mop) release_mop ;;
+            retail) release_retail ;;
+            universal) release_universal ;;
+            necrosis) release_necrosis ;;
+            *) printf '\n==== %s ====\n' "${flavor^^}"; bye "Unknown flavor '$flavor'" ;;
+        esac
+    done
+fi
