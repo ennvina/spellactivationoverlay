@@ -4,6 +4,7 @@
 ### :hunter:  Hunter
 New Spell Alert
 - Kill Command (The Burning Crusade)
+
 New Glowing Button
 - Kill Command (The Burning Crusade)
 ## Bug Fixes
@@ -78,7 +79,7 @@ The following glowing buttons have been added temporarily
   - Heroic Strike, during Ultimatum
   - Cleave, during Ultimatum
 ## Known Limitations
-It is possible that the above fixes do not work exactly as the game client. These fixes already required a ton of work, doing better would be even worse. Again, this is a bandaid to help Blizzard, please don't shoot the medic, thank you :)
+It is possible that the above fixes do not work exactly as the game client. These fixes already required a ton of work, doing better would be even worse. Again, this is a band-aid to help Blizzard, please don't shoot the medic, thank you :innocent:
 ## Contributors
 Shout-out to our amazing contributors
 - Sofpokito for reporting Warrior issues and testing fixes
@@ -86,6 +87,7 @@ Shout-out to our amazing contributors
 - 떡반죽 for reporting Death Knight, Warrior, Paladin, Monk and Druid issues
 - Moosi_13 for reporting Priest, Warrior and Paladin issues
 - YoungChreezy for reporting Hunter issues
+
 Thanks!
 
 As always, the latest release is available on [CurseForge](https://www.curseforge.com/wow/addons/spellactivationoverlay) / [GitHub](https://github.com/ennvina/spellactivationoverlay/releases/latest) / [Discord](https://discord.com/channels/1013194771969355858/1379111832207228938)
