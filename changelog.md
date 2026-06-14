@@ -77,6 +77,7 @@ New Glowing Button
 - Hunter's Kill Command (The Burning Crusade)
 
 Bug Fixes
+- Opening the options panel is delayed after leaving combat (Mists of Pandaria)
 - Paladin's The Art of War now displays its Spell Alert (Mists of Pandaria)
 - Paladin's Exorcism now triggers if the target is Demon or Undead\* (Era, TBC)
 \* Previously, Exorcism triggered independently of the target's creature type

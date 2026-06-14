@@ -7,8 +7,12 @@ New Spell Alert
 New Glowing Button
 - Kill Command (The Burning Crusade)
 ## Bug Fixes
+### Options Panel
+Opening the options panel is delayed after leaving combat (Mists of Pandaria).
+
+_Developer's Note: This delay is annoying but it became mandatory with Siege of Orgrimmar patch for Mists of Pandaria Classic. Not delaying would cause an error when opening the options panel while in combat. Based on how Blizzard updates their game client over time, this is probably just the beginning. Expect other flavors to be affected by the same issue in the long run._
 ### :paladin:  Paladin
-Exorcism now triggers if the target is Demon or Undead (Era, The Burning Crusade).
+Exorcism now triggers if the target is Demon or Undead (Classic Era, The Burning Crusade).
 Previously, Exorcism triggered for all targets, even if the target was neither Demon nor Undead.
 ### Glowing Buttons
 A workaround has been implemented to fix an in-game glowing buttons issue (Mists of Pandaria).

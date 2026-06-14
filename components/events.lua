@@ -24,6 +24,7 @@ end
 function SAO.PLAYER_REGEN_ENABLED(self, ...)
     local inCombat = false; -- Cannot rely on InCombatLockdown() at this point
     self:ForEachBucket(function(bucket) bucket:checkCombat(inCombat) end);
+    self:ExecutePendingOperations("ooc");
 end
 
 function SAO.PLAYER_REGEN_DISABLED(self, ...)
