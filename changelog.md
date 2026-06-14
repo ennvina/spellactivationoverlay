@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.7.4 (2026-06-xx)
+#### v2.7.4 (2026-06-14)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - Sofpokito for reporting Warrior issues and testing fixes
