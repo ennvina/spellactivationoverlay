@@ -216,15 +216,18 @@ local function useShadowform()
 end
 
 local function useShadowWordDeath()
+    local execThreshold = SAO.IsProject(SAO.MOP_AND_ONWARD) and 20 or 25; -- MoP+ has a lower threshold than previous expansions
+
     SAO:CreateEffect(
         "sw_death",
+        SAO.MOP_AND_ONWARD + -- isNative = true (button already glowing natively by the game client in MoP)
         SAO.CATA,
         swDeath,
         "counter",
         {
             useExecute = true,
-            execThreshold = 25,
-            buttonOption = { spellSubText = SAO:ExecuteBelow(25) },
+            execThreshold = execThreshold,
+            buttonOption = { spellSubText = SAO:ExecuteBelow(execThreshold) },
         }
     );
 end

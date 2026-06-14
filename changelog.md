@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.7.5 (2026-06-xx)
+
+The following glowing buttons have been added temporarily (Mists of Pandaria)
+- Priest's Shadow Word: Death
+
 #### v2.7.4 (2026-06-14)
 
 Thank you to our amazing contributors for helping out. Thanks!
