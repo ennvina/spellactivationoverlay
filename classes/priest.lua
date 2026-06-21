@@ -14,7 +14,9 @@ local innerFire = 588;
 local lesserHeal = 2050;
 local mindBlast = 8092;
 local mindSpike = 73510;
+local powerWordShield = 17;
 local prayerOfHealing = 596;
+local prayerOfMending = 33076;
 local shadowform = 15473;
 local smite = 585;
 local swDeath = 32379;
@@ -216,15 +218,18 @@ local function useShadowform()
 end
 
 local function useShadowWordDeath()
+    local execThreshold = SAO.IsProject(SAO.MOP_AND_ONWARD) and 20 or 25; -- MoP+ has a lower threshold than previous expansions
+
     SAO:CreateEffect(
         "sw_death",
+        SAO.MOP_AND_ONWARD + -- isNative = true (button already glowing natively by the game client in MoP)
         SAO.CATA,
         swDeath,
         "counter",
         {
             useExecute = true,
-            execThreshold = 25,
-            buttonOption = { spellSubText = SAO:ExecuteBelow(25) },
+            execThreshold = execThreshold,
+            buttonOption = { spellSubText = SAO:ExecuteBelow(execThreshold) },
         }
     );
 end
@@ -257,19 +262,19 @@ local function useDivineInsight()
             spec = "discipline",
             buff = 123266,
             texture = "serendipity",
---            button = powerWordShield,
+            button = powerWordShield,
         },
         {
             spec = "holy",
             buff = 123267,
             texture = "serendipity",
---            button = prayerOfMending,
+            button = prayerOfMending,
         },
         {
             spec = "shadow",
             buff = 124430,
             texture = "shadow_of_death",
---            button = mindBlast,
+            button = mindBlast,
         },
     };
 
@@ -287,7 +292,7 @@ local function useDivineInsight()
             "aura",
             {
                 overlay = { texture = divineInsight.texture, position = "Top", option = { subText = subText } },
---                button = { spellID = divineInsight.button, option = { talentSubText = subText } },
+                button = { spellID = divineInsight.button, option = { talentSubText = subText, isNative = true } },
             }
         );
     end
