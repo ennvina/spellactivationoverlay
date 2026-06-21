@@ -58,130 +58,100 @@ end
     Migration functions
 ]]
 
--- Migrate from pre-091 to 091 or higher
-local function migrateTo091(db)
+local migrations = {
+    {"0.9.1", function(db)
+        -- Warrior glowing buttons changed from boolean to string
+        local warriorSpells = {
+            7384, -- Overpower
+            6572, -- Revenge
+            5308, -- Execute
+        }
+        for _, spellID in ipairs(warriorSpells) do
+            promoteOptionFromBoolToString(db, "WARRIOR", "glow", spellID, spellID);
+        end
 
-    -- Warrior glowing buttons changed from boolean to string
-    local warriorSpells = {
-        7384, -- Overpower
-        6572, -- Revenge
-        5308, -- Execute
-    }
-    for _, spellID in ipairs(warriorSpells) do
-        promoteOptionFromBoolToString(db, "WARRIOR", "glow", spellID, spellID);
-    end
+        -- Classic Era mages probably want Clearcasting by default, because it's the only proc available
+        if SAO.IsEra() then
+            db.classes["MAGE"]["alert"][12536][0] = SAO.defaults.classes["MAGE"]["alert"][12536][0];
+        end
+    end},
 
-    -- Classic Era mages probably want Clearcasting by default, because it's the only proc available
-    if SAO.IsEra() then
-        db.classes["MAGE"]["alert"][12536][0] = SAO.defaults.classes["MAGE"]["alert"][12536][0];
-    end
+    {"1.1.2", function(db)
+        -- Rogue Riposte options changed from boolean to string
+        local riposte = 14251;
+        promoteOptionFromBoolToString(db, "ROGUE", "alert", riposte, 0);
+        promoteOptionFromBoolToString(db, "ROGUE", "glow", riposte, riposte);
+    end},
 
-    SAO:Info(Module, SAO:migratedOptions("0.9.1"));
-end
+    {"1.3.1", function(db)
+        -- Cataclysm introduced Pyroblast!, a variant from Pyroblast (notice the bang '!' character in the former spell name)
+        -- We copy options from Pyroblast to Pyroblast!, because we assume mages want to keep the same option
+        local hotStreak = 48108;
+        local pyro = 11366;
+        local pyroBang = 92315;
+        transferOption(db, "MAGE", "glow", hotStreak, pyro, hotStreak, pyroBang);
 
--- Migrate from pre-091 to 091 or higher
-local function migrateTo112(db)
+        -- Same for Fingers of Frost, which has a new spell ID, because the effect was reworked
+        local fingersOfFrostWrath = 74396;
+        local fingersOfFrostCata = 44544;
+        local iceLance = 30455;
+        local deepFreeze = 44572;
+        transferOption(db, "MAGE", "alert", fingersOfFrostWrath, 0, fingersOfFrostCata, 0);
+        transferOption(db, "MAGE", "glow", fingersOfFrostWrath, iceLance, fingersOfFrostCata, iceLance);
+        transferOption(db, "MAGE", "glow", fingersOfFrostWrath, deepFreeze, fingersOfFrostCata, deepFreeze);
+    end},
 
-    -- Rogue Riposte options changed from boolean to string
-    local riposte = 14251;
-    promoteOptionFromBoolToString(db, "ROGUE", "alert", riposte, 0);
-    promoteOptionFromBoolToString(db, "ROGUE", "glow", riposte, riposte);
+    {"1.4.0", function(db)
+        -- Priest's Serendipity in Cataclysm has 2 stacks at most (down from 3 in Wrath)
+        -- We copy options from Wrath:0/3 to Cataclysm:1/2, because we assume priests want to transfer these settings
+        local serendipityWrath = 63734;
+        local serendipityCata = 63735;
+        local greaterHeal = 2060;
+        local prayerOfHealing = 596;
+        transferOption(db, "PRIEST", "alert", serendipityWrath, 0, serendipityCata, 1);
+        transferOption(db, "PRIEST", "alert", serendipityWrath, 3, serendipityCata, 2);
+        transferOption(db, "PRIEST", "glow", serendipityWrath, greaterHeal, serendipityCata, greaterHeal);
+        transferOption(db, "PRIEST", "glow", serendipityWrath, prayerOfHealing, serendipityCata, prayerOfHealing);
+    end},
 
-    SAO:Info(Module, SAO:migratedOptions("1.1.2"));
-end
+    {"1.4.3", function(db)
+        -- Priest's Surge of Lightning in Cataclysm triggers a new version of Flash Heal
+        local surgeOfLightWrath = 33151;
+        local surgeOfLightCata = 88688;
+        local flashHeal = 2061;
+        local flashHealNoMana = 101062;
+        transferOption(db, "PRIEST", "glow", surgeOfLightWrath, flashHeal, surgeOfLightCata, flashHealNoMana);
+    end},
 
--- Migrate from pre-131 to 131 or higher
-local function migrateTo131(db)
+    {"2.5.0", function(db)
+        -- Priest's Surge of Lightning in Mists of Pandaria triggers again the normal Flash Heal, but uses another buff
+        local surgeOfLightCata = 88688;
+        local surgeOfLightMoP = 114255;
+        local flashHealNoMana = 101062;
+        local flashHeal = 2061;
+        transferOption(db, "PRIEST", "alert", surgeOfLightCata, 0, surgeOfLightMoP, 0);
+        transferOption(db, "PRIEST", "glow", surgeOfLightCata, flashHealNoMana, surgeOfLightMoP, flashHeal);
+    end},
 
-    -- Cataclysm introduced Pyroblast!, a variant from Pyroblast (notice the bang '!' character in the former spell name)
-    -- We copy options from Pyroblast to Pyroblast!, because we assume mages want to keep the same option
-    local hotStreak = 48108;
-    local pyro = 11366;
-    local pyroBang = 92315;
-    transferOption(db, "MAGE", "glow", hotStreak, pyro, hotStreak, pyroBang);
+    {"2.5.7", function(db)
+        -- Shaman's Lava Burst glowing button should be disabled by default starting from Mists of Pandaria
+        if SAO.IsProject(SAO.MOP_AND_ONWARD) then
+            local lavaBurst = 51505;
+            retrogradeOption(db, "SHAMAN", "glow", lavaBurst, lavaBurst);
+        end
+    end},
 
-    -- Same for Fingers of Frost, which has a new spell ID, because the effect was reworked
-    local fingersOfFrostWrath = 74396;
-    local fingersOfFrostCata = 44544;
-    local iceLance = 30455;
-    local deepFreeze = 44572;
-    transferOption(db, "MAGE", "alert", fingersOfFrostWrath, 0, fingersOfFrostCata, 0);
-    transferOption(db, "MAGE", "glow", fingersOfFrostWrath, iceLance, fingersOfFrostCata, iceLance);
-    transferOption(db, "MAGE", "glow", fingersOfFrostWrath, deepFreeze, fingersOfFrostCata, deepFreeze);
-
-    SAO:Info(Module, SAO:migratedOptions("1.3.1"));
-end
-
--- Migrate from pre-140 to 140 or higher
-local function migrateTo140(db)
-
-    -- Priest's Serendipity in Cataclysm has 2 stacks at most (down from 3 in Wrath)
-    -- We copy options from Wrath:0/3 to Cataclysm:1/2, because we assume priests want to transfer these settings
-    local serendipityWrath = 63734;
-    local serendipityCata = 63735;
-    local greaterHeal = 2060;
-    local prayerOfHealing = 596;
-    transferOption(db, "PRIEST", "alert", serendipityWrath, 0, serendipityCata, 1);
-    transferOption(db, "PRIEST", "alert", serendipityWrath, 3, serendipityCata, 2);
-    transferOption(db, "PRIEST", "glow", serendipityWrath, greaterHeal, serendipityCata, greaterHeal);
-    transferOption(db, "PRIEST", "glow", serendipityWrath, prayerOfHealing, serendipityCata, prayerOfHealing);
-
-    SAO:Info(Module, SAO:migratedOptions("1.4.0"));
-end
-
--- Migrate from pre-143 to 143 or higher
-local function migrateTo143(db)
-
-    -- Priest's Surge of Lightning in Cataclysm triggers a new version of Flash Heal
-    local surgeOfLightWrath = 33151;
-    local surgeOfLightCata = 88688;
-    local flashHeal = 2061;
-    local flashHealNoMana = 101062;
-    transferOption(db, "PRIEST", "glow", surgeOfLightWrath, flashHeal, surgeOfLightCata, flashHealNoMana);
-
-    SAO:Info(Module, SAO:migratedOptions("1.4.3"));
-end
-
--- Migrate from pre-250 to 250 or higher
-local function migrateTo250(db)
-
-    -- Priest's Surge of Lightning in Mists of Pandaria triggers again the normal Flash Heal, but uses another buff
-    local surgeOfLightCata = 88688;
-    local surgeOfLightMoP = 114255;
-    local flashHealNoMana = 101062;
-    local flashHeal = 2061;
-    transferOption(db, "PRIEST", "alert", surgeOfLightCata, 0, surgeOfLightMoP, 0);
-    transferOption(db, "PRIEST", "glow", surgeOfLightCata, flashHealNoMana, surgeOfLightMoP, flashHeal);
-
-    SAO:Info(Module, SAO:migratedOptions("2.5.0"));
-end
-
--- Migrate from pre-257 to 257 or higher
-local function migrateTo257(db)
-
-    -- Shaman's Lava Burst glowing button should be disabled by default starting from Mists of Pandaria
-    if SAO.IsProject(SAO.MOP_AND_ONWARD) then
-        local lavaBurst = 51505;
-        retrogradeOption(db, "SHAMAN", "glow", lavaBurst, lavaBurst);
-    end
-
-    SAO:Info(Module, SAO:migratedOptions("2.5.7"));
-end
-
--- Migrate from pre-275 to 275 or higher
-local function migrateTo275(db)
-    -- Era/TBC/Wrath Shaman Elemental Focus option changed from boolean to string
-    if SAO.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH) then
-        local elemantalFocus = 16246;
-        promoteOptionFromBoolToString(db, "SHAMAN", "alert", elemantalFocus, 0);
-    end
-
-    SAO:Info(Module, SAO:migratedOptions("2.7.5"));
-end
+    {"2.7.5", function(db)
+        -- Era/TBC/Wrath Shaman Elemental Focus option changed from boolean to string
+        if SAO.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH) then
+            local elemantalFocus = 16246;
+            promoteOptionFromBoolToString(db, "SHAMAN", "alert", elemantalFocus, 0);
+        end
+    end},
+}
 
 -- Load database and use default values if needed
 function SAO.LoadDB(self)
-    local currentversion = 275;
     local db = SpellActivationOverlayDB or {};
 
     if not db.alert then
@@ -206,7 +176,7 @@ function SAO.LoadDB(self)
     end
     if (type(db.alert.sound) == "nil") then
         -- Enable sound by default in Cataclysm, where the "PowerAura" sound effect was added
-        db.alert.sound = not self.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH) and 1 or 0;
+        db.alert.sound = self.IsProject(SAO.CATA_AND_ONWARD) and 1 or 0;
     end
 
     if not db.glow then
@@ -240,32 +210,41 @@ function SAO.LoadDB(self)
     end
 
     -- Migration from older versions
-    if not db.version or db.version < 091 then
-        migrateTo091(db);
+    -- Each version string has 2 dots (e.g. 1.2.3) -> compute a number as if taling about gold/silver/copper coins, capped at 99 each
+    -- For example: 1.2.3 -> 1g 2s 3c -> 1*100*100 + 2*100 + 3 -> 10203
+    if db.version and db.version < 1000 then
+        -- Versions before 2.7.5 used a different versioning system, so we need to convert it to the new system
+        -- For example, version 1.2.3 was 123 in the old system, and should be converted to 10203
+        db.version = math.floor(db.version / 100) * 10000 + math.floor((db.version % 100) / 10) * 100 + (db.version % 10);
     end
-    if not db.version or db.version < 112 then
-        migrateTo112(db);
-    end
-    if not db.version or db.version < 131 then
-        migrateTo131(db);
-    end
-    if not db.version or db.version < 140 then
-        migrateTo140(db);
-    end
-    if not db.version or db.version < 143 then
-        migrateTo143(db);
-    end
-    if not db.version or db.version < 250 then
-        migrateTo250(db);
-    end
-    if not db.version or db.version < 257 then
-        migrateTo257(db);
-    end
-    if not db.version or db.version < 275 then
-        migrateTo275(db);
+    local highestAppliedVersion = db.version or 0;
+    for _, migration in ipairs(migrations) do
+        local version, func = migration[1], migration[2];
+
+        -- Convert version string to its coin value, as total copper coins
+        local coins = { strsplit(".", version) };
+        local copper = 0;
+        for i = 1, 3 do
+            local coin = tonumber(coins[i]);
+            if (coin > 99) then --[[BEGIN_DEV_ONLY]]
+                SAO:Warn(Module, string.format("Coin value %d exceeds maximum of 99", coin));
+            end --[[END_DEV_ONLY]]
+            copper = copper * 100 + coin;
+        end
+
+        -- Apply migration function, if applicable
+        if not db.version or db.version < copper then
+            func(db);
+            SAO:Info(Module, SAO:migratedOptions(version));
+        end
+
+        -- Update highest known version
+        if copper > highestAppliedVersion then
+            highestAppliedVersion = copper;
+        end
     end
 
-    db.version = currentversion;
+    db.version = highestAppliedVersion;
     SpellActivationOverlayDB = db;
 
     -- At the very end, register the class

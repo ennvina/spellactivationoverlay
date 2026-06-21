@@ -18,6 +18,7 @@
         "strjoin",
         "strlenutf8",
         "strlower",
+        "strsplit",
         "strupper",
         "tContains",
         "tDeleteItem",
