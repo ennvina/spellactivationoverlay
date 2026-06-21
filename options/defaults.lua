@@ -940,7 +940,12 @@ SAO.defaults = {
     },
 }
 
-if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+if SAO.IsEra() then
     -- Options that have different default values for Classic Era
-    SAO.defaults.classes["MAGE"]["alert"][12536][0] = "genericarc_05";
+    SAO.defaults.classes["MAGE"]["alert"][12536][0] = "genericarc_05"; -- Clearcasting
+end
+
+if SAO.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH) then
+    -- Options that have different default values for Classic Era, The Burning Crusade, and Wrath of the Lich King
+    SAO.defaults.classes["SHAMAN"]["alert"][16246][0] = "echo_of_the_elements"; -- Elemental Focus
 end

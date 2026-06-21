@@ -16,9 +16,42 @@ local lavaBurstSoD = 408490;
 local lesserHealingWave = 8004; -- Renamed Healing Surge in Cataclysm; keep the former name to make the effects easier to design
 local lightningBolt = 403;
 
+local elementalFocusVariants; -- Lazy init in lazyCreateElementalFocusVariants()
+local function lazyCreateElementalFocusVariants(self)
+    if elementalFocusVariants then
+        return;
+    end
+
+    if self.IsProject(SAO.CATA_AND_ONWARD) then
+        -- Starting from Cataclysm, Elemental Focus always shares Clearcasting texture with other classes
+        -- Because of that, Elemental Focus no longer has 'variants' in Cataclysm and onward
+        return;
+    end
+
+    local spellID = 16246; -- Clearcasting (buff)
+
+    local textureVariant1 = "genericarc_05";
+    local textureVariant2 = "echo_of_the_elements";
+
+    self:MarkTexture(textureVariant1);
+    self:MarkTexture(textureVariant2);
+
+    local weakText = PET_BATTLE_COMBAT_LOG_DAMAGE_WEAK:gsub("[ ()]","");
+    local strongText = PET_BATTLE_COMBAT_LOG_DAMAGE_STRONG:gsub("[ ()]","");
+
+    elementalFocusVariants = self:CreateTextureVariants(spellID, 0, {
+        self:TextureVariantValue(textureVariant1, false, weakText),
+        self:TextureVariantValue(textureVariant2, false, strongText),
+    });
+end
+
 local function useElementalFocus(self)
     local hash0Stacks = self:HashNameFromStacks(0);
     local hash2Stacks = self:HashNameFromStacks(2);
+
+    lazyCreateElementalFocusVariants(self);
+    local texture = elementalFocusVariants and elementalFocusVariants.textureFunc or "genericarc_05";
+    local variants = elementalFocusVariants or nil;
 
     -- Elemental Focus has 2 charges on TBC and beyond
     self:CreateEffect(
@@ -29,15 +62,15 @@ local function useElementalFocus(self)
         {
             talent = 16164, -- Elemental Focus (talent)
             overlays = {
-                { stacks = 1, texture = "genericarc_05", position = "Left", scale = 1.5, pulse = false, option = false },
-                { stacks = 2, texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.5, pulse = false, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
+                { stacks = 1, texture = texture, position = "Left", scale = 1.5, pulse = false, option = false },
+                { stacks = 2, texture = texture, position = "Left + Right (Flipped)", scale = 1.5, pulse = false, option = { setupHash = hash0Stacks, testHash = hash2Stacks, variants = variants } },
             },
         }
     );
 
     if self.IsEra() and not self.IsSoD() then
         -- On non-SoD Era, Elemental Focus is simply displayed Left and Right
-        self:RegisterAura("elemental_focus", 0, 16246, "genericarc_05", "Left + Right (Flipped)", 1.25, 255, 255, 255, false);
+        self:RegisterAura("elemental_focus", 0, 16246, texture, "Left + Right (Flipped)", 1.25, 255, 255, 255, false);
     end
 end
 
@@ -341,7 +374,8 @@ local function loadOptions(self)
         local elementalFocusBuff = 16246;
         local elementalFocusTalent = 16164;
 
-        self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff);
+        lazyCreateElementalFocusVariants(self);
+        self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff, 0, nil, elementalFocusVariants);
     end
 
     self:AddEyeOfGruulOverlayOption(37722); -- 37722 = Shaman buff
