@@ -379,6 +379,23 @@ local function useSupplication()
     );
 end
 
+local function useSelflessHealer()
+    if false
+    or SAO.IsProject(SAO.MOP_AND_ONWARD) -- Keep this comment for isNative = true
+    then
+        SAO:CreateEffect(
+            "selfless_healer",
+            SAO.MOP_AND_ONWARD,
+            114250, -- Selfless Healer (buff)
+            "aura",
+            {
+                talent = 85804, -- Selfless Healer (talent)
+                button = { spellID = flashOfLight, stacks = 3, option = { isNative = true } }, -- Button already glowing natively by the game client
+            }
+        );
+    end
+end
+
 local function registerClass(self)
     -- Holy Power tracking
     useHolyPowerTracker();
@@ -416,6 +433,9 @@ local function registerClass(self)
 
     -- Passive abilities
     useSupplication();
+
+    -- Talents
+    useSelflessHealer();
 end
 
 local function loadOptions(self)

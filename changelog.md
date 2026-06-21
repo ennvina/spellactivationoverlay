@@ -1,5 +1,17 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.7.5 (2026-06-xx)
+
+Thank you to our amazing contributors for helping out. Thanks!
+- Moosi_13 for reporting Priest and Paladin issues
+
+The following glowing buttons have been added temporarily (Mists of Pandaria)
+- Paladin's Flash of Light, while Selfless Healer is at 3 stacks
+- Priest's Shadow Word: Death
+- Priest's Power Word: Shield, during Divine Insight
+- Priest's Praryer of Mending, during Divine Insight
+- Priest's Mind Blast, during Divine Insight
+
 #### v2.7.4 (2026-06-14)
 
 Thank you to our amazing contributors for helping out. Thanks!
