@@ -31,6 +31,33 @@ local applyDefaultClassData = function(classData, defaultClassData)
     end
 end
 
+--[[
+    Utility functions to change a database option
+]]
+
+-- Transfer option between two different aura IDs and/or node IDs
+local function transferOption(db, classFile, optionType, oldAuraID, oldNodeID, newAuraID, newNodeID)
+    if type(db.classes[classFile][optionType][oldAuraID][oldNodeID]) ~= 'nil' and type(db.classes[classFile][optionType][newAuraID][newNodeID]) == 'nil' then
+        db.classes[classFile][optionType][newAuraID][newNodeID] = db.classes[classFile][optionType][oldAuraID][oldNodeID];
+    end
+end
+
+-- Forcefully disable an option from the database, even if the player had enabled it
+local function retrogradeOption(db, classFile, optionType, auraID, nodeID)
+    db.classes[classFile][optionType][auraID][nodeID] = false;
+end
+
+-- Promote an option from bool to string
+local function promoteOptionFromBoolToString(db, classFile, optionType, auraID, nodeID)
+    if db.classes[classFile][optionType][auraID][nodeID] == true and SAO.defaults.classes[classFile][optionType][auraID][nodeID] then
+        db.classes[classFile][optionType][auraID][nodeID] = SAO.defaults.classes[classFile][optionType][auraID][nodeID];
+    end
+end
+
+--[[
+    Migration functions
+]]
+
 -- Migrate from pre-091 to 091 or higher
 local function migrateTo091(db)
 
@@ -41,9 +68,7 @@ local function migrateTo091(db)
         5308, -- Execute
     }
     for _, spellID in ipairs(warriorSpells) do
-        if db.classes["WARRIOR"]["glow"][spellID][spellID] == true and SAO.defaults.classes["WARRIOR"]["glow"][spellID][spellID] then
-            db.classes["WARRIOR"]["glow"][spellID][spellID] = SAO.defaults.classes["WARRIOR"]["glow"][spellID][spellID];
-        end
+        promoteOptionFromBoolToString(db, "WARRIOR", "glow", spellID, spellID);
     end
 
     -- Classic Era mages probably want Clearcasting by default, because it's the only proc available
@@ -59,20 +84,10 @@ local function migrateTo112(db)
 
     -- Rogue Riposte options changed from boolean to string
     local riposte = 14251;
-    if db.classes["ROGUE"]["alert"][riposte][0] == true and SAO.defaults.classes["ROGUE"]["alert"][riposte][0] then
-        db.classes["ROGUE"]["alert"][riposte][0] = SAO.defaults.classes["ROGUE"]["alert"][riposte][0];
-    end
-    if db.classes["ROGUE"]["glow"][riposte][riposte] == true and SAO.defaults.classes["ROGUE"]["glow"][riposte][riposte] then
-        db.classes["ROGUE"]["glow"][riposte][riposte] = SAO.defaults.classes["ROGUE"]["glow"][riposte][riposte];
-    end
+    promoteOptionFromBoolToString(db, "ROGUE", "alert", riposte, 0);
+    promoteOptionFromBoolToString(db, "ROGUE", "glow", riposte, riposte);
 
     SAO:Info(Module, SAO:migratedOptions("1.1.2"));
-end
-
-local function transferOption(db, classFile, optionType, oldAuraID, oldNodeID, newAuraID, newNodeID)
-    if type(db.classes[classFile][optionType][oldAuraID][oldNodeID]) ~= 'nil' and type(db.classes[classFile][optionType][newAuraID][newNodeID]) == 'nil' then
-        db.classes[classFile][optionType][newAuraID][newNodeID] = db.classes[classFile][optionType][oldAuraID][oldNodeID];
-    end
 end
 
 -- Migrate from pre-131 to 131 or higher
@@ -146,15 +161,27 @@ local function migrateTo257(db)
 
     -- Shaman's Lava Burst glowing button should be disabled by default starting from Mists of Pandaria
     if SAO.IsProject(SAO.MOP_AND_ONWARD) then
-        db.classes["SHAMAN"]["glow"][51505][51505] = false; -- 51505 = Lava Burst
+        local lavaBurst = 51505;
+        retrogradeOption(db, "SHAMAN", "glow", lavaBurst, lavaBurst);
     end
 
     SAO:Info(Module, SAO:migratedOptions("2.5.7"));
 end
 
+-- Migrate from pre-275 to 275 or higher
+local function migrateTo275(db)
+    -- Era/TBC/Wrath Shaman Elemental Focus option changed from boolean to string
+    if SAO.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH) then
+        local elemantalFocus = 16246;
+        promoteOptionFromBoolToString(db, "SHAMAN", "alert", elemantalFocus, 0);
+    end
+
+    SAO:Info(Module, SAO:migratedOptions("2.7.5"));
+end
+
 -- Load database and use default values if needed
 function SAO.LoadDB(self)
-    local currentversion = 257;
+    local currentversion = 275;
     local db = SpellActivationOverlayDB or {};
 
     if not db.alert then
@@ -233,6 +260,9 @@ function SAO.LoadDB(self)
     end
     if not db.version or db.version < 257 then
         migrateTo257(db);
+    end
+    if not db.version or db.version < 275 then
+        migrateTo275(db);
     end
 
     db.version = currentversion;
