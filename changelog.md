@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.7.5 (2026-06-xx)
+#### v2.7.5 (2026-06-21)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - Moosi_13 for reporting Priest and Paladin issues
