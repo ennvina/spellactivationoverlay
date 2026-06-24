@@ -345,7 +345,6 @@ TEXTURES_NOT_FOR_WRATH=(
 arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
-echo_of_the_elements
 fulmination
 fury_of_stormrage_yellow
 maelstrom_weapon_6
@@ -389,7 +388,6 @@ arcane_missiles_3
 art_of_war
 blood_surge
 daybreak
-echo_of_the_elements
 fulmination
 fury_of_stormrage
 fury_of_stormrage_yellow
@@ -445,7 +443,6 @@ TEXTURES_NOT_FOR_VANILLA=(
 art_of_war
 backlash
 daybreak
-echo_of_the_elements
 fury_of_stormrage_yellow
 genericarc_04
 master_marksman

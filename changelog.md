@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.7.6 (2026-06-xx)
+
+Bug Fixes
+- Shaman's Elemental Focus was not always displayed (Era, TBC, Wrath)
+
 #### v2.7.5 (2026-06-21)
 
 Thank you to our amazing contributors for helping out. Thanks!
@@ -10,7 +15,7 @@ The following glowing buttons have been added temporarily (Mists of Pandaria)
 - Paladin's Flash of Light, while Selfless Healer is at 3 stacks
 - Priest's Shadow Word: Death
 - Priest's Power Word: Shield, during Divine Insight
-- Priest's Praryer of Mending, during Divine Insight
+- Priest's Prayer of Mending, during Divine Insight
 - Priest's Mind Blast, during Divine Insight
 
 Known Limitations
