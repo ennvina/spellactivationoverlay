@@ -613,7 +613,7 @@ function SpellActivationOverlayTexture_ShowCombatMask(anim)
 	SAO:Trace(Module, "SpellActivationOverlayTexture_ShowCombatMask "..tostring(anim));
 
 	local combat = anim:GetParent():GetParent();
-	combat:SetTexture("Interface/Addons/SpellActivationOverlay/textures/maskzero");
+	combat:SetTexture("Interface/AddOns/SpellActivationOverlay/textures/maskzero");
 
 	local overlay = combat:GetParent();
 	SAO:Debug(Module, "Showing combat mask for Overlay at location "..overlay.position.." for spell ID "..overlay.spellID.." "..SAO:GetSpellName(overlay.spellID, ""));
