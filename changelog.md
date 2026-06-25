@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.7.6 (2026-06-xx)
+#### v2.7.6 (2026-06-25)
 
 Bug Fixes
 - Shaman's Elemental Focus was not always displayed (Era, TBC, Wrath)
