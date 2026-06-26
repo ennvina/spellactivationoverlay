@@ -256,18 +256,22 @@ local function addOneOverlay(overlays, overlayConfig, project, default, triggers
     local condition = getCondition(overlayConfig, default, triggers);
 
     local texture = overlayConfig.texture or default.texture;
-    if type(texture) ~= 'string' then
+    if type(texture) ~= 'string'
+    and (type(texture) ~= 'function' or type(texture()) ~= 'string') then
+        -- Texture must be either a string or a function returning a string
         SAO:Error(Module, "Adding Overlay with invalid texture "..tostring(texture));
     end
 
     local position = overlayConfig.position or default.position;
     if type(position) ~= 'string' then
+        -- Position must be a string
         SAO:Error(Module, "Adding Overlay with invalid position "..tostring(position));
     end
 
     local option = overlayConfig.option;
     if option == nil then option = default.option; end
     if option ~= nil and type(option) ~= 'boolean' and type(option) ~= 'table' then
+        -- Option must be either nil or a boolean or a table
         SAO:Error(Module, "Adding Overlay with invalid option "..tostring(option));
     end
 
@@ -642,11 +646,11 @@ local function checkNativeEffect(effect)
                 hasStacksNonZero = true;
             end
         end
-        if type(overlay.texture) ~= 'string' then
+        if type(overlay.texture) ~= 'string' and (type(overlay.texture) ~= 'function' or type(overlay.texture()) ~= 'string') then
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid texture name "..tostring(overlay.texture));
             return false;
         end
-        if SAO.TexName[overlay.texture] == nil then
+        if type(overlay.texture) == 'string' and SAO.TexName[overlay.texture] == nil then
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with unknown texture name "..tostring(overlay.texture));
             return false;
         end
@@ -718,7 +722,7 @@ local function RegisterNativeEffectNow(self, effect)
             local overlayPod = {
                 stacks = nil, -- Not set, to use hash instead
                 spellID = spellID,
-                texture = SAO.TexName[texture], -- Map from TexName
+                texture = type(texture) == 'string' and SAO.TexName[texture] or texture, -- Map from TexName, unless texture is a function, in which case it is used as-is
                 position = position,
                 level = level,
                 scale = scale,
