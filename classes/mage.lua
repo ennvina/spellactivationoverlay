@@ -554,9 +554,6 @@ local function lazyCreateClearcastingVariants(self)
     local textureVariant1 = "genericarc_05";
     local textureVariant2 = "genericarc_02";
 
-    self:MarkTexture(textureVariant1);
-    self:MarkTexture(textureVariant2);
-
     local weakText = PET_BATTLE_COMBAT_LOG_DAMAGE_WEAK:gsub("[ ()]","");
     local strongText = PET_BATTLE_COMBAT_LOG_DAMAGE_STRONG:gsub("[ ()]","");
 
