@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.7.7 (2026-06-xx)
+#### v2.7.7 (2026-06-26)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - JonathanCheung for reporting the Shaman issue
