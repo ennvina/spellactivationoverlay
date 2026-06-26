@@ -101,7 +101,7 @@ SAO.TextureFilenameFromFullname = {}
 for retailTexture, classicTexture in pairs(mapping) do
   -- For now, all textures are copied locally in the addon's texture folder
   local filename = classicTexture:gsub(" ", "_"):gsub("'", "");
-  local fullTextureName = "Interface\\Addons\\SpellActivationOverlay\\textures\\"..filename;
+  local fullTextureName = "Interface\\AddOns\\SpellActivationOverlay\\textures\\"..filename;
   local retailNumber = tonumber(retailTexture, 10);
   if (
     (SAO.IsCata() and retailNumber <= 511469) -- Cataclysm game files embed textures up to (at least) 511469

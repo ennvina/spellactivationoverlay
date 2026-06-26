@@ -33,9 +33,6 @@ local function lazyCreateElementalFocusVariants(self)
     local textureVariant1 = "genericarc_05";
     local textureVariant2 = "echo_of_the_elements";
 
-    self:MarkTexture(textureVariant1);
-    self:MarkTexture(textureVariant2);
-
     local weakText = PET_BATTLE_COMBAT_LOG_DAMAGE_WEAK:gsub("[ ()]","");
     local strongText = PET_BATTLE_COMBAT_LOG_DAMAGE_STRONG:gsub("[ ()]","");
 

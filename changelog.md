@@ -1,5 +1,14 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.7.7 (2026-06-xx)
+
+Thank you to our amazing contributors for helping out. Thanks!
+- JonathanCheung for reporting the Shaman issue
+
+Bug Fixes
+- Shamans no longer get a Lua error at start (TBC, Wrath)
+- Incidentally, Elemental Focus really works this time
+
 #### v2.7.6 (2026-06-25)
 
 Bug Fixes
