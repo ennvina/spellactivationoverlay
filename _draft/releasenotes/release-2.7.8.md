@@ -10,9 +10,10 @@ New Spell Alerts
 New Glowing Buttons
 - 
 ## Bug Fixes
-The 'Write Debug to chatbox' option should no longer trigger Lua errors
-- Paladin (Classic Era, The Burning Crusade)
-- Warrior (Mists of Pandaria)
+### :paladin:  Paladin
+The 'Write Debug to chatbox' option should no longer trigger Lua errors (Classic Era, The Burning Crusade).
+### :warrior:  Warrior
+The 'Write Debug to chatbox' option should no longer trigger Lua errors (Mists of Pandaria).
 ## Known Limitations
 ## Miscellaneous
 ## Contributors
