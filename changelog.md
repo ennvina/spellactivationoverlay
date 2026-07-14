@@ -2,6 +2,12 @@
 
 #### v2.7.8 (2026-07-xx)
 
+Bump in TOC file for The Burning Crusade Anniversary
+
+The 'Write Debug to chatbox' option should no longer trigger Lua errors
+- Paladin (Classic Era, The Burning Crusade)
+- Warrior (Mists of Pandaria)
+
 #### v2.7.7 (2026-06-26)
 
 Thank you to our amazing contributors for helping out. Thanks!
