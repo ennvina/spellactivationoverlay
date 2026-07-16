@@ -4,6 +4,8 @@
 ## Game Updates
 This release bumps TOC file for The Burning Crusade Anniversary.
 ## Bug Fixes
+### Shaman
+Elemental Focus fancy visuals are correctly displayed when selected (Season of Discovery).
 ### Paladin
 The 'Write Debug to chatbox' option should no longer trigger Lua errors.
 
@@ -48,6 +50,8 @@ This release bumps TOC file for The Burning Crusade Anniversary.
 ## Bug Fixes
 ### Paladin
 The 'Write Debug to chatbox' option should no longer trigger Lua errors (Classic Era, The Burning Crusade).
+### Shaman
+Elemental Focus fancy visuals are correctly displayed when selected (Season of Discovery).
 ### Warrior
 The 'Write Debug to chatbox' option should no longer trigger Lua errors (Mists of Pandaria).
 
@@ -68,6 +72,8 @@ New Glowing Buttons
 ## Bug Fixes
 ### :paladin:  Paladin
 The 'Write Debug to chatbox' option should no longer trigger Lua errors (Classic Era, The Burning Crusade).
+### :shaman:  Shaman
+Elemental Focus fancy visuals are correctly displayed when selected (Season of Discovery).
 ### :warrior:  Warrior
 The 'Write Debug to chatbox' option should no longer trigger Lua errors (Mists of Pandaria).
 ## Known Limitations

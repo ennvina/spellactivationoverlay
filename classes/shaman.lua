@@ -315,6 +315,8 @@ local function usePowerSurge(self)
     local _, _, efTalentTab, efTalentIndex = SAO:GetTalentByName(self:GetSpellName(elementalFocusTalent));
     local powerSurgeSoDRune = 48829;
 
+    lazyCreateElementalFocusVariants(self);
+
     local powerSurgeRightTextureFunc = function()
         local hasElementalFocusOption = SpellActivationOverlayDB.classes["SHAMAN"]["alert"][elementalFocusBuff][0];
         local canProcElementalFocus = efTalentTab and efTalentIndex and self:GetNbTalentPoints(efTalentTab, efTalentIndex) > 0;
@@ -330,13 +332,13 @@ local function usePowerSurge(self)
         if hasPowerSurgeOption and canProcPowerSurge then
             return;
         end
-        return self.TexName["genericarc_05"];
+        return elementalFocusVariants and elementalFocusVariants.textureFunc() or self.TexName["genericarc_05"];
     end
 
     self:RegisterAura("power_surge_sod", 0, powerSurgeSoDBuff, "imp_empowerment", "Left", 1.25, 255, 255, 255, true, powerSurgeSpells);
     self:RegisterAura("power_surge_sod", 0, powerSurgeSoDBuff, powerSurgeRightTextureFunc, "Right (Flipped)", 1.25, 255, 255, 255, true, powerSurgeSpells);
     self:RegisterAura("elemental_focus", 0, elementalFocusBuff, elementalFocusLeftTextureFunc, "Left", 1.25, 255, 255, 255, false);
-    self:RegisterAura("elemental_focus", 0, elementalFocusBuff, "genericarc_05", "Right (Flipped)", 1.25, 255, 255, 255, false);
+    self:RegisterAura("elemental_focus", 0, elementalFocusBuff, elementalFocusVariants and elementalFocusVariants.textureFunc or "genericarc_05", "Right (Flipped)", 1.25, 255, 255, 255, false);
 
     SAO:CreateEffect(
         "power_surge_sod_heal",
