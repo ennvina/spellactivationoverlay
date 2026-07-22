@@ -14,6 +14,7 @@ New Spell Alerts
 - Shaman's Eye of the Storm (Classic Era, The Burning Crusade)
 
 Bug Fixes
+- The addon should no longer cause Lua errors since last patch (Classic Era)
 - Shaman's Elemental Focus displays selected visuals (Season of Discovery)
 
 #### v2.7.7 (2026-06-26)
