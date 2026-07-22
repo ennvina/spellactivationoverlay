@@ -19,11 +19,11 @@ The 'Write Debug to chatbox' option should no longer trigger Lua errors (Classic
 Elemental Focus fancy visuals are correctly displayed when selected (Season of Discovery).
 ### :warrior:  Warrior
 The 'Write Debug to chatbox' option should no longer trigger Lua errors (Mists of Pandaria).
-## Known Limitations
-## Miscellaneous
 ## Contributors
 Shout-out to our amazing contributors
-- 
+- LaD1x for suggesting the Eye of the Storm spell alert
+- Amanthuul for reporting the Elemental Focus issue
+- Metallic_Horizon, Simmehchan, Beef1, yttrium and CallMePreph for reporting the Classic Era patch issue
 Thanks!
 
 As always, the latest release is available on [CurseForge](https://www.curseforge.com/wow/addons/spellactivationoverlay) / [GitHub](https://github.com/ennvina/spellactivationoverlay/releases/latest) / [Discord](https://discord.com/channels/1013194771969355858/1379111832207228938)
