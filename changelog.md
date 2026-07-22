@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.7.8 (2026-07-xx)
+#### v2.7.8 (2026-07-22)
 
 Bump in TOC file for Classic Era
 Bump in TOC file for The Burning Crusade Anniversary
