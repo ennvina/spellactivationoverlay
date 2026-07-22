@@ -8,6 +8,12 @@ The 'Write Debug to chatbox' option should no longer trigger Lua errors
 - Paladin (Classic Era, The Burning Crusade)
 - Warrior (Mists of Pandaria)
 
+New Spell Alerts
+- Shaman's Eye of the Storm (Classic Era, The Burning Crusade)
+
+Bug Fixes
+- Shaman's Elemental Focus displays selected visuals (Season of Discovery)
+
 #### v2.7.7 (2026-06-26)
 
 Thank you to our amazing contributors for helping out. Thanks!

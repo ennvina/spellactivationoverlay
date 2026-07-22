@@ -3,6 +3,10 @@
 ## General
 ## Game Updates
 This release bumps TOC file for The Burning Crusade Anniversary.
+## Classes
+### Shaman
+New Spell Alert
+- Eye of the Storm
 ## Bug Fixes
 ### Shaman
 Elemental Focus fancy visuals are correctly displayed when selected (Season of Discovery).
@@ -15,6 +19,10 @@ The 'Write Debug to chatbox' option should no longer trigger Lua errors.
 ## General
 ## Game Updates
 This release bumps TOC file for The Burning Crusade Anniversary.
+## Classes
+### Shaman
+New Spell Alert
+- Eye of the Storm
 ## Bug Fixes
 ### Paladin
 The 'Write Debug to chatbox' option should no longer trigger Lua errors.
@@ -47,6 +55,10 @@ The 'Write Debug to chatbox' option should no longer trigger Lua errors.
 ## General
 ## Game Updates
 This release bumps TOC file for The Burning Crusade Anniversary.
+## Classes
+### Shaman
+New Spell Alert
+- Eye of the Storm (Classic Era, The Burning Crusade)
 ## Bug Fixes
 ### Paladin
 The 'Write Debug to chatbox' option should no longer trigger Lua errors (Classic Era, The Burning Crusade).
@@ -64,11 +76,9 @@ The 'Write Debug to chatbox' option should no longer trigger Lua errors (Mists o
 ## Game Updates
 This release bumps TOC file for The Burning Crusade Anniversary.
 ## Classes
-### :class:  Class
-New Spell Alerts
-- 
-New Glowing Buttons
-- 
+### :shaman:  Shaman
+New Spell Alert
+- Eye of the Storm (Classic Era, The Burning Crusade)
 ## Bug Fixes
 ### :paladin:  Paladin
 The 'Write Debug to chatbox' option should no longer trigger Lua errors (Classic Era, The Burning Crusade).

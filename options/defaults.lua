@@ -626,6 +626,9 @@ SAO.defaults = {
                 [16246] = { -- Elemental Focus
                     [0] = true,
                 },
+                [29063] = { -- Eye of the Storm (Era, TBC)
+                    [0] = false,
+                },
                 [43339] = { -- Shamanistic Focus (TBC-Cataclysm)
                     [0] = false,
                 },

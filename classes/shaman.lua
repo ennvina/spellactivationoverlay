@@ -71,6 +71,19 @@ local function useElementalFocus(self)
     end
 end
 
+local function useEyeOfTheStorm(self)
+    self:CreateEffect(
+        "eye_of_the_storm",
+        SAO.ERA + SAO.TBC,
+        29063, -- Focused Casting (Shaman buff)
+        "aura",
+        {
+            talent = 29062, -- Eye of the Storm (talent)
+            overlay = { texture = "white_tiger", position = "Left + Right (Flipped)", scale = 1.4, color = { 32, 192, 255 }, level = 5, pulse = false },
+        }
+    );
+end
+
 local function useShamanisticFocus(self)
     self:CreateEffect(
         "shamanistic_focus",
@@ -354,6 +367,7 @@ end
 
 local function registerClass(self)
     useElementalFocus(self);
+    useEyeOfTheStorm(self);
     useShamanisticFocus(self);
     useLavaSurge(self);
     useTidalWaves(self);
