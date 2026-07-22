@@ -2,6 +2,7 @@
 
 #### v2.7.8 (2026-07-xx)
 
+Bump in TOC file for Classic Era
 Bump in TOC file for The Burning Crusade Anniversary
 
 The 'Write Debug to chatbox' option should no longer trigger Lua errors

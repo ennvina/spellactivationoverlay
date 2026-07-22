@@ -430,7 +430,7 @@ cdup
 
 # Release vanilla version
 release_vanilla() {
-VANILLA_BUILD_VERSION=11508
+VANILLA_BUILD_VERSION=11509
 mkproject vanilla "$VANILLA_BUILD_VERSION" ffffff inv_misc_food_31 32 "Classic Era and Season of Discovery"
 
 VARIABLES_NOT_FOR_VANILLA=(holypower nativesao)

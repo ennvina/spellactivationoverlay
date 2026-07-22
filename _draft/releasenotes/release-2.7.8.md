@@ -2,7 +2,7 @@
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.7.8
 ## General
 ## Game Updates
-This release bumps TOC file for The Burning Crusade Anniversary.
+This release bumps TOC file for Classic Era and The Burning Crusade Anniversary.
 ## Classes
 ### :priest:  Priest
 New Spell Alert

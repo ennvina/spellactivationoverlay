@@ -2,7 +2,7 @@
 
 ## General
 ## Game Updates
-This release bumps TOC file for The Burning Crusade Anniversary.
+This release bumps TOC file for Classic Era / Season of Discovery / Hardcore.
 ## Classes
 ### Priest
 New Spell Alert
@@ -47,9 +47,6 @@ New Spell Alert
 
 # Mists of Pandaria
 
-## General
-## Game Updates
-This release bumps TOC file for The Burning Crusade Anniversary.
 ## Bug Fixes
 ### Warrior
 The 'Write Debug to chatbox' option should no longer trigger Lua errors.
@@ -63,7 +60,7 @@ The 'Write Debug to chatbox' option should no longer trigger Lua errors.
 
 ## General
 ## Game Updates
-This release bumps TOC file for The Burning Crusade Anniversary.
+This release bumps TOC file for Classic Era and The Burning Crusade Anniversary.
 ## Classes
 ### Priest
 New Spell Alert
@@ -86,7 +83,7 @@ The 'Write Debug to chatbox' option should no longer trigger Lua errors (Mists o
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.7.8
 ## General
 ## Game Updates
-This release bumps TOC file for The Burning Crusade Anniversary.
+This release bumps TOC file for Classic Era and The Burning Crusade Anniversary.
 ## Classes
 ### :priest:  Priest
 New Spell Alert
