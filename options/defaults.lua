@@ -482,6 +482,9 @@ SAO.defaults = {
         },
         ["PRIEST"] = {
             alert = {
+                [14743] = {  -- Martyrdom (Era - Wrath)
+                    [0] = false,
+                },
                 [33151] = {  -- Surge of Light (TBC - Wrath)
                     [0] = true,
                 },

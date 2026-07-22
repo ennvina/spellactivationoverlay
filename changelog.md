@@ -9,6 +9,7 @@ The 'Write Debug to chatbox' option should no longer trigger Lua errors
 - Warrior (Mists of Pandaria)
 
 New Spell Alerts
+- Priest's Martyrdom (Classic Era, The Burning Crusade, Wrath of the Lich King)
 - Shaman's Eye of the Storm (Classic Era, The Burning Crusade)
 
 Bug Fixes

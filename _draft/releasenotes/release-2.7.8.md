@@ -4,6 +4,9 @@
 ## Game Updates
 This release bumps TOC file for The Burning Crusade Anniversary.
 ## Classes
+### :priest:  Priest
+New Spell Alert
+- Martyrdom (Classic Era, The Burning Crusade, Wrath of the Lich King)
 ### :shaman:  Shaman
 New Spell Alert
 - Eye of the Storm (Classic Era, The Burning Crusade)

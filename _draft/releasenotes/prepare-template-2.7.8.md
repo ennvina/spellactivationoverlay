@@ -4,6 +4,9 @@
 ## Game Updates
 This release bumps TOC file for The Burning Crusade Anniversary.
 ## Classes
+### Priest
+New Spell Alert
+- Martyrdom
 ### Shaman
 New Spell Alert
 - Eye of the Storm
@@ -20,6 +23,9 @@ The 'Write Debug to chatbox' option should no longer trigger Lua errors.
 ## Game Updates
 This release bumps TOC file for The Burning Crusade Anniversary.
 ## Classes
+### Priest
+New Spell Alert
+- Martyrdom
 ### Shaman
 New Spell Alert
 - Eye of the Storm
@@ -29,7 +35,10 @@ The 'Write Debug to chatbox' option should no longer trigger Lua errors.
 
 
 # Wrath of the Lich King
-(N/A)
+## Classes
+### Priest
+New Spell Alert
+- Martyrdom
 
 
 # Cataclysm
@@ -56,6 +65,9 @@ The 'Write Debug to chatbox' option should no longer trigger Lua errors.
 ## Game Updates
 This release bumps TOC file for The Burning Crusade Anniversary.
 ## Classes
+### Priest
+New Spell Alert
+- Martyrdom (Classic Era, The Burning Crusade, Wrath of the Lich King)
 ### Shaman
 New Spell Alert
 - Eye of the Storm (Classic Era, The Burning Crusade)
@@ -76,6 +88,9 @@ The 'Write Debug to chatbox' option should no longer trigger Lua errors (Mists o
 ## Game Updates
 This release bumps TOC file for The Burning Crusade Anniversary.
 ## Classes
+### :priest:  Priest
+New Spell Alert
+- Martyrdom (Classic Era, The Burning Crusade, Wrath of the Lich King)
 ### :shaman:  Shaman
 New Spell Alert
 - Eye of the Storm (Classic Era, The Burning Crusade)
