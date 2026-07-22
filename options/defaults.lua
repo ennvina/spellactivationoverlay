@@ -482,6 +482,9 @@ SAO.defaults = {
         },
         ["PRIEST"] = {
             alert = {
+                [14743] = {  -- Martyrdom (Era - Wrath)
+                    [0] = false,
+                },
                 [33151] = {  -- Surge of Light (TBC - Wrath)
                     [0] = true,
                 },
@@ -625,6 +628,9 @@ SAO.defaults = {
             alert = {
                 [16246] = { -- Elemental Focus
                     [0] = true,
+                },
+                [29063] = { -- Eye of the Storm (Era, TBC)
+                    [0] = false,
                 },
                 [43339] = { -- Shamanistic Focus (TBC-Cataclysm)
                     [0] = false,

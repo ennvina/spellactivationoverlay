@@ -371,7 +371,7 @@ cdup
 
 # Release TBC version
 release_tbc() {
-TBC_BUILD_VERSION=20505
+TBC_BUILD_VERSION=20506
 mkproject tbc "$TBC_BUILD_VERSION" 2da203 achievement_dungeon_outland_dungeonmaster 64 "The Burning Crusade" true
 
 VARIABLES_NOT_FOR_TBC=(holypower nativesao)
@@ -430,7 +430,7 @@ cdup
 
 # Release vanilla version
 release_vanilla() {
-VANILLA_BUILD_VERSION=11508
+VANILLA_BUILD_VERSION=11509
 mkproject vanilla "$VANILLA_BUILD_VERSION" ffffff inv_misc_food_31 32 "Classic Era and Season of Discovery"
 
 VARIABLES_NOT_FOR_VANILLA=(holypower nativesao)

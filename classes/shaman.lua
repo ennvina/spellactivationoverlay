@@ -71,6 +71,19 @@ local function useElementalFocus(self)
     end
 end
 
+local function useEyeOfTheStorm(self)
+    self:CreateEffect(
+        "eye_of_the_storm",
+        SAO.ERA + SAO.TBC,
+        29063, -- Focused Casting (Shaman buff)
+        "aura",
+        {
+            talent = 29062, -- Eye of the Storm (talent)
+            overlay = { texture = "white_tiger", position = "Left + Right (Flipped)", scale = 1.4, color = { 32, 192, 255 }, level = 5, pulse = false },
+        }
+    );
+end
+
 local function useShamanisticFocus(self)
     self:CreateEffect(
         "shamanistic_focus",
@@ -315,6 +328,8 @@ local function usePowerSurge(self)
     local _, _, efTalentTab, efTalentIndex = SAO:GetTalentByName(self:GetSpellName(elementalFocusTalent));
     local powerSurgeSoDRune = 48829;
 
+    lazyCreateElementalFocusVariants(self);
+
     local powerSurgeRightTextureFunc = function()
         local hasElementalFocusOption = SpellActivationOverlayDB.classes["SHAMAN"]["alert"][elementalFocusBuff][0];
         local canProcElementalFocus = efTalentTab and efTalentIndex and self:GetNbTalentPoints(efTalentTab, efTalentIndex) > 0;
@@ -330,13 +345,13 @@ local function usePowerSurge(self)
         if hasPowerSurgeOption and canProcPowerSurge then
             return;
         end
-        return self.TexName["genericarc_05"];
+        return elementalFocusVariants and elementalFocusVariants.textureFunc() or self.TexName["genericarc_05"];
     end
 
     self:RegisterAura("power_surge_sod", 0, powerSurgeSoDBuff, "imp_empowerment", "Left", 1.25, 255, 255, 255, true, powerSurgeSpells);
     self:RegisterAura("power_surge_sod", 0, powerSurgeSoDBuff, powerSurgeRightTextureFunc, "Right (Flipped)", 1.25, 255, 255, 255, true, powerSurgeSpells);
     self:RegisterAura("elemental_focus", 0, elementalFocusBuff, elementalFocusLeftTextureFunc, "Left", 1.25, 255, 255, 255, false);
-    self:RegisterAura("elemental_focus", 0, elementalFocusBuff, "genericarc_05", "Right (Flipped)", 1.25, 255, 255, 255, false);
+    self:RegisterAura("elemental_focus", 0, elementalFocusBuff, elementalFocusVariants and elementalFocusVariants.textureFunc or "genericarc_05", "Right (Flipped)", 1.25, 255, 255, 255, false);
 
     SAO:CreateEffect(
         "power_surge_sod_heal",
@@ -352,6 +367,7 @@ end
 
 local function registerClass(self)
     useElementalFocus(self);
+    useEyeOfTheStorm(self);
     useShamanisticFocus(self);
     useLavaSurge(self);
     useTidalWaves(self);

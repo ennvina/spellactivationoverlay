@@ -34,6 +34,19 @@ local function useInnerFire()
     );
 end
 
+local function useMartyrdom()
+    SAO:CreateEffect(
+        "martyrdom",
+        SAO.ERA + SAO.TBC + SAO.WRATH,
+        14743, -- Focused Casting (Priest buff)
+        "aura",
+        {
+            talent = 14531, -- Martyrdom (talent)
+            overlay = { texture = "white_tiger", position = "Left + Right (Flipped)", scale = 1.25, color = { 32, 192, 255 }, level = 5, pulse = false },
+        }
+    );
+end
+
 local function useSerendipity()
     if SAO.IsMoP() then
         SAO:CreateEffect(
@@ -343,6 +356,7 @@ end
 local function registerClass(self)
     -- Discipline
     useInnerFire();
+    useMartyrdom();
 
     -- Holy
     useSerendipity();

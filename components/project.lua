@@ -65,6 +65,7 @@ function SAO.HasMidnightUI()
     hasMidnightUI = (SAO.IsWoD()) -- Soon(tm)
                  or (SAO.IsMoP() and buildInfo >= 68042) -- 68042 = first build number of MoP Classic SoO patch
                  or (SAO.IsTBC() and buildInfo >= 65295) -- 65295 = first build number of TBC Classic Anniversary
+                 or (SAO.IsEra() and buildInfo >= 68808) -- 68808 = first build number of Era with 'Midnight UI'
                  or (SAO.IsRetail() and LE_EXPANSION_LEVEL_CURRENT >= LE_EXPANSION_MIDNIGHT);
 
     return hasMidnightUI;

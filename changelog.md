@@ -1,6 +1,23 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.7.7 (2026-06-xx)
+#### v2.7.8 (2026-07-xx)
+
+Bump in TOC file for Classic Era
+Bump in TOC file for The Burning Crusade Anniversary
+
+The 'Write Debug to chatbox' option should no longer trigger Lua errors
+- Paladin (Classic Era, The Burning Crusade)
+- Warrior (Mists of Pandaria)
+
+New Spell Alerts
+- Priest's Martyrdom (Classic Era, The Burning Crusade, Wrath of the Lich King)
+- Shaman's Eye of the Storm (Classic Era, The Burning Crusade)
+
+Bug Fixes
+- The addon should no longer cause Lua errors since last patch (Classic Era)
+- Shaman's Elemental Focus displays selected visuals (Season of Discovery)
+
+#### v2.7.7 (2026-06-26)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - JonathanCheung for reporting the Shaman issue

@@ -4,9 +4,9 @@ local Module = "custom"
 -- Optimize frequent calls
 
 -- Does the current custom variable match one of the expected values
-local HASH_CUSTOM_ACTIVATED   = 0x40000000
-local HASH_CUSTOM_DEACTIVATED = 0x80000000
-local HASH_CUSTOM_MASK        = 0xC0000000
+local HASH_CUSTOM_ACTIVATED   = 0x20000000
+local HASH_CUSTOM_DEACTIVATED = 0x40000000
+local HASH_CUSTOM_MASK        = 0x60000000
 
 SAO.Variable:register({
     order = 99,
