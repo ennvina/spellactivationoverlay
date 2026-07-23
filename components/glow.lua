@@ -681,7 +681,14 @@ binder:SetScript("OnEvent", function()
                 self.__sao = { useExternalGlow = true };
             end
             self.__sao.GetGlowID = function()
-                return self:GetSpellId();
+                local spellID = self:GetSpellId();
+                if (type(spellID) == 'number') then
+                    return spellID;
+                end
+                if (type(self.id) == 'number') then
+                    return SAO:GetSpellIDByActionSlot(self.id);
+                end
+                return nil;
             end
             self.__sao.EnableGlow = function()
                 libGlow.ShowOverlayGlow(self);

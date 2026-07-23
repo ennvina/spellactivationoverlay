@@ -1,5 +1,15 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.7.9 (2026-07-xx)
+
+Thank you to our amazing contributors for helping out. Thanks!
+- brownfiesta and Clemonti for reporting the Bartender issue
+
+Bug Fixes
+- Glowing buttons should work for macros in Bartender\* (Classic Era)
+
+\* This affected players who updated Bartender recently (4.17.8)
+
 #### v2.7.8 (2026-07-22)
 
 Bump in TOC file for Classic Era
@@ -131,6 +141,7 @@ Bug Fixes
 - Opening the options panel is delayed after leaving combat (Mists of Pandaria)
 - Paladin's The Art of War now displays its Spell Alert (Mists of Pandaria)
 - Paladin's Exorcism now triggers if the target is Demon or Undead\* (Era, TBC)
+
 \* Previously, Exorcism triggered independently of the target's creature type
 
 #### v2.7.3 (2026-06-07)
