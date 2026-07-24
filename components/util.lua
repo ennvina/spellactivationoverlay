@@ -288,7 +288,7 @@ function SAO:GetPlayerAuraStacksBySpellID(id)
     return nil, nil;
 end
 
-function SAO:GetPlayerAuraDurationExpirationTimBySpellIdOrName(spellIdOrName)
+function SAO:GetPlayerAuraDurationExpirationTimeBySpellIdOrName(spellIdOrName)
     if type(spellIdOrName) == 'string' then
         if GetAuraDataBySpellName then
             local aura = GetAuraDataBySpellName("player", spellIdOrName, "HELPFUL");

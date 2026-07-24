@@ -20,7 +20,7 @@ end
 -- key = spell name, value = list of spell IDs
 -- The list is a cache of calls to GetSpellIDsByName
 -- The list will evolve automatically when the player learns new spells
-SAO.SpellIDsByName = {}
+local SpellIDsByName = {}
 
 -- Check if a spell exists for a given spell ID
 -- Returns true if the spell exists, false otherwise
@@ -86,25 +86,28 @@ end
 -- Returns the list of spell IDs for a given name
 -- Returns an empty list {} if the spell is not found in the spellbook
 function SAO.GetSpellIDsByName(self, name)
-    local cached = self.SpellIDsByName[name];
+    local cached = SpellIDsByName[name];
     if (cached) then
         return cached;
     end
 
     self:RefreshSpellIDsByName(name);
-    return self.SpellIDsByName[name];
+    return SpellIDsByName[name];
 end
 
 -- Force refresh the list of spell IDs for a given name by looking at the spellbook
 -- The cache is updated in the process
 -- If awaken is true, spellIDs are also added to RegisteredGlowSpellIDs
 function SAO.RefreshSpellIDsByName(self, name, awaken)
-    local homonyms = self:GetHomonymSpellIDs(name);
-    self.SpellIDsByName[name] = homonyms;
+    -- Get the list of spell IDs from the spellbook
+    local spellsIDsByName = self:GetHomonymSpellIDs(name);
+
+    -- Save the list of spell IDs in the cache
+    SpellIDsByName[name] = spellsIDsByName;
 
     -- Awake dormant buttons associated to these spellIDs
     if (awaken) then
-        for _, spellID in ipairs(homonyms) do
+        for _, spellID in ipairs(spellsIDsByName) do
             -- Glowing Action Buttons (GABs)
             if (not self.RegisteredGlowSpellIDs[spellID]) then
                 self.RegisteredGlowSpellIDs[spellID] = true;
@@ -121,7 +124,7 @@ function SAO:LearnNewSpell(spellID)
         return;
     end
 
-    local cached = self.SpellIDsByName[name];
+    local cached = SpellIDsByName[name];
     if not cached then
         -- Not interested in untracked spells
         return;
@@ -130,14 +133,14 @@ function SAO:LearnNewSpell(spellID)
     for _, id in ipairs(cached) do
         if id == spellID then
             -- Spell ID already cached
-            return
+            return;
         end
     end
 
     -- At this point, the spell ID is not cached yet, just do it!
-    table.insert(self.SpellIDsByName[name], spellID);
+    table.insert(SpellIDsByName[name], spellID);
 
-    -- Also update RegisteredGlowSpellIDs if the name the tracked
+    -- Also update RegisteredGlowSpellIDs if the name is tracked
     if (self.RegisteredGlowSpellNames[name]) then
         self.RegisteredGlowSpellIDs[spellID] = true;
 
@@ -168,8 +171,8 @@ function SAO:IsSpellLearned(spellID)
     end
     if canHaveMultipleRanks then
         local spellName = self:GetSpellName(spellID);
-        for _, spellID in ipairs(self.SpellIDsByName[spellName] or {}) do
-            if IsSpellKnownOrOverridesKnown(spellID) then
+        for _, id in ipairs(SpellIDsByName[spellName] or {}) do
+            if IsSpellKnownOrOverridesKnown(id) then
                 return true;
             end
         end
@@ -189,7 +192,7 @@ function SAO.GetSpellEndTime(self, spellID, suggestedEndTime)
         return -- Return nil if there is no timer effect, to save CPU
     end
 
-    local duration, expirationTime = self:GetPlayerAuraDurationExpirationTimBySpellIdOrName(spellID);
+    local duration, expirationTime = self:GetPlayerAuraDurationExpirationTimeBySpellIdOrName(spellID);
 
     if type(duration) == 'number' and type(expirationTime) == 'number' then
         local startTime, endTime = expirationTime-duration, expirationTime;
