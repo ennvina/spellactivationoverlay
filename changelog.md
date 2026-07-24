@@ -6,9 +6,7 @@ Thank you to our amazing contributors for helping out. Thanks!
 - brownfiesta and Clemonti for reporting the Bartender issue
 
 Bug Fixes
-- Glowing buttons should work for macros in Bartender\* (Classic Era)
-
-\* This affected players who updated Bartender recently (4.17.8)
+- Glowing buttons should now work for macros in Bartender 4.17.8 or later
 
 #### v2.7.8 (2026-07-22)
 
