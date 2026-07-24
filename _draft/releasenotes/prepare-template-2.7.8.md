@@ -17,6 +17,13 @@ The addon should no longer cause Lua errors since last patch of Classic Era.
 Elemental Focus fancy visuals are correctly displayed when selected (Season of Discovery).
 ### Paladin
 The 'Write Debug to chatbox' option should no longer trigger Lua errors.
+## Contributors
+Shout-out to our amazing contributors
+- LaD1x for suggesting the Eye of the Storm spell alert
+- Amanthuul for reporting the Elemental Focus issue
+- Metallic_Horizon, Simmehchan, Beef1, yttrium and CallMePreph for reporting the Classic Era patch issue
+
+Thanks!
 
 
 # The Burning Crusade
@@ -34,6 +41,11 @@ New Spell Alert
 ## Bug Fixes
 ### Paladin
 The 'Write Debug to chatbox' option should no longer trigger Lua errors.
+## Contributors
+Shout-out to our amazing contributors
+- LaD1x for suggesting the Eye of the Storm spell alert
+
+Thanks!
 
 
 # Wrath of the Lich King
@@ -80,7 +92,13 @@ The 'Write Debug to chatbox' option should no longer trigger Lua errors (Classic
 Elemental Focus fancy visuals are correctly displayed when selected (Season of Discovery).
 ### Warrior
 The 'Write Debug to chatbox' option should no longer trigger Lua errors (Mists of Pandaria).
+## Contributors
+Shout-out to our amazing contributors
+- LaD1x for suggesting the Eye of the Storm spell alert
+- Amanthuul for reporting the Elemental Focus issue
+- Metallic_Horizon, Simmehchan, Beef1, yttrium and CallMePreph for reporting the Classic Era patch issue
 
+Thanks!
 
 # Discord
 

@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.7.9 (2026-07-xx)
+#### v2.7.9 (2026-07-24)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - brownfiesta and Clemonti for reporting the Bartender issue

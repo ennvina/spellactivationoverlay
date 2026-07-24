@@ -1,12 +1,5 @@
 # SpellActivationOverlay 2.7.9
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.7.9
-## General
-## Classes
-### :class:  Class
-New Spell Alerts
-- 
-New Glowing Buttons
-- 
 ## Bug Fixes
 ### Addon Interaction
 Macro-based glowing buttons should glow as intended. This functionality broke with the recent update to Bartender, version 4.17.8.
@@ -18,8 +11,6 @@ Either way, the native game client's action bars are unaffected by this issue. T
 All spell ranks will now glow, even if the 'Show all spell ranks' checkbox is not checked in the spellbook (Classic Era, The Burning Crusade, Wrath of the Lich King).
 
 _Developer's Note: This is one of the oldest issues, one which has bothered countless players. Let's hope it's ancient history!_
-## Known Limitations
-## Miscellaneous
 ## Contributors
 Shout-out to our amazing contributors
 - brownfiesta and Clemonti for reporting the Bartender issue
