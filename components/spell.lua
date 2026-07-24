@@ -22,6 +22,10 @@ end
 -- The list will evolve automatically when the player learns new spells
 local SpellIDsByName = {}
 
+-- List of spell IDs that have been observed at least once in an action button
+-- These spell IDs are appended to the list of homonyms when fetching the list of spell IDs by name
+local ObservedSpellIDs = {}
+
 -- Check if a spell exists for a given spell ID
 -- Returns true if the spell exists, false otherwise
 function SAO:DoesSpellExist(spellID)
@@ -102,6 +106,13 @@ function SAO.RefreshSpellIDsByName(self, name, awaken)
     -- Get the list of spell IDs from the spellbook
     local spellsIDsByName = self:GetHomonymSpellIDs(name);
 
+    -- Add observed spell IDs to the list
+    for spellID, spellName in pairs(ObservedSpellIDs) do
+        if not tContains(spellsIDsByName, spellID) and spellName == name then
+            tinsert(spellsIDsByName, spellID);
+        end
+    end
+
     -- Save the list of spell IDs in the cache
     SpellIDsByName[name] = spellsIDsByName;
 
@@ -118,7 +129,7 @@ function SAO.RefreshSpellIDsByName(self, name, awaken)
 end
 
 -- Update the spell cache when a new spell is learned
-function SAO:LearnNewSpell(spellID)
+function SAO:LearnNewSpell(spellID, observed)
     local name = self:GetSpellName(spellID);
     if not name then
         return;
@@ -135,6 +146,11 @@ function SAO:LearnNewSpell(spellID)
             -- Spell ID already cached
             return;
         end
+    end
+
+    if observed then
+        -- Add to the list of observed spell IDs
+        ObservedSpellIDs[spellID] = name;
     end
 
     -- At this point, the spell ID is not cached yet, just do it!

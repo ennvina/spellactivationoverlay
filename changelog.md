@@ -7,6 +7,10 @@ Thank you to our amazing contributors for helping out. Thanks!
 
 Bug Fixes
 - Glowing buttons should now work for macros in Bartender 4.17.8 or later
+- 'Show all spell ranks' is no longer required in spellbook (Era, TBC, Wrath)
+
+This spellbook option was not really required, but it prevented some issues
+Now, players with or without this option should experience the same behavior
 
 #### v2.7.8 (2026-07-22)
 

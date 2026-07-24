@@ -44,6 +44,10 @@ SAO.RegisteredGlowSpellIDs = {}
 -- This helps fill or re-fill RegisteredGlowSpellIDs when e.g. a new spell rank is learned
 SAO.RegisteredGlowSpellNames = {}
 
+-- List of spell IDs that have been observed at least once in an action button
+-- This list helps 'learn' spell IDs which cannot be viewed in the spellbook
+local ObservedSpellIDs = {}
+
 -- Register a glow ID
 -- Each ID is either a numeric value (spellID) or a string (spellName)
 function SAO.RegisterGlowID(self, glowID)
@@ -283,6 +287,12 @@ function SAO.UpdateActionButton(self, button, forceRefresh)
     if (oldGlowID == newGlowID and not forceRefresh) then
         -- Skip any processing if the glow ID hasn't changed
         return;
+    end
+
+    -- Observe the spell ID if not done already
+    if (newGlowID and not ObservedSpellIDs[newGlowID]) then
+        ObservedSpellIDs[newGlowID] = true;
+        self:LearnNewSpell(newGlowID, true); -- true means 'observed', a special mode that bypasses the spellbook
     end
 
     -- Register/unregister button as 'dormant' i.e., not tracked but could be tracked in the future
