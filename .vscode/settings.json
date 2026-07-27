@@ -93,6 +93,7 @@
         "WrapTextInColor",
         "WrapTextInColorCode",
         // WoW game API
+        "C_ActionBar",
         "C_AddOns",
         "C_CVar",
         "C_Engraving",
@@ -233,13 +234,20 @@
         "statusBar.background": "#2951cf",
         "statusBar.foreground": "#e7e7e7",
         "statusBarItem.hoverBackground": "#4f71dc",
-        "statusBarItem.remoteBackground": "#2951cf",
+        "statusBarItem.remoteBackground": "#50101f",
         "statusBarItem.remoteForeground": "#e7e7e7",
         "titleBar.activeBackground": "#2951cf",
         "titleBar.activeForeground": "#e7e7e7",
         "titleBar.inactiveBackground": "#2951cf99",
         "titleBar.inactiveForeground": "#e7e7e799",
-        "commandCenter.border": "#e7e7e799"
+        "commandCenter.border": "#e7e7e799",
+        "activityBarTop.activeBackground": "#4f71dc",
+        "activityBarTop.background": "#4f71dc",
+        "activityBarTop.foreground": "#e7e7e7",
+        "activityBarTop.inactiveForeground": "#e7e7e799",
+        "commandCenter.foreground": "#e7e7e7",
+        "statusBar.debuggingBackground": "#2951cf",
+        "statusBar.debuggingForeground": "#e7e7e7"
     },
     "peacock.color": "#2951cf"
 }

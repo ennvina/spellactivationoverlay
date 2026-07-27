@@ -692,11 +692,11 @@ binder:SetScript("OnEvent", function()
             end
             self.__sao.GetGlowID = function()
                 local spellID = self:GetSpellId();
-                if (type(spellID) == 'number') then
+                if type(spellID) == 'number' and spellID ~= 0 then
                     return spellID;
                 end
-                if (type(self.id) == 'number') then
-                    return SAO:GetSpellIDByActionSlot(self.id);
+                if self._state_action then
+                    return SAO:GetSpellIDByActionSlot(self._state_action);
                 end
                 return nil;
             end
