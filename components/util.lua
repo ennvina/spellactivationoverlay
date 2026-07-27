@@ -27,6 +27,8 @@ local GetSpecializationInfo = C_SpecializationInfo and C_SpecializationInfo.GetS
 
 local IsEquippedItem = C_Item and C_Item.IsEquippedItem
 
+local GetActionSpell = C_ActionBar and C_ActionBar.GetSpell
+
 --[[
     Logging functions
 ]]
@@ -502,11 +504,15 @@ end
 
 -- Utility function to get the spell ID associated to an action
 function SAO:GetSpellIDByActionSlot(actionSlot)
+    if GetActionSpell then
+        return GetActionSpell(actionSlot);
+    end
+
     local actionType, id, subType = GetActionInfo(actionSlot);
     if actionType == "spell" then
         return id;
     elseif actionType == "macro" then
-        return GetMacroSpell(id);
+        return (GetMacroSpell(id));
     end
 end
 
