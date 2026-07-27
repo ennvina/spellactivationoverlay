@@ -61,7 +61,10 @@ prunedev() {
     echo -n "0/${NB_PATHS_TO_MINIFY}"
     while read -r -d '' filename
     do
-        # Remove comment-only blocks
+        # Remove comment-only blocks --[=[ ... ]=]
+        sed -i '/^[[:space:]]*--\[=\[/,/[[:space:]]*\]=\]/d' "$filename" || bye "Cannot remove comment blocks from $filename"
+
+        # Remove comment-only blocks --[[ ... ]]
         sed -i '/^[[:space:]]*--\[\[/,/[[:space:]]*\]\]/d' "$filename" || bye "Cannot remove comment blocks from $filename"
 
         # Remove comment-only lines and blank lines
