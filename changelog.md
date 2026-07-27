@@ -6,7 +6,8 @@ Thank you to our amazing contributors for helping out. Thanks!
 - Clemonti for pawn for investigating the Bartender issue
 
 Bug Fixes
-- New fix to Bartender users, because sometimes the previous fix was not enough
+- New fix to Bartender users who bind spell in macros (Mists of Pandaria)
+- Mage's Pyroblast glows as intended during Hot Streak (Mists of Pandaria)
 
 #### v2.7.9 (2026-07-24)
 
