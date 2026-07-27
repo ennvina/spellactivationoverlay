@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.7.10 (2026-07-xx)
+#### v2.7.10 (2026-07-28)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - Clemonti for pawn for investigating the Bartender issue
