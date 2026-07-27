@@ -61,6 +61,13 @@ prunedev() {
     echo -n "0/${NB_PATHS_TO_MINIFY}"
     while read -r -d '' filename
     do
+        # Preserve top long-comment block for embedded libs (typically license headers)
+        preserved_header=""
+        if [[ "$filename" == SpellActivationOverlay/libs/* ]]
+        then
+            preserved_header=$(sed -n '1{/^[[:space:]]*--\[\[/!q};1,/^[[:space:]]*\]\]/p' "$filename")
+        fi
+
         # Remove comment-only blocks --[=[ ... ]=]
         sed -i '/^[[:space:]]*--\[=\[/,/[[:space:]]*\]=\]/d' "$filename" || bye "Cannot remove comment blocks from $filename"
 
@@ -95,6 +102,13 @@ prunedev() {
         # Replace '( ' with '(' and ' )' with ')' and '{ ' with '{' and ' }' with '}'
         BRACES_SPACE='s/([[:space:]][[:space:]]*/(/g;s/[[:space:]][[:space:]]*)/)/g;s/{[[:space:]][[:space:]]*/{/g;s/[[:space:]][[:space:]]*}/}/g'
         sed -i "$LOCAL_NIL_ASSIGNMENT;$INEQUALITY_SIGN;$EQUALITY_SIGN;$COMMA_SPACE;$BRACES_THEN;$BRACES_SPACE" "$filename" || bye "Cannot optimize Lua syntax in $filename"
+
+        # Re-inject preserved header after minification
+        if [ -n "$preserved_header" ]
+        then
+            preserved_header_escaped=$(printf '%s' "$preserved_header" | sed ':a;N;$!ba;s/[\\&|]/\\&/g;s/\n/\\n/g')
+            sed -i "1s|^|${preserved_header_escaped}\\n|" "$filename" || bye "Cannot preserve header for $filename"
+        fi
 
         echo -ne "\033[u[2/2] $((++NB_FILES_PROCESSED))/${NB_PATHS_TO_MINIFY}"
     done < <(find "SpellActivationOverlay/" -type f -name '*.lua' -print0)
