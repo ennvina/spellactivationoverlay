@@ -694,7 +694,7 @@ local function useHeatingUpAndHotStreak()
         "aura",
         {
             overlay = { texture = "hot_streak", position = "Left + Right (Flipped)" },
-            button = pyroblast,
+            button = { spellID = pyroblast, option = { isNative = true } }, -- Already glowing natively
         }
     );
 end
