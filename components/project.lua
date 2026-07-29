@@ -54,6 +54,7 @@ end
 -- UI has changed in Midnight
 -- Also applies to WoW Classic:
 -- - TBC Classic Anniversary
+-- - Titan Reforged, starting with 3.80.1
 -- - MoP Classic, starting with SoO patch
 local hasMidnightUI = nil;
 function SAO.HasMidnightUI()
@@ -62,9 +63,11 @@ function SAO.HasMidnightUI()
     end
 
     local buildInfo = tonumber((select(2, GetBuildInfo())));
+    local interfaceVersion = tonumber((select(4, GetBuildInfo())));
     hasMidnightUI = (SAO.IsWoD()) -- Soon(tm)
                  or (SAO.IsMoP() and buildInfo >= 68042) -- 68042 = first build number of MoP Classic SoO patch
                  or (SAO.IsTBC() and buildInfo >= 65295) -- 65295 = first build number of TBC Classic Anniversary
+                 or (SAO.IsWrath() and interfaceVersion >= 38001) -- 38001 = interface version of Titan Reforged 3.80.1
                  or (SAO.IsEra() and buildInfo >= 68808) -- 68808 = first build number of Era with 'Midnight UI'
                  or (SAO.IsRetail() and LE_EXPANSION_LEVEL_CURRENT >= LE_EXPANSION_MIDNIGHT);
 
