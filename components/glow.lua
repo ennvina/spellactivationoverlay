@@ -399,7 +399,20 @@ local function HookActionButton_Update(button)
     end
     SAO:UpdateActionButton(button);
 end
-if SAO.HasMidnightUI() then
+
+local HookedActionButtons = {};
+local function HookActionButtonUpdateMethod(button)
+    if button and not HookedActionButtons[button] and type(button.Update) == "function" then
+        HookedActionButtons[button] = true;
+        hooksecurefunc(button, "Update", HookActionButton_Update);
+    end
+end
+
+if type(ActionButton_Update) == "function" then
+    -- Legacy action bars have a single entry point that updates all native ActionButton instances
+    hooksecurefunc("ActionButton_Update", HookActionButton_Update);
+else
+    -- Newer action bars, including Titan Reforged, update each ActionButton instance separately
     local actionBars = {
         -- https://www.townlong-yak.com/framexml/anniversary/Blizzard_ActionBar/MainActionBar.xml
         MainActionBar,
@@ -424,17 +437,28 @@ if SAO.HasMidnightUI() then
         -- https://www.townlong-yak.com/framexml/anniversary/Blizzard_ActionBar/PetActionBar.xml
         -- PetActionBar,
     };
-    for index, actionBar in ipairs(actionBars) do
-        if not actionBar then --[[BEGIN_DEV_ONLY]]
-            SAO:Error(Module, "Missing action bar: "..tostring(index));
-        end --[[END_DEV_ONLY]]
-        for _, actionButton in ipairs(actionBar and actionBar.actionButtons or {}) do
-            hooksecurefunc(actionButton, "Update", HookActionButton_Update);
+    for _, actionBar in pairs(actionBars) do
+        for _, actionButton in pairs(actionBar.actionButtons or {}) do
+            HookActionButtonUpdateMethod(actionButton);
         end
     end
-else
-    -- In other flavors of WoW Classic, there is a single entry point that updates all native ActionButton instances
-    hooksecurefunc("ActionButton_Update", HookActionButton_Update);
+
+    -- Some clients do not expose the actionButtons collection on their bar frames
+    local actionButtonPrefixes = {
+        "ActionButton",
+        "MultiBarBottomLeftButton",
+        "MultiBarBottomRightButton",
+        "MultiBarRightButton",
+        "MultiBarLeftButton",
+        "MultiBar5Button",
+        "MultiBar6Button",
+        "MultiBar7Button",
+    };
+    for _, prefix in ipairs(actionButtonPrefixes) do
+        for index = 1, NUM_ACTIONBAR_BUTTONS or 12 do
+            HookActionButtonUpdateMethod(_G[prefix..index]);
+        end
+    end
 end
 
 -- Grab buttons in the stance bar
@@ -473,7 +497,7 @@ local function HookStanceBar_UpdateState()
 end
 if select(2, UnitClass("player")) == "PRIEST" then
     -- Only Priests require hooking to StanceBar_UpdateState, for Shadowform
-    if not SAO.HasMidnightUI() then
+    if type(StanceBar_UpdateState) == "function" then
         -- Note: Shadow Priests do not have 'stances' in TBC, but we might need to fix it for Retail
         hooksecurefunc("StanceBar_UpdateState", HookStanceBar_UpdateState);
     end
@@ -786,7 +810,7 @@ binder:SetScript("OnEvent", function()
             local bar = _G["DominosFrame"..i];
             if bar and bar.buttons then
                 for _, button in pairs(bar.buttons) do
-                    hooksecurefunc(button, "Update", HookActionButton_Update);
+                    HookActionButtonUpdateMethod(button);
                 end
             end
         end
