@@ -699,6 +699,8 @@ binder:SetScript("OnEvent", function()
     local LBG, LBGversion = LibStub("LibButtonGlow-1.0", true);
     local LCG = LibStub("LibCustomGlow-1.0", true);
     local Dominos = LibStub("AceAddon-3.0", true) and LibStub("AceAddon-3.0", true):GetAddon("Dominos", true);
+    local LAB_NDui = LibStub("LibActionButton-1.0-NDui", true);
+    local LCG_NDui = LibStub("LibCustomGlow-1.0-NDui", true);
 
     local buttonUpdateFunc = function(libGlow, event, self)
         if (self._state_type ~= "action") then
@@ -745,6 +747,10 @@ binder:SetScript("OnEvent", function()
         buttonUpdateFunc(LCG, event, self);
     end
 
+    local LCGNDuiButtonUpdateFunc = function(event, self)
+        buttonUpdateFunc(LCG_NDui, event, self);
+    end
+
     local LAB_GEButtonUpdateFunc = function(event, self)
         buttonUpdateFunc(LAB_GE, event, self);
     end
@@ -756,6 +762,11 @@ binder:SetScript("OnEvent", function()
         LAB:RegisterCallback("OnButtonUpdate", LCGButtonUpdateFunc);
     elseif (LAB and LBG) then
         warnOutdatedLBG();
+    end
+
+    -- Support for NDui's LibActionButton
+    if (LAB_NDui and LCG_NDui) then
+        LAB_NDui:RegisterCallback("OnButtonUpdate", LCGNDuiButtonUpdateFunc);
     end
 
     -- Support for ElvUI's LibActionButton

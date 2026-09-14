@@ -307,6 +307,19 @@ local function useDivinePurpose()
     );
 end
 
+local function useDivineCrusader()
+    SAO:CreateEffect(
+        "divine_crusader",
+        SAO.MOP,
+        144595, -- Divine Crusader (buff)
+        "aura",
+        {
+            overlay = { texture = "white_tiger", position = "Left + Right (Flipped)", scale = 1.4, level = 6 },
+            button = divineStorm,
+        }
+    );
+end
+
 local function registerArtOfWar(name, project, buff, glowingButtons, defaultOverlay, defaultButton)
     SAO:CreateEffect(
         name,
@@ -430,6 +443,7 @@ local function registerClass(self)
     useCrusade();
     useArtOfWar();
     useDivinePurpose();
+    useDivineCrusader(); -- T16 4pc
 
     -- Passive abilities
     useSupplication();
