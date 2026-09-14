@@ -1,9 +1,23 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.7.11 (2026-09-xx)
+
+Thank you to our amazing contributors for helping out. Thanks!
+- Alepoudiaris for suggesting Divine Crusader
+
+New Spell Alert
+- Paladin's Divine Crusader with 4p set bonus of tier 16 (Mists of Pandaria)
+
+New Glowing Button
+- Paladin's Divine Storm, during Divine Crusader (Mists of Pandaria)
+
+Bug Fixes
+- All Paladin glowing buttons are visible in options panel (Mists of Pandaria)
+
 #### v2.7.10 (2026-07-28)
 
 Thank you to our amazing contributors for helping out. Thanks!
-- Clemonti for pawn for investigating the Bartender issue
+- Clemonti and pawn for investigating the Bartender issue
 
 Bug Fixes
 - New fix to Bartender users who bind spell in macros (Mists of Pandaria)

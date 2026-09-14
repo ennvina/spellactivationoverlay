@@ -408,6 +408,9 @@ SAO.defaults = {
                 [90174] = { -- Divine Purpose (Cataclysm+)
                     [0] = true,
                 },
+                [144595] = { -- Divine Crusader (Mists of Pandaria)
+                    [0] = true,
+                },
             },
             glow = {
                 [879] = { -- Exorcism
@@ -477,6 +480,9 @@ SAO.defaults = {
                 [94686] = { -- Crusade (Cataclysm) / Supplication (Mists of Pandaria)
                     [635]   = true, -- Holy Light (Cataclysm)
                     [19750] = true, -- Flash of Light (Mists of Pandaria)
+                },
+                [144595] = { -- Divine Crusader (Mists of Pandaria)
+                    [53385]  = true, -- Divine Storm
                 },
             },
         },
