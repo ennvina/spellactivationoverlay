@@ -4,6 +4,10 @@
 
 Thank you to our amazing contributors for helping out. Thanks!
 - Alepoudiaris for suggesting Divine Crusader
+- wcong for suggesting support for NDui addon
+
+User Interface
+- NDui is now officially supported
 
 New Spell Alert
 - Paladin's Divine Crusader with 4p set bonus of tier 16 (Mists of Pandaria)
