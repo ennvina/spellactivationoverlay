@@ -9,6 +9,9 @@ New Spell Alert
 New Glowing Button
 - Divine Storm, during Divine Crusader (Mists of Pandaria)
 ## Bug Fixes
+### :paladin:  Paladin
+There are so many glowing buttons for Paladins that they do not fit in the options panel (Mists of Pandaria).
+The glowing button options are now packed a bit closer to each other to make enough room for all of them.
 ## Known Limitations
 ## Miscellaneous
 ## Contributors

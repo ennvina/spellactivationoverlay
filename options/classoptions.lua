@@ -173,9 +173,14 @@ function SAO.AddOption(self, optionType, auraID, id, subValues, applyTextFunc, t
         -- Each subsequent checkbox is anchored to the previous one
         local nbCheckboxes = #SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType];
         local lastCheckBox = SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType][nbCheckboxes];
+        local superPackGlow = SAO.IsProject(SAO.MOP) and select(2, UnitClass("player")) == "PALADIN"; -- MoP's Paladin has a lot of glowing buttons
         local maxNbGlowPerColumn = SAO:CanReport() and 13 or 14;
+        if superPackGlow and optionType == "glow" then
+            maxNbGlowPerColumn = maxNbGlowPerColumn + 2;
+        end
+        local yPackOffset = superPackGlow and optionType == "glow" and 3 or 0;
         if optionType ~= "glow" or nbCheckboxes ~= maxNbGlowPerColumn then
-            cb:SetPoint("TOPLEFT", lastCheckBox, "BOTTOMLEFT", 0, 0);
+            cb:SetPoint("TOPLEFT", lastCheckBox, "BOTTOMLEFT", 0, yPackOffset);
         else
             -- Glowing buttons may be too numerous (more than maxNbGlowPerColumn)
             -- When this happens, a second column is used, and the first column is offset to the left
