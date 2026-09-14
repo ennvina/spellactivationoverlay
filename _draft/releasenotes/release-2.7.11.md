@@ -1,6 +1,8 @@
 # SpellActivationOverlay 2.7.11
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.7.11
 ## General
+### User Interface
+The NDui addon is now officially supported.
 ## Classes
 ### :paladin:  Paladin
 New Spell Alert
