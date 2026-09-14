@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.7.11 (2026-09-xx)
+#### v2.7.11 (2026-09-14)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - WidgetA for reporting and fixing issues on Titan Forged: Wrath

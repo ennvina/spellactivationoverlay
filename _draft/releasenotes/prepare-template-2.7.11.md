@@ -1,0 +1,112 @@
+# Classic Era / The Burning Crusade / Cataclysm
+
+## General
+### User Interface
+The NDui addon is now officially supported.
+## Contributors
+Shout-out to our amazing contributors
+- wcong for suggesting support for NDui addon
+
+Thanks!
+
+
+# Wrath of the Lich King
+
+## General
+## Game Updates
+This release bumps TOC file for Titan Reforged: Wrath.
+### User Interface
+The NDui addon is now officially supported.
+## Bug Fixes
+### Glowing Buttons
+Glowing buttons should now work again as intended (Titan Reforged: Wrath).
+## Contributors
+Shout-out to our amazing contributors
+- WidgetA for reporting and fixing issues on Titan Forged: Wrath
+- wcong for suggesting support for NDui addon
+
+Thanks!
+
+
+# Mists of Pandaria
+
+## General
+### User Interface
+The NDui addon is now officially supported.
+## Classes
+### Paladin
+New Spell Alert
+- Divine Crusader with 4p set bonus of tier 16
+
+New Glowing Button
+- Divine Storm, during Divine Crusader
+## Bug Fixes
+### Paladin
+There are so many glowing buttons for Paladins that they do not fit in the options panel.
+The glowing button options are now packed a bit closer to each other to make enough room for all of them.
+## Contributors
+Shout-out to our amazing contributors
+- Alepoudiaris for suggesting Divine Crusader
+- wcong for suggesting support for NDui addon
+
+Thanks!
+
+
+# GitHub
+
+## General
+## Game Updates
+This release bumps TOC file for Titan Reforged: Wrath.
+### User Interface
+The NDui addon is now officially supported.
+## Classes
+### Paladin
+New Spell Alert
+- Divine Crusader with 4p set bonus of tier 16 (Mists of Pandaria)
+
+New Glowing Button
+- Divine Storm, during Divine Crusader (Mists of Pandaria)
+## Bug Fixes
+### Glowing Buttons
+Glowing buttons should now work again as intended (Titan Reforged: Wrath).
+### Paladin
+There are so many glowing buttons for Paladins that they do not fit in the options panel (Mists of Pandaria).
+The glowing button options are now packed a bit closer to each other to make enough room for all of them.
+## Contributors
+Shout-out to our amazing contributors
+- WidgetA for reporting and fixing issues on Titan Forged: Wrath
+- Alepoudiaris for suggesting Divine Crusader
+- wcong for suggesting support for NDui addon
+
+Thanks!
+
+
+# Discord
+
+# SpellActivationOverlay 2.7.11
+@here I am pleased to announce the newest release of SpellActivationOverlay, version 2.7.11
+## General
+## Game Updates
+This release bumps TOC file for Titan Reforged: Wrath.
+### User Interface
+The NDui addon is now officially supported.
+## Classes
+### :paladin:  Paladin
+New Spell Alert
+- Divine Crusader with 4p set bonus of tier 16 (Mists of Pandaria)
+New Glowing Button
+- Divine Storm, during Divine Crusader (Mists of Pandaria)
+## Bug Fixes
+### Glowing Buttons
+Glowing buttons should now work again as intended (Titan Reforged: Wrath).
+### :paladin:  Paladin
+There are so many glowing buttons for Paladins that they do not fit in the options panel (Mists of Pandaria).
+The glowing button options are now packed a bit closer to each other to make enough room for all of them.
+## Contributors
+Shout-out to our amazing contributors
+- WidgetA for reporting and fixing issues on Titan Forged: Wrath
+- Alepoudiaris for suggesting Divine Crusader
+- wcong for suggesting support for NDui addon
+Thanks!
+
+As always, the latest release is available on [CurseForge](https://www.curseforge.com/wow/addons/spellactivationoverlay) / [GitHub](https://github.com/ennvina/spellactivationoverlay/releases/latest) / [Discord](https://discord.com/channels/1013194771969355858/1379111832207228938)

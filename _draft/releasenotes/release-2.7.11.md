@@ -18,8 +18,6 @@ Glowing buttons should now work again as intended (Titan Reforged: Wrath).
 ### :paladin:  Paladin
 There are so many glowing buttons for Paladins that they do not fit in the options panel (Mists of Pandaria).
 The glowing button options are now packed a bit closer to each other to make enough room for all of them.
-## Known Limitations
-## Miscellaneous
 ## Contributors
 Shout-out to our amazing contributors
 - WidgetA for reporting and fixing issues on Titan Forged: Wrath
