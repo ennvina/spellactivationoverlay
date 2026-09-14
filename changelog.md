@@ -3,8 +3,11 @@
 #### v2.7.11 (2026-09-xx)
 
 Thank you to our amazing contributors for helping out. Thanks!
+- WidgetA for reporting and fixing issues on Titan Forged: Wrath
 - Alepoudiaris for suggesting Divine Crusader
 - wcong for suggesting support for NDui addon
+
+Bump in TOC file for Titan Reforged: Wrath
 
 User Interface
 - NDui is now officially supported
@@ -16,6 +19,7 @@ New Glowing Button
 - Paladin's Divine Storm, during Divine Crusader (Mists of Pandaria)
 
 Bug Fixes
+- Glowing buttons should now work again as intended (Titan Reforged: Wrath)
 - All Paladin glowing buttons are visible in options panel (Mists of Pandaria)
 
 #### v2.7.10 (2026-07-28)
