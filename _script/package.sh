@@ -553,7 +553,7 @@ cdup
 
 # Release retail version
 release_retail() {
-RETAIL_BUILD_VERSION=120000
+RETAIL_BUILD_VERSION=120100
 mkproject retail "$RETAIL_BUILD_VERSION" 2266c5 inv_ability_voidweaverpriest_entropicrift 64 "Retail"
 
 #prunecopyright Cataclysm Pandaria Draenor
@@ -743,6 +743,7 @@ PROJECTS=(
 "cata Cata"
 "mop Mists"
 "retail Mainline"
+"forever Forever" # Please check value
 )
 addon_name=SpellActivationOverlay
 for project in "${PROJECTS[@]}"; do
