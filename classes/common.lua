@@ -12,7 +12,7 @@ SAO.Class["__SHARED"] = {
             local fromClass = self:FromClass(classFile);
             SAO:CreateEffect(
                 "leap_of_faith_"..classFile:lower(),
-                SAO.MOP_AND_ONWARD,
+                SAO.MOP,
                 spellID,
                 "aura",
                 {
