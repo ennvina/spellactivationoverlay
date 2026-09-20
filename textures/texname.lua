@@ -350,31 +350,43 @@ function SAO_DB_ComputeUnmarkedTextures(output)
 end
 
 function SAO_DB_LookForTexture(fileDataID, output, saveToDev)
+  if saveToDev and SpellActivationOverlayDB.dev then
+    SpellActivationOverlayDB.dev.existing[fileDataID] = nil;
+  end
+
+  local setLoaded = function(isLoaded)
+    if saveToDev and SpellActivationOverlayDB.dev then
+      SpellActivationOverlayDB.dev.existing.id[fileDataID] = isLoaded;
+
+      SpellActivationOverlayDB.dev.existing.remaining = SpellActivationOverlayDB.dev.existing.remaining-1;
+      if SpellActivationOverlayDB.dev.existing.remaining == 0 and (type(output) ~= 'boolean' or output) then
+        print("SAO_DB_DetectExistingMarkedTextures() "..WrapTextInColorCode("Complete", "FF00FF00"));
+      end
+    end
+    if not saveToDev and (type(output) ~= 'boolean' or output) then
+      if isLoaded then
+        SAO:Info(Module, "Texture "..tostring(fileDataID).." has been found in game files.");
+      else
+        SAO:Warn(Module, "Texture "..tostring(fileDataID).." has *not* been found in game files.");
+      end
+    end
+  end;
+
+  -- Simply use C_UIFileAsset.IsKnownFile is available
+  if C_UIFileAsset and C_UIFileAsset.IsKnownFile then
+    setLoaded(C_UIFileAsset.IsKnownFile(fileDataID));
+    return;
+  end
+
+  -- Otherwise, fall back to creating a frame and texture to check if the file is loaded in the game
   local f = CreateFrame("Frame", nil);
   local tex = f:CreateTexture();
   tex:SetPoint('CENTER', WorldFrame);
 
   f:SetAllPoints(tex);
-  if saveToDev and SpellActivationOverlayDB.dev then
-    SpellActivationOverlayDB.dev.existing[fileDataID] = nil;
-  end
   f:SetScript('OnSizeChanged', function(self, width, height)
-      local isLoaded = width > 15 and height > 15
-      if saveToDev and SpellActivationOverlayDB.dev then
-        SpellActivationOverlayDB.dev.existing.id[fileDataID] = isLoaded;
-
-        SpellActivationOverlayDB.dev.existing.remaining = SpellActivationOverlayDB.dev.existing.remaining-1;
-        if SpellActivationOverlayDB.dev.existing.remaining == 0 and (type(output) ~= 'boolean' or output) then
-          print("SAO_DB_DetectExistingMarkedTextures() "..WrapTextInColorCode("Complete", "FF00FF00"));
-        end
-      end
-      if not saveToDev and (type(output) ~= 'boolean' or output) then
-        if isLoaded then
-          SAO:Info(Module, "Texture "..tostring(fileDataID).." has been found in game files.");
-        else
-          SAO:Warn(Module, "Texture "..tostring(fileDataID).." has *not* been found in game files.");
-        end
-      end
+      local isLoaded = width > 15 and height > 15;
+      setLoaded(isLoaded);
       f:Hide();
   end);
 
