@@ -107,6 +107,10 @@ for retailTexture, classicTexture in pairs(mapping) do
     (SAO.IsCata() and retailNumber <= 511469) -- Cataclysm game files embed textures up to (at least) 511469
     or
     (SAO.IsMoP() and retailNumber <= 898423) -- Mists of Pandaria game files embed textures up to (at least) 898423
+    or
+    (SAO.IsRetail() and retailNumber <= 30000000) -- Arbitrary large number for retail game files
+    or
+    (SAO.IsForever() and retailNumber <= 2888300) -- Forever game files embed textures up to (at least) 2888300
   ) and
     retailNumber ~= 450914 and retailNumber ~= 450915 then -- Eclipse textures in Cataclysm and Pandaria were different
     -- In this case, use texture embedded in game using its FileDataID, not from addon folder using a file path

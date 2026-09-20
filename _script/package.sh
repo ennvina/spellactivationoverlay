@@ -580,6 +580,41 @@ zipproject retail-alpha "$VERSION_TOC_VERSION"
 cdup
 }
 
+# Release forever version
+release_forever() {
+FOREVER_BUILD_VERSION=16001
+mkproject forever "$FOREVER_BUILD_VERSION" 30c9d9 inv_catskybornemount_c60_blue 64 "Forever"
+
+#prunecopyright Cataclysm Pandaria Draenor
+# Do not remove Cataclysm copyright, because we may need to use a sound file introduced in Cataclysm
+prunecopyright Pandaria Draenor
+
+VARIABLES_NOT_FOR_FOREVER=(holypower nativesao)
+prunevar "${VARIABLES_NOT_FOR_FOREVER[@]}"
+
+CLASSES_NOT_FOR_FOREVER=(deathknight monk)
+pruneclass "${CLASSES_NOT_FOR_FOREVER[@]}"
+
+TEXTURES_NOT_FOR_FOREVER=(
+fury_of_stormrage_yellow
+maelstrom_weapon_6
+maelstrom_weapon_7
+maelstrom_weapon_8
+maelstrom_weapon_9
+maelstrom_weapon_10
+$(texbelow 2888300)
+)
+prunetex "${TEXTURES_NOT_FOR_FOREVER[@]}"
+
+# Do not remove sound; in Retail the file exists but has no volume - Check if the issue persists in Forever
+#SOUNDS_NOT_FOR_FOREVER=(UI_PowerAura_Generic)
+#prunesound "${SOUNDS_NOT_FOR_FOREVER[@]}"
+
+zipproject forever-alpha "$VERSION_TOC_VERSION"
+
+cdup
+}
+
 # Release Necrosis version
 release_necrosis() {
 NECROSIS_BUILD_VERSION=00000 # Version does not matter, toc will not be used
@@ -733,6 +768,7 @@ if [ $# -eq 0 ]; then
     release_cata
     release_mop
     release_retail
+    release_forever
     release_universal
     release_necrosis
 else
@@ -744,6 +780,7 @@ else
             cata) release_cata ;;
             mop) release_mop ;;
             retail) release_retail ;;
+            forever) release_forever ;;
             universal) release_universal ;;
             necrosis) release_necrosis ;;
             *) printf '\n==== %s ====\n' "${flavor^^}"; bye "Unknown flavor '$flavor'" ;;

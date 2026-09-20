@@ -1,4 +1,4 @@
-## Interface: 11509, 20506, 30405, 38002, 40402, 50504, 120000
+## Interface: 11509, 16001, 20506, 30405, 38002, 40402, 50504, 120000
 ## Title: |TInterface/Icons/Spell_Frost_Stun:16:16:0:0:512:512:64:448:64:448|t SpellActivationOverlay |cff66bbff2.7.11|r |TInterface/Icons/trade_engineering:16:16:0:0:512:512:32:480:32:480|t
 ## Notes: Display overlays and glow buttons to improve your gameplay!
 ## Notes-deDE: Zeigt Overlays und leuchtende Schaltflächen zur Verbesserung Ihres Gameplays an!
@@ -29,7 +29,7 @@
 ## X-SAO-Build: dev
 ## X-Curse-Project-ID: 649417
 
-# SpellActivationOverlay.lua, SpellActivationOverlay.xml and all textures were created by Blizzard Entertainment, Inc.
+# The original SpellActivationOverlay.lua, SpellActivationOverlay.xml, the spell alert sound and all textures were created by Blizzard Entertainment, Inc.
 #
 # World of Warcraft®: Cataclysm®
 # ©2010 Blizzard Entertainment, Inc. All rights reserved. Cataclysm is a trademark, and World of Warcraft, Warcraft and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc. in the U.S. and/or other countries.
