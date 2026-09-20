@@ -1,4 +1,4 @@
---[[ $Id: CallbackHandler-1.0.lua 26 2022-12-12 15:09:39Z nevcairiel $ ]]
+-- $Id: CallbackHandler-1.0.lua 26 2022-12-12 15:09:39Z nevcairiel $
 local MAJOR, MINOR = "CallbackHandler-1.0", 8
 local CallbackHandler = LibStub:NewLibrary(MAJOR, MINOR)
 
@@ -77,7 +77,7 @@ function CallbackHandler.New(_self, target, RegisterName, UnregisterName, Unregi
 	--   self with function ref, leads to functionref(...)
 	--   "addonId" (instead of self) with function ref, leads to functionref(...)
 	-- all with an optional arg, which, if present, gets passed as first argument (after self if present)
-	target[RegisterName] = function(self, eventname, method, ... --[[actually just a single arg]])
+	target[RegisterName] = function(self, eventname, method, ...) --[[the last argument is actually just a single arg]]
 		if type(eventname) ~= "string" then
 			error("Usage: "..RegisterName.."(eventname, method[, arg]): 'eventname' - string expected.", 2)
 		end
