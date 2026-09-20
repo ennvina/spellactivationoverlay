@@ -516,7 +516,7 @@ function SAO:GetSpellIDByActionSlot(actionSlot)
     end
 end
 
--- Utility function to return the list spellIDs for spells in the spellbook matching the same of a given spell
+-- Utility function to return the list spellIDs for spells in the spellbook matching the name of a given spell
 -- Spells are searched into the *current* spellbook, not through all available spells ever
 -- This means the returned list will be obsolete if e.g. new spells are learned afterwards or if the player re-specs
 -- @param spell Either the spell name (as string) or the spell ID (as number)
@@ -532,6 +532,12 @@ function SAO:GetHomonymSpellIDs(spell)
     end
 
     local homonyms = {};
+
+    if type(GetNumSpellTabs) ~= 'function' then
+        -- Flavors who don't support spell tabs probably don't have homonyms
+        -- Therefore, don't bother looking for them
+        return homonyms;
+    end
 
     for tab = 1, GetNumSpellTabs() do
         local offset, numSlots = select(3, GetSpellTabInfo(tab));
@@ -608,6 +614,11 @@ function SAO:RegisterEventHandler(handler, event, from)
         return;
     end
     --[[END_DEV_ONLY]]
+    if event == "COMBAT_LOG_EVENT_UNFILTERED" and SAO.IsRetail() then
+        -- CLEU forbidden in Retail since Midnight
+        SAO:Warn(Module, "Skipping forbidden CLEU registration in Retail for "..getHandlerName(handler)..getFromDescription(from));
+        return;
+    end
     if not eventHandlers then
         eventHandlers = {};
     end
