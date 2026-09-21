@@ -3,6 +3,8 @@ local Module = "auracontainer"
 
 local LoadAddOn = C_AddOns and C_AddOns.LoadAddOn or LoadAddOn
 
+local useAuraContainer = SAO.IsRetail()
+
 local xOffset = -256
 
 local function initializeAuraButton(button, overlayPod)
@@ -29,7 +31,7 @@ local function initializeAuraButton(button, overlayPod)
 end
 
 function SAO:InitializeAuraContainer()
-    if not self.IsRetail() or self.AuraContainer then
+    if not useAuraContainer or self.AuraContainer then
         return
     end
 
@@ -57,14 +59,24 @@ function SAO:InitializeAuraContainer()
     self.AuraContainerBuckets = {}
 end
 
-function SAO:RegisterAuraContainerBucketOverlay(bucket, overlayPod)
-    local container = self.AuraContainer
-    local id = overlayPod.index * 10000000 + bucket.spellID;
-    if not container or not bucket or self.AuraContainerBuckets[id] then
-        return
+function SAO:RegisterAuraContainerOverlay(overlayPod)
+    if not useAuraContainer then
+        return nil
     end
 
-    local spellID = bucket.spellID
+    local container = self.AuraContainer
+    if not container or not overlayPod then --[[BEGIN_DEV_ONLY]]
+        SAO:Warn(Module, "Invalid overlayPod or container not initialized")
+        return
+    end --[[END_DEV_ONLY]]
+
+    local id = overlayPod.index * 10000000 + overlayPod.spellID;
+    if self.AuraContainerBuckets[id] then --[[BEGIN_DEV_ONLY]]
+        SAO:Warn(Module, "Overlay already registered for id "..tostring(id))
+        return
+    end --[[END_DEV_ONLY]]
+
+    local spellID = overlayPod.spellID
 
     local auraButton = container:AddAuraSlot("spell_"..id, "HELPFUL", {
         templateNames = { "SAOAuraButtonTemplate" },
@@ -82,4 +94,16 @@ function SAO:RegisterAuraContainerBucketOverlay(bucket, overlayPod)
     end
 
     self.AuraContainerBuckets[id] = auraButton
+
+    return auraButton
+end
+
+function SAO:SetAuraContainerOverlayDisplayed(auraButton, displayed)
+    if auraButton then
+        if displayed then
+            auraButton:Show() -- @todo set parent's opacity to 100% instead
+        else
+            auraButton:Hide() -- @todo set parent's opacity to 0% instead
+        end
+    end
 end

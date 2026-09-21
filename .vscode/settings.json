@@ -139,6 +139,7 @@
         "InCombatLockdown",
         "IsSpellKnownOrOverridesKnown",
         "IsUsableSpell",
+        "LoadAddOn",
         "PlaySound",
         "PlaySoundFile",
         "SetCVar",

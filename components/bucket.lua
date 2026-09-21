@@ -286,11 +286,10 @@ SAO.BucketManager = {
         end
     end,
 
-    addEffectOverlay = function(self, bucket, hash, overlay, combatOnly)
+    addEffectOverlay = function(self, bucket, hash, overlay)
         local display = bucket:getOrCreateDisplay(hash);
         display:addOverlay(overlay);
-        display:setCombatOnly(combatOnly);
-        SAO:RegisterAuraContainerBucketOverlay(bucket, overlay);
+        display:setCombatOnly(overlay.combatOnly);
     end,
 
     addEffectButton = function(self, bucket, hash, button, combatOnly)

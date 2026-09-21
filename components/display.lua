@@ -72,6 +72,7 @@ SAO.Display = {
         end
 
         local _overlay = {
+            index = overlay.index,
             spellID = overlay.spellID,
             texture = overlay.texture,
             position = overlay.position,
@@ -82,7 +83,12 @@ SAO.Display = {
             b = overlay.color and overlay.color[3] or 255,
             autoPulse = type(overlay.autoPulse) == 'function' and overlay.autoPulse or overlay.autoPulse ~= false, -- true by default
             combatOnly = overlay.combatOnly == true, -- false by default
+            auraButton = nil, -- Possibly set below
         }
+
+        if overlay.requiresAura == true then -- false by default
+            _overlay.auraButton = SAO:RegisterAuraContainerOverlay(_overlay);
+        end
 
         if _overlay.spellID ~= self.spellID then
             SAO:Warn(Module, "Inconsistent spellID between display and overlay: "..tostring(self.spellID).." vs. "..tostring(_overlay.spellID));
@@ -129,12 +135,21 @@ SAO.Display = {
                 extra = { level = overlay.level };
             end
 
-            SAO:ActivateOverlay(self.hashData, overlay.spellID, overlay.texture, overlay.position, overlay.scale, overlay.r, overlay.g, overlay.b, overlay.autoPulse, forcePulsePlay, nil, overlay.combatOnly, extra);
+            if overlay.auraButton then
+                SAO:SetAuraContainerOverlayDisplayed(overlay.auraButton, true);
+            else
+                SAO:ActivateOverlay(self.hashData, overlay.spellID, overlay.texture, overlay.position, overlay.scale, overlay.r, overlay.g, overlay.b, overlay.autoPulse, forcePulsePlay, nil, overlay.combatOnly, extra);
+            end
         end
     end,
 
     hideOverlays = function(self)
         if #self.overlays > 0 then
+            for _, overlay in ipairs(self.overlays) do
+                if overlay.auraButton then
+                    SAO:SetAuraContainerOverlayDisplayed(overlay.auraButton, false);
+                end
+            end
             SAO:DeactivateOverlay(self.spellID);
         end
     end,
