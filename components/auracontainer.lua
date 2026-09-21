@@ -11,33 +11,21 @@ local function initializeAuraButton(button, overlayPod)
     button:SetPoint("CENTER", xOffset, 0)
     xOffset = xOffset + 128
 
-    local auraIcon = button:CreateTexture(nil, "ARTWORK")
-    auraIcon:SetAllPoints()
-    button:SetIcon(auraIcon)
+    button:SetIcon(button.auraIcon)
 
     local customTexture = overlayPod.texture
     if customTexture and type(customTexture) == 'function' then
-        SAO:Warn(Module, "Custom texture is a function, calling it to get the actual texture.")
         customTexture = customTexture()
     end
     if type(customTexture) == 'string' and tonumber(customTexture, 10) then
-        SAO:Warn(Module, "Custom texture is a number, using ReallyFullTexName.")
         customTexture = tonumber(customTexture, 10)
     end
-    SAO:Info(Module, "Initializing aura button with customTexture:"..tostring(customTexture))
-    if customTexture then
-        local overlayIcon = button:CreateTexture(nil, "OVERLAY")
-        overlayIcon:SetAllPoints()
-        overlayIcon:SetTexture(customTexture)
+    if customTexture and button.customTexture then
+        button.customTexture:SetTexture(customTexture)
     end
 
-    local cooldown = CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate")
-    cooldown:SetAllPoints()
-    button:SetDurationCooldown(cooldown)
-
-    local count = button:CreateFontString(nil, "OVERLAY", "NumberFontNormal")
-    count:SetPoint("BOTTOMRIGHT", -8, 8)
-    button:SetApplicationCount(count)
+    button:SetDurationCooldown(button.cooldown)
+    button:SetApplicationCount(button.count)
 end
 
 function SAO:InitializeAuraContainer()
@@ -79,7 +67,7 @@ function SAO:RegisterAuraContainerBucketOverlay(bucket, overlayPod)
     local spellID = bucket.spellID
 
     local auraButton = container:AddAuraSlot("spell_"..id, "HELPFUL", {
-        templateNames = { "CustomAuraButtonTemplate" },
+        templateNames = { "SAOAuraButtonTemplate" },
         initializeFrame = function(button)
             initializeAuraButton(button, overlayPod)
         end,
@@ -88,8 +76,8 @@ function SAO:RegisterAuraContainerBucketOverlay(bucket, overlayPod)
         },
     })
 
-    if overlayPod.texture and auraButton:GetIcon() then
-        -- Hide the GetIcon() texture by replacing it with a custom texture
+    if auraButton:GetIcon() then
+        -- Hide GetIcon() because it will be replaced by a custom texture
         auraButton:GetIcon():Hide()
     end
 
