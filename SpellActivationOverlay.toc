@@ -28,6 +28,7 @@
 ## IconTexture: Interface/AddOns/SpellActivationOverlay/textures/icon64
 ## X-SAO-Build: dev
 ## X-Curse-Project-ID: 649417
+## OptionalDeps: Blizzard_AuraContainer
 
 # The original SpellActivationOverlay.lua, SpellActivationOverlay.xml, the spell alert sound and all textures were created by Blizzard Entertainment, Inc.
 #
@@ -52,6 +53,7 @@ components\project.lua
 components\util.lua
 
 components\aura.lua
+components\auracontainer.lua
 components\bucket.lua
 components\display.lua
 components\effect.lua

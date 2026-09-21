@@ -14,6 +14,7 @@ local useSound = false;
 
 function SpellActivationOverlay_OnLoad(self)
 	SAO.Frame = self;
+	SAO:InitializeAuraContainer();
 	SAO.ShowAllOverlays = SpellActivationOverlay_ShowAllOverlays;
 	SAO.HideOverlays = SpellActivationOverlay_HideOverlays;
 	SAO.HideAllOverlays = SpellActivationOverlay_HideAllOverlays;
