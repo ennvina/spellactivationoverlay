@@ -83,11 +83,11 @@ SAO.Display = {
             b = overlay.color and overlay.color[3] or 255,
             autoPulse = type(overlay.autoPulse) == 'function' and overlay.autoPulse or overlay.autoPulse ~= false, -- true by default
             combatOnly = overlay.combatOnly == true, -- false by default
-            auraButton = nil, -- Possibly set below
+            auraContainerItem = nil, -- Possibly set below
         }
 
         if overlay.requiresAura == true then -- false by default
-            _overlay.auraButton = SAO:RegisterAuraContainerOverlay(_overlay);
+            _overlay.auraContainerItem = SAO.AuraContainer:registerOverlay(_overlay);
         end
 
         if _overlay.spellID ~= self.spellID then
@@ -135,8 +135,8 @@ SAO.Display = {
                 extra = { level = overlay.level };
             end
 
-            if overlay.auraButton then
-                SAO:SetAuraContainerOverlayDisplayed(overlay.auraButton, true);
+            if overlay.auraContainerItem then
+                overlay.auraContainerItem:setVisible(true);
             else
                 SAO:ActivateOverlay(self.hashData, overlay.spellID, overlay.texture, overlay.position, overlay.scale, overlay.r, overlay.g, overlay.b, overlay.autoPulse, forcePulsePlay, nil, overlay.combatOnly, extra);
             end
@@ -146,8 +146,8 @@ SAO.Display = {
     hideOverlays = function(self)
         if #self.overlays > 0 then
             for _, overlay in ipairs(self.overlays) do
-                if overlay.auraButton then
-                    SAO:SetAuraContainerOverlayDisplayed(overlay.auraButton, false);
+                if overlay.auraContainerItem then
+                    overlay.auraContainerItem:setVisible(false);
                 end
             end
             SAO:DeactivateOverlay(self.spellID);

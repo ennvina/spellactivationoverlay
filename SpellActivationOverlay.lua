@@ -14,7 +14,6 @@ local useSound = false;
 
 function SpellActivationOverlay_OnLoad(self)
 	SAO.Frame = self;
-	SAO:InitializeAuraContainer();
 	SAO.ShowAllOverlays = SpellActivationOverlay_ShowAllOverlays;
 	SAO.HideOverlays = SpellActivationOverlay_HideOverlays;
 	SAO.HideAllOverlays = SpellActivationOverlay_HideAllOverlays;
@@ -33,6 +32,12 @@ function SpellActivationOverlay_OnLoad(self)
 
 	self.useSound = false;
 	SpellActivationOverlay_OnChangeSoundToggle(self);
+
+	SAO.AuraContainer:initialize(SpellActivationOverlayContainerFrame, {
+		containerSize = 256 * sizeScale + self.offset,
+		longSide = 256 * sizeScale * self.scale,
+		shortSide = 128 * sizeScale * self.scale,
+	});
 
 	local className, classFile, classId = UnitClass("player");
 	local class = SAO.Class[classFile];
@@ -100,6 +105,11 @@ function SpellActivationOverlay_OnChangeGeometry(self)
 	-- Resize existing overlays and prepare variables for future overlays
 	longSide = 256 * sizeScale * self.scale;
 	shortSide = 128 * sizeScale * self.scale;
+	SAO.AuraContainer:updateGeometry({
+		containerSize = newSize,
+		longSide = longSide,
+		shortSide = shortSide,
+	});
 	for _, overlayList in pairs(self.overlaysInUse) do
 		for i=1, #overlayList do
 			local overlay = overlayList[i];

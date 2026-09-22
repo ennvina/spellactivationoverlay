@@ -104,6 +104,12 @@
 		</Scripts>
 	</Frame>
 	<Frame name="SAOAuraButtonTemplate" virtual="true">
+		<Animations>
+			<AnimationGroup parentKey="pulse" looping="REPEAT">
+				<Scale scaleX="1.08" scaleY="1.08" duration="0.5" smoothing="IN_OUT" order="1"/>
+				<Scale scaleX="0.9259" scaleY="0.9259" duration="0.5" smoothing="IN_OUT" order="2"/>
+			</AnimationGroup>
+		</Animations>
 		<Layers>
 			<Layer level="ARTWORK">
 				<Texture parentKey="auraIcon" setAllPoints="true"/>
