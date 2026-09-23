@@ -232,14 +232,17 @@ SAO.AuraContainer = {
         container:SetPoint("CENTER")
         container:SetUnit("player")
         container:SetEnabled(true)
-        container:Show()
 
         -- if RegisterStateDriver then
         --     RegisterStateDriver(container, "visibility", "[combat] show; hide")
         -- end
 
-        self.globalGeometry = initialGlobalGeometry
         self.container = container
+        self.globalGeometry = {
+            geometry = initialGlobalGeometry,
+            updatedAt = GetTime(),
+            pendingTimer = nil,
+        }
         self.items = {}
         self.initialized = true
     end,
@@ -255,7 +258,7 @@ SAO.AuraContainer = {
             return
         end --[[END_DEV_ONLY]]
 
-        local button = SAO.AuraContainerItem:new(id, self.container, overlay, self.globalGeometry)
+        local button = SAO.AuraContainerItem:new(id, self.container, overlay, self.globalGeometry.geometry)
 
         self.items[id] = button
 
@@ -267,12 +270,26 @@ SAO.AuraContainer = {
             return
         end
 
-        self.container:SetSize(globalGeometry.containerSize, globalGeometry.containerSize)
+        local containerSize = globalGeometry.containerSize
+        local recentUpdate = self.globalGeometry.updatedAt
+        if GetTime() == recentUpdate then
+            -- Must delay ever so slightly, otherwise the new size might not be applied correctly
+            if self.globalGeometry.pendingTimer then
+                self.globalGeometry.pendingTimer:Cancel()
+            end
+            self.globalGeometry.pendingTimer = C_Timer.NewTimer(0, function()
+                self.container:SetSize(containerSize, containerSize)
+                self.globalGeometry.pendingTimer = nil
+            end)
+        else
+            self.container:SetSize(containerSize, containerSize)
+        end
 
         for _, item in pairs(self.items) do
             item:setGeometry(item.auraButton, globalGeometry)
         end
 
-        self.globalGeometry = globalGeometry
+        self.globalGeometry.geometry = globalGeometry
+        self.globalGeometry.updatedAt = GetTime()
     end,
 }
