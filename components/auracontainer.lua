@@ -5,6 +5,15 @@ local LoadAddOn = C_AddOns and C_AddOns.LoadAddOn or LoadAddOn
 
 local useAuraContainer = SAO.IsRetail()
 
+local function splitPositions(position)
+    local positions = {}
+    for component in string.gmatch(position or "", "[^%+]+") do
+        component = string.match(component, "^%s*(.-)%s*$")
+        tinsert(positions, component)
+    end
+    return positions
+end
+
 local positionInfo = {
     CENTER = { location = "CENTER" },
     LEFT = { location = "LEFT" },
@@ -48,7 +57,7 @@ SAO.AuraContainerItem = {
             -- Constants
             spellID = overlay.spellID,
             scale = overlay.scale,
-            position = overlay.position,
+            positions = splitPositions(overlay.position),
             level = overlay.level,
             autoPulse = overlay.autoPulse,
             texture = overlay.texture,
@@ -57,34 +66,36 @@ SAO.AuraContainerItem = {
             b = overlay.b,
 
             -- Variables
-            auraButton = nil, -- Assigned before the end of the constructor
+            auraButtons = {}, -- Assigned below; there will be as many buttons as there are positions
         }
 
         self.__index = nil;
         setmetatable(item, self);
         self.__index = self;
 
-        local auraButton = container:AddAuraSlot("spell_"..id, "HELPFUL", {
-            templateNames = { "SAOAuraButtonTemplate" },
-            initializeFrame = function(auraButton)
-                item:initializeAuraButton(auraButton, initialGlobalGeometry)
-            end,
-            candidateFilters = {
-                includeSpellIDs = { [overlay.spellID] = true },
-            },
-        })
+        for index, position in ipairs(item.positions) do
+            local buttonPosition = position
+            local auraButton = container:AddAuraSlot("spell_"..id.."_"..index, "HELPFUL", {
+                templateNames = { "SAOAuraButtonTemplate" },
+                initializeFrame = function(auraButton)
+                    item:initializeAuraButton(auraButton, initialGlobalGeometry, buttonPosition)
+                end,
+                candidateFilters = {
+                    includeSpellIDs = { [overlay.spellID] = true },
+                },
+            })
 
-        item.auraButton = auraButton
+            item.auraButtons[index] = auraButton
+        end
 
         return item;
     end,
 
-    initializeAuraButton = function(self, auraButton, initialGlobalGeometry)
-        -- Please note, at this point, we cannot rely on the fact that self.auraButton == auraButton
-        self.pulse = auraButton.pulse
+    initializeAuraButton = function(self, auraButton, initialGlobalGeometry, position)
+        -- Please note, at this point, we cannot rely on the fact that this button is in self.auraButtons
         auraButton:SetIcon(auraButton.auraIcon)
 
-        self:setTexture(auraButton)
+        self:setTexture(auraButton, position)
 
         auraButton:SetDurationCooldown(auraButton.cooldown)
         auraButton:SetApplicationCount(auraButton.count)
@@ -93,7 +104,7 @@ SAO.AuraContainerItem = {
             auraButton:SetFrameLevel(self.level)
         end
 
-        self:setGeometry(auraButton, initialGlobalGeometry)
+        self:setButtonGeometry(auraButton, initialGlobalGeometry, position)
 
         if auraButton:GetIcon() then
             -- Hide GetIcon() because we want to control which texture is displayed
@@ -102,7 +113,7 @@ SAO.AuraContainerItem = {
         end
     end,
 
-    setTexture = function(self, auraButton)
+    setTexture = function(self, auraButton, position)
         local texture = auraButton.customTexture
 
         -- Set filename or file ID
@@ -116,7 +127,7 @@ SAO.AuraContainerItem = {
         texture:SetTexture(customTexture)
 
         -- Set texture coordinates
-        local position = self.position and strupper(self.position)
+        position = position and strupper(position)
         local info = positionInfo[position]
         local texLeft, texRight, texTop, texBottom = 0, 1, 0, 1
         if info and info.cw and info.cw > 0 then
@@ -137,8 +148,8 @@ SAO.AuraContainerItem = {
         texture:SetVertexColor(self.r / 255, self.g / 255, self.b / 255)
     end,
 
-    setGeometry = function(self, auraButton, globalGeometry)
-        local position = self.position and strupper(self.position)
+    setButtonGeometry = function(self, auraButton, globalGeometry, position)
+        position = position and strupper(position)
         local info = positionInfo[position]
         local parent = auraButton:GetParent()
         local width, height
@@ -174,20 +185,22 @@ SAO.AuraContainerItem = {
             width, height = shortSide, shortSide
             auraButton:SetPoint("TOPRIGHT", parent, "BOTTOMLEFT", 0, 0)
         else
-            if position then --[[BEGIN_DEV_ONLY]]
-                SAO:Warn(Module, "Composite or unknown aura position is not supported: "..tostring(self.position))
-            end --[[END_DEV_ONLY]]
+            SAO:Warn(Module, "Unknown aura position is not supported: "..tostring(position)) --[[DEV_ONLY]]
             return
         end
 
         auraButton:SetSize(width * self.scale, height * self.scale)
     end,
 
-    setVisible = function(self, visible)
-        local auraButton = self.auraButton
+    setGeometry = function(self, globalGeometry)
+        for index, auraButton in ipairs(self.auraButtons) do
+            self:setButtonGeometry(auraButton, globalGeometry, self.positions[index])
+        end
+    end,
 
-        if auraButton then
-            local pulse = self.pulse
+    setVisible = function(self, visible)
+        for _, auraButton in ipairs(self.auraButtons) do
+            local pulse = auraButton.pulse
             if visible then
                 if pulse then
                     local mustPulse = self.autoPulse ~= false -- True by default
@@ -286,7 +299,7 @@ SAO.AuraContainer = {
         end
 
         for _, item in pairs(self.items) do
-            item:setGeometry(item.auraButton, globalGeometry)
+            item:setGeometry(globalGeometry)
         end
 
         self.globalGeometry.geometry = globalGeometry
