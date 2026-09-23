@@ -168,5 +168,8 @@
 				</Scripts>
 			</Frame>
 		</Frames>
+		<Scripts>
+			<OnShow function="SpellActivationOverlayContainerFrame_OnShow"/>
+		</Scripts>
 	</Frame>
 </Ui>
