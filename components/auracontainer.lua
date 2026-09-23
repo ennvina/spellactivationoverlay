@@ -190,8 +190,8 @@ SAO.AuraContainerItem = {
             local pulse = self.pulse
             if visible then
                 if pulse then
-                    pulse.autoPlay = self.autoPulse
-                    if pulse.autoPlay and not pulse:IsPlaying() then
+                    local mustPulse = self.autoPulse ~= false -- True by default
+                    if mustPulse and not pulse:IsPlaying() then
                         pulse:Play()
                     end
                 end
