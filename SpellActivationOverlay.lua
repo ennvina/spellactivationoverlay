@@ -33,7 +33,7 @@ function SpellActivationOverlay_OnLoad(self)
 	self.useSound = false;
 	SpellActivationOverlay_OnChangeSoundToggle(self);
 
-	SAO.AuraContainer:initialize(SpellActivationOverlayContainerFrame, {
+	SAO.AuraContainer:initialize(SpellActivationOverlayAddonFrame, {
 		containerSize = 256 * sizeScale + self.offset,
 		longSide = 256 * sizeScale * self.scale,
 		shortSide = 128 * sizeScale * self.scale,
@@ -792,7 +792,7 @@ function SpellActivationOverlayFrame_SetForceAlpha2(enabled)
 	end
 end
 
-function SpellActivationOverlayContainerFrame_OnShow(self)
+function SpellActivationOverlay_OnShow(self)
 	if SpellActivationOverlayDB and SpellActivationOverlayDB.alert and SpellActivationOverlayDB.alert.enabled
 	and SAO.AuraContainer and SAO.AuraContainer.initialized then
 		-- Must refresh the geometry of the aura container, because it was reset when its parent frame was hidden
