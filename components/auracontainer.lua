@@ -3,7 +3,7 @@ local Module = "auracontainer"
 
 local LoadAddOn = C_AddOns and C_AddOns.LoadAddOn or LoadAddOn
 
-local useAuraContainer = SAO.IsRetail()
+local useAuraContainer = SAO.IsRetail() and C_Secrets ~= nil and C_Secrets.GetSpellAuraSecrecy ~= nil
 
 local function splitPositions(position)
     local positions = {}
@@ -260,8 +260,19 @@ SAO.AuraContainer = {
         self.initialized = true
     end,
 
+    --[[
+        Register a secret-compatible overlay for a spell
+        Returns nil if either
+        - the addon is not capable of handling secret-compatible overlays
+        - or the spell does not need such overlay (e.g., is not secret in combat)
+    ]]
     registerOverlay = function(self, overlay)
         if not useAuraContainer or not self.initialized then
+            return nil
+        end
+
+        if C_Secrets.GetSpellAuraSecrecy(overlay.spellID) == Enum.SecrecyLevel.NeverSecret then
+            -- We don't need to create an secret-compatible overlay for spells that are not secret in combat
             return nil
         end
 
