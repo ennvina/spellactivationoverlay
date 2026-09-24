@@ -136,6 +136,7 @@ SAO.Display = {
             end
 
             if overlay.auraContainerItem then
+                SpellActivationOverlayFrame_ResetCombatFade(SAO.Frame);
                 overlay.auraContainerItem:setVisible(true);
             else
                 SAO:ActivateOverlay(self.hashData, overlay.spellID, overlay.texture, overlay.position, overlay.scale, overlay.r, overlay.g, overlay.b, overlay.autoPulse, forcePulsePlay, nil, overlay.combatOnly, extra);

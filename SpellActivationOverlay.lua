@@ -126,6 +126,13 @@ function SpellActivationOverlay_OnChangeGeometry(self)
 	end
 end
 
+function SpellActivationOverlayFrame_ResetCombatFade(self)
+	if not self.disableDimOutOfCombat and not InCombatLockdown() then
+		self.combatAnimOut:Stop();
+		self.combatAnimIn:Play();
+	end
+end
+
 function SpellActivationOverlay_OnChangeTimerVisibility(self)
 	SAO:Trace(Module, "SpellActivationOverlay_OnChangeTimerVisibility");
 
@@ -385,8 +392,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 
 	if ( not self.disableDimOutOfCombat and not InCombatLockdown() ) then
 		-- Simulate a short, fake in-combat mode, to make the spell alert more visible
-		self.combatAnimOut:Stop();
-		self.combatAnimIn:Play();
+		SpellActivationOverlayFrame_ResetCombatFade(self);
 		if ( combatOnly ) then
 			-- Playing combat.animIn to add a smoother fade-in animation when not in combat
 			-- Because the player is not in combat, the 'very quick' popup is overkill
