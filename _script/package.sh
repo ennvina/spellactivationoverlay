@@ -589,7 +589,8 @@ mkproject forever "$FOREVER_BUILD_VERSION" 30c9d9 inv_catskybornemount_c60_blue 
 # Do not remove Cataclysm copyright, because we may need to use a sound file introduced in Cataclysm
 prunecopyright Pandaria Draenor
 
-VARIABLES_NOT_FOR_FOREVER=(holypower nativesao)
+# VARIABLES_NOT_FOR_FOREVER=(holypower nativesao)
+VARIABLES_NOT_FOR_FOREVER=(holypower) # Keep nativesao until we are certain the game does not fire such events
 prunevar "${VARIABLES_NOT_FOR_FOREVER[@]}"
 
 CLASSES_NOT_FOR_FOREVER=(deathknight monk)
