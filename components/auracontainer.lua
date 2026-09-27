@@ -97,6 +97,12 @@ SAO.AuraContainerItem = {
 
         self:setTexture(auraButton, position)
 
+        if auraButton.cooldown then
+            auraButton.cooldown:SetDrawBling(false)
+            auraButton.cooldown:SetDrawEdge(false)
+            auraButton.cooldown:SetDrawSwipe(false)
+        end
+
         auraButton:SetDurationCooldown(auraButton.cooldown)
         auraButton:SetApplicationCount(auraButton.count)
 
