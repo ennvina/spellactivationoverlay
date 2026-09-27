@@ -18,8 +18,9 @@ SAO.CATA_AND_ONWARD  = SAO.ALL_PROJECTS - (SAO.FOREVER + SAO.ERA + SAO.SOD + SAO
 SAO.MOP_AND_ONWARD   = SAO.ALL_PROJECTS - (SAO.FOREVER + SAO.ERA + SAO.SOD + SAO.TBC + SAO.WRATH + SAO.CATA)
 
 function SAO.IsForever()
-    return false; -- Unknown project ID for now
-    -- return WOW_PROJECT_ID == WOW_PROJECT_FOREVER;
+    local interfaceVersion = tonumber((select(4, GetBuildInfo())));
+    return interfaceVersion >= 16000 and interfaceVersion < 20000; -- Between 1.60.0 and 1.99.99
+    -- return WOW_PROJECT_ID == WOW_PROJECT_FOREVER; -- Better option if available (not available on Forever Beta)
 end
 
 function SAO.IsEra()
@@ -61,13 +62,13 @@ function SAO.HasMidnightUI()
         return hasMidnightUI;
     end
 
-    local buildInfo = tonumber((select(2, GetBuildInfo())));
+    local buildNumber = tonumber((select(2, GetBuildInfo())));
     local interfaceVersion = tonumber((select(4, GetBuildInfo())));
     hasMidnightUI = (SAO.IsForever())
-                 or (SAO.IsMoP() and buildInfo >= 68042) -- 68042 = first build number of MoP Classic SoO patch
-                 or (SAO.IsTBC() and buildInfo >= 65295) -- 65295 = first build number of TBC Classic Anniversary
+                 or (SAO.IsMoP() and buildNumber >= 68042) -- 68042 = first build number of MoP Classic SoO patch
+                 or (SAO.IsTBC() and buildNumber >= 65295) -- 65295 = first build number of TBC Classic Anniversary
                  or (SAO.IsWrath() and interfaceVersion >= 38001) -- 38001 = interface version of Titan Reforged 3.80.1
-                 or (SAO.IsEra() and buildInfo >= 68808) -- 68808 = first build number of Era with 'Midnight UI'
+                 or (SAO.IsEra() and buildNumber >= 68808) -- 68808 = first build number of Era with 'Midnight UI'
                  or (SAO.IsRetail() and LE_EXPANSION_LEVEL_CURRENT >= LE_EXPANSION_MIDNIGHT);
 
     return hasMidnightUI;
@@ -108,8 +109,11 @@ local flavorNames = {
 };
 
 function SAO.GetFlavorName()
+    -- Special case for flavors which do not have a dedicated WOW_PROJECT_ID
     if SAO.IsSoD() then
-        return "SoD"; -- Special case for SoD, which does not have a dedicated WOW_PROJECT_ID
+        return "SoD";
+    elseif SAO.IsForever() then
+        return "Forever";
     end
     return flavorNames[WOW_PROJECT_ID] or "Unknown";
 end
