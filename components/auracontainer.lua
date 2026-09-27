@@ -106,6 +106,13 @@ SAO.AuraContainerItem = {
 
         self:setButtonGeometry(auraButton, initialGlobalGeometry, position)
 
+        if auraButton.pulse then
+            local mustPulse = self.autoPulse ~= false -- True by default
+            if mustPulse then
+                auraButton.pulse:Play()
+            end
+        end
+
         if auraButton:GetIcon() then
             -- Hide GetIcon() because we want to control which texture is displayed
             -- Ideally, we would set the icon's texture, but it looks like the game client overrides it
@@ -200,19 +207,9 @@ SAO.AuraContainerItem = {
 
     setVisible = function(self, visible)
         for _, auraButton in ipairs(self.auraButtons) do
-            local pulse = auraButton.pulse
             if visible then
-                if pulse then
-                    local mustPulse = self.autoPulse ~= false -- True by default
-                    if mustPulse and not pulse:IsPlaying() then
-                        pulse:Play()
-                    end
-                end
                 auraButton:Show() -- @todo set parent's opacity to 100% instead
             else
-                if pulse then
-                    pulse:Stop()
-                end
                 auraButton:Hide() -- @todo set parent's opacity to 0% instead
             end
         end
