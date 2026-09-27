@@ -54,8 +54,8 @@ function SpellActivationOverlayOptionsPanel_Init(self)
         end
     end
 
-    -- local mustDisableGlowForEveryone = SAO.IsTBC(); -- In TBC Classic Anniversary, glowing buttons are disabled for everyone
-    local mustDisableGlowForEveryone = false; -- Re-enable glowing buttons for everyone
+    local mustDisableGlowForEveryone = SAO.IsRetail() or SAO.IsForever(); -- There are no viable glowing buttons alternatives in Retail or Forever, for now
+    -- local mustDisableGlowForEveryone = false; -- Re-enable glowing buttons for everyone when issues are fixed
     if not shutdownCategory and mustDisableGlowForEveryone then
         SpellActivationOverlayOptionsPanel.glowOff:Show();
     else
