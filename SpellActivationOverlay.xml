@@ -130,7 +130,15 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Cooldown parentKey="cooldown" inherits="CooldownFrameTemplate" setAllPoints="true"/>
+			<Cooldown
+				parentKey="cooldown"
+				inherits="CooldownFrameTemplate"
+				setAllPoints="true"
+				drawBling="false"
+				drawEdge="false"
+				drawSwipe="false"
+				hideCountdownNumbers="true">
+			</Cooldown>
 		</Frames>
 	</Frame>
 	<Frame name="SpellActivationOverlayContainerFrame" parent="UIParent">

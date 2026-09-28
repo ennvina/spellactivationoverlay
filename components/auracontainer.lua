@@ -97,13 +97,8 @@ SAO.AuraContainerItem = {
 
         self:setTexture(auraButton, position)
 
-        if auraButton.cooldown then
-            auraButton.cooldown:SetDrawBling(false)
-            auraButton.cooldown:SetDrawEdge(false)
-            auraButton.cooldown:SetDrawSwipe(false)
-        end
+        self:setCooldown(auraButton)
 
-        auraButton:SetDurationCooldown(auraButton.cooldown)
         auraButton:SetApplicationCount(auraButton.count)
 
         if self.level then -- Optional
@@ -159,6 +154,11 @@ SAO.AuraContainerItem = {
 
         -- Set vertex color
         texture:SetVertexColor(self.r / 255, self.g / 255, self.b / 255)
+    end,
+
+    setCooldown = function(self, auraButton)
+        local cooldown = auraButton.cooldown
+        auraButton:SetDurationCooldown(cooldown)
     end,
 
     setButtonGeometry = function(self, auraButton, globalGeometry, position)
