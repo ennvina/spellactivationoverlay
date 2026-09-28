@@ -12,6 +12,7 @@
     "Lua.diagnostics.globals": [
         // Lua global functions
         "bit",
+        "canaccessvalue",
         "ceil",
         "hooksecurefunc",
         "issecretvalue",
