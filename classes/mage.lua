@@ -685,18 +685,18 @@ end
 local function useHeatingUpAndHotStreak()
     SAO:CreateEffect(
         "heating_up",
-        SAO.MOP,
+        SAO.MOP + SAO.RETAIL,
         heatingUpSpellID,
         "aura",
         {
-            overlay = { texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.5 },
+            overlay = { texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.5, pulse = false },
             button = infernoBlast,
         }
     );
 
     SAO:CreateEffect(
         "hot_streak",
-        SAO.MOP,
+        SAO.MOP + SAO.RETAIL,
         hotStreakSpellID,
         "aura",
         {
@@ -715,14 +715,14 @@ local function registerFire(self)
 
     if self.IsSoD() then
         self:RegisterAura("hot_streak_full", 0, hotStreakSoDSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { self:GetSpellName(pyroblast) });
+    elseif SAO.IsWrath() then
+        self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { self:GetSpellName(pyroblast) });
     elseif self.IsCata() then
         self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { pyroblastBang });
-    elseif self.IsMoP() then
+    elseif self.IsMoP() or self.IsRetail() then
         useHeatingUpAndHotStreak();
-    else
-        self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { self:GetSpellName(pyroblast) });
     end
-    if not self.IsMoP() then
+    if not self.IsMoP() and not self.IsRetail() then
         self:RegisterAura("hot_streak_half", 0, heatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255, false); -- Does not exist, but define it for option testing
     end
     if not self.IsCata() then
