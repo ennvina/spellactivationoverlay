@@ -93,6 +93,9 @@ SAO.AuraContainerItem = {
 
     initializeAuraButton = function(self, auraButton, initialGlobalGeometry, position)
         -- Please note, at this point, we cannot rely on the fact that this button is in self.auraButtons
+
+        auraButton:EnableMouse(false) -- Disable tooltip
+
         auraButton:SetIcon(auraButton.auraIcon)
 
         self:setTexture(auraButton, position)
