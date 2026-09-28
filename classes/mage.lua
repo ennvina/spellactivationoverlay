@@ -514,7 +514,7 @@ local function customLogin(self, ...)
         HotStreakHandler:init(hotStreakSpellName);
     end
 
-    if not SAO.IsRetail() and not SAO.IsForever() then
+    if isCompatibleWithFrozen then
         if not FrozenHandler.initialized then
             FrozenHandler:init();
         end
