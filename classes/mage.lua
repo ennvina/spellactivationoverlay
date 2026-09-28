@@ -514,8 +514,10 @@ local function customLogin(self, ...)
         HotStreakHandler:init(hotStreakSpellName);
     end
 
-    if (not FrozenHandler.initialized) then
-        FrozenHandler:init();
+    if not SAO.IsRetail() and not SAO.IsForever() then
+        if not FrozenHandler.initialized then
+            FrozenHandler:init();
+        end
     end
 end
 
@@ -935,7 +937,9 @@ local function loadOptions(self)
 
     -- Frost options - spell alerts
 
-    self:AddOverlayOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, 0, self:translateDebuff(), nil, nil, FrozenHandler.fakeSpellID);
+    if FrozenHandler.initialized then
+        self:AddOverlayOption(FrozenHandler.freezeTalent, FrozenHandler.freezeID, 0, self:translateDebuff(), nil, nil, FrozenHandler.fakeSpellID);
+    end
 
     if self.IsSoD() then
         self:AddOverlayOption(fingersOfFrostSoDTalent, fingersOfFrostSoDBuff, 0, nil, nil, 2); -- setup any stacks, test with 2 stacks
