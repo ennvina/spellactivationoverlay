@@ -2,7 +2,7 @@
 ..\FrameXML\UI.xsd">
   <Script file="InterfaceOptionsPanels.lua"/>
 
-  <Frame name="SpellActivationOverlayOptionsPanel" hidden="true" parent="UIParent">
+  <Frame name="SpellActivationOverlayOptionsPanel" hidden="true" parent="UIParent" mixin="SpellActivationOverlayOptionsPanelMixin">
     <Layers>
       <Layer level="ARTWORK">
         <FontString name="$parentBuildInfo" text="" inherits="GameFontNormal" justifyH="CENTER" justifyV="CENTER">
@@ -371,8 +371,8 @@
       </Layer>
     </Layers>
     <Scripts>
-      <OnShow function="SpellActivationOverlayOptionsPanel_OnShow"/>
-      <OnLoad function="SpellActivationOverlayOptionsPanel_OnLoad"/>
+      <OnShow method="OnShow"/>
+      <OnLoad method="OnLoad"/>
     </Scripts>
   </Frame>
 
