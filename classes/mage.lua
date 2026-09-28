@@ -10,11 +10,11 @@ local UnitGUID = UnitGUID
 local UnitHealth = UnitHealth
 
 local clearcastingVariants; -- Lazy init in lazyCreateClearcastingVariants()
-local isCompatibleWithClearcasting = not SAO.IsRetail();
+local isCompatibleWithClearcasting = not SAO.IsRetail() and not SAO.IsForever();
 
-local isCompatibleWithFrozen = not SAO.IsRetail();
+local isCompatibleWithFrozen = not SAO.IsRetail() and not SAO.IsForever();
 
-local isCompatibleWithHotStreak = not SAO.IsRetail();
+local isCompatibleWithCustomHotStreak = not SAO.IsRetail() and not SAO.IsForever();
 
 local arcaneExplosion = 1449;
 local arcaneMissiles = 5143;
@@ -990,12 +990,12 @@ end
 SAO.Class["MAGE"] = {
     ["Register"] = registerClass,
     ["LoadOptions"] = loadOptions,
-    ["COMBAT_LOG_EVENT_UNFILTERED"] = (isCompatibleWithFrozen or isCompatibleWithHotStreak) and customCLEU or nil,
-    ["PLAYER_LOGIN"] = (isCompatibleWithFrozen or isCompatibleWithHotStreak) and customLogin or nil,
-    ["CHARACTER_POINTS_CHANGED"] = isCompatibleWithHotStreak and recheckTalents or nil,
+    ["COMBAT_LOG_EVENT_UNFILTERED"] = (isCompatibleWithFrozen or isCompatibleWithCustomHotStreak) and customCLEU or nil,
+    ["PLAYER_LOGIN"] = (isCompatibleWithFrozen or isCompatibleWithCustomHotStreak) and customLogin or nil,
+    ["CHARACTER_POINTS_CHANGED"] = isCompatibleWithCustomHotStreak and recheckTalents or nil,
     ["PLAYER_TARGET_CHANGED"] = isCompatibleWithFrozen and retarget or nil,
     ["UNIT_HEALTH"] = isCompatibleWithFrozen and unitHealth or nil,
     ["UNIT_HEALTH_FREQUENT"] = (isCompatibleWithFrozen and not SAO.HasMidnightEvents()) and unitHealthFrequent or nil,
-    [SAO.IsWrath() and "PLAYER_TALENT_UPDATE" or "CHARACTER_POINTS_CHANGED"] = isCompatibleWithHotStreak and recheckTalents or nil, -- Event changed in Wrath
-    ["RUNE_UPDATED"] = (isCompatibleWithHotStreak and SAO.IsSoD()) and recheckTalents or nil,
+    [SAO.IsWrath() and "PLAYER_TALENT_UPDATE" or "CHARACTER_POINTS_CHANGED"] = isCompatibleWithCustomHotStreak and recheckTalents or nil, -- Event changed in Wrath
+    ["RUNE_UPDATED"] = (isCompatibleWithCustomHotStreak and SAO.IsSoD()) and recheckTalents or nil,
 }
