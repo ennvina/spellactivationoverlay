@@ -223,7 +223,7 @@ SAO.Variable:register({
             end
 
             -- Special case, should happen once per login or per loading screen at best
-            if updateInfo.isFullUpdate then
+            if not issecretvalue(updateInfo.isFullUpdate) and updateInfo.isFullUpdate then
                 SAO:Debug(Module, "Full aura update detected, rechecking all buckets");
                 SAO:CheckManuallyAllBuckets(SAO.TRIGGER_AURA);
                 return;
@@ -260,8 +260,7 @@ SAO.Variable:register({
                 bucket.lastTimeUnitAuraEvent = GetTime();
             end
 
-
-            for _, auraInstanceID in ipairs(updateInfo.updatedAuraInstanceIDs or {}) do
+            for _, auraInstanceID in ipairs(not issecretvalue(updateInfo.updatedAuraInstanceIDs) and updateInfo.updatedAuraInstanceIDs or {}) do
                 local bucket = bucketsByAuraInstanceID[auraInstanceID];
                 if bucket then
                     if bucket.lastTimeUnitAuraEvent == GetTime() then
@@ -280,7 +279,7 @@ SAO.Variable:register({
                 end
             end
 
-            for _, auraInstanceID in ipairs(updateInfo.removedAuraInstanceIDs or {}) do
+            for _, auraInstanceID in ipairs(not issecretvalue(updateInfo.removedAuraInstanceIDs) and updateInfo.removedAuraInstanceIDs or {}) do
                 local bucket = bucketsByAuraInstanceID[auraInstanceID];
                 if bucket then
                     if bucket.lastTimeUnitAuraEvent == GetTime() then
@@ -291,7 +290,7 @@ SAO.Variable:register({
                 end
             end
 
-            for _, aura in ipairs(updateInfo.addedAuras or {}) do
+            for _, aura in ipairs(not issecretvalue(updateInfo.addedAuras) and updateInfo.addedAuras or {}) do
                 local bucket = SAO:GetBucketBySpellID(aura.spellId);
                 if bucket and bucket.trigger:reactsWith(SAO.TRIGGER_AURA) then
                     if bucket.lastTimeUnitAuraEvent == GetTime() then
