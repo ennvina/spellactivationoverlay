@@ -320,7 +320,22 @@ SAO.Variable:register({
     import = {
         noeTrigger = "aura",
         hreTrigger = "requireAura",
-        dependency = nil, -- Actually, aura stacks depend on 'spellID', but this property is mandatory and automatically imported
+        -- dependency = nil, -- Actually, aura stacks depend on 'spellID', but this property is mandatory and automatically imported
+        dependency = (C_Secrets and C_Secrets.GetSpellAuraSecrecy) and {
+            name = "spellID",
+            expectedType = "number",
+            default = function(effect) return effect.spellID end,
+            prepareBucket = function(bucket, value)
+                local secrecy = C_Secrets.GetSpellAuraSecrecy(value);
+                if secrecy then
+                    if secrecy == Enum.SecrecyLevel.ContextuallySecret then
+                        SAO:Debug(Module, bucket.description.." is based on spell "..value.." which has secret restrictions");
+                    elseif secrecy == Enum.SecrecyLevel.AlwaysSecret then
+                        SAO:Debug(Module, bucket.description.." is based on spell "..value.." which is always secret");
+                    end
+                end
+            end,
+        } or nil,
         classes = {
             force = "aura",
             ignore = nil,
