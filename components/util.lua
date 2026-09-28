@@ -533,18 +533,28 @@ function SAO:GetHomonymSpellIDs(spell)
 
     local homonyms = {};
 
-    if type(GetNumSpellTabs) ~= 'function' then
-        -- Flavors who don't support spell tabs probably don't have homonyms
-        -- Therefore, don't bother looking for them
-        return homonyms;
+    if type(GetNumSpellTabs) == 'function' then -- Pretty much all flavors except Retail
+        for tab = 1, GetNumSpellTabs() do
+            local offset, numSlots = select(3, GetSpellTabInfo(tab));
+            for index = offset+1, offset+numSlots do
+                local name, _, id = GetSpellBookItemName(index, BOOKTYPE_SPELL);
+                if (name == spellName) then
+                    table.insert(homonyms, id);
+                end
+            end
+        end
     end
 
-    for tab = 1, GetNumSpellTabs() do
-        local offset, numSlots = select(3, GetSpellTabInfo(tab));
-        for index = offset+1, offset+numSlots do
-            local name, _, id = GetSpellBookItemName(index, BOOKTYPE_SPELL);
-            if (name == spellName) then
-                table.insert(homonyms, id);
+    if C_SpellBook and C_SpellBook.GetNumSpellBookSkillLines then
+        for i = 1, C_SpellBook.GetNumSpellBookSkillLines() do
+            local skillLineInfo = C_SpellBook.GetSpellBookSkillLineInfo(i)
+            local offset, numSlots = skillLineInfo.itemIndexOffset, skillLineInfo.numSpellBookItems
+            for j = offset+1, offset+numSlots do
+                local name, subName = C_SpellBook.GetSpellBookItemName(j, Enum.SpellBookSpellBank.Player)
+                local spellID = select(2,C_SpellBook.GetSpellBookItemType(j, Enum.SpellBookSpellBank.Player))
+                if name == spellName then
+                    table.insert(homonyms, spellID);
+                end
             end
         end
     end
