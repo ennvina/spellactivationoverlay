@@ -2,23 +2,12 @@ local AddonName, SAO = ...
 local Module = "aurastacks"
 
 -- Global variables
--- For now, enforce Legacy on WoW Classic, because Modern mode requires more testing
--- It is safe to assume Retail players want the Modern mode, because Legacy is unusable there
-SAO.AURASTACKS = {
-    LEGACY = not SAO.IsRetail(),
-    MODERN = SAO.IsRetail(),
-};
---[[BEGIN_DEV_ONLY]]
--- Developers will test Modern mode on Classic, when supported
 SAO.AURASTACKS = {
     LEGACY = C_UnitAuras == nil,
     MODERN = C_UnitAuras ~= nil,
 };
 assert(SAO.AURASTACKS.LEGACY ~= SAO.AURASTACKS.MODERN); -- Exactly one of these modes must be active
-if SAO.AURASTACKS.MODERN and not SAO.IsRetail() then
-    SAO:Info(Module, "You are currently testing the Modern AuraStacks mode. Enjoy!");
-end
---[[END_DEV_ONLY]]
+SAO:Info(Module, "You are currently using the Modern AuraStacks mode. Enjoy!");
 
 -- Aura stacks
 --  if stacks >= 0 then
