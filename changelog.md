@@ -1,5 +1,31 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.8.0 (2026-09-xx)
+
+Introducing Forever flavor!
+- Forever support is in very early stage at the moment
+- Please read the Known Limitations sections for more information
+- Make sure to report issues and suggest ideas, thank you :)
+
+This release uses a new technology to detect auras
+- This increases performance and has better long-term support
+- All flavors should be compatible with this technology as of today
+- Don't worry, this has been tested internally for almost a year now :)
+
+Bug Fixes
+- Mage's Heating Up Spell Alert no longer pulses (Mists of Pandaria)
+
+Known Limitations (Forever)
+- Glowing Buttons are not supported
+  - It is unsure whether Glowing Buttons can become a reality in Forever
+  - In the meantime, Glowing Buttons have been disabled in Options Panel
+- Most Spell Alerts do not support Progressive Timer
+  - Some progressive timer alternatives are being evaluated
+  - Support will definitely come someday, but differently than in Classic
+- Custom effect are not supported
+  - This includes things like Mage's Freeze effect, or Rogue's Riposte
+  - There is no ETA on this matter, as it requires further investigation
+
 #### v2.7.11 (2026-09-14)
 
 Thank you to our amazing contributors for helping out. Thanks!
@@ -1428,7 +1454,7 @@ Enter /sao to enable or disable these options
 - Spell Alerts triggering out-of-combat are not dimmed for 5 seconds
 - SAOs and GABs should disappear if their triggers fade during a loading screen
 - Lua errors of 'ipairs' should no longer occur after a loading screen
-- Pulse animations should no longer start earlier thn expected
+- Pulse animations should no longer start earlier than expected
 
 #### v0.6.3 (2022-09-20)
 
