@@ -58,11 +58,11 @@ end
 
 local function useHammerOfWrath()
     if false
-    or SAO.IsProject(SAO.MOP_AND_ONWARD) -- Keep this comment for isNative = true
+    or SAO.IsProject(SAO.MOP_AND_ONWARD - SAO.RETAIL) -- Keep this comment for isNative = true
     then
         SAO:CreateEffect(
             "how",
-            SAO.MOP_AND_ONWARD, -- Already glowing natively by the game client in Mists of Pandaria and onward
+            SAO.MOP_AND_ONWARD - SAO.RETAIL, -- Already glowing natively by the game client in Mists of Pandaria and onward
             how,
             "counter",
             {
@@ -92,7 +92,7 @@ end
 local function useExorcism()
     SAO:CreateEffect(
         "exorcism",
-        SAO.ALL_PROJECTS,
+        SAO.ALL_PROJECTS - SAO.RETAIL,
         exorcism,
         "counter",
         {
@@ -232,7 +232,7 @@ end
 local function useDaybreak()
     SAO:CreateEffect(
         "daybreak",
-        SAO.CATA_AND_ONWARD,
+        SAO.CATA_AND_ONWARD - SAO.RETAIL,
         88819, -- Daybreak (buff)
         "aura",
         {
@@ -290,7 +290,7 @@ end
 local function useDivinePurpose()
     SAO:CreateEffect(
         "divine_purpose",
-        SAO.CATA_AND_ONWARD,
+        SAO.CATA_AND_ONWARD - SAO.RETAIL,
         90174, -- Divine Purpose (buff)
         "aura",
         {
@@ -365,10 +365,10 @@ local function useArtOfWar()
                 button = exorcism,
             }
         );
-    elseif SAO.IsProject(SAO.MOP_AND_ONWARD) then
+    elseif SAO.IsProject(SAO.MOP_AND_ONWARD - SAO.RETAIL) then
         SAO:CreateEffect(
             "art_of_war",
-            SAO.MOP_AND_ONWARD,
+            SAO.MOP_AND_ONWARD - SAO.RETAIL,
             59578, -- The Art of War (buff)
             "native",
             {
@@ -394,11 +394,11 @@ end
 
 local function useSelflessHealer()
     if false
-    or SAO.IsProject(SAO.MOP_AND_ONWARD) -- Keep this comment for isNative = true
+    or SAO.IsProject(SAO.MOP_AND_ONWARD - SAO.RETAIL) -- Keep this comment for isNative = true
     then
         SAO:CreateEffect(
             "selfless_healer",
-            SAO.MOP_AND_ONWARD,
+            SAO.MOP_AND_ONWARD - SAO.RETAIL,
             114250, -- Selfless Healer (buff)
             "aura",
             {
@@ -425,7 +425,7 @@ local function registerClass(self)
     useHolySpender("shield_of_the_righteous", shieldOfTheRighteous); -- Protection only
     useHolySpender("templars_verdict", templarsVerdict); -- Retribution only
     useHolySpender("inquisition", inquisition);
-    useHolySpender("eternal_flame", eternalFlame, SAO.MOP_AND_ONWARD);
+    useHolySpender("eternal_flame", eternalFlame, SAO.MOP_AND_ONWARD - SAO.RETAIL);
 
     -- Items
     self:RegisterAuraEyeOfGruul("eye_of_gruul_paladin", 37723); -- 37723 = Paladin buff
