@@ -75,7 +75,7 @@ SAO.AuraContainerItem = {
 
         for index, position in ipairs(item.positions) do
             local buttonPosition = position
-            local auraButton = container:AddAuraSlot("spell_"..id.."_"..index, "HELPFUL", {
+            local auraButton = container:AddAuraSlot("item_"..id.."_index_"..index, "HELPFUL", {
                 templateNames = { "SAOAuraButtonTemplate" },
                 initializeFrame = function(auraButton)
                     item:initializeAuraButton(auraButton, initialGlobalGeometry, buttonPosition)
@@ -272,7 +272,7 @@ SAO.AuraContainer = {
         - the addon is not capable of handling secret-compatible overlays
         - or the spell does not need such overlay (e.g., is not secret in combat)
     ]]
-    registerOverlay = function(self, overlay)
+    registerOverlay = function(self, overlay, hash)
         if not useAuraContainer or not self.initialized then
             return nil
         end
@@ -282,12 +282,16 @@ SAO.AuraContainer = {
             return nil
         end
 
-        local id = overlay.index * 10000000 + overlay.spellID;
-        if self.items[id] then --[[BEGIN_DEV_ONLY]]
-            SAO:Warn(Module, "Overlay already registered for id "..tostring(id))
+        local id = ("spell:"..overlay.spellID) .. ("_hash:"..tostring(hash)) .. ("_pos:"..overlay.position)
+         --[[BEGIN_DEV_ONLY]]
+        if hash ~= 2 then -- 2 == HASH_AURA_ANY
+            SAO:Warn(Module, "Can only handle HASH_AURA_ANY (2), but there is an overlay for spell "..tostring(overlay.spellID).." which uses hash "..tostring(hash).." i.e.,", SAO.Hash:new(hash):toHumanReadableString())
+        end
+        if self.items[id] then
+            SAO:Error(Module, "Overlay already registered for id "..tostring(id))
             return
-        end --[[END_DEV_ONLY]]
-
+        end
+        --[[END_DEV_ONLY]]
         local button = SAO.AuraContainerItem:new(id, self.container, overlay, self.globalGeometry.geometry)
 
         self.items[id] = button

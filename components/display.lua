@@ -87,7 +87,7 @@ SAO.Display = {
         }
 
         if overlay.requiresAura == true then -- false by default
-            _overlay.auraContainerItem = SAO.AuraContainer:registerOverlay(_overlay);
+            _overlay.auraContainerItem = SAO.AuraContainer:registerOverlay(_overlay, self.hash);
         end
 
         if _overlay.spellID ~= self.spellID then

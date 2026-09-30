@@ -709,9 +709,7 @@ local function RegisterNativeEffectNow(self, effect)
     bucket:reset(); -- Force reset after triggers are set, because resetting is optimized, based on trigger flags
 
     for _, overlay in ipairs(effect.overlays or {}) do
-        local index = 0;
         if not overlay.project or self.IsProject(overlay.project) then
-            index = index + 1;
             local spellID = overlay.spellID or effect.spellID;
             local texture = overlay.texture;
             local position = overlay.position;
@@ -723,7 +721,6 @@ local function RegisterNativeEffectNow(self, effect)
             local requiresAura = effect.triggers.aura;
 
             local overlayPod = {
-                index = index,
                 stacks = nil, -- Not set, to use hash instead
                 spellID = spellID,
                 texture = type(texture) == 'string' and SAO.TexName[texture] or texture, -- Map from TexName, unless texture is a function, in which case it is used as-is
