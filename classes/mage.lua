@@ -690,7 +690,10 @@ local function useHeatingUpAndHotStreak()
         "aura",
         {
             overlay = { texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.5, pulse = false },
-            button = infernoBlast,
+            buttons = {
+                [SAO.MOP] = infernoBlast,
+                -- No glowing button for Retail
+            },
         }
     );
 
