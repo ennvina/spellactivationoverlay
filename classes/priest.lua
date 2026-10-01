@@ -235,8 +235,9 @@ local function useShadowWordDeath()
 
     SAO:CreateEffect(
         "sw_death",
-        SAO.MOP_AND_ONWARD + -- isNative = true (button already glowing natively by the game client in MoP)
-        SAO.CATA,
+        SAO.MOP_AND_ONWARD -- isNative = true (button already glowing natively by the game client in MoP)
+        + SAO.CATA
+        - SAO.RETAIL, -- Would make sense for Retail, but impossible because "execute" requires UnitHealth, which is secret
         swDeath,
         "counter",
         {
