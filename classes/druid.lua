@@ -5,7 +5,7 @@ local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local GetShapeshiftForm = GetShapeshiftForm
 local UnitGUID = UnitGUID
 
-local canHaveEclipse = SAO.IsProject(SAO.SOD + SAO.WRATH_AND_ONWARD);
+local canHaveEclipse = SAO.IsProject(SAO.SOD + SAO.WRATH_AND_ONWARD - SAO.RETAIL);
 
 local omenSpellID = 16870;
 local omenSpellIDFeral = 135700;
@@ -50,7 +50,7 @@ local omenOfClarityTalent = 16864;
 local function useShootingStars()
     SAO:CreateEffect(
         "shooting_stars",
-        SAO.CATA_AND_ONWARD,
+        SAO.CATA_AND_ONWARD - SAO.RETAIL,
         93400, -- Shooting Stars (buff)
         "aura",
         {
@@ -126,13 +126,14 @@ local function useOmenOfClarity()
 end
 
 local function useNaturesGrace()
+    local naturesGraceTalent = SAO.IsWrath and 61346 or 16880;
     SAO:CreateEffect(
         "natures_grace",
-        SAO.ERA + SAO.TBC + SAO.WRATH,
+        SAO.FOREVER + SAO.ERA + SAO.TBC + SAO.WRATH,
         16886, -- Nature's Grace (buff)
         "aura",
         {
-            talent = (SAO.IsEra() or SAO.IsTBC()) and 16880 or 61346, -- Nature's Grace (Era and TBC talent) or Nature's Grace (Wrath talent)
+            talent = naturesGraceTalent,
             overlay = { texture = "serendipity", position = "Top", scale = 0.7 },
         }
     );
@@ -626,7 +627,7 @@ end
 SAO.Class["DRUID"] = {
     ["Register"] = registerClass,
     ["LoadOptions"] = loadOptions,
-    ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
-    ["UPDATE_SHAPESHIFT_FORM"] = updateShapeshift,
-    ["PLAYER_ENTERING_WORLD"] = customLoad,
+    ["COMBAT_LOG_EVENT_UNFILTERED"] = canHaveEclipse and customCLEU or nil,
+    ["UPDATE_SHAPESHIFT_FORM"] = canHaveEclipse and updateShapeshift or nil,
+    ["PLAYER_ENTERING_WORLD"] = canHaveEclipse and customLoad or nil,
 }
