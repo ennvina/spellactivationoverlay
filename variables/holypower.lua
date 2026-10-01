@@ -45,7 +45,7 @@ if playerClass == "PRIEST" then
     EnumHolyPower = Enum and Enum.PowerType and Enum.PowerType.ShadowOrbs;
     HolyPowerPowerTypeToken = "SHADOW_ORBS";
     isPlayerClassValid = true;
-    requiredProject = SAO.MOP + SAO.WOD;
+    requiredProject = SAO.MOP_AND_ONWARD;
     minimumLevel = SHADOW_ORBS_SHOW_LEVEL or 10;
     FormatHolyPower = function(holyPower)
         if holyPower == 3 then

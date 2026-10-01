@@ -67,6 +67,7 @@
         "MultiBarBottomRight",
         "MultiBarLeft",
         "MultiBarRight",
+        "StanceBar",
         "WorldFrame",
         // WoW UI helpers
         "ActionButton_HideOverlayGlow",

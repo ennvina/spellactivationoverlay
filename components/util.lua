@@ -440,7 +440,7 @@ end
 -- Get text and icon for either a talent as spellID, or as spec bit-field
 function SAO:GetTalentText(talentID)
     if type(talentID) == 'number' and talentID < 0 then
-        if not self.IsMoP() then
+        if not self.IsProject(SAO.MOP_AND_ONWARD) then
             self:Error(Module, "Getting talent text for a negative talentID "..talentID.." but prior to the Mists of Pandaria specialization rework");
             return nil;
         end
