@@ -737,17 +737,17 @@ UNIVERSAL_BUILD_VERSION="$VANILLA_BUILD_VERSION, $TBC_BUILD_VERSION, $WRATH_BUIL
 mkproject universal "$UNIVERSAL_BUILD_VERSION" c845fa spell_arcane_portalstormwind 32 "Universal"
 
 echo -n "Generatic TOC files for each flavor..."
-PROJECTS=(
+PROJECT_TOC_SUFFIX=( # List of flavor names + TOC suffixes e.g. 'vanilla' -> SpellActivationOverlay_Vanilla.toc
 "vanilla Vanilla"
 "tbc TBC"
 "wrath Wrath"
 "cata Cata"
 "mop Mists"
-"retail Mainline"
-"forever Forever" # Please check value
+"retail Mainline" # Shall be 'Standard' after patch 12.1.5
+"forever Camelot" # May become something like 'Forever' by the time the game is released
 )
 addon_name=SpellActivationOverlay
-for project in "${PROJECTS[@]}"; do
+for project in "${PROJECT_TOC_SUFFIX[@]}"; do
     read flavor suffix <<< "$project"
     build_version=$(grep -i '^##[[:space:]]*interface:' "../${flavor}/${addon_name}/${addon_name}.toc" | grep -o '[0-9].*[^[:space:]]')
     [ -z "$build_version" ] && bye "Cannot read Interface version from '$flavor'"
