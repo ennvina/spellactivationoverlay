@@ -21,7 +21,10 @@ Known Limitations (Forever)
   - In the meantime, Glowing Buttons have been disabled in Options Panel
 - Most Spell Alerts do not support Progressive Timer
   - Some progressive timer alternatives are being evaluated
-  - Support will definitely come someday, but differently than in Classic
+  - Support will definitely come someday, but will be different than Classic
+- Most Spell Alerts do not support Sound Effects
+  - Some sound alternatives are being evaluated
+  - If support is possible, it will be probably similar to Classic's sound
 - Custom effect are not supported
   - This includes things like Mage's Freeze effect, or Rogue's Riposte
   - There is no ETA on this matter, as it requires further investigation
