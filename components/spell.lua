@@ -135,6 +135,11 @@ function SAO:LearnNewSpell(spellID, observed)
         return;
     end
 
+    if observed then
+        -- Add to the list of observed spell IDs
+        ObservedSpellIDs[spellID] = name;
+    end
+
     local cached = SpellIDsByName[name];
     if not cached then
         -- Not interested in untracked spells
@@ -146,11 +151,6 @@ function SAO:LearnNewSpell(spellID, observed)
             -- Spell ID already cached
             return;
         end
-    end
-
-    if observed then
-        -- Add to the list of observed spell IDs
-        ObservedSpellIDs[spellID] = name;
     end
 
     -- At this point, the spell ID is not cached yet, just do it!
