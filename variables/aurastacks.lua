@@ -218,12 +218,12 @@ SAO.Variable:register({
 
         -- Modern aura handling via UNIT_AURA
         UNIT_AURA = SAO.AURASTACKS.MODERN and function(unitTarget, updateInfo)
-            if not UnitIsUnit(unitTarget, "player") then
+            if unitTarget ~= "player" and (not canaccessvalue(UnitIsUnit(unitTarget, "player")) or not UnitIsUnit(unitTarget, "player")) then
                 return;
             end
 
             -- Special case, should happen once per login or per loading screen at best
-            if not issecretvalue(updateInfo.isFullUpdate) and updateInfo.isFullUpdate then
+            if canaccessvalue(updateInfo.isFullUpdate) and updateInfo.isFullUpdate then
                 SAO:Debug(Module, "Full aura update detected, rechecking all buckets");
                 SAO:CheckManuallyAllBuckets(SAO.TRIGGER_AURA);
                 return;
@@ -260,7 +260,7 @@ SAO.Variable:register({
                 bucket.lastTimeUnitAuraEvent = GetTime();
             end
 
-            for _, auraInstanceID in ipairs(not issecretvalue(updateInfo.updatedAuraInstanceIDs) and updateInfo.updatedAuraInstanceIDs or {}) do
+            for _, auraInstanceID in ipairs(canaccessvalue(updateInfo.updatedAuraInstanceIDs) and updateInfo.updatedAuraInstanceIDs or {}) do
                 local bucket = bucketsByAuraInstanceID[auraInstanceID];
                 if bucket then
                     if bucket.lastTimeUnitAuraEvent == GetTime() then
@@ -279,7 +279,7 @@ SAO.Variable:register({
                 end
             end
 
-            for _, auraInstanceID in ipairs(not issecretvalue(updateInfo.removedAuraInstanceIDs) and updateInfo.removedAuraInstanceIDs or {}) do
+            for _, auraInstanceID in ipairs(canaccessvalue(updateInfo.removedAuraInstanceIDs) and updateInfo.removedAuraInstanceIDs or {}) do
                 local bucket = bucketsByAuraInstanceID[auraInstanceID];
                 if bucket then
                     if bucket.lastTimeUnitAuraEvent == GetTime() then
@@ -290,7 +290,7 @@ SAO.Variable:register({
                 end
             end
 
-            for _, aura in ipairs(not issecretvalue(updateInfo.addedAuras) and updateInfo.addedAuras or {}) do
+            for _, aura in ipairs(canaccessvalue(updateInfo.addedAuras) and updateInfo.addedAuras or {}) do
                 local bucket = SAO:GetBucketBySpellID(aura.spellId);
                 if bucket and bucket.trigger:reactsWith(SAO.TRIGGER_AURA) then
                     if bucket.lastTimeUnitAuraEvent == GetTime() then
