@@ -1,6 +1,8 @@
 local AddonName, SAO = ...
 local Module = "project"
 
+local WOW_PROJECT_FOREVER = WOW_PROJECT_FOREVER or WOW_PROJECT_CAMELOT or 18 -- Hardcode until the variable name is stable
+
 -- List of project flags, as bit field
 -- Start high enough to be able to index project flag to a list, and avoid confusion with traditional lists
 SAO.ERA    = 0x0100
@@ -18,9 +20,9 @@ SAO.CATA_AND_ONWARD  = SAO.ALL_PROJECTS - (SAO.FOREVER + SAO.ERA + SAO.SOD + SAO
 SAO.MOP_AND_ONWARD   = SAO.ALL_PROJECTS - (SAO.FOREVER + SAO.ERA + SAO.SOD + SAO.TBC + SAO.WRATH + SAO.CATA)
 
 function SAO.IsForever()
-    local interfaceVersion = tonumber((select(4, GetBuildInfo())));
-    return interfaceVersion >= 16000 and interfaceVersion < 20000; -- Between 1.60.0 and 1.99.99
-    -- return WOW_PROJECT_ID == WOW_PROJECT_FOREVER; -- Better option if available (not available on Forever Beta)
+    -- local interfaceVersion = tonumber((select(4, GetBuildInfo())));
+    -- return interfaceVersion >= 16000 and interfaceVersion < 20000; -- Between 1.60.0 and 1.99.99
+    return WOW_PROJECT_ID == WOW_PROJECT_FOREVER;
 end
 
 function SAO.IsEra()
@@ -99,7 +101,7 @@ function SAO.IsProject(projectFlags)
 end
 
 local flavorNames = {
---    [WOW_PROJECT_FOREVER or xx] = "Forever",
+    [WOW_PROJECT_FOREVER or 18] = "Forever",
     [WOW_PROJECT_CLASSIC or 2] = "Era",
     [WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5] = "TBC",
     [WOW_PROJECT_WRATH_CLASSIC or 11] = "Wrath",
@@ -112,8 +114,6 @@ function SAO.GetFlavorName()
     -- Special case for flavors which do not have a dedicated WOW_PROJECT_ID
     if SAO.IsSoD() then
         return "SoD";
-    elseif SAO.IsForever() then
-        return "Forever";
     end
     return flavorNames[WOW_PROJECT_ID] or "Unknown";
 end
@@ -162,7 +162,7 @@ function SAO.GetSubProjectName(buildID)
 end
 
 local expectedBuildID = {
---    [WOW_PROJECT_FOREVER or xx] = "forever",
+    [WOW_PROJECT_FOREVER or 18] = "forever",
     --
     [WOW_PROJECT_CLASSIC or 2] = "vanilla",
     [WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5] = "tbc",
