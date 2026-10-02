@@ -126,7 +126,7 @@ local function useOmenOfClarity()
 end
 
 local function useNaturesGrace()
-    local naturesGraceTalent = SAO.IsWrath and 61346 or 16880;
+    local naturesGraceTalent = SAO.IsWrath() and 61346 or 16880;
     SAO:CreateEffect(
         "natures_grace",
         SAO.FOREVER + SAO.ERA + SAO.TBC + SAO.WRATH,
