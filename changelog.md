@@ -28,6 +28,8 @@ Known Limitations (Forever)
 - Custom effect are not supported
   - This includes things like Mage's Freeze effect, or Rogue's Riposte
   - There is no ETA on this matter, as it requires further investigation
+- Some effects are supported only outside dungeons and raids
+  - For example, Paladin's Exorcism will _not_ work in a dungeon or raid
 
 #### v2.7.11 (2026-09-14)
 

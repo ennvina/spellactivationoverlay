@@ -103,11 +103,21 @@ local function useExorcism()
             custom = {
                 isActivated = function(bucket, state)
                     state.canAttack = UnitCanAttack("player", "target");
+                    if not canaccessvalue(state.canAttack) then
+                        state.canAttack = true; -- In doubt, assume we can attack the target
+                    end
 
                     local creatureType = select(2, UnitCreatureType("target"));
-                    state.isDemonOrUndead = creatureType == 3 or creatureType == 6; -- 3 = Demon, 6 = Undead
+                    if canaccessvalue(creatureType) then
+                        state.isDemonOrUndead = creatureType == 3 or creatureType == 6; -- 3 = Demon, 6 = Undead
+                    else
+                        state.isDemonOrUndead = false; -- In doubt, assume the target is neither Demon nor Undead
+                    end
 
                     state.isAlive = not UnitIsDead("target")
+                    if not canaccessvalue(state.isAlive) then
+                        state.isAlive = true; -- In doubt, assume the target is alive
+                    end
 
                     return state.canAttack and state.isDemonOrUndead and state.isAlive;
                 end,
@@ -118,7 +128,7 @@ local function useExorcism()
                         bucket:setCustom(isActivated);
                     end,
                     [{"UNIT_HEALTH", "target"}] = function(bucket, state, unitID)
-                        if UnitIsDead("target") then
+                        if canaccessvalue(UnitIsDead("target")) and UnitIsDead("target") then
                             SAO:Trace(Module, "Target died, resetting Exorcism custom variable");
                             state.isAlive = false;
                             bucket:setCustom(false);
@@ -127,6 +137,9 @@ local function useExorcism()
                     [{"UNIT_FACTION", "target"}] = function(bucket, state, unitID)
                         SAO:Trace(Module, "Target faction changed, updating Exorcism custom variable");
                         state.canAttack = UnitCanAttack("player", "target");
+                        if not canaccessvalue(state.canAttack) then
+                            state.canAttack = true; -- In doubt, assume we can attack the target
+                        end
                         bucket:setCustom(state.canAttack and state.isDemonOrUndead and state.isAlive);
                     end,
                 },
