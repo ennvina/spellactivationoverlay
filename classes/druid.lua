@@ -120,9 +120,22 @@ local function useOmenOfClarityForSpec(specIndex, suffix, spellID, texture, scal
 end
 
 local function useOmenOfClarity()
+    -- Mists of Pandaria
     -- Feral Omen of Clarity is slightly smaller to avoid conflict with Dream of Cenarius, and higher level to make it more visible
     useOmenOfClarityForSpec(2, "feral", omenSpellIDFeral, "feral_omenofclarity", 0.9, 4);
     useOmenOfClarityForSpec(4, "resto", omenSpellID, "natures_grace", nil, nil);
+
+    -- Forever and Retail
+    SAO:CreateEffect(
+        "omen_of_clarity",
+        SAO.FOREVER + SAO.RETAIL,
+        omenSpellID,
+        "aura",
+        {
+            talent = omenOfClarityTalent,
+            overlay = { texture = "natures_grace", position = "Left + Right (Flipped)" },
+        }
+    );
 end
 
 local function useNaturesGrace()
@@ -557,10 +570,10 @@ local function registerClass(self)
     useDreamOfCenarius();
     usePredatoryStrikes(); -- a.k.a. Predatory Swiftness
     useMangle();
-    useOmenOfClarity(); -- MoP+
+    useOmenOfClarity(); -- MoP+ and Forever
     useSwiftbloom(); -- SoD Scarlet Enclave Resto 2pc
 
-    if not SAO.IsProject(SAO.MOP_AND_ONWARD) then -- Pre-MoP
+    if self.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH + SAO.CATA) then -- Pre-MoP
         -- Track Eclipses with a custom CLEU function, so that eclipses can coexist with Omen of Clarity
         -- self:RegisterAura("eclipse_lunar", 0, lunarSpellID, "eclipse_moon", "Left", 1, 255, 255, 255, true);
         -- self:RegisterAura("eclipse_solar", 0, solarSpellID, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true);
