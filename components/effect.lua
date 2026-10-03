@@ -718,7 +718,7 @@ local function RegisterNativeEffectNow(self, effect)
             local color = overlay.color and { overlay.color[1], overlay.color[2], overlay.color[3] } or { 255, 255, 255 };
             local autoPulse = type(overlay.pulse) == 'function' and overlay.pulse or overlay.pulse ~= false;
             local combatOnly = overlay.combatOnly == true or effect.combatOnly == true;
-            local requiresAura = effect.triggers.aura;
+            local hash = overlay.hash;
 
             local overlayPod = {
                 stacks = nil, -- Not set, to use hash instead
@@ -730,11 +730,10 @@ local function RegisterNativeEffectNow(self, effect)
                 color = color,
                 autoPulse = autoPulse,
                 combatOnly = combatOnly,
-                requiresAura = requiresAura,
+                hash = hash,
             }
 
-            local hash = self.Hash:new(overlay.hash);
-            self.BucketManager:addEffectOverlay(bucket, hash, overlayPod);
+            self.BucketManager:addEffectOverlay(bucket, overlayPod);
         end
     end
 

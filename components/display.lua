@@ -57,6 +57,7 @@ SAO.Display = {
     end,
 
     addOverlay = function(self, overlay)
+        --[[BEGIN_DEV_ONLY]]
         if not overlay.spellID then
             SAO:Warn(Module, "Missing spellID for overlay");
         end
@@ -66,6 +67,10 @@ SAO.Display = {
         if not overlay.position then
             SAO:Warn(Module, "Missing position for overlay");
         end
+        if overlay.hash ~= self.hash then
+            SAO:Warn(Module, "Inconsistent hash between display and overlay: "..tostring(self.hash).." vs. "..tostring(overlay.hash));
+        end
+        --[[END_DEV_ONLY]]
 
         if type(overlay.texture) == 'string' or type(overlay.texture) == 'number' then
             SAO:MarkTexture(overlay.texture);
@@ -83,16 +88,15 @@ SAO.Display = {
             b = overlay.color and overlay.color[3] or 255,
             autoPulse = type(overlay.autoPulse) == 'function' and overlay.autoPulse or overlay.autoPulse ~= false, -- true by default
             combatOnly = overlay.combatOnly == true, -- false by default
+            hash = overlay.hash,
             auraContainerItem = nil, -- Possibly set below
         }
 
-        if overlay.requiresAura == true then -- false by default
-            _overlay.auraContainerItem = SAO.AuraContainer:registerOverlay(_overlay, self.hash);
-        end
+        _overlay.auraContainerItem = SAO.AuraContainer:registerOverlay(_overlay); -- Shall return nil if a secret-compatible aura container item is not needed
 
-        if _overlay.spellID ~= self.spellID then
+        if _overlay.spellID ~= self.spellID then --[[BEGIN_DEV_ONLY]]
             SAO:Warn(Module, "Inconsistent spellID between display and overlay: "..tostring(self.spellID).." vs. "..tostring(_overlay.spellID));
-        end
+        end --[[END_DEV_ONLY]]
 
         tinsert(self.overlays, _overlay);
     end,
@@ -136,7 +140,7 @@ SAO.Display = {
             end
 
             if overlay.auraContainerItem then
-                SpellActivationOverlayFrame_ResetCombatFade(SAO.Frame);
+                SpellActivationOverlayFrame_ResetCombatFade(SAO.Frame); -- Overlays may be invisible due to out-of-combat fade-out; this call ensures the overlay will be seen with or without combat
                 overlay.auraContainerItem:setVisible(true);
             else
                 SAO:ActivateOverlay(self.hashData, overlay.spellID, overlay.texture, overlay.position, overlay.scale, overlay.r, overlay.g, overlay.b, overlay.autoPulse, forcePulsePlay, nil, overlay.combatOnly, extra);

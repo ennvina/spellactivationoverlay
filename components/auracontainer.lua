@@ -272,20 +272,27 @@ SAO.AuraContainer = {
         - the addon is not capable of handling secret-compatible overlays
         - or the spell does not need such overlay (e.g., is not secret in combat)
     ]]
-    registerOverlay = function(self, overlay, hash)
+    registerOverlay = function(self, overlay)
         if not useAuraContainer or not self.initialized then
             return nil
         end
 
         if C_Secrets.GetSpellAuraSecrecy(overlay.spellID) == Enum.SecrecyLevel.NeverSecret then
-            -- We don't need to create an secret-compatible overlay for spells that are not secret in combat
+            -- We don't need to create a secret-compatible overlay for spells that are not secret in combat
             return nil
         end
 
-        local id = ("spell:"..overlay.spellID) .. ("_hash:"..tostring(hash)) .. ("_pos:"..overlay.position)
+        local hash = SAO.Hash:new(overlay.hash)
+        local requiresAura = type(SAO.Hash.hasAuraStacks) == 'function' and SAO.Hash.hasAuraStacks(hash)
+        if not requiresAura then
+            -- The aura container, as its name implies, only handles overlays that require an aura (i.e., have aura stacks)
+            return nil
+        end
+
+        local id = ("spell:"..overlay.spellID) .. ("_hash:"..tostring(overlay.hash)) .. ("_pos:"..overlay.position)
          --[[BEGIN_DEV_ONLY]]
-        if hash ~= 2 then -- 2 == HASH_AURA_ANY
-            SAO:Warn(Module, "Can only handle HASH_AURA_ANY (2), but there is an overlay for spell "..tostring(overlay.spellID).." which uses hash "..tostring(hash).." i.e.,", SAO.Hash:new(hash):toHumanReadableString())
+        if SAO.Hash.getAuraStacks(hash) ~= 0 then -- 0 means 'any stacks'
+            SAO:Warn(Module, "Spell "..tostring(overlay.spellID).." has secret restrictions, which makes it compatible only with auras with 'any stacks', but it requires", hash:toHumanReadableString())
         end
         if self.items[id] then
             SAO:Error(Module, "Overlay already registered for id "..tostring(id))
@@ -331,7 +338,7 @@ SAO.AuraContainer = {
                 self.globalGeometry.initAttemptsLeft = self.globalGeometry.initAttemptsLeft - 1
                 if self.globalGeometry.initAttemptsLeft <= 0 then
                     self.globalGeometry.initTicker:Cancel()
-                    -- self.globalGeometry.initTicker = nil -- Do not reset, it helps know the ticker was created and ended
+                    -- self.globalGeometry.initTicker = nil -- Do not reset, it helps knowing the ticker was created and ended
                 end
             end)
         end
