@@ -3,7 +3,7 @@ local Module = "auracontainer"
 
 local LoadAddOn = C_AddOns and C_AddOns.LoadAddOn or LoadAddOn
 
-local useAuraContainer = SAO.IsRetail() and C_Secrets ~= nil and C_Secrets.GetSpellAuraSecrecy ~= nil
+local useAuraContainer = (SAO.IsForever() or SAO.IsRetail()) and C_Secrets ~= nil and C_Secrets.GetSpellAuraSecrecy ~= nil
 
 local function splitPositions(position)
     local positions = {}
