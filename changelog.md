@@ -7,6 +7,12 @@ Introducing Forever flavor!
 - Please read the Known Limitations sections for more information
 - Make sure to report issues and suggest ideas, thank you :)
 
+Thank you to our amazing contributors for helping out on Forever.
+- lancestre for development and tests
+- r41dboss for tests and feedback
+
+You guys are helping a great deal, much appreciated!
+
 This release uses a new technology to detect auras
 - This increases performance and has better long-term support
 - All flavors should be compatible with this technology as of today
@@ -14,6 +20,7 @@ This release uses a new technology to detect auras
 
 Bug Fixes
 - Mage's Heating Up Spell Alert no longer pulses (Mists of Pandaria)
+- In very rare circumstances, some buttons did not glow as expected
 
 Known Limitations (Forever)
 - Glowing Buttons are not supported
