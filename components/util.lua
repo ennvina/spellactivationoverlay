@@ -624,7 +624,7 @@ function SAO:RegisterEventHandler(handler, event, from)
         return;
     end
     --[[END_DEV_ONLY]]
-    if event == "COMBAT_LOG_EVENT_UNFILTERED" and SAO.IsRetail() then
+    if event == "COMBAT_LOG_EVENT_UNFILTERED" and (SAO.IsForever() or SAO.IsRetail()) then
         -- CLEU forbidden in Retail since Midnight
         SAO:Warn(Module, "Skipping forbidden CLEU registration in Retail for "..getHandlerName(handler)..getFromDescription(from));
         return;
