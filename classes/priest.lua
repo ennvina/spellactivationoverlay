@@ -17,7 +17,7 @@ local mindSpike = 73510;
 local powerWordShield = 17;
 local prayerOfHealing = 596;
 local prayerOfMending = 33076;
-local shadowform = 15473;
+local shadowform = SAO.IsRetail() and 232698 or 15473;
 local smite = 585;
 local swDeath = 32379;
 
@@ -221,7 +221,7 @@ local function useShadowform()
         {
             talent = {
                 [SAO.ERA+SAO.TBC+SAO.WRATH+SAO.CATA] = shadowform, -- Talent is same spell ID as the spell itself
-                [SAO.MOP] = PRIEST_SPEC_SHADOW, -- In Mists of Pandaria, all shadow priests learn Shadowform
+                [SAO.MOP_AND_ONWARD] = PRIEST_SPEC_SHADOW, -- In Mists of Pandaria and later, all shadow priests learn Shadowform
             },
             requireTalent = true,
             combatOnly = true,
@@ -235,8 +235,9 @@ local function useShadowWordDeath()
 
     SAO:CreateEffect(
         "sw_death",
-        SAO.MOP_AND_ONWARD + -- isNative = true (button already glowing natively by the game client in MoP)
-        SAO.CATA,
+        SAO.MOP_AND_ONWARD -- isNative = true (button already glowing natively by the game client in MoP)
+        + SAO.CATA
+        - SAO.RETAIL, -- Would make sense for Retail, but impossible because "execute" requires UnitHealth, which is secret
         swDeath,
         "counter",
         {

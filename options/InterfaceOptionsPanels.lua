@@ -5,7 +5,10 @@ local Module = "options"
 -- Optimize frequent calls
 local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
 
-function SpellActivationOverlayOptionsPanel_Init(self)
+SpellActivationOverlayOptionsPanelMixin = {}
+
+function SpellActivationOverlayOptionsPanelMixin:Init()
+    SAO:Trace(Module, "SpellActivationOverlayOptionsPanelMixin:Init called");
     local shutdownCategory = SAO.Shutdown:GetCategory();
     if shutdownCategory then
         -- Apply shutdown settings before enything else, in case init fails precisely because of why the addon was shut down
@@ -54,8 +57,8 @@ function SpellActivationOverlayOptionsPanel_Init(self)
         end
     end
 
-    -- local mustDisableGlowForEveryone = SAO.IsTBC(); -- In TBC Classic Anniversary, glowing buttons are disabled for everyone
-    local mustDisableGlowForEveryone = false; -- Re-enable glowing buttons for everyone
+    -- local mustDisableGlowForEveryone = SAO.IsRetail() or SAO.IsForever(); -- There are no viable glowing buttons alternatives in Retail or Forever, for now
+    local mustDisableGlowForEveryone = false; -- Re-enable glowing buttons for everyone when issues are fixed
     if not shutdownCategory and mustDisableGlowForEveryone then
         SpellActivationOverlayOptionsPanel.glowOff:Show();
     else
@@ -503,7 +506,8 @@ if Settings and Settings.RegisterCanvasLayoutCategory then
     end
 end
 
-function SpellActivationOverlayOptionsPanel_OnLoad(self)
+function SpellActivationOverlayOptionsPanelMixin:OnLoad()
+    SAO:Trace(Module, "SpellActivationOverlayOptionsPanelMixin:OnLoad called");
     self.name = AddonName;
     self.okay = okayFunc;
     self.cancel = cancelFunc;
@@ -521,9 +525,10 @@ function SpellActivationOverlayOptionsPanel_OnLoad(self)
     SAO.OptionsPanel = self;
 end
 
-local optionsLoaded = false; -- Make sure we do not load the options panel twice
-function SpellActivationOverlayOptionsPanel_OnShow(self)
-    if optionsLoaded then
+SpellActivationOverlayOptionsPanelMixin.optionsLoaded = false; -- Make sure we do not load the options panel twice
+function SpellActivationOverlayOptionsPanelMixin:OnShow()
+    SAO:Trace(Module, "SpellActivationOverlayOptionsPanelMixin:OnShow called");
+    if self.optionsLoaded then
         return;
     end
 
@@ -547,7 +552,7 @@ function SpellActivationOverlayOptionsPanel_OnShow(self)
         end
     end
 
-    optionsLoaded = true;
+    self.optionsLoaded = true;
 end
 
 if not iamNecrosis then

@@ -2,7 +2,7 @@ local AddonName, SAO = ...
 local Module = "actionusable"
 
 -- Optimize frequent calls
-local IsUsableSpell = IsUsableSpell
+local IsUsableSpell = C_Spell and C_Spell.IsSpellUsable or IsUsableSpell
 
 -- Action usable or not
 local HASH_ACTION_USABLE_NO   = 0x10
@@ -85,8 +85,8 @@ SAO.Variable:register({
             local isActionUsable, notEnoughPower = IsUsableSpell(spellID);
 
             local gcdDuration = SAO:GetGCD();
-            local isGCD = duration <= gcdDuration;
-            local isActionOnCD = start > 0 and not isGCD;
+            local isGCD = not issecretvalue(duration) and (duration <= gcdDuration);
+            local isActionOnCD = not issecretvalue(start) and (start > 0 and not isGCD);
 
             -- Non-mana spells and abilities should always be considered usable, regardless of player's current resources
             local costsMana = false;

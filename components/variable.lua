@@ -280,11 +280,11 @@ SAO.Variable = {
                         effect[depName] = depDefault;
                     end
                 end
-                if effect[depName] == nil and depDefault ~= nil then
-                    SAO:Debug(Module, "Missing dependency "..tostring(depName).." for effect "..tostring(effect.name));
+                if effect[depName] == nil and depDefault ~= nil then --[[BEGIN_DEV_ONLY]]
+                    error("Missing dependency "..tostring(depName).." for effect "..tostring(effect.name));
                 elseif type(effect[depName]) ~= depType and type(depDefault) == depType then
-                    SAO:Debug(Module, "Wrong type for dependency "..tostring(depName).." of effect "..tostring(effect.name));
-                end
+                    error("Wrong type for dependency "..tostring(depName).." of effect "..tostring(effect.name));
+                end --[[END_DEV_ONLY]]
             end
         end
 

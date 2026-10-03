@@ -402,13 +402,13 @@ end
 
 local HookedActionButtons = {};
 local function HookActionButtonUpdateMethod(button)
-    if button and not HookedActionButtons[button] and type(button.Update) == "function" then
+    if button and not HookedActionButtons[button] and type(button.Update) == 'function' then
         HookedActionButtons[button] = true;
         hooksecurefunc(button, "Update", HookActionButton_Update);
     end
 end
 
-if type(ActionButton_Update) == "function" then
+if type(ActionButton_Update) == 'function' then
     -- Legacy action bars have a single entry point that updates all native ActionButton instances
     hooksecurefunc("ActionButton_Update", HookActionButton_Update);
 else
@@ -462,44 +462,55 @@ else
 end
 
 -- Grab buttons in the stance bar
-local function HookStanceBar_UpdateState()
+local function HookStanceButton_Update(button, i)
+    button.stanceForm = i;
+    if not button.__sao then
+        button.__sao = { useExternalGlow = false };
+        button.__sao.GetGlowID = function()
+            return select(4, GetShapeshiftFormInfo(button.stanceForm));
+        end
+        button.__sao.EnableGlow = function()
+            LBG.ShowOverlayGlow(button);
+        end
+        button.__sao.DisableGlow = function()
+            LBG.HideOverlayGlow(button);
+        end
+        if SAO.IsMoP() then
+            -- Until Blizzard fixes it, we will act as if macro buttons ignore native events
+            button.__sao.DoesIgnoreNative = function()
+                return button.action and HasAction(button.action) and GetActionInfo(button.action) == 'macro';
+            end
+        else
+            button.__sao.DoesIgnoreNative = function()
+                return false;
+            end
+        end
+    end
+    SAO:UpdateActionButton(button);
+end
+local function HookStanceBar_UpdateState_Classic()
     local numForms = GetNumShapeshiftForms();
     for i=1, numForms do
         if i > NUM_STANCE_SLOTS then
             break;
         end
         local button = StanceBarFrame.StanceButtons[i];
-        button.stanceForm = i;
-        if not button.__sao then
-            button.__sao = { useExternalGlow = false };
-            button.__sao.GetGlowID = function()
-                return select(4, GetShapeshiftFormInfo(button.stanceForm));
-            end
-            button.__sao.EnableGlow = function()
-                LBG.ShowOverlayGlow(button);
-            end
-            button.__sao.DisableGlow = function()
-                LBG.HideOverlayGlow(button);
-            end
-            if SAO.IsMoP() then
-                -- Until Blizzard fixes it, we will act as if macro buttons ignore native events
-                button.__sao.DoesIgnoreNative = function()
-                    return button.action and HasAction(button.action) and GetActionInfo(button.action) == 'macro';
-                end
-            else
-                button.__sao.DoesIgnoreNative = function()
-                    return false;
-                end
-            end
-        end
-        SAO:UpdateActionButton(button);
+        HookStanceButton_Update(button, i);
+    end
+end
+local function HookStanceBar_UpdateState_Retail()
+    for index = 1, StanceBar.numButtons do
+        local button = _G["StanceButton"..index];
+        HookStanceButton_Update(button, index);
     end
 end
 if select(2, UnitClass("player")) == "PRIEST" then
     -- Only Priests require hooking to StanceBar_UpdateState, for Shadowform
-    if type(StanceBar_UpdateState) == "function" then
-        -- Note: Shadow Priests do not have 'stances' in TBC, but we might need to fix it for Retail
-        hooksecurefunc("StanceBar_UpdateState", HookStanceBar_UpdateState);
+    if type(StanceBar_UpdateState) == 'function' then
+        -- Note: Shadow Priests do not have 'stances' in TBC
+        hooksecurefunc("StanceBar_UpdateState", HookStanceBar_UpdateState_Classic);
+    elseif StanceBar and type(StanceBar.numButtons) == 'number' then
+        hooksecurefunc(StanceBar, "Update", HookStanceBar_UpdateState_Retail);
     end
 end
 

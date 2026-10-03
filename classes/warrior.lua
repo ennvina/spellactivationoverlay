@@ -9,6 +9,11 @@ local UnitGUID = UnitGUID
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
+-- Custom handlers are only compatible from Classic Era to Cataclysm Classic, included
+-- Mists of Pandaria is not supported because it's not needed - stances no longer matter
+-- Retail and Forever are not supported because they don't have access to CLEU
+local compatibleWithCustomHandlers = not SAO.IsMoP() and not SAO.IsRetail() and not SAO.IsForever();
+
 local cleave = 845;
 local colossusSmash = 86346;
 local execute = 5308;
@@ -321,11 +326,6 @@ local ExecuteHandler = {
 }
 
 local function customLogin(self, ...)
-    if SAO.IsMoP() then
-        -- No handlers for Mists of Pandaria: all abilities are available in all stances
-        return;
-    end
-
     local overpowerName = self:GetSpellName(overpower);
     if overpowerName then
         -- Overpower is used for OverpowerHandler, detecting when the target dodges
@@ -470,8 +470,8 @@ end
 local function useVictoryRush()
     SAO:CreateEffect(
         "victory_rush",
-        SAO.ALL_PROJECTS - SAO.ERA - SAO.MOP_AND_ONWARD, -- includes SAO.SOD, then SAO.TBC and later,
-                                                         -- except for Mists of Pandaria and later where we track a buff instead
+        SAO.ALL_PROJECTS - SAO.FOREVER - SAO.ERA - SAO.MOP_AND_ONWARD, -- includes SAO.SOD, then SAO.TBC and later,
+        -- except for Mists of Pandaria and later where we track a buff instead (see below)
         victoryRush,
         "counter"
     );
@@ -534,7 +534,7 @@ end
 local function useSuddenDeath()
     SAO:CreateEffect(
         "sudden_death",
-        SAO.SOD + SAO.WRATH_AND_ONWARD,
+        SAO.SOD + SAO.WRATH_AND_ONWARD - SAO.RETAIL,
         {
             [SAO.SOD] = 440114,
             [SAO.WRATH] = 52437,
@@ -666,7 +666,7 @@ local function useBloodsurge()
 
     SAO:CreateEffect(
         "bloodsurge",
-        SAO.SOD + SAO.WRATH_AND_ONWARD,
+        SAO.SOD + SAO.WRATH_AND_ONWARD - SAO.RETAIL,
         {
             [SAO.SOD]   = 413399,
             [SAO.WRATH] = 46916,
@@ -701,7 +701,7 @@ end
 local function useSwordAndBoard()
     SAO:CreateEffect(
         "sword_and_board",
-        SAO.SOD + SAO.WRATH_AND_ONWARD,
+        SAO.SOD + SAO.WRATH_AND_ONWARD - SAO.RETAIL,
         {
             [SAO.SOD]   = 426979,
             [SAO.WRATH] = 50227,
@@ -820,9 +820,9 @@ end
 
 SAO.Class["WARRIOR"] = {
     ["Register"] = registerClass,
-    ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
-    ["PLAYER_LOGIN"] = customLogin,
-    ["PLAYER_TARGET_CHANGED"] = retarget,
-    ["UNIT_HEALTH"] = unitHealth,
-    ["UNIT_HEALTH_FREQUENT"] = (not SAO.HasMidnightEvents()) and unitHealthFrequent or nil,
+    ["COMBAT_LOG_EVENT_UNFILTERED"] = compatibleWithCustomHandlers and customCLEU or nil,
+    ["PLAYER_LOGIN"] = compatibleWithCustomHandlers and customLogin or nil,
+    ["PLAYER_TARGET_CHANGED"] = compatibleWithCustomHandlers and retarget or nil,
+    ["UNIT_HEALTH"] = compatibleWithCustomHandlers and unitHealth or nil,
+    ["UNIT_HEALTH_FREQUENT"] = compatibleWithCustomHandlers and (not SAO.HasMidnightEvents()) and unitHealthFrequent or nil,
 }

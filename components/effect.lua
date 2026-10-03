@@ -19,7 +19,7 @@ local Module = "effect"
         aura = true, -- The aura with spell ID 'spellID' is gained or lost by the player
         action = false, -- The action with spell ID 'spellID' is usable or not
         talent = false, -- The player spent at least one point in effect's talent, or spent none
-        holyPower = false, -- Number of charges of Holy Power (Paladin only, Cataclysm)
+        holyPower = false, -- Number of charges of Holy Power (Paladin only, Cataclysm+)
     },
 
     overlays = {{
@@ -718,6 +718,7 @@ local function RegisterNativeEffectNow(self, effect)
             local color = overlay.color and { overlay.color[1], overlay.color[2], overlay.color[3] } or { 255, 255, 255 };
             local autoPulse = type(overlay.pulse) == 'function' and overlay.pulse or overlay.pulse ~= false;
             local combatOnly = overlay.combatOnly == true or effect.combatOnly == true;
+            local hash = overlay.hash;
 
             local overlayPod = {
                 stacks = nil, -- Not set, to use hash instead
@@ -729,10 +730,10 @@ local function RegisterNativeEffectNow(self, effect)
                 color = color,
                 autoPulse = autoPulse,
                 combatOnly = combatOnly,
+                hash = hash,
             }
 
-            local hash = self.Hash:new(overlay.hash);
-            self.BucketManager:addEffectOverlay(bucket, hash, overlayPod, combatOnly);
+            self.BucketManager:addEffectOverlay(bucket, overlayPod);
         end
     end
 

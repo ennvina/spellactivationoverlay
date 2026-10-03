@@ -2,23 +2,12 @@ local AddonName, SAO = ...
 local Module = "aurastacks"
 
 -- Global variables
--- For now, enforce Legacy on WoW Classic, because Modern mode requires more testing
--- It is safe to assume Retail players want the Modern mode, because Legacy is unusable there
-SAO.AURASTACKS = {
-    LEGACY = not SAO.IsRetail(),
-    MODERN = SAO.IsRetail(),
-};
---[[BEGIN_DEV_ONLY]]
--- Developers will test Modern mode on Classic, when supported
 SAO.AURASTACKS = {
     LEGACY = C_UnitAuras == nil,
     MODERN = C_UnitAuras ~= nil,
 };
 assert(SAO.AURASTACKS.LEGACY ~= SAO.AURASTACKS.MODERN); -- Exactly one of these modes must be active
-if SAO.AURASTACKS.MODERN and not SAO.IsRetail() then
-    SAO:Info(Module, "You are currently testing the Modern AuraStacks mode. Enjoy!");
-end
---[[END_DEV_ONLY]]
+SAO:Info(Module, "You are currently using the Modern AuraStacks mode. Enjoy!");
 
 -- Aura stacks
 --  if stacks >= 0 then
@@ -229,12 +218,12 @@ SAO.Variable:register({
 
         -- Modern aura handling via UNIT_AURA
         UNIT_AURA = SAO.AURASTACKS.MODERN and function(unitTarget, updateInfo)
-            if not UnitIsUnit(unitTarget, "player") then
+            if unitTarget ~= "player" and (not canaccessvalue(UnitIsUnit(unitTarget, "player")) or not UnitIsUnit(unitTarget, "player")) then
                 return;
             end
 
             -- Special case, should happen once per login or per loading screen at best
-            if updateInfo.isFullUpdate then
+            if canaccessvalue(updateInfo.isFullUpdate) and updateInfo.isFullUpdate then
                 SAO:Debug(Module, "Full aura update detected, rechecking all buckets");
                 SAO:CheckManuallyAllBuckets(SAO.TRIGGER_AURA);
                 return;
@@ -271,8 +260,7 @@ SAO.Variable:register({
                 bucket.lastTimeUnitAuraEvent = GetTime();
             end
 
-
-            for _, auraInstanceID in ipairs(updateInfo.updatedAuraInstanceIDs or {}) do
+            for _, auraInstanceID in ipairs(canaccessvalue(updateInfo.updatedAuraInstanceIDs) and updateInfo.updatedAuraInstanceIDs or {}) do
                 local bucket = bucketsByAuraInstanceID[auraInstanceID];
                 if bucket then
                     if bucket.lastTimeUnitAuraEvent == GetTime() then
@@ -291,7 +279,7 @@ SAO.Variable:register({
                 end
             end
 
-            for _, auraInstanceID in ipairs(updateInfo.removedAuraInstanceIDs or {}) do
+            for _, auraInstanceID in ipairs(canaccessvalue(updateInfo.removedAuraInstanceIDs) and updateInfo.removedAuraInstanceIDs or {}) do
                 local bucket = bucketsByAuraInstanceID[auraInstanceID];
                 if bucket then
                     if bucket.lastTimeUnitAuraEvent == GetTime() then
@@ -302,7 +290,7 @@ SAO.Variable:register({
                 end
             end
 
-            for _, aura in ipairs(updateInfo.addedAuras or {}) do
+            for _, aura in ipairs(canaccessvalue(updateInfo.addedAuras) and updateInfo.addedAuras or {}) do
                 local bucket = SAO:GetBucketBySpellID(aura.spellId);
                 if bucket and bucket.trigger:reactsWith(SAO.TRIGGER_AURA) then
                     if bucket.lastTimeUnitAuraEvent == GetTime() then
@@ -332,7 +320,22 @@ SAO.Variable:register({
     import = {
         noeTrigger = "aura",
         hreTrigger = "requireAura",
-        dependency = nil, -- Actually, aura stacks depend on 'spellID', but this property is mandatory and automatically imported
+        -- dependency = nil, -- Actually, aura stacks depend on 'spellID', but this property is mandatory and automatically imported
+        dependency = (C_Secrets and C_Secrets.GetSpellAuraSecrecy) and {
+            name = "spellID",
+            expectedType = "number",
+            default = function(effect) return effect.spellID end,
+            prepareBucket = function(bucket, value)
+                local secrecy = C_Secrets.GetSpellAuraSecrecy(value);
+                if secrecy then
+                    if secrecy == Enum.SecrecyLevel.ContextuallySecret then
+                        SAO:Debug(Module, bucket.description.." is based on spell "..value.." which has secret restrictions");
+                    elseif secrecy == Enum.SecrecyLevel.AlwaysSecret then
+                        SAO:Debug(Module, bucket.description.." is based on spell "..value.." which is always secret");
+                    end
+                end
+            end,
+        } or nil,
         classes = {
             force = "aura",
             ignore = nil,

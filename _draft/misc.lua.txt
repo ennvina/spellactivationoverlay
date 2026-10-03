@@ -109,6 +109,19 @@ COMBATLOG_HIGHLIGHT_ABILITY
 /run filename="Interface/Addons/SpellActivationOverlay/textures/mask.blp" f.mask:SetTexture(filename, modulo, modulo)
 /run filename="interface/glues/models/ui_human/gradient5circle" f.mask:SetTexture(filename, modulo, modulo)
 
+/run f = CreateFrame("Frame", nil, UIParent) f:SetPoint("CENTER") f:SetSize(128, 128) f:SetMovable(true) f:SetScript("OnMouseDown", f.StartMoving) f:SetScript("OnMouseUp", f.StopMovingOrSizing) f:SetClampedToScreen(true)
+/run f.tex = f:CreateTexture(nil, "OVERLAY") f.tex:SetAllPoints(f) f.tex:SetTexture("interface/icons/spell_frost_frostnova") f.tex:SetVertexColor(1,1,1,.5)
+/run f.c = CreateFrame("Cooldown", nil, f, "CooldownFrameTemplate") f.c:SetAllPoints(f) f.c:SetCooldownDuration(60) f.c:SetSwipeTexture(texname) f.c:SetSwipeColor(1, 1, 1, 1) f.c:SetRotation(3.14/2) f.c:SetDrawEdge(false)
+/run f.tex = f:CreateTexture(nil, "ARTWORK") f.tex:SetAllPoints(f) f.tex:SetTexture("Interface/Icons/Spell_Frost_Stun") f.tex:SetVertexColor(1,0,0,.5)
+/run f.mask = f:CreateMaskTexture() f.tex:AddMaskTexture(f.mask)
+/run local z=360 for i=1,z do C_Timer.After(i*0.01, function(self) f:RotateTextures(3.14*2*i/z) f.c:RotateTextures(3.14*2*i/z) end) end
+/run g = CreateFrame("Frame", nil, f) g:SetPoint("TOPLEFT", f, "TOPLEFT", 64, 64) g:SetSize(256, 256) f:SetClipsChildren(true)
+/run g.tex = g:CreateTexture(nil, "OVERLAY") g.tex:SetAllPoints(g) g.tex:SetTexture("Interface/Icons/Spell_Frost_Stun") f.tex:SetVertexColor(1,0.5,0.5,.75)
+/run g.c = CreateFrame("Cooldown", nil, g, "CooldownFrameTemplate") g.c:SetAllPoints(g) g.c:SetCooldownDuration(30) g.c:SetRotation(3.14/2) g.c:SetDrawEdge(false)
+
+/run g = CreateFrame("Frame", nil, UIParent) g:SetSize(200, 100) g:SetPoint("CENTER") g:SetMovable(true) g:SetScript("OnMouseDown", g.StartMoving) g:SetScript("OnMouseUp", g.StopMovingOrSizing) g:SetClampedToScreen(true)
+/run g:SetClampRectInsets(42, -42, -42, 42) g.tex = g:CreateTexture() g.tex:SetColorTexture(1, 0, 0) g.tex:SetAllPoints()
+
 /run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayAddonFrame, 14251, "Interface\\Addons\\SpellActivationOverlay\\textures\\Hot_Streak", "TOP", 1, 255, 255, 255, false, false, 1, true, nil, GetTime()+600, true)
 /run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayAddonFrame, 14251, "Interface\\Addons\\SpellActivationOverlay\\textures\\Hot_Streak", "TOP", 1, 255, 255, 255, false, false, 1, true, nil, GetTime()+5)
 /run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, nil, GetTime()+2)

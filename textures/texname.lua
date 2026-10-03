@@ -107,6 +107,10 @@ for retailTexture, classicTexture in pairs(mapping) do
     (SAO.IsCata() and retailNumber <= 511469) -- Cataclysm game files embed textures up to (at least) 511469
     or
     (SAO.IsMoP() and retailNumber <= 898423) -- Mists of Pandaria game files embed textures up to (at least) 898423
+    or
+    (SAO.IsRetail() and retailNumber <= 30000000) -- Arbitrary large number for retail game files
+    or
+    (SAO.IsForever() and retailNumber <= 2888300) -- Forever game files embed textures up to (at least) 2888300
   ) and
     retailNumber ~= 450914 and retailNumber ~= 450915 then -- Eclipse textures in Cataclysm and Pandaria were different
     -- In this case, use texture embedded in game using its FileDataID, not from addon folder using a file path
@@ -346,31 +350,43 @@ function SAO_DB_ComputeUnmarkedTextures(output)
 end
 
 function SAO_DB_LookForTexture(fileDataID, output, saveToDev)
+  if saveToDev and SpellActivationOverlayDB.dev then
+    SpellActivationOverlayDB.dev.existing[fileDataID] = nil;
+  end
+
+  local setLoaded = function(isLoaded)
+    if saveToDev and SpellActivationOverlayDB.dev then
+      SpellActivationOverlayDB.dev.existing.id[fileDataID] = isLoaded;
+
+      SpellActivationOverlayDB.dev.existing.remaining = SpellActivationOverlayDB.dev.existing.remaining-1;
+      if SpellActivationOverlayDB.dev.existing.remaining == 0 and (type(output) ~= 'boolean' or output) then
+        print("SAO_DB_DetectExistingMarkedTextures() "..WrapTextInColorCode("Complete", "FF00FF00"));
+      end
+    end
+    if not saveToDev and (type(output) ~= 'boolean' or output) then
+      if isLoaded then
+        SAO:Info(Module, "Texture "..tostring(fileDataID).." has been found in game files.");
+      else
+        SAO:Warn(Module, "Texture "..tostring(fileDataID).." has *not* been found in game files.");
+      end
+    end
+  end;
+
+  -- Simply use C_UIFileAsset.IsKnownFile is available
+  if C_UIFileAsset and C_UIFileAsset.IsKnownFile then
+    setLoaded(C_UIFileAsset.IsKnownFile(fileDataID));
+    return;
+  end
+
+  -- Otherwise, fall back to creating a frame and texture to check if the file is loaded in the game
   local f = CreateFrame("Frame", nil);
   local tex = f:CreateTexture();
   tex:SetPoint('CENTER', WorldFrame);
 
   f:SetAllPoints(tex);
-  if saveToDev and SpellActivationOverlayDB.dev then
-    SpellActivationOverlayDB.dev.existing[fileDataID] = nil;
-  end
   f:SetScript('OnSizeChanged', function(self, width, height)
-      local isLoaded = width > 15 and height > 15
-      if saveToDev and SpellActivationOverlayDB.dev then
-        SpellActivationOverlayDB.dev.existing.id[fileDataID] = isLoaded;
-
-        SpellActivationOverlayDB.dev.existing.remaining = SpellActivationOverlayDB.dev.existing.remaining-1;
-        if SpellActivationOverlayDB.dev.existing.remaining == 0 and (type(output) ~= 'boolean' or output) then
-          print("SAO_DB_DetectExistingMarkedTextures() "..WrapTextInColorCode("Complete", "FF00FF00"));
-        end
-      end
-      if not saveToDev and (type(output) ~= 'boolean' or output) then
-        if isLoaded then
-          SAO:Info(Module, "Texture "..tostring(fileDataID).." has been found in game files.");
-        else
-          SAO:Warn(Module, "Texture "..tostring(fileDataID).." has *not* been found in game files.");
-        end
-      end
+      local isLoaded = width > 15 and height > 15;
+      setLoaded(isLoaded);
       f:Hide();
   end);
 

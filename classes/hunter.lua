@@ -115,7 +115,7 @@ local function useMasterMarksman()
 
     SAO:CreateEffect(
         "master_marksman",
-        SAO.CATA_AND_ONWARD,
+        SAO.CATA_AND_ONWARD - SAO.RETAIL,
         masterMarksmanBuff5, -- Fire! (buff)
         "aura",
         {
@@ -135,7 +135,7 @@ end
 local function useLockAndLoad()
     SAO:CreateEffect(
         "lock_and_load",
-        SAO.SOD + SAO.WRATH_AND_ONWARD,
+        SAO.SOD + SAO.WRATH_AND_ONWARD - SAO.RETAIL,
         {
             [SAO.SOD] = 415414,
             [SAO.WRATH_AND_ONWARD] = 56453,

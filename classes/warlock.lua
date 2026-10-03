@@ -135,7 +135,7 @@ end
 local function useDrainSoul(self)
     self:CreateEffect(
         "drain_soul",
-        SAO.SOD + SAO.MOP_AND_ONWARD,
+        SAO.SOD + SAO.MOP_AND_ONWARD - SAO.RETAIL,
         drainSoul,
         "execute",
         {
@@ -144,6 +144,7 @@ local function useDrainSoul(self)
             talent = {
                 [SAO.SOD] = 403511, -- Soul Siphon (rune)
                 -- [SAO.MOP_AND_ONWARD] = WARLOCK_SPEC_AFFLICTION, -- Affliction (spec) -- See comment in requireTalent
+                [SAO.MOP_AND_ONWARD] = drainSoul, -- Use spell ID to avoid issues - it should be chosen by default, except when there is a table
             },
             button = drainSoul,
         }
@@ -163,10 +164,10 @@ local function useEyeOfKilrogg(self)
 end
 
 local function useNightfall(self)
-    local SAO_UP_UNTIL_CATA = SAO.ERA + SAO.TBC + SAO.WRATH + SAO.CATA;
+    local SAO_UP_UNTIL_CATA = SAO.FOREVER + SAO.ERA + SAO.TBC + SAO.WRATH + SAO.CATA; -- Also implicitly matches SAO.SOD, thanks to SAO.ERA
     self:CreateEffect(
         "nightfall",
-        SAO.ALL_PROJECTS,
+        SAO.ALL_PROJECTS - SAO.RETAIL,
         17941, -- Shadow Trance (buff)
         "aura",
         {

@@ -1,5 +1,5 @@
-## Interface: 11509, 20506, 30405, 38002, 40402, 50504, 120000
-## Title: |TInterface/Icons/Spell_Frost_Stun:16:16:0:0:512:512:64:448:64:448|t SpellActivationOverlay |cff66bbff2.7.11|r |TInterface/Icons/trade_engineering:16:16:0:0:512:512:32:480:32:480|t
+## Interface: 11509, 16001, 20506, 30405, 38002, 40402, 50504, 120100
+## Title: |TInterface/Icons/Spell_Frost_Stun:16:16:0:0:512:512:64:448:64:448|t SpellActivationOverlay |cff66bbff2.8.0-alpha|r |TInterface/Icons/trade_engineering:16:16:0:0:512:512:32:480:32:480|t
 ## Notes: Display overlays and glow buttons to improve your gameplay!
 ## Notes-deDE: Zeigt Overlays und leuchtende Schaltflächen zur Verbesserung Ihres Gameplays an!
 ## Notes-frFR: Affiche des overlays et illumine des boutons pour améliorer votre expérience de jeu !
@@ -23,13 +23,14 @@
 ## Category-zhCN: 战斗改进
 ## Category-zhTW: 戰鬥改進
 ## Author: Vinny/Ennvina
-## Version: 2.7.11
+## Version: 2.8.0-alpha
 ## SavedVariables: SpellActivationOverlayDB
 ## IconTexture: Interface/AddOns/SpellActivationOverlay/textures/icon64
 ## X-SAO-Build: dev
 ## X-Curse-Project-ID: 649417
+## OptionalDeps: Blizzard_AuraContainer
 
-# SpellActivationOverlay.lua, SpellActivationOverlay.xml and all textures were created by Blizzard Entertainment, Inc.
+# The original SpellActivationOverlay.lua, SpellActivationOverlay.xml, the spell alert sound and all textures were created by Blizzard Entertainment, Inc.
 #
 # World of Warcraft®: Cataclysm®
 # ©2010 Blizzard Entertainment, Inc. All rights reserved. Cataclysm is a trademark, and World of Warcraft, Warcraft and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc. in the U.S. and/or other countries.
@@ -43,6 +44,7 @@
 
 #@no-lib-strip@
 libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
 libs\LibActionButton-1.0\LibActionButton-1.0.lua
 libs\LibButtonGlow-1.0\LibButtonGlow-1.0.lua
 #@end-no-lib-strip@
@@ -51,6 +53,7 @@ components\project.lua
 components\util.lua
 
 components\aura.lua
+components\auracontainer.lua
 components\bucket.lua
 components\display.lua
 components\effect.lua

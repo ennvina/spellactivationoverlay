@@ -33,6 +33,12 @@ function SpellActivationOverlay_OnLoad(self)
 	self.useSound = false;
 	SpellActivationOverlay_OnChangeSoundToggle(self);
 
+	SAO.AuraContainer:initialize(SpellActivationOverlayAddonFrame, {
+		containerSize = 256 * sizeScale + self.offset,
+		longSide = 256 * sizeScale * self.scale,
+		shortSide = 128 * sizeScale * self.scale,
+	});
+
 	local className, classFile, classId = UnitClass("player");
 	local class = SAO.Class[classFile];
 	if class and not class.IsDisabled then
@@ -99,6 +105,11 @@ function SpellActivationOverlay_OnChangeGeometry(self)
 	-- Resize existing overlays and prepare variables for future overlays
 	longSide = 256 * sizeScale * self.scale;
 	shortSide = 128 * sizeScale * self.scale;
+	SAO.AuraContainer:updateGeometry({
+		containerSize = newSize,
+		longSide = longSide,
+		shortSide = shortSide,
+	});
 	for _, overlayList in pairs(self.overlaysInUse) do
 		for i=1, #overlayList do
 			local overlay = overlayList[i];
@@ -112,6 +123,13 @@ function SpellActivationOverlay_OnChangeGeometry(self)
 			-- Calling the 'Play' custom function for animOut will setup its offset
 			SpellActivationOverlayFrame_PlayCombatAnimOut(overlay.combat.animOut);
 		end
+	end
+end
+
+function SpellActivationOverlayFrame_ResetCombatFade(self)
+	if not self.disableDimOutOfCombat and not InCombatLockdown() then
+		self.combatAnimOut:Stop();
+		self.combatAnimIn:Play();
 	end
 end
 
@@ -374,8 +392,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 
 	if ( not self.disableDimOutOfCombat and not InCombatLockdown() ) then
 		-- Simulate a short, fake in-combat mode, to make the spell alert more visible
-		self.combatAnimOut:Stop();
-		self.combatAnimIn:Play();
+		SpellActivationOverlayFrame_ResetCombatFade(self);
 		if ( combatOnly ) then
 			-- Playing combat.animIn to add a smoother fade-in animation when not in combat
 			-- Because the player is not in combat, the 'very quick' popup is overkill
@@ -778,5 +795,16 @@ function SpellActivationOverlayFrame_SetForceAlpha2(enabled)
 				end
 			end
 		end
+	end
+end
+
+function SpellActivationOverlay_OnShow(self)
+	if SpellActivationOverlayDB and SpellActivationOverlayDB.alert and SpellActivationOverlayDB.alert.enabled
+	and SAO.AuraContainer and SAO.AuraContainer.initialized then
+		-- Must refresh the geometry of the aura container, because it was reset when its parent frame was hidden
+		-- But cannot refresh it immediately, because of the frame being in the process of showing
+		C_Timer.After(0, function()
+			SAO.AuraContainer:updateGeometry(SAO.AuraContainer.globalGeometry.geometry);
+		end);
 	end
 end

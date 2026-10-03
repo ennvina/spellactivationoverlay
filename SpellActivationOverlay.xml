@@ -103,6 +103,44 @@
 			<OnShow function="SpellActivationOverlayTexture_OnShow"/>
 		</Scripts>
 	</Frame>
+	<Frame name="SAOAuraButtonTemplate" virtual="true">
+		<Animations>
+			<AnimationGroup parentKey="pulse" looping="REPEAT">
+				<Scale scaleX="1.08" scaleY="1.08" duration="0.5" smoothing="IN_OUT" order="1"/>
+				<Scale scaleX="0.9259" scaleY="0.9259" duration="0.5" smoothing="IN_OUT" order="2"/>
+			</AnimationGroup>
+		</Animations>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="auraIcon" setAllPoints="true"/>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture parentKey="customTexture" setAllPoints="true">
+					<Animations>
+						<AnimationGroup parentKey="fadeIn" setToFinalAlpha="true">
+							<Alpha fromAlpha="0" toAlpha="1" duration="1.5"/>
+						</AnimationGroup>
+					</Animations>
+				</Texture>
+				<FontString parentKey="count" inherits="NumberFontNormal">
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" x="-8" y="8"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Cooldown
+				parentKey="cooldown"
+				inherits="CooldownFrameTemplate"
+				setAllPoints="true"
+				drawBling="false"
+				drawEdge="false"
+				drawSwipe="false"
+				hideCountdownNumbers="true">
+			</Cooldown>
+		</Frames>
+	</Frame>
 	<Frame name="SpellActivationOverlayContainerFrame" parent="UIParent">
 		<Size x="256" y="256"/>
 		<Anchors>
@@ -135,6 +173,7 @@
 				<Scripts>
 					<OnLoad function="SpellActivationOverlay_OnLoad"/>
 					<OnEvent function="SpellActivationOverlay_OnEvent"/>
+					<OnShow function="SpellActivationOverlay_OnShow"/>
 				</Scripts>
 			</Frame>
 		</Frames>
