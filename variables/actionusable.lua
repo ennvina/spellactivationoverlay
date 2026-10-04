@@ -75,7 +75,7 @@ SAO.Variable:register({
                 return;
             end
 
-            local start, duration = SAO:GetSpellCooldown(spellID);
+            local start, duration, isOnCD, isOnGCD = SAO:GetSpellCooldown(spellID);
             if type(start) ~= "number" then
                 -- Spell not available
                 bucket:setActionUsable(false);
@@ -83,10 +83,6 @@ SAO.Variable:register({
             end
 
             local isActionUsable, notEnoughPower = IsUsableSpell(spellID);
-
-            local gcdDuration = SAO:GetGCD();
-            local isGCD = not issecretvalue(duration) and (duration <= gcdDuration);
-            local isActionOnCD = not issecretvalue(start) and (start > 0 and not isGCD);
 
             -- Non-mana spells and abilities should always be considered usable, regardless of player's current resources
             local costsMana = false;
@@ -98,11 +94,21 @@ SAO.Variable:register({
             end
 
             -- Evaluate whether or not the action is actually usable
+            local isActionOnCD = isOnCD and not isOnGCD;
             local usable = not isActionOnCD and (isActionUsable or (notEnoughPower and not costsMana));
 
             if isActionUsable and isActionOnCD then
                 -- Action could be usable, but CD prevents us to: try again in a few seconds
-                local endTime = start+duration;
+                -- - If the end time (start+duration) can be estimated, try again after that estimation
+                -- - Otherwise try again after an arbitrary duration, based on the Responsive Mode setting
+                local endTime;
+                if canaccessvalue(start) and canaccessvalue(duration) then
+                    endTime = start + duration;
+                elseif SAO:IsResponsiveMode() then
+                    endTime = GetTime() + 0.1;
+                else
+                    endTime = GetTime() + 0.5;
+                end
 
                 if (not ActionRetryTimers[spellID] or ActionRetryTimers[spellID].endTime ~= endTime) then
                     if (ActionRetryTimers[spellID]) then
