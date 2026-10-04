@@ -127,7 +127,7 @@ end
 
 -- Get the Global Cooldown duration
 function SAO:GetGCD()
-    if self.IsEra() or self.IsTBC() then
+    if self.IsForever() or self.IsEra() or self.IsTBC() then
         -- Most spells and abilities incur a 1.5-second Global Cooldown
         -- Some spells and abilities incur a 1-second cooldown, such as Shaman totems or most Rogue abilities
         -- But these are very hard to detect, requiring to catch the last spell/ability which triggered the GCD
