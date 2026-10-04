@@ -9,6 +9,7 @@ Introducing Forever flavor!
 
 Thank you to our amazing contributors for helping out on Forever.
 - lancestre for development and tests
+- FunkArouser for development and tests
 - r41dboss for tests and feedback
 
 You guys are helping a great deal, much appreciated!
