@@ -68,18 +68,24 @@ function SAO:GetSpellIconAndText(spellID)
     return nil;
 end
 
--- Get the cooldown start time and duration for a given spell ID
+-- Get the cooldown information for a given spell ID: startTime, duration, isOnCD, isOnGCD
 function SAO:GetSpellCooldown(spellID)
     if GetSpellCooldownModern then
         local cooldownInfo = GetSpellCooldownModern(spellID);
         if cooldownInfo == nil then
-            return nil, nil;
+            return nil, nil, nil, nil;
         end
-        return cooldownInfo.startTime, cooldownInfo.duration;
+        return cooldownInfo.startTime,
+               cooldownInfo.duration,
+               cooldownInfo.isActive == true,
+               cooldownInfo.isOnGCD == true; -- If cooldownInfo.isOnGCD is unreliable, use GetSpellCooldownModern(61304).startTime > 0
     end
 
     local startTime, duration = GetSpellCooldownLegacy(spellID);
-    return startTime, duration;
+    local isOnCD = startTime > 0;
+    local gcdDuration = SAO:GetGCD();
+    local isOnGCD = duration <= gcdDuration;
+    return startTime, duration, isOnCD, isOnGCD;
 end
 
 -- Get the power cost table for a given spell ID
