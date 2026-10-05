@@ -34,7 +34,6 @@ function SpellActivationOverlay_OnLoad(self)
 	SpellActivationOverlay_OnChangeSoundToggle(self);
 
 	SAO.AuraContainer:initialize(SpellActivationOverlayAddonFrame, {
-		containerSize = 256 * sizeScale + self.offset,
 		longSide = 256 * sizeScale * self.scale,
 		shortSide = 128 * sizeScale * self.scale,
 	});
@@ -106,7 +105,6 @@ function SpellActivationOverlay_OnChangeGeometry(self)
 	longSide = 256 * sizeScale * self.scale;
 	shortSide = 128 * sizeScale * self.scale;
 	SAO.AuraContainer:updateGeometry({
-		containerSize = newSize,
 		longSide = longSide,
 		shortSide = shortSide,
 	});

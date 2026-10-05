@@ -247,7 +247,7 @@ SAO.AuraContainer = {
         end
 
         local container = CreateFrame("AuraContainer", "SpellActivationOverlayAuraContainer", parent, "CustomAuraContainerTemplate")
-        container:SetSize(initialGlobalGeometry.containerSize, initialGlobalGeometry.containerSize)
+        container:SetAllPoints()
         container:SetPoint("CENTER")
         container:SetUnit("player")
         container:SetEnabled(true)
@@ -309,38 +309,6 @@ SAO.AuraContainer = {
     updateGeometry = function(self, globalGeometry)
         if not useAuraContainer or not self.initialized then
             return
-        end
-
-        local containerSize = globalGeometry.containerSize
-        local recentUpdate = self.globalGeometry.updatedAt
-        if GetTime() == recentUpdate then
-            -- Must delay ever so slightly, otherwise the new size might not be applied correctly
-            if self.globalGeometry.pendingTimer then
-                self.globalGeometry.pendingTimer:Cancel()
-            end
-            self.globalGeometry.pendingTimer = C_Timer.NewTimer(0, function()
-                self.container:SetSize(containerSize, containerSize)
-                self.globalGeometry.pendingTimer = nil
-            end)
-        else
-            self.container:SetSize(containerSize, containerSize)
-        end
-
-        if self.globalGeometry.initTicker == nil then
-            -- Additional timer to fix initialization, which usually has issues on first login (not on reload UI)
-            -- Ideally we would set the size, then get the size back to confirm it was applied correctly
-            -- Unfortunately, due to secrets limitations, fetching the size is forbidden
-            -- Therefore, our best option is to spam the size setting until we are reasonably sure it has been applied correctly
-            self.globalGeometry.initAttemptsLeft = 50
-            self.globalGeometry.initTicker = C_Timer.NewTicker(0.2, function()
-                local containerSize = globalGeometry.containerSize -- Use most recent one in case it changed since ticker creation
-                self.container:SetSize(containerSize, containerSize)
-                self.globalGeometry.initAttemptsLeft = self.globalGeometry.initAttemptsLeft - 1
-                if self.globalGeometry.initAttemptsLeft <= 0 then
-                    self.globalGeometry.initTicker:Cancel()
-                    -- self.globalGeometry.initTicker = nil -- Do not reset, it helps knowing the ticker was created and ended
-                end
-            end)
         end
 
         for _, item in pairs(self.items) do
