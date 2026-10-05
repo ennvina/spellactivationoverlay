@@ -121,6 +121,15 @@ function SAO:ReportUnknownEffect(prefix, spellID, texture, positions, scale, r, 
     end
 end
 
+-- Get the value of debugstack(), split it line by line, then DevTools_Dump over the list of splitted lines
+function SAO:PrintDebugStack()
+    local stackLines = {};
+    for line in string.gmatch(debugstack(), "[^\n]+") do
+        tinsert(stackLines, line);
+    end
+    DevTools_Dump(stackLines);
+end
+
 --[[
     Global Cooldown
 ]]
