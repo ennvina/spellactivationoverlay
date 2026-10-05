@@ -270,7 +270,7 @@ local FrozenHandler = {
 
     saoTexture = "frozen_fingers",
     saoPosition = SAO.IsCata() and "Top" or "Top (CW)", -- Re-orient in Cataclysm because former effect had different orientation
-    saoScaleFactor = (SAO.IsEra() or SAO.IsTBC()) and 1 or 0.75, -- Scaling down on Wrath and Cataclysm because of conflict
+    saoScaleFactor = SAO.IsProject(SAO.FOREVER + SAO.ERA + SAO.TBC) and 1 or 0.75, -- Scaling down on Wrath and Cataclysm because of conflict
 
     -- Constants that will be initialized at init()
     allSpellIDs = {},
@@ -725,10 +725,10 @@ local function registerFire(self)
     elseif self.IsMoP() or self.IsRetail() then
         useHeatingUpAndHotStreak();
     end
-    if not self.IsMoP() and not self.IsRetail() then
+    if self.IsProject(SAO.SOD + SAO.WRATH + SAO.CATA) then
         self:RegisterAura("hot_streak_half", 0, heatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255, false); -- Does not exist, but define it for option testing
     end
-    if not self.IsCata() then
+    if self.IsCata(SAO.SOD + SAO.WRATH) then
         self:RegisterAura("hot_streak_duo", 0, hotStreakHeatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255, false); -- Does not exist, but define it for option testing
         self:RegisterAura("hot_streak_duo", 0, hotStreakHeatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true); -- Does not exist, but define it for option testing
     end
@@ -738,10 +738,8 @@ local function registerFire(self)
 end
 
 local function registerFrost(self)
-    if not self.IsCata() then
-        self:RegisterAura("freeze", 0, FrozenHandler.fakeSpellID, FrozenHandler.saoTexture, "Top (CW)", FrozenHandler.saoScaleFactor, 255, 255, 255, false);
-    else
-        self:RegisterAura("freeze", 0, FrozenHandler.fakeSpellID, FrozenHandler.saoTexture, "Top", FrozenHandler.saoScaleFactor, 255, 255, 255, false);
+    if self.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH + SAO.CATA + SAO.MOP) then
+        self:RegisterAura("freeze", 0, FrozenHandler.fakeSpellID, FrozenHandler.saoTexture, FrozenHandler.saoPosition, FrozenHandler.saoScaleFactor, 255, 255, 255, false);
     end
 
     if self.IsSoD() then
