@@ -585,8 +585,8 @@ local function useTasteForBlood()
 end
 
 local function useBladestorm()
-    if SAO.IsProject(SAO.MOP_AND_ONWARD) then
-        -- Not interested in Bladestorm in Mists of Pandaria and later
+    if not SAO.IsProject(SAO.WRATH + SAO.CATA) then
+        -- Although Bladestorm is supported in Mists of Pandaria and later, we are not interested in Bladestorm in those expansions
         return;
     end
 
