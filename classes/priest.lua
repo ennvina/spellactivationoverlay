@@ -215,7 +215,7 @@ end
 local function useShadowform()
     SAO:CreateEffect(
         "shadowform",
-        SAO.ALL_PROJECTS,
+        SAO.ALL_PROJECTS - SAO.FOREVER,
         shadowform,
         "aura",
         {
