@@ -7,6 +7,8 @@ local function promoteAura(aura)
     aura.stacks = aura[2];
     aura.spellID = aura[3];
     if aura[4] then
+        local hash = SAO.Hash:new();
+        hash:setAuraStacks(aura.stacks);
         aura.overlay = {
             spellID = aura[3],
             texture = aura[4],
@@ -15,6 +17,7 @@ local function promoteAura(aura)
             color = { aura[7], aura[8], aura[9] },
             autoPulse = aura[10],
             combatOnly = aura[13],
+            hash = hash.hash,
         }
     end
     if aura[11] then
