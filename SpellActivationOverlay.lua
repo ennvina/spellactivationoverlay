@@ -795,14 +795,3 @@ function SpellActivationOverlayFrame_SetForceAlpha2(enabled)
 		end
 	end
 end
-
-function SpellActivationOverlay_OnShow(self)
-	if SpellActivationOverlayDB and SpellActivationOverlayDB.alert and SpellActivationOverlayDB.alert.enabled
-	and SAO.AuraContainer and SAO.AuraContainer.initialized then
-		-- Must refresh the geometry of the aura container, because it was reset when its parent frame was hidden
-		-- But cannot refresh it immediately, because of the frame being in the process of showing
-		C_Timer.After(0, function()
-			SAO.AuraContainer:updateGeometry(SAO.AuraContainer.globalGeometry.geometry);
-		end);
-	end
-end

@@ -173,7 +173,6 @@
 				<Scripts>
 					<OnLoad function="SpellActivationOverlay_OnLoad"/>
 					<OnEvent function="SpellActivationOverlay_OnEvent"/>
-					<OnShow function="SpellActivationOverlay_OnShow"/>
 				</Scripts>
 			</Frame>
 		</Frames>
