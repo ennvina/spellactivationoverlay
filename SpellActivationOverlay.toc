@@ -106,5 +106,5 @@ options\glowoptions.lua
 options\overlayoptions.lua
 options\variants.lua
 
-SpellActivationOverlay.lua
+# SpellActivationOverlay.lua -- Loaded by SpellActivationOverlay.xml
 SpellActivationOverlay.xml
