@@ -24,9 +24,9 @@ Bug Fixes
 - In very rare circumstances, some buttons did not glow as expected
 
 Known Limitations (Forever)
-- Glowing Buttons are not supported
-  - It is unsure whether Glowing Buttons can become a reality in Forever
-  - In the meantime, Glowing Buttons have been disabled in Options Panel
+- Glowing Buttons are not supported for auras e.g, Shadow Bolt for Nightfall
+  - It is unsure whether Glowing Buttons can become a reality with auras
+  - Non-auras Glowing Buttons, such as Warrior's Execute, should work
 - Most Spell Alerts do not support Progressive Timer
   - Some progressive timer alternatives are being evaluated
   - Support will definitely come someday, but will be different than Classic

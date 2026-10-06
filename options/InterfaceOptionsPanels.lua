@@ -57,8 +57,8 @@ function SpellActivationOverlayOptionsPanelMixin:Init()
         end
     end
 
-    -- local mustDisableGlowForEveryone = SAO.IsRetail() or SAO.IsForever(); -- There are no viable glowing buttons alternatives in Retail or Forever, for now
-    local mustDisableGlowForEveryone = false; -- Re-enable glowing buttons for everyone when issues are fixed
+    local mustDisableGlowForEveryone = false; -- Re-enable glowing buttons for everyone
+    -- mustDisableGlowForEveryone = true; -- Uncomment this to disable glowing buttons from options
     if not shutdownCategory and mustDisableGlowForEveryone then
         SpellActivationOverlayOptionsPanel.glowOff:Show();
     else
