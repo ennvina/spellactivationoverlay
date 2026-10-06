@@ -12,6 +12,20 @@ local combatOverlayFactor = 2;
 local useTimer = true;
 local useSound = false;
 
+if SAO.IsForever() then
+	local welcomeBefore = SAO:gradientText(">>>>>>", { { r=0.5, g=0.5, b=1 }, { r=1, g=1, b=1 } });
+	local orange, orangeLight, orangeDark = { r = 1, g = 0.7, b = 0.2 }, { r = 1, g = 0.85, b = 0.55 }, { r = 0.9, g = 0.65, b = 0.15 };
+	local welcomeSAO = SAO:gradientText("Spell Activation Overlay", { orange, orangeLight, orange, orangeDark });
+	local lightBlue, lightBlueLight = { r = 0.7, g = 0.9, b = 1 }, { r = 0.85, g = 0.95, b = 1 };
+	local welcomeForever = SAO:gradientText("World of Warcraft: Forever", { lightBlue, lightBlueLight, lightBlue });
+	local welcomeDiscord = "|cffcdffcdDiscord server|r";
+	local welcomeCurseForge = "|cffcdffcdCurseForge|r";
+	local welcomeText = welcomeBefore .. " Welcome to " .. welcomeSAO .. ". " ..
+		"The addon is still in early development for " .. welcomeForever .. ". " ..
+		"Please be patient and make sure to report issues over the " .. welcomeDiscord .. " or " .. welcomeCurseForge .. ", thank you :)";
+    print(welcomeText)
+end
+
 function SpellActivationOverlay_OnLoad(self)
 	SAO.Frame = self;
 	SAO.ShowAllOverlays = SpellActivationOverlay_ShowAllOverlays;
