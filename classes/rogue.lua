@@ -6,6 +6,8 @@ local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local GetTime = GetTime
 local UnitGUID = UnitGUID
 
+local hasCustomRiposte = SAO.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH);
+
 --[[
     RiposteHandler guesses when Riposte is available,
     even while the ability is on cooldown
@@ -17,7 +19,7 @@ local UnitGUID = UnitGUID
     - Riposte has been cast
     - more than 5 seconds have elapsed since last parry
 ]]
-local RiposteHandler = {
+local RiposteHandler = hasCustomRiposte and {
 
     initialized = false,
     hash = nil,
@@ -126,7 +128,7 @@ local RiposteHandler = {
             self.alertVanishTime = nil;
         end
     end,
-}
+} or nil;
 
 local function customLogin(self, ...)
     -- Initialization on PLAYER_LOGIN event because the talent tree may not be available before
@@ -149,11 +151,11 @@ local function useRiposte()
     -- Register Riposte as both an aura and a counter
     local riposte = 14251;
     -- Lazy evaluation for variants, because they will be initialized later on
-    local riposteOverlayOption = { variants = function() return RiposteHandler.alertVariants end }
-    local riposteButtonOption = { variants = function() return RiposteHandler.variants end }
+    local riposteOverlayOption = hasCustomRiposte and { variants = function() return RiposteHandler.alertVariants end } or nil;
+    local riposteButtonOption = hasCustomRiposte and { variants = function() return RiposteHandler.variants end } or nil;
     SAO:CreateEffect(
         "riposte",
-        SAO.ERA + SAO.TBC + SAO.WRATH,
+        SAO.FOREVER + SAO.ERA + SAO.TBC + SAO.WRATH,
         riposte,
         "counter",
         {
@@ -221,7 +223,7 @@ local function useDispatch()
 
     SAO:CreateEffect(
         "dispatch",
-        SAO.MOP_AND_ONWARD,
+        SAO.MOP_AND_ONWARD - SAO.RETAIL,
         dispatch,
         "execute",
         {
@@ -239,10 +241,8 @@ local function registerClass(self)
     useDispatch();
 end
 
-local hasRiposte = SAO.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH);
-
 SAO.Class["ROGUE"] = {
     ["Register"] = registerClass,
-    ["PLAYER_LOGIN"] = hasRiposte and customLogin or nil,
-    ["COMBAT_LOG_EVENT_UNFILTERED"] = hasRiposte and customCLEU or nil,
+    ["PLAYER_LOGIN"] = hasCustomRiposte and customLogin or nil,
+    ["COMBAT_LOG_EVENT_UNFILTERED"] = hasCustomRiposte and customCLEU or nil,
 }

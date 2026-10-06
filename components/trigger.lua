@@ -32,6 +32,10 @@ function SAO:GetBucketsByTrigger(flag)
     return buckets;
 end
 
+local function getTriggerName(flag)
+    return tostring(SAO.TriggerNames[flag] or flag);
+end
+
 SAO.Trigger = {
     new = function(self, parent) -- parent is the bucket attached to the new trigger
         local trigger = {
@@ -72,29 +76,27 @@ SAO.Trigger = {
     end,
 
     inform = function(self, flag)
-        local name = tostring(SAO.TriggerNames[flag] or flag);
         if bit.bor(self.required, flag) ~= self.required then
-            SAO:Error(Module, "Informing unsupported trigger "..name.." for "..self.parent.description);
+            SAO:Error(Module, "Informing unsupported trigger "..getTriggerName(flag).." for "..self.parent.description);
             return;
         end
         if bit.band(self.informed, flag) == flag then
             return;
         end
-        SAO:Trace(Module, "Informing trigger "..name.." for "..self.parent.description);
+        SAO:Trace(Module, "Informing trigger "..getTriggerName(flag).." for "..self.parent.description);
 
         self.informed = bit.bor(self.informed, flag);
     end,
 
     uninform = function(self, flag) -- @todo remove code maybe, probably dead code. Who needs to un-inform?
-        local name = tostring(SAO.TriggerNames[flag] or flag);
         if bit.band(self.required, flag) ~= self.required then
             return;
         end
         if bit.band(self.informed, flag) == 0 then
-            SAO:Debug(Module, "De-informing unactive trigger "..name.." for "..self.parent.description);
+            SAO:Debug(Module, "De-informing unactive trigger "..getTriggerName(flag).." for "..self.parent.description);
             return;
         end
-        SAO:Trace(Module, "De-informing trigger "..name.." for "..self.parent.description);
+        SAO:Trace(Module, "De-informing trigger "..getTriggerName(flag).." for "..self.parent.description);
 
         self.informed = bit.band(self.informed, bit.bnot(flag));
     end,
@@ -119,9 +121,9 @@ SAO.Trigger = {
         for flag, name in pairs(SAO.TriggerNames) do
             if bit.band(flag, flags) ~= 0 and self:reactsWith(flag) then
                 SAO.TriggerManualChecks[flag](self.parent);
-                -- Must inform explicitly
-                -- Usually, the manual check would change state of the bucket, which will re-inform the trigger has triggered
-                -- But if the state does not change, the bucket may ignore the change, and thus not re-inform the trigger
+                -- Must update explicitly the informed bitfield
+                -- Usually, the manual check would change state of the bucket, which will re-inform that the trigger has been triggered
+                -- But if the state does not change, the bucket's update function may return early, and thus not re-inform the trigger
                 self.informed = bit.bor(self.informed, flag);
             end
         end
@@ -141,9 +143,9 @@ SAO.Trigger = {
         for flag, name in pairs(SAO.TriggerNames) do
             if self:reactsWith(flag) then
                 SAO.TriggerManualChecks[flag](self.parent);
-                -- Must inform explicitly
-                -- Usually, the manual check would change state of the bucket, which will re-inform the trigger has triggered
-                -- But if the state does not change, the bucket may ignore the change, and thus not re-inform the trigger
+                -- Must update explicitly the informed bitfield
+                -- Usually, the manual check would change state of the bucket, which will re-inform that the trigger has been triggered
+                -- But if the state does not change, the bucket's update function may return early, and thus not re-inform the trigger
                 self.informed = bit.bor(self.informed, flag);
             end
         end

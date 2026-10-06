@@ -5,7 +5,7 @@ local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local GetShapeshiftForm = GetShapeshiftForm
 local UnitGUID = UnitGUID
 
-local canHaveEclipse = SAO.IsProject(SAO.SOD + SAO.WRATH_AND_ONWARD);
+local canHaveEclipse = SAO.IsProject(SAO.SOD + SAO.WRATH_AND_ONWARD - SAO.RETAIL);
 
 local omenSpellID = 16870;
 local omenSpellIDFeral = 135700;
@@ -50,7 +50,7 @@ local omenOfClarityTalent = 16864;
 local function useShootingStars()
     SAO:CreateEffect(
         "shooting_stars",
-        SAO.CATA_AND_ONWARD,
+        SAO.CATA_AND_ONWARD - SAO.RETAIL,
         93400, -- Shooting Stars (buff)
         "aura",
         {
@@ -120,19 +120,33 @@ local function useOmenOfClarityForSpec(specIndex, suffix, spellID, texture, scal
 end
 
 local function useOmenOfClarity()
+    -- Mists of Pandaria
     -- Feral Omen of Clarity is slightly smaller to avoid conflict with Dream of Cenarius, and higher level to make it more visible
     useOmenOfClarityForSpec(2, "feral", omenSpellIDFeral, "feral_omenofclarity", 0.9, 4);
     useOmenOfClarityForSpec(4, "resto", omenSpellID, "natures_grace", nil, nil);
+
+    -- Forever and Retail
+    SAO:CreateEffect(
+        "omen_of_clarity",
+        SAO.FOREVER + SAO.RETAIL,
+        omenSpellID,
+        "aura",
+        {
+            talent = omenOfClarityTalent,
+            overlay = { texture = "natures_grace", position = "Left + Right (Flipped)" },
+        }
+    );
 end
 
 local function useNaturesGrace()
+    local naturesGraceTalent = SAO.IsWrath() and 61346 or 16880;
     SAO:CreateEffect(
         "natures_grace",
-        SAO.ERA + SAO.TBC + SAO.WRATH,
+        SAO.FOREVER + SAO.ERA + SAO.TBC + SAO.WRATH,
         16886, -- Nature's Grace (buff)
         "aura",
         {
-            talent = (SAO.IsEra() or SAO.IsTBC()) and 16880 or 61346, -- Nature's Grace (Era and TBC talent) or Nature's Grace (Wrath talent)
+            talent = naturesGraceTalent,
             overlay = { texture = "serendipity", position = "Top", scale = 0.7 },
         }
     );
@@ -556,10 +570,10 @@ local function registerClass(self)
     useDreamOfCenarius();
     usePredatoryStrikes(); -- a.k.a. Predatory Swiftness
     useMangle();
-    useOmenOfClarity(); -- MoP+
+    useOmenOfClarity(); -- MoP+ and Forever
     useSwiftbloom(); -- SoD Scarlet Enclave Resto 2pc
 
-    if not SAO.IsProject(SAO.MOP_AND_ONWARD) then -- Pre-MoP
+    if self.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH + SAO.CATA) then -- Pre-MoP
         -- Track Eclipses with a custom CLEU function, so that eclipses can coexist with Omen of Clarity
         -- self:RegisterAura("eclipse_lunar", 0, lunarSpellID, "eclipse_moon", "Left", 1, 255, 255, 255, true);
         -- self:RegisterAura("eclipse_solar", 0, solarSpellID, "eclipse_sun", "Right (Flipped)", 1, 255, 255, 255, true);
@@ -602,7 +616,7 @@ local function registerClass(self)
 end
 
 local function loadOptions(self)
-    if not SAO.IsProject(SAO.MOP_AND_ONWARD) then -- Pre-MoP
+    if not SAO.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH + SAO.CATA) then -- Pre-MoP
         -- Cheat with fake talents, to tell explicitly which type of eclipse is involved
         -- Otherwise the player would always see a generic "Eclipse" text
         local lunarEclipseTalent = lunarSpellID; -- Not really a talent
@@ -626,7 +640,7 @@ end
 SAO.Class["DRUID"] = {
     ["Register"] = registerClass,
     ["LoadOptions"] = loadOptions,
-    ["COMBAT_LOG_EVENT_UNFILTERED"] = customCLEU,
-    ["UPDATE_SHAPESHIFT_FORM"] = updateShapeshift,
-    ["PLAYER_ENTERING_WORLD"] = customLoad,
+    ["COMBAT_LOG_EVENT_UNFILTERED"] = canHaveEclipse and customCLEU or nil,
+    ["UPDATE_SHAPESHIFT_FORM"] = canHaveEclipse and updateShapeshift or nil,
+    ["PLAYER_ENTERING_WORLD"] = canHaveEclipse and customLoad or nil,
 }

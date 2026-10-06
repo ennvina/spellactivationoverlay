@@ -275,7 +275,7 @@ loader:SetScript("OnEvent", function (self, event)
     SAO:ApplyAllVariables();
     loadingState.variablesApplied = true;
 
-    SpellActivationOverlayOptionsPanel_Init(SAO.OptionsPanel);
+    SAO.OptionsPanel:Init();
     loadingState.optionsPanelInitialized = true;
 
     loader:UnregisterEvent("VARIABLES_LOADED");

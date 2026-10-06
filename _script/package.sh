@@ -553,7 +553,7 @@ cdup
 
 # Release retail version
 release_retail() {
-RETAIL_BUILD_VERSION=120000
+RETAIL_BUILD_VERSION=120100
 mkproject retail "$RETAIL_BUILD_VERSION" 2266c5 inv_ability_voidweaverpriest_entropicrift 64 "Retail"
 
 #prunecopyright Cataclysm Pandaria Draenor
@@ -576,6 +576,42 @@ prunetex "${TEXTURES_NOT_FOR_RETAIL[@]}"
 #prunesound "${SOUNDS_NOT_FOR_RETAIL[@]}"
 
 zipproject retail-alpha "$VERSION_TOC_VERSION"
+
+cdup
+}
+
+# Release forever version
+release_forever() {
+FOREVER_BUILD_VERSION=16001
+mkproject forever "$FOREVER_BUILD_VERSION" 30c9d9 inv_catskybornemount_c60_blue 64 "Forever"
+
+#prunecopyright Cataclysm Pandaria Draenor
+# Do not remove Cataclysm copyright, because we may need to use a sound file introduced in Cataclysm
+prunecopyright Pandaria Draenor
+
+# VARIABLES_NOT_FOR_FOREVER=(holypower nativesao)
+VARIABLES_NOT_FOR_FOREVER=(holypower) # Keep nativesao until we are certain the game does not fire such events
+prunevar "${VARIABLES_NOT_FOR_FOREVER[@]}"
+
+CLASSES_NOT_FOR_FOREVER=(deathknight monk)
+pruneclass "${CLASSES_NOT_FOR_FOREVER[@]}"
+
+TEXTURES_NOT_FOR_FOREVER=(
+fury_of_stormrage_yellow
+maelstrom_weapon_6
+maelstrom_weapon_7
+maelstrom_weapon_8
+maelstrom_weapon_9
+maelstrom_weapon_10
+$(texbelow 2888300)
+)
+prunetex "${TEXTURES_NOT_FOR_FOREVER[@]}"
+
+# Do not remove sound; in Retail the file exists but has no volume - Check if the issue persists in Forever
+#SOUNDS_NOT_FOR_FOREVER=(UI_PowerAura_Generic)
+#prunesound "${SOUNDS_NOT_FOR_FOREVER[@]}"
+
+zipproject forever-alpha "$VERSION_TOC_VERSION"
 
 cdup
 }
@@ -701,16 +737,17 @@ UNIVERSAL_BUILD_VERSION="$VANILLA_BUILD_VERSION, $TBC_BUILD_VERSION, $WRATH_BUIL
 mkproject universal "$UNIVERSAL_BUILD_VERSION" c845fa spell_arcane_portalstormwind 32 "Universal"
 
 echo -n "Generatic TOC files for each flavor..."
-PROJECTS=(
+PROJECT_TOC_SUFFIX=( # List of flavor names + TOC suffixes e.g. 'vanilla' -> SpellActivationOverlay_Vanilla.toc
 "vanilla Vanilla"
 "tbc TBC"
 "wrath Wrath"
 "cata Cata"
 "mop Mists"
-"retail Mainline"
+"retail Mainline" # Shall be 'Standard' after patch 12.1.5
+"forever Camelot" # May become something like 'Forever' by the time the game is released
 )
 addon_name=SpellActivationOverlay
-for project in "${PROJECTS[@]}"; do
+for project in "${PROJECT_TOC_SUFFIX[@]}"; do
     read flavor suffix <<< "$project"
     build_version=$(grep -i '^##[[:space:]]*interface:' "../${flavor}/${addon_name}/${addon_name}.toc" | grep -o '[0-9].*[^[:space:]]')
     [ -z "$build_version" ] && bye "Cannot read Interface version from '$flavor'"
@@ -733,6 +770,7 @@ if [ $# -eq 0 ]; then
     release_cata
     release_mop
     release_retail
+    release_forever
     release_universal
     release_necrosis
 else
@@ -744,6 +782,7 @@ else
             cata) release_cata ;;
             mop) release_mop ;;
             retail) release_retail ;;
+            forever) release_forever ;;
             universal) release_universal ;;
             necrosis) release_necrosis ;;
             *) printf '\n==== %s ====\n' "${flavor^^}"; bye "Unknown flavor '$flavor'" ;;

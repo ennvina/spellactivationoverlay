@@ -9,7 +9,7 @@ local frostShock = 8056;
 local greaterHealingWave = 77472;
 local healingRain = 73920;
 local healingSurge = 8004;
-local healingWave = 331;
+local healingWave = SAO.IsRetail() and 77472 or 331;
 local hex = 51514;
 local lavaBurst = 51505;
 local lavaBurstSoD = 408490;
@@ -53,7 +53,7 @@ local function useElementalFocus(self)
     -- Elemental Focus has 2 charges on TBC and beyond
     self:CreateEffect(
         "elemental_focus",
-        SAO.TBC_AND_ONWARD,
+        SAO.TBC_AND_ONWARD - SAO.RETAIL,
         16246, -- Clearcasting (buff)
         "aura",
         {
@@ -154,13 +154,21 @@ local function useTidalWaves(self)
         {
             talent = tidalWavesTalent,
             overlays = {
-                { stacks = 1, texture = "high_tide", position = "Left (CCW)", scale = 0.8, option = false },
-                { stacks = 2, texture = "high_tide", position = "Left (CCW)", scale = 0.8, option = false },
-                { stacks = 2, texture = "high_tide", position = "Right (CW)", scale = 0.8, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
+                [SAO.ALL_PROJECTS - SAO.RETAIL] = {
+                    { stacks = 1, texture = "high_tide", position = "Left (CCW)", scale = 0.8, option = false },
+                    { stacks = 2, texture = "high_tide", position = "Left (CCW)", scale = 0.8, option = false },
+                    { stacks = 2, texture = "high_tide", position = "Right (CW)", scale = 0.8, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
+                },
+                [SAO.RETAIL] = {
+                    -- Must be stack-agnostic on Retail which does not support specific stacks
+                    { texture = "high_tide", position = "Left (CCW)", scale = 0.8, option = false },
+                    { texture = "high_tide", position = "Right (CW)", scale = 0.8, option = true },
+                },
             },
             buttons = {
-                [SAO.SOD+SAO.WRATH] = { lesserHealingWave, healingWave },
-                [SAO.CATA_AND_ONWARD] = { greaterHealingWave, healingWave, healingSurge },
+                [SAO.SOD + SAO.WRATH] = { lesserHealingWave, healingWave },
+                [SAO.CATA + SAO.MOP] = { greaterHealingWave, healingWave, healingSurge },
+                [SAO.RETAIL] = { healingWave, chainHeal },
             },
         }
     );
@@ -198,7 +206,7 @@ local function useMaelstromWeapon(self)
 
     self:CreateEffect(
         "maelstrom_weapon",
-        SAO.SOD + SAO.WRATH_AND_ONWARD,
+        SAO.SOD + SAO.WRATH_AND_ONWARD - SAO.RETAIL,
         maelstromWeaponBuff,
         "aura",
         {
@@ -242,7 +250,7 @@ local function useFulmination(self)
     -- Fulmination (Cataclysm and onward)
     SAO:CreateEffect(
         "fulmination",
-        SAO.CATA_AND_ONWARD,
+        SAO.CATA_AND_ONWARD - SAO.RETAIL,
         324, -- Lightning Shield
         "aura",
         {

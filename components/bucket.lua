@@ -286,10 +286,11 @@ SAO.BucketManager = {
         end
     end,
 
-    addEffectOverlay = function(self, bucket, hash, overlay, combatOnly)
+    addEffectOverlay = function(self, bucket, overlay)
+        local hash = SAO.Hash:new(overlay.hash);
         local display = bucket:getOrCreateDisplay(hash);
         display:addOverlay(overlay);
-        display:setCombatOnly(combatOnly);
+        display:setCombatOnly(overlay.combatOnly);
     end,
 
     addEffectButton = function(self, bucket, hash, button, combatOnly)

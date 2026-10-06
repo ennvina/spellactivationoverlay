@@ -68,18 +68,24 @@ function SAO:GetSpellIconAndText(spellID)
     return nil;
 end
 
--- Get the cooldown start time and duration for a given spell ID
+-- Get the cooldown information for a given spell ID: startTime, duration, isOnCD, isOnGCD
 function SAO:GetSpellCooldown(spellID)
     if GetSpellCooldownModern then
         local cooldownInfo = GetSpellCooldownModern(spellID);
         if cooldownInfo == nil then
-            return nil, nil;
+            return nil, nil, nil, nil;
         end
-        return cooldownInfo.startTime, cooldownInfo.duration;
+        return cooldownInfo.startTime,
+               cooldownInfo.duration,
+               cooldownInfo.isActive == true,
+               cooldownInfo.isOnGCD == true; -- If cooldownInfo.isOnGCD is unreliable, use GetSpellCooldownModern(61304).startTime > 0
     end
 
     local startTime, duration = GetSpellCooldownLegacy(spellID);
-    return startTime, duration;
+    local isOnCD = startTime > 0;
+    local gcdDuration = SAO:GetGCD();
+    local isOnGCD = duration <= gcdDuration;
+    return startTime, duration, isOnCD, isOnGCD;
 end
 
 -- Get the power cost table for a given spell ID
@@ -135,6 +141,11 @@ function SAO:LearnNewSpell(spellID, observed)
         return;
     end
 
+    if observed then
+        -- Add to the list of observed spell IDs
+        ObservedSpellIDs[spellID] = name;
+    end
+
     local cached = SpellIDsByName[name];
     if not cached then
         -- Not interested in untracked spells
@@ -146,11 +157,6 @@ function SAO:LearnNewSpell(spellID, observed)
             -- Spell ID already cached
             return;
         end
-    end
-
-    if observed then
-        -- Add to the list of observed spell IDs
-        ObservedSpellIDs[spellID] = name;
     end
 
     -- At this point, the spell ID is not cached yet, just do it!

@@ -107,7 +107,7 @@ SAO.Variable:register({
         names =
             (SAO.IsSoD() and { "PLAYER_TALENT_UPDATE", "RUNE_UPDATED", "PLAYER_EQUIPMENT_CHANGED" })
             or
-            (SAO.IsMoP() and { "PLAYER_TALENT_UPDATE", "PLAYER_SPECIALIZATION_CHANGED" })
+            (SAO.IsProject(SAO.MOP_AND_ONWARD) and { "PLAYER_TALENT_UPDATE", "PLAYER_SPECIALIZATION_CHANGED" })
             or
             ({ "PLAYER_TALENT_UPDATE" })
         ,
@@ -164,7 +164,7 @@ SAO.Variable:register({
             prepareBucket = function(bucket, value)
                 if value < 0 then
                     -- Negative values are focused on specializations instead of talents
-                    if not SAO.IsMoP() or not C_SpecializationInfo or not C_SpecializationInfo.IsInitialized() then
+                    if not SAO.IsProject(SAO.MOP_AND_ONWARD) or not C_SpecializationInfo or not C_SpecializationInfo.IsInitialized() then
                         SAO:Error(Module, bucket.description.." calls for specialization "..value.." but specializations are unavailable"); return;
                     end
 
@@ -184,7 +184,7 @@ SAO.Variable:register({
                 local talentName = SAO:GetSpellName(value);
                 local _, _, i, j = SAO:GetTalentByName(talentName);
                 if type(i) == 'number' and type(j) == 'number' then
-                    if SAO.IsMoP() then
+                    if SAO.IsProject(SAO.MOP_AND_ONWARD) then
                         -- Talent Tier-Column is an optional table { tier, column } telling the talent location in the player's talent table
                         local tier, column = i, j;
                         bucket.talentTierColumn = { tier, column };

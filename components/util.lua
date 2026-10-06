@@ -121,13 +121,22 @@ function SAO:ReportUnknownEffect(prefix, spellID, texture, positions, scale, r, 
     end
 end
 
+-- Get the value of debugstack(), split it line by line, then DevTools_Dump over the list of splitted lines
+function SAO:PrintDebugStack()
+    local stackLines = {};
+    for line in string.gmatch(debugstack(), "[^\n]+") do
+        tinsert(stackLines, line);
+    end
+    DevTools_Dump(stackLines);
+end
+
 --[[
     Global Cooldown
 ]]
 
 -- Get the Global Cooldown duration
 function SAO:GetGCD()
-    if self.IsEra() or self.IsTBC() then
+    if self.IsForever() or self.IsEra() or self.IsTBC() then
         -- Most spells and abilities incur a 1.5-second Global Cooldown
         -- Some spells and abilities incur a 1-second cooldown, such as Shaman totems or most Rogue abilities
         -- But these are very hard to detect, requiring to catch the last spell/ability which triggered the GCD
@@ -440,7 +449,7 @@ end
 -- Get text and icon for either a talent as spellID, or as spec bit-field
 function SAO:GetTalentText(talentID)
     if type(talentID) == 'number' and talentID < 0 then
-        if not self.IsMoP() then
+        if not self.IsProject(SAO.MOP_AND_ONWARD) then
             self:Error(Module, "Getting talent text for a negative talentID "..talentID.." but prior to the Mists of Pandaria specialization rework");
             return nil;
         end
@@ -516,7 +525,7 @@ function SAO:GetSpellIDByActionSlot(actionSlot)
     end
 end
 
--- Utility function to return the list spellIDs for spells in the spellbook matching the same of a given spell
+-- Utility function to return the list spellIDs for spells in the spellbook matching the name of a given spell
 -- Spells are searched into the *current* spellbook, not through all available spells ever
 -- This means the returned list will be obsolete if e.g. new spells are learned afterwards or if the player re-specs
 -- @param spell Either the spell name (as string) or the spell ID (as number)
@@ -533,12 +542,28 @@ function SAO:GetHomonymSpellIDs(spell)
 
     local homonyms = {};
 
-    for tab = 1, GetNumSpellTabs() do
-        local offset, numSlots = select(3, GetSpellTabInfo(tab));
-        for index = offset+1, offset+numSlots do
-            local name, _, id = GetSpellBookItemName(index, BOOKTYPE_SPELL);
-            if (name == spellName) then
-                table.insert(homonyms, id);
+    if type(GetNumSpellTabs) == 'function' then -- Pretty much all flavors except Retail
+        for tab = 1, GetNumSpellTabs() do
+            local offset, numSlots = select(3, GetSpellTabInfo(tab));
+            for index = offset+1, offset+numSlots do
+                local name, _, id = GetSpellBookItemName(index, BOOKTYPE_SPELL);
+                if (name == spellName) then
+                    table.insert(homonyms, id);
+                end
+            end
+        end
+    end
+
+    if C_SpellBook and C_SpellBook.GetNumSpellBookSkillLines then
+        for i = 1, C_SpellBook.GetNumSpellBookSkillLines() do
+            local skillLineInfo = C_SpellBook.GetSpellBookSkillLineInfo(i)
+            local offset, numSlots = skillLineInfo.itemIndexOffset, skillLineInfo.numSpellBookItems
+            for j = offset+1, offset+numSlots do
+                local name, subName = C_SpellBook.GetSpellBookItemName(j, Enum.SpellBookSpellBank.Player)
+                local spellID = select(2,C_SpellBook.GetSpellBookItemType(j, Enum.SpellBookSpellBank.Player))
+                if name == spellName then
+                    table.insert(homonyms, spellID);
+                end
             end
         end
     end
@@ -608,6 +633,11 @@ function SAO:RegisterEventHandler(handler, event, from)
         return;
     end
     --[[END_DEV_ONLY]]
+    if event == "COMBAT_LOG_EVENT_UNFILTERED" and (SAO.IsForever() or SAO.IsRetail()) then
+        -- CLEU forbidden in Retail since Midnight
+        SAO:Warn(Module, "Skipping forbidden CLEU registration in Retail for "..getHandlerName(handler)..getFromDescription(from));
+        return;
+    end
     if not eventHandlers then
         eventHandlers = {};
     end
