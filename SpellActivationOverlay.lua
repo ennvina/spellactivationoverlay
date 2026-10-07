@@ -297,6 +297,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	SAO_LastShownOverlay = overlay; -- Global variable for debugging purposes
 	overlay.spellID = spellID;
 	overlay.position = position;
+	overlay.scale = scale;
 	
 	local texLeft, texRight, texTop, texBottom = 0, 1, 0, 1;
 	if ( vFlip ) then
@@ -592,7 +593,7 @@ function SpellActivationOverlayFrame_GetCombatAnimOffsetFarAway(anim)
 
 	local baseLongSide = 256;
 	local baseShortSide = 128;
-	local farAway = ((baseLongSide-baseShortSide) / 2 + baseShortSide) * sizeScale * frame.scale * combatOverlayFactor;
+	local farAway = ((baseLongSide-baseShortSide) / 2 + baseShortSide) * sizeScale * frame.scale * overlay.scale * combatOverlayFactor;
 
 	if ( position == "CENTER" ) then
 		return 0, 0;
