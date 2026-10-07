@@ -128,14 +128,14 @@ SAO.AuraContainerItem = {
         local texture = auraButton.customTexture
 
         -- Set filename or file ID
-        local customTexture = self.texture
-        if customTexture and type(customTexture) == 'function' then
-            customTexture = customTexture()
+        local textureFilenameOrID = self.texture
+        if textureFilenameOrID and type(textureFilenameOrID) == 'function' then
+            textureFilenameOrID = textureFilenameOrID()
         end
-        if type(customTexture) == 'string' and tonumber(customTexture, 10) then
-            customTexture = tonumber(customTexture, 10)
+        if type(textureFilenameOrID) == 'string' and tonumber(textureFilenameOrID, 10) then
+            textureFilenameOrID = tonumber(textureFilenameOrID, 10)
         end
-        texture:SetTexture(customTexture)
+        texture:SetTexture(textureFilenameOrID)
 
         -- Set texture coordinates
         position = position and strupper(position)
