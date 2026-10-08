@@ -22,8 +22,9 @@ if SAO.IsForever() then
 	local welcomeCurseForge = "|cffcdffcdCurseForge|r";
 	local welcomeText = welcomeBefore .. " Welcome to " .. welcomeSAO .. ". " ..
 		"The addon is still in early development for " .. welcomeForever .. ". " ..
-		"Please be patient and make sure to report issues over the " .. welcomeDiscord .. " or " .. welcomeCurseForge .. ", thank you :)";
-    print(welcomeText)
+		"Lots of cool stuff is coming soon™. " ..
+		"Make sure to report issues and suggest ideas over the " .. welcomeDiscord .. " or " .. welcomeCurseForge .. ", thank you :)";
+	print(welcomeText)
 end
 
 function SpellActivationOverlay_OnLoad(self)
