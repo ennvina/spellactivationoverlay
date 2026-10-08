@@ -35,10 +35,11 @@ local function useInnerFire()
 end
 
 local function useMartyrdom()
+    local focusedCasting = SAO.IsForever() and 27828 or 14743; -- Focused Casting (Priest buff)
     SAO:CreateEffect(
         "martyrdom",
         SAO.ERA + SAO.TBC + SAO.WRATH,
-        14743, -- Focused Casting (Priest buff)
+        focusedCasting,
         "aura",
         {
             talent = 14531, -- Martyrdom (talent)

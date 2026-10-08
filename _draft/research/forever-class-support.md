@@ -79,7 +79,7 @@ Glowing Buttons
 - _none_
 
 Known Limitations
-- Focus Casting (Martyrdom) is not supported
+- Focused Casting (Martyrdom) is not supported
 - Is it fixable? Almost certainly (90% chance, based on research)
 - When will it be fixed? Best case scenario: early October
 
@@ -152,6 +152,11 @@ The goal of this branch is to **fix the most anticipated Known Limitations ident
 
 Spell Alerts
 - Clearcasting is now supported
+
+### :priest:  Priest
+
+Spell Alerts
+- Focused Casting is now supported
 
 ### :shaman:  Shaman
 
