@@ -294,6 +294,10 @@ SAO.AuraContainer = {
         if SAO.Hash.getAuraStacks(hash) ~= 0 then -- 0 means 'any stacks'
             SAO:Warn(Module, "Spell "..tostring(overlay.spellID).." has secret restrictions, which makes it compatible only with auras with 'any stacks', but it requires", hash:toHumanReadableString())
         end
+        local hashOnlyAnyStacks = SAO.Hash:new(SAO.Hash:new():toAnyAuraStacks())
+        if hash.hash ~= hashOnlyAnyStacks.hash then
+            SAO:Warn(Module, "Spell "..tostring(overlay.spellID).." has a hash that is not strictly equal to 'any stacks':", hash.hash)
+        end
         if self.items[id] then
             SAO:Error(Module, "Overlay already registered for id "..tostring(id))
             return
