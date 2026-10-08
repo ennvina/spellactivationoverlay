@@ -21,6 +21,7 @@ This release uses a new technology to detect auras
 
 Bug Fixes
 - Mage's Heating Up Spell Alert no longer pulses (Mists of Pandaria)
+- Combat-only large spell alerts stayed visible for too long after combat
 - In very rare circumstances, some buttons did not glow as expected
 
 Known Limitations (Forever)

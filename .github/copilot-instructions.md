@@ -42,7 +42,11 @@ The `_script/package.sh` bash script handles multi-expansion releases:
 
 **Key Commands**:
 ```bash
-cd _script && ./package.sh  # Build all expansion variants
+cd _script && ./package.sh  # No parameters = Build packages for all flavors
+```
+
+```bash
+cd _script && ./package.sh forever # With parameter(s) = Build only packages for these flavors
 ```
 
 ### Adding New Spell Effects
@@ -80,7 +84,17 @@ Translation system in `components/tr.lua` with gradient text support for UI elem
 
 ### Debugging
 Consistent debug module pattern: `SAO:Debug(Module, "message")`
-Use `SAO:Trace()`, `SAO:Warn()`, `SAO:Error()` for different log levels.
+`Module` is the name of the current Lua file without the `.lua` extension and is declared at the beginning of the file.
+Use `SAO:Trace()`, `SAO:Warn()`, `SAO:Error()` for different log levels. If a trace can be called too frequently, use `SAO:TraceThrottle()`.
+
+Use `--[[DEV_ONLY]]` for development-only code lines.
+Use `--[[BEGIN_DEV_ONLY]]` and `--[[END_DEV_ONLY]]` to wrap development-only code blocks.
+Development-only code will be excluded from production builds.
+Use these markers to either:
+- Test something that isn't meant for production e.g, weird stuff that helps debugging
+- Add validation checks useful during development, but isn't expected to fail in production
+
+If a check can fail during production builds, it should *not* be wrapped in development-only markers.
 
 ## Integration Points
 
