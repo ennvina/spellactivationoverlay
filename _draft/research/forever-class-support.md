@@ -153,6 +153,11 @@ The goal of this branch is to **fix the most anticipated Known Limitations ident
 Spell Alerts
 - Clearcasting is now supported
 
+### :shaman:  Shaman
+
+Spell Alerts
+- Elemental Focus is now supported
+
 
 ## Third round of supported class effects (beta)
 
