@@ -148,7 +148,10 @@ This section showcases changes between branch retail-before-forever and branch f
 
 The goal of this branch is to **fix the most anticipated Known Limitations identified above**. Once this has sufficient support, the addon should be deemed ready for a public release, as alpha.
 
-TBD
+### :mage~1:  Mage
+
+Spell Alerts
+- Clearcasting is now supported
 
 
 ## Third round of supported class effects (beta)

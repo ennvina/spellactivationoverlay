@@ -646,6 +646,19 @@ local function useArcaneBlast()
     end
 end
 
+local function useClearcasting()
+    local clearcastingBuff = SAO.IsRetail() and 276743 or 12536; -- Clearcasting (Mage)
+    SAO:CreateEffect(
+        "clearcasting",
+        SAO.FOREVER + SAO.RETAIL,
+        clearcastingBuff,
+        "aura",
+        {
+            overlay = { texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.5, pulse = false },
+        }
+    );
+end
+
 local function useFingersOfFrost()
     local fingersOfFrostBuff = 44544;
     local hash0Stacks = SAO:HashNameFromStacks(0);
@@ -807,6 +820,8 @@ local function registerArcane(self)
     end
 
     useArcaneBlast();
+
+    useClearcasting();
 end
 
 local function registerClass(self)
