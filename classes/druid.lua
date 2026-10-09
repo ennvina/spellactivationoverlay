@@ -5,6 +5,15 @@ local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local GetShapeshiftForm = GetShapeshiftForm
 local UnitGUID = UnitGUID
 
+local DRUID_STANCE_BEAR = 5487; -- Bear Form (stance)
+local DRUID_STANCE_CAT = 768; -- Cat Form (stance)
+local DRUID_STANCE_DIRE_BEAR = SAO.IsRetail() and DRUID_STANCE_BEAR or 9634; -- Dire Bear Form (stance)
+local DRUID_STANCE_MOONKIN = 24858; -- Moonkin Form (stance)
+local DRUID_STANCE_TRAVEL = 783; -- Travel Form (stance)
+local DRUID_STANCE_AQUATIC = 1066; -- Aquatic Form (stance)
+local DRUID_STANCE_FLIGHT = 33943; -- Flight Form (stance)
+local DRUID_STANCE_SWIFTFLIGHT = 40120; -- Swift Flight Form (stance)
+
 local canHaveEclipse = SAO.IsProject(SAO.SOD + SAO.WRATH_AND_ONWARD - SAO.RETAIL);
 
 local omenSpellID = 16870;
@@ -133,7 +142,18 @@ local function useOmenOfClarity()
         "aura",
         {
             talent = omenOfClarityTalent,
-            overlay = { texture = "natures_grace", position = "Left + Right (Flipped)" },
+
+            useStance = true,
+            stances = {
+                DRUID_STANCE_BEAR,
+                DRUID_STANCE_DIRE_BEAR,
+                DRUID_STANCE_CAT,
+            },
+
+            overlays = {
+                { matchStance = true, texture = "feral_omenofclarity", position = "Left + Right (Flipped)", option = false },
+                { matchStance = false, texture = "natures_grace", position = "Left + Right (Flipped)" },
+            },
         }
     );
 end
