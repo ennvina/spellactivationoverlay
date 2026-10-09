@@ -2,6 +2,7 @@ local AddonName, SAO = ...
 local Module = "stance"
 
 -- Optimize frequent calls
+local GetNumShapeshiftForms = GetNumShapeshiftForms
 local GetShapeshiftForm = GetShapeshiftForm
 local GetShapeshiftFormInfo = GetShapeshiftFormInfo
 
@@ -69,6 +70,8 @@ SAO.Variable:register({
             if currentStanceIndex == nil then
                 bucket:setMatchStance(nil);
             elseif currentStanceIndex == 0 then
+                bucket:setMatchStance(false);
+            elseif currentStanceIndex > GetNumShapeshiftForms() then -- May happen with intermediate stances, like Rogue's Vanish / Shadow Dance
                 bucket:setMatchStance(false);
             else
                 local _, _, _, currentStanceSpellID = GetShapeshiftFormInfo(currentStanceIndex);
