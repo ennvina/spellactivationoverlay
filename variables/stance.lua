@@ -115,6 +115,9 @@ SAO.Variable:register({
             expectedType = "table",
             default = function(effect) return nil end, -- Make the 'stances' property mandatory
             prepareBucket = function(bucket, value)
+                if type(value) ~= 'table' then --[[BEGIN_DEV_ONLY]]
+                    SAO:Warn(Module, "Bucket "..bucket.name.." requires a table for stanceIDs", tostring(value));
+                end --[[END_DEV_ONLY]]
                 if #value == 1 then
                     bucket.stanceID = value[1];
                 else
@@ -126,5 +129,46 @@ SAO.Variable:register({
             force = nil,
             ignore = nil,
         },
+    },
+
+    macro = {
+        getCondition = function(bucket, hash)
+            if not hash:hasMatchStance() then
+                return nil;
+            end
+
+            assertsafe(type(hash) == 'table'); --[[DEV_ONLY]]
+            assertsafe(type(bucket.stanceID) == 'number' or type(bucket.stanceIDs) == 'table'); --[[DEV_ONLY]]
+
+            local getMacroStanceIndex = function(spellID)
+                for i = 1, GetNumShapeshiftForms() do
+                    local _, _, _, formSpellID = GetShapeshiftFormInfo(i)
+                    if spellID == formSpellID then
+                        return i
+                    end
+                end
+                assertsafe(false); --[[DEV_ONLY]]
+            end
+
+            local stances = {};
+            if type(bucket.stanceID) == 'number' then
+                table.insert(stances, getMacroStanceIndex(bucket.stanceID));
+            elseif type(bucket.stanceIDs) == 'table' then
+                local stanceSet = {} -- Use a set to ensure unique stance indices
+                for _, stanceID in ipairs(bucket.stanceIDs) do
+                    stanceSet[getMacroStanceIndex(stanceID)] = true;
+                end
+                for stanceIndex, _ in pairs(stanceSet) do
+                    table.insert(stances, stanceIndex);
+                end
+            end
+
+            local matchStance = hash:getMatchStance();
+            if matchStance then
+                return "stance:"..table.concat(stances, '/');
+            else
+                return "nostance:"..table.concat(stances, '/');
+            end
+        end,
     },
 });

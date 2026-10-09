@@ -14,6 +14,52 @@ local function splitPositions(position)
     return positions
 end
 
+-- Return hash information for container auras, or nil if the hash is not supported
+local function getInfoFromHash(hash, macroCondition, spellID)
+    local requiresAura = type(SAO.Hash.hasAuraStacks) == 'function' and hash:hasAuraStacks()
+    if not requiresAura then
+        -- The aura container, as its name implies, only handles overlays that require an aura (i.e., have aura stacks)
+        return nil
+    end
+
+    -- Fill in item information
+    local itemInfo = {}
+
+    local nbAuraStacks = hash:getAuraStacks()
+    itemInfo.nbAuraStacks = nbAuraStacks
+
+    if nbAuraStacks == nil then
+        SAO:Warn(Module, "Spell "..tostring(spellID).." uses an inverse aura trigger, but aura containers do not support inverse auras") --[[DEV_ONLY]]
+        return nil
+    end
+
+    -- Fill in container information
+    local containerInfo = {}
+
+    local hasStance = type(SAO.Hash.hasMatchStance) == 'function' and hash:hasMatchStance()
+
+    local hashOnlyAnyStacks = SAO.Hash:new(SAO.Hash:new():toAnyAuraStacks())
+    if (hasStance and hash:toWithoutMatchStance() ~= hashOnlyAnyStacks.hash)
+    or (not hasStance and hash.hash ~= hashOnlyAnyStacks.hash) then
+        SAO:Warn(Module, "Spell "..tostring(spellID).." has a hash that has more than 'any stacks' and a stance trigger:", hash.hash)
+        return nil
+    end
+
+    if hasStance then
+        containerInfo.matchStance = hash:getMatchStance()
+    end
+
+    if hasStance and type(macroCondition) ~= 'string' then
+        SAO:Warn(Module, "Spell "..tostring(spellID).." has a stance but no macro condition") --[[DEV_ONLY]]
+        return nil
+    end
+    containerInfo.macroCondition = macroCondition
+
+    containerInfo.key = type(macroCondition) == 'string' and macroCondition or "default"
+
+    return { container = containerInfo, item = itemInfo }
+end
+
 local positionInfo = {
     CENTER = { location = "CENTER" },
     LEFT = { location = "LEFT" },
@@ -69,9 +115,9 @@ SAO.AuraContainerItem = {
             auraButtons = {}, -- Assigned below; there will be as many buttons as there are positions
         }
 
-        self.__index = nil;
-        setmetatable(item, self);
-        self.__index = self;
+        self.__index = nil
+        setmetatable(item, self)
+        self.__index = self
 
         for index, position in ipairs(item.positions) do
             local buttonPosition = position
@@ -88,7 +134,7 @@ SAO.AuraContainerItem = {
             item.auraButtons[index] = auraButton
         end
 
-        return item;
+        return item
     end,
 
     initializeAuraButton = function(self, auraButton, initialGlobalGeometry, position)
@@ -246,24 +292,37 @@ SAO.AuraContainer = {
             end
         end
 
-        local container = CreateFrame("AuraContainer", "SpellActivationOverlayAuraContainer", parent, "CustomAuraContainerTemplate")
-        container:SetAllPoints()
-        container:SetPoint("CENTER")
-        container:SetUnit("player")
-        container:SetEnabled(true)
-
-        -- if RegisterStateDriver then
-        --     RegisterStateDriver(container, "visibility", "[combat] show; hide")
-        -- end
-
-        self.container = container
         self.globalGeometry = {
             geometry = initialGlobalGeometry,
             updatedAt = GetTime(),
             pendingTimer = nil,
         }
-        self.items = {}
+        self.parent = parent
+        self.containers = {} -- Will be populated by getOrCreateContainer
+        self.items = {} -- Will be populated by registerOverlay
         self.initialized = true
+    end,
+
+    -- Get or create an aura container based on the provided hash information
+    getOrCreateContainer = function(self, hashInfo)
+        assertsafe(type(hashInfo) == 'table' and type(hashInfo.container) == 'table' and type(hashInfo.container.key) == 'string') --[[DEV_ONLY]]
+        local container = self.containers[hashInfo.container.key]
+        if container then
+            return container
+        end
+
+        container = CreateFrame("AuraContainer", "SpellActivationOverlayAuraContainer", self.parent, "CustomAuraContainerTemplate")
+        container:SetAllPoints()
+        container:SetPoint("CENTER")
+        container:SetUnit("player")
+        container:SetEnabled(true)
+
+        if type(hashInfo.container.macroCondition) == 'string' then
+            RegisterStateDriver(container, "visibility", hashInfo.container.macroCondition .. " show; hide")
+        end
+
+        self.containers[hashInfo.container.key] = container
+        return container
     end,
 
     --[[
@@ -273,7 +332,13 @@ SAO.AuraContainer = {
         - or the spell does not need such overlay (e.g., is not secret in combat)
     ]]
     registerOverlay = function(self, overlay)
-        if not useAuraContainer or not self.initialized then
+        if not useAuraContainer then
+            -- Aura containers are not supported / not required for the current flavor
+            return nil
+        end
+
+        if not self.initialized then
+            SAO:Error(Module, "Registering an overlay of spell "..tostring(overlay.spellID).." before AuraContainer is initialized")
             return nil
         end
 
@@ -282,28 +347,26 @@ SAO.AuraContainer = {
             return nil
         end
 
-        local hash = SAO.Hash:new(overlay.hash)
-        local requiresAura = type(SAO.Hash.hasAuraStacks) == 'function' and SAO.Hash.hasAuraStacks(hash)
-        if not requiresAura then
-            -- The aura container, as its name implies, only handles overlays that require an aura (i.e., have aura stacks)
+        local hashInfo = getInfoFromHash(SAO.Hash:new(overlay.hash), overlay.macroCondition, overlay.spellID)
+        if not hashInfo then
+            -- An empty hash info means the hash is not supported, for good or bad reasons (look for messages to know more)
             return nil
         end
 
-        local id = ("spell:"..overlay.spellID) .. ("_hash:"..tostring(overlay.hash)) .. ("_pos:"..overlay.position)
-         --[[BEGIN_DEV_ONLY]]
-        if SAO.Hash.getAuraStacks(hash) ~= 0 then -- 0 means 'any stacks'
-            SAO:Warn(Module, "Spell "..tostring(overlay.spellID).." has secret restrictions, which makes it compatible only with auras with 'any stacks', but it requires", hash:toHumanReadableString())
-        end
-        local hashOnlyAnyStacks = SAO.Hash:new(SAO.Hash:new():toAnyAuraStacks())
-        if hash.hash ~= hashOnlyAnyStacks.hash then
-            SAO:Warn(Module, "Spell "..tostring(overlay.spellID).." has a hash that is not strictly equal to 'any stacks':", hash.hash)
-        end
+        local container = self:getOrCreateContainer(hashInfo)
+        assertsafe(container) --[[DEV_ONLY]]
+
+        local id = ("container:"..hashInfo.container.key) ..
+            ("_spell:"..overlay.spellID) ..
+            ("_hash:"..tostring(overlay.hash)) ..
+            ("_pos:"..overlay.position)
+
         if self.items[id] then
             SAO:Error(Module, "Overlay already registered for id "..tostring(id))
             return
         end
-        --[[END_DEV_ONLY]]
-        local button = SAO.AuraContainerItem:new(id, self.container, overlay, self.globalGeometry.geometry)
+
+        local button = SAO.AuraContainerItem:new(id, container, overlay, self.globalGeometry.geometry)
 
         self.items[id] = button
 

@@ -15,6 +15,8 @@ local Module = "bucket"
 SAO.RegisteredBucketsByName = {}
 SAO.RegisteredBucketsBySpellID = {}
 
+SAO.MacroConditionGenerators = {}
+
 -- List of displays, indexed by hash
 -- A stack count of zero means "for everyone"
 -- A stack count of non-zero means "for a specific number of stacks"
@@ -261,6 +263,28 @@ SAO.Bucket = {
                 end
             end
         end
+    end,
+
+    addMacroConditionGenerator = function(func) -- Static method, because this will be called before instantiating buckets
+        table.insert(SAO.MacroConditionGenerators, func);
+    end,
+
+    craftMacroCondition = function(self, hash)
+        if type(hash) == 'number' then
+            hash = SAO.Hash:new(hash); -- Convert numeric hash to a Hash object
+        end
+
+        local conditions = {};
+        for _, generator in ipairs(SAO.MacroConditionGenerators) do
+            local cond = generator(self, hash);
+            if cond ~= nil and cond ~= "" then
+                table.insert(conditions, cond);
+            end
+        end
+        if #conditions == 0 then
+            return nil;
+        end
+        return "["..table.concat(conditions, ",").."]";
     end,
 }
 

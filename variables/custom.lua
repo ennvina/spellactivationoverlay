@@ -168,4 +168,8 @@ SAO.Variable:register({
             ignore = nil,
         },
     },
+
+    macro = {
+        getCondition = nil,
+    },
 });

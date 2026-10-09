@@ -89,6 +89,7 @@ SAO.Display = {
             autoPulse = type(overlay.autoPulse) == 'function' and overlay.autoPulse or overlay.autoPulse ~= false, -- true by default
             combatOnly = overlay.combatOnly == true, -- false by default
             hash = overlay.hash,
+            macroCondition = self.parent:craftMacroCondition(overlay.hash),
             auraContainerItem = nil, -- Possibly set below
         }
 
