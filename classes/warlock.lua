@@ -181,7 +181,7 @@ local function useNightfall(self)
                 [SAO.MOP_AND_ONWARD] = { pulse = false, scale = 0.8, level = 4 },
             },
             buttons = {
-                [SAO_UP_UNTIL_CATA] = shadowBolt,
+                [SAO_UP_UNTIL_CATA - SAO.FOREVER] = shadowBolt,
                 [SAO.SOD] = shadowCleave,
             },
         }
