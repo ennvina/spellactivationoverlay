@@ -306,6 +306,7 @@ SAO.AuraContainer = {
     -- Get or create an aura container based on the provided hash information
     getOrCreateContainer = function(self, hashInfo)
         assertsafe(type(hashInfo) == 'table' and type(hashInfo.container) == 'table' and type(hashInfo.container.key) == 'string') --[[DEV_ONLY]]
+
         local container = self.containers[hashInfo.container.key]
         if container then
             return container
@@ -318,7 +319,17 @@ SAO.AuraContainer = {
         container:SetEnabled(true)
 
         if type(hashInfo.container.macroCondition) == 'string' then
-            RegisterStateDriver(container, "visibility", hashInfo.container.macroCondition .. " show; hide")
+            if InCombatLockdown() then
+                -- RegisterStateDriver will trigger errors if called during combat
+                SAO:Debug(Module, "Delaying macro conditional until leaving combat:", hashInfo.container.macroCondition)
+                container:Hide()
+                SAO:AddPendingOperation("ooc", function()
+                    container:Show()
+                    RegisterStateDriver(container, "visibility", hashInfo.container.macroCondition .. " show; hide")
+                end)
+            else
+                RegisterStateDriver(container, "visibility", hashInfo.container.macroCondition .. " show; hide")
+            end
         end
 
         self.containers[hashInfo.container.key] = container
