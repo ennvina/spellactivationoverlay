@@ -39,6 +39,7 @@ Known Limitations (Forever)
   - There is no ETA on this matter, as it requires further investigation
 - Some effects are supported only outside dungeons and raids
   - For example, Paladin's Exorcism will _not_ work in a dungeon or raid
+- Disabling some Spell Alerts from the Options Panel has no effect
 
 #### v2.7.11 (2026-09-14)
 
