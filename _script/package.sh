@@ -607,7 +607,7 @@ $(texbelow 2888300)
 )
 prunetex "${TEXTURES_NOT_FOR_FOREVER[@]}"
 
-# Do not remove sound; in Retail the file exists but has no volume - Check if the issue persists in Forever
+# Do not remove sound; in Forever the file exists but has no volume
 #SOUNDS_NOT_FOR_FOREVER=(UI_PowerAura_Generic)
 #prunesound "${SOUNDS_NOT_FOR_FOREVER[@]}"
 
