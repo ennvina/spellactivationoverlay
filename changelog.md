@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.8.0-alpha (2026-10-xx)
+#### v2.8.0 (2026-10-10)
 
 Introducing Forever flavor!
 - Forever support is in very early stage at the moment
