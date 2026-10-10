@@ -744,7 +744,7 @@ PROJECT_TOC_SUFFIX=( # List of flavor names + TOC suffixes e.g. 'vanilla' -> Spe
 "cata Cata"
 "mop Mists"
 "retail Mainline" # Shall be 'Standard' after patch 12.1.5
-"forever Camelot" # May become something like 'Forever' by the time the game is released
+"forever Forever"
 )
 addon_name=SpellActivationOverlay
 for project in "${PROJECT_TOC_SUFFIX[@]}"; do
