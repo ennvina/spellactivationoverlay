@@ -261,13 +261,21 @@ SAO.AuraContainerItem = {
     end,
 
     setVisible = function(self, visible)
+        if true then
+            -- Completely bypass visibility changes, because we are not allowed to do that, especially in combat
+            SAO:Debug(Module, "Bypassing visibility changes for aura container item ", tostring(self.id))
+            return
+        end
+
+        --[[BEGIN DEV_ONLY]]
         for _, auraButton in ipairs(self.auraButtons) do
             if visible then
-                auraButton:Show() -- @todo set parent's opacity to 100% instead
+                auraButton:Show() -- @todo Maybe set parent's opacity to 100% instead
             else
-                auraButton:Hide() -- @todo set parent's opacity to 0% instead
+                auraButton:Hide() -- @todo Maybe set parent's opacity to 0% instead
             end
         end
+        --[[END DEV_ONLY]]
     end,
 
 }

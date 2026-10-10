@@ -1,6 +1,10 @@
 local AddonName, SAO = ...
 local Module = "aurastacks"
 
+-- Optimize frequent calls
+local canaccessvalue = canaccessvalue
+local InCombatLockdown = InCombatLockdown
+
 -- Global variables
 SAO.AURASTACKS = {
     LEGACY = C_UnitAuras == nil,
@@ -25,6 +29,10 @@ local HASH_AURA_MASK   = 0xF
 
 -- map between aura instance ID and bucket (Modern mode only)
 local bucketsByAuraInstanceID = {};
+
+-- Shared variable to optimize manual bucket attempts
+local secretBuckets = {};
+local secretlessBuckets = {};
 
 SAO.Variable:register({
     order = 1,
@@ -106,6 +114,11 @@ SAO.Variable:register({
     bucket = {
         impossibleValue = -1,
         fetchAndSet = function(bucket)
+            if bucket.auraHasSecretRestrictions and InCombatLockdown() then
+                -- Cannot fetch aura stacks reliably due to secret restrictions while in combat
+                return;
+            end
+
             local auraStacks, auraInstanceID = SAO:GetPlayerAuraStacksBySpellID(bucket.spellID);
             if auraStacks ~= nil then
                 if bucket.stackAgnostic then
@@ -116,6 +129,7 @@ SAO.Variable:register({
             else
                 bucket:setAuraStacks(nil);
             end
+
             if SAO.AURASTACKS.MODERN then -- Additional handling to optimize Modern mode
                 bucket.lastKnownAuraStacks = auraStacks; -- Store raw value, because bucket:getAuraStacks() is unreliable if stackAgnostic is set
                 bucket.lastTimeUnitAuraEvent = nil;
@@ -129,7 +143,7 @@ SAO.Variable:register({
 
     event = {
         isRequired = true,
-        names = SAO.AURASTACKS.MODERN and { "UNIT_AURA" } or { "COMBAT_LOG_EVENT_UNFILTERED" },
+        names = SAO.AURASTACKS.MODERN and { "UNIT_AURA", "PLAYER_REGEN_ENABLED" } or { "COMBAT_LOG_EVENT_UNFILTERED" },
 
         -- Legacy aura handling via CLEU
         COMBAT_LOG_EVENT_UNFILTERED = SAO.AURASTACKS.LEGACY and function(...)
@@ -222,6 +236,23 @@ SAO.Variable:register({
                 return;
             end
 
+            if not canaccessvalue(updateInfo.isFullUpdate) or
+               not canaccessvalue(updateInfo.updatedAuraInstanceIDs) or
+               not canaccessvalue(updateInfo.removedAuraInstanceIDs) or
+               not canaccessvalue(updateInfo.addedAuras)
+            then
+                -- Cannot fetch information from the updateInfo structure, but maybe there are non-secret auras that can be checked manually
+                for _, bucket in ipairs(secretlessBuckets) do
+                    SAO:Debug(Module, "Checking buckets manually for secretless aura", bucket.name);
+                    bucket.trigger:manualCheck(SAO.TRIGGER_AURA);
+                end
+                if SAO.IsForever() or SAO.IsRetail() then
+                    return; -- There's probably no reason to continue processing auras information after this point
+                else
+                    SAO:Warn(Module, "Dealing with secret aura information in a flavor which is not supposed to have them:", SAO.GetFlavorName());
+                end
+            end
+
             -- Special case, should happen once per login or per loading screen at best
             if canaccessvalue(updateInfo.isFullUpdate) and updateInfo.isFullUpdate then
                 SAO:Debug(Module, "Full aura update detected, rechecking all buckets");
@@ -306,6 +337,14 @@ SAO.Variable:register({
                 end
             end
         end or nil,
+
+        PLAYER_REGEN_ENABLED = SAO.AURASTACKS.MODERN and function(self, event, ...)
+            -- When leaving combat, auras may be queried individually
+            for _, bucket in ipairs(secretBuckets) do
+                SAO:Debug(Module, "Checking buckets manually for secret aura", bucket.name);
+                bucket.trigger:manualCheck(SAO.TRIGGER_AURA);
+            end
+        end or nil,
     },
 
     condition = {
@@ -326,13 +365,24 @@ SAO.Variable:register({
             expectedType = "number",
             default = function(effect) return effect.spellID end,
             prepareBucket = function(bucket, value)
+                local hasSecretRestrictions = false;
                 local secrecy = C_Secrets.GetSpellAuraSecrecy(value);
                 if secrecy then
                     if secrecy == Enum.SecrecyLevel.ContextuallySecret then
+                        hasSecretRestrictions = true;
                         SAO:Debug(Module, bucket.description.." is based on spell "..value.." which has secret restrictions");
                     elseif secrecy == Enum.SecrecyLevel.AlwaysSecret then
+                        hasSecretRestrictions = true;
                         SAO:Debug(Module, bucket.description.." is based on spell "..value.." which is always secret");
+                    else
+                        hasSecretRestrictions = false;
                     end
+                end
+                bucket.auraHasSecretRestrictions = hasSecretRestrictions;
+                if hasSecretRestrictions then
+                    table.insert(secretBuckets, bucket);
+                else
+                    table.insert(secretlessBuckets, bucket);
                 end
             end,
         } or nil,
