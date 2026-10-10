@@ -636,7 +636,7 @@ local function registerClass(self)
 end
 
 local function loadOptions(self)
-    if not SAO.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH + SAO.CATA) then -- Pre-MoP
+    if SAO.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH + SAO.CATA) then -- Pre-MoP
         -- Cheat with fake talents, to tell explicitly which type of eclipse is involved
         -- Otherwise the player would always see a generic "Eclipse" text
         local lunarEclipseTalent = lunarSpellID; -- Not really a talent
