@@ -28,11 +28,11 @@ prunedev() {
 
     # Remove developer-specific calls in code
     echo -ne " \033[s" # Save cursor position
-    PATHS_WITH_DEV_CODE=(SpellActivationOverlay/SpellActivationOverlay.lua SpellActivationOverlay/components/)
-    NB_PATHS_WITH_DEV_CODE=$(find "${PATHS_WITH_DEV_CODE[@]}" -type f -name '*.lua' -printf . | wc -c)
+    PATHS_WITH_DEV_CODE=( $(find SpellActivationOverlay/ -type f -name '*.lua' -exec grep -HEm1 '(SAO:Trace|DEV_ONLY|assertsafe)' \{} \; | cut -d: -f1) )
+    NB_PATHS_WITH_DEV_CODE=${#PATHS_WITH_DEV_CODE[@]}
     NB_FILES_PROCESSED=0
     echo -n "[1/2] 0/${NB_PATHS_WITH_DEV_CODE}"
-    while read -r -d '' filename
+    for filename in "${PATHS_WITH_DEV_CODE[@]}"
     do
         # Remove SAO:Trace calls
         if grep -q 'SAO:Trace' "$filename"
@@ -50,16 +50,23 @@ prunedev() {
             sed -i '/DEV_ONLY/d' "$filename" || bye "Cannot remove developer-specific code from $filename"
         fi
 
+        # Remove assertsafe calls
+        if grep -q 'assertsafe' "$filename"
+        then
+            sed -i '/assertsafe/d' "$filename" || bye "Cannot remove assertsafe code from $filename"
+        fi
+
         echo -ne "\033[u[1/2] $((++NB_FILES_PROCESSED))/${NB_PATHS_WITH_DEV_CODE}"
-    done < <(find "${PATHS_WITH_DEV_CODE[@]}" -type f -name '*.lua' -print0)
+    done
 
     # Pseudo-minify by removing things like comments and blank lines
     # Must be done after removing DEV_ONLY blocks to avoid removing comments that would contain DEV_ONLY markers
-    NB_PATHS_TO_MINIFY=$(find "SpellActivationOverlay/" -type f -name '*.lua' -printf . | wc -c)
+    PATHS_TO_MINIFY=( $(find SpellActivationOverlay/ -type f -name '*.lua') )
+    NB_PATHS_TO_MINIFY=${#PATHS_TO_MINIFY[@]}
     NB_FILES_PROCESSED=0
     echo -ne "\033[u"; printf "%$((8 + 2 * ${#NB_PATHS_WITH_DEV_CODE}))s" ""; echo -ne "\033[u" # Erase former progress line
     echo -n "0/${NB_PATHS_TO_MINIFY}"
-    while read -r -d '' filename
+    for filename in "${PATHS_TO_MINIFY[@]}"
     do
         # Preserve top long-comment block for embedded libs (typically license headers)
         preserved_header=""
@@ -111,7 +118,7 @@ prunedev() {
         fi
 
         echo -ne "\033[u[2/2] $((++NB_FILES_PROCESSED))/${NB_PATHS_TO_MINIFY}"
-    done < <(find "SpellActivationOverlay/" -type f -name '*.lua' -print0)
+    done
 
     echo
 }

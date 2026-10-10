@@ -315,7 +315,7 @@ local FrozenHandler = {
                 SAO:GetSpellName(self.deep_freeze_sod[1]),
             });
         else
-            --assert(SAO.IsProject(SAO.CATA_AND_ONWARD))
+            --assertsafe(SAO.IsProject(SAO.CATA_AND_ONWARD))
             -- Starting from Cataclysm, the spell ID is enough to identify the spell
             SAO:RegisterGlowIDs({
                 self.ice_lance[1],

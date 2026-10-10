@@ -6,7 +6,7 @@ SAO.AURASTACKS = {
     LEGACY = C_UnitAuras == nil,
     MODERN = C_UnitAuras ~= nil,
 };
-assert(SAO.AURASTACKS.LEGACY ~= SAO.AURASTACKS.MODERN); -- Exactly one of these modes must be active
+assertsafe(SAO.AURASTACKS.LEGACY ~= SAO.AURASTACKS.MODERN); -- Exactly one of these modes must be active
 SAO:Info(Module, "You are currently using the Modern AuraStacks mode. Enjoy!"); --[[DEV_ONLY]]
 
 -- Aura stacks
@@ -93,7 +93,7 @@ SAO.Variable:register({
                 -- Aura is expected to be missing
                 return ACTION_SPELL_AURA_REMOVED_DEBUFF;
             else
-                -- assert(aurastacks == 0);
+                -- assertsafe(aurastacks == 0);
                 -- Aura is expected to be present, but we don't care how many stacks it has, a.k.a. it has 'any' stacks
                 return nil; -- Should be obvious if aura is 'any'
             end
