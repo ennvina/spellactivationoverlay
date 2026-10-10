@@ -40,6 +40,8 @@ Known Limitations (Forever)
 - Some effects are supported only outside dungeons and raids
   - For example, Paladin's Exorcism will _not_ work in a dungeon or raid
 - Disabling some Spell Alerts from the Options Panel has no effect
+- Druid's Omen of Clarity may not work right after learning Cat/Bear form
+  - Simply logging out and logging back in fixes the issue
 
 #### v2.7.11 (2026-09-14)
 

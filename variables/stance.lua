@@ -145,21 +145,30 @@ SAO.Variable:register({
 
             local getMacroStanceIndex = function(spellID)
                 for i = 1, GetNumShapeshiftForms() do
-                    local _, _, _, formSpellID = GetShapeshiftFormInfo(i)
+                    local _, _, _, formSpellID = GetShapeshiftFormInfo(i);
                     if spellID == formSpellID then
-                        return i
+                        return i; -- May not be the perfect index for a macro, but that's the best we have
                     end
                 end
-                assertsafe(false); --[[DEV_ONLY]]
+
+                -- Stance not found (e.g., spell is not learned yet)
+                -- @TODO Handle this case, e.g., log a warning or provide feedback to the user
+                return nil;
             end
 
             local stances = {};
             if type(bucket.stanceID) == 'number' then
-                table.insert(stances, getMacroStanceIndex(bucket.stanceID));
+                local stanceIndex = getMacroStanceIndex(bucket.stanceID);
+                if stanceIndex then
+                    table.insert(stances, stanceIndex);
+                end
             elseif type(bucket.stanceIDs) == 'table' then
                 local stanceSet = {} -- Use a set to ensure unique stance indices
                 for _, stanceID in ipairs(bucket.stanceIDs) do
-                    stanceSet[getMacroStanceIndex(stanceID)] = true;
+                    local stanceIndex = getMacroStanceIndex(stanceID);
+                    if stanceIndex then
+                        stanceSet[stanceIndex] = true;
+                    end;
                 end
                 for stanceIndex, _ in pairs(stanceSet) do
                     table.insert(stances, stanceIndex);
@@ -168,6 +177,7 @@ SAO.Variable:register({
 
             local matchStance = hash:getMatchStance();
             if matchStance then
+                -- Fringe case: if stances is empty, the macro will be [stance:] which will act as [stance] which is what we want
                 return "stance:"..table.concat(stances, '/');
             else
                 return "nostance:"..table.concat(stances, '/');
