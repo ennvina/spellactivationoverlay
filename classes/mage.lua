@@ -736,6 +736,18 @@ local function useHeatingUpAndHotStreak()
             button = { spellID = pyroblast, option = { isNative = true } }, -- Already glowing natively
         }
     );
+
+    --[[BEGIN_DEV_ONLY]]
+    SAO:CreateEffect(
+        "heating_up_forever",
+        SAO.FOREVER,
+        400625,
+        "aura",
+        {
+            overlay = { texture = "hot_streak", position = "Left + Right (Flipped)" },
+        }
+    );
+    --[[END_DEV_ONLY]]
 end
 
 local function registerFire(self)
@@ -751,7 +763,7 @@ local function registerFire(self)
         self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { self:GetSpellName(pyroblast) });
     elseif self.IsCata() then
         self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { pyroblastBang });
-    elseif self.IsMoP() or self.IsRetail() then
+    elseif self.IsProject(SAO.FOREVER + SAO.MOP + SAO.RETAIL) then
         useHeatingUpAndHotStreak();
     end
     if self.IsProject(SAO.SOD + SAO.WRATH + SAO.CATA) then
