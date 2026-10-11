@@ -660,25 +660,41 @@ local function useClearcasting()
 end
 
 local function useFingersOfFrost()
-    local fingersOfFrostBuff = 44544;
-    local hash0Stacks = SAO:HashNameFromStacks(0);
-    local hash2Stacks = SAO:HashNameFromStacks(2);
-    SAO:CreateEffect(
-        "fingers_of_frost",
-        SAO.MOP,
-        fingersOfFrostBuff,
-        "aura",
-        {
-            aka = {
-                [SAO.MOP] = 126084, -- Fingers of Frost (second charge)
-            },
-            overlays = { -- Slightly bigger to avoid overlap with Arcane Missiles, and slightly dimmer to compensate
-                { stacks = 1, texture = "frozen_fingers", position = "Left",                   scale = 1.1, color = { 222, 222, 222 }, option = false },
-                { stacks = 2, texture = "frozen_fingers", position = "Left + Right (Flipped)", scale = 1.1, color = { 222, 222, 222 }, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
-            },
-            buttons = { FrozenHandler.ice_lance[1], FrozenHandler.deep_freeze[1], default = { option = { isNative = true } } }, -- Already glowing natively
-        }
-    );
+    if SAO.IsMoP() or SAO.IsRetail() then
+        local fingersOfFrostBuff = 44544;
+        local hash0Stacks = SAO:HashNameFromStacks(0);
+        local hash2Stacks = SAO:HashNameFromStacks(2);
+        SAO:CreateEffect(
+            "fingers_of_frost",
+            SAO.MOP + SAO.RETAIL,
+            fingersOfFrostBuff,
+            "aura",
+            {
+                aka = {
+                    [SAO.MOP] = 126084, -- Fingers of Frost (second charge)
+                },
+                overlays = { [SAO.MOP] = { -- Slightly bigger to avoid overlap with Arcane Missiles, and slightly dimmer to compensate
+                    { stacks = 1, texture = "frozen_fingers", position = "Left",                   scale = 1.1, color = { 222, 222, 222 }, option = false },
+                    { stacks = 2, texture = "frozen_fingers", position = "Left + Right (Flipped)", scale = 1.1, color = { 222, 222, 222 }, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
+                },
+                [SAO.RETAIL] = {
+                    { stacks = 0, texture = "frozen_fingers", position = "Left + Right (Flipped)", scale = 1.1, color = { 222, 222, 222 } },
+                }, },
+                buttons = { FrozenHandler.ice_lance[1], FrozenHandler.deep_freeze[1], default = { option = { isNative = true } } }, -- Already glowing natively
+            }
+        );
+    elseif SAO.IsForever() then --[[BEGIN_DEV_ONLY]]
+        local fingersOfFrostBuff = 400670;
+        SAO:CreateEffect(
+            "fingers_of_frost",
+            SAO.FOREVER,
+            fingersOfFrostBuff,
+            "aura",
+            {
+                overlay = { texture = "frozen_fingers", position = "Left + Right (Flipped)" },
+            }
+        ); --[[END_DEV_ONLY]]
+    end
 end
 
 local function useBrainFreeze()
@@ -770,7 +786,7 @@ local function registerFrost(self)
         self:RegisterAura("fingers_of_frost_1", 1, 44544, "frozen_fingers", "Left (CCW)", 1.1, 222, 222, 222, true, iceLanceAndDeepFreeze);
         self:RegisterAura("fingers_of_frost_2", 2, 44544, "frozen_fingers", "Left (CCW)", 1.1, 222, 222, 222, true, iceLanceAndDeepFreeze);
         self:RegisterAura("fingers_of_frost_2", 2, 44544, "frozen_fingers", "Right (CW)", 1.1, 222, 222, 222, true); -- no need to re-glow iceLanceAndDeepFreeze for right texture
-    elseif self.IsMoP() then
+    elseif self.IsProject(SAO.FOREVER + SAO.MOP + SAO.RETAIL) then
         useFingersOfFrost();
     end
 
