@@ -103,6 +103,7 @@ SAO.AuraContainerItem = {
             -- Constants
             spellID = overlay.spellID,
             scale = overlay.scale,
+            fontScale = 3,
             positions = splitPositions(overlay.position),
             level = overlay.level,
             autoPulse = overlay.autoPulse,
@@ -142,24 +143,26 @@ SAO.AuraContainerItem = {
 
         auraButton:EnableMouse(false) -- Disable tooltip
 
-        auraButton:SetIcon(auraButton.auraIcon)
+        auraButton:SetIcon(auraButton.pulsableItem.auraIcon)
 
         self:setTexture(auraButton, position)
 
         self:setCooldown(auraButton)
 
-        auraButton:SetApplicationCount(auraButton.count)
+        auraButton.staticItem.applicationCount:SetScale(self.fontScale * initialGlobalGeometry.scale)
+        auraButton:SetApplicationCount(auraButton.staticItem.applicationCount)
 
         if self.level then -- Optional
             auraButton:SetFrameLevel(self.level)
         end
+        auraButton.staticItem:SetFrameLevel(auraButton:GetFrameLevel() + 1)
 
         self:setButtonGeometry(auraButton, initialGlobalGeometry, position)
 
-        if auraButton.pulse then
+        if auraButton.pulsableItem.pulse then
             local mustPulse = self.autoPulse ~= false -- True by default
             if mustPulse then
-                auraButton.pulse:Play()
+                auraButton.pulsableItem.pulse:Play()
             end
         end
 
@@ -171,7 +174,7 @@ SAO.AuraContainerItem = {
     end,
 
     setTexture = function(self, auraButton, position)
-        local texture = auraButton.customTexture
+        local texture = auraButton.pulsableItem.customTexture
 
         -- Set filename or file ID
         local textureFilenameOrID = self.texture
@@ -206,7 +209,7 @@ SAO.AuraContainerItem = {
     end,
 
     setCooldown = function(self, auraButton)
-        local cooldown = auraButton.cooldown
+        local cooldown = auraButton.staticItem.cooldown
         auraButton:SetDurationCooldown(cooldown)
     end,
 
@@ -250,6 +253,8 @@ SAO.AuraContainerItem = {
             SAO:Warn(Module, "Unknown aura position is not supported: "..tostring(position)) --[[DEV_ONLY]]
             return
         end
+
+        auraButton.staticItem.applicationCount:SetScale(self.fontScale * globalGeometry.scale)
 
         auraButton:SetSize(width * self.scale, height * self.scale)
     end,

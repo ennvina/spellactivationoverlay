@@ -57,6 +57,7 @@ function SpellActivationOverlay_OnLoad(self)
 	SAO.AuraContainer:initialize(SpellActivationOverlayAddonFrame, {
 		longSide = 256 * sizeScale * self.scale,
 		shortSide = 128 * sizeScale * self.scale,
+		scale = sizeScale * self.scale,
 	});
 
 	local className, classFile, classId = UnitClass("player");
@@ -128,6 +129,7 @@ function SpellActivationOverlay_OnChangeGeometry(self)
 	SAO.AuraContainer:updateGeometry({
 		longSide = longSide,
 		shortSide = shortSide,
+		scale = sizeScale * self.scale,
 	});
 	for _, overlayList in pairs(self.overlaysInUse) do
 		for i=1, #overlayList do
