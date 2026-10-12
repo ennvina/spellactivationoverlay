@@ -88,7 +88,7 @@ SAO.defaults = {
                 [93400] = { -- Shooting Stars (Cataclysm+)
                     [0] = true,
                 },
-                [16886] = { -- Nature's Grace (Era - Wrath)
+                [16886] = { -- Nature's Grace (Forever, Era - Wrath)
                     [0] = false,
                 },
                 [46833] = { -- Wrath of Elune (Wrath)
@@ -178,7 +178,7 @@ SAO.defaults = {
         },
         ["HUNTER"] = {
             alert = {
-                [1495] = { -- Mongoose Bite (Era, TBC)
+                [1495] = { -- Mongoose Bite (Forever, Era, TBC)
                     [0] = true, -- Mongoose Bite
                 },
                 [34026] = { -- Kill Command (TBC)
@@ -234,7 +234,7 @@ SAO.defaults = {
                 [82926] = { -- Master Marksman (Cataclysm)
                     [82928] = true, -- Aimed Shot!
                 },
-                [1495] = { -- Mongoose Bite (Era, TBC)
+                [1495] = { -- Mongoose Bite (Forever, Era, TBC)
                     [1495]  = true, -- Mongoose Bite
                 },
                 [94007] = { -- Killing Streak (2/2) (Cataclysm)
@@ -250,7 +250,7 @@ SAO.defaults = {
         },
         ["MAGE"] = {
             alert = {
-                [12536] = { -- Arcane Concentration (Era - Cataclysm)
+                [12536] = { -- Arcane Concentration (Forever, Era - Cataclysm)
                     [0] = false,
                 },
                 [79683] = { -- Arcane Missiles! (Cataclysm+)

@@ -28,17 +28,17 @@ Bug Fixes
 Known Limitations (Forever)
 - Glowing Buttons are not supported for auras e.g, Shadow Bolt for Nightfall
   - It is unsure whether Glowing Buttons can become a reality with auras
-  - Non-auras Glowing Buttons, such as Warrior's Execute, should work
+  - Non-auras Glowing Buttons, such as Warrior's Execute, do work
 - Most Spell Alerts do not support Progressive Timer
   - Some progressive timer alternatives are being evaluated
   - Support will definitely come someday, but will be different than Classic
 - Most Spell Alerts cannot have different visuals based on number of stacks
   - Because of that, some effects have been postponed
-  - Some alternatives are being evaluated
+  - Alternatives are being evaluated
 - Most Spell Alerts do not support Sound Effects
   - Some sound alternatives are being evaluated
   - If support is possible, it will be probably similar to Classic's sound
-- Custom effect are not supported
+- Custom effects are not supported
   - This includes things like Mage's Freeze effect
   - There is no ETA on this matter, as it requires further investigation
 - Non-exclusive execute-like effects are not supported
@@ -47,12 +47,15 @@ Known Limitations (Forever)
   - Excusive execute, such as Warrior's Execute, are correctly supported
 - Some effects are supported only outside dungeons and raids
   - For example, Paladin's Exorcism will _not_ work in a dungeon or raid
-- Disabling some Spell Alerts from the Options Panel has no effect
+  - This is a limitation wanted by Blizzard and unlikely to change, sorry
+- For some Spell Alerts disabling them from the Options Panel has no effect
+  - On the other hand, disabling a Glowing Button always work
 - Druid's Omen of Clarity may not work right after learning Cat/Bear form
+  - This is a one-time issue happening when finishing their respective quests
   - Simply logging out and logging back in fixes the issue
 - Stance-based visuals may display a short ghost when switching stance
   - Druid's Omen of Clarity may trigger that issue when visuals go red/green
-  - The issue does not trigger is the stance never changes during the effect
+  - The issue does not trigger if the stance never changes during the effect
 
 #### v2.7.11 (2026-09-14)
 
