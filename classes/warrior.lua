@@ -25,7 +25,7 @@ local ragingBlowSoD = 402911;
 local revenge = 6572;
 local shieldSlam = 23922;
 local slam = 1464;
-local victoryRush = SAO.IsSoD() and 402927 or 34428;
+local victoryRush = (SAO.IsForever() or SAO.IsSoD()) and 402927 or 34428;
 local wildStrike = 100130;
 
 local function easyAs123(option)
@@ -474,6 +474,15 @@ local function useVictoryRush()
         -- except for Mists of Pandaria and later where we track a buff instead (see below)
         victoryRush,
         "counter"
+    );
+    SAO:CreateEffect(
+        "victory_rush",
+        SAO.FOREVER,
+        victoryRush,
+        "counter",
+        {
+            overlay = { texture = "serendipity", position = "Top", level = 4, scale = 0.9, color = { 255, 32, 32 } },
+        }
     );
     SAO:CreateEffect(
         "victory_rush",
