@@ -570,8 +570,8 @@ if not iamNecrosis then
         end
 
         local mustDelayIfInCombat = false;
-        if SAO.IsMoP() then
-            -- In MoP, the options panel cannot be opened while in combat since Siege of Orgrimmar patch
+        if SAO.HasMidnightUI() then
+            -- Restrictions added in Midnight prevents from opening the options panel in combat
             local buildInfo = tonumber((select(2, GetBuildInfo())));
             mustDelayIfInCombat = buildInfo >= 68042; -- 68042 = first build number of MoP Classic SoO patch
         end

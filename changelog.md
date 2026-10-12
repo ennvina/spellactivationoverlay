@@ -1,5 +1,12 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.8.1 (2026-10-xx)
+
+Bug Fixes
+- Opening the options panel is delayed after leaving combat\*
+
+\* This was done in Mists of Pandaria and is now available on all flavors
+
 #### v2.8.0 (2026-10-12)
 
 Introducing Forever flavor!
