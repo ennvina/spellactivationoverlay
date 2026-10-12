@@ -8,6 +8,8 @@ New Spell Alerts
 New Glowing Buttons
 - 
 ## Bug Fixes
+### :druid:  Druid
+After triggering Omen of Clarity, there was a ghost spell alert that could appear shortly when switching stance (Forever). This ghost overlay should appear no longer.
 ### Options
 Opening the options panel is delayed after leaving combat (Forever, Era, The Burning Crusade, Wrath of the Lich King).
 

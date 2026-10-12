@@ -3,6 +3,7 @@
 #### v2.8.1 (2026-10-xx)
 
 Bug Fixes
+- Ghost overlays from switching stance should no longer occur (Forever)
 - Opening the options panel is delayed after leaving combat\*
 
 \* This was done in Mists of Pandaria and is now available on all flavors

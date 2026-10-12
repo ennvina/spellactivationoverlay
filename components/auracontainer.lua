@@ -99,6 +99,7 @@ SAO.AuraContainerItem = {
     new = function(self, id, container, overlay, initialGlobalGeometry)
         local item = {
             id = id,
+            container = container,
 
             -- Constants
             spellID = overlay.spellID,
@@ -114,6 +115,7 @@ SAO.AuraContainerItem = {
 
             -- Variables
             auraButtons = {}, -- Assigned below; there will be as many buttons as there are positions
+            slotKeys = {}, -- Assigned below; there will be as many slot keys as there are buttons
         }
 
         self.__index = nil
@@ -122,7 +124,8 @@ SAO.AuraContainerItem = {
 
         for index, position in ipairs(item.positions) do
             local buttonPosition = position
-            local auraButton = container:AddAuraSlot("item_"..id.."_index_"..index, "HELPFUL", {
+            local slotKey = "item_"..id.."_index_"..index
+            local auraButton = container:AddAuraSlot(slotKey, "HELPFUL", {
                 templateNames = { "SAOAuraButtonTemplate" },
                 initializeFrame = function(auraButton)
                     item:initializeAuraButton(auraButton, initialGlobalGeometry, buttonPosition)
@@ -133,6 +136,7 @@ SAO.AuraContainerItem = {
             })
 
             item.auraButtons[index] = auraButton
+            item.slotKeys[index] = slotKey
         end
 
         return item
@@ -266,21 +270,19 @@ SAO.AuraContainerItem = {
     end,
 
     setVisible = function(self, visible)
-        if true then
-            -- Completely bypass visibility changes, because we are not allowed to do that, especially in combat
+        if not self.container.SetAuraSlotEnabled then -- AuraContainer:SetAuraSlotEnabled is required for the fix
+            -- Completely bypass visibility changes, because we are not allowed to do that
             SAO:Debug(Module, "Bypassing visibility changes for aura container item ", tostring(self.id))
             return
         end
 
-        --[[BEGIN DEV_ONLY]]
-        for _, auraButton in ipairs(self.auraButtons) do
+        for _, slotKey in ipairs(self.slotKeys) do
             if visible then
-                auraButton:Show() -- @todo Maybe set parent's opacity to 100% instead
+                self.container:SetAuraSlotEnabled(slotKey, true)
             else
-                auraButton:Hide() -- @todo Maybe set parent's opacity to 0% instead
+                self.container:SetAuraSlotEnabled(slotKey, false)
             end
         end
-        --[[END DEV_ONLY]]
     end,
 
 }
