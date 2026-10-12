@@ -2,6 +2,12 @@
 
 #### v2.8.1 (2026-10-xx)
 
+New Spell Alert
+- Warrior's Victory Rush (Forever)
+
+New Glowing Button
+- Warrior's Victory Rush (Forever)
+
 Bug Fixes
 - Ghost overlays from switching stance should no longer occur (Forever)
 - Opening the options panel is delayed after leaving combat\*

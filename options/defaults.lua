@@ -891,8 +891,8 @@ SAO.defaults = {
                 [34428] = { -- Victory Rush (TBC+)
                     [34428] = true, -- Victory Rush
                 },
-                [402927]= { -- Victory Rush (Season of Discovery)
-                    [402927]= true, -- Victory Rush (Season of Discovery)
+                [402927]= { -- Victory Rush (Forever, Season of Discovery)
+                    [402927]= true, -- Victory Rush (Forever, Season of Discovery)
                 },
                 [402911]= { -- Raging Blow (Season of Discovery)
                     [402911]= true, -- Raging Blow (Season of Discovery)
