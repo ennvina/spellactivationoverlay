@@ -175,7 +175,10 @@ This section showcases changes between branch forever-alpha and branch forever-b
 
 The goal of this branch is to **add new effects introduced in Forever**. This new list may not support everything asked by the players. Hopefully, there will be enough to make most people happy.
 
-TBD
+### :warrior:  Warrior
+
+Glowing Buttons 
+- Victory Rush
 
 
 ## Fourth round of supported class effects
