@@ -608,7 +608,7 @@ SAO.defaults = {
         },
         ["ROGUE"] = {
             alert = {
-                [14251] = { -- Riposte (Era - Wrath)
+                [14251] = { -- Riposte (Forever, Era - Wrath)
                     [0] = "cd:off",
                 },
                 [462707] = { -- Cutthroat (Season of Discovery)
@@ -622,7 +622,7 @@ SAO.defaults = {
                 [14158] = { -- Murderous Intent (not an actual buff) (Cataclysm)
                     [53] = true, -- Backstab
                 },
-                [14251] = { -- Riposte (Era - Wrath)
+                [14251] = { -- Riposte (Forever, Era - Wrath)
                     [14251] = "cd:off", -- Riposte
                 },
                 [462707] = { -- Cutthroat (Season of Discovery)
