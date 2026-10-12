@@ -53,14 +53,19 @@ local function useElementalFocus(self)
     -- Elemental Focus has 2 charges on TBC and beyond
     self:CreateEffect(
         "elemental_focus",
-        SAO.TBC_AND_ONWARD - SAO.RETAIL,
+        SAO.FOREVER + SAO.TBC_AND_ONWARD - SAO.RETAIL,
         16246, -- Clearcasting (buff)
         "aura",
         {
             talent = 16164, -- Elemental Focus (talent)
             overlays = {
-                { stacks = 1, texture = texture, position = "Left", scale = 1.5, pulse = false, option = false },
-                { stacks = 2, texture = texture, position = "Left + Right (Flipped)", scale = 1.5, pulse = false, option = { setupHash = hash0Stacks, testHash = hash2Stacks, variants = variants } },
+                [SAO.FOREVER] = {
+                    { stacks = 0, texture = texture, position = "Left + Right (Flipped)", scale = 1.5, pulse = false },
+                },
+                [SAO.ALL_PROJECTS - SAO.FOREVER] = {
+                    { stacks = 1, texture = texture, position = "Left", scale = 1.5, pulse = false, option = false },
+                    { stacks = 2, texture = texture, position = "Left + Right (Flipped)", scale = 1.5, pulse = false, option = { setupHash = hash0Stacks, testHash = hash2Stacks, variants = variants } },
+                },
             },
         }
     );

@@ -133,6 +133,11 @@ SAO.Variable = {
             check(var.import.classes, "ignore", { 'string', 'table', 'nil' });
         end
 
+        check(var, "macro", { 'table', 'nil' });
+        if type(var.macro) == 'table' then
+            check(var.macro, "getCondition", { 'function', 'nil' });
+        end
+
         -- Uniqueness tests
         for _, var2 in pairs(SAO.Variables) do
             if var.order == var2.order then
@@ -164,6 +169,7 @@ SAO.Variable = {
         if var.hash.toAnyFunc then
             SAO.Hash["toAny"..var.core] = var.hash.toAnyFunc;
         end
+        SAO.Hash["toWithout"..var.core] = function(hash) return bit.band(hash.hash, bit.bnot(var.hash.mask)) end;
 
         -- Add the bucket setter directly to the bucket class declaration
         SAO.Bucket["set"..var.core] = function(bucket, value)
@@ -180,6 +186,11 @@ SAO.Variable = {
             if bucket.trigger:isFullyInformed() then
                 bucket:applyHash();
             end
+        end
+
+        -- Add the macro condition generator to be invoked automatically when calling Bucket:craftMacroCondition
+        if var.macro and var.macro.getCondition then
+            SAO.Bucket.addMacroConditionGenerator(var.macro.getCondition); -- Static method
         end
 
         -- Add a dependency importer directly to the bucket class declaration

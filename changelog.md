@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.8.0-alpha (2026-10-xx)
+#### v2.8.0 (2026-10-12)
 
 Introducing Forever flavor!
 - Forever support is in very early stage at the moment
@@ -11,6 +11,7 @@ Thank you to our amazing contributors for helping out on Forever.
 - lancestre for development and tests
 - FunkArouser for development and tests
 - r41dboss for tests and feedback
+- Zerver for tests and feedback
 
 You guys are helping a great deal, much appreciated!
 
@@ -21,6 +22,7 @@ This release uses a new technology to detect auras
 
 Bug Fixes
 - Mage's Heating Up Spell Alert no longer pulses (Mists of Pandaria)
+- Combat-only large spell alerts stayed visible for too long after combat
 - In very rare circumstances, some buttons did not glow as expected
 
 Known Limitations (Forever)
@@ -30,14 +32,27 @@ Known Limitations (Forever)
 - Most Spell Alerts do not support Progressive Timer
   - Some progressive timer alternatives are being evaluated
   - Support will definitely come someday, but will be different than Classic
+- Most Spell Alerts cannot have different visuals based on number of stacks
+  - Because of that, some effects have been postponed
+  - Some alternatives are being evaluated
 - Most Spell Alerts do not support Sound Effects
   - Some sound alternatives are being evaluated
   - If support is possible, it will be probably similar to Classic's sound
 - Custom effect are not supported
-  - This includes things like Mage's Freeze effect, or Rogue's Riposte
+  - This includes things like Mage's Freeze effect
   - There is no ETA on this matter, as it requires further investigation
+- Non-exclusive execute-like effects are not supported
+  - 'Non-exclusive execute' means a spell that can be cast at any time
+  - This includes things like Priest's Shadow Word: Death
+  - Excusive execute, such as Warrior's Execute, are correctly supported
 - Some effects are supported only outside dungeons and raids
   - For example, Paladin's Exorcism will _not_ work in a dungeon or raid
+- Disabling some Spell Alerts from the Options Panel has no effect
+- Druid's Omen of Clarity may not work right after learning Cat/Bear form
+  - Simply logging out and logging back in fixes the issue
+- Stance-based visuals may display a short ghost when switching stance
+  - Druid's Omen of Clarity may trigger that issue when visuals go red/green
+  - The issue does not trigger is the stance never changes during the effect
 
 #### v2.7.11 (2026-09-14)
 

@@ -1,3 +1,4 @@
+# Forever
 # Classic Era
 # The Burning Crusade
 # Wrath of the Lich King

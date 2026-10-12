@@ -20,7 +20,11 @@ function SAO.PlaySpellAlertSound(self)
 
     local willPlay, soundHandle;
 
-    if SAO.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH + SAO.RETAIL) then -- For some reason, SOUNDKIT.UI_POWER_AURA_GENERIC does nothing in Retail
+    local mustUseLocalSound = SAO.IsProject(
+        SAO.ERA + SAO.TBC + SAO.WRATH + -- Flavors where SOUNDKIT.UI_POWER_AURA_GENERIC is absent
+        SAO.FOREVER + SAO.RETAIL -- Flavors where SOUNDKIT.UI_POWER_AURA_GENERIC exists but the sound is inaudible
+    )
+    if mustUseLocalSound then
         willPlay, soundHandle = PlaySoundFile("Interface\\AddOns\\SpellActivationOverlay\\sounds\\UI_PowerAura_Generic.ogg");
     else
         -- SOUNDKIT.UI_POWER_AURA_GENERIC was introduced in Cataclysm

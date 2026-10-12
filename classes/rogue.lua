@@ -160,7 +160,7 @@ local function useRiposte()
         "counter",
         {
             talent = riposte,
-            requireTalent = true,
+            requireTalent = not SAO.IsForever(), -- Disable talent testing in Forever until we find a reliable way to check talents
             useName = false,
             overlay = { texture = "bandits_guile", position = "Top (CW)", option = riposteOverlayOption },
             buttonOption = riposteButtonOption,

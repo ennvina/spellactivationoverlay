@@ -315,7 +315,7 @@ local FrozenHandler = {
                 SAO:GetSpellName(self.deep_freeze_sod[1]),
             });
         else
-            --assert(SAO.IsProject(SAO.CATA_AND_ONWARD))
+            --assertsafe(SAO.IsProject(SAO.CATA_AND_ONWARD))
             -- Starting from Cataclysm, the spell ID is enough to identify the spell
             SAO:RegisterGlowIDs({
                 self.ice_lance[1],
@@ -646,26 +646,55 @@ local function useArcaneBlast()
     end
 end
 
-local function useFingersOfFrost()
-    local fingersOfFrostBuff = 44544;
-    local hash0Stacks = SAO:HashNameFromStacks(0);
-    local hash2Stacks = SAO:HashNameFromStacks(2);
+local function useClearcasting()
+    local clearcastingBuff = SAO.IsRetail() and 276743 or 12536; -- Clearcasting (Mage)
     SAO:CreateEffect(
-        "fingers_of_frost",
-        SAO.MOP,
-        fingersOfFrostBuff,
+        "clearcasting",
+        SAO.FOREVER + SAO.RETAIL,
+        clearcastingBuff,
         "aura",
         {
-            aka = {
-                [SAO.MOP] = 126084, -- Fingers of Frost (second charge)
-            },
-            overlays = { -- Slightly bigger to avoid overlap with Arcane Missiles, and slightly dimmer to compensate
-                { stacks = 1, texture = "frozen_fingers", position = "Left",                   scale = 1.1, color = { 222, 222, 222 }, option = false },
-                { stacks = 2, texture = "frozen_fingers", position = "Left + Right (Flipped)", scale = 1.1, color = { 222, 222, 222 }, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
-            },
-            buttons = { FrozenHandler.ice_lance[1], FrozenHandler.deep_freeze[1], default = { option = { isNative = true } } }, -- Already glowing natively
+            overlay = { texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.5, pulse = false },
         }
     );
+end
+
+local function useFingersOfFrost()
+    if SAO.IsMoP() or SAO.IsRetail() then
+        local fingersOfFrostBuff = 44544;
+        local hash0Stacks = SAO:HashNameFromStacks(0);
+        local hash2Stacks = SAO:HashNameFromStacks(2);
+        SAO:CreateEffect(
+            "fingers_of_frost",
+            SAO.MOP + SAO.RETAIL,
+            fingersOfFrostBuff,
+            "aura",
+            {
+                aka = {
+                    [SAO.MOP] = 126084, -- Fingers of Frost (second charge)
+                },
+                overlays = { [SAO.MOP] = { -- Slightly bigger to avoid overlap with Arcane Missiles, and slightly dimmer to compensate
+                    { stacks = 1, texture = "frozen_fingers", position = "Left",                   scale = 1.1, color = { 222, 222, 222 }, option = false },
+                    { stacks = 2, texture = "frozen_fingers", position = "Left + Right (Flipped)", scale = 1.1, color = { 222, 222, 222 }, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
+                },
+                [SAO.RETAIL] = {
+                    { stacks = 0, texture = "frozen_fingers", position = "Left + Right (Flipped)", scale = 1.1, color = { 222, 222, 222 } },
+                }, },
+                buttons = { FrozenHandler.ice_lance[1], FrozenHandler.deep_freeze[1], default = { option = { isNative = true } } }, -- Already glowing natively
+            }
+        );
+    elseif SAO.IsForever() then --[[BEGIN_DEV_ONLY]]
+        local fingersOfFrostBuff = 400670;
+        SAO:CreateEffect(
+            "fingers_of_frost",
+            SAO.FOREVER,
+            fingersOfFrostBuff,
+            "aura",
+            {
+                overlay = { texture = "frozen_fingers", position = "Left + Right (Flipped)" },
+            }
+        ); --[[END_DEV_ONLY]]
+    end
 end
 
 local function useBrainFreeze()
@@ -707,6 +736,18 @@ local function useHeatingUpAndHotStreak()
             button = { spellID = pyroblast, option = { isNative = true } }, -- Already glowing natively
         }
     );
+
+    --[[BEGIN_DEV_ONLY]]
+    SAO:CreateEffect(
+        "heating_up_forever",
+        SAO.FOREVER,
+        400625,
+        "aura",
+        {
+            overlay = { texture = "hot_streak", position = "Left + Right (Flipped)" },
+        }
+    );
+    --[[END_DEV_ONLY]]
 end
 
 local function registerFire(self)
@@ -722,7 +763,7 @@ local function registerFire(self)
         self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { self:GetSpellName(pyroblast) });
     elseif self.IsCata() then
         self:RegisterAura("hot_streak_full", 0, hotStreakSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true, { pyroblastBang });
-    elseif self.IsMoP() or self.IsRetail() then
+    elseif self.IsProject(SAO.FOREVER + SAO.MOP + SAO.RETAIL) then
         useHeatingUpAndHotStreak();
     end
     if self.IsProject(SAO.SOD + SAO.WRATH + SAO.CATA) then
@@ -757,7 +798,7 @@ local function registerFrost(self)
         self:RegisterAura("fingers_of_frost_1", 1, 44544, "frozen_fingers", "Left (CCW)", 1.1, 222, 222, 222, true, iceLanceAndDeepFreeze);
         self:RegisterAura("fingers_of_frost_2", 2, 44544, "frozen_fingers", "Left (CCW)", 1.1, 222, 222, 222, true, iceLanceAndDeepFreeze);
         self:RegisterAura("fingers_of_frost_2", 2, 44544, "frozen_fingers", "Right (CW)", 1.1, 222, 222, 222, true); -- no need to re-glow iceLanceAndDeepFreeze for right texture
-    elseif self.IsMoP() then
+    elseif self.IsProject(SAO.FOREVER + SAO.MOP + SAO.RETAIL) then
         useFingersOfFrost();
     end
 
@@ -807,6 +848,8 @@ local function registerArcane(self)
     end
 
     useArcaneBlast();
+
+    useClearcasting();
 end
 
 local function registerClass(self)

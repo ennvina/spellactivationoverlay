@@ -11,7 +11,7 @@
     "explorer.excludeGitIgnore": false,
     "Lua.diagnostics.globals": [
         // Lua global functions
-        "bit",
+        "assertsafe",
         "canaccessvalue",
         "ceil",
         "debugstack",
@@ -27,6 +27,8 @@
         "tDeleteItem",
         "tinsert",
         "tremove",
+        // Lua global objects
+        "bit",
         // Objects from this addon
         "SpellActivationOverlayAddonFrame",
         "SpellActivationOverlayContainerFrame",
@@ -82,6 +84,7 @@
         "InterfaceOptions_AddCategory",
         "InterfaceOptionsFrame_OpenToCategory",
         "OverrideActionBar",
+        "RegisterStateDriver",
         "Settings",
         "StanceBarFrame",
         "StanceBar_UpdateState",

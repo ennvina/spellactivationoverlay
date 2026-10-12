@@ -12,6 +12,27 @@ local combatOverlayFactor = 2;
 local useTimer = true;
 local useSound = false;
 
+if SAO.IsForever() then
+	local welcomeBefore = SAO:gradientText(">>>>>>", { { r=0.5, g=0.5, b=1 }, { r=1, g=1, b=1 } });
+	local orange, orangeLight, orangeDark = { r = 1, g = 0.7, b = 0.2 }, { r = 1, g = 0.85, b = 0.55 }, { r = 0.9, g = 0.65, b = 0.15 };
+	local welcomeSAO = SAO:gradientText("Spell Activation Overlay", { orange, orangeLight, orange, orangeDark });
+	local lightBlue, lightBlueLight = { r = 0.7, g = 0.9, b = 1 }, { r = 0.85, g = 0.95, b = 1 };
+	local welcomeForever = SAO:gradientText("World of Warcraft: Forever", { lightBlue, lightBlueLight, lightBlue });
+	local welcomeDiscord = "|cffcdffcdDiscord server|r";
+	local welcomeCurseForge = "|cffcdffcdCurseForge|r";
+	local welcomeText = welcomeBefore .. " Welcome to " .. welcomeSAO .. ". " ..
+		"The addon is still in early development for " .. welcomeForever .. ". " ..
+		"Lots of cool stuff is coming soon™. " ..
+		"Make sure to report issues and suggest ideas over the " .. welcomeDiscord .. " or " .. welcomeCurseForge .. ", thank you :)";
+	print(welcomeText);
+
+	local newReleases = "Expect releases with new effects and bug fixes EVERY DAY until the end of the Beta test, on October 21st. Stay tuned!";
+	local c = function(intensity)
+		return { r = 1, g = 0.2 + 0.7 * intensity, b = 0.6 * intensity };
+	end
+	print(SAO:gradientText(newReleases, { c(0.8), c(0.9), c(1), c(0.8), c(0.7) }));
+end
+
 function SpellActivationOverlay_OnLoad(self)
 	SAO.Frame = self;
 	SAO.ShowAllOverlays = SpellActivationOverlay_ShowAllOverlays;
@@ -36,6 +57,7 @@ function SpellActivationOverlay_OnLoad(self)
 	SAO.AuraContainer:initialize(SpellActivationOverlayAddonFrame, {
 		longSide = 256 * sizeScale * self.scale,
 		shortSide = 128 * sizeScale * self.scale,
+		scale = sizeScale * self.scale,
 	});
 
 	local className, classFile, classId = UnitClass("player");
@@ -107,6 +129,7 @@ function SpellActivationOverlay_OnChangeGeometry(self)
 	SAO.AuraContainer:updateGeometry({
 		longSide = longSide,
 		shortSide = shortSide,
+		scale = sizeScale * self.scale,
 	});
 	for _, overlayList in pairs(self.overlaysInUse) do
 		for i=1, #overlayList do
@@ -283,6 +306,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	SAO_LastShownOverlay = overlay; -- Global variable for debugging purposes
 	overlay.spellID = spellID;
 	overlay.position = position;
+	overlay.scale = scale;
 	
 	local texLeft, texRight, texTop, texBottom = 0, 1, 0, 1;
 	if ( vFlip ) then
@@ -578,7 +602,7 @@ function SpellActivationOverlayFrame_GetCombatAnimOffsetFarAway(anim)
 
 	local baseLongSide = 256;
 	local baseShortSide = 128;
-	local farAway = ((baseLongSide-baseShortSide) / 2 + baseShortSide) * sizeScale * frame.scale * combatOverlayFactor;
+	local farAway = ((baseLongSide-baseShortSide) / 2 + baseShortSide) * sizeScale * frame.scale * overlay.scale * combatOverlayFactor;
 
 	if ( position == "CENTER" ) then
 		return 0, 0;

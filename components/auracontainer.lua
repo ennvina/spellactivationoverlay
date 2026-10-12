@@ -14,6 +14,52 @@ local function splitPositions(position)
     return positions
 end
 
+-- Return hash information for container auras, or nil if the hash is not supported
+local function getInfoFromHash(hash, macroCondition, spellID)
+    local requiresAura = type(SAO.Hash.hasAuraStacks) == 'function' and hash:hasAuraStacks()
+    if not requiresAura then
+        -- The aura container, as its name implies, only handles overlays that require an aura (i.e., have aura stacks)
+        return nil
+    end
+
+    -- Fill in item information
+    local itemInfo = {}
+
+    local nbAuraStacks = hash:getAuraStacks()
+    itemInfo.nbAuraStacks = nbAuraStacks
+
+    if nbAuraStacks == nil then
+        SAO:Warn(Module, "Spell "..tostring(spellID).." uses an inverse aura trigger, but aura containers do not support inverse auras") --[[DEV_ONLY]]
+        return nil
+    end
+
+    -- Fill in container information
+    local containerInfo = {}
+
+    local hasStance = type(SAO.Hash.hasMatchStance) == 'function' and hash:hasMatchStance()
+
+    local hashOnlyAnyStacks = SAO.Hash:new(SAO.Hash:new():toAnyAuraStacks())
+    if (hasStance and hash:toWithoutMatchStance() ~= hashOnlyAnyStacks.hash)
+    or (not hasStance and hash.hash ~= hashOnlyAnyStacks.hash) then
+        SAO:Warn(Module, "Spell "..tostring(spellID).." has a hash that has more than 'any stacks' and a stance trigger:", hash.hash)
+        return nil
+    end
+
+    if hasStance then
+        containerInfo.matchStance = hash:getMatchStance()
+    end
+
+    if hasStance and type(macroCondition) ~= 'string' then
+        SAO:Warn(Module, "Spell "..tostring(spellID).." has a stance but no macro condition") --[[DEV_ONLY]]
+        return nil
+    end
+    containerInfo.macroCondition = macroCondition
+
+    containerInfo.key = type(macroCondition) == 'string' and macroCondition or "default"
+
+    return { container = containerInfo, item = itemInfo }
+end
+
 local positionInfo = {
     CENTER = { location = "CENTER" },
     LEFT = { location = "LEFT" },
@@ -57,6 +103,7 @@ SAO.AuraContainerItem = {
             -- Constants
             spellID = overlay.spellID,
             scale = overlay.scale,
+            fontScale = 3,
             positions = splitPositions(overlay.position),
             level = overlay.level,
             autoPulse = overlay.autoPulse,
@@ -69,9 +116,9 @@ SAO.AuraContainerItem = {
             auraButtons = {}, -- Assigned below; there will be as many buttons as there are positions
         }
 
-        self.__index = nil;
-        setmetatable(item, self);
-        self.__index = self;
+        self.__index = nil
+        setmetatable(item, self)
+        self.__index = self
 
         for index, position in ipairs(item.positions) do
             local buttonPosition = position
@@ -88,7 +135,7 @@ SAO.AuraContainerItem = {
             item.auraButtons[index] = auraButton
         end
 
-        return item;
+        return item
     end,
 
     initializeAuraButton = function(self, auraButton, initialGlobalGeometry, position)
@@ -96,24 +143,26 @@ SAO.AuraContainerItem = {
 
         auraButton:EnableMouse(false) -- Disable tooltip
 
-        auraButton:SetIcon(auraButton.auraIcon)
+        auraButton:SetIcon(auraButton.pulsableItem.auraIcon)
 
         self:setTexture(auraButton, position)
 
         self:setCooldown(auraButton)
 
-        auraButton:SetApplicationCount(auraButton.count)
+        auraButton.staticItem.applicationCount:SetScale(self.fontScale * initialGlobalGeometry.scale)
+        auraButton:SetApplicationCount(auraButton.staticItem.applicationCount)
 
         if self.level then -- Optional
             auraButton:SetFrameLevel(self.level)
         end
+        auraButton.staticItem:SetFrameLevel(auraButton:GetFrameLevel() + 1)
 
         self:setButtonGeometry(auraButton, initialGlobalGeometry, position)
 
-        if auraButton.pulse then
+        if auraButton.pulsableItem.pulse then
             local mustPulse = self.autoPulse ~= false -- True by default
             if mustPulse then
-                auraButton.pulse:Play()
+                auraButton.pulsableItem.pulse:Play()
             end
         end
 
@@ -125,17 +174,17 @@ SAO.AuraContainerItem = {
     end,
 
     setTexture = function(self, auraButton, position)
-        local texture = auraButton.customTexture
+        local texture = auraButton.pulsableItem.customTexture
 
         -- Set filename or file ID
-        local customTexture = self.texture
-        if customTexture and type(customTexture) == 'function' then
-            customTexture = customTexture()
+        local textureFilenameOrID = self.texture
+        if textureFilenameOrID and type(textureFilenameOrID) == 'function' then
+            textureFilenameOrID = textureFilenameOrID()
         end
-        if type(customTexture) == 'string' and tonumber(customTexture, 10) then
-            customTexture = tonumber(customTexture, 10)
+        if type(textureFilenameOrID) == 'string' and tonumber(textureFilenameOrID, 10) then
+            textureFilenameOrID = tonumber(textureFilenameOrID, 10)
         end
-        texture:SetTexture(customTexture)
+        texture:SetTexture(textureFilenameOrID)
 
         -- Set texture coordinates
         position = position and strupper(position)
@@ -160,7 +209,7 @@ SAO.AuraContainerItem = {
     end,
 
     setCooldown = function(self, auraButton)
-        local cooldown = auraButton.cooldown
+        local cooldown = auraButton.staticItem.cooldown
         auraButton:SetDurationCooldown(cooldown)
     end,
 
@@ -205,6 +254,8 @@ SAO.AuraContainerItem = {
             return
         end
 
+        auraButton.staticItem.applicationCount:SetScale(self.fontScale * globalGeometry.scale)
+
         auraButton:SetSize(width * self.scale, height * self.scale)
     end,
 
@@ -215,13 +266,21 @@ SAO.AuraContainerItem = {
     end,
 
     setVisible = function(self, visible)
+        if true then
+            -- Completely bypass visibility changes, because we are not allowed to do that, especially in combat
+            SAO:Debug(Module, "Bypassing visibility changes for aura container item ", tostring(self.id))
+            return
+        end
+
+        --[[BEGIN DEV_ONLY]]
         for _, auraButton in ipairs(self.auraButtons) do
             if visible then
-                auraButton:Show() -- @todo set parent's opacity to 100% instead
+                auraButton:Show() -- @todo Maybe set parent's opacity to 100% instead
             else
-                auraButton:Hide() -- @todo set parent's opacity to 0% instead
+                auraButton:Hide() -- @todo Maybe set parent's opacity to 0% instead
             end
         end
+        --[[END DEV_ONLY]]
     end,
 
 }
@@ -246,24 +305,48 @@ SAO.AuraContainer = {
             end
         end
 
-        local container = CreateFrame("AuraContainer", "SpellActivationOverlayAuraContainer", parent, "CustomAuraContainerTemplate")
-        container:SetAllPoints()
-        container:SetPoint("CENTER")
-        container:SetUnit("player")
-        container:SetEnabled(true)
-
-        -- if RegisterStateDriver then
-        --     RegisterStateDriver(container, "visibility", "[combat] show; hide")
-        -- end
-
-        self.container = container
         self.globalGeometry = {
             geometry = initialGlobalGeometry,
             updatedAt = GetTime(),
             pendingTimer = nil,
         }
-        self.items = {}
+        self.parent = parent
+        self.containers = {} -- Will be populated by getOrCreateContainer
+        self.items = {} -- Will be populated by registerOverlay
         self.initialized = true
+    end,
+
+    -- Get or create an aura container based on the provided hash information
+    getOrCreateContainer = function(self, hashInfo)
+        assertsafe(type(hashInfo) == 'table' and type(hashInfo.container) == 'table' and type(hashInfo.container.key) == 'string')
+
+        local container = self.containers[hashInfo.container.key]
+        if container then
+            return container
+        end
+
+        container = CreateFrame("AuraContainer", "SpellActivationOverlayAuraContainer", self.parent, "CustomAuraContainerTemplate")
+        container:SetAllPoints()
+        container:SetPoint("CENTER")
+        container:SetUnit("player")
+        container:SetEnabled(true)
+
+        if type(hashInfo.container.macroCondition) == 'string' then
+            if InCombatLockdown() then
+                -- RegisterStateDriver will trigger errors if called during combat
+                SAO:Debug(Module, "Delaying macro conditional until leaving combat:", hashInfo.container.macroCondition)
+                container:Hide()
+                SAO:AddPendingOperation("ooc", function()
+                    container:Show()
+                    RegisterStateDriver(container, "visibility", hashInfo.container.macroCondition .. " show; hide")
+                end)
+            else
+                RegisterStateDriver(container, "visibility", hashInfo.container.macroCondition .. " show; hide")
+            end
+        end
+
+        self.containers[hashInfo.container.key] = container
+        return container
     end,
 
     --[[
@@ -273,7 +356,13 @@ SAO.AuraContainer = {
         - or the spell does not need such overlay (e.g., is not secret in combat)
     ]]
     registerOverlay = function(self, overlay)
-        if not useAuraContainer or not self.initialized then
+        if not useAuraContainer then
+            -- Aura containers are not supported / not required for the current flavor
+            return nil
+        end
+
+        if not self.initialized then
+            SAO:Error(Module, "Registering an overlay of spell "..tostring(overlay.spellID).." before AuraContainer is initialized")
             return nil
         end
 
@@ -282,24 +371,26 @@ SAO.AuraContainer = {
             return nil
         end
 
-        local hash = SAO.Hash:new(overlay.hash)
-        local requiresAura = type(SAO.Hash.hasAuraStacks) == 'function' and SAO.Hash.hasAuraStacks(hash)
-        if not requiresAura then
-            -- The aura container, as its name implies, only handles overlays that require an aura (i.e., have aura stacks)
+        local hashInfo = getInfoFromHash(SAO.Hash:new(overlay.hash), overlay.macroCondition, overlay.spellID)
+        if not hashInfo then
+            -- An empty hash info means the hash is not supported, for good or bad reasons (look for messages to know more)
             return nil
         end
 
-        local id = ("spell:"..overlay.spellID) .. ("_hash:"..tostring(overlay.hash)) .. ("_pos:"..overlay.position)
-         --[[BEGIN_DEV_ONLY]]
-        if SAO.Hash.getAuraStacks(hash) ~= 0 then -- 0 means 'any stacks'
-            SAO:Warn(Module, "Spell "..tostring(overlay.spellID).." has secret restrictions, which makes it compatible only with auras with 'any stacks', but it requires", hash:toHumanReadableString())
-        end
+        local container = self:getOrCreateContainer(hashInfo)
+        assertsafe(container)
+
+        local id = ("container:"..hashInfo.container.key) ..
+            ("_spell:"..overlay.spellID) ..
+            ("_hash:"..tostring(overlay.hash)) ..
+            ("_pos:"..overlay.position)
+
         if self.items[id] then
             SAO:Error(Module, "Overlay already registered for id "..tostring(id))
             return
         end
-        --[[END_DEV_ONLY]]
-        local button = SAO.AuraContainerItem:new(id, self.container, overlay, self.globalGeometry.geometry)
+
+        local button = SAO.AuraContainerItem:new(id, container, overlay, self.globalGeometry.geometry)
 
         self.items[id] = button
 

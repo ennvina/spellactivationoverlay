@@ -2,6 +2,7 @@ local AddonName, SAO = ...
 local Module = "stance"
 
 -- Optimize frequent calls
+local GetNumShapeshiftForms = GetNumShapeshiftForms
 local GetShapeshiftForm = GetShapeshiftForm
 local GetShapeshiftFormInfo = GetShapeshiftFormInfo
 
@@ -70,6 +71,8 @@ SAO.Variable:register({
                 bucket:setMatchStance(nil);
             elseif currentStanceIndex == 0 then
                 bucket:setMatchStance(false);
+            elseif currentStanceIndex > GetNumShapeshiftForms() then -- May happen with intermediate stances, like Rogue's Vanish / Shadow Dance
+                bucket:setMatchStance(false);
             else
                 local _, _, _, currentStanceSpellID = GetShapeshiftFormInfo(currentStanceIndex);
                 if not currentStanceSpellID then
@@ -115,6 +118,9 @@ SAO.Variable:register({
             expectedType = "table",
             default = function(effect) return nil end, -- Make the 'stances' property mandatory
             prepareBucket = function(bucket, value)
+                if type(value) ~= 'table' then --[[BEGIN_DEV_ONLY]]
+                    SAO:Warn(Module, "Bucket "..bucket.name.." requires a table for stanceIDs", tostring(value));
+                end --[[END_DEV_ONLY]]
                 if #value == 1 then
                     bucket.stanceID = value[1];
                 else
@@ -126,5 +132,56 @@ SAO.Variable:register({
             force = nil,
             ignore = nil,
         },
+    },
+
+    macro = {
+        getCondition = function(bucket, hash)
+            if not hash:hasMatchStance() then
+                return nil;
+            end
+
+            assertsafe(type(hash) == 'table'); --[[DEV_ONLY]]
+            assertsafe(type(bucket.stanceID) == 'number' or type(bucket.stanceIDs) == 'table'); --[[DEV_ONLY]]
+
+            local getMacroStanceIndex = function(spellID)
+                for i = 1, GetNumShapeshiftForms() do
+                    local _, _, _, formSpellID = GetShapeshiftFormInfo(i);
+                    if spellID == formSpellID then
+                        return i; -- May not be the perfect index for a macro, but that's the best we have
+                    end
+                end
+
+                -- Stance not found (e.g., spell is not learned yet)
+                -- @TODO Handle this case, e.g., log a warning or provide feedback to the user
+                return nil;
+            end
+
+            local stances = {};
+            if type(bucket.stanceID) == 'number' then
+                local stanceIndex = getMacroStanceIndex(bucket.stanceID);
+                if stanceIndex then
+                    table.insert(stances, stanceIndex);
+                end
+            elseif type(bucket.stanceIDs) == 'table' then
+                local stanceSet = {} -- Use a set to ensure unique stance indices
+                for _, stanceID in ipairs(bucket.stanceIDs) do
+                    local stanceIndex = getMacroStanceIndex(stanceID);
+                    if stanceIndex then
+                        stanceSet[stanceIndex] = true;
+                    end;
+                end
+                for stanceIndex, _ in pairs(stanceSet) do
+                    table.insert(stances, stanceIndex);
+                end
+            end
+
+            local matchStance = hash:getMatchStance();
+            if matchStance then
+                -- Fringe case: if stances is empty, the macro will be [stance:] which will act as [stance] which is what we want
+                return "stance:"..table.concat(stances, '/');
+            else
+                return "nostance:"..table.concat(stances, '/');
+            end
+        end,
     },
 });

@@ -1,10 +1,6 @@
 local AddonName, SAO = ...
 local Module = "events"
 
--- Optimize frequent calls
-local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
-local UnitGUID = UnitGUID
-
 local arePendingEffectsRegistered = false;
 function SAO.LOADING_SCREEN_DISABLED(self, ...)
     -- Register effects right after the loading screen ends
@@ -96,7 +92,7 @@ end
 -- Each event handler must have the signature: function(self, event, ...) where self is SpellActivationOverlayFrame
 local DirectFrameEventHandlers = {}
 
-if SAO.IsProject(SAO.CATA_AND_ONWARD) then
+if SAO.IsProject(SAO.FOREVER + SAO.CATA_AND_ONWARD) then -- Include Forever in case this game sends these events, which we don't know yet
 	--[[
 		Dead code because these events do not exist in Classic Era, BC Classic, nor Wrath Classic
 		Also, the "displaySpellActivationOverlays" console variable does not exist

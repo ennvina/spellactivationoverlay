@@ -708,6 +708,14 @@ local function RegisterNativeEffectNow(self, effect)
     end
     bucket:reset(); -- Force reset after triggers are set, because resetting is optimized, based on trigger flags
 
+    for _, var in pairs(SAO.Variables) do
+        local triggerName = var.trigger.name;
+        local dependencyName = var.import.dependency and var.import.dependency.name;
+        if effect[dependencyName] and effect.triggers[triggerName] then
+            var.import.dependency.prepareBucket(bucket, effect[dependencyName]);
+        end
+    end
+
     for _, overlay in ipairs(effect.overlays or {}) do
         if not overlay.project or self.IsProject(overlay.project) then
             local spellID = overlay.spellID or effect.spellID;
@@ -758,14 +766,6 @@ local function RegisterNativeEffectNow(self, effect)
 
             local hash = self.Hash:new(button.hash);
             self.BucketManager:addEffectButton(bucket, hash, spellToAdd, combatOnly);
-        end
-    end
-
-    for _, var in pairs(SAO.Variables) do
-        local triggerName = var.trigger.name;
-        local dependencyName = var.import.dependency and var.import.dependency.name;
-        if effect[dependencyName] and effect.triggers[triggerName] then
-            var.import.dependency.prepareBucket(bucket, effect[dependencyName]);
         end
     end
 

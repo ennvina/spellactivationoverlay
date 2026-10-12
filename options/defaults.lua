@@ -491,6 +491,9 @@ SAO.defaults = {
                 [14743] = {  -- Martyrdom (Era - Wrath)
                     [0] = false,
                 },
+                [27828] = {  -- Martyrdom (Forever)
+                    [0] = false,
+                },
                 [33151] = {  -- Surge of Light (TBC - Wrath)
                     [0] = true,
                 },
