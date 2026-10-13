@@ -1,6 +1,9 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.8.1 (2026-10-xx)
+#### v2.8.1 (2026-10-13)
+
+Thank you to our amazing contributors for helping out on Forever.
+- Vexonia for tests and feedback
 
 New Spell Alert
 - Warrior's Victory Rush (Forever)
