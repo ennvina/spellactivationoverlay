@@ -1,6 +1,5 @@
 # SpellActivationOverlay 2.8.2
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.8.2
-## General
 ## Classes
 ### :druid:  Druid
 New Spell Alerts
@@ -13,9 +12,6 @@ New Spell Alerts
 ### :warlock:  Warlock
 New Spell Alerts
 - Warlock's Decimation (Forever)
-## Bug Fixes
-## Known Limitations
-## Miscellaneous
 ## Contributors
 Shout-out to our amazing contributors
 - Aerotsune for reporting and testing the Omen of Clarity issue

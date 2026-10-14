@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.8.2 (2026-10-xx)
+#### v2.8.2 (2026-10-14)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - Aerotsune for reporting and testing the Omen of Clarity issue
