@@ -6,9 +6,10 @@ Thank you to our amazing contributors for helping out. Thanks!
 - Aerotsune for reporting and testing the Omen of Clarity issue
 
 New Spell Alert
-- Druid's Omen of Clarity (The Burning Crusade)
+- Druid's Omen of Clarity\* (The Burning Crusade)
+- Warlock's Decimation (Forever)
 
-Oddly enough, Omen of Clarity was unofficially supported
+\* Oddly enough, Omen of Clarity was unofficially supported
 
 #### v2.8.1 (2026-10-13)
 

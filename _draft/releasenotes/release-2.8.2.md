@@ -7,6 +7,9 @@ New Spell Alerts
 - Druid's Omen of Clarity (The Burning Crusade)
 
 Oddly enough, Omen of Clarity was unofficially supported, up to version 2.7.11. At least, now it becomes officially supported.
+### :warlock:  Warlock
+New Spell Alerts
+- Warlock's Decimation (Forever)
 ## Bug Fixes
 ## Known Limitations
 ## Miscellaneous

@@ -359,7 +359,7 @@ local function useDecimation(self)
 
         registerDecimation(self, 1); -- 1/2 talent point
         registerDecimation(self, 2); -- 2/2 talent points
-    elseif self.IsSoD() then
+    elseif self.IsSoD() or self.IsForever() then
         self:CreateEffect(
             "decimation",
             SAO.SOD,
@@ -368,7 +368,9 @@ local function useDecimation(self)
             {
                 talent = 440870, -- Decimation (rune)
                 overlay = { texture = "impact", position = "Top", scale = 0.8 },
-                button = { spellID = soulFire },
+                buttons = {
+                    [SAO.SOD] = { spellID = soulFire },
+                },
             }
         );
     end
