@@ -137,7 +137,7 @@ local function useOmenOfClarity()
     -- Forever and Retail
     SAO:CreateEffect(
         "omen_of_clarity",
-        SAO.FOREVER + SAO.RETAIL,
+        SAO.FOREVER + SAO.TBC + SAO.RETAIL,
         omenSpellID,
         "aura",
         {
