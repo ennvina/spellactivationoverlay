@@ -1,5 +1,15 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.8.2 (2026-10-xx)
+
+Thank you to our amazing contributors for helping out. Thanks!
+- Aerotsune for reporting and testing the Omen of Clarity issue
+
+New Spell Alert
+- Druid's Omen of Clarity (The Burning Crusade)
+
+Oddly enough, Omen of Clarity was unofficially supported
+
 #### v2.8.1 (2026-10-13)
 
 Thank you to our amazing contributors for helping out on Forever.
