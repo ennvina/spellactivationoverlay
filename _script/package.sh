@@ -560,7 +560,7 @@ cdup
 
 # Release retail version
 release_retail() {
-RETAIL_BUILD_VERSION=120100
+RETAIL_BUILD_VERSION=120105
 mkproject retail "$RETAIL_BUILD_VERSION" 2266c5 inv_ability_voidweaverpriest_entropicrift 64 "Retail"
 
 #prunecopyright Cataclysm Pandaria Draenor
