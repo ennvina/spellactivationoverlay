@@ -112,20 +112,21 @@
 						<Scale scaleX="0.9259" scaleY="0.9259" duration="0.5" smoothing="IN_OUT" order="2"/>
 					</AnimationGroup>
 				</Animations>
-				<Layers>
-					<Layer level="ARTWORK">
-						<Texture parentKey="auraIcon" setAllPoints="true"/>
-					</Layer>
-					<Layer level="OVERLAY">
-						<Texture parentKey="customTexture" setAllPoints="true">
-							<Animations>
-								<AnimationGroup parentKey="fadeIn" setToFinalAlpha="true">
-									<Alpha fromAlpha="0" toAlpha="1" duration="1.5"/>
-								</AnimationGroup>
-							</Animations>
-						</Texture>
-					</Layer>
-				</Layers>
+				<Frames>
+					<StatusBar parentKey="applicationBar" setAllPoints="true" hidden="true" clipChildren="false" fillStyle="Standard">
+						<Frames>
+							<Cooldown parentKey="cooldown" inherits="CooldownFrameTemplate" setAllPoints="true" drawBling="false" drawEdge="false" drawSwipe="false" hideCountdownNumbers="true" reverse="true"/>
+						</Frames>
+						<Layers>
+							<!-- <Layer level="ARTWORK">
+								<Texture parentKey="auraIcon" setAllPoints="true"/>
+							</Layer> -->
+							<Layer level="OVERLAY">
+								<Texture parentKey="customTexture" setAllPoints="true"/>
+							</Layer>
+						</Layers>
+					</StatusBar>
+				</Frames>
 			</Frame>
 			<Frame parentKey="staticItem" setAllPoints="true">
 				<Layers>
@@ -133,9 +134,6 @@
 						<FontString parentKey="applicationCount" font="NumberFontNormal" setAllPoints="true" justifyH="CENTER" justifyV="MIDDLE"/>
 					</Layer>
 				</Layers>
-				<Frames>
-					<Cooldown parentKey="cooldown" inherits="CooldownFrameTemplate" setAllPoints="true" drawBling="false" drawEdge="false" drawSwipe="false" hideCountdownNumbers="true"/>
-				</Frames>
 			</Frame>
 		</Frames>
 	</Frame>

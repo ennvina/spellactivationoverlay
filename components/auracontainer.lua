@@ -39,9 +39,8 @@ local function getInfoFromHash(hash, macroCondition, spellID)
     local hasStance = type(SAO.Hash.hasMatchStance) == 'function' and hash:hasMatchStance()
 
     local hashOnlyAnyStacks = SAO.Hash:new(SAO.Hash:new():toAnyAuraStacks())
-    if (hasStance and hash:toWithoutMatchStance() ~= hashOnlyAnyStacks.hash)
-    or (not hasStance and hash.hash ~= hashOnlyAnyStacks.hash) then
-        SAO:Warn(Module, "Spell "..tostring(spellID).." has a hash that has more than 'any stacks' and a stance trigger:", hash.hash)
+    if hasStance and hash:toWithoutMatchStance() ~= hashOnlyAnyStacks.hash then
+        SAO:Warn(Module, "Spell "..tostring(spellID).." has a hash that has more than aura stacks and a stance trigger:", hash.hash)
         return nil
     end
 
@@ -96,7 +95,7 @@ local positionInfo = {
     setting its texture, geometry, and visibility.
 ]]
 SAO.AuraContainerItem = {
-    new = function(self, id, container, overlay, initialGlobalGeometry)
+    new = function(self, id, container, overlay, options)
         local item = {
             id = id,
             container = container,
@@ -123,12 +122,18 @@ SAO.AuraContainerItem = {
         self.__index = self
 
         for index, position in ipairs(item.positions) do
-            local buttonPosition = position
             local slotKey = "item_"..id.."_index_"..index
+
+            local auraSlotOptions = {
+                globalGeometry = options.globalGeometry,
+                position = position,
+                applications = options.nbAuraStacks,
+            }
+
             local auraButton = container:AddAuraSlot(slotKey, "HELPFUL", {
                 templateNames = { "SAOAuraButtonTemplate" },
                 initializeFrame = function(auraButton)
-                    item:initializeAuraButton(auraButton, initialGlobalGeometry, buttonPosition)
+                    item:initializeAuraButton(auraButton, auraSlotOptions)
                 end,
                 candidateFilters = {
                     includeSpellIDs = { [overlay.spellID] = true },
@@ -142,26 +147,29 @@ SAO.AuraContainerItem = {
         return item
     end,
 
-    initializeAuraButton = function(self, auraButton, initialGlobalGeometry, position)
+    initializeAuraButton = function(self, auraButton, options)
         -- Please note, at this point, we cannot rely on the fact that this button is in self.auraButtons
 
         auraButton:EnableMouse(false) -- Disable tooltip
 
-        auraButton:SetIcon(auraButton.pulsableItem.auraIcon)
+        -- local auraIcon = auraButton.pulsableItem.applicationBar.auraIcon
+        -- auraButton:SetIcon(auraIcon)
 
-        self:setTexture(auraButton, position)
+        self:setTexture(auraButton, options.position)
+
+        self:setApplications(auraButton, options.applications)
+
+        -- auraButton.staticItem.applicationCount:SetScale(self.fontScale * options.globalGeometry.scale)
+        -- auraButton:SetApplicationCount(auraButton.staticItem.applicationCount)
 
         self:setCooldown(auraButton)
-
-        auraButton.staticItem.applicationCount:SetScale(self.fontScale * initialGlobalGeometry.scale)
-        auraButton:SetApplicationCount(auraButton.staticItem.applicationCount)
 
         if self.level then -- Optional
             auraButton:SetFrameLevel(self.level)
         end
         auraButton.staticItem:SetFrameLevel(auraButton:GetFrameLevel() + 1)
 
-        self:setButtonGeometry(auraButton, initialGlobalGeometry, position)
+        self:setButtonGeometry(auraButton, options.globalGeometry, options.position)
 
         if auraButton.pulsableItem.pulse then
             local mustPulse = self.autoPulse ~= false -- True by default
@@ -178,7 +186,7 @@ SAO.AuraContainerItem = {
     end,
 
     setTexture = function(self, auraButton, position)
-        local texture = auraButton.pulsableItem.customTexture
+        local texture = auraButton.pulsableItem.applicationBar.customTexture
 
         -- Set filename or file ID
         local textureFilenameOrID = self.texture
@@ -189,6 +197,12 @@ SAO.AuraContainerItem = {
             textureFilenameOrID = tonumber(textureFilenameOrID, 10)
         end
         texture:SetTexture(textureFilenameOrID)
+
+        -- local applicationBar = auraButton.staticItem.applicationBar
+        -- applicationBar:SetStatusBarTexture(textureFilenameOrID)
+        -- local applicationBarTexture = applicationBar:GetStatusBarTexture()
+        -- Cannot use the application bar's texture directly because some features are not working as intended e.g., texcoords
+        -- Rather, we use the application bar as a parent of other UI elements to filter based on number of applications
 
         -- Set texture coordinates
         position = position and strupper(position)
@@ -212,8 +226,23 @@ SAO.AuraContainerItem = {
         texture:SetVertexColor(self.r / 255, self.g / 255, self.b / 255)
     end,
 
+    setApplications = function(self, auraButton, applications)
+        local applicationBar = auraButton.pulsableItem.applicationBar
+
+        local minApplications, maxApplications = 0, 1
+        if applications ~= 0 then
+            minApplications, maxApplications = applications, applications
+            applicationBar:SetFillStyle(Enum.StatusBarFillStyle.StandardNoRangeFill)
+        end
+
+        auraButton:SetApplicationBar(applicationBar, {
+            minApplications = minApplications,
+            maxApplications = maxApplications,
+        })
+    end,
+
     setCooldown = function(self, auraButton)
-        local cooldown = auraButton.staticItem.cooldown
+        local cooldown = auraButton.pulsableItem.applicationBar.cooldown
         auraButton:SetDurationCooldown(cooldown)
     end,
 
@@ -284,7 +313,6 @@ SAO.AuraContainerItem = {
             end
         end
     end,
-
 }
 
 --[[
@@ -392,7 +420,9 @@ SAO.AuraContainer = {
             return
         end
 
-        local button = SAO.AuraContainerItem:new(id, container, overlay, self.globalGeometry.geometry)
+        local buttonOptions = hashInfo.item
+        buttonOptions.globalGeometry = self.globalGeometry.geometry
+        local button = SAO.AuraContainerItem:new(id, container, overlay, buttonOptions)
 
         self.items[id] = button
 
