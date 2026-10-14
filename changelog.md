@@ -7,6 +7,7 @@ Thank you to our amazing contributors for helping out. Thanks!
 
 New Spell Alert
 - Druid's Omen of Clarity\* (The Burning Crusade)
+- Rogue's Cutthroat (Forever)
 - Warlock's Decimation (Forever)
 
 \* Oddly enough, Omen of Clarity was unofficially supported

@@ -187,17 +187,17 @@ end
 local function useCutthroat()
     local ambush = 8676;
     local cutthroatBuff = 462707;
-    local cutthroatRune = 424980;
+    local cutthroatTalent = SAO.IsForever() and 462708 or 424980;
 
     SAO:CreateEffect(
         "cutthroat",
-        SAO.SOD,
+        SAO.FOREVER + SAO.SOD,
         cutthroatBuff,
         "aura",
         {
-            talent = cutthroatRune,
+            talent = cutthroatTalent,
             overlay = { texture = "white_tiger", position = "Left + Right (Flipped)" },
-            button = ambush,
+            buttons = { [SAO.SOD] = { spellID = ambush } },
         }
     );
 end

@@ -1,5 +1,5 @@
-# SpellActivationOverlay x.y.z
-@here I am pleased to announce the newest release of SpellActivationOverlay, version x.y.z
+# SpellActivationOverlay 2.8.2
+@here I am pleased to announce the newest release of SpellActivationOverlay, version 2.8.2
 ## General
 ## Classes
 ### :druid:  Druid
@@ -7,6 +7,9 @@ New Spell Alerts
 - Druid's Omen of Clarity (The Burning Crusade)
 
 Oddly enough, Omen of Clarity was unofficially supported, up to version 2.7.11. At least, now it becomes officially supported.
+### :rogue:  Rogue
+New Spell Alerts
+- Rogue's Cutthroat (Forever)
 ### :warlock:  Warlock
 New Spell Alerts
 - Warlock's Decimation (Forever)
