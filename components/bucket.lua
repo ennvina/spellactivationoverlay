@@ -97,6 +97,15 @@ SAO.Bucket = {
         end
     end,
 
+    -- Set that the hash is currently displayed
+    setDisplayed = function(self, hash, visible)
+        if visible then
+            self.displayedHash = hash;
+        else
+            self.displayedHash = nil;
+        end
+    end,
+
     refresh = function(self)
         if self.displayedHash == nil then
             -- Nothing to refresh if nothing is displayed

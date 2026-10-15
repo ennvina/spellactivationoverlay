@@ -182,7 +182,7 @@ SAO.Display = {
             local hashDescription = string.format("%s (0x%X = %d)", hashCalculator:toString(), self.hash, self.hash);
             SAO:Debug(Module, "Showing hash "..hashDescription.." of "..self.parent.description);
         end
-        self.parent.displayedHash = self.hash;
+        self.parent:setDisplayed(self.hash, true);
         if not self.combatOnly or InCombatLockdown() then
             self:setStatus('hard', options);
         else
@@ -200,7 +200,7 @@ SAO.Display = {
             local hashDescription = string.format("%s (0x%X = %d)", hashCalculator:toString(), self.hash, self.hash);
             SAO:Debug(Module, "Hiding hash "..hashDescription.." of "..self.parent.description);
         end
-        self.parent.displayedHash = nil;
+        self.parent:setDisplayed(self.hash, false);
         self:setStatus('off');
     end,
 
