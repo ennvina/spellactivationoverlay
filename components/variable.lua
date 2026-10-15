@@ -183,7 +183,9 @@ SAO.Variable = {
             if bucket.onVariableChanged and bucket.onVariableChanged[var.core] then
                 bucket.onVariableChanged[var.core](bucket.hashCalculator, oldValue, value, bucket);
             end
-            if bucket.trigger:isFullyInformed() then
+            if bucket.trigger:isFullyInformed()
+            or (bucket.secretStacks and bucket.trigger:isFullyInformedExcept(SAO.TRIGGER_AURA))
+            then
                 bucket:applyHash();
             end
         end

@@ -75,6 +75,10 @@ SAO.Trigger = {
         return self.required ~= 0 and self.informed == self.required;
     end,
 
+    isFullyInformedExcept = function(self, flag)
+        return self.required ~= 0 and bit.band(self.informed, bit.bnot(flag)) == bit.band(self.required, bit.bnot(flag));
+    end,
+
     inform = function(self, flag)
         if bit.bor(self.required, flag) ~= self.required then
             SAO:Error(Module, "Informing unsupported trigger "..getTriggerName(flag).." for "..self.parent.description);

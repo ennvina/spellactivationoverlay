@@ -248,7 +248,9 @@ SAO.Bucket = {
 
         -- Get out if the hash to display is incomplete
         -- But get out *after* storing the new hash, in case someone wants to know the currently displayed hash (although this one is not 'displayed')
-        if not self.trigger:isFullyInformed() then
+        if (not self.secretStacks and not self.trigger:isFullyInformed())
+        or (self.secretStacks and not self.trigger:isFullyInformedExcept(SAO.TRIGGER_AURA))
+        then
             return;
         end
 
