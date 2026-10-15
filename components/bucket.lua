@@ -37,11 +37,11 @@ SAO.Bucket = {
             displayHashesOfStacklessHashes = nil, -- Holds hashes for displays after removing their stack counts, nil if secretStacks is false
 
             -- Initially, nothing is displayed
-            displayedHash = nil,
-            currentHash = nil,
+            displayedHash = nil, -- If secretStacks is false, this is the direct displayed hash, otherwise it is the stackless displayed hash
+            currentHash = nil, -- Same comment as displayedHash
             hashCalculator = SAO.Hash:new(), -- Hash that reflects real state of the game
             hashCalculatorToApply = SAO.Hash:new(), -- Hash that holds virtual situation we want to display
-            -- hashCalculator and hashCalculatorToApply may differ if and only if there is an onAboutToApplyHash handler
+            -- hashCalculator and hashCalculatorToApply may differ if e.g. there is an onAboutToApplyHash handler, or if secretStacks is true
 
             -- Constant for more efficient debugging
             description = name.." ("..spellID..(spellName and (" = "..spellName) or "")..")",
@@ -127,6 +127,9 @@ SAO.Bucket = {
     -- If hash is not set, returns tru if any display is currently shown
     isDisplayed = function(self, hash)
         if hash then
+            if self.secretStacks then
+                hash = SAO.Hash:new(hash):toWithoutAuraStacks();
+            end
             return self.displayedHash == hash;
         else
             return self.displayedHash ~= nil;
@@ -134,8 +137,13 @@ SAO.Bucket = {
     end,
 
     -- Set that the hash is currently displayed
+    -- Without secret stacks, this simply overwrites self.displayedHash
+    -- With secret stacks, this stores the stackless hash instead
     setDisplayed = function(self, hash, visible)
         if visible then
+            if self.secretStacks then
+                hash = SAO.Hash:new(hash):toWithoutAuraStacks();
+            end
             self.displayedHash = hash;
         else
             self.displayedHash = nil;
@@ -149,18 +157,32 @@ SAO.Bucket = {
         end
 
         local currentStacks = self.currentState.currentAuraStacks;
-        if not self.stackAgnostic and (currentStacks and currentStacks > 0) then
+        if not self.secretStacks and not self.stackAgnostic and (currentStacks and currentStacks > 0) then
             local hashForAnyStacks = self.hashCalculator:toAnyAuraStacks();
             if self[hashForAnyStacks] then
                 self[hashForAnyStacks]:refresh();
             end
         end
-        self[self.displayedHash]:refresh();
+
+        if self.secretStacks then
+            -- Iterate over all stackless secret hashes and refresh them
+            for _, displayHash in pairs(self.displayHashesOfStacklessHashes[self.displayedHash] or {}) do
+                self[displayHash]:refresh();
+            end
+        else
+            self[self.displayedHash]:refresh();
+        end
     end,
 
     checkCombat = function(self, inCombat)
         if self.displayedHash then
-            self[self.displayedHash]:checkCombat(inCombat);
+            if self.secretStacks then
+                for _, displayHash in pairs(self.displayHashesOfStacklessHashes[self.displayedHash] or {}) do
+                    self[displayHash]:checkCombat(inCombat);
+                end
+            else
+                self[self.displayedHash]:checkCombat(inCombat);
+            end
         end
     end,
 
@@ -170,6 +192,9 @@ SAO.Bucket = {
         if self.onAboutToApplyHash then
             -- Possibly change the hash about do be applied right before applying it
             alwaysRefresh = self.onAboutToApplyHash(self.hashCalculatorToApply);
+        end
+        if self.secretStacks then
+            self.hashCalculatorToApply.hash = self.hashCalculator:toWithoutAuraStacks();
         end
 
         if SAO:HasDebug() or SAO:HasTrace(Module) then
@@ -229,7 +254,18 @@ SAO.Bucket = {
 
         local currentStacks = self.currentState.currentAuraStacks;
         local transitionOptions = { mimicPulse = true };
-        if self.stackAgnostic then
+        if self.secretStacks then
+            if self.displayedHash then
+                -- Hide all displays of displayHashesOfStacklessHashes[self.displayedHash]
+                for _, displayHash in pairs(self.displayHashesOfStacklessHashes[self.displayedHash] or {}) do
+                    self[displayHash]:hide();
+                end
+            end
+            -- Show all displays of displayHashesOfStacklessHashes[self.currentHash]
+            for _, displayHash in pairs(self.displayHashesOfStacklessHashes[self.currentHash] or {}) do
+                self[displayHash]:show(); -- Ignore transition options, we probably have no real opportunity for a transition
+            end
+        elseif self.stackAgnostic then
             if self.displayedHash == nil then
                 if self[self.currentHash] then
                     self[self.currentHash]:show();
