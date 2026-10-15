@@ -73,12 +73,12 @@ Known Limitations (Forever)
 - Non-exclusive execute-like effects are not supported
   - 'Non-exclusive execute' means a spell that can be cast at any time
   - This includes things like Priest's Shadow Word: Death
-  - Excusive execute, such as Warrior's Execute, are correctly supported
+  - Exclusive execute, such as Warrior's Execute, are correctly supported
 - Some effects are supported only outside dungeons and raids
   - For example, Paladin's Exorcism will _not_ work in a dungeon or raid
   - This is a limitation wanted by Blizzard and unlikely to change, sorry
 - For some Spell Alerts disabling them from the Options Panel has no effect
-  - On the other hand, disabling a Glowing Button always work
+  - On the other hand, disabling a Glowing Button always works
 - Druid's Omen of Clarity may not work right after learning Cat/Bear form
   - This is a one-time issue happening when finishing their respective quests
   - Simply logging out and logging back in fixes the issue

@@ -2,7 +2,7 @@
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.8.2
 ## Classes
 ### :druid:  Druid
-New Spell Alerts
+New Spell Alert
 - Druid's Omen of Clarity (The Burning Crusade)
 
 Oddly enough, Omen of Clarity was unofficially supported, up to version 2.7.11. At least, now it becomes officially supported.
