@@ -30,14 +30,18 @@ SAO.Bucket = {
             spellID = spellID,
 
             -- Stack-agnostic means the bucket does not care about its number of stacks
-            stackAgnostic = true,
+            stackAgnostic = true, -- Default is true, meaning the bucket does not care about the number of stacks
+
+            -- Secret stacks means the number of stacks cannot be known exactly at all times
+            secretStacks = false, --  Default is false, meaning the bucket is not limited by secret stacks
+            displayHashesOfStacklessHashes = nil, -- Holds hashes for displays after removing their stack counts, nil if secretStacks is false
 
             -- Initially, nothing is displayed
-            displayedHash = nil,
-            currentHash = nil,
+            displayedHash = nil, -- If secretStacks is false, this is the direct displayed hash, otherwise it is the stackless displayed hash
+            currentHash = nil, -- Same comment as displayedHash
             hashCalculator = SAO.Hash:new(), -- Hash that reflects real state of the game
             hashCalculatorToApply = SAO.Hash:new(), -- Hash that holds virtual situation we want to display
-            -- hashCalculator and hashCalculatorToApply may differ if and only if there is an onAboutToApplyHash handler
+            -- hashCalculator and hashCalculatorToApply may differ if e.g. there is an onAboutToApplyHash handler, or if secretStacks is true
 
             -- Constant for more efficient debugging
             description = name.." ("..spellID..(spellName and (" = "..spellName) or "")..")",
@@ -71,12 +75,44 @@ SAO.Bucket = {
         if not self[hash.hash] then
             self[hash.hash] = SAO.Display:new(self, hash.hash);
 
-            -- Special case for aura stacks: detect if the bucket is stackAgnostic based on inserted displays
+            -- Update displayHashesOfStacklessHashes if the bucket tracks secret stacks
+            if self.secretStacks then
+                local stacklessHash = hash:toWithoutAuraStacks();
+                if self.displayHashesOfStacklessHashes[stacklessHash] == nil then
+                    self.displayHashesOfStacklessHashes[stacklessHash] = {};
+                end
+                table.insert(self.displayHashesOfStacklessHashes[stacklessHash], hash.hash);
+            end
+
+            -- Special case for aura stacks: detect if the bucket is stackAgnostic / secretStacks based on inserted displays
             if hash:hasAuraStacks() then
-                local stacks = hash:getAuraStacks();
-                if stacks and stacks > 0 then
-                    -- Having at least one positive display is enough to know the bucket cares about number of stacks
-                    self.stackAgnostic = false;
+                if self.stackAgnostic then
+                    local stacks = hash:getAuraStacks();
+                    if stacks and stacks > 0 then
+                        -- Having at least one positive display is enough to know the bucket cares about number of stacks
+                        self.stackAgnostic = false;
+                    end
+                end
+
+                if not self.secretStacks then
+                    local secrecy = SAO:IsSpellSecret(self.spellID);
+                    if type(secrecy) == 'number' and secrecy > 0 then
+                        -- Having at least one aura-bound display is enough to know the bucket is limited by secret stacks
+                        self.secretStacks = true;
+
+                        -- Initialize displayHashesOfStacklessHashes with existing hashes of already inserted displays, including the new one
+                        -- (the new display did not insert its hash earlier this method, because self.secretStacks was not true yet)
+                        self.displayHashesOfStacklessHashes = {};
+                        for hashKey, display in pairs(self) do
+                            if type(hashKey) == 'number' then
+                                local stacklessHash = SAO.Hash:new(hashKey):toWithoutAuraStacks();
+                                if self.displayHashesOfStacklessHashes[stacklessHash] == nil then
+                                    self.displayHashesOfStacklessHashes[stacklessHash] = {};
+                                end
+                                table.insert(self.displayHashesOfStacklessHashes[stacklessHash], hashKey);
+                            end
+                        end
+                    end
                 end
             end
 
@@ -91,9 +127,26 @@ SAO.Bucket = {
     -- If hash is not set, returns tru if any display is currently shown
     isDisplayed = function(self, hash)
         if hash then
+            if self.secretStacks then
+                hash = SAO.Hash:new(hash):toWithoutAuraStacks();
+            end
             return self.displayedHash == hash;
         else
             return self.displayedHash ~= nil;
+        end
+    end,
+
+    -- Set that the hash is currently displayed
+    -- Without secret stacks, this simply overwrites self.displayedHash
+    -- With secret stacks, this stores the stackless hash instead
+    setDisplayed = function(self, hash, visible)
+        if visible then
+            if self.secretStacks then
+                hash = SAO.Hash:new(hash):toWithoutAuraStacks();
+            end
+            self.displayedHash = hash;
+        else
+            self.displayedHash = nil;
         end
     end,
 
@@ -104,18 +157,32 @@ SAO.Bucket = {
         end
 
         local currentStacks = self.currentState.currentAuraStacks;
-        if not self.stackAgnostic and (currentStacks and currentStacks > 0) then
+        if not self.secretStacks and not self.stackAgnostic and (currentStacks and currentStacks > 0) then
             local hashForAnyStacks = self.hashCalculator:toAnyAuraStacks();
             if self[hashForAnyStacks] then
                 self[hashForAnyStacks]:refresh();
             end
         end
-        self[self.displayedHash]:refresh();
+
+        if self.secretStacks then
+            -- Iterate over all stackless secret hashes and refresh them
+            for _, displayHash in pairs(self.displayHashesOfStacklessHashes[self.displayedHash] or {}) do
+                self[displayHash]:refresh();
+            end
+        else
+            self[self.displayedHash]:refresh();
+        end
     end,
 
     checkCombat = function(self, inCombat)
         if self.displayedHash then
-            self[self.displayedHash]:checkCombat(inCombat);
+            if self.secretStacks then
+                for _, displayHash in pairs(self.displayHashesOfStacklessHashes[self.displayedHash] or {}) do
+                    self[displayHash]:checkCombat(inCombat);
+                end
+            else
+                self[self.displayedHash]:checkCombat(inCombat);
+            end
         end
     end,
 
@@ -125,6 +192,9 @@ SAO.Bucket = {
         if self.onAboutToApplyHash then
             -- Possibly change the hash about do be applied right before applying it
             alwaysRefresh = self.onAboutToApplyHash(self.hashCalculatorToApply);
+        end
+        if self.secretStacks then
+            self.hashCalculatorToApply.hash = self.hashCalculator:toWithoutAuraStacks();
         end
 
         if SAO:HasDebug() or SAO:HasTrace(Module) then
@@ -178,13 +248,26 @@ SAO.Bucket = {
 
         -- Get out if the hash to display is incomplete
         -- But get out *after* storing the new hash, in case someone wants to know the currently displayed hash (although this one is not 'displayed')
-        if not self.trigger:isFullyInformed() then
+        if (not self.secretStacks and not self.trigger:isFullyInformed())
+        or (self.secretStacks and not self.trigger:isFullyInformedExcept(SAO.TRIGGER_AURA))
+        then
             return;
         end
 
         local currentStacks = self.currentState.currentAuraStacks;
         local transitionOptions = { mimicPulse = true };
-        if self.stackAgnostic then
+        if self.secretStacks then
+            if self.displayedHash then
+                -- Hide all displays of displayHashesOfStacklessHashes[self.displayedHash]
+                for _, displayHash in pairs(self.displayHashesOfStacklessHashes[self.displayedHash] or {}) do
+                    self[displayHash]:hide();
+                end
+            end
+            -- Show all displays of displayHashesOfStacklessHashes[self.currentHash]
+            for _, displayHash in pairs(self.displayHashesOfStacklessHashes[self.currentHash] or {}) do
+                self[displayHash]:show(); -- Ignore transition options, we probably have no real opportunity for a transition
+            end
+        elseif self.stackAgnostic then
             if self.displayedHash == nil then
                 if self[self.currentHash] then
                     self[self.currentHash]:show();
