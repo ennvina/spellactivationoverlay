@@ -365,19 +365,13 @@ SAO.Variable:register({
             expectedType = "number",
             default = function(effect) return effect.spellID end,
             prepareBucket = function(bucket, value)
-                local hasSecretRestrictions = false;
-                local secrecy = C_Secrets.GetSpellAuraSecrecy(value);
-                if secrecy then
-                    if secrecy == Enum.SecrecyLevel.ContextuallySecret then
-                        hasSecretRestrictions = true;
-                        SAO:Debug(Module, bucket.description.." is based on spell "..value.." which has secret restrictions");
-                    elseif secrecy == Enum.SecrecyLevel.AlwaysSecret then
-                        hasSecretRestrictions = true;
-                        SAO:Debug(Module, bucket.description.." is based on spell "..value.." which is always secret");
-                    else
-                        hasSecretRestrictions = false;
-                    end
+                local secrecy = SAO:IsSpellSecret(value);
+                if secrecy == 1 then
+                    SAO:Debug(Module, bucket.description.." is based on spell "..value.." which has secret restrictions");
+                elseif secrecy == 2 then
+                    SAO:Debug(Module, bucket.description.." is based on spell "..value.." which is always secret");
                 end
+                local hasSecretRestrictions = type(secrecy) == 'number' and secrecy > 0;
                 bucket.auraHasSecretRestrictions = hasSecretRestrictions;
                 if hasSecretRestrictions then
                     table.insert(secretBuckets, bucket);

@@ -1,6 +1,7 @@
 local AddonName, SAO = ...
 
 -- Optimize frequent calls
+local GetSpellAuraSecrecy = C_Secrets and C_Secrets.GetSpellAuraSecrecy
 local GetSpellCooldownLegacy = GetSpellCooldown
 local GetSpellCooldownModern = C_Spell and C_Spell.GetSpellCooldown
 local GetSpellInfoLegacy = GetSpellInfo
@@ -222,6 +223,23 @@ function SAO.GetSpellEndTime(self, spellID, suggestedEndTime)
     elseif type(expirationTime) == 'number' then
         return expirationTime;
     end
+end
+
+function SAO.IsSpellSecret(self, spellID)
+    if not GetSpellAuraSecrecy then
+        -- If the C_Secrets API is not available, all spells are considered not secret
+        return false;
+    end
+
+    local secrecy = GetSpellAuraSecrecy(spellID);
+    if secrecy then
+        if secrecy == Enum.SecrecyLevel.ContextuallySecret then
+            return 1;
+        elseif secrecy == Enum.SecrecyLevel.AlwaysSecret then
+            return 2;
+        end
+    end
+    return false;
 end
 
 -- Determine if the spell belongs is made up for internal purposes

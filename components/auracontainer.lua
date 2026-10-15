@@ -396,7 +396,7 @@ SAO.AuraContainer = {
             return nil
         end
 
-        if C_Secrets.GetSpellAuraSecrecy(overlay.spellID) == Enum.SecrecyLevel.NeverSecret then
+        if not SAO:IsSpellSecret(overlay.spellID) then
             -- We don't need to create a secret-compatible overlay for spells that are not secret in combat
             return nil
         end
