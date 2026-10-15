@@ -30,7 +30,11 @@ SAO.Bucket = {
             spellID = spellID,
 
             -- Stack-agnostic means the bucket does not care about its number of stacks
-            stackAgnostic = true,
+            stackAgnostic = true, -- Default is true, meaning the bucket does not care about the number of stacks
+
+            -- Secret stacks means the number of stacks cannot be known exactly at all times
+            secretStacks = false, --  Default is false, meaning the bucket is not limited by secret stacks
+            displayHashesOfStacklessHashes = nil, -- Holds hashes for displays after removing their stack counts, nil if secretStacks is false
 
             -- Initially, nothing is displayed
             displayedHash = nil,
@@ -71,12 +75,44 @@ SAO.Bucket = {
         if not self[hash.hash] then
             self[hash.hash] = SAO.Display:new(self, hash.hash);
 
-            -- Special case for aura stacks: detect if the bucket is stackAgnostic based on inserted displays
+            -- Update displayHashesOfStacklessHashes if the bucket tracks secret stacks
+            if self.secretStacks then
+                local stacklessHash = hash:toWithoutAuraStacks();
+                if self.displayHashesOfStacklessHashes[stacklessHash] == nil then
+                    self.displayHashesOfStacklessHashes[stacklessHash] = {};
+                end
+                table.insert(self.displayHashesOfStacklessHashes[stacklessHash], hash.hash);
+            end
+
+            -- Special case for aura stacks: detect if the bucket is stackAgnostic / secretStacks based on inserted displays
             if hash:hasAuraStacks() then
-                local stacks = hash:getAuraStacks();
-                if stacks and stacks > 0 then
-                    -- Having at least one positive display is enough to know the bucket cares about number of stacks
-                    self.stackAgnostic = false;
+                if self.stackAgnostic then
+                    local stacks = hash:getAuraStacks();
+                    if stacks and stacks > 0 then
+                        -- Having at least one positive display is enough to know the bucket cares about number of stacks
+                        self.stackAgnostic = false;
+                    end
+                end
+
+                if not self.secretStacks then
+                    local secrecy = SAO:IsSpellSecret(self.spellID);
+                    if type(secrecy) == 'number' and secrecy > 0 then
+                        -- Having at least one aura-bound display is enough to know the bucket is limited by secret stacks
+                        self.secretStacks = true;
+
+                        -- Initialize displayHashesOfStacklessHashes with existing hashes of already inserted displays, including the new one
+                        -- (the new display did not insert its hash earlier this method, because self.secretStacks was not true yet)
+                        self.displayHashesOfStacklessHashes = {};
+                        for hashKey, display in pairs(self) do
+                            if type(hashKey) == 'number' then
+                                local stacklessHash = SAO.Hash:new(hashKey):toWithoutAuraStacks();
+                                if self.displayHashesOfStacklessHashes[stacklessHash] == nil then
+                                    self.displayHashesOfStacklessHashes[stacklessHash] = {};
+                                end
+                                table.insert(self.displayHashesOfStacklessHashes[stacklessHash], hashKey);
+                            end
+                        end
+                    end
                 end
             end
 
