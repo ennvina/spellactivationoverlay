@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.8.3 (2026-10-xx)
+#### v2.8.3 (2026-10-15)
 
 Thank you to our amazing contributors for helping out.
 - Xaryu for promoting the addon on stream. Legend!
