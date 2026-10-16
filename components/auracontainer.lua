@@ -113,6 +113,8 @@ SAO.AuraContainerItem = {
             b = overlay.b,
 
             -- Variables
+            enabled = true, -- By default, the aura container item is enabled
+            visible = true, -- By default, the aura container item is visible
             auraButtons = {}, -- Assigned below; there will be as many buttons as there are positions
             slotKeys = {}, -- Assigned below; there will be as many slot keys as there are buttons
         }
@@ -298,19 +300,34 @@ SAO.AuraContainerItem = {
         end
     end,
 
+    -- 'Enabled' means wanted by the player
+    -- The item is enabled unless the player explicitly disables it from the options panel
+    setEnabled = function(self, enabled)
+        if enabled == self.enabled then
+            return
+        end
+        self.enabled = enabled
+        self:_internalSetAuraSlotEnabled(self.enabled and self.visible)
+    end,
+
+    -- 'Visible' means currently explicitly wanted to be shown
+    -- The item is visible unless a non-aura trigger (e.g. stance) explicitly asks to hide it
     setVisible = function(self, visible)
-        if not self.container.SetAuraSlotEnabled then -- AuraContainer:SetAuraSlotEnabled is required for the fix
-            -- Completely bypass visibility changes, because we are not allowed to do that
-            SAO:Debug(Module, "Bypassing visibility changes for aura container item ", tostring(self.id))
+        if visible == self.visible then
+            return
+        end
+        self.visible = visible
+        self:_internalSetAuraSlotEnabled(self.enabled and self.visible)
+    end,
+
+    _internalSetAuraSlotEnabled = function(self, enabled)
+        if not self.container.SetAuraSlotEnabled then -- AuraContainer:SetAuraSlotEnabled is required to make this functionality work
+            SAO:Debug(Module, "Cannot change internal enabling state of aura container item ", tostring(self.id))
             return
         end
 
         for _, slotKey in ipairs(self.slotKeys) do
-            if visible then
-                self.container:SetAuraSlotEnabled(slotKey, true)
-            else
-                self.container:SetAuraSlotEnabled(slotKey, false)
-            end
+            self.container:SetAuraSlotEnabled(slotKey, enabled)
         end
     end,
 }
