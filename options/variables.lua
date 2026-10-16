@@ -41,5 +41,6 @@ function SAO.ApplyGlowingButtonsToggle(self)
     self:ForEachBucket(function(bucket)
         bucket:reset(); -- Reset hash to force re-display if needed
         bucket.trigger:manualCheckAll();
+        bucket:checkOption();
     end);
 end

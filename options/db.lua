@@ -278,6 +278,8 @@ loader:SetScript("OnEvent", function (self, event)
     SAO.OptionsPanel:Init();
     loadingState.optionsPanelInitialized = true;
 
+    SAO:ForEachBucket(function(bucket) bucket:checkOption() end);
+
     loader:UnregisterEvent("VARIABLES_LOADED");
 end);
 
