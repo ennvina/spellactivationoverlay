@@ -14,6 +14,8 @@ New Glowing Buttons
 ## Bug Fixes
 ### Options Panel
 Enabling or disabling a Spell Alert from options panel now correctly shows or hides it (Forever)
+### :shaman:  Shaman
+The Spell Alert of Elemental Focus was not visible (Forever)
 ## Known Limitations
 ## Miscellaneous
 ## Contributors

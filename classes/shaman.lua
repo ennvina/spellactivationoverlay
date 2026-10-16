@@ -22,7 +22,7 @@ local function lazyCreateElementalFocusVariants(self)
         return;
     end
 
-    if self.IsProject(SAO.CATA_AND_ONWARD) then
+    if self.IsProject(SAO.FOREVER + SAO.CATA_AND_ONWARD) then
         -- Starting from Cataclysm, Elemental Focus always shares Clearcasting texture with other classes
         -- Because of that, Elemental Focus no longer has 'variants' in Cataclysm and onward
         return;
