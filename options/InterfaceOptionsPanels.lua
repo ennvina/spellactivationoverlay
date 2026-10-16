@@ -187,9 +187,10 @@ function SpellActivationOverlayOptionsPanelMixin:Init()
     opacitySlider.initialValue = SpellActivationOverlayDB.alert.opacity;
     opacitySlider:SetValue(opacitySlider.initialValue);
     opacitySlider.ApplyValueToEngine = function(self, value)
+        local wasEnabled = SpellActivationOverlayDB.alert.enabled;
         SpellActivationOverlayDB.alert.opacity = value;
         SpellActivationOverlayDB.alert.enabled = value > 0;
-        SAO:ApplySpellAlertOpacity();
+        SAO:ApplySpellAlertOpacity(SpellActivationOverlayDB.alert.enabled ~= wasEnabled);
     end
 
     local scaleSlider = SpellActivationOverlayOptionsPanelSpellAlertScaleSlider;
@@ -408,9 +409,10 @@ local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, timerVa
     local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
     opacitySlider:SetValue(opacityValue);
     if (SpellActivationOverlayDB.alert.opacity ~= opacityValue) then
+        local wasEnabled = SpellActivationOverlayDB.alert.enabled;
         SpellActivationOverlayDB.alert.opacity = opacityValue;
         SpellActivationOverlayDB.alert.enabled = opacityValue > 0;
-        SAO:ApplySpellAlertOpacity();
+        SAO:ApplySpellAlertOpacity(SpellActivationOverlayDB.alert.enabled ~= wasEnabled);
     end
 
     local geometryChanged = false;

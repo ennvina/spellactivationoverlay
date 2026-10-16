@@ -2,7 +2,7 @@ local AddonName, SAO = ...
 
 -- Apply all values from the database to the engine
 function SAO.ApplyAllVariables(self)
-    self:ApplySpellAlertOpacity();
+    self:ApplySpellAlertOpacity(true); -- true to force-apply the enabled state
     self:ApplySpellAlertGeometry();
     self:ApplySpellAlertTimer();
     self:ApplySpellAlertSound();
@@ -10,10 +10,13 @@ function SAO.ApplyAllVariables(self)
 end
 
 -- Apply spell alert opacity
-function SAO.ApplySpellAlertOpacity(self)
+function SAO.ApplySpellAlertOpacity(self, enableChanged)
     -- Change the main frame's visibility and opacity
     SpellActivationOverlayContainerFrame:SetShown(SpellActivationOverlayDB.alert.enabled);
     SpellActivationOverlayContainerFrame:SetAlpha(SpellActivationOverlayDB.alert.opacity);
+    if enableChanged then
+        SAO:ForEachBucket(function(bucket) bucket:checkOption() end);
+    end
 end
 
 -- Apply spell alert geometry i.e., scale and offset
