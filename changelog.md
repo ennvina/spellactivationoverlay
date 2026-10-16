@@ -1,5 +1,19 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.8.4 (2026-10-xx)
+
+Thank you to our amazing contributors for helping out. Thanks!
+- Xaryu for tests, feedback, and promoting the addon on stream
+- Vexonia for tests and feedback
+- Venoon for tests and feedback
+- Zerver for tests
+
+Options Panel
+- The Spell Alert Opacity slider can go down to 25% (limit was 50%)
+
+Bug Fixes
+- Disabling a Spell Alert from options now correctly hides it (Forever)
+
 #### v2.8.3 (2026-10-15)
 
 Thank you to our amazing contributors for helping out.

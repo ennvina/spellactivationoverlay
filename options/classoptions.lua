@@ -149,6 +149,7 @@ function SAO.AddOption(self, optionType, auraID, id, subValues, applyTextFunc, t
         if bucket then -- Bucket may not exist with this auraID, especially for fake spell IDs
             bucket:reset(); -- Reset hash to force re-display if needed
             bucket.trigger:manualCheckAll();
+            bucket:checkOption();
         end
     end);
 

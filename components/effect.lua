@@ -831,6 +831,9 @@ local function RegisterNativeEffectNow(self, effect)
         end
     end
 
+    -- Now that the bucket is fully initialized, check its options
+    bucket:checkOption();
+
     table.insert(registeredEffects, effect);
     if registeredEffectsByName[effect.name] then
         self:Warn(Module, "Registering multiple effects with same name "..tostring(effect.name));
