@@ -8,6 +8,9 @@ Thank you to our amazing contributors for helping out. Thanks!
 - Venoon for tests and feedback
 - Zerver for tests
 
+Options Panel
+- The Spell Alert Opacity slider can go down to 25% (limit was 50%)
+
 Bug Fixes
 - Disabling a Spell Alert from options now correctly hides it (Forever)
 

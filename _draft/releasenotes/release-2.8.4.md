@@ -1,6 +1,10 @@
 # SpellActivationOverlay 2.8.4
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.8.4
 ## General
+### Options Panel
+The Spell Alert Opacity slider limits was updated to include the 25-50% range
+- Previously, the opacity slider could be either 0% or between 50% and 100%
+- Now the slider can be either 0% or between 25% and 100%
 ## Classes
 ### :class:  Class
 New Spell Alerts

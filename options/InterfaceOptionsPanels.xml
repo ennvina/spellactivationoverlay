@@ -40,7 +40,7 @@
           <OnValueChanged>
             value = math.floor(value * 100 + 0.5) / 100;
             if (value ~= 0) then
-              value = math.max(0.5, value);
+              value = math.max(0.25, value);
             end
             self.value = value;
             self:SetValue(value);
