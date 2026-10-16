@@ -5,7 +5,7 @@
 New Spell Alert
 - Fingers of Frost (Forever)
 ## Bug Fixes
-### :druid:  Class
+### :druid:  Druid
 New and (hopefully) better fix for Druid's Omen of Clarity ghost spell alert (Forever)
 ## Contributors
 Shout-out to our amazing contributors
