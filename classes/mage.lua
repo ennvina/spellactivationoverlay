@@ -660,40 +660,39 @@ local function useClearcasting()
 end
 
 local function useFingersOfFrost()
-    if SAO.IsMoP() or SAO.IsRetail() then
+    local hash0Stacks = SAO:HashNameFromStacks(0);
+    local hash2Stacks = SAO:HashNameFromStacks(2);
+    if SAO.IsMoP() then
         local fingersOfFrostBuff = 44544;
-        local hash0Stacks = SAO:HashNameFromStacks(0);
-        local hash2Stacks = SAO:HashNameFromStacks(2);
         SAO:CreateEffect(
             "fingers_of_frost",
-            SAO.MOP + SAO.RETAIL,
+            SAO.MOP,
             fingersOfFrostBuff,
             "aura",
             {
-                aka = {
-                    [SAO.MOP] = 126084, -- Fingers of Frost (second charge)
-                },
-                overlays = { [SAO.MOP] = { -- Slightly bigger to avoid overlap with Arcane Missiles, and slightly dimmer to compensate
+                aka = 126084, -- Fingers of Frost (second charge)
+                overlays = { -- Slightly bigger to avoid overlap with Arcane Missiles, and slightly dimmer to compensate
                     { stacks = 1, texture = "frozen_fingers", position = "Left",                   scale = 1.1, color = { 222, 222, 222 }, option = false },
                     { stacks = 2, texture = "frozen_fingers", position = "Left + Right (Flipped)", scale = 1.1, color = { 222, 222, 222 }, option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
                 },
-                [SAO.RETAIL] = {
-                    { stacks = 0, texture = "frozen_fingers", position = "Left + Right (Flipped)", scale = 1.1, color = { 222, 222, 222 } },
-                }, },
                 buttons = { FrozenHandler.ice_lance[1], FrozenHandler.deep_freeze[1], default = { option = { isNative = true } } }, -- Already glowing natively
             }
         );
-    elseif SAO.IsForever() then --[[BEGIN_DEV_ONLY]]
-        local fingersOfFrostBuff = 400670;
+    elseif SAO.IsForever() or SAO.IsRetail() then
+        local fingersOfFrostBuff = SAO.IsForever() and 400670 or 44544;
         SAO:CreateEffect(
             "fingers_of_frost",
-            SAO.FOREVER,
+            SAO.FOREVER + SAO.RETAIL,
             fingersOfFrostBuff,
             "aura",
             {
-                overlay = { texture = "frozen_fingers", position = "Left + Right (Flipped)" },
+                overlays = {
+                    -- In Forever/Retail, 'stacks' determines is the minimum number of stacks, not the exact number
+                    { stacks = 1, texture = "frozen_fingers", position = "Left",            option = false },
+                    { stacks = 2, texture = "frozen_fingers", position = "Right (Flipped)", option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
+                },
             }
-        ); --[[END_DEV_ONLY]]
+        );
     end
 end
 

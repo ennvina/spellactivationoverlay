@@ -1,5 +1,16 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.8.3 (2026-10-15)
+
+Thank you to our amazing contributors for helping out.
+- Xaryu for promoting the addon on stream. Legend!
+
+New Spell Alert
+- Mage's Fingers of Frost (Forever)
+
+Bug Fixes
+- Better fix for Druid's Omen of Clarity ghost spell alert (Forever)
+
 #### v2.8.2 (2026-10-14)
 
 Thank you to our amazing contributors for helping out. Thanks!
