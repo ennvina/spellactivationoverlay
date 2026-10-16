@@ -6,7 +6,7 @@ local Module = "overlay"
 -- This happens e.g., if there is no option for this auraID
 -- @param optionIndex Main indexing of overlay in options
 -- @param optionAnyStacks For aura triggers, the 'aura_stacks=any' counterpart
-local function discardedByOverlayOption(self, auraID, optionIndex, optionAnyStacks)
+function SAO:IsOverlayDiscardedByOption(auraID, optionIndex, optionAnyStacks)
     if (not SpellActivationOverlayDB) then
         return false; -- By default, do not discard
     end
@@ -39,13 +39,13 @@ function SAO.ActivateOverlay(self, hashData, spellID, texture, positions, scale,
             -- Legacy code
             local stacks = hashData;
             local fallbackAny = stacks > 0 and 0 or nil;
-            if discardedByOverlayOption(self, spellID, stacks, fallbackAny) then
+            if self:IsOverlayDiscardedByOption(spellID, stacks, fallbackAny) then
                 return;
             end
         elseif type(hashData) == 'table' then
             -- Modern code
             local optionIndex, optionAnyStacks = hashData.optionIndex, hashData.optionAnyStacks;
-            if discardedByOverlayOption(self, spellID, optionIndex, optionAnyStacks) then
+            if self:IsOverlayDiscardedByOption(spellID, optionIndex, optionAnyStacks) then
                 return;
             end
         else
@@ -80,12 +80,12 @@ function SAO.ActivateOverlay(self, hashData, spellID, texture, positions, scale,
 end
 
 -- Remove an overlay
-function SAO.DeactivateOverlay(self, spellID)
+function SAO:DeactivateOverlay(spellID)
     self.HideOverlays(self.Frame, spellID);
 end
 
 -- Refresh the duration of an overlay
-function SAO.RefreshOverlayTimer(self, spellID, endTime)
+function SAO:RefreshOverlayTimer(spellID, endTime)
     endTime = self:GetSpellEndTime(spellID, endTime);
     if (endTime) then
         self.SetOverlayTimer(self.Frame, spellID, endTime);
