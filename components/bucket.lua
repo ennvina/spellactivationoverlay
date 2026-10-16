@@ -103,13 +103,13 @@ SAO.Bucket = {
                         -- Initialize displayHashesOfStacklessHashes with existing hashes of already inserted displays, including the new one
                         -- (the new display did not insert its hash earlier this method, because self.secretStacks was not true yet)
                         self.displayHashesOfStacklessHashes = {};
-                        for hashKey, display in pairs(self) do
-                            if type(hashKey) == 'number' then
-                                local stacklessHash = SAO.Hash:new(hashKey):toWithoutAuraStacks();
+                        for displayHash, display in pairs(self) do
+                            if type(displayHash) == 'number' then
+                                local stacklessHash = SAO.Hash:new(displayHash):toWithoutAuraStacks();
                                 if self.displayHashesOfStacklessHashes[stacklessHash] == nil then
                                     self.displayHashesOfStacklessHashes[stacklessHash] = {};
                                 end
-                                table.insert(self.displayHashesOfStacklessHashes[stacklessHash], hashKey);
+                                table.insert(self.displayHashesOfStacklessHashes[stacklessHash], displayHash);
                             end
                         end
                     end
@@ -182,6 +182,14 @@ SAO.Bucket = {
                 end
             else
                 self[self.displayedHash]:checkCombat(inCombat);
+            end
+        end
+    end,
+
+    checkOption = function(self)
+        for hash, display in pairs(self) do
+            if type(hash) == 'number' then
+                display:checkOption();
             end
         end
     end,

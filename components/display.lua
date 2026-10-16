@@ -77,6 +77,7 @@ SAO.Display = {
         end
 
         local _overlay = {
+            -- Baseline overlay information
             index = overlay.index,
             spellID = overlay.spellID,
             texture = overlay.texture,
@@ -88,6 +89,7 @@ SAO.Display = {
             b = overlay.color and overlay.color[3] or 255,
             autoPulse = type(overlay.autoPulse) == 'function' and overlay.autoPulse or overlay.autoPulse ~= false, -- true by default
             combatOnly = overlay.combatOnly == true, -- false by default
+            -- Added for aura containers
             hash = overlay.hash,
             macroCondition = self.parent:craftMacroCondition(overlay.hash),
             auraContainerItem = nil, -- Possibly set below
@@ -125,6 +127,21 @@ SAO.Display = {
             self:setStatus('hard');
         elseif self.status == 'hard' and not inCombat then
             self:setStatus('soft');
+        end
+    end,
+
+    checkOption = function(self)
+        if #self.overlays > 0 then
+            local isDiscarded = SAO:IsOverlayDiscardedByOption(self.spellID, self.hashData.optionIndex, self.hashData.optionAnyStacks);
+            local isEnabled = not isDiscarded;
+            for _, overlay in ipairs(self.overlays) do
+                if overlay.auraContainerItem then
+                    overlay.auraContainerItem:setEnabled(isEnabled);
+                else
+                    -- @TODO maybe set code here to enable/disable the non-aura container items
+                    -- (this is already done somewhere else - the goal would be to move the code here)
+                end
+            end
         end
     end,
 
