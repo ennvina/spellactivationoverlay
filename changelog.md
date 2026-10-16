@@ -13,6 +13,7 @@ Options Panel
 
 Bug Fixes
 - Disabling a Spell Alert from options now correctly hides it (Forever)
+- The Spell Alert of Shaman's Elemental Focus was not visible (Forever)
 
 #### v2.8.3 (2026-10-15)
 
