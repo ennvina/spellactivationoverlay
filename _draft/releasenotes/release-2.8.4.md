@@ -14,8 +14,6 @@ New Spell Alert
 Enabling or disabling a Spell Alert from options panel now correctly shows or hides it (Forever)
 ### :shaman:  Shaman
 The Spell Alert of Elemental Focus was not visible (Forever)
-## Known Limitations
-## Miscellaneous
 ## Contributors
 Shout-out to our amazing contributors
 - Xaryu for tests, feedback, and promoting the addon on stream
