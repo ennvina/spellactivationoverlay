@@ -6,11 +6,9 @@ The Spell Alert Opacity slider limits was updated to include the 25-50% range
 - Previously, the opacity slider could be either 0% or between 50% and 100%
 - Now the slider can be either 0% or between 25% and 100%
 ## Classes
-### :class:  Class
-New Spell Alerts
-- 
-New Glowing Buttons
-- 
+### :mage~1:  Mage
+New Spell Alert
+- Missile Barrage (Forever)
 ## Bug Fixes
 ### Options Panel
 Enabling or disabling a Spell Alert from options panel now correctly shows or hides it (Forever)

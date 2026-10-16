@@ -629,6 +629,25 @@ local function useArcaneMissiles()
     end
 end
 
+local function useMissileBarrage()
+    if SAO.IsSoD() then
+    	-- Blue-ish, slightly smaller, to avoid confusion and overlap with Arcane Blast
+        SAO:RegisterAura("missile_barrage", 0, 400589, "arcane_missiles", "Left + Right (Flipped)", 0.8, 103, 184, 238, true, { SAO:GetSpellName(arcaneMissiles) });
+    elseif SAO.IsWrath() then
+        SAO:RegisterAura("missile_barrage", 0, 44401, "arcane_missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, { SAO:GetSpellName(arcaneMissiles) });
+    else
+        SAO:CreateEffect(
+            "missile_barrage",
+            SAO.FOREVER,
+            400589,
+            "aura",
+            {
+                overlay = { texture = "arcane_missiles", position = "Left + Right (Flipped)" },
+            }
+        );
+    end
+end
+
 local function useArcaneBlast()
     if SAO.IsSoD() then
         local arcaneBlastSoDBuff = 400573;
@@ -815,12 +834,7 @@ end
 local function registerArcane(self)
     useArcaneMissiles();
 
-    if self.IsSoD() then
-    	-- Blue-ish, slightly smaller, to avoid confusion and overlap with Arcane Blast
-        self:RegisterAura("missile_barrage", 0, 400589, "arcane_missiles", "Left + Right (Flipped)", 0.8, 103, 184, 238, true, { self:GetSpellName(arcaneMissiles) });
-    elseif self.IsWrath() then
-        self:RegisterAura("missile_barrage", 0, 44401, "arcane_missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, { self:GetSpellName(arcaneMissiles) });
-    end
+    useMissileBarrage();
 
     if self.IsCata() then
         local arcanePotency1 = 57529;

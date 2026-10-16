@@ -11,6 +11,9 @@ Thank you to our amazing contributors for helping out. Thanks!
 Options Panel
 - The Spell Alert Opacity slider can go down to 25% (limit was 50%)
 
+New Spell Alert
+- Mage's Missile Barrage (Forever)
+
 Bug Fixes
 - Disabling a Spell Alert from options now correctly hides it (Forever)
 - The Spell Alert of Shaman's Elemental Focus was not visible (Forever)
