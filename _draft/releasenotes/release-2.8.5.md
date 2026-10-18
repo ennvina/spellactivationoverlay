@@ -1,8 +1,7 @@
 # SpellActivationOverlay 2.8.5
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.8.5
-## General
 ## Classes
-### :class:  Class
+### :mage~1:  Mage
 New Spell Alert
 - Heating Up (Forever)
 Updated Spell Alerts
@@ -15,9 +14,7 @@ Effects are more consistent when a buff is gained and lost exactly at the same t
 
 While in theory it could happen to any effect based on a buff, in practice it happened only for a handful of effects, such as Mage's Heating Up.
 ### :mage~1:  Mage
-Heating Up should no longer cancel early (Mists of Pandaria)
-## Known Limitations
-## Miscellaneous
+Heating Up should no longer cancel earlier than intended (Mists of Pandaria)
 ## Contributors
 Shout-out to our amazing contributors
 - Xaryu for tests, feedback, and promoting the addon on stream
