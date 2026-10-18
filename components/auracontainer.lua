@@ -166,10 +166,8 @@ SAO.AuraContainerItem = {
 
         self:setCooldown(auraButton)
 
-        if self.level then -- Optional
-            auraButton:SetFrameLevel(self.level)
-        end
-        auraButton.staticItem:SetFrameLevel(auraButton:GetFrameLevel() + 1)
+        auraButton:SetFrameLevel(self.level or 3)
+        auraButton.staticItem:SetFrameLevel(auraButton:GetFrameLevel() + 1) -- @todo Maybe find a better way to give priority to the static item
 
         self:setButtonGeometry(auraButton, options.globalGeometry, options.position)
 
