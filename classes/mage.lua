@@ -756,17 +756,20 @@ local function useHeatingUpAndHotStreak()
         }
     );
 
-    --[[BEGIN_DEV_ONLY]]
     SAO:CreateEffect(
         "heating_up_forever",
         SAO.FOREVER,
         400625,
         "aura",
         {
-            overlay = { texture = "hot_streak", position = "Left + Right (Flipped)" },
+            overlays = {
+                -- In Forever/Retail, 'stacks' determines is the minimum number of stacks, not the exact number
+                { stacks = 1, texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.6, pulse = false, level = 1, color = { 200, 200, 200 }, option = false },
+                { stacks = 2, texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.8, pulse = false, level = 2, color = { 222, 222, 222 }, option = false },
+                { stacks = 3, texture = "hot_streak", position = "Left + Right (Flipped)", scale = 1.0, pulse = true , level = 3, color = { 255, 255, 255 }, option = { setupHash = SAO:HashNameFromStacks(0), testHash = SAO:HashNameFromStacks(3) } },
+            },
         }
     );
-    --[[END_DEV_ONLY]]
 end
 
 local function registerFire(self)

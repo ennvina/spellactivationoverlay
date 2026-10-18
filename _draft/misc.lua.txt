@@ -126,6 +126,7 @@ COMBATLOG_HIGHLIGHT_ABILITY
 /run SpellActivationOverlay_ShowOverlay(SpellActivationOverlayAddonFrame, 14251, "Interface\\Addons\\SpellActivationOverlay\\textures\\Hot_Streak", "TOP", 1, 255, 255, 255, false, false, 1, true, nil, GetTime()+5)
 /run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 666667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Arcane_Missiles", "Left + Right (Flipped)", 1, 255, 255, 255, true, nil, GetTime()+2)
 /run SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame, 666.667, "Interface\\Addons\\SpellActivationOverlay\\textures\\Frozen_Fingers", "Left + Right (Flipped)", 1, 127, 0, 255, true, nil, GetTime()+15)
+/run sf=function(s)si=(si or 0)+1 c=255*(1-(1-s)*(1-s)) SpellActivationOverlay_ShowAllOverlays(SpellActivationOverlayAddonFrame,si,"Interface/Addons/SpellActivationOverlay/textures/Hot_Streak","Left + Right (Flipped)",s,c,c,c,s==1) end sf(1) sf(.8) sf(.6)
 
 /run for i=1,6 do print("o["..i.."] is "..(o[i]:IsVisible() and "" or "not ").."visible") end
 

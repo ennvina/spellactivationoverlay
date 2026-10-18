@@ -259,7 +259,7 @@ SAO.defaults = {
                 [44401] = { -- Missile Barrage (Wrath)
                     [0] = true,
                 },
-                [400589] = { -- Missile Barrage (Season of Discovery)
+                [400589] = { -- Missile Barrage (Forever, Season of Discovery)
                     [0] = true,
                 },
                 [400573]= { -- Arcane Blast (Season of Discovery)
@@ -275,7 +275,7 @@ SAO.defaults = {
                 [48108] = { -- Hot Streak (Wrath+)
                     [0] = true,
                 },
-                [400625] = { -- Hot Streak (Season of Discovery)
+                [400625] = { -- Heating Up (Forever) / Hot Streak (Season of Discovery)
                     [0] = true,
                 },
                 [64343] = { -- Impact (Wrath+)
@@ -290,7 +290,7 @@ SAO.defaults = {
                 [44544] = { -- Fingers of Frost (Cataclysm+)
                     [0] = nil,  -- any stacks, set to nil to simplify DB migration
                 },
-                [400670]= { -- Fingers of Frost (Season of Discovery)
+                [400670]= { -- Fingers of Frost (Forever, Season of Discovery)
                     [0] = true, -- any stacks
                 },
                 [57761] = { -- Brain Freeze (Wrath+)
