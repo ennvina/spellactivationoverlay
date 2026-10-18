@@ -5,8 +5,10 @@
 ### :class:  Class
 New Spell Alerts
 - 
-New Glowing Buttons
-- 
+Updated Spell Alerts
+- Missile Barrage has been scaled up and layered behind (Forever)
+
+The goal is to tackle the potential overlap between Missile Barrage and Fingers of Frost, which became possible in last patch.
 ## Bug Fixes
 ### General
 Effects are more consistent when a buff is gained and lost exactly at the same time (Classic Era, The Burning Crusade, Wrath of the Lich King, Cataclysm, Mists of Pandaria). It meant either gaining the buff then losing it immediately, or the other way around.

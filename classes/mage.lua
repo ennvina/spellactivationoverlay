@@ -643,7 +643,7 @@ local function useMissileBarrage()
             400589,
             "aura",
             {
-                overlay = { texture = "arcane_missiles", position = "Left + Right (Flipped)" },
+                overlay = { texture = "arcane_missiles", position = "Left + Right (Flipped)", scale = 1.22, level = 2 },
             }
         );
     end

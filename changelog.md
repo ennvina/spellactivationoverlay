@@ -6,6 +6,10 @@ Thank you to our amazing contributors for helping out. Thanks!
 - Xaryu for tests, feedback, and promoting the addon on stream
 - Aerotsune for tests
 
+Updated Spell Alerts
+- Mage's Missile Barrage has been scaled up and layered behind (Forever)
+- The goal is to overlap Missile Barrage and Fingers of Frost more nicely
+
 Bug Fixes
 - Mage's Heating Up should no longer cancel early (Mists of Pandaria)
 - Effects are more consistent when gained and lost exactly at the same time
