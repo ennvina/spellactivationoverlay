@@ -1,5 +1,18 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.8.5 (2026-10-xx)
+
+Thank you to our amazing contributors for helping out. Thanks!
+- Xaryu for tests, feedback, and promoting the addon on stream
+- Aerotsune for tests
+
+Bug Fixes
+- Mage's Heating Up should no longer cancel early (Mists of Pandaria)
+- Effects are more consistent when gained and lost exactly at the same time
+
+The latter issue affected all Classic flavors: Era, TBC, Wrath, Cata, and MoP
+In practice, it happened only for a handful of effects e.g., Mage's Heating Up
+
 #### v2.8.4 (2026-10-16)
 
 Thank you to our amazing contributors for helping out. Thanks!

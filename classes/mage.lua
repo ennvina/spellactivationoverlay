@@ -10,11 +10,11 @@ local UnitGUID = UnitGUID
 local UnitHealth = UnitHealth
 
 local clearcastingVariants; -- Lazy init in lazyCreateClearcastingVariants()
-local isCompatibleWithClearcasting = not SAO.IsRetail() and not SAO.IsForever();
+local isCompatibleWithClearcasting = not SAO.IsProject(SAO.FOREVER + SAO.RETAIL);
 
-local isCompatibleWithFrozen = not SAO.IsRetail() and not SAO.IsForever();
+local isCompatibleWithFrozen = not SAO.IsProject(SAO.FOREVER + SAO.RETAIL);
 
-local isCompatibleWithCustomHotStreak = not SAO.IsRetail() and not SAO.IsForever();
+local isCompatibleWithCustomHotStreak = not SAO.IsProject(SAO.FOREVER + SAO.RETAIL + SAO.MOP);
 
 local arcaneExplosion = 1449;
 local arcaneMissiles = 5143;
@@ -499,19 +499,18 @@ local FrozenHandler = {
 local function customLogin(self, ...)
     -- Must initialize class on PLAYER_LOGIN instead of registerClass
     -- Because we need the talent tree, which is not always available right off the bat
-    local hotStreakSpellName;
-    if SAO.IsProject(SAO.MOP_AND_ONWARD) then
-        -- Invalidate hotStreakSpellName to avoid using HotStreakHandler, which is deprecated from Mists of Pandaria
-        hotStreakSpellName = nil;
-    elseif SAO.IsSoD() then
-        hotStreakSpellName = self:GetSpellName(hotStreakSoDSpellID);
-    elseif SAO.IsCata() then
-        hotStreakSpellName = self:GetSpellName(improvedHotStreakSpellID);
-    else
-        hotStreakSpellName = self:GetSpellName(hotStreakSpellID);
-    end
-    if (hotStreakSpellName) then
-        HotStreakHandler:init(hotStreakSpellName);
+    if isCompatibleWithCustomHotStreak then
+        local hotStreakSpellName;
+        if SAO.IsSoD() then
+            hotStreakSpellName = self:GetSpellName(hotStreakSoDSpellID);
+        elseif SAO.IsCata() then
+            hotStreakSpellName = self:GetSpellName(improvedHotStreakSpellID);
+        else
+            hotStreakSpellName = self:GetSpellName(hotStreakSpellID);
+        end
+        if (hotStreakSpellName) then
+            HotStreakHandler:init(hotStreakSpellName);
+        end
     end
 
     if isCompatibleWithFrozen then
@@ -522,7 +521,9 @@ local function customLogin(self, ...)
 end
 
 local function customCLEU(self, ...)
-    hotStreakCLEU(self, ...);
+    if isCompatibleWithCustomHotStreak then
+        hotStreakCLEU(self, ...);
+    end
     if FrozenHandler.initialized then
         FrozenHandler:cleu();
     end

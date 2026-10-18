@@ -27,7 +27,7 @@ local HASH_AURA_ZERO   = HASH_AURA_ANY
 local HASH_AURA_MAX    = HASH_AURA_ZERO + 10 -- Allow no more than 10 stacks
 local HASH_AURA_MASK   = 0xF
 
--- map between aura instance ID and bucket (Modern mode only)
+-- Map between aura instance ID and bucket (Modern mode only)
 local bucketsByAuraInstanceID = {};
 
 -- Shared variable to optimize manual bucket attempts
@@ -132,10 +132,17 @@ SAO.Variable:register({
 
             if SAO.AURASTACKS.MODERN then -- Additional handling to optimize Modern mode
                 bucket.lastKnownAuraStacks = auraStacks; -- Store raw value, because bucket:getAuraStacks() is unreliable if stackAgnostic is set
-                bucket.lastTimeUnitAuraEvent = nil;
-                bucket.auraInstanceID = auraInstanceID;
-                if auraInstanceID ~= nil then
-                    bucketsByAuraInstanceID[auraInstanceID] = bucket;
+                if bucket.auraInstanceID ~= auraInstanceID then
+                    if bucket.auraInstanceID ~= nil then
+                        if not bucket.auraHasSecretRestrictions then --[[BEGIN_DEV_ONLY]]
+                            SAO:Warn(Module, "Removing outdated aura instance ID mapping for", bucket.auraInstanceID, "of bucket", bucket.name);
+                        end --[[END_DEV_ONLY]]
+                        bucketsByAuraInstanceID[bucket.auraInstanceID] = nil;
+                    end
+                    bucket.auraInstanceID = auraInstanceID;
+                    if auraInstanceID ~= nil then
+                        bucketsByAuraInstanceID[auraInstanceID] = bucket;
+                    end
                 end
             end
         end,
@@ -260,13 +267,25 @@ SAO.Variable:register({
                 return;
             end
 
+            local addedAuraInstanceIDsExpectedToBeRemoved = {}; --[[DEV_ONLY]]
+
             local addAura = function(auraInstanceID, aura, bucket)
                 SAO:Trace(Module, "Associating aura instance ID "..tostring(auraInstanceID).." to bucket "..bucket.name);
                 bucket:setAuraStacks(bucket.stackAgnostic and 0 or aura.applications);
                 bucket.lastKnownAuraStacks = aura.applications;
+                if bucket.auraInstanceID then
+                    -- This situation is usually an issue, unless the aura instance ID is removed in the same update cycle, before leaving this function
+                    --[[BEGIN_DEV_ONLY]]
+                    addedAuraInstanceIDsExpectedToBeRemoved[bucket.auraInstanceID] = { name = bucket.name, newID = auraInstanceID };
+                    SAO:Warn(Module, "Aura instance ID "..tostring(bucket.auraInstanceID)..
+                        " is being replaced by new aura instance ID "..tostring(auraInstanceID)..
+                        " for bucket "..bucket.name);
+                    --[[END_DEV_ONLY]]
+                    bucketsByAuraInstanceID[bucket.auraInstanceID] = nil;
+                    bucket:refresh();
+                end
                 bucket.auraInstanceID = auraInstanceID;
                 bucketsByAuraInstanceID[auraInstanceID] = bucket;
-                bucket.lastTimeUnitAuraEvent = GetTime();
             end
 
             local removeAura = function(auraInstanceID, bucket)
@@ -275,7 +294,6 @@ SAO.Variable:register({
                 bucket.lastKnownAuraStacks = nil;
                 bucket.auraInstanceID = nil;
                 bucketsByAuraInstanceID[auraInstanceID] = nil;
-                bucket.lastTimeUnitAuraEvent = GetTime();
             end
 
             local updateAura = function(auraInstanceID, aura, bucket)
@@ -288,54 +306,55 @@ SAO.Variable:register({
                     SAO:Trace(Module, "Bucket "..tostring(bucket.name).." aura stacks remain unchanged at "..tostring(bucket.lastKnownAuraStacks));
                     bucket:refresh();
                 end
-                bucket.lastTimeUnitAuraEvent = GetTime();
+            end
+
+            -- Process aura data in the following order, as seen in the game client UI files (e.g. Interface\AddOns\Blizzard_PrivateAurasUI\Blizzard_PrivateAurasUI.lua)
+            -- 1. added auras
+            -- 2. updated auras*
+            -- 3. removed auras
+            -- *updated auras may incidentally indicate an aura removal as well
+
+            for _, aura in ipairs(canaccessvalue(updateInfo.addedAuras) and updateInfo.addedAuras or {}) do
+                local bucket = SAO:GetBucketBySpellID(aura.spellId);
+                if bucket and bucket.trigger:reactsWith(SAO.TRIGGER_AURA) then
+                    local auraInstanceID = aura.auraInstanceID;
+                    addAura(auraInstanceID, aura, bucket);
+                end
             end
 
             for _, auraInstanceID in ipairs(canaccessvalue(updateInfo.updatedAuraInstanceIDs) and updateInfo.updatedAuraInstanceIDs or {}) do
                 local bucket = bucketsByAuraInstanceID[auraInstanceID];
                 if bucket then
-                    if bucket.lastTimeUnitAuraEvent == GetTime() then
-                        SAO:Trace(Module, "Skipping UNIT_AURA update of bucket "..tostring(bucket.name).." and aura instance ID "..tostring(auraInstanceID));
+                    SAO:Trace(Module, "Trying to update aura instance ID "..tostring(auraInstanceID).." for bucket "..bucket.name);
+                    local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, auraInstanceID);
+                    if not aura then
+                        -- Known Issue: sometimes the game client tells the aura is updated, while in reality it has been removed
+                        -- @todo Check if the game is sending an aura removal at the same time, and if so, ignore this update
+                        removeAura(auraInstanceID, bucket);
                     else
-                        SAO:Trace(Module, "Trying to update aura instance ID "..tostring(auraInstanceID).." for bucket "..bucket.name);
-                        local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, auraInstanceID);
-                        if not aura then
-                            -- Known Issue: sometimes the game client tells the aura is updates, while in reality it has been removed
-                            -- @todo Check if the game is sending an aura removal at the same time, and if so, ignore this update
-                            removeAura(auraInstanceID, bucket);
-                        else
-                            updateAura(auraInstanceID, aura, bucket);
-                        end
+                        updateAura(auraInstanceID, aura, bucket);
                     end
                 end
             end
 
             for _, auraInstanceID in ipairs(canaccessvalue(updateInfo.removedAuraInstanceIDs) and updateInfo.removedAuraInstanceIDs or {}) do
+                if addedAuraInstanceIDsExpectedToBeRemoved[auraInstanceID] then --[[BEGIN_DEV_ONLY]]
+                    SAO:Warn(Module, "Removed aura instance ID "..tostring(auraInstanceID)..
+                        " which was expected to be removed because an aura for the same bucket was just added");
+                    addedAuraInstanceIDsExpectedToBeRemoved[auraInstanceID] = nil;
+                end --[[END_DEV_ONLY]]
                 local bucket = bucketsByAuraInstanceID[auraInstanceID];
                 if bucket then
-                    if bucket.lastTimeUnitAuraEvent == GetTime() then
-                        SAO:Trace(Module, "Skipping UNIT_AURA removal of bucket "..tostring(bucket.name).." and aura instance ID "..tostring(auraInstanceID));
-                    else
-                        removeAura(auraInstanceID, bucket);
-                    end
+                    removeAura(auraInstanceID, bucket);
                 end
             end
 
-            for _, aura in ipairs(canaccessvalue(updateInfo.addedAuras) and updateInfo.addedAuras or {}) do
-                local bucket = SAO:GetBucketBySpellID(aura.spellId);
-                if bucket and bucket.trigger:reactsWith(SAO.TRIGGER_AURA) then
-                    if bucket.lastTimeUnitAuraEvent == GetTime() then
-                        SAO:Trace(Module, "Skipping UNIT_AURA addition of bucket "..tostring(bucket.name).." and aura instance ID "..tostring(aura.auraInstanceID));
-                    else
-                        local auraInstanceID = aura.auraInstanceID;
-                        if bucketsByAuraInstanceID[auraInstanceID] then --[[BEGIN_DEV_ONLY]]
-                            SAO:Warn(Module, "Associating the (supposedly) newfound aura instance ID "..tostring(auraInstanceID).." to bucket "..bucket.name
-                                ..", ".."but this aura instance ID is already associated with bucket "..bucketsByAuraInstanceID[auraInstanceID].name);
-                        end --[[END_DEV_ONLY]]
-                        addAura(auraInstanceID, aura, bucket);
-                    end
-                end
-            end
+            for auraInstanceID, replacementInfo in pairs(addedAuraInstanceIDsExpectedToBeRemoved) do --[[BEGIN_DEV_ONLY]]
+                SAO:Warn(Module, "Replacing bucket "..replacementInfo.name..
+                    " which had aura instance ID "..tostring(auraInstanceID)..
+                    " with aura instance ID "..tostring(replacementInfo.newID)..
+                    " without removing the former aura instance ID");
+            end --[[END_DEV_ONLY]]
         end or nil,
 
         PLAYER_REGEN_ENABLED = SAO.AURASTACKS.MODERN and function(self, event, ...)
