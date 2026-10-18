@@ -4,7 +4,11 @@
 
 Thank you to our amazing contributors for helping out. Thanks!
 - Xaryu for tests, feedback, and promoting the addon on stream
+- Zerver for tests and feedback
 - Aerotsune for tests
+
+New Spell Alert
+- Mage's Heating Up (Forever)
 
 Updated Spell Alerts
 - Mage's Missile Barrage has been scaled up and layered behind (Forever)

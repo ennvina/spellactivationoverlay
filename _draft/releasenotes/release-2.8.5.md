@@ -3,10 +3,10 @@
 ## General
 ## Classes
 ### :class:  Class
-New Spell Alerts
-- 
+New Spell Alert
+- Heating Up (Forever)
 Updated Spell Alerts
-- Missile Barrage has been scaled up and layered behind (Forever)
+- Missile Barrage has been scaled up and layered behind Fingers of Frost (Forever)
 
 The goal is to tackle the potential overlap between Missile Barrage and Fingers of Frost, which became possible in last patch.
 ## Bug Fixes
@@ -21,6 +21,7 @@ Heating Up should no longer cancel early (Mists of Pandaria)
 ## Contributors
 Shout-out to our amazing contributors
 - Xaryu for tests, feedback, and promoting the addon on stream
+- Zerver for tests and feedback
 - Aerotsune for tests
 Thanks!
 
