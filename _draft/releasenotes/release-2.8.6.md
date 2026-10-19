@@ -1,6 +1,5 @@
 # SpellActivationOverlay 2.8.6
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.8.6
-## General
 ## Classes
 ### :shaman:  Shaman
 New Spell Alert
@@ -8,8 +7,6 @@ New Spell Alert
 ## Bug Fixes
 ### Spell Alerts
 Triggering a Spell Alert now correctly plays a sound (Forever)
-## Known Limitations
-## Miscellaneous
 ## Contributors
 Shout-out to our amazing contributors
 - Amanthuul for feedback
