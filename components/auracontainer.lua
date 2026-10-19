@@ -22,10 +22,10 @@ local function getInfoFromHash(hash, macroCondition, spellID)
         return nil
     end
 
-    -- Fill in item information
-    local itemInfo = {}
+    local unit = "player" -- For now, aura containers only support the "player" unit
 
-    itemInfo.unit = "player"
+    -- Fill in item information
+    local itemInfo = { unit = unit }
 
     local nbAuraStacks = hash:getAuraStacks()
     itemInfo.nbAuraStacks = nbAuraStacks
@@ -36,7 +36,7 @@ local function getInfoFromHash(hash, macroCondition, spellID)
     end
 
     -- Fill in container information
-    local containerInfo = {}
+    local containerInfo = { unit = unit }
 
     local hasStance = type(SAO.Hash.hasMatchStance) == 'function' and hash:hasMatchStance()
 
@@ -56,7 +56,8 @@ local function getInfoFromHash(hash, macroCondition, spellID)
     end
     containerInfo.macroCondition = macroCondition
 
-    containerInfo.key = type(macroCondition) == 'string' and macroCondition or "default"
+    containerInfo.key = unit ..
+        "_" .. (type(macroCondition) == 'string' and macroCondition or "nomacro")
 
     return { container = containerInfo, item = itemInfo }
 end
@@ -390,7 +391,7 @@ SAO.AuraContainer = {
         container = CreateFrame("AuraContainer", "SpellActivationOverlayAuraContainer", self.parent, "CustomAuraContainerTemplate")
         container:SetAllPoints()
         container:SetPoint("CENTER")
-        container:SetUnit("player")
+        container:SetUnit(hashInfo.container.unit)
         container:SetEnabled(true)
 
         if type(hashInfo.container.macroCondition) == 'string' then
