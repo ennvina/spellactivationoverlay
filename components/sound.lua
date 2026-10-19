@@ -57,31 +57,29 @@ end
     Due to how the game's AuraSound API works, it is impossible to target a specific number of applications
     Therefore, the rules aren this:
     - If at least one item enables the sound for a specific spell ID, the sound will be played
-    - Incidentally, if no item enables the sound for a spell ID, it will not be played
+    - Conversely, if no item enables the sound for a spell ID, it will not be played
+    - Also, the globalEnabled flag controls whether any aura sounds can be played at all
 ]]
 SAO.AuraSoundLibrary = {
+    globalEnabled = true, -- Whether the global sound is enabled
+
     enableItem = function(self, item)
         SAO:Trace(Module, "Enabling aura sound for item "..tostring(item.id).." with spellID "..tostring(item.spellID))
         local spellID = item.spellID
         if not self[spellID] then
             self[spellID] = {
-                itemIDs = {},
+                items = {},
                 auraSoundID = nil, -- Non-nil indicates a sound is currently playing
             }
         end
 
-        if not tContains(self[spellID].itemIDs, item.id) then
-            table.insert(self[spellID].itemIDs, item.id)
+        if self[spellID].items[item.id] then
+            SAO:Warn(Module, "Enabling aura sound for item "..tostring(item.id).." with spellID "..tostring(item.spellID).." which is already enabled") --[[DEV_ONLY]]
         end
-        if not self[spellID].auraSoundID then
-            local trigger = Enum.UnitAuraSoundTrigger.Added -- @todo Maybe consider Enum.UnitAuraSoundTrigger.ApplicationsIncreased
-            local sound = {
-                unitToken = item.unit,
-                spellID = item.spellID,
-                soundFileName = mustUseLocalSound and localSound or nil,
-                soundFileID = not mustUseLocalSound and gameSound or nil,
-            }
-            local auraSoundID = C_UnitAuras.AddAuraSound(trigger, sound)
+        self[spellID].items[item.id] = item;
+
+        if not self[spellID].auraSoundID and self.globalEnabled then
+            local auraSoundID = self:_internalAddSound(spellID, item.unit)
             SAO:Debug(Module, "Enabling sound for spell ID", spellID)
 
             self[spellID].auraSoundID = auraSoundID
@@ -92,18 +90,65 @@ SAO.AuraSoundLibrary = {
         SAO:Trace(Module, "Disabling aura sound for item "..tostring(item.id).." with spellID "..tostring(item.spellID))
         local spellID = item.spellID
         if self[spellID] then
-            for i, id in ipairs(self[spellID].itemIDs) do
-                if id == item.id then
-                    table.remove(self[spellID].itemIDs, i)
-                    break
-                end
+            if not self[spellID].items[item.id] then
+                SAO:Warn(Module, "Disabling aura sound for item "..tostring(item.id).." with spellID "..tostring(item.spellID).." which is not enabled") --[[DEV_ONLY]]
             end
-            if #self[spellID].itemIDs == 0 and self[spellID].auraSoundID then
-                C_UnitAuras.RemoveAuraSound(self[spellID].auraSoundID)
+            self[spellID].items[item.id] = nil
+
+            if next(self[spellID].items) == nil and self[spellID].auraSoundID then
+                self:_internalRemoveSound(self[spellID].auraSoundID)
                 SAO:Debug(Module, "Disabling sound for spell ID", spellID)
 
                 self[spellID].auraSoundID = nil
             end
         end
+    end,
+
+    setGlobalEnabled = function(self, enabled)
+        if self.globalEnabled == enabled then
+            return
+        end
+        self.globalEnabled = enabled
+
+        for spellID, soundData in pairs(self) do
+            if type(spellID) == 'number' then -- Assumes that all numeric keys are spell IDs
+                if soundData.auraSoundID and not enabled then
+                    -- There was a sound and global sound is being disabled
+                    self:_internalRemoveSound(soundData.auraSoundID)
+                    SAO:Debug(Module, "Global sound disable is disabling sound of spell ID", spellID)
+
+                    soundData.auraSoundID = nil
+                elseif not soundData.auraSoundID and enabled then
+                    -- There was no sound and global sound is being enabled
+                    local firstItemID, firstItem = next(soundData.items)
+                    if firstItem ~= nil then
+                        local unit = firstItem.unit -- Use arbitrarily the unit of the first item; all items should share the same unit token
+                        local auraSoundID = self:_internalAddSound(spellID, unit)
+                        SAO:Debug(Module, "Global sound enable is enabling sound of spell ID", spellID)
+
+                        soundData.auraSoundID = auraSoundID
+                    end
+                end
+            end
+        end
+    end,
+
+    _internalAddSound = function(self, spellID, unit)
+        local trigger = Enum.UnitAuraSoundTrigger.Added -- @todo Maybe consider Enum.UnitAuraSoundTrigger.ApplicationsIncreased
+
+        local sound = {
+            unitToken = unit,
+            spellID = spellID,
+            soundFileName = mustUseLocalSound and localSound or nil,
+            soundFileID = not mustUseLocalSound and gameSound or nil,
+        }
+        local auraSoundID = C_UnitAuras.AddAuraSound(trigger, sound)
+
+        return auraSoundID
+    end,
+
+    _internalRemoveSound = function(self, auraSoundID)
+        assertsafe(auraSoundID)
+        C_UnitAuras.RemoveAuraSound(auraSoundID)
     end,
 }

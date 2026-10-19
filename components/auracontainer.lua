@@ -118,6 +118,7 @@ SAO.AuraContainerItem = {
             -- Variables
             enabled = true, -- By default, the aura container item is enabled
             visible = true, -- By default, the aura container item is visible
+            internallyEnabled = true, -- Whether the enable/visible state are applied internally
             auraButtons = {}, -- Assigned below; there will be as many buttons as there are positions
             slotKeys = {}, -- Assigned below; there will be as many slot keys as there are buttons
         }
@@ -324,6 +325,11 @@ SAO.AuraContainerItem = {
     end,
 
     _internalSetAuraSlotEnabled = function(self, enabled)
+        if self.internallyEnabled == enabled then
+            return
+        end
+        self.internallyEnabled = enabled
+
         if enabled then
             SAO.AuraSoundLibrary:enableItem(self)
         else
