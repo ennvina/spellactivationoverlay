@@ -25,6 +25,8 @@ local function getInfoFromHash(hash, macroCondition, spellID)
     -- Fill in item information
     local itemInfo = {}
 
+    itemInfo.unit = "player"
+
     local nbAuraStacks = hash:getAuraStacks()
     itemInfo.nbAuraStacks = nbAuraStacks
 
@@ -102,6 +104,7 @@ SAO.AuraContainerItem = {
 
             -- Constants
             spellID = overlay.spellID,
+            unit = options.unit,
             scale = overlay.scale,
             fontScale = 3,
             positions = splitPositions(overlay.position),
@@ -145,6 +148,8 @@ SAO.AuraContainerItem = {
             item.auraButtons[index] = auraButton
             item.slotKeys[index] = slotKey
         end
+
+        SAO.AuraSoundLibrary:enableItem(item)
 
         return item
     end,
@@ -319,6 +324,12 @@ SAO.AuraContainerItem = {
     end,
 
     _internalSetAuraSlotEnabled = function(self, enabled)
+        if enabled then
+            SAO.AuraSoundLibrary:enableItem(self)
+        else
+            SAO.AuraSoundLibrary:disableItem(self)
+        end
+
         if not self.container.SetAuraSlotEnabled then -- AuraContainer:SetAuraSlotEnabled is required to make this functionality work
             SAO:Debug(Module, "Cannot change internal enabling state of aura container item ", tostring(self.id))
             return
