@@ -111,6 +111,7 @@ SAO.AuraContainerItem = {
             positions = splitPositions(overlay.position),
             level = overlay.level,
             autoPulse = overlay.autoPulse,
+            useSound = overlay.autoPulse, -- Only pulsing overlays are worth having a sound
             texture = overlay.texture,
             r = overlay.r,
             g = overlay.g,
@@ -151,7 +152,9 @@ SAO.AuraContainerItem = {
             item.slotKeys[index] = slotKey
         end
 
-        SAO.AuraSoundLibrary:enableItem(item)
+        if item.useSound then
+            SAO.AuraSoundLibrary:enableItem(item)
+        end
 
         return item
     end,
@@ -331,10 +334,12 @@ SAO.AuraContainerItem = {
         end
         self.internallyEnabled = enabled
 
-        if enabled then
-            SAO.AuraSoundLibrary:enableItem(self)
-        else
-            SAO.AuraSoundLibrary:disableItem(self)
+        if self.useSound then
+            if enabled then
+                SAO.AuraSoundLibrary:enableItem(self)
+            else
+                SAO.AuraSoundLibrary:disableItem(self)
+            end
         end
 
         if not self.container.SetAuraSlotEnabled then -- AuraContainer:SetAuraSlotEnabled is required to make this functionality work
