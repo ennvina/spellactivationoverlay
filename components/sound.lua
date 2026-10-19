@@ -69,7 +69,7 @@ SAO.AuraSoundLibrary = {
         if not self[spellID] then
             self[spellID] = {
                 items = {},
-                auraSoundID = nil, -- Non-nil indicates a sound is currently playing
+                auraSoundIDs = nil, -- Non-nil indicates a sound is currently playing
             }
         end
 
@@ -78,11 +78,11 @@ SAO.AuraSoundLibrary = {
         end
         self[spellID].items[item.id] = item;
 
-        if not self[spellID].auraSoundID and self.globalEnabled then
-            local auraSoundID = self:_internalAddSound(spellID, item.unit)
+        if not self[spellID].auraSoundIDs and self.globalEnabled then
+            local auraSoundID1, auraSoundID2 = self:_internalAddSound(spellID, item.unit)
             SAO:Debug(Module, "Enabling sound for spell ID", spellID)
 
-            self[spellID].auraSoundID = auraSoundID
+            self[spellID].auraSoundIDs = { auraSoundID1, auraSoundID2 }
         end
     end,
 
@@ -95,11 +95,11 @@ SAO.AuraSoundLibrary = {
             end
             self[spellID].items[item.id] = nil
 
-            if next(self[spellID].items) == nil and self[spellID].auraSoundID then
-                self:_internalRemoveSound(self[spellID].auraSoundID)
+            if next(self[spellID].items) == nil and self[spellID].auraSoundIDs then
+                self:_internalRemoveSound(unpack(self[spellID].auraSoundIDs))
                 SAO:Debug(Module, "Disabling sound for spell ID", spellID)
 
-                self[spellID].auraSoundID = nil
+                self[spellID].auraSoundIDs = nil
             end
         end
     end,
@@ -112,21 +112,21 @@ SAO.AuraSoundLibrary = {
 
         for spellID, soundData in pairs(self) do
             if type(spellID) == 'number' then -- Assumes that all numeric keys are spell IDs
-                if soundData.auraSoundID and not enabled then
+                if soundData.auraSoundIDs and not enabled then
                     -- There was a sound and global sound is being disabled
-                    self:_internalRemoveSound(soundData.auraSoundID)
+                    self:_internalRemoveSound(unpack(soundData.auraSoundIDs))
                     SAO:Debug(Module, "Global sound disable is disabling sound of spell ID", spellID)
 
-                    soundData.auraSoundID = nil
-                elseif not soundData.auraSoundID and enabled then
+                    soundData.auraSoundIDs = nil
+                elseif not soundData.auraSoundIDs and enabled then
                     -- There was no sound and global sound is being enabled
                     local firstItemID, firstItem = next(soundData.items)
                     if firstItem ~= nil then
                         local unit = firstItem.unit -- Use arbitrarily the unit of the first item; all items should share the same unit token
-                        local auraSoundID = self:_internalAddSound(spellID, unit)
+                        local auraSoundID1, auraSoundID2 = self:_internalAddSound(spellID, unit)
                         SAO:Debug(Module, "Global sound enable is enabling sound of spell ID", spellID)
 
-                        soundData.auraSoundID = auraSoundID
+                        soundData.auraSoundIDs = { auraSoundID1, auraSoundID2 }
                     end
                 end
             end
@@ -134,7 +134,8 @@ SAO.AuraSoundLibrary = {
     end,
 
     _internalAddSound = function(self, spellID, unit)
-        local trigger = Enum.UnitAuraSoundTrigger.Added -- @todo Maybe consider Enum.UnitAuraSoundTrigger.ApplicationsIncreased
+        local trigger1 = Enum.UnitAuraSoundTrigger.Added
+        local trigger2 = Enum.UnitAuraSoundTrigger.ApplicationsIncreased
 
         local sound = {
             unitToken = unit,
@@ -142,13 +143,17 @@ SAO.AuraSoundLibrary = {
             soundFileName = mustUseLocalSound and localSound or nil,
             soundFileID = not mustUseLocalSound and gameSound or nil,
         }
-        local auraSoundID = C_UnitAuras.AddAuraSound(trigger, sound)
 
-        return auraSoundID
+        local auraSoundID1 = C_UnitAuras.AddAuraSound(trigger1, sound)
+        local auraSoundID2 = C_UnitAuras.AddAuraSound(trigger2, sound)
+
+        return auraSoundID1, auraSoundID2
     end,
 
-    _internalRemoveSound = function(self, auraSoundID)
-        assertsafe(auraSoundID)
-        C_UnitAuras.RemoveAuraSound(auraSoundID)
+    _internalRemoveSound = function(self, auraSoundID1, auraSoundID2)
+        assertsafe(auraSoundID1)
+        assertsafe(auraSoundID2)
+        C_UnitAuras.RemoveAuraSound(auraSoundID1)
+        C_UnitAuras.RemoveAuraSound(auraSoundID2)
     end,
 }
