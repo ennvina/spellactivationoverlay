@@ -20,7 +20,6 @@ local mustUseLocalSound = SAO.IsProject(
 local localSound = "Interface\\AddOns\\SpellActivationOverlay\\sounds\\UI_PowerAura_Generic.ogg"
 local gameSound = SOUNDKIT.UI_POWER_AURA_GENERIC
 
-
 -- Play a Spell Alert sound effect
 -- Return the sound handle ID, or nil if sound will not play e.g., muted channel
 function SAO.PlaySpellAlertSound(self)
@@ -121,7 +120,8 @@ SAO.AuraSoundLibrary = {
                 elseif not soundData.auraSoundIDs and enabled then
                     -- There was no sound and global sound is being enabled
                     local firstItemID, firstItem = next(soundData.items)
-                    if firstItem ~= nil then
+                    if firstItemID and firstItem then -- Add the sound if there is at least one item interested by this spell's aura sound
+                        assertsafe(firstItemID ~= nil and firstItem ~= nil)
                         local unit = firstItem.unit -- Use arbitrarily the unit of the first item; all items should share the same unit token
                         local auraSoundID1, auraSoundID2 = self:_internalAddSound(spellID, unit)
                         SAO:Debug(Module, "Global sound enable is enabling sound of spell ID", spellID)
