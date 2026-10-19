@@ -22,8 +22,10 @@ local function getInfoFromHash(hash, macroCondition, spellID)
         return nil
     end
 
+    local unit = "player" -- For now, aura containers only support the "player" unit
+
     -- Fill in item information
-    local itemInfo = {}
+    local itemInfo = { unit = unit }
 
     local nbAuraStacks = hash:getAuraStacks()
     itemInfo.nbAuraStacks = nbAuraStacks
@@ -34,7 +36,7 @@ local function getInfoFromHash(hash, macroCondition, spellID)
     end
 
     -- Fill in container information
-    local containerInfo = {}
+    local containerInfo = { unit = unit }
 
     local hasStance = type(SAO.Hash.hasMatchStance) == 'function' and hash:hasMatchStance()
 
@@ -54,7 +56,8 @@ local function getInfoFromHash(hash, macroCondition, spellID)
     end
     containerInfo.macroCondition = macroCondition
 
-    containerInfo.key = type(macroCondition) == 'string' and macroCondition or "default"
+    containerInfo.key = unit ..
+        "_" .. (type(macroCondition) == 'string' and macroCondition or "nomacro")
 
     return { container = containerInfo, item = itemInfo }
 end
@@ -102,6 +105,7 @@ SAO.AuraContainerItem = {
 
             -- Constants
             spellID = overlay.spellID,
+            unit = options.unit,
             scale = overlay.scale,
             fontScale = 3,
             positions = splitPositions(overlay.position),
@@ -115,6 +119,7 @@ SAO.AuraContainerItem = {
             -- Variables
             enabled = true, -- By default, the aura container item is enabled
             visible = true, -- By default, the aura container item is visible
+            internallyEnabled = true, -- Whether the enable/visible state are applied internally
             auraButtons = {}, -- Assigned below; there will be as many buttons as there are positions
             slotKeys = {}, -- Assigned below; there will be as many slot keys as there are buttons
         }
@@ -145,6 +150,8 @@ SAO.AuraContainerItem = {
             item.auraButtons[index] = auraButton
             item.slotKeys[index] = slotKey
         end
+
+        SAO.AuraSoundLibrary:enableItem(item)
 
         return item
     end,
@@ -319,6 +326,17 @@ SAO.AuraContainerItem = {
     end,
 
     _internalSetAuraSlotEnabled = function(self, enabled)
+        if self.internallyEnabled == enabled then
+            return
+        end
+        self.internallyEnabled = enabled
+
+        if enabled then
+            SAO.AuraSoundLibrary:enableItem(self)
+        else
+            SAO.AuraSoundLibrary:disableItem(self)
+        end
+
         if not self.container.SetAuraSlotEnabled then -- AuraContainer:SetAuraSlotEnabled is required to make this functionality work
             SAO:Debug(Module, "Cannot change internal enabling state of aura container item ", tostring(self.id))
             return
@@ -373,7 +391,7 @@ SAO.AuraContainer = {
         container = CreateFrame("AuraContainer", "SpellActivationOverlayAuraContainer", self.parent, "CustomAuraContainerTemplate")
         container:SetAllPoints()
         container:SetPoint("CENTER")
-        container:SetUnit("player")
+        container:SetUnit(hashInfo.container.unit)
         container:SetEnabled(true)
 
         if type(hashInfo.container.macroCondition) == 'string' then

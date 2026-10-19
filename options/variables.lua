@@ -34,8 +34,10 @@ end
 
 -- Apply spell alert sound effects toggle
 function SAO.ApplySpellAlertSound(self)
-    SpellActivationOverlayAddonFrame.useSound = SpellActivationOverlayDB.alert.sound ~= 0;
+    local useSound = SpellActivationOverlayDB.alert.sound ~= 0;
+    SpellActivationOverlayAddonFrame.useSound = useSound;
     SpellActivationOverlay_OnChangeSoundToggle(SpellActivationOverlayAddonFrame);
+    SAO.AuraSoundLibrary:setGlobalEnabled(useSound);
 end
 
 -- Apply glowing buttons on/off

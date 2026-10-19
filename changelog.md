@@ -6,7 +6,10 @@ Thank you to our amazing contributors for helping out. Thanks!
 - Amanthuul for feedback
 
 New Spell Alert
-- Shaman's Maelstrom Weapon
+- Shaman's Maelstrom Weapon (Forever)
+
+Bug Fixes
+- Spell Alerts now correctly play a sound (Forever)
 
 #### v2.8.5 (2026-10-18)
 

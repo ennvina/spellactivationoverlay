@@ -4,8 +4,10 @@
 ## Classes
 ### :shaman:  Shaman
 New Spell Alert
-- Maelstrom Weapon
+- Maelstrom Weapon (Forever)
 ## Bug Fixes
+### Spell Alerts
+Triggering a Spell Alert now correctly plays a sound (Forever)
 ## Known Limitations
 ## Miscellaneous
 ## Contributors
