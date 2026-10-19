@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.8.7 (2026-10-xx)
+
+Bug Fixes
+- Spell Alert sounds no longer play for minor effects (Forever)
+
 #### v2.8.6 (2026-10-19)
 
 Thank you to our amazing contributors for helping out. Thanks!
