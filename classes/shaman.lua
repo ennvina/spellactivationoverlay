@@ -189,6 +189,23 @@ local function useMaelstromWeapon(self)
     local maelstromWeaponTalent = self.IsSoD() and 408498 or 51530;
     local maelstromWeaponScale = self.IsSoD() and 0.8 or 1;
 
+    -- Default colors for non-Forever flavors
+    -- Slightly dimmed colors for Forever, because overlays will all display one on top of the other
+    local color1, color2, color3, color4, color5;
+    local level1, level2, level3, level4, level5;
+    if SAO.IsForever() then
+        color1 = { 128, 128, 128 };
+        color2 = { 160, 160, 160 };
+        color3 = { 192, 192, 192 };
+        color4 = { 224, 224, 224 };
+        color5 = { 255, 255, 255 };
+        level1 = 1;
+        level2 = 2;
+        level3 = 3;
+        level4 = 4;
+        level5 = 5;
+    end
+
     -- Check if Maelstrom Weapon effect should pulse at 5 stacks
     -- This question only applies to 5 stacks, because the answer is obvious for other stacks
     -- At 5 stacks, we want to pulse if the shaman is capped at 5 stacks, and not pulse if capped at 10
@@ -211,7 +228,7 @@ local function useMaelstromWeapon(self)
 
     self:CreateEffect(
         "maelstrom_weapon",
-        SAO.SOD + SAO.WRATH_AND_ONWARD - SAO.RETAIL,
+        SAO.FOREVER + SAO.SOD + SAO.WRATH_AND_ONWARD - SAO.RETAIL,
         maelstromWeaponBuff,
         "aura",
         {
@@ -220,10 +237,13 @@ local function useMaelstromWeapon(self)
             },
             talent = maelstromWeaponTalent,
             overlays = {
-                { stacks = 1, texture = "maelstrom_weapon_1", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
-                { stacks = 2, texture = "maelstrom_weapon_2", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
-                { stacks = 3, texture = "maelstrom_weapon_3", position = "Top", scale = maelstromWeaponScale, pulse = false, option = false },
-                { stacks = 4, texture = "maelstrom_weapon_4", position = "Top", scale = maelstromWeaponScale, pulse = false, option = { setupHash = hash0Stacks, testHash = hash4Stacks, subText = self:NbStacks(1,4) } },
+                { stacks = 1, texture = "maelstrom_weapon_1", position = "Top", scale = maelstromWeaponScale, pulse = false, color = color1, level = level1, option = false },
+                { stacks = 2, texture = "maelstrom_weapon_2", position = "Top", scale = maelstromWeaponScale, pulse = false, color = color2, level = level2, option = false },
+                { stacks = 3, texture = "maelstrom_weapon_3", position = "Top", scale = maelstromWeaponScale, pulse = false, color = color3, level = level3, option = false },
+                { stacks = 4, texture = "maelstrom_weapon_4", position = "Top", scale = maelstromWeaponScale, pulse = false, color = color4, level = level4, option = { setupHash = hash0Stacks, testHash = hash4Stacks, subText = self:NbStacks(1,4) } },
+                [SAO.FOREVER] = {
+                    { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = false , color = color5, level = level5, option = true },
+                },
                 [SAO.WRATH_AND_ONWARD] = {
                     { stacks = 5, texture = "maelstrom_weapon"  , position = "Top", scale = maelstromWeaponScale, pulse = true , option = true },
                 },
@@ -238,6 +258,7 @@ local function useMaelstromWeapon(self)
             },
             buttons = {
                 default = { stacks = 5 },
+                -- [SAO.FOREVER] = { lightningBolt }, -- Cannot glow buttons with "aura" effects in Forever
                 [SAO.SOD]   = { lightningBolt, chainLightning, lesserHealingWave,                                                               lavaBurstSoD },
                 [SAO.WRATH] = { lightningBolt, chainLightning, lesserHealingWave,                     healingWave, chainHeal,              hex },
                 [SAO.CATA]  = { lightningBolt, chainLightning, healingSurge,      greaterHealingWave, healingWave, chainHeal, healingRain, hex },
