@@ -681,6 +681,7 @@ end
 
 local function useFingersOfFrost()
     local hash0Stacks = SAO:HashNameFromStacks(0);
+    local hash1Stack  = SAO:HashNameFromStacks(1);
     local hash2Stacks = SAO:HashNameFromStacks(2);
     if SAO.IsMoP() then
         local fingersOfFrostBuff = 44544;
@@ -709,7 +710,10 @@ local function useFingersOfFrost()
                 overlays = {
                     -- In Forever/Retail, 'stacks' determines is the minimum number of stacks, not the exact number
                     { stacks = 1, texture = "frozen_fingers", position = "Left",            option = false },
-                    { stacks = 2, texture = "frozen_fingers", position = "Right (Flipped)", option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
+                    { stacks = 2, texture = "frozen_fingers", position = "Right (Flipped)", option = {
+                        setupHash = hash0Stacks,
+                        testHash = { hash1Stack, hash2Stacks }
+                    } },
                 },
             }
         );

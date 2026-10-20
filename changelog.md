@@ -10,6 +10,7 @@ New Spell Alert
 
 Bug Fixes
 - Mage's Heating Up and Hot Streak should have less false positives (Wrath)
+- Previewing Mage's Fingers of Frost now displays 2 stacks (Forever)
 - Druid's Omen of Clarity option now works in Cat/Bear form\* (Forever)
 
 \* Previously, disabling Omen of Clarity in options only disabled Humanoid form
