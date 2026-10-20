@@ -111,10 +111,10 @@ local function useEclipse()
 
             overlays = {
                 -- In Forever/Retail, 'stacks' determines is the minimum number of stacks, not the exact number
-                { stacks = 1, texture = "eclipse_moon", position = "Left",            scale = 0.7, pulse = false, level = 2, color = { 222, 222, 222 }, option = false },
-                { stacks = 2, texture = "eclipse_moon", position = "Left",            scale = 1.0, pulse = false, level = 3, color = { 255, 255, 255 }, option = false },
-                { stacks = 3, texture = "eclipse_moon", position = "Right (Flipped)", scale = 0.7, pulse = true , level = 2, color = { 222, 222, 222 }, option = false },
-                { stacks = 4, texture = "eclipse_moon", position = "Right (Flipped)", scale = 1.0, pulse = true , level = 3, color = { 255, 255, 255 }, option = { setupHash = SAO:HashNameFromStacks(0), testHash = SAO:HashNameFromStacks(4) } },
+                { stacks = 1, texture = "eclipse_moon", position = "Left",            scale = 0.8, pulse = false, level = 3, alpha = 192, option = false },
+                { stacks = 2, texture = "eclipse_moon", position = "Left",            scale = 1.1, pulse = false, level = 2, alpha = 255, option = false },
+                { stacks = 3, texture = "eclipse_moon", position = "Right (Flipped)", scale = 0.8, pulse = false, level = 3, alpha = 192, option = false },
+                { stacks = 4, texture = "eclipse_moon", position = "Right (Flipped)", scale = 1.1, pulse = false, level = 2, alpha = 255, option = { setupHash = SAO:HashNameFromStacks(0), testHash = SAO:HashNameFromStacks(4) } },
             },
 
             -- button = starfire,
