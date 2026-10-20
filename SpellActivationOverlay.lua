@@ -370,7 +370,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	overlay:SetGeometry(longSide, shortSide);
 	
 	overlay.texture:SetTexture(texturePath);
-	overlay.texture:SetVertexColor(r / 255, g / 255, b / 255);
+	overlay.texture:SetVertexColor(r / 255, g / 255, b / 255); -- @todo Maybe add support for alpha
 	
 	overlay.animOut:Stop();	--In case we're in the process of animating this out.
 	if useSound and (autoPulse or forcePulsePlay) then

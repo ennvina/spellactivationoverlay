@@ -103,6 +103,7 @@ SAO.Display = {
             r = overlay.color and overlay.color[1] or 255,
             g = overlay.color and overlay.color[2] or 255,
             b = overlay.color and overlay.color[3] or 255,
+            a = overlay.color and overlay.color[4] or 255,
             autoPulse = type(overlay.autoPulse) == 'function' and overlay.autoPulse or overlay.autoPulse ~= false, -- true by default
             combatOnly = overlay.combatOnly == true, -- false by default
             -- Added for aura containers
@@ -113,9 +114,16 @@ SAO.Display = {
 
         _overlay.auraContainerItem = SAO.AuraContainer:registerOverlay(_overlay); -- Shall return nil if a secret-compatible aura container item is not needed
 
-        if _overlay.spellID ~= self.spellID then --[[BEGIN_DEV_ONLY]]
+        --[[BEGIN_DEV_ONLY]]
+        if not _overlay.auraContainerItem and _overlay.a then
+            SAO:Warn(Module, "Overlay of spellID "..tostring(_overlay.spellID).." uses an alpha of "..tostring(_overlay.a)..
+                " but visuals are not compatible with alpha (they could be - it just hasn't been implemented yet)");
+        end
+
+        if _overlay.spellID ~= self.spellID then
             SAO:Warn(Module, "Inconsistent spellID between display and overlay: "..tostring(self.spellID).." vs. "..tostring(_overlay.spellID));
-        end --[[END_DEV_ONLY]]
+        end
+        --[[END_DEV_ONLY]]
 
         tinsert(self.overlays, _overlay);
     end,
