@@ -148,13 +148,22 @@ SAO.AuraContainerItem = {
                 applications = options.nbAuraStacks,
             }
 
+            local includeSpellIDs = { [overlay.spellID] = true }
+            local akaSpellIDs = SAO:GetAkaSpellIDsByEffectSpellID(overlay.spellID)
+            if akaSpellIDs then
+                for _, akaSpellID in ipairs(akaSpellIDs) do
+                    SAO:Trace(Module, "Adding aura slot with key "..tostring(slotKey).." for a.k.a. spellID", tostring(akaSpellID));
+                    includeSpellIDs[akaSpellID] = true
+                end
+            end
+
             local auraButton = container:AddAuraSlot(slotKey, "HELPFUL", {
                 templateNames = { "SAOAuraButtonTemplate" },
                 initializeFrame = function(auraButton)
                     item:initializeAuraButton(auraButton, auraSlotOptions)
                 end,
                 candidateFilters = {
-                    includeSpellIDs = { [overlay.spellID] = true },
+                    includeSpellIDs = includeSpellIDs,
                 },
             })
 

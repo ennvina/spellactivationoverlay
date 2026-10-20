@@ -104,7 +104,7 @@ local registeredEffectsByName = {}
 local pendingEffects = {}
 
 -- List of spellIDs of 'a.k.a.' spells, i.e. spells that are not the main spellID of an effect, but are related to it
--- Key = spellID, Value = effect name of the first effect that registered this spellID
+-- Key = spellID, Value = { spellID = ..., name = ... } spell ID and name of the first effect that registered this spellID
 local AKAs = {}
 
 -- Flag to know when the player has logged in, detected by PLAYER_LOGIN event
@@ -508,18 +508,18 @@ end
 ]]
 
 -- Add a spell ID to the a.k.a. list, and warn if it conflicts with either an existing bucket or an existing a.k.a.
-local function addAKA(effectName, akaSpellID)
+local function addAKA(effectSpellID, effectName, akaSpellID)
     -- Check if the spellID is already registered in the a.k.a. list
     --[[BEGIN_DEV_ONLY]]
-    local existingEffectName = AKAs[akaSpellID];
-    if existingEffectName then
-        if existingEffectName ~= effectName then
-            SAO:Warn(Module, "Adding a.k.a. spellID "..tostring(akaSpellID).." for effect "..effectName.." which is already registered for effect "..existingEffectName);
+    local existingAKA = AKAs[akaSpellID];
+    if existingAKA then
+        if existingAKA.name ~= effectName then
+            SAO:Warn(Module, "Adding a.k.a. spellID "..tostring(akaSpellID).." for effect "..effectName.." which is already registered for effect "..existingAKA.name);
         end
         return;
     end
     --[[END_DEV_ONLY]]
-    AKAs[akaSpellID] = effectName;
+    AKAs[akaSpellID] = { spellID = effectSpellID, name = effectName };
 
     --[[BEGIN_DEV_ONLY]]
     -- Check if the spellID is valid
@@ -588,9 +588,9 @@ local function checkNativeEffect(effect)
             SAO:Warn(Module, "Effect "..effect.name.." has a.k.a. spellID "..tostring(akaSpellID).." which is the same as its main spellID");
         end
     end
-    local existingEffectNameOfAka = AKAs[effect.spellID];
-    if existingEffectNameOfAka and existingEffectNameOfAka ~= effect.name then
-        SAO:Warn(Module, "Effect "..effect.name.." with spellID "..tostring(effect.spellID).." conflicts with a.k.a. spellID already registered for effect "..existingEffectNameOfAka);
+    local existingAka = AKAs[effect.spellID];
+    if existingAka and existingAka.name ~= effect.name then
+        SAO:Warn(Module, "Effect "..effect.name.." with spellID "..tostring(effect.spellID).." conflicts with a.k.a. spellID already registered for effect "..tostring(existingAka.name));
     end
 
     -- Check Triggers
@@ -852,7 +852,7 @@ function SAO:RegisterNativeEffect(effect)
     end --[[END_DEV_ONLY]]
 
     for _, akaSpellID in ipairs(effect.aka or {}) do
-        addAKA(effect.name, akaSpellID);
+        addAKA(effect.spellID, effect.name, akaSpellID);
     end
 
     if not self.IsProject(effect.project) then
@@ -1162,4 +1162,19 @@ end
 
 function SAO:IsAka(spellID)
     return AKAs[spellID] ~= nil;
+end
+
+function SAO:GetAkaEffectName(spellID)
+    local aka = AKAs[spellID];
+    return aka and aka.name or nil;
+end
+
+function SAO:GetAkaSpellIDsByEffectSpellID(effectSpellID)
+    local spellIDs = {};
+    for akaSpellID, aka in pairs(AKAs) do
+        if aka.spellID == effectSpellID then
+            table.insert(spellIDs, akaSpellID);
+        end
+    end
+    return #spellIDs > 0 and spellIDs or nil;
 end
