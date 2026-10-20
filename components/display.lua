@@ -10,7 +10,7 @@ local InCombatLockdown = InCombatLockdown
     Has functions to show/hide them
 ]]
 SAO.Display = {
-    new = function(self, parent, hash) -- parent is the bucket attached to the new trigger
+    new = function(self, parent, hash, optionIndex) -- parent is the bucket attached to the new trigger
         local display = {
             parent = parent,
 
@@ -30,23 +30,39 @@ SAO.Display = {
             SAO:Debug(Module, "Creating display with invalid hash == 0 for "..parent.description);
         end
 
-        local tempHash = SAO.Hash:new(hash);
         local hashData = {
-            optionIndex = tempHash:toOptionIndex(),
+            optionIndex = nil,
             optionAnyStacks = nil,
             legacyGlowingOption = true, -- Always allow legacy glowing button options, for now
         }
-        local legacyReady = type(hashData.optionIndex) == 'number';
-        if not legacyReady then
-            SAO:Warn(Module, "Display of "..parent.description.." is based on hash "..hash.." ("..tempHash:toString()..") which requires migrating its option");
-        end
-        if tempHash:hasAuraStacks() then
-            local stacks = tempHash:getAuraStacks();
-            if stacks ~= 0 then
-                tempHash.hash = tempHash:toAnyAuraStacks();
-                hashData.optionAnyStacks = tempHash:toOptionIndex();
+        if optionIndex then
+            -- Override the option index from the caller
+            hashData.optionIndex = optionIndex;
+
+            local legacyReady = type(hashData.optionIndex) == 'number';
+            if not legacyReady then
+                SAO:Warn(Module, "Display of "..parent.description.." is based on option index "..tostring(hashData.optionIndex).." which requires migrating its option");
+            end
+        else
+            -- Compute the option index based on the hash
+            local tempHash = SAO.Hash:new(hash);
+
+            hashData.optionIndex = tempHash:toOptionIndex();
+
+            local legacyReady = type(hashData.optionIndex) == 'number';
+            if not legacyReady then
+                SAO:Warn(Module, "Display of "..parent.description.." is based on hash "..hash.." ("..tempHash:toString()..") which requires migrating its option");
+            end
+
+            if tempHash:hasAuraStacks() then
+                local stacks = tempHash:getAuraStacks();
+                if stacks ~= 0 then
+                    tempHash.hash = tempHash:toAnyAuraStacks();
+                    hashData.optionAnyStacks = tempHash:toOptionIndex();
+                end
             end
         end
+        assertsafe(hashData.optionIndex ~= nil);
         display.hashData = hashData;
 
         self.__index = nil;

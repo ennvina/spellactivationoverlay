@@ -13,13 +13,15 @@ local Module = "effect"
     talent = 49188, -- Talent or rune or nil (for counters that don't rely on other talent)
     counter = false, -- Default is false
     combatOnly = false, -- Default is false
+    optionIndex = nil, -- Default is nil, which means the option index is computed automatically from each hash
     minor = false, -- Default is false; tells the effect is minor, and should not have any option
 
     triggers = { -- Default is false for every trigger; at least one trigger must be set
         aura = true, -- The aura with spell ID 'spellID' is gained or lost by the player
         action = false, -- The action with spell ID 'spellID' is usable or not
         talent = false, -- The player spent at least one point in effect's talent, or spent none
-        holyPower = false, -- Number of charges of Holy Power (Paladin only, Cataclysm+)
+        holyPower = false, -- Number of charges of Holy Power - Paladin only (Cataclysm+) also use for Shadow Priests (MoP+)
+        -- ...and other triggers, one for each variable
     },
 
     overlays = {{
@@ -29,7 +31,9 @@ local Module = "effect"
             action = nil, -- Default is true. true for action usable, false for action not usable
             talent = nil, -- Default is true. true for talent picked (at least one point), false for talent not picked
             holyPower = nil, -- Default is 3
+            -- ...and potentially other conditions defined in variables
         },
+        -- hash = ..., -- Always computed as getHash(condition, triggers).hash
         spellID = nil, -- Default is spellID from effect
         texture = "genericarc_05", -- Mandatory
         position = "Top", -- Mandatory
@@ -48,6 +52,7 @@ local Module = "effect"
     buttons = {{
         project = SAO.WRATH, -- Default is project from effect
         condition = {}, -- Default is the default value for each trigger. See above comment of 'overlays.condition'
+        -- hash = ..., -- Always computed as getHash(condition, triggers).hash
         spellID = 1111, -- Default is spellID from effect
         useName = true, -- Default is false from Era to Wrath, default is true starting from Cataclysm
         option = { -- Default is true
@@ -696,7 +701,7 @@ end
 --[[END_DEV_ONLY]]
 
 local function RegisterNativeEffectNow(self, effect)
-    local bucket, created = self.BucketManager:getOrCreateBucket(effect.name, effect.spellID);
+    local bucket, created = self.BucketManager:getOrCreateBucket(effect.name, effect.spellID, effect.optionIndex);
     if not created then
         self:Warn(Module, "Overwriting bucket "..bucket.description);
     end
@@ -1056,6 +1061,7 @@ function SAO:CreateEffect(name, project, spellID, class, props, register)
         project = project,
         spellID = spellID,
         aka = aka,
+        optionIndex = type(props) == 'table' and props.optionIndex,
         combatOnly = type(props) == 'table' and props.combatOnly,
         minor = type(props) == 'table' and props.minor,
         triggers = {},
