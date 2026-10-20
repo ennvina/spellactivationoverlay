@@ -14,7 +14,7 @@ local function promoteAura(aura)
             texture = aura[4],
             position = aura[5],
             scale = aura[6],
-            color = { aura[7], aura[8], aura[9] },
+            color = { aura[7], aura[8], aura[9], 255 },
             autoPulse = aura[10],
             combatOnly = aura[13],
             hash = hash.hash,

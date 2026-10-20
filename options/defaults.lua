@@ -79,7 +79,7 @@ SAO.defaults = {
                 [48517] = { -- Eclipse (Solar) (Wrath+)
                     [0] = true,
                 },
-                [408255] = { -- Eclipse (Lunar, Season of Discovery)
+                [408255] = { -- Eclipse (Lunar, Season of Discovery) / Eclipse (Forever)
                     [0] = true,
                 },
                 [408250] = { -- Eclipse (Solar, Season of Discovery)

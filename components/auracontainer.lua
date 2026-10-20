@@ -126,6 +126,7 @@ SAO.AuraContainerItem = {
             r = overlay.r,
             g = overlay.g,
             b = overlay.b,
+            a = overlay.a,
 
             -- Variables
             enabled = true, -- By default, the aura container item is enabled
@@ -252,7 +253,7 @@ SAO.AuraContainerItem = {
         end
 
         -- Set vertex color
-        texture:SetVertexColor(self.r / 255, self.g / 255, self.b / 255)
+        texture:SetVertexColor(self.r / 255, self.g / 255, self.b / 255, self.a / 255)
     end,
 
     setApplications = function(self, auraButton, applications)

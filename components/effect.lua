@@ -39,7 +39,8 @@ local Module = "effect"
         position = "Top", -- Mandatory
         level = 4, -- Default is nil, which eventually defaults to 3 when displayed
         scale = 1, -- Default is 1
-        color = {255, 255, 255}, -- Default is {255, 255, 255}
+        color = {255, 255, 255, 255}, -- Default is {255, 255, 255, 255}, alpha is optional and defaults to 255
+        alpha = 255, -- Default is nil; if set, it overrides the alpha value in 'color'
         pulse = true, -- Default is true
         option = { -- Default is true
             setupHash = 0, -- Default is hash from overlay
@@ -280,7 +281,13 @@ local function addOneOverlay(overlays, overlayConfig, project, default, triggers
         SAO:Error(Module, "Adding Overlay with invalid option "..tostring(option));
     end
 
-    local color = overlayConfig.color or default.color;
+    local color = overlayConfig.color or default.color or nil;
+    local alpha = overlayConfig.alpha or default.alpha or nil;
+    if color then
+        color = { color[1], color[2], color[3], alpha or color[4] }; -- Explicit 'alpha' has priority over the one in color[4]
+    elseif alpha then
+        color = { 255, 255, 255, alpha };
+    end
 
     local overlay = {
         project = project,
@@ -290,7 +297,7 @@ local function addOneOverlay(overlays, overlayConfig, project, default, triggers
         position = position,
         level = overlayConfig.level or default.level,
         scale = overlayConfig.scale or default.scale,
-        color = color and { color[1], color[2], color[3] } or nil,
+        color = color,
         pulse = getValueOrDefault(overlayConfig.pulse, default.pulse),
         option = mergeOption(default.option, overlayConfig.option),
     }
@@ -728,7 +735,7 @@ local function RegisterNativeEffectNow(self, effect)
             local position = overlay.position;
             local level = overlay.level;
             local scale = overlay.scale or 1;
-            local color = overlay.color and { overlay.color[1], overlay.color[2], overlay.color[3] } or { 255, 255, 255 };
+            local color = overlay.color and { overlay.color[1], overlay.color[2], overlay.color[3], overlay.color[4] } or { 255, 255, 255, 255 };
             local autoPulse = type(overlay.pulse) == 'function' and overlay.pulse or overlay.pulse ~= false;
             local combatOnly = overlay.combatOnly == true or effect.combatOnly == true;
             local hash = overlay.hash;
