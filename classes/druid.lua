@@ -154,7 +154,12 @@ local function useOmenOfClarity()
 
             overlays = {
                 { matchStance = true, texture = "feral_omenofclarity", position = "Left + Right (Flipped)", option = false },
-                { matchStance = false, texture = "natures_grace", position = "Left + Right (Flipped)", option = { setupHash = SAO:HashNameFromStacks(0) } },
+                { matchStance = false, texture = "natures_grace", position = "Left + Right (Flipped)",
+                    option = {
+                        setupHash = SAO:HashNameFromStacks(0),
+                        testHash = SAO.Hash:new():setAuraStacks(0):setMatchStance(false):toString(),
+                    }
+                },
             },
         }
     );
