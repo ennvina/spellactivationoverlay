@@ -150,9 +150,11 @@ local function useOmenOfClarity()
                 DRUID_STANCE_CAT,
             },
 
+            optionIndex = 0, -- Overrides option index so that all overlays point to the same option
+
             overlays = {
                 { matchStance = true, texture = "feral_omenofclarity", position = "Left + Right (Flipped)", option = false },
-                { matchStance = false, texture = "natures_grace", position = "Left + Right (Flipped)" },
+                { matchStance = false, texture = "natures_grace", position = "Left + Right (Flipped)", option = { setupHash = SAO:HashNameFromStacks(0) } },
             },
         }
     );
