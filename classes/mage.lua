@@ -56,24 +56,24 @@ HotStreakHandler.init = function(self, talentName)
     local balefire_bolt_sod_ids = { 428878 }
 
     self.spells = {}
-    local function addSpellPack(spellPack)
+    local function addSpellPack(spellPack, project)
+        if project and not SAO.IsProject(project) then
+            return;
+        end
         for _, spellID in pairs(spellPack) do
             self.spells[spellID] = true;
         end
     end
     addSpellPack(fire_blast_ids);
-    addSpellPack(fire_blast_sod_ids);
+    addSpellPack(fire_blast_sod_ids, SAO.SOD);
     addSpellPack(fireball_ids);
     addSpellPack(frostfire_bolt_ids);
-    addSpellPack(frostfire_bolt_sod_ids);
+    addSpellPack(frostfire_bolt_sod_ids, SAO.SOD);
     addSpellPack(scorch_ids);
-    if SAO.IsCata() then
-        addSpellPack(pyroblast_cata_ids);
-    else
-        addSpellPack(living_bomb_ids);
-        addSpellPack(living_bomb_sod_ids);
-    end
-    addSpellPack(balefire_bolt_sod_ids);
+    addSpellPack(pyroblast_cata_ids, SAO.CATA);
+    addSpellPack(living_bomb_ids, SAO.WRATH);
+    addSpellPack(living_bomb_sod_ids, SAO.SOD);
+    addSpellPack(balefire_bolt_sod_ids, SAO.SOD);
 
     local _, _, tab, index = SAO:GetTalentByName(talentName);
     if (tab and index) then
