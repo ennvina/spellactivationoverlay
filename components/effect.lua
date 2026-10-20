@@ -43,8 +43,8 @@ local Module = "effect"
         alpha = 255, -- Default is nil; if set, it overrides the alpha value in 'color'
         pulse = true, -- Default is true
         option = { -- Default is true
-            setupHash = 0, -- Default is hash from overlay
-            testHash = 0, -- Default is nil, which defaults to setupHash
+            setupHash = "aura_stacks=any", -- Default is hash from overlay, must be built by Hash:toString()
+            testHash = "aura_stacks=5", -- Default is nil, which defaults to setupHash, must be built by Hash:toString()
             subText = "no stacks", -- Default is nil
             variants = nil, -- Default is nil
         },
@@ -904,7 +904,7 @@ function SAO:AddEffectOptions()
                 local buff = overlay.spellID or effect.spellID;
                 if type(overlay.option) == 'table' then
                     local setupHash = type(overlay.option.setupHash) == 'string' and overlay.option.setupHash or self:HashNameFromHashNumber(overlay.hash);
-                    local testHash = type(overlay.option.testHash) == 'string' and overlay.option.testHash or setupHash;
+                    local testHash = (type(overlay.option.testHash) == 'string' or type(overlay.option.testHash) == 'table') and overlay.option.testHash or setupHash;
                     local subText = overlay.option.subText;
                     local variants = overlay.option.variants;
                     if type(subText) == 'function' then
