@@ -6,6 +6,7 @@ Bug Fixes
 - Spell Alert sounds no longer play for minor effects (Forever)
 
 Bug Fixes
+- Mage's Heating Up and Hot Streak should have less false positives (Wrath)
 - Druid's Omen of Clarity option now works in Cat/Bear form\* (Forever)
 
 \* Previously, disabling Omen of Clarity in options only disabled Humanoid form
