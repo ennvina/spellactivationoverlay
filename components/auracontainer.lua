@@ -5,6 +5,16 @@ local LoadAddOn = C_AddOns and C_AddOns.LoadAddOn or LoadAddOn
 
 local useAuraContainer = (SAO.IsForever() or SAO.IsRetail()) and C_Secrets ~= nil and C_Secrets.GetSpellAuraSecrecy ~= nil
 
+local function traceBooleanChange(intro, oldValue, newValue, id) --[[BEGIN_DEV_ONLY]]
+    if not SAO:HasTrace(Module) then
+        return
+    end
+    local coloredBool = function(bool)
+        return bool and "|cFF00FF00true|r" or "|cFFFF0000false|r"
+    end
+    SAO:Trace(Module, intro, "from", coloredBool(oldValue), "to", coloredBool(newValue), "for", tostring(id))
+end --[[END_DEV_ONLY]]
+
 local function splitPositions(position)
     local positions = {}
     for component in string.gmatch(position or "", "[^%+]+") do
@@ -311,6 +321,7 @@ SAO.AuraContainerItem = {
     -- 'Enabled' means wanted by the player
     -- The item is enabled unless the player explicitly disables it from the options panel
     setEnabled = function(self, enabled)
+        traceBooleanChange("setEnabled", self.enabled, enabled, self.id) --[[DEV_ONLY]]
         if enabled == self.enabled then
             return
         end
@@ -321,6 +332,7 @@ SAO.AuraContainerItem = {
     -- 'Visible' means currently explicitly wanted to be shown
     -- The item is visible unless a non-aura trigger (e.g. stance) explicitly asks to hide it
     setVisible = function(self, visible)
+        traceBooleanChange("setVisible", self.visible, visible, self.id) --[[DEV_ONLY]]
         if visible == self.visible then
             return
         end

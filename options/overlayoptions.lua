@@ -137,10 +137,10 @@ function SAO.AddOverlayOption(self, talentID, auraID, hash, talentSubText, varia
     self:AddOption("alert", auraID, optionIndex, type(variants) == 'table' and variants.values, applyTextFunc, testFunc, { frame = SpellActivationOverlayOptionsPanelSpellAlertLabel, xOffset = 4, yOffset = -4 });
 end
 
-function SAO.AddOverlayLink(self, srcOption, dstOption)
-    return self:AddOptionLink("alert", srcOption, dstOption);
+function SAO:AddOverlayLink(srcAuraID, dstAuraID)
+    return self:AddOptionLink("alert", srcAuraID, dstAuraID);
 end
 
-function SAO.GetOverlayOptions(self, auraID)
-    return self:GetOptions("alert", auraID);
+function SAO:GetOverlayOptions(auraID)
+    return self:GetOptionsForAura("alert", auraID);
 end

@@ -21,13 +21,16 @@ SAO.MacroConditionGenerators = {}
 -- A stack count of zero means "for everyone"
 -- A stack count of non-zero means "for a specific number of stacks"
 SAO.Bucket = {
-    create = function(self, name, spellID)
+    create = function(self, name, spellID, optionIndex)
         local spellName = SAO:GetSpellName(spellID);
         local bucket = {
             name = name, -- Name should be unique amongst buckets
 
             -- Spell ID is the main identifier to activate/deactivate visuals
             spellID = spellID,
+
+            -- Option index overrides the option which rules all displays
+            optionIndex = optionIndex, -- Default is nil, which means the option index is computed automatically from each display's hash
 
             -- Stack-agnostic means the bucket does not care about its number of stacks
             stackAgnostic = true, -- Default is true, meaning the bucket does not care about the number of stacks
@@ -69,11 +72,11 @@ SAO.Bucket = {
         end
     end,
 
-    getOrCreateDisplay = function(self, hash)
+    getOrCreateDisplay = function(self, hash, optionIndex)
         local created = false;
 
         if not self[hash.hash] then
-            self[hash.hash] = SAO.Display:new(self, hash.hash);
+            self[hash.hash] = SAO.Display:new(self, hash.hash, optionIndex);
 
             -- Update displayHashesOfStacklessHashes if the bucket tracks secret stacks
             if self.secretStacks then
@@ -403,18 +406,18 @@ SAO.BucketManager = {
 
     addEffectOverlay = function(self, bucket, overlay)
         local hash = SAO.Hash:new(overlay.hash);
-        local display = bucket:getOrCreateDisplay(hash);
+        local display = bucket:getOrCreateDisplay(hash, bucket.optionIndex);
         display:addOverlay(overlay);
         display:setCombatOnly(overlay.combatOnly);
     end,
 
     addEffectButton = function(self, bucket, hash, button, combatOnly)
-        local display = bucket:getOrCreateDisplay(hash);
+        local display = bucket:getOrCreateDisplay(hash, bucket.optionIndex);
         display:addButton(button);
         display:setCombatOnly(combatOnly);
     end,
 
-    getOrCreateBucket = function(self, name, spellID)
+    getOrCreateBucket = function(self, name, spellID, optionIndex)
         if type(spellID) ~= 'number' then
             SAO:Warn(Module, "Creating a bucket for spellID "..tostring(spellID).." which is of type "..type(spellID).." instead of number")
         end
@@ -423,7 +426,7 @@ SAO.BucketManager = {
         local created = false;
 
         if not bucket then
-            bucket = SAO.Bucket:create(name, spellID);
+            bucket = SAO.Bucket:create(name, spellID, optionIndex);
             SAO.RegisteredBucketsBySpellID[spellID] = bucket;
             SAO.RegisteredBucketsByName[name] = bucket;
 

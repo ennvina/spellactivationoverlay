@@ -1,5 +1,7 @@
 local AddonName, SAO = ...
 
+local OptionLinks = {};
+
 local function createOptionFor(classFile, optionType, auraID, id)
     local default = true;
     if (SAO.defaults.classes[classFile] and SAO.defaults.classes[classFile][optionType] and SAO.defaults.classes[classFile][optionType][auraID]) then
@@ -215,23 +217,23 @@ function SAO.AddOption(self, optionType, auraID, id, subValues, applyTextFunc, t
     return cb;
 end
 
-function SAO.AddOptionLink(self, optionType, srcOption, dstOption)
-    if (not self.OptionLinks) then
-        self.OptionLinks = { [optionType] = { [dstOption] = srcOption } };
-    elseif (not self.OptionLinks[optionType]) then
-        self.OptionLinks[optionType] = { [dstOption] = srcOption };
+function SAO:AddOptionLink(optionType, srcAuraID, dstAuraID)
+    if (not OptionLinks) then
+        OptionLinks = { [optionType] = { [dstAuraID] = srcAuraID } };
+    elseif (not OptionLinks[optionType]) then
+        OptionLinks[optionType] = { [dstAuraID] = srcAuraID };
     else
-        self.OptionLinks[optionType][dstOption] = srcOption;
+        OptionLinks[optionType][dstAuraID] = srcAuraID;
     end
 end
 
-function SAO.GetOptions(self, optionType, auraID)
+function SAO:GetOptionsForAura(optionType, auraID)
     if (self.CurrentClass) then
         local classFile = self.CurrentClass.Intrinsics[2];
         local classOptions = SpellActivationOverlayDB and SpellActivationOverlayDB.classes and SpellActivationOverlayDB.classes[classFile];
         if (classOptions and classOptions[optionType]) then
-            if (self.OptionLinks and self.OptionLinks[optionType] and self.OptionLinks[optionType][auraID]) then
-                return classOptions[optionType][self.OptionLinks[optionType][auraID]];
+            if (OptionLinks and OptionLinks[optionType] and OptionLinks[optionType][auraID]) then
+                return classOptions[optionType][OptionLinks[optionType][auraID]];
             else
                 return classOptions[optionType][auraID];
             end

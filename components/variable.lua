@@ -164,7 +164,7 @@ SAO.Variable = {
 
         -- Add the hash setter and getter directly to the Hash class definition
         SAO.Hash["has"..var.core] = function(hash) return bit.band(hash.hash, var.hash.mask) ~= 0 end;
-        SAO.Hash["set"..var.core] = var.hash.setterFunc;
+        SAO.Hash["set"..var.core] = function(hash, ...) var.hash.setterFunc(hash, ...) return hash end;
         SAO.Hash["get"..var.core] = var.hash.getterFunc;
         if var.hash.toAnyFunc then
             SAO.Hash["toAny"..var.core] = var.hash.toAnyFunc;

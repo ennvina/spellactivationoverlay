@@ -5,6 +5,11 @@
 Bug Fixes
 - Spell Alert sounds no longer play for minor effects (Forever)
 
+Bug Fixes
+- Druid's Omen of Clarity option now works in Cat/Bear form\* (Forever)
+
+\* Previously, disabling Omen of Clarity in options only disabled Humanoid form
+
 #### v2.8.6 (2026-10-19)
 
 Thank you to our amazing contributors for helping out. Thanks!

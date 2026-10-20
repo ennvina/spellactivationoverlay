@@ -42,9 +42,9 @@ local function transferOption(db, classFile, optionType, oldAuraID, oldNodeID, n
     end
 end
 
--- Forcefully disable an option from the database, even if the player had enabled it
-local function retrogradeOption(db, classFile, optionType, auraID, nodeID)
-    db.classes[classFile][optionType][auraID][nodeID] = false;
+-- Forcefully overwrite an option from the database, even if the player had defined it
+local function overwriteOption(db, classFile, optionType, auraID, nodeID, value)
+    db.classes[classFile][optionType][auraID][nodeID] = value;
 end
 
 -- Promote an option from bool to string
@@ -137,7 +137,7 @@ local migrations = {
         -- Shaman's Lava Burst glowing button should be disabled by default starting from Mists of Pandaria
         if SAO.IsProject(SAO.MOP_AND_ONWARD) then
             local lavaBurst = 51505;
-            retrogradeOption(db, "SHAMAN", "glow", lavaBurst, lavaBurst);
+            overwriteOption(db, "SHAMAN", "glow", lavaBurst, lavaBurst, false);
         end
     end},
 
@@ -146,6 +146,15 @@ local migrations = {
         if SAO.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH) then
             local elemantalFocus = 16246;
             promoteOptionFromBoolToString(db, "SHAMAN", "alert", elemantalFocus, 0);
+        end
+    end},
+
+    {"2.8.7", function(db)
+        -- During Forever Beta, at some point Druid's Omen of Clarity used the wrong node ID for its alert
+        if SAO.IsProject(SAO.FOREVER + SAO.RETAIL) then
+            local omenOfClarity = 16870;
+            transferOption(db, "DRUID", "alert", omenOfClarity, -1, omenOfClarity, 0);
+            overwriteOption(db, "DRUID", "alert", omenOfClarity, -1, nil);
         end
     end},
 }
