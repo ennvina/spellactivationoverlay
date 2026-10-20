@@ -112,10 +112,10 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
     );
 end
 
-function SAO.AddGlowingLink(self, srcOption, dstOption)
-    return self:AddOptionLink("glow", srcOption, dstOption);
+function SAO:AddGlowingLink(srcAuraID, dstAuraID)
+    return self:AddOptionLink("glow", srcAuraID, dstAuraID);
 end
 
-function SAO.GetGlowingOptions(self, spellID)
-    return self:GetOptions("glow", spellID);
+function SAO:GetGlowingOptions(auraID)
+    return self:GetOptionsForAura("glow", auraID);
 end
