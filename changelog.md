@@ -5,6 +5,9 @@
 Bug Fixes
 - Spell Alert sounds no longer play for minor effects (Forever)
 
+New Spell Alert
+- Druid's Eclipse (Forever)
+
 Bug Fixes
 - Mage's Heating Up and Hot Streak should have less false positives (Wrath)
 - Druid's Omen of Clarity option now works in Cat/Bear form\* (Forever)

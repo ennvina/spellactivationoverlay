@@ -2,11 +2,9 @@
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.8.7
 ## General
 ## Classes
-### :class:  Class
-New Spell Alerts
-- 
-New Glowing Buttons
-- 
+### :druid:  Druid
+New Spell Alert
+- Eclipse (Forever)
 ## Bug Fixes
 ### Spell Alerts
 Spell Alert sounds no longer play for minor effects (Forever)
