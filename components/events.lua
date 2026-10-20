@@ -107,7 +107,7 @@ if SAO.IsProject(SAO.FOREVER + SAO.CATA_AND_ONWARD) then -- Include Forever in c
 		SAO:Debug(Module, "Received native SPELL_ACTIVATION_OVERLAY_SHOW with spell ID "..tostring(spellID)..", ".."texture "..tostring(texture)..", ".."positions '"..tostring(positions).."', ".."scale "..tostring(scale)..", ".."(r g b) = ("..tostring(r).." "..tostring(g).." "..tostring(b)..")");
 		SAO:ReportUnknownEffect(Module, spellID, texture, positions, scale, r, g, b);
 		-- if ( GetCVarBool("displaySpellActivationOverlays") ) then 
-		-- 	SpellActivationOverlay_ShowAllOverlays(self, spellID, texture, positions, scale, r, g, b, true)
+		-- 	SpellActivationOverlay_ShowAllOverlays(self, spellID, texture, positions, scale, r, g, b, a, true)
 		-- end
 	end
 

@@ -185,7 +185,7 @@ SAO.Display = {
                 SpellActivationOverlayFrame_ResetCombatFade(SAO.Frame); -- Overlays may be invisible due to out-of-combat fade-out; this call ensures the overlay will be seen with or without combat
                 overlay.auraContainerItem:setVisible(true);
             else
-                SAO:ActivateOverlay(self.hashData, overlay.spellID, overlay.texture, overlay.position, overlay.scale, overlay.r, overlay.g, overlay.b, overlay.autoPulse, forcePulsePlay, nil, overlay.combatOnly, extra);
+                SAO:ActivateOverlay(self.hashData, overlay.spellID, overlay.texture, overlay.position, overlay.scale, overlay.r, overlay.g, overlay.b, overlay.a, overlay.autoPulse, forcePulsePlay, nil, overlay.combatOnly, extra);
             end
         end
     end,

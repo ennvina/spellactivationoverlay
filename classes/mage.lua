@@ -118,7 +118,7 @@ end
 
 local function activateHeatingUp(self, spellID)
     -- Heating Up uses the Hot Streak texture, but scaled at 50%
-    self:ActivateOverlay(0, spellID, self.TexName["hot_streak"], "Left + Right (Flipped)", 0.5, 255, 255, 255, false, nil, nil, true);
+    self:ActivateOverlay(0, spellID, self.TexName["hot_streak"], "Left + Right (Flipped)", 0.5, 255, 255, 255, 255, false, nil, nil, true);
 end
 
 local function deactivateHeatingUp(self, spellID)
@@ -447,7 +447,7 @@ local FrozenHandler = {
         local hasSAO = not saoOption or type(saoOption[0]) == "nil" or saoOption[0];
         if (hasSAO) then
             local endTime = self:getEndTime();
-            SAO:ActivateOverlay(0, self.freezeID, SAO.TexName[self.saoTexture], self.saoPosition, self.saoScaleFactor, 255, 255, 255, false, nil, endTime);
+            SAO:ActivateOverlay(0, self.freezeID, SAO.TexName[self.saoTexture], self.saoPosition, self.saoScaleFactor, 255, 255, 255, 255, false, nil, endTime);
         end
 
         -- GABs
@@ -681,6 +681,7 @@ end
 
 local function useFingersOfFrost()
     local hash0Stacks = SAO:HashNameFromStacks(0);
+    local hash1Stack  = SAO:HashNameFromStacks(1);
     local hash2Stacks = SAO:HashNameFromStacks(2);
     if SAO.IsMoP() then
         local fingersOfFrostBuff = 44544;
@@ -709,7 +710,10 @@ local function useFingersOfFrost()
                 overlays = {
                     -- In Forever/Retail, 'stacks' determines is the minimum number of stacks, not the exact number
                     { stacks = 1, texture = "frozen_fingers", position = "Left",            option = false },
-                    { stacks = 2, texture = "frozen_fingers", position = "Right (Flipped)", option = { setupHash = hash0Stacks, testHash = hash2Stacks } },
+                    { stacks = 2, texture = "frozen_fingers", position = "Right (Flipped)", option = {
+                        setupHash = hash0Stacks,
+                        testHash = { hash1Stack, hash2Stacks }
+                    } },
                 },
             }
         );
