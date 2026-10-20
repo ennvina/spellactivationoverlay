@@ -358,7 +358,7 @@ local function updateOneSAO(self, position, fakeSpellID, realSpellID, texture, c
         self:DeactivateOverlay(fakeSpellID);
     else
         local endTime = SAO:GetSpellEndTime(realSpellID);
-        self:ActivateOverlay(0, fakeSpellID, self.TexName[texture], position, 1, 255, 255, 255, true, nil, endTime, combatOnly);
+        self:ActivateOverlay(0, fakeSpellID, self.TexName[texture], position, 1, 255, 255, 255, 255, true, nil, endTime, combatOnly);
     end
 end
 

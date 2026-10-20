@@ -278,7 +278,7 @@ local complexLocationTable = {
 	},
 }
 
-function SpellActivationOverlay_ShowAllOverlays(self, spellID, texturePath, positions, scale, r, g, b, autoPulse, forcePulsePlay, endTime, combatOnly, extra)
+function SpellActivationOverlay_ShowAllOverlays(self, spellID, texturePath, positions, scale, r, g, b, a, autoPulse, forcePulsePlay, endTime, combatOnly, extra)
 	if SAO.Shutdown:IsAddonDisabled() then
 		return;
 	end
@@ -286,14 +286,14 @@ function SpellActivationOverlay_ShowAllOverlays(self, spellID, texturePath, posi
 	positions = strupper(positions);
 	if ( complexLocationTable[positions] ) then
 		for location, info in pairs(complexLocationTable[positions]) do
-			SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, location, scale, r, g, b, info.vFlip, info.hFlip, info.cw, autoPulse, forcePulsePlay, endTime, combatOnly, extra);
+			SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, location, scale, r, g, b, a, info.vFlip, info.hFlip, info.cw, autoPulse, forcePulsePlay, endTime, combatOnly, extra);
 		end
 	else
-		SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, positions, scale, r, g, b, false, false, 0, autoPulse, forcePulsePlay, endTime, combatOnly, extra);
+		SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, positions, scale, r, g, b, a, false, false, 0, autoPulse, forcePulsePlay, endTime, combatOnly, extra);
 	end
 end
 
-function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, vFlip, hFlip, cw, autoPulse, forcePulsePlay, endTime, combatOnly, extra)
+function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, a, vFlip, hFlip, cw, autoPulse, forcePulsePlay, endTime, combatOnly, extra)
 	SAO:Trace(Module, "SpellActivationOverlay_ShowOverlay "..tostring(spellID).." "..position);
 	SAO:Debug(Module, "Starting Overlay at location "..position.." for spell ID "..spellID.." "..SAO:GetSpellName(spellID, "")..(endTime and (" for "..math.floor((type(endTime) == 'number' and endTime or endTime.endTime)-GetTime()+0.5).." secs") or ""));
 
@@ -370,7 +370,8 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	overlay:SetGeometry(longSide, shortSide);
 	
 	overlay.texture:SetTexture(texturePath);
-	overlay.texture:SetVertexColor(r / 255, g / 255, b / 255); -- @todo Maybe add support for alpha
+	overlay.texture:SetVertexColor(r / 255, g / 255, b / 255);
+	overlay.alpha = a / 255; -- Don't bother setting the vertex color alpha, it will be overwritten by animations
 	
 	overlay.animOut:Stop();	--In case we're in the process of animating this out.
 	if useSound and (autoPulse or forcePulsePlay) then
@@ -384,9 +385,11 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 		overlay.animIn.alpha1:SetToAlpha(0.01);
 		overlay.animIn.alpha2:SetFromAlpha(0.01);
 	else
-		overlay.animIn.alpha1:SetToAlpha(0.5);
-		overlay.animIn.alpha2:SetFromAlpha(0.5);
+		overlay.animIn.alpha1:SetToAlpha(0.5 * overlay.alpha);
+		overlay.animIn.alpha2:SetFromAlpha(0.5 * overlay.alpha);
 	end
+	overlay.animIn.alpha2:SetToAlpha(overlay.alpha);
+	overlay.animOut.alpha1:SetFromAlpha(overlay.alpha);
 	overlay:Show();
 	if ( forcePulsePlay and not overlay.pulse:IsPlaying() ) then
 		overlay.pulse:Play();
@@ -697,7 +700,7 @@ end
 function SpellActivationOverlayTexture_OnFadeInFinished(animGroup)
 	SAO:Trace(Module, "SpellActivationOverlayTexture_OnFadeInFinished "..tostring(animGroup));
 	local overlay = animGroup:GetParent();
-	overlay:SetAlpha(1);
+	overlay:SetAlpha(overlay.alpha);
 	if ( overlay.pulse.autoPlay and not overlay.pulse:IsPlaying() ) then
 		overlay.pulse:Play();
 	end

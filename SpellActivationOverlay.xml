@@ -5,7 +5,7 @@
 		<Animations>
 			<AnimationGroup name="$parentAnimIn" parentKey="animIn">
 				<Alpha fromAlpha="0" toAlpha="0.5" duration="0.1" order="1" parentKey="alpha1">
-					<!-- Split alpha animation in 2 steps , whose goal in to plug in a function to circumvent a bug with pulse animations -->
+					<!-- Split alpha animation in 2 steps, whose goal in to plug in a function to circumvent a bug with pulse animations -->
 					<!-- If this script is not called slightly early (0.1 secs in, instead of 0.2 sec), starting the pulse may cause a weird flash -->
 					<Scripts>
 						<OnFinished function="SpellActivationOverlayTexture_PreStartPulse"/>
@@ -18,7 +18,7 @@
 				</Scripts>
 			</AnimationGroup>
 			<AnimationGroup name="$parentAnimOut" parentKey="animOut">
-				<Alpha fromAlpha="1" toAlpha="0" duration="0.1">
+				<Alpha fromAlpha="1" toAlpha="0" duration="0.1" parentKey="alpha1">
 					<Scripts>
 						<OnFinished function="SpellActivationOverlayTexture_OnFadeOutFinished"/>
 					</Scripts>

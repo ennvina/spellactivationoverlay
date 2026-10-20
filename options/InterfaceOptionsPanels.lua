@@ -257,8 +257,8 @@ function SpellActivationOverlayOptionsPanelMixin:Init()
             self.isTesting = true;
             -- Test with strata = "DIALOG" to see above the options panel itself
             -- Test with level = 9999, slightly below the cap of 10000, to let overlay previews have priority about the Toggle Test feature
-            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName[testTextureLeftRight], "Left + Right (Flipped)", 1, 255, 255, 255, false, nil, GetTime()+5, false, { strata = "DIALOG", level = 9999 });
-            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName[testTextureTop]      , testPositionTop         , 1, 255, 255, 255, false, nil, GetTime()+5, false, { strata = "DIALOG", level = 9999 });
+            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName[testTextureLeftRight], "Left + Right (Flipped)", 1, 255, 255, 255, 255, false, nil, GetTime()+5, false, { strata = "DIALOG", level = 9999 });
+            SAO:ActivateOverlay(0, self.fakeSpellID, SAO.TexName[testTextureTop]      , testPositionTop         , 1, 255, 255, 255, 255, false, nil, GetTime()+5, false, { strata = "DIALOG", level = 9999 });
             self.testTimerTicker = C_Timer.NewTicker(4.9, -- Ticker must be slightly shorter than overlay duration, to refresh it before losing it
             function()
                 SAO:RefreshOverlayTimer(self.fakeSpellID, GetTime()+5);
