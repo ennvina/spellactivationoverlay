@@ -6,6 +6,7 @@ Thank you to our amazing contributors for helping out. Thanks!
 - zzcbun for reporting the talent issue
 
 New Spell Alerts
+- Hunter's Mongoose Bite (Forever)
 - Hunter's Rapid Killing (Forever)
 - Paladin's Infusion of Light (Forever)
 - Priest's Martyrdom (Forever)
@@ -14,6 +15,7 @@ New Spell Alerts
 - Warlock's Decimation (Forever)
 
 New Glowing Buttons
+- Hunter's Mongoose Bite (Forever)
 - Mage's Ice Barrier (Forever)
 - Shaman's Stormstrike (Forever)
 

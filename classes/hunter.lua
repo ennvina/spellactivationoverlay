@@ -39,7 +39,7 @@ end
 local function useMongooseBite()
     SAO:CreateEffect(
         "mongoose_bite",
-        SAO.ERA + SAO.TBC,
+        SAO.FOREVER + SAO.ERA + SAO.TBC,
         mongooseBite,
         "counter",
         {

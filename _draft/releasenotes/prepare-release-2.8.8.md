@@ -4,8 +4,12 @@
 ### Druid
 Omen of Clarity and Eclipse have special rules to overlap. This mimics overlapping rules that was used in e.g. Wrath of the Lich King.
 ### Hunter
-New Spell Alert
-- Hunter's Rapid Killing
+New Spell Alerts
+- Mongoose Bite
+- Rapid Killing
+
+New Glowing Button
+- Mongoose Bite
 ### Mage
 New Glowing Button
 - Ice Barrier
@@ -99,8 +103,12 @@ Thanks!
 ### Druid
 Omen of Clarity and Eclipse have special rules to overlap (Forever). This mimics overlapping rules that was used in e.g. Wrath of the Lich King.
 ### Hunter
-New Spell Alert
-- Hunter's Rapid Killing (Forever)
+New Spell Alerts
+- Mongoose Bite (Forever)
+- Rapid Killing (Forever)
+
+New Glowing Button
+- Mongoose Bite (Forever)
 ### Mage
 New Glowing Button
 - Ice Barrier (Forever)
@@ -159,7 +167,11 @@ Thanks!
 Omen of Clarity and Eclipse have special rules to overlap (Forever). This mimics overlapping rules that was used in e.g. Wrath of the Lich King.
 ### :hunter:  Hunter
 New Spell Alert
-- Hunter's Rapid Killing (Forever)
+- Mongoose Bite (Forever)
+- Rapid Killing (Forever)
+
+New Glowing Button
+- Mongoose Bite (Forever)
 ### :mage~1:  Mage
 New Glowing Button
 - Ice Barrier (Forever)
