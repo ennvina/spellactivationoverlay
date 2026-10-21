@@ -32,6 +32,11 @@ New Glowing Button
 ### Warlock
 New Spell Alert
 - Decimation
+## Contributors
+Shout-out to our amazing contributors
+- r41dboss for reporting a texture issue
+
+Thanks!
 
 
 # Classic Era / The Burning Crusade
@@ -159,6 +164,7 @@ Lava Burst could glow without the Lava Surge talent (Cataclysm)
 ## Contributors
 Shout-out to our amazing contributors
 - zzcbun for reporting the talent issue
+- r41dboss for reporting a texture issue
 
 Thanks!
 
@@ -225,6 +231,7 @@ Lava Burst could glow without the Lava Surge talent (Cataclysm)
 ## Contributors
 Shout-out to our amazing contributors
 - zzcbun for reporting the talent issue
+- r41dboss for reporting a texture issue
 Thanks!
 
 As always, the latest release is available on [CurseForge](https://www.curseforge.com/wow/addons/spellactivationoverlay) / [GitHub](https://github.com/ennvina/spellactivationoverlay/releases/latest) / [Discord](https://discord.com/channels/1013194771969355858/1379111832207228938)
