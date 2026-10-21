@@ -8,6 +8,7 @@ Thank you to our amazing contributors for helping out. Thanks!
 New Spell Alerts
 - Paladin's Infusion of Light (Forever)
 - Priest's Searing Light (Forever)
+- Rogue's Remorseless Attacks (Forever)
 
 Updated Spell Alerts
 - Druid's Omen of Clarity and Eclipse have special rules to overlap\* (Forever)

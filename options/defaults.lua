@@ -614,6 +614,9 @@ SAO.defaults = {
         },
         ["ROGUE"] = {
             alert = {
+                [14143] = { -- Remorseless Attacks (Forever)
+                    [0] = true,
+                },
                 [14251] = { -- Riposte (Forever, Era - Wrath)
                     [0] = "cd:off",
                 },
