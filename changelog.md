@@ -5,6 +5,9 @@
 Thank you to our amazing contributors for helping out. Thanks!
 - zzcbun for reporting the talent issue
 
+New Spell Alert
+- Paladin's Infusion of Light (Forever)
+
 Updated Spell Alerts
 - Druid's Omen of Clarity and Eclipse have special rules to overlap\* (Forever)
 

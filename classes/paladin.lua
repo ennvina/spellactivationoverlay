@@ -239,6 +239,18 @@ local function useInfusionOfLight()
                 },
             }
         );
+
+        SAO:CreateEffect(
+            "infusion_of_light",
+            SAO.FOREVER,
+            infusionOfLightBuff1, -- @todo Check spell ID
+            "aura",
+            {
+                aka = 437063, -- @todo Check if this is the correct fallback for Infusion of Light (buff) in Forever
+                overlay = { texture = "daybreak", position = "Left + Right (Flipped)" },
+                -- button = holyLight,
+            }
+        );
     end
 end
 

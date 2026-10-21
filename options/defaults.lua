@@ -382,6 +382,9 @@ SAO.defaults = {
         },
         ["PALADIN"] = {
             alert = {
+                [53672] = { -- Infusion of Light (Forever)
+                    [0] = true,
+                },
                 [54149] = { -- Infusion of Light (2/2 in Wrath-Cataclysm, Spec in Mists of Pandaria)
                     [0] = true,
                 },
