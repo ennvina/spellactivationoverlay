@@ -213,7 +213,7 @@ local function useInfusionOfLight()
             "aura",
             {
                 talent = infusionOfLightTalent,
-                overlay = { texture = "daybreak", position = "Left + Right (Flipped)", option = { subText = SAO:RecentlyUpdated() } }, -- Updated 09-jul-2025
+                overlay = { texture = "daybreak", position = "Left + Right (Flipped)" },
                 buttons = { holyLight, divineLight, holyRadiance, default = { option = { isNative = true } } }, -- Buttons already glowing natively by the game client
             }
         );
@@ -269,7 +269,7 @@ local function useDaybreak()
             actionUsable = true,
             overlays = {
                 [SAO.CATA] = { texture = "daybreak", position = "Left + Right (Flipped)" },
-                [SAO.MOP_AND_ONWARD] = { texture = "eclipse_sun", position = "Top (CW)", scale = 0.8, level = 2, option = { subText = SAO:RecentlyUpdated() } }, -- Updated 09-jul-2025
+                [SAO.MOP_AND_ONWARD] = { texture = "eclipse_sun", position = "Top (CW)", scale = 0.8, level = 2 },
             },
             buttons = {
                 [SAO.CATA] = holyShock,

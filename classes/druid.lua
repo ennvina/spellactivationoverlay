@@ -117,6 +117,7 @@ local function useEclipse()
                 { stacks = 4, texture = "eclipse_moon", position = "Right (Flipped)", scale = 1.1, pulse = false, level = 2, alpha = 255, option = {
                     setupHash = SAO:HashNameFromStacks(0),
                     testHash = { SAO:HashNameFromStacks(1), SAO:HashNameFromStacks(2), SAO:HashNameFromStacks(3), SAO:HashNameFromStacks(4) },
+                    subText = SAO:RecentlyUpdated(), -- Updated 21-oct-2026
                 } },
             },
 
@@ -181,6 +182,7 @@ local function useOmenOfClarity()
                     option = {
                         setupHash = SAO:HashNameFromStacks(0),
                         testHash = SAO.Hash:new():setAuraStacks(0):setMatchStance(false):toString(),
+                        subText = SAO:RecentlyUpdated(), -- Updated 21-oct-2026
                     }
                 },
             },
