@@ -6,6 +6,9 @@ Omen of Clarity and Eclipse have special rules to overlap. This mimics overlappi
 ### Paladin
 New Spell Alert
 - Infusion of Light
+### Priest
+New Spell Alert
+- Searing Light (Forever)
 
 # Classic Era / The Burning Crusade
 
@@ -81,6 +84,9 @@ Omen of Clarity and Eclipse have special rules to overlap (Forever). This mimics
 ### Paladin
 New Spell Alert
 - Infusion of Light (Forever)
+### Priest
+New Spell Alert
+- Searing Light (Forever)
 ## Bug Fixes
 ### General
 Effects which rely on talents sometimes detected incorrectly which talent was picked (Classic Era, The Burning Crusade, Wrath of the Lich King, Cataclysm). This bug was introduced in version 2.6.0. All versions between 2.6.0 and 2.8.7 (included) are subject to this issue.
@@ -121,6 +127,9 @@ Omen of Clarity and Eclipse have special rules to overlap (Forever). This mimics
 ### :paladin:  Paladin
 New Spell Alert
 - Infusion of Light (Forever)
+### :priest:  Priest
+New Spell Alert
+- Searing Light (Forever)
 ## Bug Fixes
 ### General
 Effects which rely on talents sometimes detected incorrectly which talent was picked (Classic Era, The Burning Crusade, Wrath of the Lich King, Cataclysm). This bug was introduced in version 2.6.0. All versions between 2.6.0 and 2.8.7 (included) are subject to this issue.

@@ -126,6 +126,19 @@ local function useSerendipity()
     end
 end
 
+local function useSearingLight()
+    SAO:CreateEffect(
+        "searing_light",
+        SAO.FOREVER,
+        1284536, -- Holy Purpose (buff)
+        "aura",
+        {
+            talent = 14909, -- Searing Light (talent)
+            overlay = { texture = "hand_of_light", position = "Top" },
+        }
+    );
+end
+
 local function useSurgeOfLight()
     local hash0Stacks = SAO:HashNameFromStacks(0);
     local hash2Stacks = SAO:HashNameFromStacks(2);
@@ -362,6 +375,7 @@ local function registerClass(self)
 
     -- Holy
     useSerendipity();
+    useSearingLight();
     useSurgeOfLight(); -- Introduced in Burning Crusade, a talent in Mists of Pandaria
     useClearcasting();
     useHolyWordChastise();

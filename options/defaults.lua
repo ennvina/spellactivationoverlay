@@ -546,6 +546,9 @@ SAO.defaults = {
                 [124430] = { -- Divine Insight, Shadow (Mists of Pandaria)
                     [0] = true,
                 },
+                [1284536] = { -- Searing Light (Forever)
+                    [0] = true,
+                }
             },
             glow = {
                 [588] = { -- Inner Fire (Wrath+)
