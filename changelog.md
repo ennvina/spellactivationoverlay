@@ -8,6 +8,7 @@ Thank you to our amazing contributors for helping out. Thanks!
 New Spell Alerts
 - Hunter's Rapid Killing (Forever)
 - Paladin's Infusion of Light (Forever)
+- Priest's Martyrdom (Forever)
 - Priest's Searing Light (Forever)
 - Rogue's Remorseless Attacks (Forever)
 

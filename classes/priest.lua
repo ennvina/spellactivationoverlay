@@ -38,7 +38,7 @@ local function useMartyrdom()
     local focusedCasting = SAO.IsForever() and 27828 or 14743; -- Focused Casting (Priest buff)
     SAO:CreateEffect(
         "martyrdom",
-        SAO.ERA + SAO.TBC + SAO.WRATH,
+        SAO.FOREVER + SAO.ERA + SAO.TBC + SAO.WRATH,
         focusedCasting,
         "aura",
         {

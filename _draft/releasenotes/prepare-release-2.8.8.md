@@ -10,7 +10,8 @@ New Spell Alert
 New Spell Alert
 - Infusion of Light
 ### Priest
-New Spell Alert
+New Spell Alerts
+- Martyrdom
 - Searing Light
 ###  Rogue
 New Spell Alert
@@ -98,7 +99,8 @@ New Spell Alert
 New Spell Alert
 - Infusion of Light (Forever)
 ### Priest
-New Spell Alert
+New Spell Alerts
+- Martyrdom (Forever)
 - Searing Light (Forever)
 ###  Rogue
 New Spell Alert
@@ -150,7 +152,8 @@ New Spell Alert
 New Spell Alert
 - Infusion of Light (Forever)
 ### :priest:  Priest
-New Spell Alert
+New Spell Alerts
+- Martyrdom (Forever)
 - Searing Light (Forever)
 ### :rogue:  Rogue
 New Spell Alert

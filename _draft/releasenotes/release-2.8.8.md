@@ -11,7 +11,8 @@ New Spell Alert
 New Spell Alert
 - Infusion of Light (Forever)
 ### :priest:  Priest
-New Spell Alert
+New Spell Alerts
+- Priest's Martyrdom (Forever)
 - Searing Light (Forever)
 ### :rogue:  Rogue
 New Spell Alert
