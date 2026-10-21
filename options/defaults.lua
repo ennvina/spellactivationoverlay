@@ -775,7 +775,7 @@ SAO.defaults = {
                 [122355] = { -- Molten Core (Mists of Pandaria)
                     [0] = true, -- any stacks
                 },
-                [440873] = { -- Decimation (Season of Discovery)
+                [440873] = { -- Decimation (Forever, Season of Discovery)
                     [0] = true,
                 },
                 [47283] = { -- Empowered Imp (Wrath+)

@@ -11,6 +11,7 @@ New Spell Alerts
 - Priest's Martyrdom (Forever)
 - Priest's Searing Light (Forever)
 - Rogue's Remorseless Attacks (Forever)
+- Warlock's Decimation (Forever)
 
 New Glowing Buttons
 - Mage's Ice Barrier (Forever)

@@ -16,12 +16,15 @@ New Spell Alert
 New Spell Alerts
 - Martyrdom
 - Searing Light
-###  Rogue
+### Rogue
 New Spell Alert
 - Remorseless Attacks
 ### Shaman
 New Glowing Button
 - Stormstrike
+### Warlock
+New Spell Alert
+- Decimation
 
 
 # Classic Era / The Burning Crusade
@@ -108,12 +111,15 @@ New Spell Alert
 New Spell Alerts
 - Martyrdom (Forever)
 - Searing Light (Forever)
-###  Rogue
+### Rogue
 New Spell Alert
 - Remorseless Attacks (Forever)
 ### Shaman
 New Glowing Button
 - Stormstrike (Forever)
+### Warlock
+New Spell Alert
+- Decimation (Forever)
 ## Bug Fixes
 ### General
 Effects which rely on talents sometimes detected incorrectly which talent was picked (Classic Era, The Burning Crusade, Wrath of the Lich King, Cataclysm). This bug was introduced in version 2.6.0. All versions between 2.6.0 and 2.8.7 (included) are subject to this issue.
@@ -170,6 +176,9 @@ New Spell Alert
 ### :shaman:  Shaman
 New Glowing Button
 - Stormstrike (Forever)
+### :warlock:  Warlock
+New Spell Alert
+- Decimation (Forever)
 ## Bug Fixes
 ### General
 Effects which rely on talents sometimes detected incorrectly which talent was picked (Classic Era, The Burning Crusade, Wrath of the Lich King, Cataclysm). This bug was introduced in version 2.6.0. All versions between 2.6.0 and 2.8.7 (included) are subject to this issue.
