@@ -277,7 +277,7 @@ SAO.Variable:register({
                     -- This situation is usually an issue, unless the aura instance ID is removed in the same update cycle, before leaving this function
                     --[[BEGIN_DEV_ONLY]]
                     addedAuraInstanceIDsExpectedToBeRemoved[bucket.auraInstanceID] = { name = bucket.name, newID = auraInstanceID };
-                    SAO:Warn(Module, "Aura instance ID "..tostring(bucket.auraInstanceID)..
+                    SAO:Info(Module, "Aura instance ID "..tostring(bucket.auraInstanceID)..
                         " is being replaced by new aura instance ID "..tostring(auraInstanceID)..
                         " for bucket "..bucket.name);
                     --[[END_DEV_ONLY]]
@@ -318,7 +318,13 @@ SAO.Variable:register({
                 local bucket = SAO:GetBucketBySpellID(aura.spellId);
                 if bucket and bucket.trigger:reactsWith(SAO.TRIGGER_AURA) then
                     local auraInstanceID = aura.auraInstanceID;
-                    addAura(auraInstanceID, aura, bucket);
+                    if bucket.auraInstanceID == auraInstanceID then
+                        -- This should not happen, but we have seen cases when an addedAuras is fired twice e.g., Fingers of Frost (SoD)
+                        SAO:Warn(Module, "Added aura instance ID "..tostring(auraInstanceID).." for bucket "..bucket.name.." which already has the same aura instance ID, updating it instead");
+                        updateAura(auraInstanceID, aura, bucket);
+                    else
+                        addAura(auraInstanceID, aura, bucket);
+                    end
                 end
             end
 
@@ -339,7 +345,7 @@ SAO.Variable:register({
 
             for _, auraInstanceID in ipairs(canaccessvalue(updateInfo.removedAuraInstanceIDs) and updateInfo.removedAuraInstanceIDs or {}) do
                 if addedAuraInstanceIDsExpectedToBeRemoved[auraInstanceID] then --[[BEGIN_DEV_ONLY]]
-                    SAO:Warn(Module, "Removed aura instance ID "..tostring(auraInstanceID)..
+                    SAO:Info(Module, "Removed aura instance ID "..tostring(auraInstanceID)..
                         " which was expected to be removed because an aura for the same bucket was just added");
                     addedAuraInstanceIDsExpectedToBeRemoved[auraInstanceID] = nil;
                 end --[[END_DEV_ONLY]]
@@ -350,7 +356,7 @@ SAO.Variable:register({
             end
 
             for auraInstanceID, replacementInfo in pairs(addedAuraInstanceIDsExpectedToBeRemoved) do --[[BEGIN_DEV_ONLY]]
-                SAO:Warn(Module, "Replacing bucket "..replacementInfo.name..
+                SAO:Error(Module, "Replacing bucket "..replacementInfo.name..
                     " which had aura instance ID "..tostring(auraInstanceID)..
                     " with aura instance ID "..tostring(replacementInfo.newID)..
                     " without removing the former aura instance ID");
