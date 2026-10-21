@@ -103,7 +103,7 @@ local function useEclipse()
 
     SAO:CreateEffect(
         "eclipse_forever",
-        SAO.FOREVER + SAO.RETAIL,
+        SAO.FOREVER,
         408255, -- Eclipse (Forever) @todo Check spell ID
         "aura",
         {
