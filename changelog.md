@@ -12,7 +12,8 @@ New Spell Alerts
 - Priest's Searing Light (Forever)
 - Rogue's Remorseless Attacks (Forever)
 
-New Glowing Button
+New Glowing Buttons
+- Mage's Ice Barrier (Forever)
 - Shaman's Stormstrike (Forever)
 
 Updated Spell Alerts

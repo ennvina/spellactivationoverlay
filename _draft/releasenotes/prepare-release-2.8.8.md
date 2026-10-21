@@ -6,6 +6,9 @@ Omen of Clarity and Eclipse have special rules to overlap. This mimics overlappi
 ### Hunter
 New Spell Alert
 - Hunter's Rapid Killing
+### Mage
+New Glowing Button
+- Ice Barrier
 ### Paladin
 New Spell Alert
 - Infusion of Light
@@ -95,6 +98,9 @@ Omen of Clarity and Eclipse have special rules to overlap (Forever). This mimics
 ### Hunter
 New Spell Alert
 - Hunter's Rapid Killing (Forever)
+### Mage
+New Glowing Button
+- Ice Barrier (Forever)
 ### Paladin
 New Spell Alert
 - Infusion of Light (Forever)
@@ -148,6 +154,9 @@ Omen of Clarity and Eclipse have special rules to overlap (Forever). This mimics
 ### :hunter:  Hunter
 New Spell Alert
 - Hunter's Rapid Killing (Forever)
+### :mage~1:  Mage
+New Glowing Button
+- Ice Barrier (Forever)
 ### :paladin:  Paladin
 New Spell Alert
 - Infusion of Light (Forever)

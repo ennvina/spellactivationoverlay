@@ -310,6 +310,9 @@ SAO.defaults = {
                 },
             },
             glow = {
+                [11426] = { -- Ice Barrier (Forever)
+                    [11426] = false,
+                },
                 [79683] = { -- Arcane Missiles! (Cataclysm, Mists of Pandaria)
                     [5143] = true, -- Arcane Missiles
                 },
