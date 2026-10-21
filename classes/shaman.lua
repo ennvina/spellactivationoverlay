@@ -15,6 +15,7 @@ local lavaBurst = 51505;
 local lavaBurstSoD = 408490;
 local lesserHealingWave = 8004; -- Renamed Healing Surge in Cataclysm; keep the former name to make the effects easier to design
 local lightningBolt = 403;
+local stormstrike = 17364;
 
 local elementalFocusVariants; -- Lazy init in lazyCreateElementalFocusVariants()
 local function lazyCreateElementalFocusVariants(self)
@@ -176,6 +177,16 @@ local function useTidalWaves(self)
                 [SAO.RETAIL] = { healingWave, chainHeal },
             },
         }
+    );
+end
+
+local function useStormstrike(self)
+    SAO:CreateEffect(
+        "stormstrike",
+        SAO.FOREVER,
+        stormstrike,
+        "counter",
+        { combatOnly = true }
     );
 end
 
@@ -405,6 +416,7 @@ local function registerClass(self)
     useShamanisticFocus(self);
     useLavaSurge(self);
     useTidalWaves(self);
+    useStormstrike(self);
     useMaelstromWeapon(self);
     useFulmination(self);
     useMoltenBlast(self);

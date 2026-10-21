@@ -15,6 +15,9 @@ New Spell Alert
 ###  Rogue
 New Spell Alert
 - Remorseless Attacks
+### Shaman
+New Glowing Button
+- Stormstrike
 
 
 # Classic Era / The Burning Crusade
@@ -100,6 +103,9 @@ New Spell Alert
 ###  Rogue
 New Spell Alert
 - Remorseless Attacks (Forever)
+### Shaman
+New Glowing Button
+- Stormstrike (Forever)
 ## Bug Fixes
 ### General
 Effects which rely on talents sometimes detected incorrectly which talent was picked (Classic Era, The Burning Crusade, Wrath of the Lich King, Cataclysm). This bug was introduced in version 2.6.0. All versions between 2.6.0 and 2.8.7 (included) are subject to this issue.
@@ -149,6 +155,9 @@ New Spell Alert
 ### :rogue:  Rogue
 New Spell Alert
 - Remorseless Attacks (Forever)
+### :shaman:  Shaman
+New Glowing Button
+- Stormstrike (Forever)
 ## Bug Fixes
 ### General
 Effects which rely on talents sometimes detected incorrectly which talent was picked (Classic Era, The Burning Crusade, Wrath of the Lich King, Cataclysm). This bug was introduced in version 2.6.0. All versions between 2.6.0 and 2.8.7 (included) are subject to this issue.

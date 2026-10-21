@@ -698,6 +698,9 @@ SAO.defaults = {
                 },
             },
             glow = {
+                [17364] = { -- Stormstrike (Forever)
+                    [17364] = false,
+                },
                 [43339] = { -- Shamanistic Focus (TBC-Cataclysm)
                     [8042] = false, -- Earth Shock
                     [8050] = false, -- Flame Shock

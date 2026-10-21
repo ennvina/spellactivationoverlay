@@ -11,6 +11,9 @@ New Spell Alerts
 - Priest's Searing Light (Forever)
 - Rogue's Remorseless Attacks (Forever)
 
+New Glowing Button
+- Shaman's Stormstrike (Forever)
+
 Updated Spell Alerts
 - Druid's Omen of Clarity and Eclipse have special rules to overlap\* (Forever)
 
