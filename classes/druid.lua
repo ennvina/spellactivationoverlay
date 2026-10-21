@@ -111,10 +111,11 @@ local function useEclipse()
 
             overlays = {
                 -- In Forever/Retail, 'stacks' determines is the minimum number of stacks, not the exact number
-                { stacks = 1, texture = "eclipse_moon", position = "Left",            scale = 0.8, pulse = false, level = 4, alpha = 192, option = false },
-                { stacks = 2, texture = "eclipse_moon", position = "Left",            scale = 1.1, pulse = false, level = 4, alpha = 255, option = false },
-                { stacks = 3, texture = "eclipse_moon", position = "Right (Flipped)", scale = 0.8, pulse = false, level = 2, alpha = 192, option = false },
-                { stacks = 4, texture = "eclipse_moon", position = "Right (Flipped)", scale = 1.1, pulse = false, level = 2, alpha = 255, option = {
+                default = { texture = "eclipse_moon", pulse = false, option = false },
+                { stacks = 1, position = "Left",            scale = 0.8, level = 4, alpha = 192 },
+                { stacks = 2, position = "Left",            scale = 1.1, level = 4, alpha = 255 },
+                { stacks = 3, position = "Right (Flipped)", scale = 0.8, level = 2, alpha = 192 },
+                { stacks = 4, position = "Right (Flipped)", scale = 1.1, level = 2, alpha = 255, option = {
                     setupHash = SAO:HashNameFromStacks(0),
                     testHash = { SAO:HashNameFromStacks(1), SAO:HashNameFromStacks(2), SAO:HashNameFromStacks(3), SAO:HashNameFromStacks(4) },
                     subText = SAO:RecentlyUpdated(), -- Updated 21-oct-2026
