@@ -406,7 +406,7 @@ function SAO:GetNbTalentPoints(i, j)
         -- Revamped pre-MoP talent API
         assertsafe(GetTalentInfo == C_SpecializationInfo.GetTalentInfo);
         local talentInfo = GetTalentInfo({ specializationIndex = i, talentIndex = j });
-        return talentInfo and talentInfo.rank and 1 or 0;
+        return talentInfo and talentInfo.rank or 0;
     else
         -- Legacy code
         return (select(5, GetTalentInfo(i, j)));
