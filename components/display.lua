@@ -115,11 +115,6 @@ SAO.Display = {
         _overlay.auraContainerItem = SAO.AuraContainer:registerOverlay(_overlay); -- Shall return nil if a secret-compatible aura container item is not needed
 
         --[[BEGIN_DEV_ONLY]]
-        if not _overlay.auraContainerItem and _overlay.a then
-            SAO:Warn(Module, "Overlay of spellID "..tostring(_overlay.spellID).." uses an alpha of "..tostring(_overlay.a)..
-                " but visuals are not compatible with alpha (they could be - it just hasn't been implemented yet)");
-        end
-
         if _overlay.spellID ~= self.spellID then
             SAO:Warn(Module, "Inconsistent spellID between display and overlay: "..tostring(self.spellID).." vs. "..tostring(_overlay.spellID));
         end
