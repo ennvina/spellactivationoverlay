@@ -159,8 +159,6 @@ Riposte could glow without the talent (Classic Era, The Burning Crusade, Wrath o
 Backstab could glow without the Murderous Intent talent (Cataclysm)
 ### Shaman
 Lava Burst could glow without the Lava Surge talent (Cataclysm)
-## Known Limitations
-## Miscellaneous
 ## Contributors
 Shout-out to our amazing contributors
 - zzcbun for reporting the talent issue
@@ -173,7 +171,6 @@ Thanks!
 
 # SpellActivationOverlay 2.8.8
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.8.8
-## General
 ## Classes
 ### :druid:  Druid
 Omen of Clarity and Eclipse have special rules to overlap (Forever). This mimics overlapping rules that was used in e.g. Wrath of the Lich King.
@@ -226,8 +223,6 @@ Riposte could glow without the talent (Classic Era, The Burning Crusade, Wrath o
 Backstab could glow without the Murderous Intent talent (Cataclysm)
 ### :shaman:  Shaman
 Lava Burst could glow without the Lava Surge talent (Cataclysm)
-## Known Limitations
-## Miscellaneous
 ## Contributors
 Shout-out to our amazing contributors
 - zzcbun for reporting the talent issue
