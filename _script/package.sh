@@ -618,7 +618,7 @@ prunetex "${TEXTURES_NOT_FOR_FOREVER[@]}"
 #SOUNDS_NOT_FOR_FOREVER=(UI_PowerAura_Generic)
 #prunesound "${SOUNDS_NOT_FOR_FOREVER[@]}"
 
-zipproject forever-beta "$VERSION_TOC_VERSION"
+zipproject forever "$VERSION_TOC_VERSION"
 
 cdup
 }
