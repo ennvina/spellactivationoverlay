@@ -1,0 +1,37 @@
+# SpellActivationOverlay 2.8.8
+@here I am pleased to announce the newest release of SpellActivationOverlay, version 2.8.8
+## General
+## Classes
+### :class:  Class
+New Spell Alerts
+- 
+New Glowing Buttons
+- 
+## Bug Fixes
+### General
+Effects which rely on talents sometimes detected incorrectly which talent was picked (Classic Era, The Burning Crusade, Wrath of the Lich King, Cataclysm). This bug was introduced in version 2.6.0. All versions between 2.6.0 and 2.8.7 (included) are subject to this issue.
+### :mage~1:  Mage
+Hot Streak could trigger without the talent (Wrath of the Lich King, Cataclysm)
+
+Impact could trigger without the talent (Wrath of the Lich King, Cataclysm)
+### :paladin:  Paladin
+Judgements of the Pure could trigger without talent (Wrath of the Lich King, Cataclysm)
+### :rogue:  Rogue
+Riposte could glow without the talent (Classic Era, The Burning Crusade, Wrath of the Lich King). This could happen if the Rogue performed the following actions in this exact order
+1. Pick the Riposte talent
+2. Put the Riposte button to an action bar
+3. Forget talents (respec) and not pick Riposte again
+4. Keep the Riposte button ni the action bar (it will be grayed out)
+5. Enter combat and parry the enemy: Riposte may glow, which is a bug
+
+Backstab could glow without the Murderous Intent talent (Cataclysm)
+### :shaman:  Shaman
+Lava Burst could glow without the Lava Surge talent (Cataclysm)
+## Known Limitations
+## Miscellaneous
+## Contributors
+Shout-out to our amazing contributors
+- zzcbun for reporting the talent issue
+Thanks!
+
+As always, the latest release is available on [CurseForge](https://www.curseforge.com/wow/addons/spellactivationoverlay) / [GitHub](https://github.com/ennvina/spellactivationoverlay/releases/latest) / [Discord](https://discord.com/channels/1013194771969355858/1379111832207228938)

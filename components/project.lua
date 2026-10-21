@@ -6,18 +6,19 @@ local WOW_PROJECT_FOREVER = WOW_PROJECT_FOREVER or WOW_PROJECT_CAMELOT or 18 -- 
 -- List of project flags, as bit field
 -- Start high enough to be able to index project flag to a list, and avoid confusion with traditional lists
 SAO.ERA    = 0x0100
-SAO.SOD    = 0x0200 -- Special case: Era effects are available to SoD, but not the other way around
+SAO.SOD    = 0x0200 -- Special case: Era effects are available in Season of Discovery, but not the other way around
 SAO.TBC    = 0x0400
 SAO.WRATH  = 0x0800
-SAO.CATA   = 0x1000
-SAO.MOP    = 0x2000
+SAO.TITAN  = 0x1000 -- Special cast: Wrath effects are available in Titan Reforged: Wrath, but not the other way around
+SAO.CATA   = 0x2000
+SAO.MOP    = 0x4000
 SAO.RETAIL = 0x10000000
 SAO.FOREVER= 0x20000000
-SAO.ALL_PROJECTS = SAO.FOREVER + SAO.ERA + SAO.SOD + SAO.TBC + SAO.WRATH + SAO.CATA + SAO.MOP + SAO.RETAIL
+SAO.ALL_PROJECTS = SAO.FOREVER + SAO.ERA + SAO.SOD + SAO.TBC + SAO.WRATH + SAO.TITAN + SAO.CATA + SAO.MOP + SAO.RETAIL
 SAO.TBC_AND_ONWARD   = SAO.ALL_PROJECTS - (SAO.FOREVER + SAO.ERA + SAO.SOD)
 SAO.WRATH_AND_ONWARD = SAO.ALL_PROJECTS - (SAO.FOREVER + SAO.ERA + SAO.SOD + SAO.TBC)
-SAO.CATA_AND_ONWARD  = SAO.ALL_PROJECTS - (SAO.FOREVER + SAO.ERA + SAO.SOD + SAO.TBC + SAO.WRATH)
-SAO.MOP_AND_ONWARD   = SAO.ALL_PROJECTS - (SAO.FOREVER + SAO.ERA + SAO.SOD + SAO.TBC + SAO.WRATH + SAO.CATA)
+SAO.CATA_AND_ONWARD  = SAO.ALL_PROJECTS - (SAO.FOREVER + SAO.ERA + SAO.SOD + SAO.TBC + SAO.WRATH + SAO.TITAN)
+SAO.MOP_AND_ONWARD   = SAO.ALL_PROJECTS - (SAO.FOREVER + SAO.ERA + SAO.SOD + SAO.TBC + SAO.WRATH + SAO.TITAN + SAO.CATA)
 
 function SAO.IsForever()
     -- local interfaceVersion = tonumber((select(4, GetBuildInfo())));
@@ -45,8 +46,14 @@ function SAO.IsMoP()
     return WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC;
 end
 
+local isSoD = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and C_Engraving and C_Engraving.IsEngravingEnabled();
 function SAO.IsSoD()
-    return WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and C_Engraving and C_Engraving.IsEngravingEnabled()
+    return isSoD;
+end
+
+local isTitan = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC and select(4, GetBuildInfo()) >= 38000 and select(4, GetBuildInfo()) <= 38099;
+function SAO.IsTitan()
+    return isTitan;
 end
 
 function SAO.IsRetail()
@@ -93,6 +100,7 @@ function SAO.IsProject(projectFlags)
         bit.band(projectFlags, SAO.SOD) ~= 0 and SAO.IsSoD() or
         bit.band(projectFlags, SAO.TBC) ~= 0 and SAO.IsTBC() or
         bit.band(projectFlags, SAO.WRATH) ~= 0 and SAO.IsWrath() or
+        bit.band(projectFlags, SAO.TITAN) ~= 0 and SAO.IsTitan() or
         bit.band(projectFlags, SAO.CATA) ~= 0 and SAO.IsCata() or
         bit.band(projectFlags, SAO.MOP) ~= 0 and SAO.IsMoP() or
         --
@@ -114,6 +122,8 @@ function SAO.GetFlavorName()
     -- Special case for flavors which do not have a dedicated WOW_PROJECT_ID
     if SAO.IsSoD() then
         return "SoD";
+    elseif SAO.IsTitan() then
+        return "Titan";
     end
     return flavorNames[WOW_PROJECT_ID] or "Unknown";
 end
