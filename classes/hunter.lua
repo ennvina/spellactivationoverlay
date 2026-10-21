@@ -39,7 +39,7 @@ end
 local function useMongooseBite()
     SAO:CreateEffect(
         "mongoose_bite",
-        SAO.ERA + SAO.TBC,
+        SAO.FOREVER + SAO.ERA + SAO.TBC,
         mongooseBite,
         "counter",
         {
@@ -89,6 +89,18 @@ local function useFocusFire()
             talent = focusFire, -- Focus Fire (ability), identical to the spell ID of the ability
             overlay = { stacks = 5, texture = "focus_fire", position = "Left + Right (Flipped)" },
             button = { stacks = 5, spellID = focusFire, option = { isNative = true } }, -- Button already glowing natively
+        }
+    );
+end
+
+local function useRapidKilling()
+    SAO:CreateEffect(
+        "rapid_killing",
+        SAO.FOREVER,
+        415407, -- Rapid Killing (buff)
+        "aura",
+        {
+            overlay = { texture = "raging_blow", position = "Left + Right (Flipped)", scale = 1.2, alpha = 222, level = 1 },
         }
     );
 end
@@ -292,6 +304,7 @@ local function registerClass(self)
     useFocusFire();
 
     -- Marksmanship
+    useRapidKilling();
     useImprovedSteadyShot(); -- Improved Steady Shot, formerly Master Marksman
     useMasterMarksman(); -- Master Marksman, from Cataclysm
 

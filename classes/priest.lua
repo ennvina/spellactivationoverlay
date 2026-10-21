@@ -38,7 +38,7 @@ local function useMartyrdom()
     local focusedCasting = SAO.IsForever() and 27828 or 14743; -- Focused Casting (Priest buff)
     SAO:CreateEffect(
         "martyrdom",
-        SAO.ERA + SAO.TBC + SAO.WRATH,
+        SAO.FOREVER + SAO.ERA + SAO.TBC + SAO.WRATH,
         focusedCasting,
         "aura",
         {
@@ -124,6 +124,19 @@ local function useSerendipity()
             SAO:RegisterAura("serendipity_sod", nbStacks, serendipityBuff, "serendipity", "Top", scale, 255, 255, 255, pulse, glowIDs);
         end
     end
+end
+
+local function useSearingLight()
+    SAO:CreateEffect(
+        "searing_light",
+        SAO.FOREVER,
+        1284536, -- Holy Purpose (buff)
+        "aura",
+        {
+            talent = 14909, -- Searing Light (talent)
+            overlay = { texture = "hand_of_light", position = "Top" },
+        }
+    );
 end
 
 local function useSurgeOfLight()
@@ -362,6 +375,7 @@ local function registerClass(self)
 
     -- Holy
     useSerendipity();
+    useSearingLight();
     useSurgeOfLight(); -- Introduced in Burning Crusade, a talent in Mists of Pandaria
     useClearcasting();
     useHolyWordChastise();

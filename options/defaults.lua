@@ -196,6 +196,9 @@ SAO.defaults = {
                 [99060] = { -- Burning Adrenaline (Cataclysm)
                     [0] = true,
                 },
+                [415407]= { -- Rapid Killing (Forever)
+                    [0] = true,
+                },
                 [415414]= { -- Lock and Load (Season of Discovery)
                     [0] = true, -- any stacks
                 },
@@ -307,6 +310,9 @@ SAO.defaults = {
                 },
             },
             glow = {
+                [11426] = { -- Ice Barrier (Forever)
+                    [11426] = false,
+                },
                 [79683] = { -- Arcane Missiles! (Cataclysm, Mists of Pandaria)
                     [5143] = true, -- Arcane Missiles
                 },
@@ -382,6 +388,9 @@ SAO.defaults = {
         },
         ["PALADIN"] = {
             alert = {
+                [53672] = { -- Infusion of Light (Forever)
+                    [0] = true,
+                },
                 [54149] = { -- Infusion of Light (2/2 in Wrath-Cataclysm, Spec in Mists of Pandaria)
                     [0] = true,
                 },
@@ -543,6 +552,9 @@ SAO.defaults = {
                 [124430] = { -- Divine Insight, Shadow (Mists of Pandaria)
                     [0] = true,
                 },
+                [1284536] = { -- Searing Light (Forever)
+                    [0] = true,
+                }
             },
             glow = {
                 [588] = { -- Inner Fire (Wrath+)
@@ -608,6 +620,9 @@ SAO.defaults = {
         },
         ["ROGUE"] = {
             alert = {
+                [14143] = { -- Remorseless Attacks (Forever)
+                    [0] = true,
+                },
                 [14251] = { -- Riposte (Forever, Era - Wrath)
                     [0] = "cd:off",
                 },
@@ -657,11 +672,11 @@ SAO.defaults = {
                     [5] = true, -- 5 stacks
                     [0] = true, -- any stacks but 5
                 },
-                [408505] = { -- Maelstrom Weapon (Season of Discovery)
+                [408505] = { -- Maelstrom Weapon (Forever, Season of Discovery)
                     [5] = true, -- 5 stacks
                     [0] = true, -- any stacks but 5
-                    [6] = true, -- 6-9 stacks
-                    [10]= true, -- 10 stacks
+                    [6] = true, -- 6-9 stacks (Season of Discovery)
+                    [10]= true, -- 10 stacks (Season of Discovery)
                 },
                 [53390] = { -- Tidal Waves (Wrath+)
                     [0] = false, -- any stacks
@@ -686,6 +701,9 @@ SAO.defaults = {
                 },
             },
             glow = {
+                [17364] = { -- Stormstrike (Forever)
+                    [17364] = false,
+                },
                 [43339] = { -- Shamanistic Focus (TBC-Cataclysm)
                     [8042] = false, -- Earth Shock
                     [8050] = false, -- Flame Shock
@@ -757,7 +775,7 @@ SAO.defaults = {
                 [122355] = { -- Molten Core (Mists of Pandaria)
                     [0] = true, -- any stacks
                 },
-                [440873] = { -- Decimation (Season of Discovery)
+                [440873] = { -- Decimation (Forever, Season of Discovery)
                     [0] = true,
                 },
                 [47283] = { -- Empowered Imp (Wrath+)

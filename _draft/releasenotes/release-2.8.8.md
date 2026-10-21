@@ -2,11 +2,37 @@
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.8.8
 ## General
 ## Classes
-### :class:  Class
+### :druid:  Druid
+Omen of Clarity and Eclipse have special rules to overlap (Forever). This mimics overlapping rules that was used in e.g. Wrath of the Lich King.
+### :hunter:  Hunter
 New Spell Alerts
-- 
-New Glowing Buttons
-- 
+- Mongoose Bite (Forever)
+- Rapid Killing (Forever)
+
+New Glowing Button
+- Mongoose Bite (Forever)
+### :mage~1:  Mage
+New Glowing Button
+- Ice Barrier (Forever)
+### :paladin:  Paladin
+New Spell Alert
+- Infusion of Light (Forever)
+### :priest:  Priest
+New Spell Alerts
+- Priest's Martyrdom (Forever)
+- Searing Light (Forever)
+### :rogue:  Rogue
+New Spell Alert
+- Remorseless Attacks (Forever)
+### :shaman:  Shaman
+New Spell Alert
+- Maelstrom Weapon (Forever)
+
+New Glowing Button
+- Stormstrike (Forever)
+### :warlock:  Warlock
+New Spell Alert
+- Decimation (Forever)
 ## Bug Fixes
 ### General
 Effects which rely on talents sometimes detected incorrectly which talent was picked (Classic Era, The Burning Crusade, Wrath of the Lich King, Cataclysm). This bug was introduced in version 2.6.0. All versions between 2.6.0 and 2.8.7 (included) are subject to this issue.

@@ -734,6 +734,17 @@ local function useBrainFreeze()
     );
 end
 
+local function useIceBarrier()
+    local iceBarrier = 11426;
+    SAO:CreateEffect(
+        "ice_barrier",
+        SAO.FOREVER,
+        iceBarrier,
+        "counter",
+        { combatOnly = true }
+    );
+end
+
 local function useHeatingUpAndHotStreak()
     SAO:CreateEffect(
         "heating_up",
@@ -837,6 +848,8 @@ local function registerFrost(self)
     elseif self.IsMoP() then
         useBrainFreeze();
     end
+
+    useIceBarrier();
 end
 
 local function registerArcane(self)

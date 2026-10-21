@@ -362,7 +362,7 @@ local function useDecimation(self)
     elseif self.IsSoD() or self.IsForever() then
         self:CreateEffect(
             "decimation",
-            SAO.SOD,
+            SAO.FOREVER + SAO.SOD,
             440873, -- Decimation (buff)
             "aura",
             {

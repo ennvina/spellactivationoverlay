@@ -168,6 +168,21 @@ local function useRiposte()
     );
 end
 
+local function useRemorselessAttacks()
+    local remorselessBuff = 14143;
+    local remorselessTalent = 14144;
+    SAO:CreateEffect(
+        "remorseless_attacks",
+        SAO.FOREVER,
+        remorselessBuff,
+        "aura",
+        {
+            talent = remorselessTalent,
+            overlay = { texture = "raging_blow", position = "Left + Right (Flipped)", scale = 1.2, alpha = 222, level = 1 },
+        }
+    );
+end
+
 local function useMurderousIntent()
     local backstab = 53;
     local murderousIntent = 14158;
@@ -234,8 +249,9 @@ local function useDispatch()
 end
 
 local function registerClass(self)
-    useRiposte();
     useMurderousIntent();
+    useRemorselessAttacks();
+    useRiposte();
     useCutthroat();
     useBlindside();
     useDispatch();
