@@ -368,7 +368,7 @@ function SAO:GetTalentByName(talentName)
             for index = 1, nbTabs do
                 local talentInfo = GetTalentInfo({ specializationIndex = tab, talentIndex = index });
                 if talentInfo and talentInfo.name == talentName then
-                    local rank = talentInfo.selected and 1 or 0; -- Use talentInfo.known, if .selected is unreliable
+                    local rank = talentInfo.rank;
                     local maxRank = talentInfo.maxRank;
                     return rank, maxRank, tab, index;
                 end
