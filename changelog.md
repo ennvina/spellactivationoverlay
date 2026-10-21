@@ -1,5 +1,19 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.8.8 (2026-10-xx)
+
+Thank you to our amazing contributors for helping out. Thanks!
+- zzcbun for reporting the talent issue
+
+Bug Fixes
+- Talents were sometimes detected incorrectly (Era, TBC, Wrath)
+- Mage's Hot Streak could trigger without the talent (Wrath, Cata)
+- Mage's Impact could trigger without the talent (Wrath, Cata)
+- Paladin's Judgements of the Pure could trigger without talent (Wrath, Cata)
+- Rogue's Riposte could glow without the talent (Era, TBC, Wrath)
+- Rogue's Backstab could glow without the Murderous Intent talent (Cata)
+- Shaman's Lava Burst could glow without the Lava Surge talent (Cata)
+
 #### v2.8.7 (2026-10-20)
 
 Bug Fixes
