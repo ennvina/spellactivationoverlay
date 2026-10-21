@@ -4,6 +4,9 @@
 ## Classes
 ### :druid:  Druid
 Omen of Clarity and Eclipse have special rules to overlap (Forever). This mimics overlapping rules that was used in e.g. Wrath of the Lich King.
+### :hunter:  Hunter
+New Spell Alert
+- Hunter's Rapid Killing (Forever)
 ### :paladin:  Paladin
 New Spell Alert
 - Infusion of Light (Forever)

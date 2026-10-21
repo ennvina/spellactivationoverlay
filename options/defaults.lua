@@ -196,6 +196,9 @@ SAO.defaults = {
                 [99060] = { -- Burning Adrenaline (Cataclysm)
                     [0] = true,
                 },
+                [415407]= { -- Rapid Killing (Forever)
+                    [0] = true,
+                },
                 [415414]= { -- Lock and Load (Season of Discovery)
                     [0] = true, -- any stacks
                 },

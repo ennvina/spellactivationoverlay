@@ -93,6 +93,18 @@ local function useFocusFire()
     );
 end
 
+local function useRapidKilling()
+    SAO:CreateEffect(
+        "rapid_killing",
+        SAO.FOREVER,
+        415407, -- Rapid Killing (buff)
+        "aura",
+        {
+            overlay = { texture = "raging_blow", position = "Left + Right (Flipped)", scale = 1.2, alpha = 222, level = 1 },
+        }
+    );
+end
+
 local function useImprovedSteadyShot()
     local improvedSteadyShotBuff = 53220;
     local improvedSteadyShotTalent = 53221;
@@ -292,6 +304,7 @@ local function registerClass(self)
     useFocusFire();
 
     -- Marksmanship
+    useRapidKilling();
     useImprovedSteadyShot(); -- Improved Steady Shot, formerly Master Marksman
     useMasterMarksman(); -- Master Marksman, from Cataclysm
 
