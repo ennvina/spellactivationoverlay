@@ -590,7 +590,7 @@ cdup
 # Release forever version
 release_forever() {
 FOREVER_BUILD_VERSION=16001
-mkproject forever "$FOREVER_BUILD_VERSION" 30c9d9 inv_catskybornemount_c60_blue 64 "Forever"
+mkproject forever "$FOREVER_BUILD_VERSION" 30c9d9 inv_catskybornemount_c60_blue 96 "Forever"
 
 #prunecopyright Cataclysm Pandaria Draenor
 # Do not remove Cataclysm copyright, because we may need to use a sound file introduced in Cataclysm
