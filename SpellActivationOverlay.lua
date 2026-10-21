@@ -20,17 +20,9 @@ if SAO.IsForever() then
 	local welcomeForever = SAO:gradientText("World of Warcraft: Forever", { lightBlue, lightBlueLight, lightBlue });
 	local welcomeDiscord = "|cffcdffcdDiscord server|r";
 	local welcomeCurseForge = "|cffcdffcdCurseForge|r";
-	local welcomeText = welcomeBefore .. " Welcome to " .. welcomeSAO .. ". " ..
-		"The addon is still in early development for " .. welcomeForever .. ". " ..
-		"Lots of cool stuff is coming soon™. " ..
-		"Make sure to report issues and suggest ideas over the " .. welcomeDiscord .. " or " .. welcomeCurseForge .. ", thank you :)";
+	local welcomeText = welcomeBefore .. " Welcome to " .. welcomeSAO .. " for " .. welcomeForever .. ". " ..
+		"Make sure to send feedback over the " .. welcomeDiscord .. " or " .. welcomeCurseForge .. ", ".. "thank you :)";
 	print(welcomeText);
-
-	local newReleases = "Expect releases with new effects and bug fixes EVERY DAY until the end of the Beta test, on October 21st. Stay tuned!";
-	local c = function(intensity)
-		return { r = 1, g = 0.2 + 0.7 * intensity, b = 0.6 * intensity };
-	end
-	print(SAO:gradientText(newReleases, { c(0.8), c(0.9), c(1), c(0.8), c(0.7) }));
 end
 
 function SpellActivationOverlay_OnLoad(self)
