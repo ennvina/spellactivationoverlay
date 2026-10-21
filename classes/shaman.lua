@@ -196,9 +196,9 @@ local function useMaelstromWeapon(self)
     local hash6Stacks = self:HashNameFromStacks(6);
     local hash9Stacks = self:HashNameFromStacks(9);
 
-    local maelstromWeaponBuff = self.IsSoD() and 408505 or 53817;
-    local maelstromWeaponTalent = self.IsSoD() and 408498 or 51530;
-    local maelstromWeaponScale = self.IsSoD() and 0.8 or 1;
+    local maelstromWeaponBuff   = self.IsProject(SAO.FOREVER + SAO.SOD) and 408505 or 53817;
+    local maelstromWeaponTalent = self.IsProject(SAO.FOREVER + SAO.SOD) and 408498 or 51530;
+    local maelstromWeaponScale  = self.IsSoD() and 0.8 or 1;
 
     -- Default colors for non-Forever flavors
     -- Slightly dimmed colors for Forever, because overlays will all display one on top of the other

@@ -672,11 +672,11 @@ SAO.defaults = {
                     [5] = true, -- 5 stacks
                     [0] = true, -- any stacks but 5
                 },
-                [408505] = { -- Maelstrom Weapon (Season of Discovery)
+                [408505] = { -- Maelstrom Weapon (Forever, Season of Discovery)
                     [5] = true, -- 5 stacks
                     [0] = true, -- any stacks but 5
-                    [6] = true, -- 6-9 stacks
-                    [10]= true, -- 10 stacks
+                    [6] = true, -- 6-9 stacks (Season of Discovery)
+                    [10]= true, -- 10 stacks (Season of Discovery)
                 },
                 [53390] = { -- Tidal Waves (Wrath+)
                     [0] = false, -- any stacks

@@ -25,6 +25,9 @@ New Spell Alerts
 New Spell Alert
 - Remorseless Attacks (Forever)
 ### :shaman:  Shaman
+New Spell Alert
+- Maelstrom Weapon (Forever)
+
 New Glowing Button
 - Stormstrike (Forever)
 ### :warlock:  Warlock

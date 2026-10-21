@@ -12,6 +12,7 @@ New Spell Alerts
 - Priest's Martyrdom (Forever)
 - Priest's Searing Light (Forever)
 - Rogue's Remorseless Attacks (Forever)
+- Shaman's Maelstrom Weapon (Forever)
 - Warlock's Decimation (Forever)
 
 New Glowing Buttons
