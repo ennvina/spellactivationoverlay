@@ -112,6 +112,8 @@ function SpellActivationOverlayOptionsPanelMixin:Init()
                 else
                     optimizedForText = SAO:optimizedFor(WrapTextInColorCode(BNET_FRIEND_TOOLTIP_WOW_CLASSIC, "ffff0000"));
                 end
+            elseif xSaoBuild == "forever" then
+                optimizedForText = SAO:optimizedFor(string.format(CATALOG_SHOP_WOW_FLAVOR_MODERN, addonBuild));
             else
                 optimizedForText = SAO:optimizedFor(string.format(BNET_FRIEND_ZONE_WOW_CLASSIC, addonBuild));
             end
