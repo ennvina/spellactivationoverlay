@@ -21,9 +21,13 @@ local UnitClassBase = UnitClassBase
 local GetAuraDataBySpellName = C_UnitAuras and C_UnitAuras.GetAuraDataBySpellName
 local GetPlayerAuraBySpellID = C_UnitAuras and C_UnitAuras.GetPlayerAuraBySpellID
 
+local canUseModernTalentAPI = not SAO.IsTitan() -- Enforce using legacy talent API for Titan Reforged: Wrath
+
 local GetNumSpecializationsForClassID = C_SpecializationInfo and C_SpecializationInfo.GetNumSpecializationsForClassID
 local GetSpecializationInfo = C_SpecializationInfo and C_SpecializationInfo.GetSpecializationInfo
+if canUseModernTalentAPI then
       GetTalentInfo = C_SpecializationInfo and C_SpecializationInfo.GetTalentInfo or GetTalentInfo
+end
 
 local IsEquippedItem = C_Item and C_Item.IsEquippedItem
 
@@ -360,7 +364,7 @@ function SAO:GetTalentByName(talentName)
                 end
             end
         end
-    elseif C_SpecializationInfo and C_SpecializationInfo.GetTalentInfo then
+    elseif C_SpecializationInfo and C_SpecializationInfo.GetTalentInfo and canUseModernTalentAPI then
         -- Revamped pre-MoP talent API (introduced in Classic Era patch 1.15.8)
         assertsafe(GetTalentInfo == C_SpecializationInfo.GetTalentInfo);
         for tab = 1, GetNumTalentTabs() do
@@ -398,7 +402,7 @@ function SAO:GetNbTalentPoints(i, j)
     if self.IsProject(SAO.MOP_AND_ONWARD) then
         local talentInfo = GetTalentInfo({ tier=i, column=j });
         return talentInfo and talentInfo.selected and 1 or 0;
-    elseif C_SpecializationInfo and C_SpecializationInfo.GetTalentInfo then
+    elseif C_SpecializationInfo and C_SpecializationInfo.GetTalentInfo and canUseModernTalentAPI then
         -- Revamped pre-MoP talent API
         assertsafe(GetTalentInfo == C_SpecializationInfo.GetTalentInfo);
         local talentInfo = GetTalentInfo({ specializationIndex = i, talentIndex = j });
