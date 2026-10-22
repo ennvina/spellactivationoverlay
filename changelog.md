@@ -1,5 +1,10 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.8.9 (2026-10-22)
+
+Bug Fixes
+- Removed a warning message that could spam the chat
+
 #### v2.8.8 (2026-10-21)
 
 Thank you to our amazing contributors for helping out. Thanks!

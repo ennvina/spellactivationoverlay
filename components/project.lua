@@ -149,7 +149,7 @@ end
 
 local projectNameForBuildID = {
     universal = "*",
-    forever   = "Forever", -- If possible: EXPANSION_NAMExx or "Forever"
+    forever   = EXPANSION_NAME_FOREVER0 or "Forever",
     vanilla   = EXPANSION_NAME0 or "Classic",
     tbc       = EXPANSION_NAME1 or "The Burning Crusade",
     wrath     = EXPANSION_NAME2 or "Wrath of the Lich King",

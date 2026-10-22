@@ -320,7 +320,7 @@ SAO.Variable:register({
                     local auraInstanceID = aura.auraInstanceID;
                     if bucket.auraInstanceID == auraInstanceID then
                         -- This should not happen, but we have seen cases when an addedAuras is fired twice e.g., Fingers of Frost (SoD)
-                        SAO:Warn(Module, "Added aura instance ID "..tostring(auraInstanceID).." for bucket "..bucket.name.." which already has the same aura instance ID, updating it instead");
+                        SAO:Warn(Module, "Added aura instance ID "..tostring(auraInstanceID).." for bucket "..bucket.name.." which already has the same aura instance ID, updating it instead"); --[[DEV_ONLY]]
                         updateAura(auraInstanceID, aura, bucket);
                     else
                         addAura(auraInstanceID, aura, bucket);
