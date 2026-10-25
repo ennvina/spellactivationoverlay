@@ -231,6 +231,10 @@ SAO.Variable:register({
 
             local isPlayer = destGUID == UnitGUID("player");
             local isTarget = destGUID == UnitGUID("target");
+            local acceptedUnit = (hasPlayerBuckets and isPlayer) or (hasTargetBuckets and isTarget);
+            if not acceptedUnit then
+                return; -- Ignore events for units we're not tracking
+            end
 
             if ( (event:sub(0,11) == "SPELL_AURA_") and (isPlayer or isTarget)) then
                 -- Events starting with SPELL_AURA e.g., SPELL_AURA_APPLIED
