@@ -15,7 +15,9 @@ SAO:Info(Module, "You are currently using the Modern AuraStacks mode. Enjoy!"); 
 
 -- Aura stacks
 --  if stacks >= 0 then
---      if stackAgnostic then
+--      if isDebuff then
+--          hash = HASH_AURA_DEBUFF
+--      else if stackAgnostic then
 --          hash = HASH_AURA_ANY
 --      else 
 --          hash = HASH_AURA_ZERO + stacks
@@ -25,6 +27,7 @@ local HASH_AURA_ABSENT = 1
 local HASH_AURA_ANY    = 2
 local HASH_AURA_ZERO   = HASH_AURA_ANY
 local HASH_AURA_MAX    = HASH_AURA_ZERO + 10 -- Allow no more than 10 stacks
+local HASH_AURA_DEBUFF = HASH_AURA_ZERO + 11
 local HASH_AURA_MASK   = 0xF
 
 -- Map between aura instance ID and bucket (Modern mode only)
@@ -52,10 +55,12 @@ SAO.Variable:register({
         key = "aura_stacks",
 
         setterFunc = function(self, stacks, bucket)
-            if stacks == nil then
-                self:setMaskedHash(HASH_AURA_ABSENT, HASH_AURA_MASK);
-            elseif type(stacks) ~= 'number' or stacks < 0 then
+            if type(stacks) ~= 'number' or stacks < -2 then
                 SAO:Warn(Module, "Invalid stack count "..tostring(stacks));
+            elseif stacks == -2 then
+                self:setMaskedHash(HASH_AURA_ABSENT, HASH_AURA_MASK);
+            elseif stacks == -1 then
+                self:setMaskedHash(HASH_AURA_DEBUFF, HASH_AURA_MASK);
             elseif bucket and bucket.stackAgnostic then
                 self:setMaskedHash(HASH_AURA_ANY, HASH_AURA_MASK);
             elseif stacks > 10 then
@@ -70,7 +75,10 @@ SAO.Variable:register({
             if maskedHash == nil then return nil; end
 
             if maskedHash == HASH_AURA_ABSENT then
-                return nil;
+                return -2;
+            end
+            if maskedHash == HASH_AURA_DEBUFF then
+                return -1;
             end
             return maskedHash - HASH_AURA_ZERO;
         end,
@@ -80,11 +88,14 @@ SAO.Variable:register({
 
         toValue = function(hash)
             local auraStacks = hash:getAuraStacks();
-            return (auraStacks == nil) and "missing" or (auraStacks == 0 and "any" or tostring(auraStacks));
+            return (auraStacks == nil and "missing") or (auraStacks == -2 and "debuff") or (auraStacks == 0 and "any" or tostring(auraStacks));
         end,
         fromValue = function(hash, value)
             if value == "missing" then
-                hash:setAuraStacks(nil);
+                hash:setAuraStacks(-2);
+                return true;
+            elseif value == "debuff" then
+                hash:setAuraStacks(-1);
                 return true;
             elseif value == "any" then
                 hash:setAuraStacks(0);
@@ -210,7 +221,7 @@ SAO.Variable:register({
                 -- Now, we are in a situation where we either got a buff (SPELL_AURA_APPLIED*) or lost it (SPELL_AURA_REMOVED*)
 
                 if (auraRemovedLast) then
-                    bucket:setAuraStacks(nil); -- nil means "not currently holding any stacks"
+                    bucket:setAuraStacks(-2); -- -2 means "not currently holding any stacks"
                     -- Can return now, because SPELL_AURA_REMOVED resets everything
                     return;
                 end
@@ -237,7 +248,7 @@ SAO.Variable:register({
                     - or was upgraded (SPELL_AURA_APPLIED_DOSE)
                     - or was downgraded but still visible (SPELL_AURA_REMOVED_DOSE)
                 ]]
-                bucket:setAuraStacks(stacks);
+                bucket:setAuraStacks(isBuffBucket and stacks or -1); -- -1 means 'debuff'
             end
         end or nil,
 
@@ -275,7 +286,7 @@ SAO.Variable:register({
 
             local addAura = function(auraInstanceID, aura, bucket)
                 SAO:Trace(Module, "Associating aura instance ID "..tostring(auraInstanceID).." to bucket "..bucket.name);
-                bucket:setAuraStacks(bucket.stackAgnostic and 0 or aura.applications);
+                bucket:setAuraStacks((bucket.auraProps and bucket.auraProps.debuff and -1) or (bucket.stackAgnostic and 0) or aura.applications);
                 bucket.lastKnownAuraStacks = aura.applications;
                 if bucket.auraInstanceID then
                     -- This situation is usually an issue, unless the aura instance ID is removed in the same update cycle, before leaving this function
@@ -294,7 +305,7 @@ SAO.Variable:register({
 
             local removeAura = function(auraInstanceID, bucket)
                 SAO:Trace(Module, "Removing association of aura instance ID "..tostring(auraInstanceID).." from bucket "..bucket.name);
-                bucket:setAuraStacks(nil);
+                bucket:setAuraStacks(-2);
                 bucket.lastKnownAuraStacks = nil;
                 bucket.auraInstanceID = nil;
                 bucketsByAuraInstanceID[auraInstanceID] = nil;
@@ -304,7 +315,7 @@ SAO.Variable:register({
                 SAO:Trace(Module, "Updating aura instance ID "..tostring(auraInstanceID).." for bucket "..bucket.name);
                 if bucket.lastKnownAuraStacks ~= aura.applications then
                     SAO:Trace(Module, "Bucket "..tostring(bucket.name).." aura stacks changed from "..tostring(bucket.lastKnownAuraStacks).." to "..tostring(aura.applications));
-                    bucket:setAuraStacks(bucket.stackAgnostic and 0 or aura.applications);
+                    bucket:setAuraStacks((bucket.auraProps and bucket.auraProps.debuff and -1) or (bucket.stackAgnostic and 0) or aura.applications);
                     bucket.lastKnownAuraStacks = aura.applications;
                 else
                     SAO:Trace(Module, "Bucket "..tostring(bucket.name).." aura stacks remain unchanged at "..tostring(bucket.lastKnownAuraStacks));
@@ -381,8 +392,8 @@ SAO.Variable:register({
         hreVar = "stacks",
         noeDefault = 0,
         description = "number of stacks",
-        checker = function(value) return type(value) == 'number' and value >= -1 and value <= 10 end,
-        noeToHash = function(value) return value >= 0 and value or nil end, -- return n if n >= 0, otherwise (if n == -1) return nil
+        checker = function(value) return type(value) == 'number' and value >= -2 and value <= 10 end,
+        noeToHash = function(value) return value end, -- return nb stacks (if n > 0), or return 0 (if any), or return -1 (if debuff), or return -2 (if missing)
     },
 
     import = {

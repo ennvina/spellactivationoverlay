@@ -29,7 +29,7 @@ local function useInnerFire()
         "aura",
         {
             combatOnly = true,
-            button = { stacks = -1 },
+            button = { stacks = -2 }, -- -2 means 'buff missing'
         }
     );
 end
@@ -239,7 +239,7 @@ local function useShadowform()
             },
             requireTalent = true,
             combatOnly = true,
-            button = { stacks = -1 },
+            button = { stacks = -2 }, -- -2 means 'buff missing'
         }
     );
 end

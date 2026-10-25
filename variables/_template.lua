@@ -268,7 +268,7 @@ SAO.Variable:register({
         Setting a transform function is useful e.g. if the hash value should be nil
         - to get a nil value to the hash fragment of this variable, we couldn't use the 'matchStance = nil' property
         - indeed, if the developer passed the HRE property 'matchStance = nil' it would be seen as if the property was missing
-        There are other cases where setting a non-identify function can be useful, but nil is the most frequent reason
+        There are other cases where setting a non-identity function can be useful, but nil is the most frequent reason
         (side note, this is called noeToHash and not hreToHash, simply because the sequence is to build HRE > NOE > hash)
         ]]
         noeToHash = function(value) return value end,
