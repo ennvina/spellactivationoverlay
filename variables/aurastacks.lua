@@ -30,7 +30,11 @@ local HASH_AURA_MASK   = 0xF
 -- Map between aura instance ID and bucket (Modern mode only)
 local bucketsByAuraInstanceID = {};
 
--- Shared variable to optimize manual bucket attempts
+-- Local variables to optimize bucket parsing
+local hasPlayerBuckets = false;
+local hasTargetBuckets = false;
+local playerBuckets = {};
+local targetBuckets = {};
 local secretBuckets = {};
 local secretlessBuckets = {};
 
@@ -114,7 +118,7 @@ SAO.Variable:register({
     bucket = {
         impossibleValue = -1,
         fetchAndSet = function(bucket)
-            if bucket.auraHasSecretRestrictions and InCombatLockdown() then
+            if bucket.auraProps and bucket.auraProps.hasSecretRestrictions and InCombatLockdown() then
                 -- Cannot fetch aura stacks reliably due to secret restrictions while in combat
                 return;
             end
@@ -134,7 +138,7 @@ SAO.Variable:register({
                 bucket.lastKnownAuraStacks = auraStacks; -- Store raw value, because bucket:getAuraStacks() is unreliable if stackAgnostic is set
                 if bucket.auraInstanceID ~= auraInstanceID then
                     if bucket.auraInstanceID ~= nil then
-                        if not bucket.auraHasSecretRestrictions then --[[BEGIN_DEV_ONLY]]
+                        if not (bucket.auraProps and bucket.auraProps.hasSecretRestrictions) then --[[BEGIN_DEV_ONLY]]
                             SAO:Warn(Module, "Removing outdated aura instance ID mapping for", bucket.auraInstanceID, "of bucket", bucket.name);
                         end --[[END_DEV_ONLY]]
                         bucketsByAuraInstanceID[bucket.auraInstanceID] = nil;
@@ -385,26 +389,67 @@ SAO.Variable:register({
         noeTrigger = "aura",
         hreTrigger = "requireAura",
         -- dependency = nil, -- Actually, aura stacks depend on 'spellID', but this property is mandatory and automatically imported
-        dependency = (C_Secrets and C_Secrets.GetSpellAuraSecrecy) and {
-            name = "spellID",
-            expectedType = "number",
-            default = function(effect) return effect.spellID end,
+        dependency = {
+            name = "auraProps",
+            expectedType = "table",
+            default = function(effect) return {} end,
             prepareBucket = function(bucket, value)
-                local secrecy = SAO:IsSpellSecret(value);
-                if secrecy == 1 then
-                    SAO:Debug(Module, bucket.description.." is based on spell "..value.." which has secret restrictions");
-                elseif secrecy == 2 then
-                    SAO:Debug(Module, bucket.description.." is based on spell "..value.." which is always secret");
+                bucket.auraProps = {};
+
+                local allowedProps = { hasSecretRestrictions = 'boolean', debuff = 'boolean', mineOnly = 'boolean' }
+                for key, prop in pairs(value) do
+                    if allowedProps[key] then --[[BEGIN_DEV_ONLY]]
+                        if type(prop) ~= allowedProps[key] then
+                            SAO:Warn(Module, "Invalid type for aura property "..key.." in bucket "..bucket.description..". Expected "..allowedProps[key]..", got "..type(prop));
+                        end --[[END_DEV_ONLY]]
+                        bucket.auraProps[key] = prop;
+                    else --[[BEGIN_DEV_ONLY]]
+                        SAO:Warn(Module, "Unknown aura property "..key.." in bucket "..bucket.description);
+                    end --[[END_DEV_ONLY]]
                 end
-                local hasSecretRestrictions = type(secrecy) == 'number' and secrecy > 0;
-                bucket.auraHasSecretRestrictions = hasSecretRestrictions;
-                if hasSecretRestrictions then
+
+                if bucket.auraProps.debuff == true then
+                    table.insert(targetBuckets, bucket);
+                    hasTargetBuckets = true;
+                else
+                    table.insert(playerBuckets, bucket);
+                    hasPlayerBuckets = true;
+                end
+
+                -- Guess the hasSecretRestrictions property if needed
+                if type(bucket.auraProps.hasSecretRestrictions) ~= 'boolean' then
+                    local doesSpellHaveSecretRestrictions = function(auraID)
+                        if not C_Secrets or not C_Secrets.GetSpellAuraSecrecy then
+                            return false;
+                        end
+                        local secrecy = SAO:IsSpellSecret(auraID);
+                        if secrecy == 1 then
+                            SAO:Debug(Module, bucket.description.." is based on spell "..value.." which has secret restrictions");
+                        elseif secrecy == 2 then
+                            SAO:Debug(Module, bucket.description.." is based on spell "..value.." which is always secret");
+                        end
+                        return type(secrecy) == 'number' and secrecy > 0;
+                    end;
+
+                    -- First, try with the bucket's spellID
+                    local hasSecretRestrictions = doesSpellHaveSecretRestrictions(bucket.spellID);
+
+                    -- Then, try with the bucket's aka spell IDs
+                    for _, akaSpellID in ipairs(SAO:GetAkaSpellIDsByEffectSpellID(bucket.spellID) or {}) do
+                        hasSecretRestrictions = doesSpellHaveSecretRestrictions(akaSpellID) or hasSecretRestrictions;
+                    end
+
+                    bucket.auraProps.hasSecretRestrictions = hasSecretRestrictions;
+                end
+
+                -- Local lists to optimize parsing secret and secretless buckets later on
+                if bucket.auraProps.hasSecretRestrictions then
                     table.insert(secretBuckets, bucket);
                 else
                     table.insert(secretlessBuckets, bucket);
                 end
             end,
-        } or nil,
+        },
         classes = {
             force = "aura",
             ignore = nil,
