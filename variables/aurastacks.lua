@@ -205,7 +205,9 @@ SAO.Variable:register({
                 bucket.lastKnownAuraStacks = auraStacks; -- Store raw value, because bucket:getAuraStacks() is unreliable if stackAgnostic is set
                 if bucket.auraInstanceID ~= auraInstanceID then
                     if bucket.auraInstanceID ~= nil then
-                        if not (bucket.auraProps and bucket.auraProps.hasSecretRestrictions) then --[[BEGIN_DEV_ONLY]]
+                        if isBuffBucket and not (bucket.auraProps and bucket.auraProps.hasSecretRestrictions) then --[[BEGIN_DEV_ONLY]]
+                            -- Note: this warning is ignored for debuff buckets, because of target issues
+                            -- (the game client does not send UNIT_AURA events when changing target)
                             SAO:Warn(Module, "Removing outdated aura instance ID mapping for", bucket.auraInstanceID, "of bucket", bucket.name);
                         end --[[END_DEV_ONLY]]
                         bucketsByAuraInstanceID[bucket.auraInstanceID] = nil;
@@ -225,7 +227,7 @@ SAO.Variable:register({
 
         -- Legacy aura handling via CLEU
         COMBAT_LOG_EVENT_UNFILTERED = SAO.AURASTACKS.LEGACY and function(...)
-            local _, event, _, _, _, _, _, destGUID = CombatLogGetCurrentEventInfo();
+            local _, event, _, srcGUID, _, _, _, destGUID = CombatLogGetCurrentEventInfo();
 
             local isPlayer = destGUID == UnitGUID("player");
             local isTarget = destGUID == UnitGUID("target");
@@ -290,6 +292,10 @@ SAO.Variable:register({
                     end
                 end
                 local isBuffBucket, isDebuffBucket = getBuffDebuffBucket(bucket);
+                if isDebuffBucket and bucket.auraProps.mineOnly and srcGUID ~= UnitGUID("player") then
+                    -- Ignore debuffs not applied by the player, when the aura is marked as 'mineOnly'
+                    return;
+                end
 
                 -- Handle unique case first: aura refresh
                 if (auraRefresh) then
@@ -368,6 +374,10 @@ SAO.Variable:register({
             local addedAuraInstanceIDsExpectedToBeRemoved = {}; --[[DEV_ONLY]]
 
             local addAura = function(auraInstanceID, aura, bucket)
+                local isDebuffBucket = bucket.auraProps and bucket.auraProps.debuff;
+                if isDebuffBucket and bucket.auraProps.mineOnly and not aura.isFromPlayerOrPlayerPet then
+                    return;
+                end
                 SAO:Trace(Module, "Associating aura instance ID "..tostring(auraInstanceID).." to bucket "..bucket.name);
                 bucket:setAuraStacks((bucket.auraProps and bucket.auraProps.debuff and -1) or (bucket.stackAgnostic and 0) or aura.applications);
                 bucket.lastKnownAuraStacks = aura.applications;
