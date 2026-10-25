@@ -175,10 +175,38 @@ This section showcases changes between branch forever-alpha and branch forever-b
 
 The goal of this branch is to **add new effects introduced in Forever**. This new list may not support everything asked by the players. Hopefully, there will be enough to make most people happy.
 
+### :druid:  Druid
+
+Spell Alertts
+- Eclipse (New)
+- Many fixes to Omen of Clarity
+
+### :mage~1:  Mage
+
+Spell Alerts
+- Missile Barrage (New)
+- Heating Up (New)
+- Fingers of Frost (New)
+
+### :rogue:  Rogue
+
+Spell Alerts
+- Cutthroat (New)
+
+### :shaman:  Shaman
+
+Spell Alerts
+- Maelstrom Weapon (New)
+
+### :warlock:  Warlock
+
+Spell Alerts
+- Decimation (New)
+
 ### :warrior:  Warrior
 
-Glowing Buttons 
-- Victory Rush
+Glowing Buttons
+- Victory Rush (New)
 
 
 ## Fourth round of supported class effects
@@ -189,4 +217,37 @@ The goal of this branch is to iron things out to make sure that players can use 
 
 This is *not* the final round of class effects. More may come based on new suggestions, potential resolutions of known limitations, or simply Blizzard adding/updating effects with e.g. class balance or new tier sets.
 
-TBD
+### :hunter:  Hunter
+
+Spell Alerts
+- Hunter's Mongoose Bite (New)
+- Hunter's Rapid Killing (New)
+
+Glowing Buttons
+- Hunter's Mongoose Bite (New)
+
+### :mage~1:  Mage
+
+Glowing Buttons
+- Mage's Ice Barrier (New)
+
+### :paladin:  Paladin
+
+Spell Alerts
+- Paladin's Infusion of Light (New)
+
+### :priest:  Priest
+
+Spell Alerts
+- Priest's Martyrdom (New)
+- Priest's Searing Light (New)
+
+### :rogue:  Rogue
+
+Spell Alerts
+- Rogue's Remorseless Attacks (New)
+
+### :shaman:  Shaman
+
+Glowing Buttons
+- Shaman's Stormstrike (New)
