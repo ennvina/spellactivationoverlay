@@ -431,7 +431,7 @@ SAO.BucketManager = {
             SAO.RegisteredBucketsByName[name] = bucket;
 
             if SAO:IsAka(spellID) then --[[BEGIN_DEV_ONLY]]
-                SAO:Warn(Module, "Creating a bucket for spellID "..tostring(spellID).." which is an a.k.a. of "..SAO:GetAkaEffectName(spellID));
+                SAO:Info(Module, "Creating a bucket for spellID "..tostring(spellID).." which is an a.k.a. of "..SAO:GetAkaEffectName(spellID));
             end --[[END_DEV_ONLY]]
 
             -- Cannot guarantee we can track spell ID on Classic Era, but can always track spell name

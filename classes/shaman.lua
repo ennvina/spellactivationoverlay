@@ -188,6 +188,20 @@ local function useStormstrike(self)
         "counter",
         { combatOnly = true }
     );
+
+    --[[BEGIN_DEV_ONLY]]
+    SAO:CreateEffect(
+        "stormstrike_debuff",
+        SAO.ALL_PROJECTS,
+        27775, -- Not the actual spell ID to circumvent unicity; set the stormstrike spellID into a.k.a. instead
+        "aura",
+        {
+            aka = stormstrike,
+            auraProps = { debuff = true },
+            overlay = { stacks = -1, texture = "fulmination", position = "Top", scale = 1.5, option = { subText = "SS" } },
+        }
+    );
+    --[[END_DEV_ONLY]]
 end
 
 local function useMaelstromWeapon(self)
