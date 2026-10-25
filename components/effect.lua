@@ -1176,6 +1176,11 @@ function SAO:GetAkaEffectName(spellID)
     return aka and aka.name or nil;
 end
 
+function SAO:GetAkaBucket(spellID)
+    local aka = AKAs[spellID];
+    return aka and aka.name and SAO:GetBucketByName(aka.name) or nil;
+end
+
 function SAO:GetAkaSpellIDsByEffectSpellID(effectSpellID)
     local spellIDs = {};
     for akaSpellID, aka in pairs(AKAs) do

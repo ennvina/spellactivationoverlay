@@ -41,6 +41,31 @@ local targetBuckets = {};
 local secretBuckets = {};
 local secretlessBuckets = {};
 
+local function getAuraBucket(spellID, isPlayer, isTarget)
+    local checkBucketCompatibility = function(bucket)
+        if not bucket or not bucket.trigger:reactsWith(SAO.TRIGGER_AURA) then
+            return false;
+        end
+        local isDebuffBucket = bucket.auraProps and bucket.auraProps.debuff;
+        local isBuffBucket = not isDebuffBucket;
+        return (isPlayer and isBuffBucket) or (isTarget and isDebuffBucket);
+    end
+
+    -- Fetch direct aura bucket first, if compatible
+    local bucket = SAO:GetBucketBySpellID(spellID);
+    if checkBucketCompatibility(bucket) then
+        return bucket;
+    end
+
+    -- Otherwise, fetch a.k.a. bucket
+    bucket = SAO:GetAkaBucket(spellID);
+    if checkBucketCompatibility(bucket) then
+        return bucket;
+    end
+
+    return nil;
+end
+
 SAO.Variable:register({
     order = 1,
     core = "AuraStacks",
@@ -134,15 +159,46 @@ SAO.Variable:register({
                 return;
             end
 
-            local auraStacks, auraInstanceID = SAO:GetPlayerAuraStacksBySpellID(bucket.spellID);
-            if auraStacks ~= nil then
-                if bucket.stackAgnostic then
-                    bucket:setAuraStacks(0);
+            local isDebuffBucket = bucket.auraProps and bucket.auraProps.debuff;
+            local isBuffBucket = not isDebuffBucket;
+
+            local auraStacks, auraInstanceID;
+
+            if isBuffBucket then
+                auraStacks, auraInstanceID = SAO:GetPlayerAuraStacksBySpellID(bucket.spellID);
+                if auraStacks ~= nil then
+                    if bucket.stackAgnostic then
+                        bucket:setAuraStacks(0); -- any
+                    else
+                        bucket:setAuraStacks(auraStacks);
+                    end
                 else
-                    bucket:setAuraStacks(auraStacks);
+                    bucket:setAuraStacks(-2); -- missing
                 end
             else
-                bucket:setAuraStacks(nil);
+                assertsafe(isDebuffBucket);
+                assertsafe(C_UnitAuras and C_UnitAuras.GetUnitAuraInstanceIDs);
+                if not C_UnitAuras or not C_UnitAuras.GetUnitAuraInstanceIDs then
+                    return;
+                end
+
+                local filter = bucket.auraProps.mineOnly and "HARMFUL|PLAYER" or "HARMFUL";
+                local auraInstanceIDs = C_UnitAuras.GetUnitAuraInstanceIDs("target", filter, bucket.spellID);
+
+                for _, id in ipairs(auraInstanceIDs) do
+                    local aura = C_UnitAuras.GetAuraDataByAuraInstanceID("target", id);
+                    if aura then
+                        auraInstanceID = id; -- store the first valid aura instance ID
+                        auraStacks = aura.applications;
+                    end
+                    break;
+                end
+
+                if auraInstanceID == nil then
+                    bucket:setAuraStacks(-2); -- missing
+                else
+                    bucket:setAuraStacks(-1); -- debuff
+                end
             end
 
             if SAO.AURASTACKS.MODERN then -- Additional handling to optimize Modern mode
@@ -165,13 +221,16 @@ SAO.Variable:register({
 
     event = {
         isRequired = true,
-        names = SAO.AURASTACKS.MODERN and { "UNIT_AURA", "PLAYER_REGEN_ENABLED" } or { "COMBAT_LOG_EVENT_UNFILTERED" },
+        names = SAO.AURASTACKS.MODERN and { "UNIT_AURA", "PLAYER_REGEN_ENABLED", "PLAYER_TARGET_CHANGED" } or { "COMBAT_LOG_EVENT_UNFILTERED" },
 
         -- Legacy aura handling via CLEU
         COMBAT_LOG_EVENT_UNFILTERED = SAO.AURASTACKS.LEGACY and function(...)
             local _, event, _, _, _, _, _, destGUID = CombatLogGetCurrentEventInfo();
 
-            if ( (event:sub(0,11) == "SPELL_AURA_") and (destGUID == UnitGUID("player")) ) then
+            local isPlayer = destGUID == UnitGUID("player");
+            local isTarget = destGUID == UnitGUID("target");
+
+            if ( (event:sub(0,11) == "SPELL_AURA_") and (isPlayer or isTarget)) then
                 -- Events starting with SPELL_AURA e.g., SPELL_AURA_APPLIED
                 -- This should be invoked only if the buff is done on the player i.e., UnitGUID("player") == destGUID
                 local spellID, spellName = select(12, CombatLogGetCurrentEventInfo());
@@ -211,6 +270,27 @@ SAO.Variable:register({
                     return;
                 end
 
+                -- Check compatibility of the bucket with the current unit (player or target)
+                local getBuffDebuffBucket = function(bucket)
+                    local isDebuffBucket = bucket.auraProps and bucket.auraProps.debuff;
+                    local isBuffBucket = not isDebuffBucket;
+                    return isBuffBucket, isDebuffBucket;
+                end
+                local isBucketCompatible = function(bucket, isPlayer, isTarget)
+                    local isBuffBucket, isDebuffBucket = getBuffDebuffBucket(bucket);
+                    return (isBuffBucket and isPlayer) or (isDebuffBucket and isTarget);
+                end
+                if not isBucketCompatible(bucket, isPlayer, isTarget) then
+                    local otherBucket = SAO:GetAkaBucket(spellID); -- Try with another bucket, registered as a.k.a.
+                    if otherBucket and otherBucket.trigger:reactsWith(SAO.TRIGGER_AURA) and isBucketCompatible(otherBucket, isPlayer, isTarget) then
+                        bucket = otherBucket;
+                    else
+                        -- Buffs are for players only, and debuffs are for targets only
+                        return;
+                    end
+                end
+                local isBuffBucket, isDebuffBucket = getBuffDebuffBucket(bucket);
+
                 -- Handle unique case first: aura refresh
                 if (auraRefresh) then
                     bucket:refresh();
@@ -233,7 +313,7 @@ SAO.Variable:register({
                 ]]
 
                 local stacks = 0; -- Number of stacks of the aura, unless the aura is stack-agnostic (see below)
-                if not bucket.stackAgnostic then
+                if isBuffBucket and not bucket.stackAgnostic then
                     -- To handle stackable auras, we must find the aura (ugh!) to get its number of stacks
                     -- In an ideal world, we would use a stack count from the combat log which, unfortunately, is unavailable
                     if event ~= "SPELL_AURA_REMOVED" then -- No need to find aura with complete removal: the buff is not there anymore
@@ -254,7 +334,10 @@ SAO.Variable:register({
 
         -- Modern aura handling via UNIT_AURA
         UNIT_AURA = SAO.AURASTACKS.MODERN and function(unitTarget, updateInfo)
-            if unitTarget ~= "player" and (not canaccessvalue(UnitIsUnit(unitTarget, "player")) or not UnitIsUnit(unitTarget, "player")) then
+            local isPlayer = unitTarget == "player" or (canaccessvalue(UnitIsUnit(unitTarget, "player")) and UnitIsUnit(unitTarget, "player"));
+            local isTarget = unitTarget == "target" or (canaccessvalue(UnitIsUnit(unitTarget, "target")) and UnitIsUnit(unitTarget, "target"));
+            local acceptedUnit = (hasPlayerBuckets and isPlayer) or (hasTargetBuckets and isTarget);
+            if not acceptedUnit then
                 return;
             end
 
@@ -330,7 +413,7 @@ SAO.Variable:register({
             -- *updated auras may incidentally indicate an aura removal as well
 
             for _, aura in ipairs(canaccessvalue(updateInfo.addedAuras) and updateInfo.addedAuras or {}) do
-                local bucket = SAO:GetBucketBySpellID(aura.spellId);
+                local bucket = getAuraBucket(aura.spellId, isPlayer, isTarget);
                 if bucket and bucket.trigger:reactsWith(SAO.TRIGGER_AURA) then
                     local auraInstanceID = aura.auraInstanceID;
                     if bucket.auraInstanceID == auraInstanceID then
@@ -376,6 +459,18 @@ SAO.Variable:register({
                     " with aura instance ID "..tostring(replacementInfo.newID)..
                     " without removing the former aura instance ID");
             end --[[END_DEV_ONLY]]
+        end or nil,
+
+        PLAYER_TARGET_CHANGED = SAO.AURASTACKS.MODERN and function(self, event, ...)
+            if not hasTargetBuckets then
+                return;
+            end
+
+            -- When the player's target changes, auras may need to be re-evaluated
+            for _, bucket in ipairs(secretlessBuckets) do
+                SAO:Debug(Module, "Checking buckets manually for secretless aura due to target change", bucket.name);
+                bucket.trigger:manualCheck(SAO.TRIGGER_AURA);
+            end
         end or nil,
 
         PLAYER_REGEN_ENABLED = SAO.AURASTACKS.MODERN and function(self, event, ...)
