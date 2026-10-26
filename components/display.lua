@@ -56,7 +56,7 @@ SAO.Display = {
 
             if tempHash:hasAuraStacks() then
                 local stacks = tempHash:getAuraStacks();
-                if stacks ~= 0 then
+                if type(stacks) == 'number' and stacks > 0 then
                     tempHash.hash = tempHash:toAnyAuraStacks();
                     hashData.optionAnyStacks = tempHash:toOptionIndex();
                 end

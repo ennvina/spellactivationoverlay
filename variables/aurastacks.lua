@@ -113,7 +113,7 @@ SAO.Variable:register({
 
         toValue = function(hash)
             local auraStacks = hash:getAuraStacks();
-            return (auraStacks == nil and "missing") or (auraStacks == -2 and "debuff") or (auraStacks == 0 and "any" or tostring(auraStacks));
+            return (auraStacks == -2 and "missing") or (auraStacks == -1 and "debuff") or (auraStacks == 0 and "any" or tostring(auraStacks));
         end,
         fromValue = function(hash, value)
             if value == "missing" then
@@ -137,9 +137,12 @@ SAO.Variable:register({
             if auraStacks and auraStacks > 0 then
                 -- Aura aims a specific number of stacks
                 return SAO:NbStacks(auraStacks);
-            elseif auraStacks == nil then
+            elseif auraStacks == -2 then
                 -- Aura is expected to be missing
                 return ACTION_SPELL_AURA_REMOVED_DEBUFF;
+            elseif auraStacks == -1 then
+                -- Aura is a debuff
+                return SAO:translateDebuff();
             else
                 -- assertsafe(aurastacks == 0);
                 -- Aura is expected to be present, but we don't care how many stacks it has, a.k.a. it has 'any' stacks
@@ -147,12 +150,12 @@ SAO.Variable:register({
             end
         end,
         optionIndexer = function(hash)
-            return hash:getAuraStacks() or -1; -- returns n if n >= 0, otherwise (if n == nil) returns -1
+            return hash:getAuraStacks(); -- return nb stacks (if n > 0), or return 0 (if any), or return -1 (if debuff), or return -2 (if missing)
         end,
     },
 
     bucket = {
-        impossibleValue = -1,
+        impossibleValue = -3,
         fetchAndSet = function(bucket)
             if bucket.auraProps and bucket.auraProps.hasSecretRestrictions and InCombatLockdown() then
                 -- Cannot fetch aura stacks reliably due to secret restrictions while in combat

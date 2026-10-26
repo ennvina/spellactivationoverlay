@@ -278,7 +278,8 @@ SAO.Bucket = {
             for _, displayHash in pairs(self.displayHashesOfStacklessHashes[self.currentHash] or {}) do
                 self[displayHash]:show(); -- Ignore transition options, we probably have no real opportunity for a transition
             end
-        elseif self.stackAgnostic then
+        elseif self.stackAgnostic or self.auraProps and self.auraProps.debuff then
+            -- Stack-agnostic or debuff auras are treated similarly: only an on/off switch, no need to track individual stacks
             if self.displayedHash == nil then
                 if self[self.currentHash] then
                     self[self.currentHash]:show();
