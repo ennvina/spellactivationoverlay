@@ -175,6 +175,14 @@ SAO.Display = {
             if overlay.level then
                 extra = { level = overlay.level };
             end
+            if self.parent and self.parent.auraProps and self.parent.auraProps.debuff then
+                extra = extra or {};
+                extra.debuff = true;
+            end
+            if self.parent and self.parent.auraProps and self.parent.auraProps.mineOnly then
+                extra = extra or {};
+                extra.mineOnly = true;
+            end
 
             if overlay.auraContainerItem then
                 SpellActivationOverlayFrame_ResetCombatFade(SAO.Frame); -- Overlays may be invisible due to out-of-combat fade-out; this call ensures the overlay will be seen with or without combat
@@ -242,7 +250,19 @@ SAO.Display = {
 
     refresh = function(self)
         SAO:Debug(Module, "Refreshing aura of "..self.spellID.." "..SAO:GetSpellName(self.spellID, ""));
-        SAO:RefreshOverlayTimer(self.spellID);
+
+        local extra;
+        if self.parent and self.parent.auraProps and (self.parent.auraProps.debuff or self.parent.auraProps.mineOnly) then
+            extra = {};
+            if self.parent.auraProps.debuff then
+                extra.debuff = true;
+            end
+            if self.parent.auraProps.mineOnly then
+                extra.mineOnly = true;
+            end
+        end
+    
+        SAO:RefreshOverlayTimer(self.spellID, nil, extra);
     end,
 
     --[[

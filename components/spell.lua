@@ -205,7 +205,7 @@ end
 
 -- Get the time when the effect ends, or nil if it either does not end or we do not know when it will end
 -- Returns either a table {startTime, endTime} or a single number endTime
-function SAO.GetSpellEndTime(self, spellID, suggestedEndTime)
+function SAO.GetSpellEndTime(self, spellID, suggestedEndTime, extra)
     if type(suggestedEndTime) == 'number'
     or type(suggestedEndTime) == 'table' and type(suggestedEndTime.endTime) == 'number' then
         return suggestedEndTime;
@@ -215,14 +215,62 @@ function SAO.GetSpellEndTime(self, spellID, suggestedEndTime)
         return -- Return nil if there is no timer effect, to save CPU
     end
 
-    local duration, expirationTime = self:GetPlayerAuraDurationExpirationTimeBySpellIdOrName(spellID);
+    -- Buff
+    if not extra or not extra.debuff then
+        -- Search for direct spell, if available
+        local duration, expirationTime = self:GetPlayerAuraDurationExpirationTimeBySpellIdOrName(spellID);
 
-    if type(duration) == 'number' and type(expirationTime) == 'number' then
-        local startTime, endTime = expirationTime-duration, expirationTime;
-        return { startTime=startTime, endTime=endTime }
-    elseif type(expirationTime) == 'number' then
-        return expirationTime;
+        if type(duration) == 'number' and type(expirationTime) == 'number' then
+            local startTime, endTime = expirationTime-duration, expirationTime;
+            return { startTime=startTime, endTime=endTime }
+        elseif type(expirationTime) == 'number' then
+            return expirationTime;
+        end
+
+        -- Otherwise search for longest expiration time among a.k.a. known aliases
+        local highestExpirationTime = 0;
+        local bestResult;
+        for _, akaSpellID in ipairs(SAO:GetAkaSpellIDsByEffectSpellID(spellID) or {}) do
+            local duration, expirationTime = self:GetPlayerAuraDurationExpirationTimeBySpellIdOrName(akaSpellID);
+            if type(duration) == 'number' and type(expirationTime) == 'number' then
+                local startTime, endTime = expirationTime-duration, expirationTime;
+                if expirationTime > highestExpirationTime then
+                    highestExpirationTime = expirationTime;
+                    bestResult = { startTime=startTime, endTime=endTime };
+                end
+            elseif type(expirationTime) == 'number' then
+                if expirationTime > highestExpirationTime then
+                    highestExpirationTime = expirationTime;
+                    bestResult = expirationTime;
+                end
+            end
+        end
+        return bestResult;
     end
+
+    -- Debuff
+    if not C_UnitAuras or not C_UnitAuras.GetUnitAuras then
+        return -- Return nil if the API is not available
+    end
+    local filter = extra.mineOnly and "HARMFUL|PLAYER" or "HARMFUL";
+    local auras = {};
+    for _, aura in ipairs(C_UnitAuras.GetUnitAuras("target", filter, spellID) or {}) do
+        table.insert(auras, aura);
+    end
+    for _, akaSpellID in ipairs(SAO:GetAkaSpellIDsByEffectSpellID(spellID) or {}) do
+        for _, aura in ipairs(C_UnitAuras.GetUnitAuras("target", filter, akaSpellID) or {}) do
+            table.insert(auras, aura);
+        end
+    end
+    local bestResult;
+    for _, aura in ipairs(auras) do
+        if type(aura.expirationTime) == 'number' then
+            if aura.expirationTime > (bestResult and bestResult.endTime or 0) then
+                bestResult = { startTime = aura.expirationTime-aura.duration, endTime = aura.expirationTime };
+            end
+        end
+    end
+    return bestResult;
 end
 
 function SAO.IsSpellSecret(self, spellID)
