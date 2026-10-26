@@ -502,7 +502,6 @@ TEXTURES_NOT_FOR_CATA=(
 arcane_missiles_1
 arcane_missiles_2
 arcane_missiles_3
-fulmination
 fury_of_stormrage_yellow
 maelstrom_weapon_6
 maelstrom_weapon_7
@@ -516,7 +515,7 @@ thrill_of_the_hunt_2
 thrill_of_the_hunt_3
 tooth_and_claw
 white_tiger
-$(texbelow 511469 450914 450915)
+$(texbelow 511469 450914 450915 467696)
 rkm128)
 prunetex "${TEXTURES_NOT_FOR_CATA[@]}"
 
@@ -546,7 +545,7 @@ maelstrom_weapon_8
 maelstrom_weapon_9
 maelstrom_weapon_10
 raging_blow
-$(texbelow 898423 450914 450915)
+$(texbelow 898423 450914 450915 467696)
 )
 prunetex "${TEXTURES_NOT_FOR_MOP[@]}"
 
@@ -574,7 +573,7 @@ maelstrom_weapon_7
 maelstrom_weapon_8
 maelstrom_weapon_9
 maelstrom_weapon_10
-$(texbelow 30000000 450914 450915)
+$(texbelow 30000000 450914 450915 467696)
 )
 prunetex "${TEXTURES_NOT_FOR_RETAIL[@]}"
 
@@ -610,7 +609,7 @@ maelstrom_weapon_7
 maelstrom_weapon_8
 maelstrom_weapon_9
 maelstrom_weapon_10
-$(texbelow 2888300 450914)
+$(texbelow 2888300 450914 467696)
 )
 prunetex "${TEXTURES_NOT_FOR_FOREVER[@]}"
 
