@@ -48,7 +48,7 @@ function SAO.AddOverlayOption(self, talentID, auraID, hash, talentSubText, varia
         local enabled = self:IsEnabled();
 
         -- Class text
-        local text = "";
+        local text = " "; -- Start with a space to not stick to the checkbox
         -- No longer display the class name for each overlay
         -- local classColor;
         -- if (enabled) then
@@ -57,10 +57,10 @@ function SAO.AddOverlayOption(self, talentID, auraID, hash, talentSubText, varia
         --     local dimmedClassColor = CreateColor(0.5*RAID_CLASS_COLORS[classFile].r, 0.5*RAID_CLASS_COLORS[classFile].g, 0.5*RAID_CLASS_COLORS[classFile].b);
         --     classColor = dimmedClassColor:GenerateHexColor();
         -- end
-        -- text = WrapTextInColorCode(className, classColor);
+        -- text = text..WrapTextInColorCode(className, classColor).." ";
 
         -- Talent text
-        text = text.." "..talentText;
+        text = talentText;
         local humanReadableHash = hashCalculator:toHumanReadableString();
         if humanReadableHash then
             text = text .. " ("..humanReadableHash..")";
