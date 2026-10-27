@@ -1,5 +1,13 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.9.0 (2026-10-xx)
+
+New Spell Alert
+- Shaman's Stormstrike Debuff (Forever)
+
+New Glowing Button
+- Shaman's Stormstrike (Era, TBC, Wrath, Cata, MoP)
+
 #### v2.8.9 (2026-10-22)
 
 Bug Fixes

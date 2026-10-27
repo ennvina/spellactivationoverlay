@@ -609,7 +609,7 @@ maelstrom_weapon_7
 maelstrom_weapon_8
 maelstrom_weapon_9
 maelstrom_weapon_10
-$(texbelow 2888300 450914 467696)
+$(texbelow 2888300 450914)
 )
 prunetex "${TEXTURES_NOT_FOR_FOREVER[@]}"
 
