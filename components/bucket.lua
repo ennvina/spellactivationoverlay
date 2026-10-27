@@ -91,7 +91,7 @@ SAO.Bucket = {
             if hash:hasAuraStacks() then
                 if self.stackAgnostic then
                     local stacks = hash:getAuraStacks();
-                    if stacks and stacks > 0 then
+                    if stacks ~= 0 then
                         -- Having at least one positive display is enough to know the bucket cares about number of stacks
                         self.stackAgnostic = false;
                     end
@@ -278,8 +278,8 @@ SAO.Bucket = {
             for _, displayHash in pairs(self.displayHashesOfStacklessHashes[self.currentHash] or {}) do
                 self[displayHash]:show(); -- Ignore transition options, we probably have no real opportunity for a transition
             end
-        elseif self.stackAgnostic or self.auraProps and self.auraProps.debuff then
-            -- Stack-agnostic or debuff auras are treated similarly: only an on/off switch, no need to track individual stacks
+        elseif self.stackAgnostic then
+            -- Stack-agnostic auras simply have an on/off switch, no need to track individual stacks
             if self.displayedHash == nil then
                 if self[self.currentHash] then
                     self[self.currentHash]:show();

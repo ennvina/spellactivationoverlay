@@ -15,9 +15,7 @@ SAO:Info(Module, "You are currently using the Modern AuraStacks mode. Enjoy!"); 
 
 -- Aura stacks
 --  if stacks >= 0 then
---      if isDebuff then
---          hash = HASH_AURA_DEBUFF
---      else if stackAgnostic then
+--      if stackAgnostic then
 --          hash = HASH_AURA_ANY
 --      else 
 --          hash = HASH_AURA_ZERO + stacks
@@ -27,7 +25,6 @@ local HASH_AURA_ABSENT = 1
 local HASH_AURA_ANY    = 2
 local HASH_AURA_ZERO   = HASH_AURA_ANY
 local HASH_AURA_MAX    = HASH_AURA_ZERO + 10 -- Allow no more than 10 stacks
-local HASH_AURA_DEBUFF = HASH_AURA_ZERO + 11
 local HASH_AURA_MASK   = 0xF
 
 -- Map between aura instance ID and bucket (Modern mode only)
@@ -80,12 +77,10 @@ SAO.Variable:register({
         key = "aura_stacks",
 
         setterFunc = function(self, stacks, bucket)
-            if type(stacks) ~= 'number' or stacks < -2 then
+            if type(stacks) ~= 'number' or stacks < -1 then
                 SAO:Warn(Module, "Invalid stack count "..tostring(stacks));
-            elseif stacks == -2 then
-                self:setMaskedHash(HASH_AURA_ABSENT, HASH_AURA_MASK);
             elseif stacks == -1 then
-                self:setMaskedHash(HASH_AURA_DEBUFF, HASH_AURA_MASK);
+                self:setMaskedHash(HASH_AURA_ABSENT, HASH_AURA_MASK);
             elseif bucket and bucket.stackAgnostic then
                 self:setMaskedHash(HASH_AURA_ANY, HASH_AURA_MASK);
             elseif stacks > 10 then
@@ -100,9 +95,6 @@ SAO.Variable:register({
             if maskedHash == nil then return nil; end
 
             if maskedHash == HASH_AURA_ABSENT then
-                return -2;
-            end
-            if maskedHash == HASH_AURA_DEBUFF then
                 return -1;
             end
             return maskedHash - HASH_AURA_ZERO;
@@ -113,13 +105,10 @@ SAO.Variable:register({
 
         toValue = function(hash)
             local auraStacks = hash:getAuraStacks();
-            return (auraStacks == -2 and "missing") or (auraStacks == -1 and "debuff") or (auraStacks == 0 and "any" or tostring(auraStacks));
+            return (auraStacks == -1 and "missing") or (auraStacks == 0 and "any" or tostring(auraStacks));
         end,
         fromValue = function(hash, value)
             if value == "missing" then
-                hash:setAuraStacks(-2);
-                return true;
-            elseif value == "debuff" then
                 hash:setAuraStacks(-1);
                 return true;
             elseif value == "any" then
@@ -137,12 +126,9 @@ SAO.Variable:register({
             if auraStacks and auraStacks > 0 then
                 -- Aura aims a specific number of stacks
                 return SAO:NbStacks(auraStacks);
-            elseif auraStacks == -2 then
+            elseif auraStacks == -1 then
                 -- Aura is expected to be missing
                 return ACTION_SPELL_AURA_REMOVED_DEBUFF;
-            elseif auraStacks == -1 then
-                -- Aura is a debuff
-                return SAO:translateDebuff();
             else
                 -- assertsafe(aurastacks == 0);
                 -- Aura is expected to be present, but we don't care how many stacks it has, a.k.a. it has 'any' stacks
@@ -150,12 +136,12 @@ SAO.Variable:register({
             end
         end,
         optionIndexer = function(hash)
-            return hash:getAuraStacks(); -- return nb stacks (if n > 0), or return 0 (if any), or return -1 (if debuff), or return -2 (if missing)
+            return hash:getAuraStacks(); -- return nb stacks (if n > 0), or return 0 (if any), or return -1 (if missing)
         end,
     },
 
     bucket = {
-        impossibleValue = -3,
+        impossibleValue = -2,
         fetchAndSet = function(bucket)
             if bucket.auraProps and bucket.auraProps.hasSecretRestrictions and InCombatLockdown() then
                 -- Cannot fetch aura stacks reliably due to secret restrictions while in combat
@@ -169,40 +155,23 @@ SAO.Variable:register({
 
             if isBuffBucket then
                 auraStacks, auraInstanceID = SAO:GetPlayerAuraStacksBySpellID(bucket.spellID);
-                if auraStacks ~= nil then
-                    if bucket.stackAgnostic then
-                        bucket:setAuraStacks(0); -- any
-                    else
-                        bucket:setAuraStacks(auraStacks);
-                    end
-                else
-                    bucket:setAuraStacks(-2); -- missing
-                end
             else
                 assertsafe(isDebuffBucket);
-                assertsafe(C_UnitAuras and C_UnitAuras.GetUnitAuraInstanceIDs);
-                if not C_UnitAuras or not C_UnitAuras.GetUnitAuraInstanceIDs then
-                    return;
-                end
-
+                assertsafe(type(bucket.auraProps) == "table");
                 local filter = bucket.auraProps.mineOnly and "HARMFUL|PLAYER" or "HARMFUL";
-                local auraInstanceIDs = C_UnitAuras.GetUnitAuraInstanceIDs("target", filter, bucket.spellID);
-
-                for _, id in ipairs(auraInstanceIDs) do
-                    local aura = C_UnitAuras.GetAuraDataByAuraInstanceID("target", id);
-                    if aura then
-                        auraInstanceID = id; -- store the first valid aura instance ID
-                        auraStacks = aura.applications;
-                    end
-                    break;
-                end
-
-                if auraInstanceID == nil then
-                    bucket:setAuraStacks(-2); -- missing
-                else
-                    bucket:setAuraStacks(-1); -- debuff
-                end
+                auraStacks, auraInstanceID = SAO:GetUnitAuraStacksBySpellID("target", filter, bucket.spellID);
             end
+
+            if auraStacks ~= nil then
+                if bucket.stackAgnostic then
+                    bucket:setAuraStacks(0); -- any
+                else
+                    bucket:setAuraStacks(auraStacks);
+                end
+            else
+                bucket:setAuraStacks(-1); -- missing
+            end
+
 
             if SAO.AURASTACKS.MODERN then -- Additional handling to optimize Modern mode
                 bucket.lastKnownAuraStacks = auraStacks; -- Store raw value, because bucket:getAuraStacks() is unreliable if stackAgnostic is set
@@ -314,7 +283,7 @@ SAO.Variable:register({
                 -- Now, we are in a situation where we either got a buff (SPELL_AURA_APPLIED*) or lost it (SPELL_AURA_REMOVED*)
 
                 if (auraRemovedLast) then
-                    bucket:setAuraStacks(-2); -- -2 means "not currently holding any stacks"
+                    bucket:setAuraStacks(-1); -- -1 means "not currently holding any stacks"
                     -- Can return now, because SPELL_AURA_REMOVED resets everything
                     return;
                 end
@@ -326,11 +295,19 @@ SAO.Variable:register({
                 ]]
 
                 local stacks = 0; -- Number of stacks of the aura, unless the aura is stack-agnostic (see below)
-                if isBuffBucket and not bucket.stackAgnostic then
+                if not bucket.stackAgnostic then
                     -- To handle stackable auras, we must find the aura (ugh!) to get its number of stacks
                     -- In an ideal world, we would use a stack count from the combat log which, unfortunately, is unavailable
                     if event ~= "SPELL_AURA_REMOVED" then -- No need to find aura with complete removal: the buff is not there anymore
-                        stacks = SAO:GetPlayerAuraStacksBySpellID(spellID) or 0;
+                        -- Known limitation: we fetch aura stacks of the current spellID, without looking at other possible auras that
+                        -- might have the same effect but different spellIDs, such as aka spellIDs. Doing better would be much more
+                        -- complex, so as now now, we simply assume this situation is not supported.
+                        if isBuffBucket then
+                            stacks = SAO:GetPlayerAuraStacksBySpellID(spellID) or 0;
+                        elseif isDebuffBucket then
+                            local filter = bucket.auraProps.mineOnly and "HARMFUL|PLAYER" or "HARMFUL";
+                            stacks = SAO:GetUnitAuraStacksBySpellID("target", filter, spellID) or 0;
+                        end
                     end
                     -- For the record, stacks will always be 0 for stack-agnostic auras, even if the aura actually has stacks
                     -- This is an optimization that prevents the above call of GetPlayerAuraStacksBySpellID, which has a significant cost
@@ -341,7 +318,7 @@ SAO.Variable:register({
                     - or was upgraded (SPELL_AURA_APPLIED_DOSE)
                     - or was downgraded but still visible (SPELL_AURA_REMOVED_DOSE)
                 ]]
-                bucket:setAuraStacks(isBuffBucket and stacks or -1); -- -1 means 'debuff'
+                bucket:setAuraStacks(stacks);
             end
         end or nil,
 
@@ -386,7 +363,7 @@ SAO.Variable:register({
                     return;
                 end
                 SAO:Trace(Module, "Associating aura instance ID "..tostring(auraInstanceID).." to bucket "..bucket.name);
-                bucket:setAuraStacks((bucket.auraProps and bucket.auraProps.debuff and -1) or (bucket.stackAgnostic and 0) or aura.applications);
+                bucket:setAuraStacks((bucket.stackAgnostic and 0) or aura.applications);
                 bucket.lastKnownAuraStacks = aura.applications;
                 if bucket.auraInstanceID then
                     -- This situation is usually an issue, unless the aura instance ID is removed in the same update cycle, before leaving this function
@@ -405,7 +382,7 @@ SAO.Variable:register({
 
             local removeAura = function(auraInstanceID, bucket)
                 SAO:Trace(Module, "Removing association of aura instance ID "..tostring(auraInstanceID).." from bucket "..bucket.name);
-                bucket:setAuraStacks(-2);
+                bucket:setAuraStacks(-1);
                 bucket.lastKnownAuraStacks = nil;
                 bucket.auraInstanceID = nil;
                 bucketsByAuraInstanceID[auraInstanceID] = nil;
@@ -415,7 +392,7 @@ SAO.Variable:register({
                 SAO:Trace(Module, "Updating aura instance ID "..tostring(auraInstanceID).." for bucket "..bucket.name);
                 if bucket.lastKnownAuraStacks ~= aura.applications then
                     SAO:Trace(Module, "Bucket "..tostring(bucket.name).." aura stacks changed from "..tostring(bucket.lastKnownAuraStacks).." to "..tostring(aura.applications));
-                    bucket:setAuraStacks((bucket.auraProps and bucket.auraProps.debuff and -1) or (bucket.stackAgnostic and 0) or aura.applications);
+                    bucket:setAuraStacks((bucket.stackAgnostic and 0) or aura.applications);
                     bucket.lastKnownAuraStacks = aura.applications;
                 else
                     SAO:Trace(Module, "Bucket "..tostring(bucket.name).." aura stacks remain unchanged at "..tostring(bucket.lastKnownAuraStacks));
@@ -504,8 +481,8 @@ SAO.Variable:register({
         hreVar = "stacks",
         noeDefault = 0,
         description = "number of stacks",
-        checker = function(value) return type(value) == 'number' and value >= -2 and value <= 10 end,
-        noeToHash = function(value) return value end, -- return nb stacks (if n > 0), or return 0 (if any), or return -1 (if debuff), or return -2 (if missing)
+        checker = function(value) return type(value) == 'number' and value >= -1 and value <= 10 end,
+        noeToHash = function(value) return value end, -- return nb stacks (if n > 0), or return 0 (if any), or return -1 (if missing)
     },
 
     import = {

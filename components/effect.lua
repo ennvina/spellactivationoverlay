@@ -908,7 +908,10 @@ function SAO:AddEffectOptions()
                 local testHash = (type(option.testHash) == 'string' or type(option.testHash) == 'table') and option.testHash or setupHash;
                 local subText = option.subText;
                 local variants = option.variants;
-                if type(subText) == 'function' then
+                if subText == nil and type(effect.auraProps) == 'table' and effect.auraProps.debuff then
+                    subText = SAO:translateDebuff();
+                    -- @todo if auraProps.mineOnly, we might want to adjust the subText accordingly e.g. "My Debuff"
+                elseif type(subText) == 'function' then
                     subText = subText();
                 end
                 if type(variants) == 'function' then

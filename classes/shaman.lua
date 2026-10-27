@@ -200,7 +200,6 @@ local function useStormstrike(self)
             talent = stormstrike, -- To override text in option, otherwise it would display the spell name of 27775 "The Furious Storm"
             auraProps = { debuff = true, mineOnly = true },
             overlay = {
-                stacks = -1, -- -1 means 'debuff', used in conjuction with auraProps.debuff = true
                 texture = "fury_of_stormrage", position = "Top",
                 pulse = false, -- No pulse = no sound; the player does not need sound because they just cast Stormstrike which has an audio cue
                 scale = 1.28, level = 1, alpha = 222, -- Slightly bigger and behind Maelstrom Weapon

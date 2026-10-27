@@ -303,6 +303,20 @@ function SAO:GetPlayerAuraStacksBySpellID(id)
     return nil, nil;
 end
 
+function SAO:GetUnitAuraStacksBySpellID(unit, filter, spellID)
+    assertsafe(C_UnitAuras and C_UnitAuras.GetUnitAuraInstanceIDs);
+    if not C_UnitAuras or not C_UnitAuras.GetUnitAuraInstanceIDs then
+        return;
+    end
+
+    for _, id in ipairs(C_UnitAuras.GetUnitAuraInstanceIDs(unit, filter, spellID) or {}) do
+        local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, id);
+        if aura then
+            return aura.applications, id; -- Return the first aura available
+        end
+    end
+end
+
 function SAO:GetPlayerAuraDurationExpirationTimeBySpellIdOrName(spellIdOrName)
     if type(spellIdOrName) == 'string' then
         if GetAuraDataBySpellName then
