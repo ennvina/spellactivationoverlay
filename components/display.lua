@@ -112,7 +112,10 @@ SAO.Display = {
             auraContainerItem = nil, -- Possibly set below
         }
 
-        _overlay.auraContainerItem = SAO.AuraContainer:registerOverlay(_overlay); -- Shall return nil if a secret-compatible aura container item is not needed
+        if self.parent and self.parent.auraProps and self.parent.auraProps.hasSecretRestrictions then
+            local extra = self:getExtra();
+            _overlay.auraContainerItem = SAO.AuraContainer:registerOverlay(_overlay, extra);
+        end
 
         --[[BEGIN_DEV_ONLY]]
         if _overlay.spellID ~= self.spellID then
@@ -164,6 +167,23 @@ SAO.Display = {
         end
     end,
 
+    getExtra = function(self, overlay)
+        local extra = nil;
+        if overlay and overlay.level then
+            extra = extra or {};
+            extra.level = overlay.level;
+        end
+        if self.parent and self.parent.auraProps and self.parent.auraProps.debuff then
+            extra = extra or {};
+            extra.debuff = true;
+        end
+        if self.parent and self.parent.auraProps and self.parent.auraProps.mineOnly then
+            extra = extra or {};
+            extra.mineOnly = true;
+        end
+        return extra;
+    end,
+
     showOverlays = function(self, options)
         for _, overlay in ipairs(self.overlays) do
             local forcePulsePlay = nil;
@@ -171,23 +191,11 @@ SAO.Display = {
                 forcePulsePlay = overlay.autoPulse;
             end
 
-            local extra = nil;
-            if overlay.level then
-                extra = { level = overlay.level };
-            end
-            if self.parent and self.parent.auraProps and self.parent.auraProps.debuff then
-                extra = extra or {};
-                extra.debuff = true;
-            end
-            if self.parent and self.parent.auraProps and self.parent.auraProps.mineOnly then
-                extra = extra or {};
-                extra.mineOnly = true;
-            end
-
             if overlay.auraContainerItem then
                 SpellActivationOverlayFrame_ResetCombatFade(SAO.Frame); -- Overlays may be invisible due to out-of-combat fade-out; this call ensures the overlay will be seen with or without combat
                 overlay.auraContainerItem:setVisible(true);
             else
+                local extra = self:getExtra(overlay);
                 SAO:ActivateOverlay(self.hashData, overlay.spellID, overlay.texture, overlay.position, overlay.scale, overlay.r, overlay.g, overlay.b, overlay.a, overlay.autoPulse, forcePulsePlay, nil, overlay.combatOnly, extra);
             end
         end
@@ -251,17 +259,7 @@ SAO.Display = {
     refresh = function(self)
         SAO:Debug(Module, "Refreshing aura of "..self.spellID.." "..SAO:GetSpellName(self.spellID, ""));
 
-        local extra;
-        if self.parent and self.parent.auraProps and (self.parent.auraProps.debuff or self.parent.auraProps.mineOnly) then
-            extra = {};
-            if self.parent.auraProps.debuff then
-                extra.debuff = true;
-            end
-            if self.parent.auraProps.mineOnly then
-                extra.mineOnly = true;
-            end
-        end
-    
+        local extra = self:getExtra();
         SAO:RefreshOverlayTimer(self.spellID, nil, extra);
     end,
 

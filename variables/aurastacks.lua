@@ -465,6 +465,10 @@ SAO.Variable:register({
                 SAO:Debug(Module, "Checking buckets manually for secretless aura due to target change", bucket.name);
                 bucket.trigger:manualCheck(SAO.TRIGGER_AURA);
             end
+
+            if #secretBuckets > 0 then
+                SAO.AuraContainer:updateAll();
+            end
         end or nil,
 
         PLAYER_REGEN_ENABLED = SAO.AURASTACKS.MODERN and function(self, event, ...)
@@ -524,9 +528,9 @@ SAO.Variable:register({
                         end
                         local secrecy = SAO:IsSpellSecret(auraID);
                         if secrecy == 1 then
-                            SAO:Debug(Module, bucket.description.." is based on spell "..value.." which has secret restrictions");
+                            SAO:Debug(Module, bucket.description.." is based on spell "..auraID.." which has secret restrictions");
                         elseif secrecy == 2 then
-                            SAO:Debug(Module, bucket.description.." is based on spell "..value.." which is always secret");
+                            SAO:Debug(Module, bucket.description.." is based on spell "..auraID.." which is always secret");
                         end
                         return type(secrecy) == 'number' and secrecy > 0;
                     end;

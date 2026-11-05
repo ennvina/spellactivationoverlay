@@ -60,6 +60,8 @@
         "DevTools_Dump",
         "SlashCmdList",
         // WoW global objects
+        "AuraContainerSortDirection",
+        "AuraContainerSortMethod",
         "Enum",
         "Item",
         "MainActionBar",
@@ -150,6 +152,7 @@
         "LoadAddOn",
         "PlaySound",
         "PlaySoundFile",
+        "RunNextFrame",
         "SetCVar",
         "StopSound",
         "UnitAura",

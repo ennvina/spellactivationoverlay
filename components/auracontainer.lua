@@ -25,17 +25,25 @@ local function splitPositions(position)
 end
 
 -- Return hash information for container auras, or nil if the hash is not supported
-local function getInfoFromHash(hash, macroCondition, spellID)
+local function getInfoFromHash(hash, macroCondition, spellID, extra)
     local requiresAura = type(SAO.Hash.hasAuraStacks) == 'function' and hash:hasAuraStacks()
     if not requiresAura then
         -- The aura container, as its name implies, only handles overlays that require an aura (i.e., have aura stacks)
         return nil
     end
 
-    local unit = "player" -- For now, aura containers only support the "player" unit
+    local unit = "player"
+    local filterString = "HELPFUL"
+    if extra and extra.debuff then
+        unit = "target"
+        filterString = "HARMFUL"
+    end
+    if extra and extra.mineOnly then
+        filterString = filterString .. "|PLAYER"
+    end
 
     -- Fill in item information
-    local itemInfo = { unit = unit }
+    local itemInfo = { unit = unit, filterString = filterString }
 
     local nbAuraStacks = hash:getAuraStacks()
     itemInfo.nbAuraStacks = nbAuraStacks
@@ -116,6 +124,7 @@ SAO.AuraContainerItem = {
             -- Constants
             spellID = overlay.spellID,
             unit = options.unit,
+            filter = options.filterString,
             scale = overlay.scale,
             fontScale = 3,
             positions = splitPositions(overlay.position),
@@ -134,11 +143,20 @@ SAO.AuraContainerItem = {
             internallyEnabled = true, -- Whether the enable/visible state are applied internally
             auraButtons = {}, -- Assigned below; there will be as many buttons as there are positions
             slotKeys = {}, -- Assigned below; there will be as many slot keys as there are buttons
+            includeSpellIDs = { [overlay.spellID] = true } -- Assigned below; will include a.k.a. spell IDs as well
         }
 
         self.__index = nil
         setmetatable(item, self)
         self.__index = self
+
+        local akaSpellIDs = SAO:GetAkaSpellIDsByEffectSpellID(overlay.spellID)
+        if akaSpellIDs then
+            for _, akaSpellID in ipairs(akaSpellIDs) do
+                SAO:Trace(Module, "Adding aura slot with id "..tostring(id).." for a.k.a. spellID", tostring(akaSpellID));
+                item.includeSpellIDs[akaSpellID] = true
+            end
+        end
 
         for index, position in ipairs(item.positions) do
             local slotKey = "item_"..id.."_index_"..index
@@ -149,22 +167,15 @@ SAO.AuraContainerItem = {
                 applications = options.nbAuraStacks,
             }
 
-            local includeSpellIDs = { [overlay.spellID] = true }
-            local akaSpellIDs = SAO:GetAkaSpellIDsByEffectSpellID(overlay.spellID)
-            if akaSpellIDs then
-                for _, akaSpellID in ipairs(akaSpellIDs) do
-                    SAO:Trace(Module, "Adding aura slot with key "..tostring(slotKey).." for a.k.a. spellID", tostring(akaSpellID));
-                    includeSpellIDs[akaSpellID] = true
-                end
-            end
-
-            local auraButton = container:AddAuraSlot(slotKey, "HELPFUL", {
+            local auraButton = container:AddAuraSlot(slotKey, options.filterString, {
                 templateNames = { "SAOAuraButtonTemplate" },
                 initializeFrame = function(auraButton)
                     item:initializeAuraButton(auraButton, auraSlotOptions)
                 end,
+                sortMethod = AuraContainerSortMethod.ExpirationOnly,
+                sortDirection = AuraContainerSortDirection.Reverse,
                 candidateFilters = {
-                    includeSpellIDs = includeSpellIDs,
+                    includeSpellIDs = item.includeSpellIDs,
                 },
             })
 
@@ -445,7 +456,7 @@ SAO.AuraContainer = {
         - the addon is not capable of handling secret-compatible overlays
         - or the spell does not need such overlay (e.g., is not secret in combat)
     ]]
-    registerOverlay = function(self, overlay)
+    registerOverlay = function(self, overlay, extra)
         if not useAuraContainer then
             -- Aura containers are not supported / not required for the current flavor
             return nil
@@ -456,12 +467,23 @@ SAO.AuraContainer = {
             return nil
         end
 
+        --[[BEGIN_DEV_ONLY]]
         if not SAO:IsSpellSecret(overlay.spellID) then
+            local atLeastOneSecret = false
+            for _, akaSpellID in ipairs(SAO:GetAkaSpellIDsByEffectSpellID(overlay.spellID) or {}) do
+                if SAO:IsSpellSecret(akaSpellID) then
+                    atLeastOneSecret = true
+                    break
+                end
+            end
             -- We don't need to create a secret-compatible overlay for spells that are not secret in combat
-            return nil
+            if not atLeastOneSecret then
+                SAO:Warn(Module, "Spell "..tostring(overlay.spellID).." is not secret in combat, no secret-compatible overlay needed")
+            end
         end
+        --[[END_DEV_ONLY]]
 
-        local hashInfo = getInfoFromHash(SAO.Hash:new(overlay.hash), overlay.macroCondition, overlay.spellID)
+        local hashInfo = getInfoFromHash(SAO.Hash:new(overlay.hash), overlay.macroCondition, overlay.spellID, extra)
         if not hashInfo then
             -- An empty hash info means the hash is not supported, for good or bad reasons (look for messages to know more)
             return nil
@@ -487,6 +509,16 @@ SAO.AuraContainer = {
         self.items[id] = button
 
         return button
+    end,
+
+    updateAll = function(self)
+        if not useAuraContainer or not self.initialized then
+            return
+        end
+
+        for _, container in pairs(self.containers) do
+            container:UpdateAllAuras()
+        end
     end,
 
     updateGeometry = function(self, globalGeometry)
