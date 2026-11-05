@@ -196,6 +196,7 @@ SAO.Variable:register({
     event = {
         isRequired = true,
         names = SAO.AURASTACKS.MODERN and { "UNIT_AURA", "PLAYER_REGEN_ENABLED", "PLAYER_TARGET_CHANGED" } or { "COMBAT_LOG_EVENT_UNFILTERED" },
+        unitNames = nil,
 
         -- Legacy aura handling via CLEU
         COMBAT_LOG_EVENT_UNFILTERED = SAO.AURASTACKS.LEGACY and function(...)

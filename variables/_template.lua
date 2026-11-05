@@ -222,6 +222,8 @@ SAO.Variable:register({
         isRequired = true,
         --[[ names is the list of events to register to, each of them will have a key in the .event table ]]
         names = { "UPDATE_SHAPESHIFT_FORM" },
+        --[[ unitNames is the list of unit events to register to, each of them will have a key in the .event table ]]
+        unitNames = nil, -- Example: unitNames = { player = "UNIT_COMBAT", target = { "UNIT_TARGET", "UNIT_FACTION" } },
         --[[ Since the above .event.names list has mentioned UPDATE_SHAPESHIFT_FORM, this event must have a function
         When the game broadcasts the UPDATE_SHAPESHIFT_FORM event, this function will be called
         ]]

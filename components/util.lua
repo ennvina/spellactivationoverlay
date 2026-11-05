@@ -643,7 +643,7 @@ local function getFromDescription(from)
     end
 end
 
-function SAO:RegisterEventHandler(handler, event, from)
+function SAO:RegisterEventHandler(handler, event, from, unitTarget)
     --[[BEGIN_DEV_ONLY]]
     if false or -- Uncomment one of the following events to see how performance is affected
 --    event == "COMBAT_LOG_EVENT_UNFILTERED" or
@@ -665,16 +665,25 @@ function SAO:RegisterEventHandler(handler, event, from)
         eventHandlers[event] = {};
     end
     table.insert(eventHandlers[event], handler);
+    if unitTarget and handler.RegisterUnitEvent then
+        handler:RegisterUnitEvent(event, unitTarget);
+    else
+        handler:RegisterEvent(event);
+    end
     handler:RegisterEvent(event);
     SAO:Debug(Module, "Handling event "..tostring(event).." for "..getHandlerName(handler)..getFromDescription(from));
 end
 
-function SAO:UnregisterEventHandler(handler, event, from)
+function SAO:UnregisterEventHandler(handler, event, from, unitTarget)
     local found = false;
     for i, h in ipairs(eventHandlers[event] or {}) do
         if h == handler then
             table.remove(eventHandlers[event], i);
-            handler:UnregisterEvent(event);
+            if unitTarget and handler.UnregisterUnitEvent then
+                handler:UnregisterUnitEvent(event, unitTarget);
+            else
+                handler:UnregisterEvent(event);
+            end
             SAO:Debug(Module, "Un-handling event "..tostring(event).." for "..getHandlerName(handler)..getFromDescription(from));
             found = true;
             break;

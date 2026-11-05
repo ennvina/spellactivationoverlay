@@ -102,9 +102,20 @@ SAO.Variable = {
 
         check(var, "event", 'table');
         check(var.event, "isRequired", { 'boolean', 'function' }); -- SAO.IsCata() and select(2, UnitClass("player")) == "PALADIN"
-        check(var.event, "names", 'table'); -- { "UNIT_POWER_FREQUENT" }
+        check(var.event, "names", { 'table', 'nil' }); -- { "UNIT_POWER_FREQUENT" }
         for _, eventName in ipairs(var.event.names or {}) do
             check(var.event, eventName, { 'function', 'nil' });
+        end
+        check(var.event, "unitNames", { 'table', 'nil' }); -- { player = "UNIT_COMBAT" }
+        for unitName, eventName in pairs(var.event.unitNames or {}) do
+            check(var.event.unitNames, unitName, { 'string', 'table' });
+            if type(eventName) == 'string' then
+                check(var.event, eventName, { 'function', 'nil' });
+            elseif type(eventName) == 'table' then
+                for _, subEventName in ipairs(eventName) do
+                    check(var.event, subEventName, { 'function', 'nil' });
+                end
+            end
         end
 
         check(var, "condition", 'table');
@@ -223,14 +234,26 @@ SAO.Variable = {
             var.condition.noeToHash
         );
 
+        local function addEventProxy(eventName)
+            if var.event[eventName] then
+                if SAO.VariableEventProxy[eventName] then
+                    tinsert(SAO.VariableEventProxy[eventName], var);
+                else
+                    SAO.VariableEventProxy[eventName] = { var };
+                end
+            end
+        end
         if type(var.event.isRequired) == 'function' and var.event.isRequired()
         or type(var.event.isRequired) == 'boolean' and var.event.isRequired then
             for _, eventName in ipairs(var.event.names or {}) do
-                if var.event[eventName] then
-                    if SAO.VariableEventProxy[eventName] then
-                        tinsert(SAO.VariableEventProxy[eventName], var);
-                    else
-                        SAO.VariableEventProxy[eventName] = { var };
+                addEventProxy(eventName);
+            end
+            for unitName, eventName in pairs(var.event.unitNames or {}) do
+                if type(eventName) == 'string' then
+                    addEventProxy(eventName);
+                elseif type(eventName) == 'table' then
+                    for _, subEventName in ipairs(eventName) do
+                        addEventProxy(subEventName);
                     end
                 end
             end
