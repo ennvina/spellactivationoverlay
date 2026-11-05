@@ -64,41 +64,43 @@ SAO.AuraSoundLibrary = {
 
     enableItem = function(self, item)
         SAO:Trace(Module, "Enabling aura sound for item "..tostring(item.id).." with spellID "..tostring(item.spellID))
-        local spellID = item.spellID
-        if not self[spellID] then
-            self[spellID] = {
-                items = {},
-                auraSoundIDs = nil, -- Non-nil indicates a sound is currently playing
-            }
-        end
+        for spellID, _ in pairs(item.includeSpellIDs) do
+            if not self[spellID] then
+                self[spellID] = {
+                    items = {},
+                    auraSoundIDs = nil, -- Non-nil indicates a sound is currently playing
+                }
+            end
 
-        if self[spellID].items[item.id] then
-            SAO:Warn(Module, "Enabling aura sound for item "..tostring(item.id).." with spellID "..tostring(item.spellID).." which is already enabled") --[[DEV_ONLY]]
-        end
-        self[spellID].items[item.id] = item;
+            if self[spellID].items[item.id] then --[[BEGIN_DEV_ONLY]]
+                SAO:Warn(Module, "Enabling aura sound for item "..tostring(item.id).." with spellID "..tostring(item.spellID).." which is already enabled")
+            end --[[END_DEV_ONLY]]
+            self[spellID].items[item.id] = item;
 
-        if not self[spellID].auraSoundIDs and self.globalEnabled then
-            local auraSoundID1, auraSoundID2 = self:_internalAddSound(spellID, item.unit)
-            SAO:Debug(Module, "Enabling sound for spell ID", spellID)
+            if not self[spellID].auraSoundIDs and self.globalEnabled then
+                local auraSoundID1, auraSoundID2 = self:_internalAddSound(spellID, item.unit)
+                SAO:Debug(Module, "Enabling sound for spell ID", spellID)
 
-            self[spellID].auraSoundIDs = { auraSoundID1, auraSoundID2 }
+                self[spellID].auraSoundIDs = { auraSoundID1, auraSoundID2 }
+            end
         end
     end,
 
     disableItem = function(self, item)
         SAO:Trace(Module, "Disabling aura sound for item "..tostring(item.id).." with spellID "..tostring(item.spellID))
-        local spellID = item.spellID
-        if self[spellID] then
-            if not self[spellID].items[item.id] then
-                SAO:Warn(Module, "Disabling aura sound for item "..tostring(item.id).." with spellID "..tostring(item.spellID).." which is not enabled") --[[DEV_ONLY]]
-            end
-            self[spellID].items[item.id] = nil
+        for spellID, _ in pairs(item.includeSpellIDs) do
+            if self[spellID] then
+                if not self[spellID].items[item.id] then --[[BEGIN_DEV_ONLY]]
+                    SAO:Warn(Module, "Disabling aura sound for item "..tostring(item.id).." with spellID "..tostring(item.spellID).." which is not enabled")
+                end --[[END_DEV_ONLY]]
+                self[spellID].items[item.id] = nil
 
-            if next(self[spellID].items) == nil and self[spellID].auraSoundIDs then
-                self:_internalRemoveSound(unpack(self[spellID].auraSoundIDs))
-                SAO:Debug(Module, "Disabling sound for spell ID", spellID)
+                if next(self[spellID].items) == nil and self[spellID].auraSoundIDs then
+                    self:_internalRemoveSound(unpack(self[spellID].auraSoundIDs))
+                    SAO:Debug(Module, "Disabling sound for spell ID", spellID)
 
-                self[spellID].auraSoundIDs = nil
+                    self[spellID].auraSoundIDs = nil
+                end
             end
         end
     end,
