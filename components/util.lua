@@ -20,6 +20,8 @@ local UnitClassBase = UnitClassBase
 
 local GetAuraDataBySpellName = C_UnitAuras and C_UnitAuras.GetAuraDataBySpellName
 local GetPlayerAuraBySpellID = C_UnitAuras and C_UnitAuras.GetPlayerAuraBySpellID
+local GetUnitAuraInstanceIDs = C_UnitAuras and C_UnitAuras.GetUnitAuraInstanceIDs
+local GetAuraDataByAuraInstanceID = C_UnitAuras and C_UnitAuras.GetAuraDataByAuraInstanceID
 
 local canUseModernTalentAPI = not SAO.IsTitan() -- Enforce using legacy talent API for Titan Reforged: Wrath
 
@@ -304,13 +306,13 @@ function SAO:GetPlayerAuraStacksBySpellID(id)
 end
 
 function SAO:GetUnitAuraStacksBySpellID(unit, filter, spellID)
-    assertsafe(C_UnitAuras and C_UnitAuras.GetUnitAuraInstanceIDs);
-    if not C_UnitAuras or not C_UnitAuras.GetUnitAuraInstanceIDs then
+    assertsafe(GetUnitAuraInstanceIDs and GetAuraDataByAuraInstanceID);
+    if not GetUnitAuraInstanceIDs then
         return;
     end
 
-    for _, id in ipairs(C_UnitAuras.GetUnitAuraInstanceIDs(unit, filter, spellID) or {}) do
-        local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, id);
+    for _, id in ipairs(GetUnitAuraInstanceIDs(unit, filter, spellID) or {}) do
+        local aura = GetAuraDataByAuraInstanceID(unit, id);
         if aura then
             return aura.applications, id; -- Return the first aura available
         end
