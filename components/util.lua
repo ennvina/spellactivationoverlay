@@ -15,6 +15,7 @@ local GetSpellTabInfo = GetSpellTabInfo
 local GetTalentInfo = GetTalentInfo
 local GetTalentTabInfo = GetTalentTabInfo
 local GetTime = GetTime
+local RunNextFrame = RunNextFrame
 local UnitAura = UnitAura
 local UnitClassBase = UnitClassBase
 
@@ -730,6 +731,18 @@ function SAO:ExecutePendingOperations(category)
         operations.executing = nil;
         pendingOperations[category] = {};
     end --[[DEV_ONLY]]
+end
+
+function SAO:RunNextFrame(func)
+    if type(func) ~= "function" then
+        self:Error(Module, "Invalid function passed to RunNextFrame: "..tostring(func)); --[[DEV_ONLY]]
+        return;
+    end
+    if RunNextFrame then
+        RunNextFrame(func);
+    else
+        C_Timer.After(0, function() func(); end);
+    end
 end
 
 --[[

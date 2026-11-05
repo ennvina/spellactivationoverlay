@@ -195,8 +195,8 @@ SAO.Variable:register({
 
     event = {
         isRequired = true,
-        names = SAO.AURASTACKS.MODERN and { "UNIT_AURA", "PLAYER_REGEN_ENABLED", "PLAYER_TARGET_CHANGED" } or { "COMBAT_LOG_EVENT_UNFILTERED" },
-        unitNames = nil,
+        names = SAO.AURASTACKS.MODERN and { "PLAYER_REGEN_ENABLED", "PLAYER_TARGET_CHANGED" } or { "COMBAT_LOG_EVENT_UNFILTERED" },
+        unitNames = SAO.AURASTACKS.MODERN and { player = "UNIT_AURA", target = { "UNIT_AURA", "UNIT_FACTION" } } or nil,
 
         -- Legacy aura handling via CLEU
         COMBAT_LOG_EVENT_UNFILTERED = SAO.AURASTACKS.LEGACY and function(...)
@@ -325,8 +325,8 @@ SAO.Variable:register({
 
         -- Modern aura handling via UNIT_AURA
         UNIT_AURA = SAO.AURASTACKS.MODERN and function(unitTarget, updateInfo)
-            local isPlayer = unitTarget == "player" or (canaccessvalue(UnitIsUnit(unitTarget, "player")) and UnitIsUnit(unitTarget, "player"));
-            local isTarget = unitTarget == "target" or (canaccessvalue(UnitIsUnit(unitTarget, "target")) and UnitIsUnit(unitTarget, "target"));
+            local isPlayer = unitTarget == "player" -- or (canaccessvalue(UnitIsUnit(unitTarget, "player")) and UnitIsUnit(unitTarget, "player"));
+            local isTarget = unitTarget == "target" -- or (canaccessvalue(UnitIsUnit(unitTarget, "target")) and UnitIsUnit(unitTarget, "target"));
             local acceptedUnit = (hasPlayerBuckets and isPlayer) or (hasTargetBuckets and isTarget);
             if not acceptedUnit then
                 return;
@@ -456,7 +456,17 @@ SAO.Variable:register({
             end --[[END_DEV_ONLY]]
         end or nil,
 
-        PLAYER_TARGET_CHANGED = SAO.AURASTACKS.MODERN and function(self, event, ...)
+        UNIT_FACTION = SAO.AURASTACKS.MODERN and function(self, unitTarget)
+            if #secretBuckets == 0 then
+                return;
+            end
+            local isTarget = unitTarget == "target" -- or (canaccessvalue(UnitIsUnit(unitTarget, "target")) and UnitIsUnit(unitTarget, "target"));
+            if isTarget then
+                SAO.AuraContainer:updateAll();
+            end
+        end or nil,
+
+        PLAYER_TARGET_CHANGED = SAO.AURASTACKS.MODERN and function(self)
             if not hasTargetBuckets then
                 return;
             end
@@ -472,7 +482,7 @@ SAO.Variable:register({
             end
         end or nil,
 
-        PLAYER_REGEN_ENABLED = SAO.AURASTACKS.MODERN and function(self, event, ...)
+        PLAYER_REGEN_ENABLED = SAO.AURASTACKS.MODERN and function(self)
             -- When leaving combat, auras may be queried individually
             for _, bucket in ipairs(secretBuckets) do
                 SAO:Debug(Module, "Checking buckets manually for secret aura", bucket.name);

@@ -517,7 +517,9 @@ SAO.AuraContainer = {
         end
 
         for _, container in pairs(self.containers) do
-            container:UpdateAllAuras()
+            SAO:RunNextFrame(function()
+                container:UpdateAllAuras()
+            end)
         end
     end,
 
