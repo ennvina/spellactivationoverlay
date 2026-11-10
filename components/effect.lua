@@ -674,8 +674,12 @@ local function checkNativeEffect(effect)
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid scale factor "..tostring(overlay.scale));
             return false;
         end
-        if overlay.color and (type(overlay.color) ~= 'table' or type(overlay.color[1]) ~= 'number' or type(overlay.color[2]) ~= 'number' or type(overlay.color[3]) ~= 'number') then
+        if overlay.color and (type(overlay.color) ~= 'table' or type(overlay.color[1]) ~= 'number' or type(overlay.color[2]) ~= 'number' or type(overlay.color[3]) ~= 'number' or (type(overlay.color[4]) ~= 'number' and overlay.color[4] ~= nil)) then
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid color");
+            return false;
+        end
+        if overlay.color and type(overlay.color[4]) == 'number' and (overlay.color[4] < 2 or overlay.color[4] > 255) then
+            SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid alpha "..tostring(overlay.color[4]).." (must be in the [2, 255] range)");
             return false;
         end
     end
