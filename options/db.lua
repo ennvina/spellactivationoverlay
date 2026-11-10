@@ -185,7 +185,7 @@ function SAO.LoadDB(self)
     end
     if (type(db.alert.sound) == "nil") then
         -- Enable sound by default in Cataclysm, where the "PowerAura" sound effect was added
-        db.alert.sound = self.IsProject(SAO.CATA_AND_ONWARD) and 1 or 0;
+        db.alert.sound = self.IsProject(SAO.FOREVER + SAO.CATA_AND_ONWARD) and 1 or 0;
     end
 
     if not db.glow then
