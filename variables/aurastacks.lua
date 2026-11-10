@@ -4,6 +4,18 @@ local Module = "aurastacks"
 -- Optimize frequent calls
 local canaccessvalue = canaccessvalue
 local InCombatLockdown = InCombatLockdown
+local ShouldAurasBeSecret = C_Secrets and C_Secrets.ShouldAurasBeSecret or function() return false; end;
+--[[BEGIN_DEV_ONLY]]
+if C_Secrets and C_Secrets.ShouldAurasBeSecret then
+    ShouldAurasBeSecret = function()
+        local result = C_Secrets.ShouldAurasBeSecret();
+        if not InCombatLockdown() and result then
+            SAO:Warn(Module, "Auras are secret even though we are not in combat");
+        end
+        return result;
+    end;
+end
+--[[END_DEV_ONLY]]
 
 -- Global variables
 SAO.AURASTACKS = {
@@ -143,8 +155,8 @@ SAO.Variable:register({
     bucket = {
         impossibleValue = -2,
         fetchAndSet = function(bucket)
-            if bucket.auraProps and bucket.auraProps.hasSecretRestrictions and InCombatLockdown() then
-                -- Cannot fetch aura stacks reliably due to secret restrictions while in combat
+            if bucket.auraProps and bucket.auraProps.hasSecretRestrictions and (InCombatLockdown() or ShouldAurasBeSecret()) then
+                -- Cannot fetch aura stacks reliably due to secret restrictions
                 return;
             end
 
@@ -484,6 +496,9 @@ SAO.Variable:register({
 
         PLAYER_REGEN_ENABLED = SAO.AURASTACKS.MODERN and function(self)
             -- When leaving combat, auras may be queried individually
+            if ShouldAurasBeSecret() then
+                return; -- If auras should be secret, querying will fail
+            end
             for _, bucket in ipairs(secretBuckets) do
                 SAO:Debug(Module, "Checking buckets manually for secret aura", bucket.name);
                 bucket.trigger:manualCheck(SAO.TRIGGER_AURA);
