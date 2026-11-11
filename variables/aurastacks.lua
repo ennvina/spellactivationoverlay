@@ -155,7 +155,7 @@ SAO.Variable:register({
     bucket = {
         impossibleValue = -2,
         fetchAndSet = function(bucket)
-            if bucket.auraProps and bucket.auraProps.hasSecretRestrictions and (InCombatLockdown() or ShouldAurasBeSecret()) then
+            if bucket.auraProps and bucket.auraProps.hasSecretRestrictions and ShouldAurasBeSecret() then
                 -- Cannot fetch aura stacks reliably due to secret restrictions
                 return;
             end
@@ -207,7 +207,12 @@ SAO.Variable:register({
 
     event = {
         isRequired = true,
-        names = SAO.AURASTACKS.MODERN and { "PLAYER_REGEN_ENABLED", "PLAYER_TARGET_CHANGED" } or { "COMBAT_LOG_EVENT_UNFILTERED" },
+        names = SAO.AURASTACKS.MODERN and {
+            "PLAYER_TARGET_CHANGED",
+            C_Secrets and "ADDON_RESTRICTION_STATE_CHANGED" or nil,
+        } or {
+            "COMBAT_LOG_EVENT_UNFILTERED"
+        },
         unitNames = SAO.AURASTACKS.MODERN and { player = "UNIT_AURA", target = { "UNIT_AURA", "UNIT_FACTION" } } or nil,
 
         -- Legacy aura handling via CLEU
@@ -494,10 +499,9 @@ SAO.Variable:register({
             end
         end or nil,
 
-        PLAYER_REGEN_ENABLED = SAO.AURASTACKS.MODERN and function(self)
-            -- When leaving combat, auras may be queried individually
+        ADDON_RESTRICTION_STATE_CHANGED = SAO.AURASTACKS.MODERN and C_Secrets and function(self)
             if ShouldAurasBeSecret() then
-                return; -- If auras should be secret, querying will fail
+                return; -- If auras should be secret, querying auras will fail
             end
             for _, bucket in ipairs(secretBuckets) do
                 SAO:Debug(Module, "Checking buckets manually for secret aura", bucket.name);
