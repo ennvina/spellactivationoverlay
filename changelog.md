@@ -1,8 +1,9 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.9.0 (2026-10-xx)
+#### v2.9.0 (2026-11-xx)
 
 New Spell Alert
+- Mage's Freeze Debuff (Forever)
 - Shaman's Stormstrike Debuff (Forever)
 
 New Glowing Button

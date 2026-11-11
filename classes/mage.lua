@@ -679,6 +679,40 @@ local function useClearcasting()
     );
 end
 
+local function useFreezeDebuff()
+    local freezeID = 5276; -- Not really a 'Frozen' spell ID, but the name should help players identify the intent
+
+    local frozenAKAs = {};
+    local addSpellIDCandidates = function(ids)
+        for _, id in pairs(ids) do
+            if SAO:GetSpellName(id) then
+                table.insert(frozenAKAs, id);
+            end
+        end
+    end;
+    addSpellIDCandidates(FrozenHandler.frostbite);
+    addSpellIDCandidates(FrozenHandler.frost_nova);
+    addSpellIDCandidates(FrozenHandler.freezing_trap);
+    addSpellIDCandidates(FrozenHandler.freeze);
+    addSpellIDCandidates(FrozenHandler.shattered_barrier);
+    addSpellIDCandidates(FrozenHandler.deep_freeze);
+    addSpellIDCandidates(FrozenHandler.deep_freeze_sod);
+    addSpellIDCandidates(FrozenHandler.hungering_cold);
+    addSpellIDCandidates(FrozenHandler.improved_cone_of_cold);
+    addSpellIDCandidates(FrozenHandler.ring_of_frost);
+
+    SAO:CreateEffect(
+        "freeze",
+        SAO.FOREVER,
+        freezeID,
+        "aura",
+        {
+            auraProps = { debuff = true },
+            overlay = { texture = "frozen_fingers", position = "Top (CW)", pulse = false },
+        }
+    );
+end
+
 local function useFingersOfFrost()
     local hash0Stacks = SAO:HashNameFromStacks(0);
     local hash1Stack  = SAO:HashNameFromStacks(1);
@@ -818,6 +852,8 @@ end
 local function registerFrost(self)
     if self.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH + SAO.CATA + SAO.MOP) then
         self:RegisterAura("freeze", 0, FrozenHandler.fakeSpellID, FrozenHandler.saoTexture, FrozenHandler.saoPosition, FrozenHandler.saoScaleFactor, 255, 255, 255, false);
+    elseif self.IsProject(SAO.FOREVER) then
+        useFreezeDebuff();
     end
 
     if self.IsSoD() then
