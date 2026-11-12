@@ -3,7 +3,7 @@ local Module = "auracontainer"
 
 local LoadAddOn = C_AddOns and C_AddOns.LoadAddOn or LoadAddOn
 
-local useAuraContainer = (SAO.IsForever() or SAO.IsRetail()) and C_Secrets ~= nil and C_Secrets.GetSpellAuraSecrecy ~= nil
+local useAuraContainer = SAO.IsModern() and C_Secrets ~= nil and C_Secrets.GetSpellAuraSecrecy ~= nil
 
 local function traceBooleanChange(intro, oldValue, newValue, id) --[[BEGIN_DEV_ONLY]]
     if not SAO:HasTrace(Module) then

@@ -361,7 +361,7 @@ SAO.Variable:register({
                     SAO:Debug(Module, "Checking buckets manually for secretless aura", bucket.name);
                     bucket.trigger:manualCheck(SAO.TRIGGER_AURA);
                 end
-                if SAO.IsForever() or SAO.IsRetail() then
+                if SAO.IsModern() then
                     return; -- There's probably no reason to continue processing auras information after this point
                 else
                     SAO:Warn(Module, "Dealing with secret aura information in a flavor which is not supposed to have them:", SAO.GetFlavorName());
