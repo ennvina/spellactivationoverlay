@@ -814,9 +814,9 @@ local function useHeatingUpAndHotStreak()
         {
             overlays = {
                 -- In Forever/Retail, 'stacks' determines is the minimum number of stacks, not the exact number
-                { stacks = 1, texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.6, pulse = false, level = 1, color = { 200, 200, 200 }, option = false },
-                { stacks = 2, texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.8, pulse = false, level = 2, color = { 222, 222, 222 }, option = false },
-                { stacks = 3, texture = "hot_streak", position = "Left + Right (Flipped)", scale = 1.0, pulse = true , level = 3, color = { 255, 255, 255 }, option = { setupHash = SAO:HashNameFromStacks(0), testHash = SAO:HashNameFromStacks(3) } },
+                { stacks = 1, texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.5, pulse = false, level = 1, color = { 200, 200, 200 }, option = false },
+                { stacks = 2, texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.7, pulse = false, level = 2, color = { 222, 222, 222 }, option = false },
+                { stacks = 3, texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.9, pulse = true , level = 3, color = { 255, 255, 255 }, option = { setupHash = SAO:HashNameFromStacks(0), testHash = SAO:HashNameFromStacks(3) } },
             },
         }
     );
