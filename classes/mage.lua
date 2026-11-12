@@ -704,9 +704,10 @@ local function useFreezeDebuff()
     SAO:CreateEffect(
         "freeze",
         SAO.FOREVER,
-        freezeID,
+        freezeID, -- Not the real spellID, but useful because it has an informative "Freeze" name and icon
         "aura",
         {
+            aka = frozenAKAs, -- Actual list of spell IDs happening in game
             auraProps = { debuff = true },
             overlay = { texture = "frozen_fingers", position = "Top (CW)", pulse = false },
         }
