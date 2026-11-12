@@ -1,13 +1,12 @@
 # SpellActivationOverlay 2.9
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.9
-## General
 ## Classes
 ### :mage~1:  Mage
 New Spell Alert
 - Frozen Debuff (Forever)
 Updated Spell Alerts
 - Heating Up and Missile Barrage have slightly more room between them to be more visible when they stack together (Forever)
-### :shaman:  Class
+### :shaman:  Shaman
 New Spell Alert
 - Stormstrike Debuff (Forever)
 New Glowing Button
@@ -19,9 +18,8 @@ New Spell Alerts
 ## Bug Fixes
 ### :mage~1:  Mage
 The option for Heating Up + Hot Streak can be previewed again (Season of Discovery, Wrath of the Lich King)
-### :shaman:  Class
+### :shaman:  Shaman
 Fulmination visuals are more centered (Season of Discovery, Cataclysm, Mists of Pandaria)
-## Known Limitations
 ## Miscellaneous
 The welcome message has vanished into the Twisting Nether (Forever). It shall or shall not return someday.
 ## Contributors
