@@ -321,7 +321,7 @@ end
 
 -- Identiical to SAO:GetPlayerAuraStacksBySpellID but for any unit and with a specific filter string
 function SAO:GetUnitAuraStacksBySpellID(unit, filter, spellID, includeAka)
-    assertsafe(GetUnitAuraInstanceIDs and GetAuraDataByAuraInstanceID);
+    assertsafe(GetUnitAuraInstanceIDs and GetAuraDataByAuraInstanceID, "GetUnitAuraStacksBySpellID can be called only if GetUnitAuraInstanceIDs and GetAuraDataByAuraInstanceID are available");
     if not GetUnitAuraInstanceIDs then
         return;
     end
@@ -405,7 +405,7 @@ function SAO:GetTalentByName(talentName)
         end
     elseif C_SpecializationInfo and C_SpecializationInfo.GetTalentInfo and canUseModernTalentAPI then
         -- Revamped pre-MoP talent API (introduced in Classic Era patch 1.15.8)
-        assertsafe(GetTalentInfo == C_SpecializationInfo.GetTalentInfo);
+        assertsafe(GetTalentInfo == C_SpecializationInfo.GetTalentInfo, "GetTalentInfo must be equal to C_SpecializationInfo.GetTalentInfo for the Classic pre-MoP talent API");
         for tab = 1, GetNumTalentTabs() do
             local nbTabs = GetNumTalents(tab)
             for index = 1, nbTabs do
@@ -443,7 +443,7 @@ function SAO:GetNbTalentPoints(i, j)
         return talentInfo and talentInfo.selected and 1 or 0;
     elseif C_SpecializationInfo and C_SpecializationInfo.GetTalentInfo and canUseModernTalentAPI then
         -- Revamped pre-MoP talent API
-        assertsafe(GetTalentInfo == C_SpecializationInfo.GetTalentInfo);
+        assertsafe(GetTalentInfo == C_SpecializationInfo.GetTalentInfo, "GetTalentInfo must be equal to C_SpecializationInfo.GetTalentInfo for the Classic pre-MoP talent API");
         local talentInfo = GetTalentInfo({ specializationIndex = i, talentIndex = j });
         return talentInfo and talentInfo.rank or 0;
     else

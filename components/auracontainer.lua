@@ -419,7 +419,7 @@ SAO.AuraContainer = {
 
     -- Get or create an aura container based on the provided hash information
     getOrCreateContainer = function(self, hashInfo)
-        assertsafe(type(hashInfo) == 'table' and type(hashInfo.container) == 'table' and type(hashInfo.container.key) == 'string')
+        assertsafe(type(hashInfo) == 'table' and type(hashInfo.container) == 'table' and type(hashInfo.container.key) == 'string', "bad hashInfo passed to AuraContainer.getOrCreateContainer")
 
         local container = self.containers[hashInfo.container.key]
         if container then
@@ -490,7 +490,7 @@ SAO.AuraContainer = {
         end
 
         local container = self:getOrCreateContainer(hashInfo)
-        assertsafe(container)
+        assertsafe(container, "failed to get or create container in AuraContainer.registerOverlay of spell "..tostring(overlay.spellID))
 
         local id = ("container:"..hashInfo.container.key) ..
             ("_spell:"..overlay.spellID) ..

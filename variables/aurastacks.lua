@@ -169,8 +169,8 @@ SAO.Variable:register({
                 local includeAka = SAO.IsModern(); -- Do not use in Classic to prevent side effects (AKAs were not used as real spell IDs in Classic)
                 auraStacks, auraInstanceID = SAO:GetPlayerAuraStacksBySpellID(bucket.spellID, includeAka);
             else
-                assertsafe(isDebuffBucket);
-                assertsafe(type(bucket.auraProps) == "table");
+                assertsafe(isDebuffBucket, "a non-buff bucket must be a debuff bucket");
+                assertsafe(type(bucket.auraProps) == "table", "a debuff bucket must have an 'auraProps' table");
                 local filter = bucket.auraProps.mineOnly and "HARMFUL|PLAYER" or "HARMFUL";
                 local includeAka = SAO.IsModern(); -- Should always be true, for debuffs were introduced in Forever/Retail
                 auraStacks, auraInstanceID = SAO:GetUnitAuraStacksBySpellID("target", filter, bucket.spellID, includeAka);
@@ -292,6 +292,7 @@ SAO.Variable:register({
                     -- Ignore debuffs not applied by the player, when the aura is marked as 'mineOnly'
                     return;
                 end
+                -- @todo: Maybe support the 'mineOnly' property for buffs as well, similar to how it's handled for debuffs
 
                 -- Handle unique case first: aura refresh
                 if (auraRefresh) then
@@ -325,6 +326,7 @@ SAO.Variable:register({
                         if isBuffBucket then
                             stacks = SAO:GetPlayerAuraStacksBySpellID(spellID) or 0;
                         elseif isDebuffBucket then
+                            assertsafe(bucket.auraProps, "bucket.auraProps must be defined for debuff buckets");
                             local filter = bucket.auraProps.mineOnly and "HARMFUL|PLAYER" or "HARMFUL";
                             stacks = SAO:GetUnitAuraStacksBySpellID("target", filter, spellID) or 0;
                         end
@@ -382,6 +384,7 @@ SAO.Variable:register({
                 if isDebuffBucket and bucket.auraProps.mineOnly and not aura.isFromPlayerOrPlayerPet then
                     return;
                 end
+                -- @todo Also support mineOnly for buff buckets
                 SAO:Trace(Module, "Associating aura instance ID "..tostring(auraInstanceID).." to bucket "..bucket.name);
                 bucket:setAuraStacks((bucket.stackAgnostic and 0) or aura.applications);
                 bucket.lastKnownAuraStacks = aura.applications;
@@ -492,11 +495,13 @@ SAO.Variable:register({
 
             -- When the player's target changes, auras may need to be re-evaluated
             for _, bucket in ipairs(secretlessBuckets) do
+                -- @todo Update only debuff buckets
                 SAO:Debug(Module, "Checking buckets manually for secretless aura due to target change", bucket.name);
                 bucket.trigger:manualCheck(SAO.TRIGGER_AURA);
             end
 
             if #secretBuckets > 0 then
+                -- @todo Update only target-based aura containers
                 SAO.AuraContainer:updateAll();
             end
         end or nil,

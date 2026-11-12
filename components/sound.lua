@@ -123,7 +123,6 @@ SAO.AuraSoundLibrary = {
                     -- There was no sound and global sound is being enabled
                     local firstItemID, firstItem = next(soundData.items)
                     if firstItemID and firstItem then -- Add the sound if there is at least one item interested by this spell's aura sound
-                        assertsafe(firstItemID ~= nil and firstItem ~= nil)
                         local unit = firstItem.unit -- Use arbitrarily the unit of the first item; all items should share the same unit token
                         local auraSoundID1, auraSoundID2 = self:_internalAddSound(spellID, unit)
                         SAO:Debug(Module, "Global sound enable is enabling sound of spell ID", spellID)
@@ -153,8 +152,8 @@ SAO.AuraSoundLibrary = {
     end,
 
     _internalRemoveSound = function(self, auraSoundID1, auraSoundID2)
-        assertsafe(auraSoundID1)
-        assertsafe(auraSoundID2)
+        assertsafe(auraSoundID1, "missing auraSoundID1 parameter in AuraSoundLibrary._internalRemoveSound")
+        assertsafe(auraSoundID2, "missing auraSoundID2 parameter in AuraSoundLibrary._internalRemoveSound")
         C_UnitAuras.RemoveAuraSound(auraSoundID1)
         C_UnitAuras.RemoveAuraSound(auraSoundID2)
     end,

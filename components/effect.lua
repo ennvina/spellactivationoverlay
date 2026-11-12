@@ -905,7 +905,7 @@ function SAO:AddEffectOptions()
 
         for _, overlay in ipairs((not skipOptions) and effect.overlays or {}) do
             if overlay.option ~= false and (not overlay.project or self.IsProject(overlay.project)) then
-                assertsafe(type(overlay.option) == 'table' or overlay.option == true or overlay.option == nil);
+                assertsafe(type(overlay.option) == 'table' or overlay.option == true or overlay.option == nil, "invalid overlay.option for spell "..tostring(overlay.spellID));
                 local buff = overlay.spellID or effect.spellID;
                 local option = type(overlay.option) == 'table' and overlay.option or {};
                 local setupHash = type(option.setupHash) == 'string' and option.setupHash or self:HashNameFromHashNumber(overlay.hash);

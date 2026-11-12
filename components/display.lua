@@ -62,7 +62,7 @@ SAO.Display = {
                 end
             end
         end
-        assertsafe(hashData.optionIndex ~= nil);
+        assertsafe(hashData.optionIndex ~= nil, "hashData.optionIndex must not be nil when creating a new Display for "..tostring(parent and parent.description));
         display.hashData = hashData;
 
         self.__index = nil;
