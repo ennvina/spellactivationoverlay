@@ -189,7 +189,6 @@ local function useStormstrike(self)
         { combatOnly = true }
     );
 
-    --[[BEGIN_DEV_ONLY]]
     SAO:CreateEffect(
         "stormstrike_debuff",
         SAO.FOREVER,
@@ -206,7 +205,6 @@ local function useStormstrike(self)
             },
         }
     );
-    --[[END_DEV_ONLY]]
 end
 
 local function useMaelstromWeapon(self)

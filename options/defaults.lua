@@ -653,6 +653,9 @@ SAO.defaults = {
                 [16246] = { -- Elemental Focus
                     [0] = true,
                 },
+                [27775] = { -- Representative spell ID of Stormstrike debuff (Forever)
+                    [0] = true,
+                },
                 [29063] = { -- Eye of the Storm (Era, TBC)
                     [0] = false,
                 },
