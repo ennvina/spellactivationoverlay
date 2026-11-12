@@ -291,7 +291,8 @@ end
 
 -- Returns the number of stacks of a player aura by spellID, or nil if the aura is not present
 -- Also returns the auraInstanceID if available, nil otherwise
-function SAO:GetPlayerAuraStacksBySpellID(id)
+function SAO:GetPlayerAuraStacksBySpellID(id, includeAka)
+    -- Find direct spell ID
     if GetPlayerAuraBySpellID then
         local aura = GetPlayerAuraBySpellID(id);
         if aura then
@@ -303,10 +304,23 @@ function SAO:GetPlayerAuraStacksBySpellID(id)
             return count, nil;
         end
     end
+
+    -- Not found yet, try with AKAs if wanted
+    if includeAka then
+        for _, akaSpellID in ipairs(SAO:GetAkaSpellIDsByEffectSpellID(id) or {}) do
+            local aura, auraInstanceID = SAO:GetPlayerAuraStacksBySpellID(akaSpellID, false); -- false to avoid infinite recursion
+            if aura then
+                return aura, auraInstanceID;
+            end
+        end
+    end
+
+    -- Really not found at all
     return nil, nil;
 end
 
-function SAO:GetUnitAuraStacksBySpellID(unit, filter, spellID)
+-- Identiical to SAO:GetPlayerAuraStacksBySpellID but for any unit and with a specific filter string
+function SAO:GetUnitAuraStacksBySpellID(unit, filter, spellID, includeAka)
     assertsafe(GetUnitAuraInstanceIDs and GetAuraDataByAuraInstanceID);
     if not GetUnitAuraInstanceIDs then
         return;
@@ -316,6 +330,14 @@ function SAO:GetUnitAuraStacksBySpellID(unit, filter, spellID)
         local aura = GetAuraDataByAuraInstanceID(unit, id);
         if aura then
             return aura.applications, id; -- Return the first aura available
+        end
+    end
+    if includeAka then
+        for _, akaSpellID in ipairs(SAO:GetAkaSpellIDsByEffectSpellID(spellID) or {}) do
+            local aura, auraInstanceID = SAO:GetUnitAuraStacksBySpellID(unit, filter, akaSpellID, false); -- false to avoid infinite recursion
+            if aura then
+                return aura, auraInstanceID;
+            end
         end
     end
 end

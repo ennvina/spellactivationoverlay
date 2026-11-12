@@ -166,12 +166,14 @@ SAO.Variable:register({
             local auraStacks, auraInstanceID;
 
             if isBuffBucket then
-                auraStacks, auraInstanceID = SAO:GetPlayerAuraStacksBySpellID(bucket.spellID);
+                local includeAka = SAO.IsModern(); -- Do not use in Classic to prevent side effects (AKAs were not used as real spell IDs in Classic)
+                auraStacks, auraInstanceID = SAO:GetPlayerAuraStacksBySpellID(bucket.spellID, includeAka);
             else
                 assertsafe(isDebuffBucket);
                 assertsafe(type(bucket.auraProps) == "table");
                 local filter = bucket.auraProps.mineOnly and "HARMFUL|PLAYER" or "HARMFUL";
-                auraStacks, auraInstanceID = SAO:GetUnitAuraStacksBySpellID("target", filter, bucket.spellID);
+                local includeAka = SAO.IsModern(); -- Should always be true, for debuffs were introduced in Forever/Retail
+                auraStacks, auraInstanceID = SAO:GetUnitAuraStacksBySpellID("target", filter, bucket.spellID, includeAka);
             end
 
             if auraStacks ~= nil then
