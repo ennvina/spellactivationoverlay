@@ -410,6 +410,7 @@ local function useOverpower()
             "counter",
             {   -- Lazy evaluation for variants, because they are created later on
                 buttonOption = not SAO.IsMoP() and { variants = function() return OverpowerHandler.variants end } or nil,
+                overlay = SAO.IsForever() and { texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234 } or nil,
             }
         );
     end
