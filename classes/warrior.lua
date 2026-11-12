@@ -463,6 +463,7 @@ local function useRevenge()
             "counter",
             {   -- Lazy evaluation for variants, because they are created later on
                 buttonOption = not SAO.IsMoP() and { variants = function() return RevengeHandler.variants end } or nil,
+                overlay = SAO.IsForever() and { texture = "sword_and_board", position = "Left + Right (Flipped)", scale = 1.1 } or nil,
             }
         );
     end

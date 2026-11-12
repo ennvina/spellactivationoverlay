@@ -11,6 +11,7 @@ New Spell Alert
 - Mage's Frozen Debuff (Forever)
 - Shaman's Stormstrike Debuff (Forever)
 - Warrior's Overpower (Forever)
+- Warrior's Revenge (Forever)
 
 New Glowing Button
 - Shaman's Stormstrike (Era, TBC, Wrath, Cata, MoP)

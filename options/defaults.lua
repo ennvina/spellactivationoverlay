@@ -862,6 +862,9 @@ SAO.defaults = {
         },
         ["WARRIOR"] = {
             alert = {
+                [6572] = { -- Revenge
+                    [0] = true,
+                },
                 [7384] = { -- Overpower
                     [0] = "stance:1",
                 },

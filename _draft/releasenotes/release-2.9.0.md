@@ -15,6 +15,7 @@ New Glowing Button
 ### :warrior:  Warrior
 New Spell Alerts
 - Overpower (Forever)
+- Revenge (Forever)
 ## Bug Fixes
 ### :mage~1:  Mage
 The option for Heating Up + Hot Streak can be previewed again (Season of Discovery, Wrath of the Lich King)
