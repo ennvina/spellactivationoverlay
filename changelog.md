@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.9.0 (2026-11-xx)
+#### v2.9.0 (2026-11-12)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - nvim for testing and debugging Mage's Frozen effect
