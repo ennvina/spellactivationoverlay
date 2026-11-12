@@ -98,7 +98,7 @@ function SpellActivationOverlay_OnLoad(self)
 	for _, var in pairs(SAO.Variables) do
 		if type(var.event.isRequired) == 'function' and var.event.isRequired()
 		or type(var.event.isRequired) == 'boolean' and var.event.isRequired then
-			for _, eventName in ipairs(var.event.names) do
+			for _, eventName in ipairs(var.event.names or {}) do
 				SAO:RegisterEventHandler(self, eventName, "Main init: Variable "..var.core);
 			end
 			for unitName, eventName in pairs(var.event.unitNames or {}) do

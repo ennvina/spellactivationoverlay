@@ -143,7 +143,7 @@ SAO.Variable:register({
     event = {
         isRequired = SAO.IsProject(requiredProject) and isPlayerClassValid,
         names = nil,
-        unitNames = { "UNIT_POWER_UPDATE", "UNIT_POWER_FREQUENT" },
+        unitNames = { player = { "UNIT_POWER_UPDATE", "UNIT_POWER_FREQUENT" } },
         UNIT_POWER_UPDATE = function(unitTarget, powerType)
             if unitTarget == "player" and powerType == HolyPowerPowerTypeToken then
                 SAO:CheckManuallyAllBuckets(SAO.TRIGGER_HOLY_POWER);

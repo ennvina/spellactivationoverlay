@@ -108,6 +108,9 @@ SAO.Variable = {
         end
         check(var.event, "unitNames", { 'table', 'nil' }); -- { player = "UNIT_COMBAT" }
         for unitName, eventName in pairs(var.event.unitNames or {}) do
+            if type(unitName) ~= 'string' then
+                error("Invalid unit name "..tostring(unitName).." in event.unitNames of variable "..tostring(var.core));
+            end
             check(var.event.unitNames, unitName, { 'string', 'table' });
             if type(eventName) == 'string' then
                 check(var.event, eventName, { 'function', 'nil' });
