@@ -21,6 +21,7 @@ The welcome message has vanished into the Twisting Nether (Forever). It shall or
 ## Contributors
 Shout-out to our amazing contributors
 - nvim for testing and debugging Mage's Frozen effect
+- SinianfromCH0813 for reporting the Fire Mage preview issue
 Thanks!
 
 As always, the latest release is available on [CurseForge](https://www.curseforge.com/wow/addons/spellactivationoverlay) / [GitHub](https://github.com/ennvina/spellactivationoverlay/releases/latest) / [Discord](https://discord.com/channels/1013194771969355858/1379111832207228938)

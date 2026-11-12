@@ -4,6 +4,7 @@
 
 Thank you to our amazing contributors for helping out. Thanks!
 - nvim for testing and debugging Mage's Frozen effect
+- SinianfromCH0813 for reporting the Fire Mage preview issue
 
 New Spell Alert
 - Mage's Frozen Debuff (Forever)
