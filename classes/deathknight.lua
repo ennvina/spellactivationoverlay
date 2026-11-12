@@ -52,7 +52,7 @@ local function useBoneShield()
 
             actionUsable = true,
             combatOnly = true,
-            button = { stacks = -2, spellID = boneShield }, -- -2 means 'buff missing'
+            button = { stacks = -1, spellID = boneShield }, -- -1 means 'buff missing'
         }
     );
 end

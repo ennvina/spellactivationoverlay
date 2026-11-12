@@ -193,7 +193,7 @@ local function useJudgementsOfThePure()
             requireTalent = true,
             combatOnly = true,
             buttons = {
-                default = { stacks = -2 }, -- -2 means 'buff missing'
+                default = { stacks = -1 }, -- -1 means 'buff missing'
                 [SAO.WRATH] = { judgementOfLight, judgementOfWisdom, judgementOfJustice },
                 [SAO.CATA] = judgement,
             }

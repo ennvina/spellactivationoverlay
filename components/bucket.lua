@@ -91,7 +91,7 @@ SAO.Bucket = {
             if hash:hasAuraStacks() then
                 if self.stackAgnostic then
                     local stacks = hash:getAuraStacks();
-                    if stacks ~= 0 then
+                    if stacks and stacks > 0 then
                         -- Having at least one positive display is enough to know the bucket cares about number of stacks
                         self.stackAgnostic = false;
                     end
