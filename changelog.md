@@ -16,6 +16,9 @@ Bug Fixes
 - Mage's Heating Up + Hot Streak can be previewed again (SoD, Wrath)
 - Shaman's Fulmination visuals are more centered (SoD, Cata, MoP)
 
+Miscellaneous
+- The welcome message has vanished into the Twisting Nether (Forever)
+
 #### v2.8.9 (2026-10-22)
 
 Bug Fixes

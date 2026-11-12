@@ -17,6 +17,7 @@ The option for Heating Up + Hot Streak can be previewed again (Season of Discove
 Fulmination visuals are more centered (Season of Discovery, Cataclysm, Mists of Pandaria)
 ## Known Limitations
 ## Miscellaneous
+The welcome message has vanished into the Twisting Nether (Forever). It shall or shall not return someday.
 ## Contributors
 Shout-out to our amazing contributors
 - nvim for testing and debugging Mage's Frozen effect
