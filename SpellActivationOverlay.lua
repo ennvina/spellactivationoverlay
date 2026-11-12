@@ -12,6 +12,7 @@ local combatOverlayFactor = 2;
 local useTimer = true;
 local useSound = false;
 
+--[[BEGIN_DEV_ONLY]]
 if SAO.IsForever() then
 	local welcomeBefore = SAO:gradientText(">>>>>>", { { r=0.5, g=0.5, b=1 }, { r=1, g=1, b=1 } });
 	local orange, orangeLight, orangeDark = { r = 1, g = 0.7, b = 0.2 }, { r = 1, g = 0.85, b = 0.55 }, { r = 0.9, g = 0.65, b = 0.15 };
@@ -24,6 +25,7 @@ if SAO.IsForever() then
 		"Make sure to send feedback over the " .. welcomeDiscord .. " or " .. welcomeCurseForge .. ", ".. "thank you :)";
 	print(welcomeText);
 end
+--[[END_DEV_ONLY]]
 
 function SpellActivationOverlay_OnLoad(self)
 	SAO.Frame = self;

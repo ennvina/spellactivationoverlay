@@ -814,9 +814,9 @@ local function useHeatingUpAndHotStreak()
         {
             overlays = {
                 -- In Forever/Retail, 'stacks' determines is the minimum number of stacks, not the exact number
-                { stacks = 1, texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.6, pulse = false, level = 1, color = { 200, 200, 200 }, option = false },
-                { stacks = 2, texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.8, pulse = false, level = 2, color = { 222, 222, 222 }, option = false },
-                { stacks = 3, texture = "hot_streak", position = "Left + Right (Flipped)", scale = 1.0, pulse = true , level = 3, color = { 255, 255, 255 }, option = { setupHash = SAO:HashNameFromStacks(0), testHash = SAO:HashNameFromStacks(3) } },
+                { stacks = 1, texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.5, pulse = false, level = 1, color = { 200, 200, 200 }, option = false },
+                { stacks = 2, texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.7, pulse = false, level = 2, color = { 222, 222, 222 }, option = false },
+                { stacks = 3, texture = "hot_streak", position = "Left + Right (Flipped)", scale = 0.9, pulse = true , level = 3, color = { 255, 255, 255 }, option = { setupHash = SAO:HashNameFromStacks(0), testHash = SAO:HashNameFromStacks(3) } },
             },
         }
     );
@@ -841,7 +841,7 @@ local function registerFire(self)
     if self.IsProject(SAO.SOD + SAO.WRATH + SAO.CATA) then
         self:RegisterAura("hot_streak_half", 0, heatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255, false); -- Does not exist, but define it for option testing
     end
-    if self.IsCata(SAO.SOD + SAO.WRATH) then
+    if self.IsProject(SAO.SOD + SAO.WRATH) then
         self:RegisterAura("hot_streak_duo", 0, hotStreakHeatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255, false); -- Does not exist, but define it for option testing
         self:RegisterAura("hot_streak_duo", 0, hotStreakHeatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true); -- Does not exist, but define it for option testing
     end

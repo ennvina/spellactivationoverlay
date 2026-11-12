@@ -862,6 +862,12 @@ SAO.defaults = {
         },
         ["WARRIOR"] = {
             alert = {
+                [6572] = { -- Revenge
+                    [0] = true,
+                },
+                [7384] = { -- Overpower
+                    [0] = "stance:1",
+                },
                 [52437] = { -- Sudden Death (Wrath+)
                     [0] = true, -- any stacks (up to 2 stacks with tier 10)
                 },

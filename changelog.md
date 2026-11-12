@@ -4,16 +4,27 @@
 
 Thank you to our amazing contributors for helping out. Thanks!
 - nvim for testing and debugging Mage's Frozen effect
+- SinianfromCH0813 for reporting the Fire Mage preview issue
+- hholy for suggesting ideas about Heating Up and Missile Barrage
 
 New Spell Alert
 - Mage's Frozen Debuff (Forever)
 - Shaman's Stormstrike Debuff (Forever)
+- Warrior's Overpower (Forever)
+- Warrior's Revenge (Forever)
 
 New Glowing Button
 - Shaman's Stormstrike (Era, TBC, Wrath, Cata, MoP)
 
+Updated Spell Alerts
+- Mage's Heating Up and Missile Barrage stack a bit better (Forever)
+
 Bug Fixes
+- Mage's Heating Up + Hot Streak can be previewed again (SoD, Wrath)
 - Shaman's Fulmination visuals are more centered (SoD, Cata, MoP)
+
+Miscellaneous
+- The welcome message has vanished into the Twisting Nether (Forever)
 
 #### v2.8.9 (2026-10-22)
 
