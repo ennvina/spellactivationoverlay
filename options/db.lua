@@ -157,6 +157,14 @@ local migrations = {
             overwriteOption(db, "DRUID", "alert", omenOfClarity, -1, nil);
         end
     end},
+
+    {"2.9.0", function(db)
+        -- Mage's Frozen debuff should be enabled by default in Forever
+        if SAO.IsProject(SAO.FOREVER) then
+            local frozenDebuff = 5276; -- Representative of spells triggering Frozen effect
+            overwriteOption(db, "MAGE", "alert", frozenDebuff, 0, true);
+        end
+    end},
 }
 
 -- Load database and use default values if needed
