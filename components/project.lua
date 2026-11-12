@@ -108,6 +108,17 @@ function SAO.IsProject(projectFlags)
     );
 end
 
+local isClassic = SAO.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH + SAO.CATA + SAO.MOP);
+-- Note: No need to add SoD and Titan, for Era will include SoD and Wrath will include Titan
+function SAO.IsClassic()
+    return isClassic;
+end
+
+local isModern = SAO.IsProject(SAO.FOREVER + SAO.RETAIL);
+function SAO.IsModern()
+    return isModern;
+end
+
 local flavorNames = {
     [WOW_PROJECT_FOREVER or 18] = "Forever",
     [WOW_PROJECT_CLASSIC or 2] = "Era",
