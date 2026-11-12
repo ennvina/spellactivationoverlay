@@ -111,6 +111,7 @@ SAO.Variable:register({
             or
             ({ "PLAYER_TALENT_UPDATE" })
         ,
+        unitNames = nil,
         PLAYER_TALENT_UPDATE = function(...)
             local buckets = SAO:GetBucketsByTrigger(SAO.TRIGGER_TALENT);
             for _, bucket in ipairs(buckets or {}) do

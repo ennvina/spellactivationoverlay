@@ -15,11 +15,14 @@ local GetSpellTabInfo = GetSpellTabInfo
 local GetTalentInfo = GetTalentInfo
 local GetTalentTabInfo = GetTalentTabInfo
 local GetTime = GetTime
+local RunNextFrame = RunNextFrame
 local UnitAura = UnitAura
 local UnitClassBase = UnitClassBase
 
 local GetAuraDataBySpellName = C_UnitAuras and C_UnitAuras.GetAuraDataBySpellName
 local GetPlayerAuraBySpellID = C_UnitAuras and C_UnitAuras.GetPlayerAuraBySpellID
+local GetUnitAuraInstanceIDs = C_UnitAuras and C_UnitAuras.GetUnitAuraInstanceIDs
+local GetAuraDataByAuraInstanceID = C_UnitAuras and C_UnitAuras.GetAuraDataByAuraInstanceID
 
 local canUseModernTalentAPI = not SAO.IsTitan() -- Enforce using legacy talent API for Titan Reforged: Wrath
 
@@ -288,7 +291,8 @@ end
 
 -- Returns the number of stacks of a player aura by spellID, or nil if the aura is not present
 -- Also returns the auraInstanceID if available, nil otherwise
-function SAO:GetPlayerAuraStacksBySpellID(id)
+function SAO:GetPlayerAuraStacksBySpellID(id, includeAka)
+    -- Find direct spell ID
     if GetPlayerAuraBySpellID then
         local aura = GetPlayerAuraBySpellID(id);
         if aura then
@@ -300,7 +304,42 @@ function SAO:GetPlayerAuraStacksBySpellID(id)
             return count, nil;
         end
     end
+
+    -- Not found yet, try with AKAs if wanted
+    if includeAka then
+        for _, akaSpellID in ipairs(SAO:GetAkaSpellIDsByEffectSpellID(id) or {}) do
+            local aura, auraInstanceID = SAO:GetPlayerAuraStacksBySpellID(akaSpellID, false); -- false to avoid infinite recursion
+            if aura then
+                return aura, auraInstanceID;
+            end
+        end
+    end
+
+    -- Really not found at all
     return nil, nil;
+end
+
+-- Identiical to SAO:GetPlayerAuraStacksBySpellID but for any unit and with a specific filter string
+function SAO:GetUnitAuraStacksBySpellID(unit, filter, spellID, includeAka)
+    assertsafe(GetUnitAuraInstanceIDs and GetAuraDataByAuraInstanceID, "GetUnitAuraStacksBySpellID can be called only if GetUnitAuraInstanceIDs and GetAuraDataByAuraInstanceID are available");
+    if not GetUnitAuraInstanceIDs then
+        return;
+    end
+
+    for _, id in ipairs(GetUnitAuraInstanceIDs(unit, filter, spellID) or {}) do
+        local aura = GetAuraDataByAuraInstanceID(unit, id);
+        if aura then
+            return aura.applications, id; -- Return the first aura available
+        end
+    end
+    if includeAka then
+        for _, akaSpellID in ipairs(SAO:GetAkaSpellIDsByEffectSpellID(spellID) or {}) do
+            local aura, auraInstanceID = SAO:GetUnitAuraStacksBySpellID(unit, filter, akaSpellID, false); -- false to avoid infinite recursion
+            if aura then
+                return aura, auraInstanceID;
+            end
+        end
+    end
 end
 
 function SAO:GetPlayerAuraDurationExpirationTimeBySpellIdOrName(spellIdOrName)
@@ -366,7 +405,7 @@ function SAO:GetTalentByName(talentName)
         end
     elseif C_SpecializationInfo and C_SpecializationInfo.GetTalentInfo and canUseModernTalentAPI then
         -- Revamped pre-MoP talent API (introduced in Classic Era patch 1.15.8)
-        assertsafe(GetTalentInfo == C_SpecializationInfo.GetTalentInfo);
+        assertsafe(GetTalentInfo == C_SpecializationInfo.GetTalentInfo, "GetTalentInfo must be equal to C_SpecializationInfo.GetTalentInfo for the Classic pre-MoP talent API");
         for tab = 1, GetNumTalentTabs() do
             local nbTabs = GetNumTalents(tab)
             for index = 1, nbTabs do
@@ -404,7 +443,7 @@ function SAO:GetNbTalentPoints(i, j)
         return talentInfo and talentInfo.selected and 1 or 0;
     elseif C_SpecializationInfo and C_SpecializationInfo.GetTalentInfo and canUseModernTalentAPI then
         -- Revamped pre-MoP talent API
-        assertsafe(GetTalentInfo == C_SpecializationInfo.GetTalentInfo);
+        assertsafe(GetTalentInfo == C_SpecializationInfo.GetTalentInfo, "GetTalentInfo must be equal to C_SpecializationInfo.GetTalentInfo for the Classic pre-MoP talent API");
         local talentInfo = GetTalentInfo({ specializationIndex = i, talentIndex = j });
         return talentInfo and talentInfo.rank or 0;
     else
@@ -627,7 +666,7 @@ local function getFromDescription(from)
     end
 end
 
-function SAO:RegisterEventHandler(handler, event, from)
+function SAO:RegisterEventHandler(handler, event, from, unitTarget)
     --[[BEGIN_DEV_ONLY]]
     if false or -- Uncomment one of the following events to see how performance is affected
 --    event == "COMBAT_LOG_EVENT_UNFILTERED" or
@@ -649,16 +688,25 @@ function SAO:RegisterEventHandler(handler, event, from)
         eventHandlers[event] = {};
     end
     table.insert(eventHandlers[event], handler);
+    if unitTarget and handler.RegisterUnitEvent then
+        handler:RegisterUnitEvent(event, unitTarget);
+    else
+        handler:RegisterEvent(event);
+    end
     handler:RegisterEvent(event);
     SAO:Debug(Module, "Handling event "..tostring(event).." for "..getHandlerName(handler)..getFromDescription(from));
 end
 
-function SAO:UnregisterEventHandler(handler, event, from)
+function SAO:UnregisterEventHandler(handler, event, from, unitTarget)
     local found = false;
     for i, h in ipairs(eventHandlers[event] or {}) do
         if h == handler then
             table.remove(eventHandlers[event], i);
-            handler:UnregisterEvent(event);
+            if unitTarget and handler.UnregisterUnitEvent then
+                handler:UnregisterUnitEvent(event, unitTarget);
+            else
+                handler:UnregisterEvent(event);
+            end
             SAO:Debug(Module, "Un-handling event "..tostring(event).." for "..getHandlerName(handler)..getFromDescription(from));
             found = true;
             break;
@@ -705,6 +753,18 @@ function SAO:ExecutePendingOperations(category)
         operations.executing = nil;
         pendingOperations[category] = {};
     end --[[DEV_ONLY]]
+end
+
+function SAO:RunNextFrame(func)
+    if type(func) ~= "function" then
+        self:Error(Module, "Invalid function passed to RunNextFrame: "..tostring(func)); --[[DEV_ONLY]]
+        return;
+    end
+    if RunNextFrame then
+        RunNextFrame(func);
+    else
+        C_Timer.After(0, function() func(); end);
+    end
 end
 
 --[[

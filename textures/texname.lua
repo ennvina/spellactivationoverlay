@@ -112,7 +112,10 @@ for retailTexture, classicTexture in pairs(mapping) do
     or
     (SAO.IsForever() and retailNumber <= 2888300) -- Forever game files embed textures up to (at least) 2888300
   ) and
-    retailNumber ~= 450914 and retailNumber ~= 450915 then -- Eclipse textures in Cataclysm and Pandaria were different
+    retailNumber ~= 450914 and retailNumber ~= 450915 -- Eclipse textures in Cataclysm and Pandaria were different
+    and
+    retailNumber ~= 467696 -- Fulmination texture has been centered
+  then
     -- In this case, use texture embedded in game using its FileDataID, not from addon folder using a file path
     fullTextureName = retailTexture;
   end

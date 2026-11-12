@@ -222,6 +222,8 @@ SAO.Variable:register({
         isRequired = true,
         --[[ names is the list of events to register to, each of them will have a key in the .event table ]]
         names = { "UPDATE_SHAPESHIFT_FORM" },
+        --[[ unitNames is the list of unit events to register to, each of them will have a key in the .event table ]]
+        unitNames = nil, -- Example: unitNames = { player = "UNIT_COMBAT", target = { "UNIT_TARGET", "UNIT_FACTION" } },
         --[[ Since the above .event.names list has mentioned UPDATE_SHAPESHIFT_FORM, this event must have a function
         When the game broadcasts the UPDATE_SHAPESHIFT_FORM event, this function will be called
         ]]
@@ -268,7 +270,7 @@ SAO.Variable:register({
         Setting a transform function is useful e.g. if the hash value should be nil
         - to get a nil value to the hash fragment of this variable, we couldn't use the 'matchStance = nil' property
         - indeed, if the developer passed the HRE property 'matchStance = nil' it would be seen as if the property was missing
-        There are other cases where setting a non-identify function can be useful, but nil is the most frequent reason
+        There are other cases where setting a non-identity function can be useful, but nil is the most frequent reason
         (side note, this is called noeToHash and not hreToHash, simply because the sequence is to build HRE > NOE > hash)
         ]]
         noeToHash = function(value) return value end,

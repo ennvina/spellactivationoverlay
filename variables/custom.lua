@@ -84,6 +84,7 @@ SAO.Variable:register({
     event = {
         isRequired = false,
         names = {},
+        unitNames = nil,
     },
 
     condition = {

@@ -33,7 +33,7 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
         local enabled = self:IsEnabled();
 
         -- Class text
-        local text = "";
+        local text = " "; -- Start with a space to not stick to the checkbox
         -- No longer display the class name for each glowing button
         -- local classColor;
         -- if (enabled) then
@@ -42,11 +42,11 @@ function SAO.AddGlowingOption(self, talentID, spellID, glowID, talentSubText, sp
         --     local dimmedClassColor = CreateColor(0.5*RAID_CLASS_COLORS[classFile].r, 0.5*RAID_CLASS_COLORS[classFile].g, 0.5*RAID_CLASS_COLORS[classFile].b);
         --     classColor = dimmedClassColor:GenerateHexColor();
         -- end
-        -- text = WrapTextInColorCode(className, classColor);
+        -- text = text..WrapTextInColorCode(className, classColor).." ";
 
         -- Talent text
         if talentID and talentID ~= glowID and not alwaysHideTalentText then
-            text = text.." "..talentText;
+            text = text..talentText;
             if type(talentSubText) == 'function' then
                 local evalTalentSubText = talentSubText();
                 if type(evalTalentSubText) == 'string' then

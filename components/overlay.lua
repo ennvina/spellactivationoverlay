@@ -72,7 +72,7 @@ function SAO.ActivateOverlay(self, hashData, spellID, texture, positions, scale,
         end
 
         -- Find when the effect ends, if it will end
-        endTime = self:GetSpellEndTime(spellID, endTime);
+        endTime = self:GetSpellEndTime(spellID, endTime, extra);
 
         -- Actually show the overlay(s)
         self.ShowAllOverlays(self.Frame, spellID, texture, positions, scale, r, g, b, a, autoPulse, forcePulsePlay, endTime, combatOnly, extra);
@@ -85,8 +85,8 @@ function SAO:DeactivateOverlay(spellID)
 end
 
 -- Refresh the duration of an overlay
-function SAO:RefreshOverlayTimer(spellID, endTime)
-    endTime = self:GetSpellEndTime(spellID, endTime);
+function SAO:RefreshOverlayTimer(spellID, endTime, extra)
+    endTime = self:GetSpellEndTime(spellID, endTime, extra);
     if (endTime) then
         self.SetOverlayTimer(self.Frame, spellID, endTime);
     end

@@ -674,8 +674,12 @@ local function checkNativeEffect(effect)
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid scale factor "..tostring(overlay.scale));
             return false;
         end
-        if overlay.color and (type(overlay.color) ~= 'table' or type(overlay.color[1]) ~= 'number' or type(overlay.color[2]) ~= 'number' or type(overlay.color[3]) ~= 'number') then
+        if overlay.color and (type(overlay.color) ~= 'table' or type(overlay.color[1]) ~= 'number' or type(overlay.color[2]) ~= 'number' or type(overlay.color[3]) ~= 'number' or (type(overlay.color[4]) ~= 'number' and overlay.color[4] ~= nil)) then
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid color");
+            return false;
+        end
+        if overlay.color and type(overlay.color[4]) == 'number' and (overlay.color[4] < 2 or overlay.color[4] > 255) then
+            SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid alpha "..tostring(overlay.color[4]).." (must be in the [2, 255] range)");
             return false;
         end
     end
@@ -901,23 +905,23 @@ function SAO:AddEffectOptions()
 
         for _, overlay in ipairs((not skipOptions) and effect.overlays or {}) do
             if overlay.option ~= false and (not overlay.project or self.IsProject(overlay.project)) then
+                assertsafe(type(overlay.option) == 'table' or overlay.option == true or overlay.option == nil, "invalid overlay.option for spell "..tostring(overlay.spellID));
                 local buff = overlay.spellID or effect.spellID;
-                if type(overlay.option) == 'table' then
-                    local setupHash = type(overlay.option.setupHash) == 'string' and overlay.option.setupHash or self:HashNameFromHashNumber(overlay.hash);
-                    local testHash = (type(overlay.option.testHash) == 'string' or type(overlay.option.testHash) == 'table') and overlay.option.testHash or setupHash;
-                    local subText = overlay.option.subText;
-                    local variants = overlay.option.variants;
-                    if type(subText) == 'function' then
-                        subText = subText();
-                    end
-                    if type(variants) == 'function' then
-                        variants = variants();
-                    end
-                    self:AddOverlayOption(talent, buff, setupHash, subText, variants, testHash);
-                else
-                    local setupHash = self:HashNameFromHashNumber(overlay.hash);
-                    self:AddOverlayOption(talent, buff, setupHash);
+                local option = type(overlay.option) == 'table' and overlay.option or {};
+                local setupHash = type(option.setupHash) == 'string' and option.setupHash or self:HashNameFromHashNumber(overlay.hash);
+                local testHash = (type(option.testHash) == 'string' or type(option.testHash) == 'table') and option.testHash or setupHash;
+                local subText = option.subText;
+                local variants = option.variants;
+                if subText == nil and type(effect.auraProps) == 'table' and effect.auraProps.debuff then
+                    subText = SAO:translateDebuff();
+                    -- @todo if auraProps.mineOnly, we might want to adjust the subText accordingly e.g. "My Debuff"
+                elseif type(subText) == 'function' then
+                    subText = subText();
                 end
+                if type(variants) == 'function' then
+                    variants = variants();
+                end
+                self:AddOverlayOption(talent, buff, setupHash, subText, variants, testHash);
             end
         end
 
@@ -1174,6 +1178,11 @@ end
 function SAO:GetAkaEffectName(spellID)
     local aka = AKAs[spellID];
     return aka and aka.name or nil;
+end
+
+function SAO:GetAkaBucket(spellID)
+    local aka = AKAs[spellID];
+    return aka and aka.name and SAO:GetBucketByName(aka.name) or nil;
 end
 
 function SAO:GetAkaSpellIDsByEffectSpellID(effectSpellID)

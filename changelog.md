@@ -1,5 +1,20 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.9.0 (2026-11-xx)
+
+Thank you to our amazing contributors for helping out. Thanks!
+- nvim for testing and debugging Mage's Frozen effect
+
+New Spell Alert
+- Mage's Frozen Debuff (Forever)
+- Shaman's Stormstrike Debuff (Forever)
+
+New Glowing Button
+- Shaman's Stormstrike (Era, TBC, Wrath, Cata, MoP)
+
+Bug Fixes
+- Shaman's Fulmination visuals are more centered (SoD, Cata, MoP)
+
 #### v2.8.9 (2026-10-22)
 
 Bug Fixes
@@ -184,7 +199,7 @@ Known Limitations (Forever)
   - Some sound alternatives are being evaluated
   - If support is possible, it will be probably similar to Classic's sound
 - Custom effects are not supported
-  - This includes things like Mage's Freeze effect
+  - This includes things like Mage's Frozen effect
   - There is no ETA on this matter, as it requires further investigation
 - Non-exclusive execute-like effects are not supported
   - 'Non-exclusive execute' means a spell that can be cast at any time
@@ -439,7 +454,7 @@ Spell Alerts for The Burning Crusade
 - Druid's Nature's Grace
 - Hunter's Mongoose Bite
 - Mage's Clearcasting
-- Mage's Freeze debuff
+- Mage's Frozen debuff
 - Priest's Surge of Light
 - Rogue's Riposte
 - Shaman's Elemental Focus
@@ -702,7 +717,7 @@ New Glowing Buttons
 - Warrior's Impending Victory, during Victorious (Mists of Pandaria)
 
 Bug Fixes
-- Restored options to disable buttons of Mage's Freeze (Mists of Pandaria)
+- Restored options to disable buttons of Mage's Frozen (Mists of Pandaria)
 - Fixed animations of Shaman's Fulmination (Cataclysm, Mists of Pandaria)
 - Fixed animations of Shaman's Rolling Thunder (Season of Discovery)
 
@@ -903,7 +918,7 @@ Introducing Mists of Pandaria flavor!
 - Support for Death Knight's Dark Transformation
 - Support for Death Knight's Sudden Doom
 - Support for Death Knight's Glyph of Dark Succor
-- Support for Mage's Freeze debuff
+- Support for Mage's Frozen debuff
 - Support for Paladin's Hammer of Wrath
 - Support for Paladin's Exorcism
 - Support for Paladin's Holy Shock
@@ -917,7 +932,7 @@ Introducing Mists of Pandaria flavor!
 Known Limitations
 - Dark Transformation does not display an overlay, due to a game client issue
 - Dark Succor will glow Death Strike in all presences, including Blood Presence
-- Mage's Freeze debuff does not track Shaman's Freeze debuff, from Frozen Power
+- Mage's Frozen debuff does not track Shaman's Freeze debuff, from Frozen Power
 
 There were significant changes which, hopefully, should not break anything.
 But in case it did break something, please to report issues. Thank you :)

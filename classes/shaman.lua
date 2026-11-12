@@ -183,10 +183,27 @@ end
 local function useStormstrike(self)
     SAO:CreateEffect(
         "stormstrike",
-        SAO.FOREVER,
+        SAO.ALL_PROJECTS,
         stormstrike,
         "counter",
         { combatOnly = true }
+    );
+
+    SAO:CreateEffect(
+        "stormstrike_debuff",
+        SAO.FOREVER,
+        27775, -- Not the actual spell ID to circumvent unicity; set the stormstrike spellID into a.k.a. instead
+        "aura",
+        {
+            aka = stormstrike, -- The real aura to track
+            talent = stormstrike, -- To override text in option, otherwise it would display the spell name of 27775 "The Furious Storm"
+            auraProps = { debuff = true, mineOnly = true },
+            overlay = {
+                texture = "fury_of_stormrage", position = "Top",
+                pulse = false, -- No pulse = no sound; the player does not need sound because they just cast Stormstrike which has an audio cue
+                scale = 1.28, level = 1, alpha = 222, -- Slightly bigger and behind Maelstrom Weapon
+            },
+        }
     );
 end
 

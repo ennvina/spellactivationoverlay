@@ -140,8 +140,8 @@ SAO.Variable:register({
                 return nil;
             end
 
-            assertsafe(type(hash) == 'table'); --[[DEV_ONLY]]
-            assertsafe(type(bucket.stanceID) == 'number' or type(bucket.stanceIDs) == 'table'); --[[DEV_ONLY]]
+            assertsafe(type(hash) == 'table', "bad hash parameter in stance.macro.getCondition"); --[[DEV_ONLY]]
+            assertsafe(type(bucket.stanceID) == 'number' or type(bucket.stanceIDs) == 'table', "bad bucket parameter in stance.macro.getCondition"); --[[DEV_ONLY]]
 
             local getMacroStanceIndex = function(spellID)
                 for i = 1, GetNumShapeshiftForms() do
