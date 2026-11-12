@@ -13,6 +13,7 @@ New Glowing Button
 - Shaman's Stormstrike (Era, TBC, Wrath, Cata, MoP)
 
 Bug Fixes
+- Mage's Heating Up + Hot Streak can be previewed again (SoD, Wrath)
 - Shaman's Fulmination visuals are more centered (SoD, Cata, MoP)
 
 #### v2.8.9 (2026-10-22)

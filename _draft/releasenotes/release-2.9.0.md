@@ -11,6 +11,8 @@ New Spell Alert
 New Glowing Button
 - Stormstrike (Classic Era, The Burning Crusade, Wrath of the Lich King, Cataclysm, Mists of Pandaria)
 ## Bug Fixes
+### :mage~1:  Mage
+The option for Heating Up + Hot Streak can be previewed again (Season of Discovery, Wrath of the Lich King)
 ### :shaman:  Class
 Fulmination visuals are more centered (Season of Discovery, Cataclysm, Mists of Pandaria)
 ## Known Limitations

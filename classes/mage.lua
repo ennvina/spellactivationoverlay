@@ -841,7 +841,7 @@ local function registerFire(self)
     if self.IsProject(SAO.SOD + SAO.WRATH + SAO.CATA) then
         self:RegisterAura("hot_streak_half", 0, heatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255, false); -- Does not exist, but define it for option testing
     end
-    if self.IsCata(SAO.SOD + SAO.WRATH) then
+    if self.IsProject(SAO.SOD + SAO.WRATH) then
         self:RegisterAura("hot_streak_duo", 0, hotStreakHeatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 0.5, 255, 255, 255, false); -- Does not exist, but define it for option testing
         self:RegisterAura("hot_streak_duo", 0, hotStreakHeatingUpSpellID, "hot_streak", "Left + Right (Flipped)", 1, 255, 255, 255, true); -- Does not exist, but define it for option testing
     end
