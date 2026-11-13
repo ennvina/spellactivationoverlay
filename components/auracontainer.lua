@@ -91,6 +91,8 @@ local positionInfo = {
     BOTTOMRIGHT = { location = "BOTTOMRIGHT" },
     BOTTOMLEFT = { location = "BOTTOMLEFT" },
     ["RIGHT (FLIPPED)"] = { location = "RIGHT", hFlip = true },
+    ["LEFT (OUTER)"] = { location = "LEFT", outer = true },
+    ["RIGHT (OUTER)"] = { location = "RIGHT", outer = true, hFlip = true },
     ["BOTTOM (FLIPPED)"] = { location = "BOTTOM", vFlip = true },
     ["LEFT (CW)"] = { location = "LEFT", cw = 1 },
     ["LEFT (CCW)"] = { location = "LEFT", cw = -1 },
@@ -294,6 +296,7 @@ SAO.AuraContainerItem = {
         local width, height
         local longSide = globalGeometry.longSide
         local shortSide = globalGeometry.shortSide
+        local outerSide = info and info.outer and shortSide * self.scale or 0
 
         auraButton:ClearAllPoints()
         if info and info.location == "CENTER" then
@@ -301,10 +304,10 @@ SAO.AuraContainerItem = {
             auraButton:SetPoint("CENTER", parent, "CENTER", 0, 0)
         elseif info and info.location == "LEFT" then
             width, height = shortSide, longSide
-            auraButton:SetPoint("RIGHT", parent, "LEFT", 0, 0)
+            auraButton:SetPoint("RIGHT", parent, "LEFT", -outerSide, 0)
         elseif info and info.location == "RIGHT" then
             width, height = shortSide, longSide
-            auraButton:SetPoint("LEFT", parent, "RIGHT", 0, 0)
+            auraButton:SetPoint("LEFT", parent, "RIGHT", outerSide, 0)
         elseif info and info.location == "TOP" then
             width, height = longSide, shortSide
             auraButton:SetPoint("BOTTOM", parent, "TOP")
@@ -313,16 +316,16 @@ SAO.AuraContainerItem = {
             auraButton:SetPoint("TOP", parent, "BOTTOM")
         elseif info and info.location == "TOPRIGHT" then
             width, height = shortSide, shortSide
-            auraButton:SetPoint("BOTTOMLEFT", parent, "TOPRIGHT", 0, 0)
+            auraButton:SetPoint("BOTTOMLEFT", parent, "TOPRIGHT", outerSide, 0)
         elseif info and info.location == "TOPLEFT" then
             width, height = shortSide, shortSide
-            auraButton:SetPoint("BOTTOMRIGHT", parent, "TOPLEFT", 0, 0)
+            auraButton:SetPoint("BOTTOMRIGHT", parent, "TOPLEFT", -outerSide, 0)
         elseif info and info.location == "BOTTOMRIGHT" then
             width, height = shortSide, shortSide
-            auraButton:SetPoint("TOPLEFT", parent, "BOTTOMRIGHT", 0, 0)
+            auraButton:SetPoint("TOPLEFT", parent, "BOTTOMRIGHT", outerSide, 0)
         elseif info and info.location == "BOTTOMLEFT" then
             width, height = shortSide, shortSide
-            auraButton:SetPoint("TOPRIGHT", parent, "BOTTOMLEFT", 0, 0)
+            auraButton:SetPoint("TOPRIGHT", parent, "BOTTOMLEFT", -outerSide, 0)
         else
             SAO:Warn(Module, "Unknown aura position is not supported: "..tostring(position)) --[[DEV_ONLY]]
             return
