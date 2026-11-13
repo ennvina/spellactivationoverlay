@@ -1,5 +1,32 @@
 ## SpellActivationOverlay Changelog
 
+#### v2.9.1 (2026-11-xx)
+
+Thank you to our amazing contributors for helping out. Thanks!
+- SinianfromCH0813 for reporting a Hunter and a Warlock issue
+- Viper2042 for reporting a Shaman issue
+
+Bug Fixes
+- There was an issue that made some spells and abilities glow indefinitely
+- Hunter's Arcane Shot should no longer glow indefinitely (Wrath, MoP)
+- Hunter's Explosive Shot should no longer glow indefinitely (Wrath, Cata, MoP)
+- Hunter's Explosive Shot should no longer glow indefinitely (Wrath, Cata, MoP)
+- Hunter's Multi Shot should no longer glow indefinitely (MoP)
+- Mage's Arcane Missiles should no longer glow indefinitely (MoP)
+- Mage's Deep Freeze should no longer glow indefinitely (MoP)
+- Mage's Ice Lance should no longer glow indefinitely (MoP)
+- Priest's Flash Heal should no longer glow indefinitely (MoP)
+- Priest's Mind Spike should no longer glow indefinitely (MoP)
+- Shaman's Greater Healing Wave should no longer glow indefinitely (Cata, MoP)
+- Shaman's Healing Wave no longer glows indefinitely (SoD, Wrath, Cata, MoP)
+- Shaman's Healing Surge should no longer glow indefinitely (Cata, MoP)
+- Shaman's Lesser Healing Wave should no longer glow indefinitely (SoD, Wrath)
+- Warlock's Fel Flame should no longer glow indefinitely (Cata)
+- Warlock's Incinerate should no longer glow indefinitely (Wrath, Cata, MoP)
+- Warlock's Soul Fire should no longer glow indefinitely (Wrath, MoP)
+- Warrior's Overpower should no longer glow indefinitely (MoP)
+- Warrior's Wild Strike should no longer glow indefinitely (MoP)
+
 #### v2.9.0 (2026-11-12)
 
 Thank you to our amazing contributors for helping out. Thanks!

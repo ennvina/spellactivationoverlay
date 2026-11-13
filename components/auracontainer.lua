@@ -48,7 +48,7 @@ local function getInfoFromHash(hash, macroCondition, spellID, extra)
     local nbAuraStacks = hash:getAuraStacks()
     itemInfo.nbAuraStacks = nbAuraStacks
 
-    if nbAuraStacks == nil then
+    if nbAuraStacks == SAO.Constants.InverseAuraStacks then
         SAO:Warn(Module, "Spell "..tostring(spellID).." uses an inverse aura trigger, but aura containers do not support inverse auras") --[[DEV_ONLY]]
         return nil
     end
