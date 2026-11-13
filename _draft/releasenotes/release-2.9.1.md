@@ -1,6 +1,5 @@
 # SpellActivationOverlay 2.9.1
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.9.1
-## General
 ## Classes
 ### :paladin:  Paladin
 New Glowing Button
@@ -31,8 +30,6 @@ There was an issue that made some spells and abilities glow indefinitely.
 ### :warrior:  Warrior
 - Overpower should no longer glow indefinitely (Mists of Pandaria)
 - Wild Strike should no longer glow indefinitely (Mists of Pandaria)
-## Known Limitations
-## Miscellaneous
 ## Contributors
 Shout-out to our amazing contributors
 - SinianfromCH0813 for suggesting and testing Paladin's Pray for Light, and for reporting a Hunter issue and Warlock issue

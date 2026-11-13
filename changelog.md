@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v2.9.1 (2026-11-xx)
+#### v2.9.1 (2026-11-13)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - SinianfromCH0813 for suggesting and testing Paladin's Pray for Light
