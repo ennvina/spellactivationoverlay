@@ -493,6 +493,9 @@ SAO.defaults = {
                 [144595] = { -- Divine Crusader (Mists of Pandaria)
                     [53385]  = true, -- Divine Storm
                 },
+                [1299090] = { -- Righteousness (Titan Reforged: Wrath)
+                    [1298728]= true, -- Pray for Light
+                },
             },
         },
         ["PRIEST"] = {

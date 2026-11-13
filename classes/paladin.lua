@@ -13,6 +13,8 @@ local holyShock = 20473;
 local how = 24275;
 local inquisition = 84963;
 local lightOfDawn = 85222;
+local prayForLight = 1298728;
+local righteousness = 1299090;
 local shieldOfTheRighteous = 53600;
 local templarsVerdict = 85256;
 local wordOfGlory = 85673;
@@ -279,6 +281,20 @@ local function useDaybreak()
     );
 end
 
+local function usePrayForLight()
+    SAO:CreateEffect(
+        "pray_for_light",
+        SAO.TITAN,
+        righteousness,
+        "aura",
+        {
+            action = prayForLight,
+            actionUsable = true,
+            button = { stacks = 5, spellID = prayForLight },
+        }
+    );
+end
+
 local function useGrandCrusader()
     SAO:CreateEffect(
         "grand_crusader",
@@ -475,6 +491,9 @@ local function registerClass(self)
 
     -- Talents
     useSelflessHealer();
+
+    -- Titan Reforged: Wrath
+    usePrayForLight();
 end
 
 local function loadOptions(self)

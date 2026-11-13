@@ -2,11 +2,9 @@
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 2.9.1
 ## General
 ## Classes
-### :class:  Class
-New Spell Alerts
-- 
-New Glowing Buttons
-- 
+### :paladin:  Paladin
+New Glowing Button
+- Pray for Light, with 5 stacks of Righteousness (Titan Reforged: Wrath)
 ## Bug Fixes
 There was an issue that made some spells and abilities glow indefinitely.
 ### :hunter:  Hunter
@@ -37,7 +35,7 @@ There was an issue that made some spells and abilities glow indefinitely.
 ## Miscellaneous
 ## Contributors
 Shout-out to our amazing contributors
-- SinianfromCH0813 for reporting a Hunter and a Warlock issue
+- SinianfromCH0813 for suggesting and testing Paladin's Pray for Light, and for reporting a Hunter issue and Warlock issue
 - Viper2042 for reporting a Shaman issue
 Thanks!
 
