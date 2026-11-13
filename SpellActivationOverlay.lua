@@ -231,6 +231,10 @@ local complexLocationTable = {
 		TOP = {},
 		BOTTOM = { vFlip = true },
 	},
+	["LEFT (OUTER) + RIGHT (OUTER)"] = {
+		LEFT = { outer = true },
+		RIGHT = { outer = true, hFlip = true },
+	},
 	["LEFT (CW)"] = {
 		LEFT = { cw = 1 },
 	},
@@ -243,6 +247,9 @@ local complexLocationTable = {
 	["LEFT (VFLIPPED)"] = {
 		LEFT = { vFlip = true },
 	},
+	["LEFT (OUTER)"] = {
+		LEFT = { outer = true },
+	},
 	["RIGHT (CW)"] = {
 		RIGHT = { cw = 1 },
 	},
@@ -254,6 +261,9 @@ local complexLocationTable = {
 	},
 	["RIGHT (VFLIPPED)"] = {
 		RIGHT = { vFlip = true },
+	},
+	["RIGHT (OUTER)"] = {
+		RIGHT = { outer = true, hFlip = true },
 	},
 	["TOP (CW)"] = {
 		TOP = { cw = 1 },
@@ -289,16 +299,19 @@ function SpellActivationOverlay_ShowAllOverlays(self, spellID, texturePath, posi
 	positions = strupper(positions);
 	if ( complexLocationTable[positions] ) then
 		for location, info in pairs(complexLocationTable[positions]) do
-			SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, location, scale, r, g, b, a, info.vFlip, info.hFlip, info.cw, autoPulse, forcePulsePlay, endTime, combatOnly, extra);
+			SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, location, scale, { r, g, b, a }, info, autoPulse, forcePulsePlay, endTime, combatOnly, extra);
 		end
 	else
-		SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, positions, scale, r, g, b, a, false, false, 0, autoPulse, forcePulsePlay, endTime, combatOnly, extra);
+		local posInfo = {};
+		SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, positions, scale, { r, g, b, a }, posInfo, autoPulse, forcePulsePlay, endTime, combatOnly, extra);
 	end
 end
 
-function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, r, g, b, a, vFlip, hFlip, cw, autoPulse, forcePulsePlay, endTime, combatOnly, extra)
+function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position, scale, color, posInfo, autoPulse, forcePulsePlay, endTime, combatOnly, extra)
 	SAO:Trace(Module, "SpellActivationOverlay_ShowOverlay "..tostring(spellID).." "..position);
 	SAO:Debug(Module, "Starting Overlay at location "..position.." for spell ID "..spellID.." "..SAO:GetSpellName(spellID, "")..(endTime and (" for "..math.floor((type(endTime) == 'number' and endTime or endTime.endTime)-GetTime()+0.5).." secs") or ""));
+	local r, g, b, a = unpack(color);
+	local vFlip, hFlip, cw, outer = posInfo.vFlip, posInfo.hFlip, posInfo.cw, posInfo.outer;
 
 	if (SpellActivationOverlayDB and SpellActivationOverlayDB.alert and not SpellActivationOverlayDB.alert.enabled) then
 		-- Last chance to quit displaying the overlay, if the main overlay flag is disabled
@@ -327,10 +340,14 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 		overlay.texture:SetTexCoord(texRight,texTop, texLeft,texTop, texRight,texBottom, texLeft,texBottom);
 	end
 
+	local outerFactor = outer and 1 or 0;
+
 	overlay.SetGeometry = function(self, longSide, shortSide)
 		local parent = self:GetParent();
 
 		self:ClearAllPoints();
+
+		local outerSide = outerFactor * shortSide * scale;
 
 		local width, height;
 		if ( position == "CENTER" ) then
@@ -338,10 +355,10 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 			self:SetPoint("CENTER", parent, "CENTER", 0, 0);
 		elseif ( position == "LEFT" ) then
 			width, height = shortSide, longSide;
-			self:SetPoint("RIGHT", parent, "LEFT", 0, 0);
+			self:SetPoint("RIGHT", parent, "LEFT", -outerSide, 0);
 		elseif ( position == "RIGHT" ) then
 			width, height = shortSide, longSide;
-			self:SetPoint("LEFT", parent, "RIGHT", 0, 0);
+			self:SetPoint("LEFT", parent, "RIGHT", outerSide, 0);
 		elseif ( position == "TOP" ) then
 			width, height = longSide, shortSide;
 			self:SetPoint("BOTTOM", parent, "TOP");
@@ -350,16 +367,16 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 			self:SetPoint("TOP", parent, "BOTTOM");
 		elseif ( position == "TOPRIGHT" ) then
 			width, height = shortSide, shortSide;
-			self:SetPoint("BOTTOMLEFT", parent, "TOPRIGHT", 0, 0);
+			self:SetPoint("BOTTOMLEFT", parent, "TOPRIGHT", outerSide, 0);
 		elseif ( position == "TOPLEFT" ) then
 			width, height = shortSide, shortSide;
-			self:SetPoint("BOTTOMRIGHT", parent, "TOPLEFT", 0, 0);
+			self:SetPoint("BOTTOMRIGHT", parent, "TOPLEFT", -outerSide, 0);
 		elseif ( position == "BOTTOMRIGHT" ) then
 			width, height = shortSide, shortSide;
-			self:SetPoint("TOPLEFT", parent, "BOTTOMRIGHT", 0, 0);
+			self:SetPoint("TOPLEFT", parent, "BOTTOMRIGHT", outerSide, 0);
 		elseif ( position == "BOTTOMLEFT" ) then
 			width, height = shortSide, shortSide;
-			self:SetPoint("TOPRIGHT", parent, "BOTTOMLEFT", 0, 0);
+			self:SetPoint("TOPRIGHT", parent, "BOTTOMLEFT", -outerSide, 0);
 		else
 			--GMError("Unknown SpellActivationOverlay position: "..tostring(position));
 			return;
