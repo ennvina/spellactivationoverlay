@@ -9,7 +9,6 @@ There was an issue that made some spells and abilities glow indefinitely.
 ### :hunter:  Hunter
 - Arcane Shot should no longer glow indefinitely (Wrath of the Lich King, Mists of Pandaria)
 - Explosive Shot should no longer glow indefinitely (Wrath of the Lich King, Cataclysm, Mists of Pandaria)
-- Explosive Shot should no longer glow indefinitely (Wrath of the Lich King, Cataclysm, Mists of Pandaria)
 - Multi Shot should no longer glow indefinitely (Mists of Pandaria)
 ### :mage~1:  Mage
 - Arcane Missiles should no longer glow indefinitely (Mists of Pandaria)
@@ -20,7 +19,7 @@ There was an issue that made some spells and abilities glow indefinitely.
 - Mind Spike should no longer glow indefinitely (Mists of Pandaria)
 ### :shaman:  Shaman
 - Greater Healing Wave should no longer glow indefinitely (Cataclysm, Mists of Pandaria)
-- Healing Wave no longer glows indefinitely (Season of Discovery, Wrath of the Lich King, Cataclysm, Mists of Pandaria)
+- Healing Wave should no longer glow indefinitely (Season of Discovery, Wrath of the Lich King, Cataclysm, Mists of Pandaria)
 - Healing Surge should no longer glow indefinitely (Cataclysm, Mists of Pandaria)
 - Lesser Healing Wave should no longer glow indefinitely (Season of Discovery, Wrath of the Lich King)
 ### :warlock:  Warlock

@@ -14,7 +14,6 @@ Bug Fixes
 - There was an issue that made some spells and abilities glow indefinitely
 - Hunter's Arcane Shot should no longer glow indefinitely (Wrath, MoP)
 - Hunter's Explosive Shot should no longer glow indefinitely (Wrath, Cata, MoP)
-- Hunter's Explosive Shot should no longer glow indefinitely (Wrath, Cata, MoP)
 - Hunter's Multi Shot should no longer glow indefinitely (MoP)
 - Mage's Arcane Missiles should no longer glow indefinitely (MoP)
 - Mage's Deep Freeze should no longer glow indefinitely (MoP)
