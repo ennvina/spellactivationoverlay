@@ -674,7 +674,9 @@ local function useClearcasting()
         clearcastingBuff,
         "aura",
         {
-            overlay = { texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.5, pulse = false },
+            overlay =
+            { texture = "genericarc_05", position = "Left (Outer) + Right (Outer)", scale = 0.8, pulse = false } or --[[DEV_ONLY]]
+            { texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.5, pulse = false },
         }
     );
 end
@@ -914,7 +916,11 @@ local function registerArcane(self)
     if isCompatibleWithClearcasting then
         lazyCreateClearcastingVariants(self);
         if clearcastingVariants then
-            self:RegisterAura("clearcasting", 0, 12536, clearcastingVariants.textureFunc, "Left + Right (Flipped)", 1.5, 192, 192, 192, false);
+            if true then --[[BEGIN_DEV_ONLY]]
+                self:RegisterAura("clearcasting", 0, 12536, clearcastingVariants.textureFunc, "Left (Outer) + Right (Outer)", 0.8, 192, 192, 192, false);
+            else --[[END_DEV_ONLY]]
+                self:RegisterAura("clearcasting", 0, 12536, clearcastingVariants.textureFunc, "Left + Right (Flipped)", 1.5, 192, 192, 192, false);
+            end --[[DEV_ONLY]]
         end
     end
 
