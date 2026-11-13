@@ -17,6 +17,9 @@ SAO.RegisteredBucketsBySpellID = {}
 
 SAO.MacroConditionGenerators = {}
 
+local inverseStacks = SAO.Constants.InverseAuraStacks
+local anyStacks = SAO.Constants.AnyAuraStacks
+
 -- List of displays, indexed by hash
 -- A stack count of zero means "for everyone"
 -- A stack count of non-zero means "for a specific number of stacks"
@@ -293,7 +296,7 @@ SAO.Bucket = {
         else
             local hashForAnyStacks = self.hashCalculatorToApply:toAnyAuraStacks();
             if self.displayedHash == nil then -- Displayed aura was 'nil'
-                if currentStacks == nil or currentStacks == 0 then
+                if currentStacks == inverseStacks or currentStacks == anyStacks then
                     if self[self.currentHash] then
                         self[self.currentHash]:show();
                     end
@@ -307,7 +310,7 @@ SAO.Bucket = {
                 end
             else
                 local displayedStacks = SAO.Hash:new(self.displayedHash):getAuraStacks();
-                if displayedStacks == nil then -- Displayed aura was 'Absent'
+                if displayedStacks == inverseStacks then -- Displayed aura was 'Absent'
                     self[self.displayedHash]:hide();
                     if self[hashForAnyStacks] then
                         self[hashForAnyStacks]:show(transitionOptions);
@@ -315,8 +318,8 @@ SAO.Bucket = {
                     if currentStacks > 0 and self[self.currentHash] then
                         self[self.currentHash]:show(transitionOptions);
                     end
-                elseif displayedStacks == 0 then -- Displayed aura was 'Any'
-                    if currentStacks == nil then
+                elseif displayedStacks == anyStacks then -- Displayed aura was 'Any'
+                    if currentStacks == inverseStacks then
                         self[self.displayedHash]:hide();
                         if self[self.currentHash] then
                             self[self.currentHash]:show(transitionOptions);
@@ -327,7 +330,7 @@ SAO.Bucket = {
                         end
                     end
                 else -- Displayed aura was N, where N > 0
-                    if currentStacks == nil then -- Now displaying 'Absent'
+                    if currentStacks == inverseStacks then -- Now displaying 'Absent'
                         local displayedHash = self.displayedHash; -- Must backup because it may be overwritten during hide() call
                         if self[hashForAnyStacks] then
                             self[hashForAnyStacks]:hide();
@@ -336,7 +339,7 @@ SAO.Bucket = {
                         if self[self.currentHash] then
                             self[self.currentHash]:show(transitionOptions);
                         end
-                    elseif currentStacks == 0 then -- Now displaying 'Any'
+                    elseif currentStacks == anyStacks then -- Now displaying 'Any'
                         self[self.displayedHash]:hide();
                         if self[self.currentHash] then
                             -- Normally, we would not need to show() 'Any' because it should be currently shown
