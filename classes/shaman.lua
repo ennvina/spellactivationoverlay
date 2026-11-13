@@ -61,11 +61,14 @@ local function useElementalFocus(self)
             talent = 16164, -- Elemental Focus (talent)
             overlays = {
                 [SAO.FOREVER] = {
-                    { stacks = 0, texture = texture, position = "Left + Right (Flipped)", scale = 1.5, pulse = false },
+                    { stacks = 0, texture = texture, position = "Left (Outer) + Right (Outer)", scale = 0.8, pulse = false } or --[[DEV_ONLY]]
+                    { stacks = 0, texture = texture, position = "Left + Right (Flipped)"      , scale = 1.5, pulse = false },
                 },
                 [SAO.ALL_PROJECTS - SAO.FOREVER] = {
-                    { stacks = 1, texture = texture, position = "Left", scale = 1.5, pulse = false, option = false },
-                    { stacks = 2, texture = texture, position = "Left + Right (Flipped)", scale = 1.5, pulse = false, option = { setupHash = hash0Stacks, testHash = hash2Stacks, variants = variants } },
+                    { stacks = 1, texture = texture, position = "Left (Outer)"                , scale = 0.8, pulse = false, option = false } or --[[DEV_ONLY]]
+                    { stacks = 1, texture = texture, position = "Left"                        , scale = 1.5, pulse = false, option = false },
+                    { stacks = 2, texture = texture, position = "Left (Outer) + Right (Outer)", scale = 0.8, pulse = false, option = { setupHash = hash0Stacks, testHash = hash2Stacks, variants = variants } } or --[[DEV_ONLY]]
+                    { stacks = 2, texture = texture, position = "Left + Right (Flipped)"      , scale = 1.5, pulse = false, option = { setupHash = hash0Stacks, testHash = hash2Stacks, variants = variants } },
                 },
             },
         }
@@ -99,7 +102,9 @@ local function useShamanisticFocus(self)
         {
             talent = 43338, -- Shamanistic Focus (talent)
             -- Smaller than Elemental Focus and orange-ish to make it stand out
-            overlay = { texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.25, color = { 255, 128, 0 }, pulse = false },
+            overlay =
+            { texture = "genericarc_05", position = "Left (Outer) + Right (Outer)", scale = 0.7, color = { 255, 128, 0 }, pulse = false } or --[[DEV_ONLY]]
+            { texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.25, color = { 255, 128, 0 }, pulse = false },
             buttons = { earthShock, flameShock, frostShock },
         }
     );

@@ -659,7 +659,6 @@ frozen_fingers
 fulmination
 fury_of_stormrage
 fury_of_stormrage_yellow
-genericarc_02
 genericarc_05
 high_tide
 hot_streak
