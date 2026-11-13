@@ -49,6 +49,7 @@ libs\LibActionButton-1.0\LibActionButton-1.0.lua
 libs\LibButtonGlow-1.0\LibButtonGlow-1.0.lua
 #@end-no-lib-strip@
 
+components\constants.lua
 components\project.lua
 components\util.lua
 
