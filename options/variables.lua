@@ -33,7 +33,7 @@ function SAO.ApplySpellAlertTimer(self)
     SpellActivationOverlayAddonFrame.textCountdownScale = countdown.text;
     SpellActivationOverlayAddonFrame.useTimer = countdown.visual ~= 0 or countdown.text > 0;
     SpellActivationOverlay_OnChangeTimerVisibility(SpellActivationOverlayAddonFrame);
-    SAO.AuraContainer:setCountdown(countdown.visual ~= 0, countdown.text);
+    SAO.AuraContainer:setCountdown({ visualEnabled = countdown.visual ~= 0, textScale = countdown.text });
 end
 
 -- Apply spell alert sound effects toggle

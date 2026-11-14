@@ -55,6 +55,9 @@ function SpellActivationOverlay_OnLoad(self)
 		longSide = 256 * sizeScale * self.scale,
 		shortSide = 128 * sizeScale * self.scale,
 		scale = sizeScale * self.scale,
+	}, {
+		visualEnabled = self.useVisualCountdown,
+		textScale = self.textCountdownScale,
 	});
 
 	local className, classFile, classId = UnitClass("player");

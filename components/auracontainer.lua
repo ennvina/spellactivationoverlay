@@ -166,6 +166,7 @@ SAO.AuraContainerItem = {
 
             local auraSlotOptions = {
                 globalGeometry = options.globalGeometry,
+                countdownSettings = options.countdownSettings,
                 position = position,
                 applications = options.nbAuraStacks,
             }
@@ -220,12 +221,12 @@ SAO.AuraContainerItem = {
             })
         end
         auraButton:SetDurationText(auraButton.pulsableItem.applicationBar.durationText, { textFormatter = durationFormatter })
-        self:setButtonCountdown(auraButton, SAO.Frame.useVisualCountdown, SAO.Frame.textCountdownScale, options.globalGeometry.scale)
+        self:setButtonCountdown(auraButton, options.countdownSettings, options.globalGeometry.scale)
 
         auraButton:SetFrameLevel(self.level or 3)
         auraButton.staticItem:SetFrameLevel(auraButton:GetFrameLevel() + 1) -- @todo Maybe find a better way to give priority to the static item
 
-        self:setButtonGeometry(auraButton, options.globalGeometry, options.position)
+        self:setButtonGeometry(auraButton, options.globalGeometry, options.position, options.countdownSettings)
 
         local pulse = auraButton.pulsableItem.applicationBar.customTexture.pulse
         if pulse then
@@ -321,22 +322,22 @@ SAO.AuraContainerItem = {
         auraButton:SetDurationBar(durationBar, { direction = Enum.StatusBarTimerDirection.RemainingTime })
     end,
 
-    setButtonCountdown = function(self, auraButton, visualEnabled, textScale, geometryScale)
+    setButtonCountdown = function(self, auraButton, countdownSettings, geometryScale)
         local applicationBar = auraButton.pulsableItem.applicationBar
-        applicationBar.durationMask:SetShown(visualEnabled)
-        if textScale > 0 then
-            applicationBar.durationText:SetScale(textScale * geometryScale)
+        applicationBar.durationMask:SetShown(countdownSettings.visualEnabled)
+        if countdownSettings.textScale > 0 then
+            applicationBar.durationText:SetScale(countdownSettings.textScale * geometryScale)
         end
-        applicationBar.durationText:SetShown(textScale > 0)
+        applicationBar.durationText:SetShown(countdownSettings.textScale > 0)
     end,
 
-    setCountdown = function(self, visualEnabled, textScale, geometryScale)
+    setCountdown = function(self, countdownSettings, geometryScale)
         for _, auraButton in ipairs(self.auraButtons) do
-            self:setButtonCountdown(auraButton, visualEnabled, textScale, geometryScale)
+            self:setButtonCountdown(auraButton, countdownSettings, geometryScale)
         end
     end,
 
-    setButtonGeometry = function(self, auraButton, globalGeometry, position)
+    setButtonGeometry = function(self, auraButton, globalGeometry, position, countdownSettings)
         position = position and strupper(position)
         local info = positionInfo[position]
         local parent = auraButton:GetParent()
@@ -379,16 +380,16 @@ SAO.AuraContainerItem = {
         end
 
         auraButton.staticItem.applicationCount:SetScale(self.fontScale * globalGeometry.scale)
-        if SAO.Frame.textCountdownScale > 0 then
-            auraButton.pulsableItem.applicationBar.durationText:SetScale(SAO.Frame.textCountdownScale * globalGeometry.scale)
+        if countdownSettings.textScale > 0 then
+            auraButton.pulsableItem.applicationBar.durationText:SetScale(countdownSettings.textScale * globalGeometry.scale)
         end
 
         auraButton:SetSize(width * self.scale, height * self.scale)
     end,
 
-    setGeometry = function(self, globalGeometry)
+    setGeometry = function(self, globalGeometry, countdownSettings)
         for index, auraButton in ipairs(self.auraButtons) do
-            self:setButtonGeometry(auraButton, globalGeometry, self.positions[index])
+            self:setButtonGeometry(auraButton, globalGeometry, self.positions[index], countdownSettings)
         end
     end,
 
@@ -446,7 +447,7 @@ SAO.AuraContainerItem = {
     - the updating of all container items from a single entry point
 ]]
 SAO.AuraContainer = {
-    initialize = function(self, parent, initialGlobalGeometry)
+    initialize = function(self, parent, initialGlobalGeometry, initialCountdownSettings)
         if not useAuraContainer or self.initialized then
             return
         end
@@ -464,6 +465,7 @@ SAO.AuraContainer = {
             updatedAt = GetTime(),
             pendingTimer = nil,
         }
+        self.countdownSettings = initialCountdownSettings
         self.parent = parent
         self.containers = {} -- Will be populated by getOrCreateContainer
         self.items = {} -- Will be populated by registerOverlay
@@ -557,6 +559,7 @@ SAO.AuraContainer = {
 
         local buttonOptions = hashInfo.item
         buttonOptions.globalGeometry = self.globalGeometry.geometry
+        buttonOptions.countdownSettings = self.countdownSettings
         local button = SAO.AuraContainerItem:new(id, container, overlay, buttonOptions)
 
         self.items[id] = button
@@ -576,14 +579,16 @@ SAO.AuraContainer = {
         end
     end,
 
-    setCountdown = function(self, visualEnabled, textScale)
+    setCountdown = function(self, countdownSettings)
         if not useAuraContainer or not self.initialized then
             return
         end
 
         for _, item in pairs(self.items) do
-            item:setCountdown(visualEnabled, textScale, self.globalGeometry.geometry.scale)
+            item:setCountdown(countdownSettings, self.globalGeometry.geometry.scale)
         end
+
+        self.countdownSettings = countdownSettings
     end,
 
     updateGeometry = function(self, globalGeometry)
@@ -592,7 +597,7 @@ SAO.AuraContainer = {
         end
 
         for _, item in pairs(self.items) do
-            item:setGeometry(globalGeometry)
+            item:setGeometry(globalGeometry, self.countdownSettings)
         end
 
         self.globalGeometry.geometry = globalGeometry
