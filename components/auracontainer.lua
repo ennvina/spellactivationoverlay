@@ -314,6 +314,7 @@ SAO.AuraContainerItem = {
             durationBar:SetOrientation("HORIZONTAL")
         end
         local mask = applicationBar.durationMask
+        mask:SetTexture("Interface/Addons/SpellActivationOverlay/textures/mask"..(info.location == "TOP" and "h" or "v")) -- maskh or maskv
         mask:SetAllPoints(durationBar:GetStatusBarTexture())
         applicationBar.customTexture:AddMaskTexture(mask)
         auraButton:SetDurationBar(durationBar, { direction = Enum.StatusBarTimerDirection.RemainingTime })

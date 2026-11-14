@@ -152,7 +152,7 @@ end
 
 --[[BEGIN_DEV_ONLY]]
 
--- List fetched from bash: cd textures && ls -1 *.blp | cut -d. -f1 | tr 'A-Z' 'a-z' | sort | grep -vE '^(icon64|mask|maskzero|rkm128)$' | awk 'BEGIN{ print "local availableTextures = {" } {printf "  [\"%s\"] = true,\n", $0} END { print "}" }'
+-- List fetched from bash: cd textures && ls -1 *.blp | cut -d. -f1 | tr 'A-Z' 'a-z' | sort | grep -vE '^(icon64|mask|maskh|maskv|maskzero|rkm128)$' | awk 'BEGIN{ print "local availableTextures = {" } {printf "  [\"%s\"] = true,\n", $0} END { print "}" }'
 local availableTextures = {
   ["arcane_missiles"] = true,
   ["arcane_missiles_1"] = true,
