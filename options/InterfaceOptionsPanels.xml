@@ -153,6 +153,19 @@
           </OnValueChanged>
         </Scripts>
       </Slider>
+      <Frame name="$parentSpellAlertVsGlowingButtonsDivider">
+        <Size x="1" y="8"/>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="$parentSpellAlertSoundSlider" relativePoint="BOTTOM" x="0" y="-60"/>
+          <Anchor point="LEFT" x="100" y="0"/>
+          <Anchor point="RIGHT" x="-116" y="0"/>
+        </Anchors>
+        <Layers>
+          <Layer level="ARTWORK">
+            <Texture setAllPoints="true" file="Interface/FriendsFrame/UI-FriendsFrame-OnlineDivider"/>
+          </Layer>
+        </Layers>
+      </Frame>
       <Button name="$parentSpellAlertTestButton" inherits="UIPanelButtonTemplate">
         <Size x="128" y="22"/>
         <Anchors>
