@@ -103,6 +103,16 @@
 			<OnShow function="SpellActivationOverlayTexture_OnShow"/>
 		</Scripts>
 	</Frame>
+	<Frame name="SpellActivationOverlayDurationTextTemplate" virtual="true" hidden="true">
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString parentKey="text" font="NumberFontNormal" setAllPoints="true" justifyH="CENTER" justifyV="MIDDLE"/>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnUpdate function="SpellActivationOverlayDuration_OnUpdate"/>
+		</Scripts>
+	</Frame>
 	<Frame name="SAOAuraButtonTemplate" virtual="true">
 		<Frames>
 			<Frame parentKey="pulsableItem" setAllPoints="true">
