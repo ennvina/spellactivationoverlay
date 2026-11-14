@@ -460,11 +460,7 @@ SAO.AuraContainer = {
             end
         end
 
-        self.globalGeometry = {
-            geometry = initialGlobalGeometry,
-            updatedAt = GetTime(),
-            pendingTimer = nil,
-        }
+        self.globalGeometry = initialGlobalGeometry
         self.countdownSettings = initialCountdownSettings
         self.parent = parent
         self.containers = {} -- Will be populated by getOrCreateContainer
@@ -558,7 +554,7 @@ SAO.AuraContainer = {
         end
 
         local buttonOptions = hashInfo.item
-        buttonOptions.globalGeometry = self.globalGeometry.geometry
+        buttonOptions.globalGeometry = self.globalGeometry
         buttonOptions.countdownSettings = self.countdownSettings
         local button = SAO.AuraContainerItem:new(id, container, overlay, buttonOptions)
 
@@ -585,7 +581,7 @@ SAO.AuraContainer = {
         end
 
         for _, item in pairs(self.items) do
-            item:setCountdown(countdownSettings, self.globalGeometry.geometry.scale)
+            item:setCountdown(countdownSettings, self.globalGeometry.scale)
         end
 
         self.countdownSettings = countdownSettings
@@ -600,7 +596,6 @@ SAO.AuraContainer = {
             item:setGeometry(globalGeometry, self.countdownSettings)
         end
 
-        self.globalGeometry.geometry = globalGeometry
-        self.globalGeometry.updatedAt = GetTime()
+        self.globalGeometry = globalGeometry
     end,
 }
