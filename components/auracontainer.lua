@@ -204,6 +204,7 @@ SAO.AuraContainerItem = {
         self:setTexture(auraButton, options.position)
 
         self:setApplications(auraButton, options.applications)
+        self:setDurationMask(auraButton, options.position)
 
         -- auraButton.staticItem.applicationCount:SetScale(self.fontScale * options.globalGeometry.scale)
         -- auraButton:SetApplicationCount(auraButton.staticItem.applicationCount)
@@ -299,6 +300,23 @@ SAO.AuraContainerItem = {
     setCooldown = function(self, auraButton)
         local cooldown = auraButton.pulsableItem.applicationBar.cooldown
         auraButton:SetDurationCooldown(cooldown)
+    end,
+
+    setDurationMask = function(self, auraButton, position)
+        local info = positionInfo[position and strupper(position)]
+        if not info or (info.location ~= "LEFT" and info.location ~= "RIGHT" and info.location ~= "TOP") then
+            return
+        end
+
+        local applicationBar = auraButton.pulsableItem.applicationBar
+        local durationBar = applicationBar.durationBar
+        if info.location == "TOP" then
+            durationBar:SetOrientation("HORIZONTAL")
+        end
+        local mask = applicationBar.durationMask
+        mask:SetAllPoints(durationBar:GetStatusBarTexture())
+        applicationBar.customTexture:AddMaskTexture(mask)
+        auraButton:SetDurationBar(durationBar, { direction = Enum.StatusBarTimerDirection.RemainingTime })
     end,
 
     setButtonGeometry = function(self, auraButton, globalGeometry, position)

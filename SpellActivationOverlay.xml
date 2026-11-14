@@ -110,6 +110,11 @@
 					<StatusBar parentKey="applicationBar" setAllPoints="true" hidden="true" clipChildren="false" fillStyle="Standard">
 						<Frames>
 							<Cooldown parentKey="cooldown" inherits="CooldownFrameTemplate" setAllPoints="true" drawBling="false" drawEdge="false" drawSwipe="false" hideCountdownNumbers="true" reverse="true"/>
+							<StatusBar parentKey="durationBar" setAllPoints="true" orientation="VERTICAL" fillStyle="Center">
+								<BarTexture>
+									<Color r="1" g="1" b="1" a="0"/>
+								</BarTexture>
+							</StatusBar>
 						</Frames>
 						<Layers>
 							<!-- <Layer level="ARTWORK">
@@ -124,6 +129,7 @@
 										</AnimationGroup>
 									</Animations>
 								</Texture>
+								<MaskTexture parentKey="durationMask" file="Interface/Addons/SpellActivationOverlay/textures/mask" hWrapMode="CLAMP" vWrapMode="CLAMP"/>
 								<FontString parentKey="durationText" font="NumberFontNormal" setAllPoints="true" justifyH="CENTER" justifyV="MIDDLE"/>
 							</Layer>
 						</Layers>
