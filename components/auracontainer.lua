@@ -220,6 +220,7 @@ SAO.AuraContainerItem = {
             })
         end
         auraButton:SetDurationText(auraButton.pulsableItem.applicationBar.durationText, { textFormatter = durationFormatter })
+        self:setButtonTimerVisibility(auraButton, SAO.Frame.useTimer)
 
         auraButton:SetFrameLevel(self.level or 3)
         auraButton.staticItem:SetFrameLevel(auraButton:GetFrameLevel() + 1) -- @todo Maybe find a better way to give priority to the static item
@@ -318,6 +319,18 @@ SAO.AuraContainerItem = {
         mask:SetAllPoints(durationBar:GetStatusBarTexture())
         applicationBar.customTexture:AddMaskTexture(mask)
         auraButton:SetDurationBar(durationBar, { direction = Enum.StatusBarTimerDirection.RemainingTime })
+    end,
+
+    setButtonTimerVisibility = function(self, auraButton, enabled)
+        local applicationBar = auraButton.pulsableItem.applicationBar
+        applicationBar.durationMask:SetShown(enabled)
+        applicationBar.durationText:SetShown(enabled)
+    end,
+
+    setTimerVisibility = function(self, enabled)
+        for _, auraButton in ipairs(self.auraButtons) do
+            self:setButtonTimerVisibility(auraButton, enabled)
+        end
     end,
 
     setButtonGeometry = function(self, auraButton, globalGeometry, position)
@@ -555,6 +568,16 @@ SAO.AuraContainer = {
             SAO:RunNextFrame(function()
                 container:UpdateAllAuras()
             end)
+        end
+    end,
+
+    setTimerVisibility = function(self, enabled)
+        if not useAuraContainer or not self.initialized then
+            return
+        end
+
+        for _, item in pairs(self.items) do
+            item:setTimerVisibility(enabled)
         end
     end,
 

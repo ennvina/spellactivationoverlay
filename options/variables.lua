@@ -30,6 +30,7 @@ end
 function SAO.ApplySpellAlertTimer(self)
     SpellActivationOverlayAddonFrame.useTimer = SpellActivationOverlayDB.alert.timer ~= 0;
     SpellActivationOverlay_OnChangeTimerVisibility(SpellActivationOverlayAddonFrame);
+    SAO.AuraContainer:setTimerVisibility(SpellActivationOverlayAddonFrame.useTimer);
 end
 
 -- Apply spell alert sound effects toggle
