@@ -4,6 +4,7 @@ local Module = "auracontainer"
 local LoadAddOn = C_AddOns and C_AddOns.LoadAddOn or LoadAddOn
 
 local useAuraContainer = SAO.IsModern() and C_Secrets ~= nil and C_Secrets.GetSpellAuraSecrecy ~= nil
+local durationFormatter
 
 local function traceBooleanChange(intro, oldValue, newValue, id) --[[BEGIN_DEV_ONLY]]
     if not SAO:HasTrace(Module) then
@@ -208,16 +209,27 @@ SAO.AuraContainerItem = {
         -- auraButton:SetApplicationCount(auraButton.staticItem.applicationCount)
 
         self:setCooldown(auraButton)
+        if not durationFormatter then
+            durationFormatter = C_StringUtil.CreateNumericRuleFormatter()
+            durationFormatter:AddBreakpoint({
+                threshold = 0,
+                step = 1,
+                rounding = Enum.NumericRuleFormatRounding.Up,
+                format = "%.0f",
+            })
+        end
+        auraButton:SetDurationText(auraButton.pulsableItem.applicationBar.durationText, { textFormatter = durationFormatter })
 
         auraButton:SetFrameLevel(self.level or 3)
         auraButton.staticItem:SetFrameLevel(auraButton:GetFrameLevel() + 1) -- @todo Maybe find a better way to give priority to the static item
 
         self:setButtonGeometry(auraButton, options.globalGeometry, options.position)
 
-        if auraButton.pulsableItem.pulse then
+        local pulse = auraButton.pulsableItem.applicationBar.customTexture.pulse
+        if pulse then
             local mustPulse = self.autoPulse ~= false -- True by default
             if mustPulse then
-                auraButton.pulsableItem.pulse:Play()
+                pulse:Play()
             end
         end
 
@@ -332,6 +344,7 @@ SAO.AuraContainerItem = {
         end
 
         auraButton.staticItem.applicationCount:SetScale(self.fontScale * globalGeometry.scale)
+        auraButton.pulsableItem.applicationBar.durationText:SetScale(self.fontScale * globalGeometry.scale)
 
         auraButton:SetSize(width * self.scale, height * self.scale)
     end,
