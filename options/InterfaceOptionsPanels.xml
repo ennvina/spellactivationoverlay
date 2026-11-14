@@ -40,6 +40,7 @@
           <OnValueChanged>
             value = math.floor(value * 100 + 0.5) / 100;
             if (value ~= 0) then
+              --[[ Ensure the opacity is at least 0.25 if it's not zero ]]
               value = math.max(0.25, value);
             end
             self.value = value;
@@ -88,7 +89,7 @@
           </OnValueChanged>
         </Scripts>
       </Slider>
-      <Slider name="$parentSpellAlertTimerSlider" inherits="OptionsSliderTemplate">
+      <Slider name="$parentSpellAlertVisualCountdownSlider" inherits="OptionsSliderTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertOffsetSlider" relativePoint="BOTTOMLEFT">
             <Offset>
@@ -108,9 +109,33 @@
           </OnValueChanged>
         </Scripts>
       </Slider>
+      <Slider name="$parentSpellAlertTextCountdownSlider" inherits="OptionsSliderTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertVisualCountdownSlider" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-32"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnValueChanged>
+            value = math.floor(value * 10 + 0.5) / 10;
+            if (value ~= 0) then
+              --[[ Ensure the text countdown is at least 1 if it's not zero ]]
+              value = math.max(1, value);
+            end
+            self.value = value;
+            self:SetValue(value);
+
+            if (self.ApplyValueToEngine) then
+              self:ApplyValueToEngine(value);
+            end
+          </OnValueChanged>
+        </Scripts>
+      </Slider>
       <Slider name="$parentSpellAlertSoundSlider" inherits="OptionsSliderTemplate">
         <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertTimerSlider" relativePoint="BOTTOMLEFT">
+          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertTextCountdownSlider" relativePoint="BOTTOMLEFT">
             <Offset>
               <AbsDimension x="0" y="-32"/>
             </Offset>

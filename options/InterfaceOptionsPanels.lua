@@ -221,16 +221,29 @@ function SpellActivationOverlayOptionsPanelMixin:Init()
         SAO:ApplySpellAlertGeometry();
     end
 
-    local timerSlider = SpellActivationOverlayOptionsPanelSpellAlertTimerSlider;
-    timerSlider.Text:SetText("Spell Alert Progressive Timer");
-    _G[timerSlider:GetName().."Low"]:SetText(DISABLE);
-    _G[timerSlider:GetName().."High"]:SetText(ENABLE);
-    timerSlider:SetMinMaxValues(0, 1);
-    timerSlider:SetValueStep(1);
-    timerSlider.initialValue = SpellActivationOverlayDB.alert.timer;
-    timerSlider:SetValue(timerSlider.initialValue);
-    timerSlider.ApplyValueToEngine = function(self, value)
-        SpellActivationOverlayDB.alert.timer = value;
+    local visualCountdownSlider = SpellActivationOverlayOptionsPanelSpellAlertVisualCountdownSlider;
+    visualCountdownSlider.Text:SetText("Spell Alert Visual Countdown");
+    _G[visualCountdownSlider:GetName().."Low"]:SetText(DISABLE);
+    _G[visualCountdownSlider:GetName().."High"]:SetText(ENABLE);
+    visualCountdownSlider:SetMinMaxValues(0, 1);
+    visualCountdownSlider:SetValueStep(1);
+    visualCountdownSlider.initialValue = SpellActivationOverlayDB.alert.countdown.visual;
+    visualCountdownSlider:SetValue(visualCountdownSlider.initialValue);
+    visualCountdownSlider.ApplyValueToEngine = function(self, value)
+        SpellActivationOverlayDB.alert.countdown.visual = value;
+        SAO:ApplySpellAlertTimer();
+    end
+
+    local textCountdownSlider = SpellActivationOverlayOptionsPanelSpellAlertTextCountdownSlider;
+    textCountdownSlider.Text:SetText("Spell Alert Text Countdown");
+    _G[textCountdownSlider:GetName().."Low"]:SetText(OFF);
+    _G[textCountdownSlider:GetName().."High"]:SetText(LARGE);
+    textCountdownSlider:SetMinMaxValues(0, 5);
+    textCountdownSlider:SetValueStep(0.1);
+    textCountdownSlider.initialValue = SpellActivationOverlayDB.alert.countdown.text;
+    textCountdownSlider:SetValue(textCountdownSlider.initialValue);
+    textCountdownSlider.ApplyValueToEngine = function(self, value)
+        SpellActivationOverlayDB.alert.countdown.text = value;
         SAO:ApplySpellAlertTimer();
     end
 
@@ -366,8 +379,11 @@ local function okayFunc(self)
     local offsetSlider = SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider;
     offsetSlider.initialValue = offsetSlider:GetValue();
 
-    local timerSlider = SpellActivationOverlayOptionsPanelSpellAlertTimerSlider;
-    timerSlider.initialValue = timerSlider:GetValue();
+    local visualCountdownSlider = SpellActivationOverlayOptionsPanelSpellAlertVisualCountdownSlider;
+    visualCountdownSlider.initialValue = visualCountdownSlider:GetValue();
+
+    local textCountdownSlider = SpellActivationOverlayOptionsPanelSpellAlertTextCountdownSlider;
+    textCountdownSlider.initialValue = textCountdownSlider:GetValue();
 
     local soundSlider = SpellActivationOverlayOptionsPanelSpellAlertSoundSlider;
     soundSlider.initialValue = soundSlider:GetValue();
@@ -386,7 +402,8 @@ local function cancelFunc(self)
     local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
     local scaleSlider = SpellActivationOverlayOptionsPanelSpellAlertScaleSlider;
     local offsetSlider = SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider;
-    local timerSlider = SpellActivationOverlayOptionsPanelSpellAlertTimerSlider;
+    local visualCountdownSlider = SpellActivationOverlayOptionsPanelSpellAlertVisualCountdownSlider;
+    local textCountdownSlider = SpellActivationOverlayOptionsPanelSpellAlertTextCountdownSlider;
     local soundSlider = SpellActivationOverlayOptionsPanelSpellAlertSoundSlider;
     local glowingButtonCheckbox = SpellActivationOverlayOptionsPanelGlowingButtons;
     local classOptions = SpellActivationOverlayOptionsPanel.classOptions;
@@ -395,7 +412,8 @@ local function cancelFunc(self)
         opacitySlider.initialValue,
         scaleSlider.initialValue,
         offsetSlider.initialValue,
-        timerSlider.initialValue,
+        visualCountdownSlider.initialValue,
+        textCountdownSlider.initialValue,
         soundSlider.initialValue,
         glowingButtonCheckbox.initialValue,
         classOptions.initialValue
@@ -409,14 +427,15 @@ local function defaultFunc(self)
         1, -- opacity
         1, -- scale
         0, -- offset
-        1, -- timer
+        1, -- visual countdown
+        0, -- text countdown
         SAO.IsCata() and 1 or 0, -- sound
         true, -- glow
         defaultClassOptions -- class options
     );
 end
 
-local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, timerValue, soundValue, isGlowEnabled, classOptions)
+local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, visualCountdownValue, textCountdownValue, soundValue, isGlowEnabled, classOptions)
     local opacitySlider = SpellActivationOverlayOptionsPanelSpellAlertOpacitySlider;
     opacitySlider:SetValue(opacityValue);
     if (SpellActivationOverlayDB.alert.opacity ~= opacityValue) then
@@ -446,10 +465,17 @@ local function applyAllFunc(self, opacityValue, scaleValue, offsetValue, timerVa
         SAO:ApplySpellAlertGeometry();
     end
 
-    local timerSlider = SpellActivationOverlayOptionsPanelSpellAlertTimerSlider;
-    timerSlider:SetValue(timerValue);
-    if (SpellActivationOverlayDB.alert.timer ~= timerValue) then
-        SpellActivationOverlayDB.alert.timer = timerValue;
+    local visualCountdownSlider = SpellActivationOverlayOptionsPanelSpellAlertVisualCountdownSlider;
+    visualCountdownSlider:SetValue(visualCountdownValue);
+    if (SpellActivationOverlayDB.alert.countdown.visual ~= visualCountdownValue) then
+        SpellActivationOverlayDB.alert.countdown.visual = visualCountdownValue;
+        SAO:ApplySpellAlertTimer();
+    end
+
+    local textCountdownSlider = SpellActivationOverlayOptionsPanelSpellAlertTextCountdownSlider;
+    textCountdownSlider:SetValue(textCountdownValue);
+    if (SpellActivationOverlayDB.alert.countdown.text ~= textCountdownValue) then
+        SpellActivationOverlayDB.alert.countdown.text = textCountdownValue;
         SAO:ApplySpellAlertTimer();
     end
 

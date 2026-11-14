@@ -9,7 +9,8 @@ local sizeScale = 0.8;
 local longSide = 256 * sizeScale;
 local shortSide = 128 * sizeScale;
 local combatOverlayFactor = 2;
-local useTimer = true;
+local useVisualCountdown = true;
+local textCountdownScale = 0;
 local useSound = false;
 
 --[[BEGIN_DEV_ONLY]]
@@ -42,7 +43,9 @@ function SpellActivationOverlay_OnLoad(self)
 	self.scale = 1;
 	SpellActivationOverlay_OnChangeGeometry(self);
 
-	self.useTimer = true;
+	self.useTimer = true; -- Should be true if either useVisualCountdown is true or textCountdownScale is greater than 0
+	self.useVisualCountdown = true;
+	self.textCountdownScale = 0;
 	SpellActivationOverlay_OnChangeTimerVisibility(self);
 
 	self.useSound = false;
@@ -160,16 +163,16 @@ end
 function SpellActivationOverlay_OnChangeTimerVisibility(self)
 	SAO:Trace(Module, "SpellActivationOverlay_OnChangeTimerVisibility");
 
-	if useTimer == self.useTimer then
-		return;
-	end
-
-	useTimer = self.useTimer;
+	useVisualCountdown = self.useVisualCountdown;
+	textCountdownScale = self.textCountdownScale;
 
 	for _, overlayList in pairs(self.overlaysInUse) do
 		for i=1, #overlayList do
 			local overlay = overlayList[i];
-			overlay.mask:SetShown(useTimer);
+			overlay.mask:SetShown(useVisualCountdown);
+			if textCountdownScale > 0 then
+				overlay.durationText.text:SetScale(textCountdownScale * sizeScale * self.scale);
+			end
 			SpellActivationOverlay_UpdateDurationText(overlay);
 		end
 	end
@@ -386,7 +389,9 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 		self:SetSize(width * scale, height * scale);
 		self.mask:SetSize(longSide * scale, longSide * scale);
 		self.combat:SetSize(longSide * scale * combatOverlayFactor, longSide * scale * combatOverlayFactor);
-		self.durationText.text:SetScale(3 * sizeScale * parent.scale);
+		if textCountdownScale > 0 then
+			self.durationText.text:SetScale(textCountdownScale * sizeScale * parent.scale);
+		end
 		-- Combat mask texture is bigger, to get an 'eye of the storm' effect at start
 	end
 	overlay:SetGeometry(longSide, shortSide);
@@ -419,7 +424,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	end
 	overlay.pulse.autoPlay = autoPulse;
 
-	overlay.mask:SetShown(useTimer);
+	overlay.mask:SetShown(useVisualCountdown);
 
 	SpellActivationOverlay_SetOverlayTimer(self, overlay, endTime);
 	SpellActivationOverlay_UpdateDurationText(overlay);
@@ -586,7 +591,7 @@ end
 function SpellActivationOverlay_UpdateDurationText(overlay)
 	local durationText = overlay.durationText;
 	local remaining = overlay.endTime and overlay.endTime - GetTime();
-	if not useTimer or not overlay:IsShown() or not remaining or remaining <= 0 then
+	if textCountdownScale <= 0 or not overlay:IsShown() or not remaining or remaining <= 0 then
 		durationText:Hide();
 		return;
 	end

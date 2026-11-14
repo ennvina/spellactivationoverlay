@@ -220,7 +220,7 @@ SAO.AuraContainerItem = {
             })
         end
         auraButton:SetDurationText(auraButton.pulsableItem.applicationBar.durationText, { textFormatter = durationFormatter })
-        self:setButtonTimerVisibility(auraButton, SAO.Frame.useTimer)
+        self:setButtonCountdown(auraButton, SAO.Frame.useVisualCountdown, SAO.Frame.textCountdownScale, options.globalGeometry.scale)
 
         auraButton:SetFrameLevel(self.level or 3)
         auraButton.staticItem:SetFrameLevel(auraButton:GetFrameLevel() + 1) -- @todo Maybe find a better way to give priority to the static item
@@ -321,15 +321,18 @@ SAO.AuraContainerItem = {
         auraButton:SetDurationBar(durationBar, { direction = Enum.StatusBarTimerDirection.RemainingTime })
     end,
 
-    setButtonTimerVisibility = function(self, auraButton, enabled)
+    setButtonCountdown = function(self, auraButton, visualEnabled, textScale, geometryScale)
         local applicationBar = auraButton.pulsableItem.applicationBar
-        applicationBar.durationMask:SetShown(enabled)
-        applicationBar.durationText:SetShown(enabled)
+        applicationBar.durationMask:SetShown(visualEnabled)
+        if textScale > 0 then
+            applicationBar.durationText:SetScale(textScale * geometryScale)
+        end
+        applicationBar.durationText:SetShown(textScale > 0)
     end,
 
-    setTimerVisibility = function(self, enabled)
+    setCountdown = function(self, visualEnabled, textScale, geometryScale)
         for _, auraButton in ipairs(self.auraButtons) do
-            self:setButtonTimerVisibility(auraButton, enabled)
+            self:setButtonCountdown(auraButton, visualEnabled, textScale, geometryScale)
         end
     end,
 
@@ -376,7 +379,9 @@ SAO.AuraContainerItem = {
         end
 
         auraButton.staticItem.applicationCount:SetScale(self.fontScale * globalGeometry.scale)
-        auraButton.pulsableItem.applicationBar.durationText:SetScale(self.fontScale * globalGeometry.scale)
+        if SAO.Frame.textCountdownScale > 0 then
+            auraButton.pulsableItem.applicationBar.durationText:SetScale(SAO.Frame.textCountdownScale * globalGeometry.scale)
+        end
 
         auraButton:SetSize(width * self.scale, height * self.scale)
     end,
@@ -571,13 +576,13 @@ SAO.AuraContainer = {
         end
     end,
 
-    setTimerVisibility = function(self, enabled)
+    setCountdown = function(self, visualEnabled, textScale)
         if not useAuraContainer or not self.initialized then
             return
         end
 
         for _, item in pairs(self.items) do
-            item:setTimerVisibility(enabled)
+            item:setCountdown(visualEnabled, textScale, self.globalGeometry.geometry.scale)
         end
     end,
 
