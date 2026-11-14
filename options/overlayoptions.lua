@@ -60,7 +60,7 @@ function SAO.AddOverlayOption(self, talentID, auraID, hash, talentSubText, varia
         -- text = text..WrapTextInColorCode(className, classColor).." ";
 
         -- Talent text
-        text = talentText;
+        text = text..talentText;
         local humanReadableHash = hashCalculator:toHumanReadableString();
         if humanReadableHash then
             text = text .. " ("..humanReadableHash..")";

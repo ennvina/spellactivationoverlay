@@ -32,7 +32,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="40" y="-32"/>
+              <AbsDimension x="16" y="-32"/>
             </Offset>
           </Anchor>
         </Anchors>
@@ -75,9 +75,9 @@
       </Slider>
       <Slider name="$parentSpellAlertOffsetSlider" inherits="OptionsSliderTemplate">
         <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertScaleSlider" relativePoint="BOTTOMLEFT">
+          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertScaleSlider" relativePoint="TOPRIGHT">
             <Offset>
-              <AbsDimension x="0" y="-32"/>
+              <AbsDimension x="32" y="0"/>
             </Offset>
           </Anchor>
         </Anchors>
@@ -91,7 +91,7 @@
       </Slider>
       <Slider name="$parentSpellAlertVisualCountdownSlider" inherits="OptionsSliderTemplate">
         <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertOffsetSlider" relativePoint="BOTTOMLEFT">
+          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertScaleSlider" relativePoint="BOTTOMLEFT">
             <Offset>
               <AbsDimension x="0" y="-32"/>
             </Offset>
@@ -111,9 +111,9 @@
       </Slider>
       <Slider name="$parentSpellAlertTextCountdownSlider" inherits="OptionsSliderTemplate">
         <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertVisualCountdownSlider" relativePoint="BOTTOMLEFT">
+          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertVisualCountdownSlider" relativePoint="TOPRIGHT">
             <Offset>
-              <AbsDimension x="0" y="-32"/>
+              <AbsDimension x="32" y="0"/>
             </Offset>
           </Anchor>
         </Anchors>
@@ -135,7 +135,7 @@
       </Slider>
       <Slider name="$parentSpellAlertSoundSlider" inherits="OptionsSliderTemplate">
         <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertTextCountdownSlider" relativePoint="BOTTOMLEFT">
+          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertVisualCountdownSlider" relativePoint="BOTTOMLEFT">
             <Offset>
               <AbsDimension x="0" y="-32"/>
             </Offset>
@@ -154,11 +154,11 @@
         </Scripts>
       </Slider>
       <Button name="$parentSpellAlertTestButton" inherits="UIPanelButtonTemplate">
-        <Size x="96" y="22"/>
+        <Size x="128" y="22"/>
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertOpacitySlider" relativePoint="TOPRIGHT">
             <Offset>
-              <AbsDimension x="24" y="2"/>
+              <AbsDimension x="40" y="12"/>
             </Offset>
           </Anchor>
         </Anchors>
@@ -179,7 +179,7 @@
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertSoundSlider" relativePoint="BOTTOMLEFT">
             <Offset>
-              <AbsDimension x="-24" y="-24"/>
+              <AbsDimension x="0" y="-64"/>
             </Offset>
           </Anchor>
         </Anchors>
@@ -366,7 +366,7 @@
           <Anchors>
             <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertTestButton" relativePoint="TOPRIGHT">
               <Offset>
-                <AbsDimension x="24" y="10"/>
+                <AbsDimension x="20" y="0"/>
               </Offset>
             </Anchor>
           </Anchors>

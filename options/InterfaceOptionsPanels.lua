@@ -196,7 +196,7 @@ function SpellActivationOverlayOptionsPanelMixin:Init()
     end
 
     local scaleSlider = SpellActivationOverlayOptionsPanelSpellAlertScaleSlider;
-    scaleSlider.Text:SetText("Spell Alert Scale");
+    scaleSlider.Text:SetText("Scale Factor");
     _G[scaleSlider:GetName().."Low"]:SetText(SMALL);
     _G[scaleSlider:GetName().."High"]:SetText(LARGE);
     scaleSlider:SetMinMaxValues(0.25, 2.5);
@@ -209,7 +209,7 @@ function SpellActivationOverlayOptionsPanelMixin:Init()
     end
 
     local offsetSlider = SpellActivationOverlayOptionsPanelSpellAlertOffsetSlider;
-    offsetSlider.Text:SetText("Spell Alert Offset");
+    offsetSlider.Text:SetText("Offset");
     _G[offsetSlider:GetName().."Low"]:SetText(NEAR);
     _G[offsetSlider:GetName().."High"]:SetText(FAR);
     offsetSlider:SetMinMaxValues(-200, 400);
@@ -222,7 +222,7 @@ function SpellActivationOverlayOptionsPanelMixin:Init()
     end
 
     local visualCountdownSlider = SpellActivationOverlayOptionsPanelSpellAlertVisualCountdownSlider;
-    visualCountdownSlider.Text:SetText("Spell Alert Visual Countdown");
+    visualCountdownSlider.Text:SetText("Visual Countdown");
     _G[visualCountdownSlider:GetName().."Low"]:SetText(DISABLE);
     _G[visualCountdownSlider:GetName().."High"]:SetText(ENABLE);
     visualCountdownSlider:SetMinMaxValues(0, 1);
@@ -235,7 +235,7 @@ function SpellActivationOverlayOptionsPanelMixin:Init()
     end
 
     local textCountdownSlider = SpellActivationOverlayOptionsPanelSpellAlertTextCountdownSlider;
-    textCountdownSlider.Text:SetText("Spell Alert Text Countdown");
+    textCountdownSlider.Text:SetText("Text Countdown Size");
     _G[textCountdownSlider:GetName().."Low"]:SetText(OFF);
     _G[textCountdownSlider:GetName().."High"]:SetText(LARGE);
     textCountdownSlider:SetMinMaxValues(0, 5);
@@ -248,7 +248,7 @@ function SpellActivationOverlayOptionsPanelMixin:Init()
     end
 
     local soundSlider = SpellActivationOverlayOptionsPanelSpellAlertSoundSlider;
-    soundSlider.Text:SetText("Spell Alert Sound Effect");
+    soundSlider.Text:SetText("Sound Effect");
     _G[soundSlider:GetName().."Low"]:SetText(DISABLE);
     _G[soundSlider:GetName().."High"]:SetText(ENABLE);
     soundSlider:SetMinMaxValues(0, 1);
