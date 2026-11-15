@@ -205,6 +205,7 @@ local function useStormstrike(self)
             auraProps = { debuff = true, mineOnly = true },
             overlay = {
                 texture = "fury_of_stormrage", position = "Top",
+                text = false, -- Avoid text to not overlap with Maelstrom Weapon text which is more important
                 pulse = false, -- No pulse = no sound; the player does not need sound because they just cast Stormstrike which has an audio cue
                 scale = 1.28, level = 1, alpha = 222, -- Slightly bigger and behind Maelstrom Weapon
             },
