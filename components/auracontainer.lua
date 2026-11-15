@@ -38,13 +38,27 @@ local function getInfoFromHash(hash, macroCondition, spellID, extra)
     if extra and extra.debuff then
         unit = "target"
         filterString = "HARMFUL"
+    elseif extra and extra.playerDebuff then
+        filterString = "HARMFUL" -- Debuff on the player, e.g. Mage's Arcane Blast
     end
-    if extra and extra.mineOnly then
+    if extra and (extra.mineOnly or extra.playerDebuff) then
         filterString = filterString .. "|PLAYER"
     end
 
     -- Fill in item information
     local itemInfo = { unit = unit, filterString = filterString }
+
+    -- The game client forbids matching harmful auras by spell ID on assistable units, such as the player
+    -- See AuraContainerUtil.CanApplyIdentityCandidateFilters in Blizzard_AuraContainerUtil.lua
+    -- Any aura container slot with includeSpellIDs would reject such auras outright
+    -- Instead, match any harmful aura cast by the player on themselves, with a limited duration
+    -- This is a heuristic that works as long as the class has no other self-inflicted debuff with stacks
+    if extra and extra.playerDebuff then
+        itemInfo.candidateFilters = {
+            isFromPlayerOrPlayerPet = true,
+            maxDuration = 60, -- Also excludes permanent auras
+        }
+    end
 
     local nbAuraStacks = hash:getAuraStacks()
     itemInfo.nbAuraStacks = nbAuraStacks
@@ -179,7 +193,7 @@ SAO.AuraContainerItem = {
                 end,
                 sortMethod = AuraContainerSortMethod.ExpirationOnly,
                 sortDirection = AuraContainerSortDirection.Reverse,
-                candidateFilters = {
+                candidateFilters = options.candidateFilters or {
                     includeSpellIDs = item.includeSpellIDs,
                 },
             })

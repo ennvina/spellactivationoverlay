@@ -265,7 +265,7 @@ SAO.defaults = {
                 [400589] = { -- Missile Barrage (Forever, Season of Discovery)
                     [0] = true,
                 },
-                [400573]= { -- Arcane Blast (Season of Discovery)
+                [400573]= { -- Arcane Blast (Season of Discovery), see below for Forever
                     [4] = true, -- 4 stacks
                     [0] = true, -- any stacks but 4
                 },
@@ -988,6 +988,17 @@ SAO.defaults = {
 if SAO.IsEra() then
     -- Options that have different default values for Classic Era
     SAO.defaults.classes["MAGE"]["alert"][12536][0] = "genericarc_05"; -- Clearcasting
+end
+
+if SAO.IsForever() then
+    -- Options that have different default values for Forever
+    -- Arcane Blast has one option per stack count; only 3 and 4 stacks are displayed by default
+    SAO.defaults.classes["MAGE"]["alert"][400573] = {
+        [1] = false,
+        [2] = false,
+        [3] = true,
+        [4] = true,
+    };
 end
 
 if SAO.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH) then

@@ -169,7 +169,11 @@ SAO.Variable:register({
 
             local auraStacks, auraInstanceID;
 
-            if isBuffBucket then
+            if isBuffBucket and bucket.auraProps and bucket.auraProps.playerDebuff and C_UnitAuras and C_UnitAuras.GetUnitAuraInstanceIDs then
+                -- Not really a buff, but a debuff on the player, look for it explicitly
+                local includeAka = SAO.IsModern();
+                auraStacks, auraInstanceID = SAO:GetUnitAuraStacksBySpellID("player", "HARMFUL", bucket.spellID, includeAka);
+            elseif isBuffBucket then
                 local includeAka = SAO.IsModern(); -- Do not use in Classic to prevent side effects (AKAs were not used as real spell IDs in Classic)
                 auraStacks, auraInstanceID = SAO:GetPlayerAuraStacksBySpellID(bucket.spellID, includeAka);
             else
@@ -541,7 +545,9 @@ SAO.Variable:register({
             prepareBucket = function(bucket, value)
                 bucket.auraProps = {};
 
-                local allowedProps = { hasSecretRestrictions = 'boolean', debuff = 'boolean', mineOnly = 'boolean' }
+                -- debuff: the aura is a debuff on the target
+                -- playerDebuff: the aura is a debuff on the player (e.g. Mage's Arcane Blast), as opposed to a buff on the player
+                local allowedProps = { hasSecretRestrictions = 'boolean', debuff = 'boolean', playerDebuff = 'boolean', mineOnly = 'boolean' }
                 for key, prop in pairs(value) do
                     if allowedProps[key] then --[[BEGIN_DEV_ONLY]]
                         if type(prop) ~= allowedProps[key] then
