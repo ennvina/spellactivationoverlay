@@ -4,8 +4,9 @@
 
 Spell Alerts now have a countdown number, similar to the shrinking effect
 - This effect is disabled by default; enter /sao to enable or disable it
-- 'Spell Alert Visual Countdown' rules the shrink (formerly Progressive Timer)
-- 'Spell Alert Text Countdown' rules the new number functionality
+- 'Visual Countdown' rules the shrink (formerly Spell Alert Progressive Timer)
+- 'Text Size' rules the new number functionality
+- Some countdown numbers are not displayed on purpose to avoid confusion
 
 Bug Fixes
 - The Spell Alert Progressive Timer should now work as intended (Forever)
