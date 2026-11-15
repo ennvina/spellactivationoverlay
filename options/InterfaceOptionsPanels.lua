@@ -235,10 +235,10 @@ function SpellActivationOverlayOptionsPanelMixin:Init()
     end
 
     local textCountdownSlider = SpellActivationOverlayOptionsPanelSpellAlertTextCountdownSlider;
-    textCountdownSlider.Text:SetText("Text Countdown Size");
+    textCountdownSlider.Text:SetText("Text Size ("..WrapTextInColorCode("New", "FFFF8000")..")");
     _G[textCountdownSlider:GetName().."Low"]:SetText(OFF);
     _G[textCountdownSlider:GetName().."High"]:SetText(LARGE);
-    textCountdownSlider:SetMinMaxValues(0, 5);
+    textCountdownSlider:SetMinMaxValues(0, 7);
     textCountdownSlider:SetValueStep(0.1);
     textCountdownSlider.initialValue = SpellActivationOverlayDB.alert.countdown.text;
     textCountdownSlider:SetValue(textCountdownSlider.initialValue);
