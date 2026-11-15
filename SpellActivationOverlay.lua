@@ -173,7 +173,7 @@ function SpellActivationOverlay_OnChangeTimerVisibility(self)
 		for i=1, #overlayList do
 			local overlay = overlayList[i];
 			overlay.mask:SetShown(useVisualCountdown);
-			if textCountdownScale > 0 then
+			if overlay.hasText and textCountdownScale > 0 then
 				overlay.durationText.text:SetScale(textCountdownScale * sizeScale * self.scale);
 			end
 			SpellActivationOverlay_UpdateDurationText(overlay);
@@ -330,6 +330,10 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	overlay.spellID = spellID;
 	overlay.position = position;
 	overlay.scale = scale;
+	overlay.hasText = true;
+	if type(extra) == 'table' and type(extra.text) ~= 'nil' then
+		overlay.hasText = extra.text;
+	end
 	
 	local texLeft, texRight, texTop, texBottom = 0, 1, 0, 1;
 	if ( vFlip ) then
@@ -392,7 +396,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 		self:SetSize(width * scale, height * scale);
 		self.mask:SetSize(longSide * scale, longSide * scale);
 		self.combat:SetSize(longSide * scale * combatOverlayFactor, longSide * scale * combatOverlayFactor);
-		if textCountdownScale > 0 then
+		if overlay.hasText and textCountdownScale > 0 then
 			self.durationText.text:SetScale(textCountdownScale * sizeScale * parent.scale);
 		end
 		-- Combat mask texture is bigger, to get an 'eye of the storm' effect at start
@@ -462,7 +466,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	overlay:SetFrameStrata(frameStrata);
 	overlay.durationText:SetFrameStrata(frameStrata);
 
-	local frameLevel = type(extra) == 'table' and extra.level or 3;
+	local frameLevel = type(extra) == 'table' and extra.level or SAO.Constants.DefaultLevel;
 	overlay:SetFrameLevel(frameLevel);
 	overlay.durationText:SetFrameLevel(frameLevel + 1);
 end
@@ -594,7 +598,7 @@ end
 function SpellActivationOverlay_UpdateDurationText(overlay)
 	local durationText = overlay.durationText;
 	local remaining = overlay.endTime and overlay.endTime - GetTime();
-	if textCountdownScale <= 0 or not overlay:IsShown() or not remaining or remaining <= 0 then
+	if not overlay.hasText or textCountdownScale <= 0 or not overlay:IsShown() or not remaining or remaining <= 0 then
 		durationText:Hide();
 		return;
 	end

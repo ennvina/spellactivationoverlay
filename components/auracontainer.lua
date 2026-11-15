@@ -132,6 +132,7 @@ SAO.AuraContainerItem = {
             fontScale = 3,
             positions = splitPositions(overlay.position),
             level = overlay.level,
+            text = overlay.text,
             autoPulse = overlay.autoPulse,
             useSound = overlay.autoPulse, -- Only pulsing overlays are worth having a sound
             texture = overlay.texture,
@@ -220,11 +221,13 @@ SAO.AuraContainerItem = {
                 format = "%.0f",
             })
         end
-        auraButton:SetDurationText(auraButton.pulsableItem.applicationBar.durationText, { textFormatter = durationFormatter })
+        local durationText = auraButton.pulsableItem.applicationBar.durationText
+        auraButton:SetDurationText(durationText, { textFormatter = durationFormatter })
         self:setButtonCountdown(auraButton, options.countdownSettings, options.globalGeometry.scale)
 
-        auraButton:SetFrameLevel(self.level or 3)
-        auraButton.staticItem:SetFrameLevel(auraButton:GetFrameLevel() + 1) -- @todo Maybe find a better way to give priority to the static item
+        local level = self.level or SAO.Constants.DefaultLevel;
+        auraButton:SetFrameLevel(level)
+        auraButton.staticItem:SetFrameLevel(level + 1) -- @todo Maybe find a better way to give priority to the static item
 
         self:setButtonGeometry(auraButton, options.globalGeometry, options.position, options.countdownSettings)
 
@@ -325,10 +328,10 @@ SAO.AuraContainerItem = {
     setButtonCountdown = function(self, auraButton, countdownSettings, geometryScale)
         local applicationBar = auraButton.pulsableItem.applicationBar
         applicationBar.durationMask:SetShown(countdownSettings.visualEnabled)
-        if countdownSettings.textScale > 0 then
+        if self.text and countdownSettings.textScale > 0 then
             applicationBar.durationText:SetScale(countdownSettings.textScale * geometryScale)
         end
-        applicationBar.durationText:SetShown(countdownSettings.textScale > 0)
+        applicationBar.durationText:SetShown(self.text and countdownSettings.textScale > 0)
     end,
 
     setCountdown = function(self, countdownSettings, geometryScale)
@@ -380,7 +383,7 @@ SAO.AuraContainerItem = {
         end
 
         auraButton.staticItem.applicationCount:SetScale(self.fontScale * globalGeometry.scale)
-        if countdownSettings.textScale > 0 then
+        if self.text and countdownSettings.textScale > 0 then
             auraButton.pulsableItem.applicationBar.durationText:SetScale(countdownSettings.textScale * globalGeometry.scale)
         end
 

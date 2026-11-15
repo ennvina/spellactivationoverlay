@@ -42,6 +42,7 @@ local Module = "effect"
         color = {255, 255, 255, 255}, -- Default is {255, 255, 255, 255}, alpha is optional and defaults to 255
         alpha = 255, -- Default is nil; if set, it overrides the alpha value in 'color'
         pulse = true, -- Default is true
+        text = true, -- Default is true
         option = { -- Default is true
             setupHash = "aura_stacks=any", -- Default is hash from overlay, must be built by Hash:toString()
             testHash = "aura_stacks=5", -- Default is nil, which defaults to setupHash, must be built by Hash:toString()
@@ -299,6 +300,7 @@ local function addOneOverlay(overlays, overlayConfig, project, default, triggers
         scale = overlayConfig.scale or default.scale,
         color = color,
         pulse = getValueOrDefault(overlayConfig.pulse, default.pulse),
+        text = getValueOrDefault(overlayConfig.text, default.text),
         option = mergeOption(default.option, overlayConfig.option),
     }
 
@@ -741,6 +743,7 @@ local function RegisterNativeEffectNow(self, effect)
             local scale = overlay.scale or 1;
             local color = overlay.color and { overlay.color[1], overlay.color[2], overlay.color[3], overlay.color[4] } or { 255, 255, 255, 255 };
             local autoPulse = type(overlay.pulse) == 'function' and overlay.pulse or overlay.pulse ~= false;
+            local text = overlay.text ~= false;
             local combatOnly = overlay.combatOnly == true or effect.combatOnly == true;
             local hash = overlay.hash;
 
@@ -754,6 +757,7 @@ local function RegisterNativeEffectNow(self, effect)
                 color = color,
                 autoPulse = autoPulse,
                 combatOnly = combatOnly,
+                text = text,
                 hash = hash,
             }
 
