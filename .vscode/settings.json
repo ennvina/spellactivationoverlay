@@ -50,6 +50,7 @@
         "SpellActivationOverlayOptionsPanelSpellAlertTestButton",
         "SpellActivationOverlayOptionsPanelSpellAlertTextCountdownSlider",
         "SpellActivationOverlayOptionsPanelSpellAlertVisualCountdownSlider",
+        "SpellActivationOverlayOptionsPanelSpellAlertVsGlowingButtonsDivider",
         // Objects from other addons
         "ElvUI",
         "ProjectAzilroka",
