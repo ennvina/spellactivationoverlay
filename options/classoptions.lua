@@ -191,7 +191,13 @@ function SAO.AddOption(self, optionType, auraID, id, subValues, applyTextFunc, t
             firstCb:SetPoint("TOPLEFT", firstAnchor.frame, "BOTTOMLEFT", (firstAnchor.xOffset or 0) - 32, firstAnchor.yOffset or 0);
             cb:SetPoint("TOPLEFT", firstAnchor.frame, "BOTTOMLEFT", (firstAnchor.xOffset or 0) + 320, firstAnchor.yOffset or 0);
         end
+
         table.insert(SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType], cb);
+
+        if optionType == "alert" and #SpellActivationOverlayOptionsPanel.additionalCheckboxes[optionType] == 12 then
+            -- At the 12th alert checkbox, the divider should shrink to avoid overlapping with alert checkboxes
+            SpellActivationOverlayOptionsPanelSpellAlertVsGlowingButtonsDivider:SetWidth(256);
+        end
     end
 
     if (infoTooltip) then

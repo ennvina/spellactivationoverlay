@@ -48,7 +48,9 @@
         "SpellActivationOverlayOptionsPanelSpellAlertScaleSlider",
         "SpellActivationOverlayOptionsPanelSpellAlertSoundSlider",
         "SpellActivationOverlayOptionsPanelSpellAlertTestButton",
-        "SpellActivationOverlayOptionsPanelSpellAlertTimerSlider",
+        "SpellActivationOverlayOptionsPanelSpellAlertTextCountdownSlider",
+        "SpellActivationOverlayOptionsPanelSpellAlertVisualCountdownSlider",
+        "SpellActivationOverlayOptionsPanelSpellAlertVsGlowingButtonsDivider",
         // Objects from other addons
         "ElvUI",
         "ProjectAzilroka",
@@ -113,6 +115,7 @@
         "C_SpecializationInfo",
         "C_Spell",
         "C_SpellBook",
+        "C_StringUtil",
         "C_Timer",
         "C_UIFileAsset",
         "C_UnitAuras",

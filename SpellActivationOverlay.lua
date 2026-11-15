@@ -9,7 +9,8 @@ local sizeScale = 0.8;
 local longSide = 256 * sizeScale;
 local shortSide = 128 * sizeScale;
 local combatOverlayFactor = 2;
-local useTimer = true;
+local useVisualCountdown = true;
+local textCountdownScale = 0;
 local useSound = false;
 
 --[[BEGIN_DEV_ONLY]]
@@ -42,7 +43,9 @@ function SpellActivationOverlay_OnLoad(self)
 	self.scale = 1;
 	SpellActivationOverlay_OnChangeGeometry(self);
 
-	self.useTimer = true;
+	self.useTimer = true; -- Should be true if either useVisualCountdown is true or textCountdownScale is greater than 0
+	self.useVisualCountdown = true;
+	self.textCountdownScale = 0;
 	SpellActivationOverlay_OnChangeTimerVisibility(self);
 
 	self.useSound = false;
@@ -52,6 +55,9 @@ function SpellActivationOverlay_OnLoad(self)
 		longSide = 256 * sizeScale * self.scale,
 		shortSide = 128 * sizeScale * self.scale,
 		scale = sizeScale * self.scale,
+	}, {
+		visualEnabled = self.useVisualCountdown,
+		textScale = self.textCountdownScale,
 	});
 
 	local className, classFile, classId = UnitClass("player");
@@ -160,16 +166,17 @@ end
 function SpellActivationOverlay_OnChangeTimerVisibility(self)
 	SAO:Trace(Module, "SpellActivationOverlay_OnChangeTimerVisibility");
 
-	if useTimer == self.useTimer then
-		return;
-	end
-
-	useTimer = self.useTimer;
+	useVisualCountdown = self.useVisualCountdown;
+	textCountdownScale = self.textCountdownScale;
 
 	for _, overlayList in pairs(self.overlaysInUse) do
 		for i=1, #overlayList do
 			local overlay = overlayList[i];
-			overlay.mask:SetShown(useTimer);
+			overlay.mask:SetShown(useVisualCountdown);
+			if overlay.hasText and textCountdownScale > 0 then
+				overlay.durationText.text:SetScale(textCountdownScale * sizeScale * self.scale);
+			end
+			SpellActivationOverlay_UpdateDurationText(overlay);
 		end
 	end
 end
@@ -323,6 +330,10 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	overlay.spellID = spellID;
 	overlay.position = position;
 	overlay.scale = scale;
+	overlay.hasText = true;
+	if type(extra) == 'table' and type(extra.text) ~= 'nil' then
+		overlay.hasText = extra.text;
+	end
 	
 	local texLeft, texRight, texTop, texBottom = 0, 1, 0, 1;
 	if ( vFlip ) then
@@ -385,6 +396,9 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 		self:SetSize(width * scale, height * scale);
 		self.mask:SetSize(longSide * scale, longSide * scale);
 		self.combat:SetSize(longSide * scale * combatOverlayFactor, longSide * scale * combatOverlayFactor);
+		if overlay.hasText and textCountdownScale > 0 then
+			self.durationText.text:SetScale(textCountdownScale * sizeScale * parent.scale);
+		end
 		-- Combat mask texture is bigger, to get an 'eye of the storm' effect at start
 	end
 	overlay:SetGeometry(longSide, shortSide);
@@ -392,6 +406,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	overlay.texture:SetTexture(texturePath);
 	overlay.texture:SetVertexColor(r / 255, g / 255, b / 255);
 	overlay.alpha = a / 255; -- Don't bother setting the vertex color alpha, it will be overwritten by animations
+	overlay.durationText:SetAlpha(overlay.alpha);
 	
 	overlay.animOut:Stop();	--In case we're in the process of animating this out.
 	if useSound and (autoPulse or forcePulsePlay) then
@@ -416,9 +431,10 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	end
 	overlay.pulse.autoPlay = autoPulse;
 
-	overlay.mask:SetShown(useTimer);
+	overlay.mask:SetShown(useVisualCountdown);
 
 	SpellActivationOverlay_SetOverlayTimer(self, overlay, endTime);
+	SpellActivationOverlay_UpdateDurationText(overlay);
 
 	overlay.combatOnly = combatOnly;
 	if ( combatOnly ) then
@@ -448,9 +464,11 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 
 	local frameStrata = type(extra) == 'table' and extra.strata or "MEDIUM";
 	overlay:SetFrameStrata(frameStrata);
+	overlay.durationText:SetFrameStrata(frameStrata);
 
-	local frameLevel = type(extra) == 'table' and extra.level or 3;
+	local frameLevel = type(extra) == 'table' and extra.level or SAO.Constants.DefaultLevel;
 	overlay:SetFrameLevel(frameLevel);
+	overlay.durationText:SetFrameLevel(frameLevel + 1);
 end
 
 function SpellActivationOverlay_DumpCombatOnlyOverlays()
@@ -533,6 +551,7 @@ function SpellActivationOverlay_SetOverlayTimer(self, overlay, endTime)
 		return; -- Overlay already has similar endTime: assume this is the same timer
 	end
 	overlay.endTime = endTime;
+	SpellActivationOverlay_UpdateDurationText(overlay);
 
 	SAO:Debug(Module, "Setting Overlay Timer at location "..overlay.position.." for spell ID "..overlay.spellID.." "..SAO:GetSpellName(overlay.spellID, "")..(endTime and (" for "..math.floor(endTime-GetTime()+0.5).." secs") or " without time"));
 
@@ -569,7 +588,31 @@ end
 
 function SpellActivationOverlay_CreateOverlay(self)
 	SAO:Trace(Module, "SpellActivationOverlay_CreateOverlay");
-	return CreateFrame("Frame", nil, self, "SpellActivationOverlayAddonTemplate");
+	local overlay = CreateFrame("Frame", nil, self, "SpellActivationOverlayAddonTemplate");
+	overlay.durationText = CreateFrame("Frame", nil, self, "SpellActivationOverlayDurationTextTemplate");
+	overlay.durationText.overlay = overlay;
+	overlay.durationText:SetAllPoints(overlay);
+	return overlay;
+end
+
+function SpellActivationOverlay_UpdateDurationText(overlay)
+	local durationText = overlay.durationText;
+	local remaining = overlay.endTime and overlay.endTime - GetTime();
+	if not overlay.hasText or textCountdownScale <= 0 or not overlay:IsShown() or not remaining or remaining <= 0 then
+		durationText:Hide();
+		return;
+	end
+
+	local seconds = math.ceil(remaining);
+	if durationText.seconds ~= seconds then
+		durationText.text:SetText(seconds);
+		durationText.seconds = seconds;
+	end
+	durationText:Show();
+end
+
+function SpellActivationOverlayDuration_OnUpdate(self)
+	SpellActivationOverlay_UpdateDurationText(self.overlay);
 end
 
 function SpellActivationOverlayTexture_OnShow(self)
@@ -602,6 +645,8 @@ function SpellActivationOverlayTexture_TerminateOverlay(overlay)
 	overlay.mask:SetAlpha(0); -- Set alpha to zero, because next time we want to start unnoticed
 	overlay.mask:SetScale(1); -- Reset scale, in case a previous animation shrank it to 0.01
 	overlay.endTime = nil; -- Reset endTime, to avoid excessive optimizations when re-using this overlay
+	overlay.durationText:Hide();
+	overlay.durationText.seconds = nil;
 	overlay:Hide();
 	tDeleteItem(overlayParent.overlaysInUse[overlay.spellID], overlay);
 	tinsert(overlayParent.unusedOverlays, overlay);

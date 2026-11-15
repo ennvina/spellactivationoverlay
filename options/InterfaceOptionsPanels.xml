@@ -7,22 +7,14 @@
       <Layer level="ARTWORK">
         <FontString name="$parentBuildInfo" text="" inherits="GameFontNormal" justifyH="CENTER" justifyV="CENTER">
           <Anchors>
-            <Anchor point="BOTTOMRIGHT">
-              <Offset>
-                <AbsDimension x="-16" y="56"/>
-              </Offset>
-            </Anchor>
+            <Anchor point="BOTTOMRIGHT" x="-16" y="56"/>
           </Anchors>
         </FontString>
       </Layer>
       <Layer level="ARTWORK">
         <FontString name="$parentClassInfo" text="" inherits="GameFontNormalLarge" justifyH="CENTER" justifyV="CENTER">
           <Anchors>
-            <Anchor point="BOTTOM" relativeTo="$parentBuildInfo" relativePoint="TOP">
-              <Offset>
-                <AbsDimension x="0" y="8"/>
-              </Offset>
-            </Anchor>
+            <Anchor point="BOTTOM" relativeTo="$parentBuildInfo" relativePoint="TOP" x="0" y="8"/>
           </Anchors>
         </FontString>
       </Layer>
@@ -30,16 +22,13 @@
     <Frames>
       <Slider name="$parentSpellAlertOpacitySlider" inherits="OptionsSliderTemplate">
         <Anchors>
-          <Anchor point="TOPLEFT">
-            <Offset>
-              <AbsDimension x="40" y="-32"/>
-            </Offset>
-          </Anchor>
+          <Anchor point="TOPLEFT" x="16" y="-32"/>
         </Anchors>
         <Scripts>
           <OnValueChanged>
             value = math.floor(value * 100 + 0.5) / 100;
             if (value ~= 0) then
+              --[[ Ensure the opacity is at least 0.25 if it's not zero ]]
               value = math.max(0.25, value);
             end
             self.value = value;
@@ -58,11 +47,7 @@
       </Slider>
       <Slider name="$parentSpellAlertScaleSlider" inherits="OptionsSliderTemplate">
         <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertOpacitySlider" relativePoint="BOTTOMLEFT">
-            <Offset>
-              <AbsDimension x="0" y="-32"/>
-            </Offset>
-          </Anchor>
+          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertOpacitySlider" relativePoint="BOTTOMLEFT" x="0" y="-32"/>
         </Anchors>
         <Scripts>
           <OnValueChanged>
@@ -74,11 +59,7 @@
       </Slider>
       <Slider name="$parentSpellAlertOffsetSlider" inherits="OptionsSliderTemplate">
         <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertScaleSlider" relativePoint="BOTTOMLEFT">
-            <Offset>
-              <AbsDimension x="0" y="-32"/>
-            </Offset>
-          </Anchor>
+          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertScaleSlider" relativePoint="TOPRIGHT" x="32" y="0"/>
         </Anchors>
         <Scripts>
           <OnValueChanged>
@@ -88,17 +69,33 @@
           </OnValueChanged>
         </Scripts>
       </Slider>
-      <Slider name="$parentSpellAlertTimerSlider" inherits="OptionsSliderTemplate">
+      <Slider name="$parentSpellAlertVisualCountdownSlider" inherits="OptionsSliderTemplate">
         <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertOffsetSlider" relativePoint="BOTTOMLEFT">
-            <Offset>
-              <AbsDimension x="0" y="-32"/>
-            </Offset>
-          </Anchor>
+          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertScaleSlider" relativePoint="BOTTOMLEFT" x="0" y="-32"/>
         </Anchors>
         <Scripts>
           <OnValueChanged>
             value = math.floor(value + 0.5);
+            self.value = value;
+            self:SetValue(value);
+
+            if (self.ApplyValueToEngine) then
+              self:ApplyValueToEngine(value);
+            end
+          </OnValueChanged>
+        </Scripts>
+      </Slider>
+      <Slider name="$parentSpellAlertTextCountdownSlider" inherits="OptionsSliderTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertVisualCountdownSlider" relativePoint="TOPRIGHT" x="32" y="0"/>
+        </Anchors>
+        <Scripts>
+          <OnValueChanged>
+            value = math.floor(value * 10 + 0.5) / 10;
+            if (value ~= 0) then
+              --[[ Ensure the text countdown is at least 1 if it's not zero ]]
+              value = math.max(1, value);
+            end
             self.value = value;
             self:SetValue(value);
 
@@ -110,11 +107,7 @@
       </Slider>
       <Slider name="$parentSpellAlertSoundSlider" inherits="OptionsSliderTemplate">
         <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertTimerSlider" relativePoint="BOTTOMLEFT">
-            <Offset>
-              <AbsDimension x="0" y="-32"/>
-            </Offset>
-          </Anchor>
+          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertVisualCountdownSlider" relativePoint="BOTTOMLEFT" x="0" y="-32"/>
         </Anchors>
         <Scripts>
           <OnValueChanged>
@@ -128,14 +121,22 @@
           </OnValueChanged>
         </Scripts>
       </Slider>
-      <Button name="$parentSpellAlertTestButton" inherits="UIPanelButtonTemplate">
-        <Size x="96" y="22"/>
+      <Frame name="$parentSpellAlertVsGlowingButtonsDivider">
+        <Size x="512" y="8"/>
         <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertOpacitySlider" relativePoint="TOPRIGHT">
-            <Offset>
-              <AbsDimension x="24" y="2"/>
-            </Offset>
-          </Anchor>
+          <Anchor point="TOP" relativeTo="$parentSpellAlertSoundSlider" relativePoint="BOTTOM" x="0" y="-60"/>
+          <Anchor point="LEFT" x="64" y="0"/>
+        </Anchors>
+        <Layers>
+          <Layer level="ARTWORK">
+            <Texture setAllPoints="true" file="Interface/FriendsFrame/UI-FriendsFrame-OnlineDivider"/>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Button name="$parentSpellAlertTestButton" inherits="UIPanelButtonTemplate">
+        <Size x="128" y="22"/>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertOpacitySlider" relativePoint="TOPRIGHT" x="40" y="12"/>
         </Anchors>
         <Scripts>
           <OnClick>
@@ -152,11 +153,7 @@
       </Button>
       <CheckButton name="$parentGlowingButtons" inherits="InterfaceOptionsCheckButtonTemplate">
         <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertSoundSlider" relativePoint="BOTTOMLEFT">
-            <Offset>
-              <AbsDimension x="-24" y="-24"/>
-            </Offset>
-          </Anchor>
+          <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertSoundSlider" relativePoint="BOTTOMLEFT" x="0" y="-64"/>
         </Anchors>
         <Scripts>
           <PostClick>
@@ -182,11 +179,7 @@
       </CheckButton>
       <CheckButton name="$parentSpellAlertReportButton" inherits="InterfaceOptionsCheckButtonTemplate">
         <Anchors>
-          <Anchor point="BOTTOMLEFT" relativeTo="$parentSpellAlertDebugButton" relativePoint="BOTTOMLEFT">
-            <Offset>
-              <AbsDimension x="0" y="20"/>
-            </Offset>
-          </Anchor>
+          <Anchor point="BOTTOMLEFT" relativeTo="$parentSpellAlertDebugButton" relativePoint="BOTTOMLEFT" x="0" y="20"/>
         </Anchors>
         <Scripts>
           <PostClick>
@@ -200,11 +193,7 @@
       </CheckButton>
       <CheckButton name="$parentSpellAlertResponsiveButton" inherits="InterfaceOptionsCheckButtonTemplate">
         <Anchors>
-          <Anchor point="BOTTOMLEFT" relativeTo="$parentSpellAlertDebugButton" relativePoint="BOTTOMLEFT">
-            <Offset>
-              <AbsDimension x="300" y="0"/>
-            </Offset>
-          </Anchor>
+          <Anchor point="BOTTOMLEFT" relativeTo="$parentSpellAlertDebugButton" relativePoint="BOTTOMLEFT" x="300" y="0"/>
         </Anchors>
         <Scripts>
           <PostClick>
@@ -218,11 +207,7 @@
       </CheckButton>
       <CheckButton name="$parentSpellAlertAskDisableGameAlertButton" inherits="InterfaceOptionsCheckButtonTemplate">
         <Anchors>
-          <Anchor point="BOTTOMLEFT" relativeTo="$parentSpellAlertResponsiveButton" relativePoint="BOTTOMLEFT">
-            <Offset>
-              <AbsDimension x="0" y="20"/>
-            </Offset>
-          </Anchor>
+          <Anchor point="BOTTOMLEFT" relativeTo="$parentSpellAlertResponsiveButton" relativePoint="BOTTOMLEFT" x="0" y="20"/>
         </Anchors>
         <Scripts>
           <PostClick>
@@ -259,22 +244,14 @@
           <Layer level="ARTWORK" textureSubLevel="3">
             <FontString name="$parentGlobalOffLabelDisabled" text="ADDON_DISABLED" inherits="SystemFont_Shadow_Huge3" justifyH="CENTER" justifyV="CENTER">
               <Anchors>
-                <Anchor point="TOP">
-                  <Offset>
-                    <AbsDimension x="0" y="-222"/>
-                  </Offset>
-                </Anchor>
+                <Anchor point="TOP" x="0" y="-222"/>
               </Anchors>
             </FontString>
           </Layer>
           <Layer level="ARTWORK" textureSubLevel="3">
             <FontString name="$parentGlobalOffLabelReason" parentKey="reason" text="" inherits="SystemFont_Shadow_Huge1" justifyH="CENTER" justifyV="CENTER">
               <Anchors>
-                <Anchor point="TOP" relativeTo="$parentGlobalOffLabelDisabled" relativePoint="BOTTOM">
-                  <Offset>
-                    <AbsDimension x="0" y="-16"/>
-                  </Offset>
-                </Anchor>
+                <Anchor point="TOP" relativeTo="$parentGlobalOffLabelDisabled" relativePoint="BOTTOM" x="0" y="-16"/>
               </Anchors>
             </FontString>
           </Layer>
@@ -282,27 +259,15 @@
         <Frames>
           <Button name="$parentGlobalOffButton" parentKey="button" inherits="UIPanelButtonTemplate" hidden="true">
             <Anchors>
-              <Anchor point="TOP" relativeTo="$parentGlobalOffLabelReason" relativePoint="BOTTOM">
-                <Offset>
-                  <AbsDimension x="0" y="-16"/>
-                </Offset>
-              </Anchor>
+              <Anchor point="TOP" relativeTo="$parentGlobalOffLabelReason" relativePoint="BOTTOM" x="0" y="-16"/>
             </Anchors>
           </Button>
         </Frames>
       </Frame>
       <Frame name="$parentGlowOffBlockingFrame" parentKey="glowOff" setAllPoints="false" frameLevel="50" enableMouse="true" hidden="true">
         <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="$parentGlowingButtons" relativePoint="TOPLEFT">
-            <Offset>
-              <AbsDimension x="-16" y="0"/>
-            </Offset>
-          </Anchor>
-          <Anchor point="BOTTOMRIGHT" relativeTo="$parentSpellAlertAskDisableGameAlertButton" relativePoint="TOPRIGHT">
-            <Offset>
-              <AbsDimension x="16" y="0"/>
-            </Offset>
-          </Anchor>
+          <Anchor point="TOPLEFT" relativeTo="$parentGlowingButtons" relativePoint="TOPLEFT" x="-16" y="0"/>
+          <Anchor point="BOTTOMRIGHT" relativeTo="$parentSpellAlertAskDisableGameAlertButton" relativePoint="TOPRIGHT" x="16" y="0"/>
         </Anchors>
         <Layers>
           <Layer level="ARTWORK" textureSubLevel="1">
@@ -319,16 +284,8 @@
             <FontString name="$parentGlowOffLabelReason" parentKey="reason" setAllPoints="true" text="Glowing Buttons are not available in this build and shall be fixed at a later date. Thank you for your understanding." inherits="SystemFont_Shadow_Huge1" justifyH="CENTER" justifyV="CENTER">
               <Color r="0.8" g="0.8" b="0.8" a="1"/>
               <Anchors>
-                <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
-                  <Offset>
-                    <AbsDimension x="64" y="-64"/>
-                  </Offset>
-                </Anchor>
-                <Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT">
-                  <Offset>
-                    <AbsDimension x="-64" y="64"/>
-                  </Offset>
-                </Anchor>
+                <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="64" y="-64"/>
+                <Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT" x="-64" y="64"/>
               </Anchors>
             </FontString>
           </Layer>
@@ -339,33 +296,23 @@
       <Layer level="ARTWORK">
         <FontString name="$parentSpellAlertLabel" text="Spell Alerts" inherits="GameFontHighlight" justifyH="LEFT" justifyV="TOP">
           <Anchors>
-            <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertTestButton" relativePoint="TOPRIGHT">
-              <Offset>
-                <AbsDimension x="24" y="10"/>
-              </Offset>
-            </Anchor>
+            <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertTestButton" relativePoint="TOPRIGHT" x="20" y="0"/>
           </Anchors>
         </FontString>
       </Layer>
       <Layer level="ARTWORK">
         <FontString name="$parentSpellAlertNone" text="" inherits="GameFontHighlight" justifyH="LEFT" justifyV="TOP" parentKey="alertNone">
           <Anchors>
-            <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertLabel" relativePoint="BOTTOMLEFT">
-              <Offset>
-                <AbsDimension x="6" y="-6"/> <!-- +2 -2 more pixels than offset for checkboxes, defined at the end of SAO.AddOverlayOption -->
-              </Offset>
-            </Anchor>
+            <Anchor point="TOPLEFT" relativeTo="$parentSpellAlertLabel" relativePoint="BOTTOMLEFT" x="6" y="-6"/>
+            <!-- x,y is +2,-2 more pixels than offset for checkboxes, defined at the end of SAO.AddOverlayOption -->
           </Anchors>
         </FontString>
       </Layer>
       <Layer level="ARTWORK">
         <FontString name="$parentGlowingButtonNone" text="" inherits="GameFontHighlight" justifyH="LEFT" justifyV="TOP" parentKey="glowNone">
           <Anchors>
-            <Anchor point="TOPLEFT" relativeTo="$parentGlowingButtons" relativePoint="BOTTOMLEFT">
-              <Offset>
-                <AbsDimension x="18" y="0"/> <!-- +2 -2 more pixels than offset for checkboxes, defined at the end of SAO.AddGlowingOption -->
-              </Offset>
-            </Anchor>
+            <Anchor point="TOPLEFT" relativeTo="$parentGlowingButtons" relativePoint="BOTTOMLEFT" x="18" y="0"/>
+            <!-- x,y is +2,-2 more pixels than offset for checkboxes, defined at the end of SAO.AddGlowingOption -->
           </Anchors>
         </FontString>
       </Layer>

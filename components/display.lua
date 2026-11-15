@@ -104,6 +104,7 @@ SAO.Display = {
             g = overlay.color and overlay.color[2] or 255,
             b = overlay.color and overlay.color[3] or 255,
             a = overlay.color and overlay.color[4] or 255,
+            text = overlay.text,
             autoPulse = type(overlay.autoPulse) == 'function' and overlay.autoPulse or overlay.autoPulse ~= false, -- true by default
             combatOnly = overlay.combatOnly == true, -- false by default
             -- Added for aura containers
@@ -172,6 +173,11 @@ SAO.Display = {
         if overlay and overlay.level then
             extra = extra or {};
             extra.level = overlay.level;
+        end
+        assertsafe(overlay == nil or type(overlay.text) ~= 'nil', "Overlay text should not be nil at this point");
+        if overlay and type(overlay.text) ~= 'nil' then
+            extra = extra or {};
+            extra.text = overlay.text;
         end
         if self.parent and self.parent.auraProps and self.parent.auraProps.debuff then
             extra = extra or {};

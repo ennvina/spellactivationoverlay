@@ -4,6 +4,7 @@ local Module = "auracontainer"
 local LoadAddOn = C_AddOns and C_AddOns.LoadAddOn or LoadAddOn
 
 local useAuraContainer = SAO.IsModern() and C_Secrets ~= nil and C_Secrets.GetSpellAuraSecrecy ~= nil
+local durationFormatter
 
 local function traceBooleanChange(intro, oldValue, newValue, id) --[[BEGIN_DEV_ONLY]]
     if not SAO:HasTrace(Module) then
@@ -131,6 +132,7 @@ SAO.AuraContainerItem = {
             fontScale = 3,
             positions = splitPositions(overlay.position),
             level = overlay.level,
+            text = overlay.text,
             autoPulse = overlay.autoPulse,
             useSound = overlay.autoPulse, -- Only pulsing overlays are worth having a sound
             texture = overlay.texture,
@@ -165,6 +167,7 @@ SAO.AuraContainerItem = {
 
             local auraSlotOptions = {
                 globalGeometry = options.globalGeometry,
+                countdownSettings = options.countdownSettings,
                 position = position,
                 applications = options.nbAuraStacks,
             }
@@ -203,21 +206,36 @@ SAO.AuraContainerItem = {
         self:setTexture(auraButton, options.position)
 
         self:setApplications(auraButton, options.applications)
+        self:setDurationMask(auraButton, options.position)
 
         -- auraButton.staticItem.applicationCount:SetScale(self.fontScale * options.globalGeometry.scale)
         -- auraButton:SetApplicationCount(auraButton.staticItem.applicationCount)
 
         self:setCooldown(auraButton)
+        if not durationFormatter then
+            durationFormatter = C_StringUtil.CreateNumericRuleFormatter()
+            durationFormatter:AddBreakpoint({
+                threshold = 0,
+                step = 1,
+                rounding = Enum.NumericRuleFormatRounding.Up,
+                format = "%.0f",
+            })
+        end
+        local durationText = auraButton.pulsableItem.applicationBar.durationText
+        auraButton:SetDurationText(durationText, { textFormatter = durationFormatter })
+        self:setButtonCountdown(auraButton, options.countdownSettings, options.globalGeometry.scale)
 
-        auraButton:SetFrameLevel(self.level or 3)
-        auraButton.staticItem:SetFrameLevel(auraButton:GetFrameLevel() + 1) -- @todo Maybe find a better way to give priority to the static item
+        local level = self.level or SAO.Constants.DefaultLevel;
+        auraButton:SetFrameLevel(level)
+        auraButton.staticItem:SetFrameLevel(level + 1) -- @todo Maybe find a better way to give priority to the static item
 
-        self:setButtonGeometry(auraButton, options.globalGeometry, options.position)
+        self:setButtonGeometry(auraButton, options.globalGeometry, options.position, options.countdownSettings)
 
-        if auraButton.pulsableItem.pulse then
+        local pulse = auraButton.pulsableItem.applicationBar.customTexture.pulse
+        if pulse then
             local mustPulse = self.autoPulse ~= false -- True by default
             if mustPulse then
-                auraButton.pulsableItem.pulse:Play()
+                pulse:Play()
             end
         end
 
@@ -289,7 +307,40 @@ SAO.AuraContainerItem = {
         auraButton:SetDurationCooldown(cooldown)
     end,
 
-    setButtonGeometry = function(self, auraButton, globalGeometry, position)
+    setDurationMask = function(self, auraButton, position)
+        local info = positionInfo[position and strupper(position)]
+        if not info or (info.location ~= "LEFT" and info.location ~= "RIGHT" and info.location ~= "TOP") then
+            return
+        end
+
+        local applicationBar = auraButton.pulsableItem.applicationBar
+        local durationBar = applicationBar.durationBar
+        if info.location == "TOP" then
+            durationBar:SetOrientation("HORIZONTAL")
+        end
+        local mask = applicationBar.durationMask
+        mask:SetTexture("Interface/Addons/SpellActivationOverlay/textures/mask"..(info.location == "TOP" and "h" or "v")) -- maskh or maskv
+        mask:SetAllPoints(durationBar:GetStatusBarTexture())
+        applicationBar.customTexture:AddMaskTexture(mask)
+        auraButton:SetDurationBar(durationBar, { direction = Enum.StatusBarTimerDirection.RemainingTime })
+    end,
+
+    setButtonCountdown = function(self, auraButton, countdownSettings, geometryScale)
+        local applicationBar = auraButton.pulsableItem.applicationBar
+        applicationBar.durationMask:SetShown(countdownSettings.visualEnabled)
+        if self.text and countdownSettings.textScale > 0 then
+            applicationBar.durationText:SetScale(countdownSettings.textScale * geometryScale)
+        end
+        applicationBar.durationText:SetShown(self.text and countdownSettings.textScale > 0)
+    end,
+
+    setCountdown = function(self, countdownSettings, geometryScale)
+        for _, auraButton in ipairs(self.auraButtons) do
+            self:setButtonCountdown(auraButton, countdownSettings, geometryScale)
+        end
+    end,
+
+    setButtonGeometry = function(self, auraButton, globalGeometry, position, countdownSettings)
         position = position and strupper(position)
         local info = positionInfo[position]
         local parent = auraButton:GetParent()
@@ -332,13 +383,16 @@ SAO.AuraContainerItem = {
         end
 
         auraButton.staticItem.applicationCount:SetScale(self.fontScale * globalGeometry.scale)
+        if self.text and countdownSettings.textScale > 0 then
+            auraButton.pulsableItem.applicationBar.durationText:SetScale(countdownSettings.textScale * globalGeometry.scale)
+        end
 
         auraButton:SetSize(width * self.scale, height * self.scale)
     end,
 
-    setGeometry = function(self, globalGeometry)
+    setGeometry = function(self, globalGeometry, countdownSettings)
         for index, auraButton in ipairs(self.auraButtons) do
-            self:setButtonGeometry(auraButton, globalGeometry, self.positions[index])
+            self:setButtonGeometry(auraButton, globalGeometry, self.positions[index], countdownSettings)
         end
     end,
 
@@ -396,7 +450,7 @@ SAO.AuraContainerItem = {
     - the updating of all container items from a single entry point
 ]]
 SAO.AuraContainer = {
-    initialize = function(self, parent, initialGlobalGeometry)
+    initialize = function(self, parent, initialGlobalGeometry, initialCountdownSettings)
         if not useAuraContainer or self.initialized then
             return
         end
@@ -409,11 +463,8 @@ SAO.AuraContainer = {
             end
         end
 
-        self.globalGeometry = {
-            geometry = initialGlobalGeometry,
-            updatedAt = GetTime(),
-            pendingTimer = nil,
-        }
+        self.globalGeometry = initialGlobalGeometry
+        self.countdownSettings = initialCountdownSettings
         self.parent = parent
         self.containers = {} -- Will be populated by getOrCreateContainer
         self.items = {} -- Will be populated by registerOverlay
@@ -506,7 +557,8 @@ SAO.AuraContainer = {
         end
 
         local buttonOptions = hashInfo.item
-        buttonOptions.globalGeometry = self.globalGeometry.geometry
+        buttonOptions.globalGeometry = self.globalGeometry
+        buttonOptions.countdownSettings = self.countdownSettings
         local button = SAO.AuraContainerItem:new(id, container, overlay, buttonOptions)
 
         self.items[id] = button
@@ -526,16 +578,27 @@ SAO.AuraContainer = {
         end
     end,
 
+    setCountdown = function(self, countdownSettings)
+        if not useAuraContainer or not self.initialized then
+            return
+        end
+
+        for _, item in pairs(self.items) do
+            item:setCountdown(countdownSettings, self.globalGeometry.scale)
+        end
+
+        self.countdownSettings = countdownSettings
+    end,
+
     updateGeometry = function(self, globalGeometry)
         if not useAuraContainer or not self.initialized then
             return
         end
 
         for _, item in pairs(self.items) do
-            item:setGeometry(globalGeometry)
+            item:setGeometry(globalGeometry, self.countdownSettings)
         end
 
-        self.globalGeometry.geometry = globalGeometry
-        self.globalGeometry.updatedAt = GetTime()
+        self.globalGeometry = globalGeometry
     end,
 }
