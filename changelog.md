@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v3.0.0 (2026-11-xx)
+#### v3.0.0 (2026-11-16)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - Xaryu for reporting Mage issues and promoting the addon on stream
