@@ -217,6 +217,9 @@ SAO.defaults = {
                 [19615] = { -- Frenzy (Mists of Pandaria)
                     [5] = true,
                 },
+                [1323410] = { -- Revelation (Forever)
+                    [0] = true,
+                },
             },
             glow = {
                 [34026] = { -- Kill Command (TBC)

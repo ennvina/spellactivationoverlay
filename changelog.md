@@ -19,6 +19,7 @@ Spell Alerts can now have a shifted position
 
 Spell Alerts now support item enchantments, starting with Revelation (Forever)
 - Druid
+- Hunter
 - Mage
 - Priest
 

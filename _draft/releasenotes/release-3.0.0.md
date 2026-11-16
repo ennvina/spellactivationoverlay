@@ -22,6 +22,9 @@ Updated Spell Alerts
 - Eclipse and Omen of Clarity have been shifted to avoid overlap (Forever)
 - Eye of Gruul is now slightly shifted (The Burning Crusade)
 - Soul Preserver is now slightly shifted (Wrath of the Lich King)
+### :hunter:  Hunter
+New Spell Alert
+- Revelation weapon enchantment (Forever)
 ### :mage~1:  Mage
 New Spell Alert
 - Revelation weapon enchantment (Forever)
