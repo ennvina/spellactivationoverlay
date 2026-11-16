@@ -643,7 +643,7 @@ local function useMissileBarrage()
             400589,
             "aura",
             {
-                overlay = { texture = "arcane_missiles", position = "Left + Right (Flipped)", scale = 1.22, level = 2 },
+                overlay = { texture = "arcane_missiles", position = "Left + Right (Flipped)", outer = 0.32, level = 5 },
             }
         );
     end
@@ -674,7 +674,7 @@ local function useClearcasting()
         clearcastingBuff,
         "aura",
         {
-            overlay = { texture = "genericarc_05", position = "Left + Right (Flipped)", outer = 0.5, pulse = false },
+            overlay = { texture = "genericarc_05", position = "Left + Right (Flipped)", outer = 0.75, pulse = false, level = 7 },
         }
     );
 end

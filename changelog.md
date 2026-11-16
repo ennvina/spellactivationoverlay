@@ -16,6 +16,7 @@ Spell Alerts can now have a shifted position
 Updated Spell Alerts
 - Druid's Eclipse and Omen of Clarity are shifted to avoid overlap (Forever)
 - Mage's Clearcasting is now shifted instead of scaled
+- Mage's Missile Barrage is now shifted instead of scaled (Forever)
 
 Bug Fixes
 - The Spell Alert Progressive Timer should now work as intended (Forever)

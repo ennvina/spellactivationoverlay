@@ -19,8 +19,9 @@ The options panel (`/sao`) has been slightly redesigned to make room for the new
 Updated Spell Alerts
 - Eclipse and Omen of Clarity have been shifted to avoid overlap (Forever)
 ### :mage~1:  Mage
-Updated Spell Alert
+Updated Spell Alerts
 - Clearcasting is now shifted instead of scaled
+- Missile Barrage is now shifted instead of scaled (Forever)
 ## Bug Fixes
 ### Spell Alerts
 The _Spell Alert Progressive Timer_, renamed _Visual Countdown_, should now work as intended (Forever)
