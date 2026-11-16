@@ -55,3 +55,21 @@ function SAO.RegisterAuraSoulPreserver(self, label, spellID)
         registerHealingTrance(self, label, spellID, 37111);
     end
 end
+
+function SAO:CreateRevelationEffect(label, spellID)
+    self:CreateEffect(
+        label,
+        SAO.FOREVER,
+        spellID,
+        "aura",
+        {
+            overlay = {
+                texture = "genericarc_02",
+                position = "Left + Right (Flipped)", outer = 1,
+                color = { 210, 145, 178 },
+                pulse = false,
+                option = { subText = WEAPON_ENCHANTMENT },
+            },
+        }
+    );
+end

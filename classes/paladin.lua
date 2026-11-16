@@ -513,6 +513,9 @@ local function registerClass(self)
 
     -- Talents
     useSelflessHealer();
+
+    -- Enchantments
+    SAO:CreateRevelationEffect("revelation_paladin", 1323419); -- 1323419 Paladin buff
 end
 
 local function loadOptions(self)

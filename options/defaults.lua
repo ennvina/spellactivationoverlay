@@ -124,6 +124,9 @@ SAO.defaults = {
                 [145162] = { -- Dream of Cenarius, Guardian (Mists of Pandaria)
                     [0] = true,
                 },
+                [1323400] = { -- Revelation (Forever)
+                    [0] = true,
+                },
             },
             glow = {
                 [2912] = { -- Starfire (Season of Discovery, Wrath+)
@@ -213,6 +216,9 @@ SAO.defaults = {
                 },
                 [19615] = { -- Frenzy (Mists of Pandaria)
                     [5] = true,
+                },
+                [1323410] = { -- Revelation (Forever)
+                    [0] = true,
                 },
             },
             glow = {
@@ -307,6 +313,9 @@ SAO.defaults = {
                 },
                 [5276] = { -- Representative of spells triggering Frozen effect
                     [0] = false,
+                },
+                [1248808] = { -- Revelation (Forever)
+                    [0] = true,
                 },
             },
             glow = {
@@ -422,6 +431,9 @@ SAO.defaults = {
                 },
                 [1311703] = { -- Echo of Command (Forever) representing Unsealed Wrath
                     [3] = true,
+                },
+                [1323419] = { -- Revelation (Forever)
+                    [0] = true,
                 },
             },
             glow = {
@@ -560,7 +572,10 @@ SAO.defaults = {
                 },
                 [1284536] = { -- Searing Light (Forever)
                     [0] = true,
-                }
+                },
+                [1323377] = { -- Revelation (Forever)
+                    [0] = true,
+                },
             },
             glow = {
                 [588] = { -- Inner Fire (Wrath+)
@@ -708,6 +723,9 @@ SAO.defaults = {
                     [8] = false,
                     [9] = true,
                 },
+                [1323418] = { -- Revelation (Forever)
+                    [0] = true,
+                },
             },
             glow = {
                 [17364] = { -- Stormstrike (Forever)
@@ -807,6 +825,9 @@ SAO.defaults = {
                 },
                 [108683] = { -- Fire and Brimstone (Mists of Pandaria)
                     [0] = false,
+                },
+                [1323392] = { -- Revelation (Forever)
+                    [0] = true,
                 },
             },
             glow = {

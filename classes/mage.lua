@@ -934,10 +934,15 @@ local function registerArcane(self)
     useClearcasting();
 end
 
+local function registerItems(self)
+    SAO:CreateRevelationEffect("revelation_mage", 1248808); -- 1248808 Mage buff
+end
+
 local function registerClass(self)
     registerArcane(self);
     registerFire(self);
     registerFrost(self);
+    registerItems(self);
 end
 
 local function loadOptions(self)

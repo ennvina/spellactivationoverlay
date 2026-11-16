@@ -441,9 +441,10 @@ local function registerClass(self)
     useMoltenBlast(self);
     usePowerSurge(self);
 
-    -- Items
+    -- Items / Enchantments
     self:RegisterAuraEyeOfGruul("eye_of_gruul_shaman", 37722); -- 37722 = Shaman buff
     self:RegisterAuraSoulPreserver("soul_preserver_shaman", 60515); -- 60515 = Shaman buff
+    self:CreateRevelationEffect("revelation_shaman", 1323418); -- 1323418 Shaman buff
 end
 
 local function loadOptions(self)

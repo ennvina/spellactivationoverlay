@@ -599,6 +599,9 @@ local function registerClass(self)
 
     -- Tier 11
     useFelSpark(self);
+
+    -- Enchantments
+    self:CreateRevelationEffect("revelation_warlock", 1323392); -- 1323392 Warlock buff
 end
 
 local function loadOptions(self)

@@ -321,6 +321,9 @@ local function registerClass(self)
 
     -- Tier Sets
     useBurningAdrenaline(); -- T12 4pc
+
+    -- Enchantments
+    SAO:CreateRevelationEffect("revelation_hunter", 1323410); -- 1323410 Hunter buff
 end
 
 SAO.Class["HUNTER"] = {

@@ -17,6 +17,18 @@ Spell Alerts can now have a shifted position
 - Previously, sharing used other techniques such as scaling
 - This new technique should provide richer spell alerts with less confusion
 
+Spell Alerts now support item enchantments, starting with Revelation (Forever)
+- Druid
+- Hunter
+- Mage
+- Paladin
+- Priest
+- Shaman
+- Warlock
+
+New Spell Alert
+- Paladin's Unsealed Wrath (Forever)
+
 Updated Spell Alerts
 - Druid's Eclipse and Omen of Clarity are shifted to avoid overlap (Forever)
 - Druid's Eye of Gruul is now slightly shifted (The Burning Crusade)
@@ -32,9 +44,6 @@ Updated Spell Alerts
 - Shamanistic Focus is now shifted instead of scaled (TBC, Wrath, Cata)
 - Shaman's Eye of Gruul is now slightly shifted (The Burning Crusade)
 - Shaman's Soul Preserver is now slightly shifted (Wrath of the Lich King)
-
-New Spell Alert
-- Paladin's Unsealed Wrath (Forever)
 
 Bug Fixes
 - The Spell Alert Progressive Timer should now work as intended (Forever)
