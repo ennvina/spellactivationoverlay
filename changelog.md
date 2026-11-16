@@ -2,6 +2,10 @@
 
 #### v3.0.0 (2026-11-xx)
 
+Thank you to our amazing contributors for helping out. Thanks!
+- Xaryu for reporting Mage issues and promoting the addon on stream
+- Partypete for suggesting and testing Paladin effects
+
 Spell Alerts now have a countdown number, similar to the shrinking effect
 - This effect is disabled by default; enter /sao to enable or disable it
 - 'Visual Countdown' rules the shrink (formerly Spell Alert Progressive Timer)
@@ -28,6 +32,9 @@ Updated Spell Alerts
 - Shamanistic Focus is now shifted instead of scaled (TBC, Wrath, Cata)
 - Shaman's Eye of Gruul is now slightly shifted (The Burning Crusade)
 - Shaman's Soul Preserver is now slightly shifted (Wrath of the Lich King)
+
+New Spell Alert
+- Paladin's Unsealed Wrath (Forever)
 
 Bug Fixes
 - The Spell Alert Progressive Timer should now work as intended (Forever)

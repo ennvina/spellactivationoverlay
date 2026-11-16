@@ -420,6 +420,9 @@ SAO.defaults = {
                 [144595] = { -- Divine Crusader (Mists of Pandaria)
                     [0] = true,
                 },
+                [1311703] = { -- Echo of Command (Forever) representing Unsealed Wrath
+                    [3] = true,
+                },
             },
             glow = {
                 [879] = { -- Exorcism

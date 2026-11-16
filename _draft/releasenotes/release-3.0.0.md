@@ -25,6 +25,8 @@ Updated Spell Alerts
 - Clearcasting is now shifted instead of scaled
 - Missile Barrage is now shifted instead of scaled (Forever)
 ### :paladin:  Paladin
+New Spell Alert
+- Paladin's Unsealed Wrath (Forever)
 Updated Spell Alerts
 - Eye of Gruul is now slightly shifted (The Burning Crusade)
 - Soul Preserver is now slightly shifted (Wrath of the Lich King)

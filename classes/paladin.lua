@@ -421,6 +421,26 @@ local function useArtOfWar()
     end
 end
 
+local function useUnsealedWrath()
+    SAO:CreateEffect(
+        "unsealed_wrath",
+        SAO.FOREVER,
+        1311703, -- Echo of Command
+        "aura",
+        {
+            aka = {
+                1311701, -- Echo of Fury
+                1311704, -- Echo of Righteousness
+                1311705, -- Echo of Justice
+                1328198, -- Echo of Light
+                1328206, -- Echo of Wisdom
+            },
+            talent = 1310735, -- Unsealed Wrath
+            overlay = { stacks = 3, texture = "denounce", position = "Top" },
+        }
+    );
+end
+
 local function useSupplication()
     SAO:CreateEffect(
         "supplication",
@@ -485,15 +505,14 @@ local function registerClass(self)
     useArtOfWar();
     useDivinePurpose();
     useDivineCrusader(); -- T16 4pc
+    usePrayForLight(); -- Titan Reforged: Wrath
+    useUnsealedWrath();
 
     -- Passive abilities
     useSupplication();
 
     -- Talents
     useSelflessHealer();
-
-    -- Titan Reforged: Wrath
-    usePrayForLight();
 end
 
 local function loadOptions(self)
