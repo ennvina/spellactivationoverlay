@@ -18,6 +18,7 @@ Updated Spell Alerts
 - Mage's Clearcasting is now shifted instead of scaled
 - Mage's Missile Barrage is now shifted instead of scaled (Forever)
 - Priest's Clearcasting is now shifted instead of scaled (The Burning Crusade)
+- Shaman's Elemental Focus is now shifted instead of scaled
 
 Bug Fixes
 - The Spell Alert Progressive Timer should now work as intended (Forever)

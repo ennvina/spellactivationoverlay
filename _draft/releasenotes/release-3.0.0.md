@@ -25,6 +25,9 @@ Updated Spell Alerts
 ### :priest:  Priest
 Updated Spell Alert
 - Clearcasting is now shifted instead of scaled
+### :shaman:  Shaman
+Updated Spell Alert
+- Elemental Focus is now shifted instead of scaled
 ## Bug Fixes
 ### Spell Alerts
 The _Spell Alert Progressive Timer_, renamed _Visual Countdown_, should now work as intended (Forever)
