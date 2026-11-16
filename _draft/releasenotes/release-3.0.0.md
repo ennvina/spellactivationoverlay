@@ -23,6 +23,8 @@ Updated Spell Alerts
 - Eye of Gruul is now slightly shifted (The Burning Crusade)
 - Soul Preserver is now slightly shifted (Wrath of the Lich King)
 ### :mage~1:  Mage
+New Spell Alert
+- Revelation weapon enchantment (Forever)
 Updated Spell Alerts
 - Clearcasting is now shifted instead of scaled
 - Missile Barrage is now shifted instead of scaled (Forever)
