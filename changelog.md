@@ -18,6 +18,7 @@ Spell Alerts can now have a shifted position
 - This new technique should provide richer spell alerts with less confusion
 
 Spell Alerts now support item enchantments, starting with Revelation (Forever)
+- Druid
 - Priest
 
 Updated Spell Alerts

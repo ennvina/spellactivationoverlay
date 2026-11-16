@@ -625,6 +625,7 @@ local function registerClass(self)
     useMangle();
     useOmenOfClarity(); -- MoP+ and Forever
     useSwiftbloom(); -- SoD Scarlet Enclave Resto 2pc
+    SAO:CreateRevelationEffect("revelation_druid", 1323400); -- 1323400 Druid buff
 
     if self.IsProject(SAO.ERA + SAO.TBC + SAO.WRATH + SAO.CATA) then -- Pre-MoP
         -- Track Eclipses with a custom CLEU function, so that eclipses can coexist with Omen of Clarity

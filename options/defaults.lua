@@ -124,6 +124,9 @@ SAO.defaults = {
                 [145162] = { -- Dream of Cenarius, Guardian (Mists of Pandaria)
                     [0] = true,
                 },
+                [1323400] = { -- Revelation (Forever)
+                    [0] = true,
+                },
             },
             glow = {
                 [2912] = { -- Starfire (Season of Discovery, Wrath+)

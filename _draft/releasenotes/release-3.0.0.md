@@ -16,6 +16,8 @@ Spell Alerts can now have a shifted position
 The options panel (`/sao`) has been slightly redesigned to make room for the new countdown number functionality.
 ## Classes
 ### :druid:  Druid
+New Spell Alert
+- Revelation weapon enchantment (Forever)
 Updated Spell Alerts
 - Eclipse and Omen of Clarity have been shifted to avoid overlap (Forever)
 - Eye of Gruul is now slightly shifted (The Burning Crusade)
