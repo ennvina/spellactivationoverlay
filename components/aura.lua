@@ -13,6 +13,7 @@ local function promoteAura(aura)
             spellID = aura[3],
             texture = aura[4],
             position = aura[5],
+            outer = 0,
             scale = aura[6],
             color = { aura[7], aura[8], aura[9], 255 },
             autoPulse = aura[10],
