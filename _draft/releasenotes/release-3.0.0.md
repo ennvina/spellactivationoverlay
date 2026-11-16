@@ -18,17 +18,27 @@ The options panel (`/sao`) has been slightly redesigned to make room for the new
 ### :druid:  Druid
 Updated Spell Alerts
 - Eclipse and Omen of Clarity have been shifted to avoid overlap (Forever)
+- Eye of Gruul is now slightly shifted (The Burning Crusade)
+- Soul Preserver is now slightly shifted (Wrath of the Lich King)
 ### :mage~1:  Mage
 Updated Spell Alerts
 - Clearcasting is now shifted instead of scaled
 - Missile Barrage is now shifted instead of scaled (Forever)
+### :paladin:  Paladin
+Updated Spell Alerts
+- Eye of Gruul is now slightly shifted (The Burning Crusade)
+- Soul Preserver is now slightly shifted (Wrath of the Lich King)
 ### :priest:  Priest
-Updated Spell Alert
+Updated Spell Alerts
 - Clearcasting is now shifted instead of scaled (The Burning Crusade)
+- Eye of Gruul is now slightly shifted (The Burning Crusade)
+- Soul Preserver is now slightly shifted (Wrath of the Lich King)
 ### :shaman:  Shaman
 Updated Spell Alerts
 - Elemental Focus is now shifted instead of scaled
 - Shamanistic Focus is now shifted instead of scaled (The Burning Crusade, Wrath of the Lich King, Cataclysm)
+- Eye of Gruul is now slightly shifted (The Burning Crusade)
+- Soul Preserver is now slightly shifted (Wrath of the Lich King)
 ## Bug Fixes
 ### Spell Alerts
 The _Spell Alert Progressive Timer_, renamed _Visual Countdown_, should now work as intended (Forever)

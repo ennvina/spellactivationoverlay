@@ -497,8 +497,6 @@ local function registerClass(self)
 end
 
 local function loadOptions(self)
-    self:AddEyeOfGruulOverlayOption(37723); -- 37723 = Paladin buff
-    self:AddSoulPreserverOverlayOption(60513); -- 60513 = Paladin buff
 end
 
 SAO.Class["PALADIN"] = {

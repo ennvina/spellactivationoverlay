@@ -456,9 +456,6 @@ local function loadOptions(self)
         self:AddOverlayOption(elementalFocusTalent, elementalFocusBuff, 0, nil, elementalFocusVariants);
     end
 
-    self:AddEyeOfGruulOverlayOption(37722); -- 37722 = Shaman buff
-    self:AddSoulPreserverOverlayOption(60515); -- 60515 = Shaman buff
-
     if self.IsSoD() then
         local powerSurgeSoDBuff = 415105;
         local powerSurgeSoD = 415100;

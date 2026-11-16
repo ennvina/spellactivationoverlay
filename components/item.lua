@@ -11,7 +11,7 @@ function SAO.GetItemText(self, itemID)
     end
 end
 
-function SAO.AddItemOverlayOption(self, spellID, itemID)
+local function registerHealingTrance(self, label, spellID, itemID)
     local itemTextFunc = function()
         local itemText = self:GetItemText(itemID);
         if itemText then
@@ -26,35 +26,32 @@ function SAO.AddItemOverlayOption(self, spellID, itemID)
             end
         end
     end;
-    self:AddOverlayOption(spellID, spellID, 0, itemTextFunc);
-end
 
-local function registerHealingTrance(self, label, spellID)
-    self:RegisterAura(label, 0, spellID, "genericarc_04", "Left + Right (Flipped)", 1.4, 255, 192, 255, false, nil, nil, nil, { outer = 0.4 } );
+    self:CreateEffect(
+        label,
+        SAO.ALL_PROJECTS, -- Not really all projects, it was filtered before reaching this point
+        spellID,
+        "aura",
+        {
+            overlay = {
+                texture = "genericarc_04",
+                position = "Left + Right (Flipped)", outer = 0.2, scale = 1.2,
+                color = { 255, 192, 255 },
+                pulse = false,
+                option = { subText = itemTextFunc },
+            },
+        }
+    );
 end
 
 function SAO.RegisterAuraEyeOfGruul(self, label, spellID)
     if self.IsTBC() then
-        registerHealingTrance(self, label, spellID);
+        registerHealingTrance(self, label, spellID, 28823);
     end
 end
 
 function SAO.RegisterAuraSoulPreserver(self, label, spellID)
     if self.IsWrath() then
-        registerHealingTrance(self, label, spellID);
-    end
-end
-
-function SAO.AddEyeOfGruulOverlayOption(self, spellID)
-    if self.IsTBC() then
-        -- Spell is specific to each class, item is the same for everyone
-        self:AddItemOverlayOption(spellID, 28823);
-    end
-end
-
-function SAO.AddSoulPreserverOverlayOption(self, spellID)
-    if self.IsWrath() then
-        -- Spell is specific to each class, item is the same for everyone
-        self:AddItemOverlayOption(spellID, 37111);
+        registerHealingTrance(self, label, spellID, 37111);
     end
 end

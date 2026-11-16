@@ -680,8 +680,6 @@ local function loadOptions(self)
             self:AddOverlayOption(solarEclipseTalent, solarSpellID, 0, nil, nil, nil, solarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
             self:AddOverlayOption(omenOfClarityTalent, omenSpellID, 0, nil, nil, nil,  omenSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
         end
-        self:AddEyeOfGruulOverlayOption(37721); -- 37721 = Druid buff
-        self:AddSoulPreserverOverlayOption(60512); -- 60512 = Druid buff
 
         if canHaveEclipse then
             self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);

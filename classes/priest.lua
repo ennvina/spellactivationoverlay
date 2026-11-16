@@ -405,9 +405,7 @@ local function loadOptions(self)
     local twoStacks = self:NbStacks(2);
     local threeStacks = self:NbStacks(3);
 
-    if self.IsTBC() then
-        self:AddEyeOfGruulOverlayOption(37706); -- 37706 = Priest buff
-    elseif self.IsProject(SAO.WRATH + SAO.CATA) then
+    if self.IsProject(SAO.WRATH + SAO.CATA) then
         if self.IsWrath() then
             self:AddOverlayOption(serendipityTalent, serendipityBuff3, 0, oneOrTwoStacks, nil, 2); -- setup any stacks, test with 2 stacks
             self:AddOverlayOption(serendipityTalent, serendipityBuff3, self:HashNameFromStacks(3)); -- setup 3 stacks
@@ -415,7 +413,6 @@ local function loadOptions(self)
             self:AddOverlayOption(serendipityTalent, serendipityBuff2, self:HashNameFromStacks(1));
             self:AddOverlayOption(serendipityTalent, serendipityBuff2, self:HashNameFromStacks(2));
         end
-        self:AddSoulPreserverOverlayOption(60514); -- 60514 = Priest buff
 
         if self.IsWrath() then
             self:AddGlowingOption(serendipityTalent, serendipityBuff3, greaterHeal, threeStacks);
