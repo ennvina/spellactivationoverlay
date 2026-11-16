@@ -723,6 +723,9 @@ SAO.defaults = {
                     [8] = false,
                     [9] = true,
                 },
+                [1323418] = { -- Revelation (Forever)
+                    [0] = true,
+                },
             },
             glow = {
                 [17364] = { -- Stormstrike (Forever)
