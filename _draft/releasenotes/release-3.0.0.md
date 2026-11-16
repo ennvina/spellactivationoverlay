@@ -15,11 +15,9 @@ Spell Alerts can now have a shifted position
 ### User Interface
 The options panel (`/sao`) has been slightly redesigned to make room for the new countdown number functionality.
 ## Classes
-### :class:  Class
-New Spell Alerts
-- 
-New Glowing Buttons
-- 
+### :druid:  Druid
+Updated Spell Alerts
+- Eclipse and Omen of Clarity have been shifted to avoid overlap (Forever)
 ## Bug Fixes
 ### Spell Alerts
 The _Spell Alert Progressive Timer_, renamed _Visual Countdown_, should now work as intended (Forever)

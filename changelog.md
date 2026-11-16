@@ -13,6 +13,9 @@ Spell Alerts can now have a shifted position
 - Previously, sharing used other techniques such as scaling
 - This new technique should provide richer spell alerts with less confusion
 
+Updated Spell Alerts
+- Druid's Eclipse and Omen of Clarity are shifted to avoid overlap (Forever)
+
 Bug Fixes
 - The Spell Alert Progressive Timer should now work as intended (Forever)
 
