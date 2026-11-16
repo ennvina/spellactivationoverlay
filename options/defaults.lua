@@ -432,6 +432,9 @@ SAO.defaults = {
                 [1311703] = { -- Echo of Command (Forever) representing Unsealed Wrath
                     [3] = true,
                 },
+                [1323419] = { -- Revelation (Forever)
+                    [0] = true,
+                },
             },
             glow = {
                 [879] = { -- Exorcism

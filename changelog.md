@@ -21,6 +21,7 @@ Spell Alerts now support item enchantments, starting with Revelation (Forever)
 - Druid
 - Hunter
 - Mage
+- Paladin
 - Priest
 
 Updated Spell Alerts
