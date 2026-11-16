@@ -98,6 +98,7 @@ SAO.Display = {
             spellID = overlay.spellID,
             texture = overlay.texture,
             position = overlay.position,
+            outer = overlay.outer,
             level = overlay.level, -- optional
             scale = overlay.scale or 1,
             r = overlay.color and overlay.color[1] or 255,
@@ -173,6 +174,11 @@ SAO.Display = {
         if overlay and overlay.level then
             extra = extra or {};
             extra.level = overlay.level;
+        end
+        assertsafe(overlay == nil or type(overlay.outer) ~= 'nil', "Overlay outer should not be nil at this point");
+        if overlay and type(overlay.outer) ~= 'nil' then
+            extra = extra or {};
+            extra.outer = overlay.outer;
         end
         assertsafe(overlay == nil or type(overlay.text) ~= 'nil', "Overlay text should not be nil at this point");
         if overlay and type(overlay.text) ~= 'nil' then

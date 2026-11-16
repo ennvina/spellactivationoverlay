@@ -8,6 +8,11 @@ Spell Alerts now have a countdown number, similar to the shrinking effect
 - 'Text Size' rules the new number functionality
 - Some countdown numbers are not displayed on purpose to avoid confusion
 
+Spell Alerts can now have a shifted position
+- Alerts can share the same location (Top/Left/Right) without overlapping
+- Previously, sharing used other techniques such as scaling
+- This new technique should provide richer spell alerts with less confusion
+
 Bug Fixes
 - The Spell Alert Progressive Timer should now work as intended (Forever)
 

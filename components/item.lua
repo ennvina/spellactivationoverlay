@@ -30,11 +30,7 @@ function SAO.AddItemOverlayOption(self, spellID, itemID)
 end
 
 local function registerHealingTrance(self, label, spellID)
-    --[[BEGIN_DEV_ONLY]]
-    self:RegisterAura(label, 0, spellID, "genericarc_04", "Left (Outer) + Right (Outer)", 1, 255, 192, 255, false);
-    if true then return end;
-    --[[END_DEV_ONLY]]
-    self:RegisterAura(label, 0, spellID, "genericarc_04", "Left + Right (Flipped)", 1.4, 255, 192, 255, false);
+    self:RegisterAura(label, 0, spellID, "genericarc_04", "Left + Right (Flipped)", 1.4, 255, 192, 255, false, nil, nil, nil, { outer = 0.4 } );
 end
 
 function SAO.RegisterAuraEyeOfGruul(self, label, spellID)

@@ -238,10 +238,6 @@ local complexLocationTable = {
 		TOP = {},
 		BOTTOM = { vFlip = true },
 	},
-	["LEFT (OUTER) + RIGHT (OUTER)"] = {
-		LEFT = { outer = true },
-		RIGHT = { outer = true, hFlip = true },
-	},
 	["LEFT (CW)"] = {
 		LEFT = { cw = 1 },
 	},
@@ -254,9 +250,6 @@ local complexLocationTable = {
 	["LEFT (VFLIPPED)"] = {
 		LEFT = { vFlip = true },
 	},
-	["LEFT (OUTER)"] = {
-		LEFT = { outer = true },
-	},
 	["RIGHT (CW)"] = {
 		RIGHT = { cw = 1 },
 	},
@@ -268,9 +261,6 @@ local complexLocationTable = {
 	},
 	["RIGHT (VFLIPPED)"] = {
 		RIGHT = { vFlip = true },
-	},
-	["RIGHT (OUTER)"] = {
-		RIGHT = { outer = true, hFlip = true },
 	},
 	["TOP (CW)"] = {
 		TOP = { cw = 1 },
@@ -318,7 +308,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	SAO:Trace(Module, "SpellActivationOverlay_ShowOverlay "..tostring(spellID).." "..position);
 	SAO:Debug(Module, "Starting Overlay at location "..position.." for spell ID "..spellID.." "..SAO:GetSpellName(spellID, "")..(endTime and (" for "..math.floor((type(endTime) == 'number' and endTime or endTime.endTime)-GetTime()+0.5).." secs") or ""));
 	local r, g, b, a = unpack(color);
-	local vFlip, hFlip, cw, outer = posInfo.vFlip, posInfo.hFlip, posInfo.cw, posInfo.outer;
+	local vFlip, hFlip, cw = posInfo.vFlip, posInfo.hFlip, posInfo.cw;
 
 	if (SpellActivationOverlayDB and SpellActivationOverlayDB.alert and not SpellActivationOverlayDB.alert.enabled) then
 		-- Last chance to quit displaying the overlay, if the main overlay flag is disabled
@@ -351,7 +341,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 		overlay.texture:SetTexCoord(texRight,texTop, texLeft,texTop, texRight,texBottom, texLeft,texBottom);
 	end
 
-	local outerFactor = outer and 1 or 0;
+	local outerFactor = type(extra) == 'table' and extra.outer or 0;
 
 	overlay.SetGeometry = function(self, longSide, shortSide)
 		local parent = self:GetParent();

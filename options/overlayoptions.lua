@@ -117,9 +117,9 @@ function SAO.AddOverlayOption(self, talentID, auraID, hash, talentSubText, varia
                 local testTexture = type(variants) == 'table' and type(variants.textureTestFunc) == 'function' and variants.textureTestFunc(cb, sb) or nil;
 
                 for _, o in ipairs(display.overlays) do
-                    local texture, positions, scale, r, g, b, a, autoPulse, forcePulsePlay, endTime, combatOnly, level = testTexture or o.texture, o.position, o.scale, o.r, o.g, o.b, o.a, o.autoPulse, o.autoPulse, nil, o.combatOnly, (o.level or 3);
+                    local texture, positions, scale, r, g, b, a, autoPulse, forcePulsePlay, endTime, combatOnly, level, outer = testTexture or o.texture, o.position, o.scale, o.r, o.g, o.b, o.a, o.autoPulse, o.autoPulse, nil, o.combatOnly, (o.level or SAO.Constants.DefaultLevel), (o.outer or 0);
                     -- Note: texture is assigned to testTexture or o.texture, forcePulsePlay is assigned to o.autoPulse, endTime is assigned to nil
-                    self:ActivateOverlay(testHashData, fakeOffset+(testAuraID or auraID), texture, positions, scale, r, g, b, a, autoPulse, forcePulsePlay, endTime, combatOnly, { strata = "DIALOG", level = 9000 + level });
+                    self:ActivateOverlay(testHashData, fakeOffset+(testAuraID or auraID), texture, positions, scale, r, g, b, a, autoPulse, forcePulsePlay, endTime, combatOnly, { strata = "DIALOG", level = 9000 + level, outer = outer });
                     fakeOffset = fakeOffset + 1000000; -- Add offset so that different nodes in the same bucket may share the same 'location' for testing purposes
                 end
             else
