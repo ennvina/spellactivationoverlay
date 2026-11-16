@@ -59,11 +59,10 @@ New Spell Alert
 ## Bug Fixes
 ### Spell Alerts
 The _Spell Alert Progressive Timer_, renamed _Visual Countdown_, should now work as intended (Forever)
-## Known Limitations
-## Miscellaneous
 ## Contributors
 Shout-out to our amazing contributors
-- 
+- Xaryu for reporting Mage issues and promoting the addon on stream
+- Partypete for suggesting and testing Paladin effects
 Thanks!
 
 As always, the latest release is available on [CurseForge](https://www.curseforge.com/wow/addons/spellactivationoverlay) / [GitHub](https://github.com/ennvina/spellactivationoverlay/releases/latest) / [Discord](https://discord.com/channels/1013194771969355858/1379111832207228938)
