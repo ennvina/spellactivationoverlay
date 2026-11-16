@@ -643,7 +643,7 @@ local function useMissileBarrage()
             400589,
             "aura",
             {
-                overlay = { texture = "arcane_missiles", position = "Left + Right (Flipped)", scale = 1.22, level = 2 },
+                overlay = { texture = "arcane_missiles", position = "Left + Right (Flipped)", outer = 0.32, level = 5 },
             }
         );
     end
@@ -674,9 +674,7 @@ local function useClearcasting()
         clearcastingBuff,
         "aura",
         {
-            overlay =
-            { texture = "genericarc_05", position = "Left (Outer) + Right (Outer)", scale = 0.8, pulse = false } or --[[DEV_ONLY]]
-            { texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.5, pulse = false },
+            overlay = { texture = "genericarc_05", position = "Left + Right (Flipped)", outer = 0.75, pulse = false, level = 7 },
         }
     );
 end
@@ -919,11 +917,15 @@ local function registerArcane(self)
     if isCompatibleWithClearcasting then
         lazyCreateClearcastingVariants(self);
         if clearcastingVariants then
-            if true then --[[BEGIN_DEV_ONLY]]
-                self:RegisterAura("clearcasting", 0, 12536, clearcastingVariants.textureFunc, "Left (Outer) + Right (Outer)", 0.8, 192, 192, 192, false);
-            else --[[END_DEV_ONLY]]
-                self:RegisterAura("clearcasting", 0, 12536, clearcastingVariants.textureFunc, "Left + Right (Flipped)", 1.5, 192, 192, 192, false);
-            end --[[DEV_ONLY]]
+            self:CreateEffect(
+                "clearcasting",
+                SAO.ALL_PROJECTS, -- Not really all projects, we will end up here if and only if the project is compatible with clearcasting
+                12536,
+                "aura",
+                {
+                    overlay = { texture = "genericarc_05", position = "Left + Right (Flipped)", outer = 0.5, pulse = false },
+                }
+            );
         end
     end
 

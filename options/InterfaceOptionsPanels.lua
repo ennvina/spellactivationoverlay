@@ -263,11 +263,11 @@ function SpellActivationOverlayOptionsPanelMixin:Init()
     local testButton = SpellActivationOverlayOptionsPanelSpellAlertTestButton;
     testButton:SetText("Toggle Test");
     testButton.fakeSpellID1 = 42;
-    testButton.fakeSpellID2 = 43; --[[DEV_ONLY]]
+    testButton.fakeSpellID2 = 43;
     testButton.fakeSpellID3 = 44;
     testButton.isTesting = false;
     local testTextureLeftRight = SAO.IsEra() and "echo_of_the_elements" or "imp_empowerment";
-    local testTextureOuter = "genericarc_02"; --[[DEV_ONLY]]
+    local testTextureOuter = "genericarc_02";
     local testTextureTop = SAO.IsEra() and "fury_of_stormrage" or "brain_freeze";
     local testPositionTop = SAO.IsCata() and "Top (CW)" or "Top"; -- Brain Freeze is rotated in Cataclysm, compared to other flavors
     testButton.StartTest = function(self)
@@ -275,13 +275,13 @@ function SpellActivationOverlayOptionsPanelMixin:Init()
             self.isTesting = true;
             -- Test with strata = "DIALOG" to see above the options panel itself
             -- Test with level = 8999, below the range of 9000-10000, to let overlay previews have priority about the Toggle Test feature
-            SAO:ActivateOverlay(0, self.fakeSpellID1, SAO.TexName[testTextureLeftRight], "Left + Right (Flipped)"      , 1, 255, 255, 255, 255, false, nil, GetTime()+5, false, { strata = "DIALOG", level = 8999 });
-            SAO:ActivateOverlay(0, self.fakeSpellID2, SAO.TexName[testTextureOuter]    , "Left (Outer) + Right (Outer)", 1, 255, 255, 255, 255, false, nil, GetTime()+5, false, { strata = "DIALOG", level = 8999 }); --[[DEV_ONLY]]
-            SAO:ActivateOverlay(0, self.fakeSpellID3, SAO.TexName[testTextureTop]      , testPositionTop               , 1, 255, 255, 255, 255, false, nil, GetTime()+5, false, { strata = "DIALOG", level = 8999 });
+            SAO:ActivateOverlay(0, self.fakeSpellID1, SAO.TexName[testTextureLeftRight], "Left + Right (Flipped)", 1, 255, 255, 255, 255, false, nil, GetTime()+5, false, { strata = "DIALOG", level = 8999 });
+            SAO:ActivateOverlay(0, self.fakeSpellID2, SAO.TexName[testTextureOuter]    , "Left + Right (Flipped)", 1, 255, 255, 255, 255, false, nil, GetTime()+5, false, { strata = "DIALOG", level = 8999, outer = 1 });
+            SAO:ActivateOverlay(0, self.fakeSpellID3, SAO.TexName[testTextureTop]      , testPositionTop         , 1, 255, 255, 255, 255, false, nil, GetTime()+5, false, { strata = "DIALOG", level = 8999 });
             self.testTimerTicker = C_Timer.NewTicker(4.9, -- Ticker must be slightly shorter than overlay duration, to refresh it before losing it
             function()
                 SAO:RefreshOverlayTimer(self.fakeSpellID1, GetTime()+5);
-                SAO:RefreshOverlayTimer(self.fakeSpellID2, GetTime()+5); --[[DEV_ONLY]]
+                SAO:RefreshOverlayTimer(self.fakeSpellID2, GetTime()+5);
                 SAO:RefreshOverlayTimer(self.fakeSpellID3, GetTime()+5);
             end);
             -- Hack the frame to force full opacity even when out of combat
@@ -293,7 +293,7 @@ function SpellActivationOverlayOptionsPanelMixin:Init()
             self.isTesting = false;
             self.testTimerTicker:Cancel();
             SAO:DeactivateOverlay(self.fakeSpellID1);
-            SAO:DeactivateOverlay(self.fakeSpellID2); --[[DEV_ONLY]]
+            SAO:DeactivateOverlay(self.fakeSpellID2);
             SAO:DeactivateOverlay(self.fakeSpellID3);
             -- Undo hack
             SpellActivationOverlayFrame_SetForceAlpha1(false);
@@ -302,7 +302,7 @@ function SpellActivationOverlayOptionsPanelMixin:Init()
     testButton:SetEnabled(SpellActivationOverlayDB.alert.enabled);
     -- Manually mark textures used for testing
     SAO:MarkTexture(testTextureLeftRight);
-    SAO:MarkTexture(testTextureOuter); --[[DEV_ONLY]]
+    SAO:MarkTexture(testTextureOuter);
     SAO:MarkTexture(testTextureTop);
 
     local debugButton = SpellActivationOverlayOptionsPanelSpellAlertDebugButton;

@@ -37,6 +37,7 @@ local Module = "effect"
         spellID = nil, -- Default is spellID from effect
         texture = "genericarc_05", -- Mandatory
         position = "Top", -- Mandatory
+        outer = 0, -- Default is 0
         level = 4, -- Default is nil, which eventually defaults to 3 when displayed
         scale = 1, -- Default is 1
         color = {255, 255, 255, 255}, -- Default is {255, 255, 255, 255}, alpha is optional and defaults to 255
@@ -296,6 +297,7 @@ local function addOneOverlay(overlays, overlayConfig, project, default, triggers
         hash = getHash(condition, triggers).hash,
         texture = texture,
         position = position,
+        outer = overlayConfig.outer or default.outer,
         level = overlayConfig.level or default.level,
         scale = overlayConfig.scale or default.scale,
         color = color,
@@ -739,6 +741,7 @@ local function RegisterNativeEffectNow(self, effect)
             local spellID = overlay.spellID or effect.spellID;
             local texture = overlay.texture;
             local position = overlay.position;
+            local outer = overlay.outer or 0;
             local level = overlay.level;
             local scale = overlay.scale or 1;
             local color = overlay.color and { overlay.color[1], overlay.color[2], overlay.color[3], overlay.color[4] } or { 255, 255, 255, 255 };
@@ -752,6 +755,7 @@ local function RegisterNativeEffectNow(self, effect)
                 spellID = spellID,
                 texture = type(texture) == 'string' and SAO.TexName[texture] or texture, -- Map from TexName, unless texture is a function, in which case it is used as-is
                 position = position,
+                outer = outer,
                 level = level,
                 scale = scale,
                 color = color,

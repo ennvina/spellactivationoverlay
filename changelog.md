@@ -8,6 +8,27 @@ Spell Alerts now have a countdown number, similar to the shrinking effect
 - 'Text Size' rules the new number functionality
 - Some countdown numbers are not displayed on purpose to avoid confusion
 
+Spell Alerts can now have a shifted position
+- Alerts can share the same location (Top/Left/Right) without overlapping
+- Previously, sharing used other techniques such as scaling
+- This new technique should provide richer spell alerts with less confusion
+
+Updated Spell Alerts
+- Druid's Eclipse and Omen of Clarity are shifted to avoid overlap (Forever)
+- Druid's Eye of Gruul is now slightly shifted (The Burning Crusade)
+- Druid's Soul Preserver is now slightly shifted (Wrath of the Lich King)
+- Mage's Clearcasting is now shifted instead of scaled
+- Mage's Missile Barrage is now shifted instead of scaled (Forever)
+- Paladin's Eye of Gruul is now slightly shifted (The Burning Crusade)
+- Paladin's Soul Preserver is now slightly shifted (Wrath of the Lich King)
+- Priest's Clearcasting is now shifted instead of scaled (The Burning Crusade)
+- Priest's Eye of Gruul is now slightly shifted (The Burning Crusade)
+- Priest's Soul Preserver is now slightly shifted (Wrath of the Lich King)
+- Shaman's Elemental Focus is now shifted instead of scaled
+- Shamanistic Focus is now shifted instead of scaled (TBC, Wrath, Cata)
+- Shaman's Eye of Gruul is now slightly shifted (The Burning Crusade)
+- Shaman's Soul Preserver is now slightly shifted (Wrath of the Lich King)
+
 Bug Fixes
 - The Spell Alert Progressive Timer should now work as intended (Forever)
 

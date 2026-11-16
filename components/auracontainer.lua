@@ -92,8 +92,6 @@ local positionInfo = {
     BOTTOMRIGHT = { location = "BOTTOMRIGHT" },
     BOTTOMLEFT = { location = "BOTTOMLEFT" },
     ["RIGHT (FLIPPED)"] = { location = "RIGHT", hFlip = true },
-    ["LEFT (OUTER)"] = { location = "LEFT", outer = true },
-    ["RIGHT (OUTER)"] = { location = "RIGHT", outer = true, hFlip = true },
     ["BOTTOM (FLIPPED)"] = { location = "BOTTOM", vFlip = true },
     ["LEFT (CW)"] = { location = "LEFT", cw = 1 },
     ["LEFT (CCW)"] = { location = "LEFT", cw = -1 },
@@ -131,6 +129,7 @@ SAO.AuraContainerItem = {
             scale = overlay.scale,
             fontScale = 3,
             positions = splitPositions(overlay.position),
+            outer = overlay.outer,
             level = overlay.level,
             text = overlay.text,
             autoPulse = overlay.autoPulse,
@@ -347,7 +346,7 @@ SAO.AuraContainerItem = {
         local width, height
         local longSide = globalGeometry.longSide
         local shortSide = globalGeometry.shortSide
-        local outerSide = info and info.outer and shortSide * self.scale or 0
+        local outerSide = self.outer * shortSide * self.scale
 
         auraButton:ClearAllPoints()
         if info and info.location == "CENTER" then

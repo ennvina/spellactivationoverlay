@@ -112,10 +112,10 @@ local function useEclipse()
             overlays = {
                 -- In Forever/Retail, 'stacks' determines is the minimum number of stacks, not the exact number
                 default = { texture = "eclipse_moon", pulse = false, option = false },
-                { stacks = 1, position = "Left",            scale = 0.8, level = 4, alpha = 192, text = true },
-                { stacks = 2, position = "Left",            scale = 1.1, level = 4, alpha = 255, text = false },
-                { stacks = 3, position = "Right (Flipped)", scale = 0.8, level = 2, alpha = 192, text = true },
-                { stacks = 4, position = "Right (Flipped)", scale = 1.1, level = 2, alpha = 255, text = false, option = {
+                { stacks = 1, position = "Left",            scale = 0.8, outer = -0.16, level = 4, alpha = 192, text = true },
+                { stacks = 2, position = "Left",            scale = 1.1, outer = -0.16, level = 4, alpha = 255, text = false },
+                { stacks = 3, position = "Right (Flipped)", scale = 0.8, outer = -0.16, level = 2, alpha = 192, text = true },
+                { stacks = 4, position = "Right (Flipped)", scale = 1.1, outer = -0.16, level = 2, alpha = 255, text = false, option = {
                     setupHash = SAO:HashNameFromStacks(0),
                     testHash = { SAO:HashNameFromStacks(1), SAO:HashNameFromStacks(2), SAO:HashNameFromStacks(3), SAO:HashNameFromStacks(4) },
                     subText = SAO:RecentlyUpdated(), -- Updated 21-oct-2026
@@ -178,8 +178,8 @@ local function useOmenOfClarity()
             optionIndex = 0, -- Overrides option index so that all overlays point to the same option
 
             overlays = {
-                { matchStance = true, texture = "feral_omenofclarity", position = "Left (Outer) + Right (Outer)", option = false },
-                { matchStance = false, texture = "natures_grace", position = "Left (Outer) + Right (Outer)",
+                { matchStance = true, texture = "feral_omenofclarity", position = "Left + Right (Flipped)", outer = 0.25, option = false },
+                { matchStance = false, texture = "natures_grace", position = "Left + Right (Flipped)", outer = 0.25,
                     option = {
                         setupHash = SAO:HashNameFromStacks(0),
                         testHash = SAO.Hash:new():setAuraStacks(0):setMatchStance(false):toString(),
@@ -680,8 +680,6 @@ local function loadOptions(self)
             self:AddOverlayOption(solarEclipseTalent, solarSpellID, 0, nil, nil, nil, solarSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
             self:AddOverlayOption(omenOfClarityTalent, omenSpellID, 0, nil, nil, nil,  omenSpellID+1000000); -- Spell ID not used by ActivateOverlay like typical overlays
         end
-        self:AddEyeOfGruulOverlayOption(37721); -- 37721 = Druid buff
-        self:AddSoulPreserverOverlayOption(60512); -- 60512 = Druid buff
 
         if canHaveEclipse then
             self:AddGlowingOption(lunarEclipseTalent, starfire, starfire);
