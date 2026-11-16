@@ -17,6 +17,9 @@ Spell Alerts can now have a shifted position
 - Previously, sharing used other techniques such as scaling
 - This new technique should provide richer spell alerts with less confusion
 
+Spell Alerts now support item enchantments, starting with Revelation (Forever)
+- Priest
+
 Updated Spell Alerts
 - Druid's Eclipse and Omen of Clarity are shifted to avoid overlap (Forever)
 - Druid's Eye of Gruul is now slightly shifted (The Burning Crusade)

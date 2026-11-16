@@ -560,7 +560,10 @@ SAO.defaults = {
                 },
                 [1284536] = { -- Searing Light (Forever)
                     [0] = true,
-                }
+                },
+                [1323377] = { -- Revelation (Forever)
+                    [0] = true,
+                },
             },
             glow = {
                 [588] = { -- Inner Fire (Wrath+)

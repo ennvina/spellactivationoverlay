@@ -390,6 +390,9 @@ local function registerClass(self)
     -- Talents / Glyphs
     useDivineInsight();
     useGlyphOfMindSpike();
+
+    -- Items / Enchantments
+    SAO:CreateRevelationEffect("revelation_priest", 1323377); -- 1323377 Priest buff
 end
 
 local function loadOptions(self)

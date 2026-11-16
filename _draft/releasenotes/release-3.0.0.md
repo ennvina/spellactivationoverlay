@@ -31,6 +31,8 @@ Updated Spell Alerts
 - Eye of Gruul is now slightly shifted (The Burning Crusade)
 - Soul Preserver is now slightly shifted (Wrath of the Lich King)
 ### :priest:  Priest
+New Spell Alert
+- Revelation weapon enchantment (Forever)
 Updated Spell Alerts
 - Clearcasting is now shifted instead of scaled (The Burning Crusade)
 - Eye of Gruul is now slightly shifted (The Burning Crusade)
