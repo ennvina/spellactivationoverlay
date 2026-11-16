@@ -22,6 +22,9 @@ Updated Spell Alerts
 Updated Spell Alerts
 - Clearcasting is now shifted instead of scaled
 - Missile Barrage is now shifted instead of scaled (Forever)
+### :priest:  Priest
+Updated Spell Alert
+- Clearcasting is now shifted instead of scaled
 ## Bug Fixes
 ### Spell Alerts
 The _Spell Alert Progressive Timer_, renamed _Visual Countdown_, should now work as intended (Forever)

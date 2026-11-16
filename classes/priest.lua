@@ -208,9 +208,7 @@ local function useClearcasting()
         34754, -- Clearcasting
         "aura",
         {
-            overlay =
-            { texture = "genericarc_05", position = "Left (Outer) + Right (Outer)", scale = 0.8, color = { 192, 192, 192 }, pulse = false } or --[[DEV_ONLY]]
-            { texture = "genericarc_05", position = "Left + Right (Flipped)", scale = 1.5, color = { 192, 192, 192 }, pulse = false },
+            overlay = { texture = "genericarc_05", position = "Left + Right (Flipped)", outer = 0.5, color = { 192, 192, 192 }, pulse = false },
             buttons = { flashHeal, bindingHeal, greaterHeal },
         }
     );
