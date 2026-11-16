@@ -53,6 +53,9 @@ Updated Spell Alerts
 - Shamanistic Focus is now shifted instead of scaled (The Burning Crusade, Wrath of the Lich King, Cataclysm)
 - Eye of Gruul is now slightly shifted (The Burning Crusade)
 - Soul Preserver is now slightly shifted (Wrath of the Lich King)
+### :warlock:  Warlock
+New Spell Alert
+- Revelation weapon enchantment (Forever)
 ## Bug Fixes
 ### Spell Alerts
 The _Spell Alert Progressive Timer_, renamed _Visual Countdown_, should now work as intended (Forever)

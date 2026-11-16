@@ -24,6 +24,7 @@ Spell Alerts now support item enchantments, starting with Revelation (Forever)
 - Paladin
 - Priest
 - Shaman
+- Warlock
 
 Updated Spell Alerts
 - Druid's Eclipse and Omen of Clarity are shifted to avoid overlap (Forever)

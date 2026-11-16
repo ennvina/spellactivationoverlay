@@ -826,6 +826,9 @@ SAO.defaults = {
                 [108683] = { -- Fire and Brimstone (Mists of Pandaria)
                     [0] = false,
                 },
+                [1323392] = { -- Revelation (Forever)
+                    [0] = true,
+                },
             },
             glow = {
                 [1120] = { -- Drain Soul (Season of Discovery, Wrath+)
