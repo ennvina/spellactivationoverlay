@@ -7,6 +7,7 @@ local UnitGUID = UnitGUID
 
 local DRUID_STANCE_BEAR = 5487; -- Bear Form (stance)
 local DRUID_STANCE_CAT = 768; -- Cat Form (stance)
+local DRUID_STANCE_CAT_FOREVER = 499; -- Cat Form (stance) on Forever, uses a different spell ID
 local DRUID_STANCE_DIRE_BEAR = SAO.IsRetail() and DRUID_STANCE_BEAR or 9634; -- Dire Bear Form (stance)
 local DRUID_STANCE_MOONKIN = 24858; -- Moonkin Form (stance)
 local DRUID_STANCE_TRAVEL = 783; -- Travel Form (stance)
@@ -173,6 +174,7 @@ local function useOmenOfClarity()
                 DRUID_STANCE_BEAR,
                 DRUID_STANCE_DIRE_BEAR,
                 DRUID_STANCE_CAT,
+                DRUID_STANCE_CAT_FOREVER, -- Unknown IDs are simply ignored, so keeping both is safe
             },
 
             optionIndex = 0, -- Overrides option index so that all overlays point to the same option
