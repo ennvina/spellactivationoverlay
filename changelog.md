@@ -2,8 +2,14 @@
 
 #### v3.0.1 (2026-11-xx)
 
+New Spell Alert
+- Mage's Arcane Tunneling (Season of Discovery)
+
 New Glowing Button
 - Rogue's Shank (Forever)
+
+Bug Fixes
+- Mage's Clearcasting option now longer appears twice (Season of Discovery)
 
 #### v3.0.0 (2026-11-16)
 

@@ -666,6 +666,21 @@ local function useArcaneBlast()
     end
 end
 
+local function useArcaneTunneling()
+    SAO:CreateEffect(
+        "arcane_tunneling",
+        SAO.SOD,
+        1226406, -- Arcane Tunneling (buff)
+        "aura",
+        {
+            overlays = {
+                { texture = "serendipity", position = "Left (CW)"  , outer = 0.6, scale = 0.9, level = 9, option = false },
+                { texture = "serendipity", position = "Right (CCW)", outer = 0.6, scale = 0.9, level = 9, option = true },
+            },
+        }
+    );
+end
+
 local function useClearcasting()
     local clearcastingBuff = SAO.IsRetail() and 276743 or 12536; -- Clearcasting (Mage)
     SAO:CreateEffect(
@@ -923,13 +938,21 @@ local function registerArcane(self)
                 12536,
                 "aura",
                 {
-                    overlay = { texture = "genericarc_05", position = "Left + Right (Flipped)", outer = 0.5, pulse = false },
+                    overlay = {
+                        texture = clearcastingVariants.textureFunc,
+                        position = "Left + Right (Flipped)",
+                        outer = 0.5,
+                        pulse = false,
+                        option = { variants = clearcastingVariants },
+                    },
                 }
             );
         end
     end
 
     useArcaneBlast();
+
+    useArcaneTunneling();
 
     useClearcasting();
 end
@@ -990,14 +1013,6 @@ local function loadOptions(self)
 
     local oneToThreeStacks = self:NbStacks(1, 3);
     local fourStacks = self:NbStacks(4);
-
-    if isCompatibleWithClearcasting then
-        -- Clearcasting variants
-        lazyCreateClearcastingVariants(self);
-        if clearcastingVariants then
-            self:AddOverlayOption(clearcastingTalent, clearcastingBuff, 0, nil, clearcastingVariants);
-        end
-    end
 
     if self.IsSoD() then
         self:AddOverlayOption(missileBarrageSoDRune, missileBarrageSoDBuff);
