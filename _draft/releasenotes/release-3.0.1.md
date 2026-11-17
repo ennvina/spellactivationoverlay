@@ -11,6 +11,8 @@ New Spell Alerts
 New Glowing Buttons
 - 
 ## Bug Fixes
+### :mage~1:  Mage
+Clearcasting option now longer appears twice (Era, TBC, Wrath, Cata, MoP)
 ## Known Limitations
 ## Miscellaneous
 ## Contributors
