@@ -248,6 +248,17 @@ local function useDispatch()
     );
 end
 
+local function useShank()
+    local shank = 1329283;
+
+    SAO:CreateEffect(
+        "shank",
+        SAO.FOREVER,
+        shank,
+        "counter"
+    );
+end
+
 local function registerClass(self)
     useMurderousIntent();
     useRemorselessAttacks();
@@ -255,6 +266,7 @@ local function registerClass(self)
     useCutthroat();
     useBlindside();
     useDispatch();
+    useShank();
 end
 
 SAO.Class["ROGUE"] = {
