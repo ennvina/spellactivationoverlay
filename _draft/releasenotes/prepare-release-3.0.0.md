@@ -315,7 +315,7 @@ Thanks!
 # Discord
 
 # SpellActivationOverlay 3.0
-@here I am pleased to announce the newest release of SpellActivationOverlay, version 3.0
+@here I am HYPED to announce the newest release of SpellActivationOverlay, version 3.0!  :tada:
 ## General
 Spell Alerts now have a countdown number, similar to the shrinking effect.
 - This effect is disabled by default; enter /sao to enable or disable it
@@ -332,7 +332,6 @@ The options panel (/sao) has been slightly redesigned to make room for the new c
 ### :druid:  Druid
 New Spell Alert
 - Revelation weapon enchantment (Forever)
-
 Updated Spell Alerts
 - Eclipse and Omen of Clarity have been shifted to avoid overlap (Forever)
 - Eye of Gruul is now slightly shifted (The Burning Crusade)
@@ -343,7 +342,6 @@ New Spell Alert
 ### :mage~1:  Mage
 New Spell Alert
 - Revelation weapon enchantment (Forever)
-
 Updated Spell Alerts
 - Clearcasting is now shifted instead of scaled
 - Missile Barrage is now shifted instead of scaled (Forever)
@@ -351,14 +349,12 @@ Updated Spell Alerts
 New Spell Alerts
 - Revelation weapon enchantment (Forever)
 - Paladin's Unsealed Wrath (Forever)
-
 Updated Spell Alerts
 - Eye of Gruul is now slightly shifted (The Burning Crusade)
 - Soul Preserver is now slightly shifted (Wrath of the Lich King)
 ### :priest:  Priest
 New Spell Alert
 - Revelation weapon enchantment (Forever)
-
 Updated Spell Alerts
 - Clearcasting is now shifted instead of scaled (The Burning Crusade)
 - Eye of Gruul is now slightly shifted (The Burning Crusade)
@@ -366,7 +362,6 @@ Updated Spell Alerts
 ### :shaman:  Shaman
 New Spell Alert
 - Revelation weapon enchantment (Forever)
-
 Updated Spell Alerts
 - Elemental Focus is now shifted instead of scaled
 - Shamanistic Focus is now shifted instead of scaled (The Burning Crusade, Wrath of the Lich King, Cataclysm)
