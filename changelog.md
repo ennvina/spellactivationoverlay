@@ -2,6 +2,9 @@
 
 #### v3.0.1 (2026-11-xx)
 
+Thank you to our amazing contributors for helping out. Thanks!
+- HugoDamore for fixing the Cat Form issue
+
 New Spell Alert
 - Mage's Arcane Tunneling (Season of Discovery)
 
@@ -9,6 +12,7 @@ New Glowing Button
 - Rogue's Shank (Forever)
 
 Bug Fixes
+- Druid's Omen of Clarity now displays correctly in Cat Form (Forever)
 - Mage's Clearcasting option now longer appears twice (Season of Discovery)
 
 #### v3.0.0 (2026-11-16)
