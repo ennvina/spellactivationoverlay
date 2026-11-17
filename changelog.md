@@ -2,6 +2,9 @@
 
 #### v3.0.1 (2026-11-xx)
 
+New Spell Alert
+- Mage's Arcane Tunneling (Season of Discovery)
+
 New Glowing Button
 - Rogue's Shank (Forever)
 

@@ -314,6 +314,9 @@ SAO.defaults = {
                 [5276] = { -- Representative of spells triggering Frozen effect
                     [0] = false,
                 },
+                [1226406] = { -- Arcane Tunneling (Season of Discovery)
+                    [0] = true,
+                },
                 [1248808] = { -- Revelation (Forever)
                     [0] = true,
                 },

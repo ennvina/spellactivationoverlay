@@ -666,6 +666,21 @@ local function useArcaneBlast()
     end
 end
 
+local function useArcaneTunneling()
+    SAO:CreateEffect(
+        "arcane_tunneling",
+        SAO.SOD,
+        1226406, -- Arcane Tunneling (buff)
+        "aura",
+        {
+            overlays = {
+                { texture = "serendipity", position = "Left (CW)"  , outer = 0.6, scale = 0.9, level = 9, option = false },
+                { texture = "serendipity", position = "Right (CCW)", outer = 0.6, scale = 0.9, level = 9, option = true },
+            },
+        }
+    );
+end
+
 local function useClearcasting()
     local clearcastingBuff = SAO.IsRetail() and 276743 or 12536; -- Clearcasting (Mage)
     SAO:CreateEffect(
@@ -936,6 +951,8 @@ local function registerArcane(self)
     end
 
     useArcaneBlast();
+
+    useArcaneTunneling();
 
     useClearcasting();
 end

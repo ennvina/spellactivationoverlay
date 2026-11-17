@@ -2,14 +2,12 @@
 @here I am pleased to announce the newest release of SpellActivationOverlay, version 3.0.1
 ## General
 ## Classes
+### :mage~1:  Mage
+New Spell Alert
+- Arcane Tunneling (Season of Discovery)
 ### :rogue:  Rogue
 New Glowing Button
 - Shank (Forever)
-### :class:  Class
-New Spell Alerts
-- 
-New Glowing Buttons
-- 
 ## Bug Fixes
 ### :mage~1:  Mage
 Clearcasting option now longer appears twice (Era, TBC, Wrath, Cata, MoP)
