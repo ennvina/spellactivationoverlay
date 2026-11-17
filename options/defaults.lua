@@ -667,6 +667,9 @@ SAO.defaults = {
                 [111240] = { -- Dispatch (Mists of Pandaria)
                     [111240] = false, -- Dispatch
                 },
+                [1329283] = { -- Shank (Forever)
+                    [1329283] = false, -- Shank
+                },
             },
         },
         ["SHAMAN"] = {
