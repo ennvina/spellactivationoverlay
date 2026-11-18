@@ -663,6 +663,52 @@ local function useArcaneBlast()
             local texture = ({ "arcane_missiles_1", "arcane_missiles_2", "arcane_missiles_3", "arcane_missiles" })[nbStacks];
             SAO:RegisterAura("arcane_blast_sod", nbStacks, arcaneBlastSoDBuff, texture, "Left + Right (Flipped)", scale, 255, 255, 255, pulse, glowIDs);
         end
+    elseif SAO.IsForever() then
+        -- Same spell ID as Season of Discovery
+        -- It is a debuff (HARMFUL) applied on the player, therefore it uses auraProps.playerDebuff
+        -- It must *not* use auraProps.debuff, which is for debuffs on the target
+        --
+        -- Exception: in Forever, this debuff is always secret, and the game client forbids matching debuffs on the player by spell ID
+        -- As a consequence, the spell ID below is *not* used to find the aura in-game; candidateFilters are used instead:
+        -- any debuff cast by the player on themselves (mineOnly), with a short duration (maxDuration), and enough stacks (overlays)
+        -- This works because Arcane Blast is the only stacking debuff mages inflict on themselves
+        -- If another one ever appears, it would trigger this effect as well
+        local arcaneBlastForeverBuff = 400573;
+        -- Displayed at the Top, with a texture unrelated to Arcane Missiles, to avoid confusion with Missile Barrage
+        -- Each stack count has its own option, so that players can choose from which stack count(s) the effect is displayed
+        -- By default, only 3 and 4 stacks are enabled, see options/defaults.lua
+        -- Overlays are displayed one on top of the other, each one a bit bigger and brighter than the previous one
+        local stackHashes = {};
+        for nbStacks=1,4 do
+            stackHashes[nbStacks] = SAO:HashNameFromStacks(nbStacks);
+        end
+        local stackOption = function(nbStacks)
+            local testHash = {}; -- Test all overlays up to this stack count, to preview what it looks like in-game
+            for testStacks=1,nbStacks do
+                tinsert(testHash, stackHashes[testStacks]);
+            end
+            return { setupHash = stackHashes[nbStacks], testHash = testHash };
+        end
+        SAO:CreateEffect(
+            "arcane_blast_forever",
+            SAO.FOREVER,
+            arcaneBlastForeverBuff,
+            "aura",
+            {
+                auraProps = {
+                    playerDebuff = true,
+                    mineOnly = true,
+                    candidateFilters = { maxDuration = 20 }, -- Arcane Blast lasts about 16 seconds; also excludes permanent auras
+                },
+                overlays = {
+                    -- In Forever/Retail, 'stacks' determines is the minimum number of stacks, not the exact number
+                    { stacks = 1, texture = "shooting_stars", position = "Top", scale = 0.6 , pulse = false, text = false, level = 1, color = { 160, 160, 160 }, option = stackOption(1) },
+                    { stacks = 2, texture = "shooting_stars", position = "Top", scale = 0.7 , pulse = false, text = false, level = 2, color = { 192, 192, 192 }, option = stackOption(2) },
+                    { stacks = 3, texture = "shooting_stars", position = "Top", scale = 0.85, pulse = false, text = true , level = 3, color = { 224, 224, 224 }, option = stackOption(3) },
+                    { stacks = 4, texture = "shooting_stars", position = "Top", scale = 1.0 , pulse = true , text = false, level = 4, color = { 255, 255, 255 }, option = stackOption(4) },
+                },
+            }
+        );
     end
 end
 
