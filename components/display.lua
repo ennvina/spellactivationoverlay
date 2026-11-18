@@ -187,6 +187,10 @@ SAO.Display = {
             extra = extra or {};
             extra.playerDebuff = true;
         end
+        if self.parent and self.parent.auraProps and self.parent.auraProps.candidateFilters then
+            extra = extra or {};
+            extra.candidateFilters = self.parent.auraProps.candidateFilters;
+        end
         if self.parent and self.parent.auraProps and self.parent.auraProps.mineOnly then
             extra = extra or {};
             extra.mineOnly = true;

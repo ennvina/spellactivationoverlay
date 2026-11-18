@@ -667,6 +667,12 @@ local function useArcaneBlast()
         -- Same spell ID as Season of Discovery
         -- It is a debuff (HARMFUL) applied on the player, therefore it uses auraProps.playerDebuff
         -- It must *not* use auraProps.debuff, which is for debuffs on the target
+        --
+        -- Exception: in Forever, this debuff is always secret, and the game client forbids matching debuffs on the player by spell ID
+        -- As a consequence, the spell ID below is *not* used to find the aura in-game; candidateFilters are used instead:
+        -- any debuff cast by the player on themselves (mineOnly), with a short duration (maxDuration), and enough stacks (overlays)
+        -- This works because Arcane Blast is the only stacking debuff mages inflict on themselves
+        -- If another one ever appears, it would trigger this effect as well
         local arcaneBlastForeverBuff = 400573;
         -- Displayed at the Top, with a texture unrelated to Arcane Missiles, to avoid confusion with Missile Barrage
         -- Each stack count has its own option, so that players can choose from which stack count(s) the effect is displayed
@@ -689,7 +695,11 @@ local function useArcaneBlast()
             arcaneBlastForeverBuff,
             "aura",
             {
-                auraProps = { playerDebuff = true },
+                auraProps = {
+                    playerDebuff = true,
+                    mineOnly = true,
+                    candidateFilters = { maxDuration = 20 }, -- Arcane Blast lasts about 16 seconds; also excludes permanent auras
+                },
                 overlays = {
                     -- In Forever/Retail, 'stacks' determines is the minimum number of stacks, not the exact number
                     { stacks = 1, texture = "shooting_stars", position = "Top", scale = 0.6 , pulse = false, text = false, level = 1, color = { 160, 160, 160 }, option = stackOption(1) },
