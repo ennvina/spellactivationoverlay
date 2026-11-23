@@ -19,6 +19,10 @@ Clearcasting option now longer appears twice (Era, TBC, Wrath, Cata, MoP)
 Execute should no longer glow without a target (Forever)
 ## Known Limitations
 ## Miscellaneous
+Spell alerts fade out more smoothly after leaving combat
+- It was fading out from 100% to 50% in 0.2 second
+- It now fades out from 100% to 60% in 3 seconds
+The result is still dimming spell alerts out of combat, but with a much less brutal transition.
 ## Contributors
 Shout-out to our amazing contributors
 - HugoDamore for fixing the Cat Form issue
