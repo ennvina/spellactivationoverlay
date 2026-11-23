@@ -15,6 +15,8 @@ Sounds should no longer cause issues during combat (Forever)
 The Omen of Clarity spell alert should now display correctly in Cat Form (Forever)
 ### :mage~1:  Mage
 Clearcasting option now longer appears twice (Era, TBC, Wrath, Cata, MoP)
+### :warrior:  Warrior
+Execute should no longer glow without a target (Forever)
 ## Known Limitations
 ## Miscellaneous
 ## Contributors
