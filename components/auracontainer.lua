@@ -144,6 +144,7 @@ SAO.AuraContainerItem = {
             enabled = true, -- By default, the aura container item is enabled
             visible = true, -- By default, the aura container item is visible
             internallyEnabled = true, -- Whether the enable/visible state are applied internally
+            internallySoundEnabled = true, -- Whether the sound state is applied internally
             auraButtons = {}, -- Assigned below; there will be as many buttons as there are positions
             slotKeys = {}, -- Assigned below; there will be as many slot keys as there are buttons
             includeSpellIDs = { [overlay.spellID] = true } -- Assigned below; will include a.k.a. spell IDs as well
@@ -188,6 +189,7 @@ SAO.AuraContainerItem = {
         end
 
         if item.useSound then
+            assertsafe(item.internallySoundEnabled, "If internallySoundEnabled is not true, the sound should not be enabled at start")
             SAO.AuraSoundLibrary:enableItem(item)
         end
 
@@ -404,6 +406,7 @@ SAO.AuraContainerItem = {
         end
         self.enabled = enabled
         self:_internalSetAuraSlotEnabled(self.enabled and self.visible)
+        self:_internalSetAuraSoundEnabled(self.enabled) -- self.visible is not considered for sound enabling
     end,
 
     -- 'Visible' means currently explicitly wanted to be shown
@@ -423,14 +426,6 @@ SAO.AuraContainerItem = {
         end
         self.internallyEnabled = enabled
 
-        if self.useSound then
-            if enabled then
-                SAO.AuraSoundLibrary:enableItem(self)
-            else
-                SAO.AuraSoundLibrary:disableItem(self)
-            end
-        end
-
         if not self.container.SetAuraSlotEnabled then -- AuraContainer:SetAuraSlotEnabled is required to make this functionality work
             SAO:Debug(Module, "Cannot change internal enabling state of aura container item ", tostring(self.id))
             return
@@ -438,6 +433,21 @@ SAO.AuraContainerItem = {
 
         for _, slotKey in ipairs(self.slotKeys) do
             self.container:SetAuraSlotEnabled(slotKey, enabled)
+        end
+    end,
+
+    _internalSetAuraSoundEnabled = function(self, enabled)
+        if self.internallySoundEnabled == enabled then
+            return
+        end
+        self.internallySoundEnabled = enabled
+
+        if self.useSound then
+            if enabled then
+                SAO.AuraSoundLibrary:enableItem(self)
+            else
+                SAO.AuraSoundLibrary:disableItem(self)
+            end
         end
     end,
 }
