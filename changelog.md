@@ -18,6 +18,11 @@ Bug Fixes
 - Warrior's Execute should no longer glow without a target (Forever)
 - Sounds should no longer cause issues during combat (Forever)
 
+Miscellaneous
+- Spell alerts fade out more smoothly after leaving combat
+- It was fading out from 100% to 50% in 0.2 second
+- It now fades out from 100% to 60% in 3 seconds
+
 #### v3.0.0 (2026-11-16)
 
 Thank you to our amazing contributors for helping out. Thanks!
