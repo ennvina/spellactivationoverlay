@@ -176,6 +176,46 @@ SAO.Variable:register({
 });
 
 SAO.VariableHelpers.custom = {
+    createPropForTargetableEnemy = function()
+        return {
+            isActivated = function(bucket, state)
+                state.canAttack = UnitCanAttack("player", "target");
+                if not canaccessvalue(state.canAttack) then
+                    state.canAttack = true; -- In doubt, assume we can attack the target
+                end
+
+                state.isAlive = not UnitIsDead("target")
+                if not canaccessvalue(state.isAlive) then
+                    state.isAlive = true;
+                end
+
+                return state.canAttack and state.isAlive;
+            end,
+            events = {
+                ["PLAYER_TARGET_CHANGED"] = function(bucket, state)
+                    SAO:Trace(Module, "Target changed, updating tragetable enemy custom variable");
+                    local isActivated = bucket.custom.isActivated(bucket, state);
+                    bucket:setCustom(isActivated);
+                end,
+                [{"UNIT_HEALTH", "target"}] = function(bucket, state, unitID)
+                    if canaccessvalue(UnitIsDead("target")) and UnitIsDead("target") then
+                        SAO:Trace(Module, "Target died, resetting targetable enemy custom variable");
+                        state.isAlive = false;
+                        bucket:setCustom(false);
+                    end
+                end,
+                [{"UNIT_FACTION", "target"}] = function(bucket, state, unitID)
+                    SAO:Trace(Module, "Target faction changed, updating targetable enemy custom variable");
+                    state.canAttack = UnitCanAttack("player", "target");
+                    if not canaccessvalue(state.canAttack) then
+                        state.canAttack = true; -- In doubt, assume we can attack the target
+                    end
+                    bucket:setCustom(state.canAttack and state.isAlive);
+                end,
+            },
+        }
+    end,
+
     createPropForExorcim = function()
         return {
             isActivated = function(bucket, state)
