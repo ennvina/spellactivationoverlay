@@ -365,3 +365,5 @@ SAO.VariableImporter = {
 }
 
 SAO.VariableEventProxy = {}
+
+SAO.VariableHelpers = {} -- May be filled by any variable willing to expose helpers
