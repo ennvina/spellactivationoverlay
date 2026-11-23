@@ -16,7 +16,7 @@ local compatibleWithCustomHandlers = not SAO.IsMoP() and not SAO.IsRetail() and 
 
 local cleave = 845;
 local colossusSmash = 86346;
-local execute = 5308;
+local execute = SAO.IsRetail() and 163201 or 5308;
 local heroicStrike = 78;
 local impendingVictory = 103840;
 local overpower = 7384;
@@ -430,6 +430,7 @@ local function useExecute()
             }
         );
     else
+        local useCustom = SAO.IsModern();
         SAO:CreateEffect(
             "execute",
             SAO.ALL_PROJECTS - SAO.MOP_AND_ONWARD, -- Already glowing natively in Mists of Pandaria and later
@@ -437,6 +438,11 @@ local function useExecute()
             "counter",
             {   -- Lazy evaluation for variants, because they are created later on
                 buttonOption = not SAO.IsMoP() and { variants = function() return ExecuteHandler.variants end } or nil,
+
+                combatOnly = true,
+
+                useCustom = useCustom,
+                custom = useCustom and SAO.VariableHelpers.custom.createPropForTargetableEnemy() or nil,
             }
         );
     end

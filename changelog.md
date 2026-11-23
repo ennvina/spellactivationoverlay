@@ -15,6 +15,7 @@ New Glowing Button
 Bug Fixes
 - Druid's Omen of Clarity now displays correctly in Cat Form (Forever)
 - Mage's Clearcasting option now longer appears twice (Season of Discovery)
+- Warrior's Execute should no longer glow without a target (Forever)
 - Sounds should no longer cause issues during combat (Forever)
 
 #### v3.0.0 (2026-11-16)
