@@ -78,10 +78,10 @@ SAO.AuraSoundLibrary = {
             self[spellID].items[item.id] = item;
 
             if not self[spellID].auraSoundIDs and self.globalEnabled then
-                local auraSoundID1, auraSoundID2 = self:_internalAddSound(spellID, item.unit)
+                local auraSoundIDs = self:_internalAddSound(spellID, item.unit)
                 SAO:Debug(Module, "Enabling sound for spell ID", spellID)
 
-                self[spellID].auraSoundIDs = { auraSoundID1, auraSoundID2 }
+                self[spellID].auraSoundIDs = auraSoundIDs
             end
         end
     end,
@@ -96,7 +96,7 @@ SAO.AuraSoundLibrary = {
                 self[spellID].items[item.id] = nil
 
                 if next(self[spellID].items) == nil and self[spellID].auraSoundIDs then
-                    self:_internalRemoveSound(unpack(self[spellID].auraSoundIDs))
+                    self:_internalRemoveSound(self[spellID].auraSoundIDs)
                     SAO:Debug(Module, "Disabling sound for spell ID", spellID)
 
                     self[spellID].auraSoundIDs = nil
@@ -115,7 +115,7 @@ SAO.AuraSoundLibrary = {
             if type(spellID) == 'number' then -- Assumes that all numeric keys are spell IDs
                 if soundData.auraSoundIDs and not enabled then
                     -- There was a sound and global sound is being disabled
-                    self:_internalRemoveSound(unpack(soundData.auraSoundIDs))
+                    self:_internalRemoveSound(soundData.auraSoundIDs)
                     SAO:Debug(Module, "Global sound disable is disabling sound of spell ID", spellID)
 
                     soundData.auraSoundIDs = nil
@@ -124,10 +124,10 @@ SAO.AuraSoundLibrary = {
                     local firstItemID, firstItem = next(soundData.items)
                     if firstItemID and firstItem then -- Add the sound if there is at least one item interested by this spell's aura sound
                         local unit = firstItem.unit -- Use arbitrarily the unit of the first item; all items should share the same unit token
-                        local auraSoundID1, auraSoundID2 = self:_internalAddSound(spellID, unit)
+                        local auraSoundIDs = self:_internalAddSound(spellID, unit)
                         SAO:Debug(Module, "Global sound enable is enabling sound of spell ID", spellID)
 
-                        soundData.auraSoundIDs = { auraSoundID1, auraSoundID2 }
+                        soundData.auraSoundIDs = auraSoundIDs
                     end
                 end
             end
@@ -148,13 +148,29 @@ SAO.AuraSoundLibrary = {
         local auraSoundID1 = C_UnitAuras.AddAuraSound(trigger1, sound)
         local auraSoundID2 = C_UnitAuras.AddAuraSound(trigger2, sound)
 
-        return auraSoundID1, auraSoundID2
+        if auraSoundID1 == nil or auraSoundID2 == nil then
+            SAO:Warn(Module, "Failed to add aura sound for spell ID "..tostring(spellID)..
+                " ("..self:GetSpellName(spellID, "unknown spell")..")"..
+                " the aura sound may be muted for this spell alert")
+        end
+
+        return {
+            addedSoundID = auraSoundID1,
+            increasedApplicationsSoundID = auraSoundID2
+        }
     end,
 
-    _internalRemoveSound = function(self, auraSoundID1, auraSoundID2)
+    _internalRemoveSound = function(self, auraSoundIDs)
+        assertsafe(auraSoundIDs, "missing auraSoundIDs parameter in AuraSoundLibrary._internalRemoveSound")
+        local auraSoundID1 = auraSoundIDs.addedSoundID
+        local auraSoundID2 = auraSoundIDs.increasedApplicationsSoundID
         assertsafe(auraSoundID1, "missing auraSoundID1 parameter in AuraSoundLibrary._internalRemoveSound")
         assertsafe(auraSoundID2, "missing auraSoundID2 parameter in AuraSoundLibrary._internalRemoveSound")
-        C_UnitAuras.RemoveAuraSound(auraSoundID1)
-        C_UnitAuras.RemoveAuraSound(auraSoundID2)
+        if type(auraSoundID1) == 'number' then
+            C_UnitAuras.RemoveAuraSound(auraSoundID1)
+        end
+        if type(auraSoundID2) == 'number' then
+            C_UnitAuras.RemoveAuraSound(auraSoundID2)
+        end
     end,
 }
