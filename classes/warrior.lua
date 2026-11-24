@@ -390,12 +390,93 @@ end
 
 
 local function useOverpower()
-    if false
+    if SAO.IsProject(SAO.FOREVER + SAO.RETAIL) then
+        local overpowerTimeout = 5; -- Overpower will end after 5 seconds no matter what, unless refreshed by another parry
+        local overpowerSpellIDs = { [7384] = true, [7887] = true, [11584] = true, [11585] = true };
+        assertsafe(overpowerSpellIDs[overpower] == true); -- Make sure 'overpower' matches one of the spell IDs in the list
+
+        local custom = {
+            isActivated = function(bucket, state)
+                return state.overpowered == true; -- Return false if nil
+            end,
+            events = {
+                --[[
+                    Track the following events:
+                    [{"UNIT_COMBAT", "player"}] to know when the player parries
+                    [{"UNIT_SPELLCAST_SENT", "player"}] (or maybe "UNIT_SPELLCAST_SUCCEEDED", needs testing) to know when Overpower is cast
+                    ["PLAYER_DEAD"] to reset instantly when the player dies
+                ]]
+                [{"UNIT_COMBAT", "player"}] = function(bucket, state, unitTarget, action)
+                    if issecretvalue and (issecretvalue(unitTarget) or issecretvalue(action)) then
+                        return;
+                    end;
+                    assertsafe(unitTarget == "player");
+
+                    if action == "PARRY" then
+                        SAO:Debug(Module, "Overpower triggered by parry");
+                        if state.overpowerTimer then
+                            state.overpowerTimer:Cancel();
+                        end;
+
+                        state.overpowered = true;
+                        bucket:setCustom(true);
+
+                        -- Overpower will end after 5 seconds no matter what, unless refreshed by another parry
+                        state.overpowerTimer = C_Timer.NewTimer(overpowerTimeout, function()
+                            state.overpowered = false;
+                            bucket:setCustom(false);
+                        end);
+                    end
+                end,
+                [{"UNIT_SPELLCAST_SENT", "player"}] = function(bucket, state, unitTarget, target, castGUID, spellID)
+                    if issecretvalue and (issecretvalue(unitTarget) or issecretvalue(spellID)) then
+                        return;
+                    end;
+                    assertsafe(unitTarget == "player");
+
+                    if overpowerSpellIDs[spellID] then
+                        SAO:Debug(Module, "Overpower reset due to spell cast");
+                        if state.overpowerTimer then
+                            state.overpowerTimer:Cancel();
+                        end;
+                        state.overpowered = false;
+                        bucket:setCustom(false);
+                    end;
+                end,
+                ["PLAYER_DEAD"] = function(bucket, state)
+                    SAO:Debug(Module, "Overpower reset due to player death");
+                    if state.overpowerTimer then
+                        state.overpowerTimer:Cancel();
+                    end;
+                    state.overpowered = false;
+                    bucket:setCustom(false);
+                end,
+            },
+        }
+
+        SAO:CreateEffect(
+            "overpower",
+            SAO.FOREVER + SAO.RETAIL,
+            overpower,
+            "custom",
+            {
+                button = overpower,
+
+                overlays = {
+                    -- Also add stances, and implement the new 'desaturate' functionality
+                    { texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234 },
+                },
+
+                useCustom = true, -- Maybe unnecessary since we use the 'custom' class?
+                custom = custom,
+            }
+        );
+    elseif false
     or SAO.IsProject(SAO.MOP_AND_ONWARD) -- Keep this comment for isNative = true
     then
         SAO:CreateEffect(
             "overpower",
-            SAO.MOP_AND_ONWARD, -- Already glowing natively in Mists of Pandaria and later
+            SAO.MOP_AND_ONWARD - SAO.RETAIL, -- Already glowing natively in Mists of Pandaria and later
             overpower,
             "counter",
             {
@@ -410,7 +491,6 @@ local function useOverpower()
             "counter",
             {   -- Lazy evaluation for variants, because they are created later on
                 buttonOption = not SAO.IsMoP() and { variants = function() return OverpowerHandler.variants end } or nil,
-                overlay = SAO.IsForever() and { texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234 } or nil,
             }
         );
     end
