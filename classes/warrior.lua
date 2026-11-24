@@ -9,6 +9,10 @@ local UnitGUID = UnitGUID
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
+local WARRIOR_STANCE_BATTLE = SAO.IsRetail() and 386164 or 2457;
+local WARRIOR_STANCE_DEFENSIVE = SAO.IsRetail() and 386208 or 71;
+local WARRIOR_STANCE_BERSERKER = SAO.IsRetail() and 386196 or 2458;
+
 -- Custom handlers are only compatible from Classic Era to Cataclysm Classic, included
 -- Mists of Pandaria is not supported because it's not needed - stances no longer matter
 -- Retail and Forever are not supported because they don't have access to CLEU
@@ -460,15 +464,25 @@ local function useOverpower()
             overpower,
             "custom",
             {
-                button = overpower,
+                useStance = true,
+                stances = {
+                    WARRIOR_STANCE_BATTLE,
+                },
+
+                buttons = {
+                    { matchStance = false, spellID = overpower },
+                    { matchStance = true , spellID = overpower },
+                },
 
                 overlays = {
-                    -- Also add stances, and implement the new 'desaturate' functionality
-                    { texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234 },
+                    { matchStance = false, texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234, desaturate = true, option = false },
+                    { matchStance = true , texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234, desaturate = false, option = true },
                 },
 
                 useCustom = true, -- Maybe unnecessary since we use the 'custom' class?
                 custom = custom,
+
+                optionIndex = 0, -- Overrides option index so that all overlays point to the same option
             }
         );
     elseif false

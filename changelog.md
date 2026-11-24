@@ -12,6 +12,12 @@ New Spell Alert
 New Glowing Button
 - Rogue's Shank (Forever)
 
+Updated Spell Alert
+- Warrior's Overpower is displayed in all stances (Forever)
+
+Updated Glowing Button
+- Warrior's Overpower glows in all stances (Forever)
+
 Bug Fixes
 - Druid's Omen of Clarity now displays correctly in Cat Form (Forever)
 - Mage's Clearcasting option now longer appears twice (Season of Discovery)
