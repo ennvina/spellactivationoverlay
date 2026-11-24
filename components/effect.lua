@@ -42,6 +42,7 @@ local Module = "effect"
         scale = 1, -- Default is 1
         color = {255, 255, 255, 255}, -- Default is {255, 255, 255, 255}, alpha is optional and defaults to 255
         alpha = 255, -- Default is nil; if set, it overrides the alpha value in 'color'
+        desaturate = false, -- Default is false
         pulse = true, -- Default is true
         text = true, -- Default is true
         option = { -- Default is true
@@ -301,6 +302,7 @@ local function addOneOverlay(overlays, overlayConfig, project, default, triggers
         level = overlayConfig.level or default.level,
         scale = overlayConfig.scale or default.scale,
         color = color,
+        desaturate = getValueOrDefault(overlayConfig.desaturate, default.desaturate),
         pulse = getValueOrDefault(overlayConfig.pulse, default.pulse),
         text = getValueOrDefault(overlayConfig.text, default.text),
         option = mergeOption(default.option, overlayConfig.option),
@@ -686,6 +688,10 @@ local function checkNativeEffect(effect)
             SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid alpha "..tostring(overlay.color[4]).." (must be in the [2, 255] range)");
             return false;
         end
+        if overlay.desaturate ~= nil and type(overlay.desaturate) ~= 'boolean' then
+            SAO:Error(Module, "Registering effect "..effect.name.." for overlay "..i.." with invalid desaturate "..tostring(overlay.desaturate));
+            return false;
+        end
     end
 
     -- Check Buttons
@@ -745,6 +751,7 @@ local function RegisterNativeEffectNow(self, effect)
             local level = overlay.level;
             local scale = overlay.scale or 1;
             local color = overlay.color and { overlay.color[1], overlay.color[2], overlay.color[3], overlay.color[4] } or { 255, 255, 255, 255 };
+            local desaturate = overlay.desaturate == true;
             local autoPulse = type(overlay.pulse) == 'function' and overlay.pulse or overlay.pulse ~= false;
             local text = overlay.text ~= false;
             local combatOnly = overlay.combatOnly == true or effect.combatOnly == true;
@@ -759,6 +766,7 @@ local function RegisterNativeEffectNow(self, effect)
                 level = level,
                 scale = scale,
                 color = color,
+                desaturate = desaturate,
                 autoPulse = autoPulse,
                 combatOnly = combatOnly,
                 text = text,

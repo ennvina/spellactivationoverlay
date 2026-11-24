@@ -395,6 +395,7 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 	
 	overlay.texture:SetTexture(texturePath);
 	overlay.texture:SetVertexColor(r / 255, g / 255, b / 255);
+	overlay.texture:SetDesaturation(type(extra) == 'table' and extra.desaturate == true and 1 or 0);
 	overlay.alpha = a / 255; -- Don't bother setting the vertex color alpha, it will be overwritten by animations
 	overlay.durationText:SetAlpha(overlay.alpha);
 	

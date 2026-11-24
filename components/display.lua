@@ -105,6 +105,7 @@ SAO.Display = {
             g = overlay.color and overlay.color[2] or 255,
             b = overlay.color and overlay.color[3] or 255,
             a = overlay.color and overlay.color[4] or 255,
+            desaturate = overlay.desaturate,
             text = overlay.text,
             autoPulse = type(overlay.autoPulse) == 'function' and overlay.autoPulse or overlay.autoPulse ~= false, -- true by default
             combatOnly = overlay.combatOnly == true, -- false by default
@@ -184,6 +185,10 @@ SAO.Display = {
         if overlay and type(overlay.text) ~= 'nil' then
             extra = extra or {};
             extra.text = overlay.text;
+        end
+        if overlay and overlay.desaturate then
+            extra = extra or {};
+            extra.desaturate = true;
         end
         if self.parent and self.parent.auraProps and self.parent.auraProps.debuff then
             extra = extra or {};

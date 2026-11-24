@@ -16,6 +16,7 @@ local function promoteAura(aura)
             outer = 0,
             scale = aura[6],
             color = { aura[7], aura[8], aura[9], 255 },
+            desaturate = false,
             autoPulse = aura[10],
             combatOnly = aura[13],
             text = true,
