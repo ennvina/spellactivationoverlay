@@ -38,6 +38,8 @@ local function getInfoFromHash(hash, macroCondition, spellID, extra)
     if extra and extra.debuff then
         unit = "target"
         filterString = "HARMFUL"
+    elseif extra and extra.playerDebuff then
+        filterString = "HARMFUL" -- Debuff on the player, e.g. Mage's Arcane Blast
     end
     if extra and extra.mineOnly then
         filterString = filterString .. "|PLAYER"
@@ -45,6 +47,15 @@ local function getInfoFromHash(hash, macroCondition, spellID, extra)
 
     -- Fill in item information
     local itemInfo = { unit = unit, filterString = filterString }
+
+    -- Effects may provide their own candidate filters, which replace matching by spell ID
+    -- This is required for debuffs on the player: the game client forbids matching harmful auras by spell ID on assistable units
+    -- See AuraContainerUtil.CanApplyIdentityCandidateFilters in Blizzard_AuraContainerUtil.lua
+    if extra and extra.candidateFilters then
+        itemInfo.candidateFilters = extra.candidateFilters
+    elseif extra and extra.playerDebuff then
+        SAO:Warn(Module, "Spell "..tostring(spellID).." is a debuff on the player, which cannot be matched by spell ID; please set auraProps.candidateFilters") --[[DEV_ONLY]]
+    end
 
     local nbAuraStacks = hash:getAuraStacks()
     itemInfo.nbAuraStacks = nbAuraStacks
@@ -180,7 +191,7 @@ SAO.AuraContainerItem = {
                 end,
                 sortMethod = AuraContainerSortMethod.ExpirationOnly,
                 sortDirection = AuraContainerSortDirection.Reverse,
-                candidateFilters = {
+                candidateFilters = options.candidateFilters or {
                     includeSpellIDs = item.includeSpellIDs,
                 },
             })

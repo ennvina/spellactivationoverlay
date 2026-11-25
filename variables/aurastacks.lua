@@ -540,7 +540,10 @@ SAO.Variable:register({
             prepareBucket = function(bucket, value)
                 bucket.auraProps = {};
 
-                local allowedProps = { hasSecretRestrictions = 'boolean', debuff = 'boolean', mineOnly = 'boolean' }
+                -- debuff: the aura is a debuff on the target
+                -- playerDebuff: the aura is a debuff on the player (e.g. Mage's Arcane Blast), as opposed to a buff on the player
+                -- candidateFilters: aura container filters used *instead of* matching the spell ID, for when the game forbids it
+                local allowedProps = { hasSecretRestrictions = 'boolean', debuff = 'boolean', playerDebuff = 'boolean', mineOnly = 'boolean', candidateFilters = 'table' }
                 for key, prop in pairs(value) do
                     if allowedProps[key] then --[[BEGIN_DEV_ONLY]]
                         if type(prop) ~= allowedProps[key] then
