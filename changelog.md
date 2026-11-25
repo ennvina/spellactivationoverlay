@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v3.0.1 (2026-11-xx)
+#### v3.1.0 (2026-11-xx)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - HugoDamore for fixing the Cat Form issue
