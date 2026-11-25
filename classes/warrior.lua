@@ -413,8 +413,8 @@ local function useOverpower()
                 },
 
                 buttons = {
-                    { matchStance = false, spellID = overpower },
-                    { matchStance = true , spellID = overpower },
+                    { matchStance = false, spellID = overpower, option = false },
+                    { matchStance = true , spellID = overpower, option = true },
                 },
 
                 overlays = {
