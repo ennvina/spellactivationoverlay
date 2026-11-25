@@ -272,7 +272,7 @@ SAO.VariableHelpers.custom = {
                 --[[
                     Track the following events:
                     [{"UNIT_COMBAT", "player"}] to know when the player parries
-                    [{"UNIT_SPELLCAST_SENT", "player"}] (or maybe "UNIT_SPELLCAST_SUCCEEDED", needs testing) to know when Overpower is cast
+                    [{"UNIT_SPELLCAST_SENT", "player"}] (or maybe "UNIT_SPELLCAST_SUCCEEDED", needs testing) to know when a parry-counter spell is cast
                     ["PLAYER_DEAD"] to reset instantly when the player dies
                 ]]
                 [{"UNIT_COMBAT", "player"}] = function(bucket, state, unitTarget, action)
@@ -282,7 +282,7 @@ SAO.VariableHelpers.custom = {
                     assertsafe(unitTarget == "player");
 
                     if action == "PARRY" then
-                        SAO:Debug(Module, "Player parry triggered by parry");
+                        SAO:Debug(Module, "Parry-counter triggered by parry");
                         if state.overpowerTimer then
                             state.overpowerTimer:Cancel();
                         end;
@@ -304,7 +304,7 @@ SAO.VariableHelpers.custom = {
                     assertsafe(unitTarget == "player");
 
                     if counterSpellIDs[spellID] then
-                        SAO:Debug(Module, "Player parry reset due to spell cast");
+                        SAO:Debug(Module, "Parry-counter reset due to spell cast");
                         if state.overpowerTimer then
                             state.overpowerTimer:Cancel();
                         end;
@@ -313,7 +313,7 @@ SAO.VariableHelpers.custom = {
                     end;
                 end,
                 ["PLAYER_DEAD"] = function(bucket, state)
-                    SAO:Debug(Module, "Player parry reset due to player death");
+                    SAO:Debug(Module, "Parry-counter reset due to player death");
                     if state.overpowerTimer then
                         state.overpowerTimer:Cancel();
                     end;
@@ -324,7 +324,7 @@ SAO.VariableHelpers.custom = {
         }
     end,
 
-    createPropForTargetDodge = function(dodgeSpellIDs, maxDuration)
+    createPropForTargetDodge = function(counterSpellIDs, maxDuration)
         return {
             isActivated = function(bucket, state)
                 return state.dodged == true; -- Return false if nil
@@ -333,7 +333,7 @@ SAO.VariableHelpers.custom = {
                 --[[
                     Track the following events:
                     [{"UNIT_COMBAT", "target"}] to know when the target dodges
-                    [{"UNIT_SPELLCAST_SENT", "player"}] (or maybe "UNIT_SPELLCAST_SUCCEEDED", needs testing) to know when Overpower is cast
+                    [{"UNIT_SPELLCAST_SENT", "player"}] (or maybe "UNIT_SPELLCAST_SUCCEEDED", needs testing) to know when a dodge-counter spell is cast
                     ["PLAYER_DEAD"] to reset instantly when the player dies
                 ]]
                 [{"UNIT_COMBAT", "target"}] = function(bucket, state, unitTarget, action)
@@ -346,17 +346,17 @@ SAO.VariableHelpers.custom = {
                     assertsafe(unitTarget == "target");
 
                     if action == "DODGE" then
-                        SAO:Debug(Module, "Target dodge triggered by dodge");
+                        SAO:Debug(Module, "Dodge-counter triggered by dodge");
                         if state.overpowerTimer then
                             state.overpowerTimer:Cancel();
                         end;
 
-                        state.overpowered = true;
+                        state.dodged = true;
                         bucket:setCustom(true);
 
                         -- Effect will end after x seconds no matter what, unless refreshed by another dodge
                         state.overpowerTimer = C_Timer.NewTimer(maxDuration, function()
-                            state.overpowered = false;
+                            state.dodged = false;
                             bucket:setCustom(false);
                         end);
                     end
@@ -367,21 +367,21 @@ SAO.VariableHelpers.custom = {
                     end;
                     assertsafe(unitTarget == "player");
 
-                    if dodgeSpellIDs[spellID] then
-                        SAO:Debug(Module, "Target dodge reset due to spell cast");
+                    if counterSpellIDs[spellID] then
+                        SAO:Debug(Module, "Dodge-counter reset due to spell cast");
                         if state.overpowerTimer then
                             state.overpowerTimer:Cancel();
                         end;
-                        state.overpowered = false;
+                        state.dodged = false;
                         bucket:setCustom(false);
                     end;
                 end,
                 ["PLAYER_DEAD"] = function(bucket, state)
-                    SAO:Debug(Module, "Target dodge reset due to player death");
+                    SAO:Debug(Module, "Dodge-counter reset due to player death");
                     if state.overpowerTimer then
                         state.overpowerTimer:Cancel();
                     end;
-                    state.overpowered = false;
+                    state.dodged = false;
                     bucket:setCustom(false);
                 end,
             },
