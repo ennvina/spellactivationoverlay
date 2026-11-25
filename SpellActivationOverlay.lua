@@ -362,22 +362,22 @@ function SpellActivationOverlay_ShowOverlay(self, spellID, texturePath, position
 			self:SetPoint("LEFT", parent, "RIGHT", outerSide, 0);
 		elseif ( position == "TOP" ) then
 			width, height = longSide, shortSide;
-			self:SetPoint("BOTTOM", parent, "TOP");
+			self:SetPoint("BOTTOM", parent, "TOP", 0, outerSide);
 		elseif ( position == "BOTTOM" ) then
 			width, height = longSide, shortSide;
-			self:SetPoint("TOP", parent, "BOTTOM");
+			self:SetPoint("TOP", parent, "BOTTOM", 0, -outerSide);
 		elseif ( position == "TOPRIGHT" ) then
 			width, height = shortSide, shortSide;
-			self:SetPoint("BOTTOMLEFT", parent, "TOPRIGHT", outerSide, 0);
+			self:SetPoint("BOTTOMLEFT", parent, "TOPRIGHT", outerSide, outerSide);
 		elseif ( position == "TOPLEFT" ) then
 			width, height = shortSide, shortSide;
-			self:SetPoint("BOTTOMRIGHT", parent, "TOPLEFT", -outerSide, 0);
+			self:SetPoint("BOTTOMRIGHT", parent, "TOPLEFT", -outerSide, outerSide);
 		elseif ( position == "BOTTOMRIGHT" ) then
 			width, height = shortSide, shortSide;
-			self:SetPoint("TOPLEFT", parent, "BOTTOMRIGHT", outerSide, 0);
+			self:SetPoint("TOPLEFT", parent, "BOTTOMRIGHT", outerSide, -outerSide);
 		elseif ( position == "BOTTOMLEFT" ) then
 			width, height = shortSide, shortSide;
-			self:SetPoint("TOPRIGHT", parent, "BOTTOMLEFT", -outerSide, 0);
+			self:SetPoint("TOPRIGHT", parent, "BOTTOMLEFT", -outerSide, -outerSide);
 		else
 			--GMError("Unknown SpellActivationOverlay position: "..tostring(position));
 			return;
