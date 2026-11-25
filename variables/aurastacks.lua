@@ -26,7 +26,6 @@ SAO.AURASTACKS = {
     MODERN = C_UnitAuras ~= nil,
 };
 assertsafe(SAO.AURASTACKS.LEGACY ~= SAO.AURASTACKS.MODERN); -- Exactly one of these modes must be active
-SAO:Info(Module, "You are currently using the Modern AuraStacks mode. Enjoy!"); --[[DEV_ONLY]]
 
 -- Aura stacks
 --  if stacks >= 0 then
@@ -439,7 +438,7 @@ SAO.Variable:register({
                     local auraInstanceID = aura.auraInstanceID;
                     if bucket.auraInstanceID == auraInstanceID then
                         -- This should not happen, but we have seen cases when an addedAuras is fired twice e.g., Fingers of Frost (SoD)
-                        SAO:Warn(Module, "Added aura instance ID "..tostring(auraInstanceID).." for bucket "..bucket.name.." which already has the same aura instance ID, updating it instead"); --[[DEV_ONLY]]
+                        SAO:Trace(Module, "Added aura instance ID "..tostring(auraInstanceID).." for bucket "..bucket.name.." which already has the same aura instance ID, updating it instead");
                         updateAura(auraInstanceID, aura, bucket);
                     else
                         addAura(auraInstanceID, aura, bucket);
