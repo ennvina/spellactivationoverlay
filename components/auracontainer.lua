@@ -139,6 +139,7 @@ SAO.AuraContainerItem = {
             g = overlay.g,
             b = overlay.b,
             a = overlay.a,
+            desaturate = overlay.desaturate,
 
             -- Variables
             enabled = true, -- By default, the aura container item is enabled
@@ -286,6 +287,7 @@ SAO.AuraContainerItem = {
 
         -- Set vertex color
         texture:SetVertexColor(self.r / 255, self.g / 255, self.b / 255, self.a / 255)
+        texture:SetDesaturation(self.desaturate and 1 or 0)
     end,
 
     setApplications = function(self, auraButton, applications)
@@ -362,22 +364,22 @@ SAO.AuraContainerItem = {
             auraButton:SetPoint("LEFT", parent, "RIGHT", outerSide, 0)
         elseif info and info.location == "TOP" then
             width, height = longSide, shortSide
-            auraButton:SetPoint("BOTTOM", parent, "TOP")
+            auraButton:SetPoint("BOTTOM", parent, "TOP", 0, outerSide)
         elseif info and info.location == "BOTTOM" then
             width, height = longSide, shortSide
-            auraButton:SetPoint("TOP", parent, "BOTTOM")
+            auraButton:SetPoint("TOP", parent, "BOTTOM", 0, -outerSide)
         elseif info and info.location == "TOPRIGHT" then
             width, height = shortSide, shortSide
-            auraButton:SetPoint("BOTTOMLEFT", parent, "TOPRIGHT", outerSide, 0)
+            auraButton:SetPoint("BOTTOMLEFT", parent, "TOPRIGHT", outerSide, outerSide)
         elseif info and info.location == "TOPLEFT" then
             width, height = shortSide, shortSide
-            auraButton:SetPoint("BOTTOMRIGHT", parent, "TOPLEFT", -outerSide, 0)
+            auraButton:SetPoint("BOTTOMRIGHT", parent, "TOPLEFT", -outerSide, outerSide)
         elseif info and info.location == "BOTTOMRIGHT" then
             width, height = shortSide, shortSide
-            auraButton:SetPoint("TOPLEFT", parent, "BOTTOMRIGHT", outerSide, 0)
+            auraButton:SetPoint("TOPLEFT", parent, "BOTTOMRIGHT", outerSide, -outerSide)
         elseif info and info.location == "BOTTOMLEFT" then
             width, height = shortSide, shortSide
-            auraButton:SetPoint("TOPRIGHT", parent, "BOTTOMLEFT", -outerSide, 0)
+            auraButton:SetPoint("TOPRIGHT", parent, "BOTTOMLEFT", -outerSide, -outerSide)
         else
             SAO:Warn(Module, "Unknown aura position is not supported: "..tostring(position)) --[[DEV_ONLY]]
             return

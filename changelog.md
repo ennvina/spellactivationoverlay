@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v3.0.1 (2026-11-xx)
+#### v3.1.0 (2026-11-xx)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - HugoDamore for fixing the Cat Form issue
@@ -11,6 +11,12 @@ New Spell Alert
 
 New Glowing Button
 - Rogue's Shank (Forever)
+
+Updated Spell Alert
+- Warrior's Overpower is displayed in all stances (Forever)
+
+Updated Glowing Button
+- Warrior's Overpower glows in all stances (Forever)
 
 Bug Fixes
 - Druid's Omen of Clarity now displays correctly in Cat Form (Forever)

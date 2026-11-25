@@ -9,6 +9,10 @@ local UnitGUID = UnitGUID
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
+local WARRIOR_STANCE_BATTLE = SAO.IsRetail() and 386164 or 2457;
+local WARRIOR_STANCE_DEFENSIVE = SAO.IsRetail() and 386208 or 71;
+local WARRIOR_STANCE_BERSERKER = SAO.IsRetail() and 386196 or 2458;
+
 -- Custom handlers are only compatible from Classic Era to Cataclysm Classic, included
 -- Mists of Pandaria is not supported because it's not needed - stances no longer matter
 -- Retail and Forever are not supported because they don't have access to CLEU
@@ -390,12 +394,46 @@ end
 
 
 local function useOverpower()
-    if false
+    if SAO.IsProject(SAO.FOREVER + SAO.RETAIL) then
+        local overpowerTimeout = 5; -- Overpower will end after 5 seconds no matter what, unless refreshed by another parry
+        local overpowerSpellIDs = { [7384] = true, [7887] = true, [11584] = true, [11585] = true };
+        assertsafe(overpowerSpellIDs[overpower] == true); -- Make sure 'overpower' matches one of the spell IDs in the list
+
+        local custom = SAO.VariableHelpers.custom.createPropForTargetDodge(overpowerSpellIDs, overpowerTimeout);
+
+        SAO:CreateEffect(
+            "overpower",
+            SAO.FOREVER + SAO.RETAIL,
+            overpower,
+            "custom",
+            {
+                useStance = true,
+                stances = {
+                    WARRIOR_STANCE_BATTLE,
+                },
+
+                buttons = {
+                    { matchStance = false, spellID = overpower, option = false },
+                    { matchStance = true , spellID = overpower, option = true },
+                },
+
+                overlays = {
+                    { matchStance = false, texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234, desaturate = true, option = false },
+                    { matchStance = true , texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234, desaturate = false, option = true },
+                },
+
+                useCustom = true, -- Maybe unnecessary since we use the 'custom' class?
+                custom = custom,
+
+                optionIndex = 0, -- Overrides option index so that all overlays point to the same option
+            }
+        );
+    elseif false
     or SAO.IsProject(SAO.MOP_AND_ONWARD) -- Keep this comment for isNative = true
     then
         SAO:CreateEffect(
             "overpower",
-            SAO.MOP_AND_ONWARD, -- Already glowing natively in Mists of Pandaria and later
+            SAO.MOP_AND_ONWARD - SAO.RETAIL, -- Already glowing natively in Mists of Pandaria and later
             overpower,
             "counter",
             {
@@ -410,7 +448,6 @@ local function useOverpower()
             "counter",
             {   -- Lazy evaluation for variants, because they are created later on
                 buttonOption = not SAO.IsMoP() and { variants = function() return OverpowerHandler.variants end } or nil,
-                overlay = SAO.IsForever() and { texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234 } or nil,
             }
         );
     end

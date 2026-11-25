@@ -8,6 +8,11 @@ New Spell Alert
 ### :rogue:  Rogue
 New Glowing Button
 - Shank (Forever)
+### :warrior:  Warrior
+Updated Spell Alert
+- Overpower is displayed in all stances (Forever)
+Updated Glowing Button
+- Overpower glows in all stances (Forever)
 ## Bug Fixes
 ### Sounds
 Sounds should no longer cause issues during combat (Forever)
