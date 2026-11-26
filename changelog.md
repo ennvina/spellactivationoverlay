@@ -1,6 +1,6 @@
 ## SpellActivationOverlay Changelog
 
-#### v3.1.0 (2026-11-xx)
+#### v3.1.0 (2026-11-26)
 
 Thank you to our amazing contributors for helping out. Thanks!
 - Sakouzw for his patience and kindness when testing Overpower
