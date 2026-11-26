@@ -1,6 +1,5 @@
-# SpellActivationOverlay 3.0.1
-@here I am pleased to announce the newest release of SpellActivationOverlay, version 3.0.1
-## General
+# SpellActivationOverlay 3.1.0
+@here I am pleased to announce the newest release of SpellActivationOverlay, version 3.1.0
 ## Classes
 ### :mage~1:  Mage
 New Spell Alert
@@ -9,6 +8,8 @@ New Spell Alert
 New Glowing Button
 - Shank (Forever)
 ### :warrior:  Warrior
+New Spell Alert
+- Bloodthrill (Forever)
 Updated Spell Alert
 - Overpower is displayed in all stances (Forever)
 Updated Glowing Button
@@ -22,7 +23,6 @@ The Omen of Clarity spell alert should now display correctly in Cat Form (Foreve
 Clearcasting option now longer appears twice (Era, TBC, Wrath, Cata, MoP)
 ### :warrior:  Warrior
 Execute should no longer glow without a target (Forever)
-## Known Limitations
 ## Miscellaneous
 Spell alerts fade out more smoothly after leaving combat
 - It was fading out from 100% to 50% in 0.2 second
@@ -30,6 +30,7 @@ Spell alerts fade out more smoothly after leaving combat
 The result is still dimming spell alerts out of combat, but with a much less brutal transition.
 ## Contributors
 Shout-out to our amazing contributors
+- Sakouzw for his patience and kindness when testing Overpower
 - HugoDamore for fixing the Cat Form issue
 - hatemachine222 for reporting the sound issue
 Thanks!

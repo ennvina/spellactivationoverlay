@@ -3,11 +3,13 @@
 #### v3.1.0 (2026-11-xx)
 
 Thank you to our amazing contributors for helping out. Thanks!
+- Sakouzw for his patience and kindness when testing Overpower
 - HugoDamore for fixing the Cat Form issue
 - hatemachine222 for reporting the sound issue
 
 New Spell Alert
 - Mage's Arcane Tunneling (Season of Discovery)
+- Warrior's Bloodthrill (Forever)
 
 New Glowing Button
 - Rogue's Shank (Forever)

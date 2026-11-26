@@ -901,6 +901,9 @@ SAO.defaults = {
                 [7384] = { -- Overpower
                     [0] = "stance:1",
                 },
+                [7887] = { -- Overpower (Rank 2) (Forever)
+                    [-1] = true,
+                },
                 [52437] = { -- Sudden Death (Wrath+)
                     [0] = true, -- any stacks (up to 2 stacks with tier 10)
                 },
@@ -936,7 +939,10 @@ SAO.defaults = {
                 },
                 [122510]= { -- Ultimatum (Mists of Pandaria)
                     [0] = true,
-                }
+                },
+                [1289681]={ -- Bloodthrill (Forever)
+                    [-1] = true,
+                },
             },
             glow = {
                 [7384] = { -- Overpower

@@ -89,6 +89,40 @@ function SAO:translateDebuff()
     return tr(debuffTranslations);
 end
 
+-- Get the "Any Stance" localized text
+function SAO:AnyStance()
+    local anyStanceTranslations = {
+        ["en"] = "Any Stance",
+        ["de"] = "Beliebige Haltung",
+        ["fr"] = "Toute posture",
+        ["es"] = "Cualquier actitud",
+        ["ru"] = "Любая стойка",
+        ["it"] = "Qualsiasi postura",
+        ["pt"] = "Qualquer postura",
+        ["ko"] = "모든 태세",
+        ["zh"] = "任意姿态",
+        ["zhTW"] = "任意姿態",
+    };
+    return tr(anyStanceTranslations);
+end
+
+-- Get the "Other Stances" localized text
+function SAO:OtherStances()
+    local otherStancesTranslations = {
+        ["en"] = "Other Stances",
+        ["de"] = "Andere Haltungen",
+        ["fr"] = "Autres postures",
+        ["es"] = "Otras actitudes",
+        ["ru"] = "Другие стойки",
+        ["it"] = "Altre posture",
+        ["pt"] = "Outras posturas",
+        ["ko"] = "다른 태세",
+        ["zh"] = "其他姿态",
+        ["zhTW"] = "其他姿態",
+    };
+    return tr(otherStancesTranslations);
+end
+
 -- Get the "when castable" localized text
 function SAO:whenCastable()
     local whenCastableTranslations = {
