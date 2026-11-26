@@ -394,7 +394,7 @@ end
 
 
 local function useOverpower()
-    if SAO.IsProject(SAO.FOREVER + SAO.RETAIL) then
+    if SAO.IsProject(SAO.FOREVER) then
         local overpowerTimeout = 5; -- Overpower will end after 5 seconds no matter what, unless refreshed by another parry
         local overpowerSpellIDs = { [7384] = true, [7887] = true, [11584] = true, [11585] = true };
         assertsafe(overpowerSpellIDs[overpower] == true); -- Make sure 'overpower' matches one of the spell IDs in the list
@@ -403,8 +403,18 @@ local function useOverpower()
 
         SAO:CreateEffect(
             "overpower",
-            SAO.FOREVER + SAO.RETAIL,
+            SAO.FOREVER,
             overpower,
+            "counter",
+            {
+                overlay = { texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234, level = 6, option = { subText = SAO:GetSpellName(WARRIOR_STANCE_BATTLE) } }, -- Higher level to have higher priority than desaturated overpower effects
+            }
+        );
+
+        SAO:CreateEffect(
+            "overpower_all_stances",
+            SAO.FOREVER,
+            7887, -- Overpower (Rank 2) to avoid conflict
             "custom",
             {
                 useStance = true,
@@ -412,20 +422,28 @@ local function useOverpower()
                     WARRIOR_STANCE_BATTLE,
                 },
 
-                buttons = {
-                    { matchStance = false, spellID = overpower, option = false },
-                    { matchStance = true , spellID = overpower, option = true },
-                },
-
-                overlays = {
-                    { matchStance = false, texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234, desaturate = true, option = false },
-                    { matchStance = true , texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234, desaturate = false, option = true },
-                },
+                -- Same as "overpower" overlay but lower priority and desaturated
+                overlay = { matchStance = false, texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234, level = 4, desaturate = true, option = { subText = SAO:OtherStances() } },
 
                 useCustom = true, -- Maybe unnecessary since we use the 'custom' class?
                 custom = custom,
+            }
+        );
 
-                optionIndex = 0, -- Overrides option index so that all overlays point to the same option
+        local bloodthrill = 1289681;
+        SAO:CreateEffect(
+            "bloodthrill_all_stances",
+            SAO.FOREVER,
+            bloodthrill,
+            "aura",
+            {
+                useStance = true,
+                stances = {
+                    WARRIOR_STANCE_BATTLE,
+                },
+
+                -- Same overlay as "overpower_all_stances"
+                overlay = { matchStance = false, texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234, level = 4, desaturate = true, option = { subText = SAO:OtherStances() } },
             }
         );
     elseif false
