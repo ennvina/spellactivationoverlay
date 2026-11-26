@@ -408,6 +408,7 @@ local function useOverpower()
             overpower,
             "counter",
             {
+                buttonOption = { spellSubText = SAO:GetSpellName(WARRIOR_STANCE_BATTLE) },
                 overlay = { texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234, level = 6, option = { subText = SAO:GetSpellName(WARRIOR_STANCE_BATTLE) } }, -- Higher level to have higher priority than desaturated overpower effects
             }
         );
