@@ -3,6 +3,7 @@
 #### v3.1.0 (2026-11-xx)
 
 Thank you to our amazing contributors for helping out. Thanks!
+- Sakouzw for testing and sending feedback about Overpower
 - HugoDamore for fixing the Cat Form issue
 - hatemachine222 for reporting the sound issue
 

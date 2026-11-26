@@ -28,6 +28,7 @@ Spell alerts fade out more smoothly after leaving combat
 The result is still dimming spell alerts out of combat, but with a much less brutal transition.
 ## Contributors
 Shout-out to our amazing contributors
+- Sakouzw for testing and sending feedback about Overpower
 - HugoDamore for fixing the Cat Form issue
 - hatemachine222 for reporting the sound issue
 Thanks!
