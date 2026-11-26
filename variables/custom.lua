@@ -345,6 +345,14 @@ SAO.VariableHelpers.custom = {
                     end;
                     assertsafe(unitTarget == "target");
 
+                    local canAttack = UnitCanAttack("player", "target");
+                    if not canaccessvalue(canAttack) then
+                        canAttack = true; -- In doubt, assume we can attack the target
+                    end
+                    if not canAttack then
+                        return; -- Only interested in targets we can attack
+                    end;
+
                     if action == "DODGE" then
                         SAO:Debug(Module, "Dodge-counter triggered by dodge");
                         if state.overpowerTimer then
