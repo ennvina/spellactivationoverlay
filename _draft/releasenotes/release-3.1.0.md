@@ -8,6 +8,8 @@ New Spell Alert
 New Glowing Button
 - Shank (Forever)
 ### :warrior:  Warrior
+New Spell Alert
+- Bloodthrill (Forever)
 Updated Spell Alert
 - Overpower is displayed in all stances (Forever)
 Updated Glowing Button
@@ -28,7 +30,7 @@ Spell alerts fade out more smoothly after leaving combat
 The result is still dimming spell alerts out of combat, but with a much less brutal transition.
 ## Contributors
 Shout-out to our amazing contributors
-- Sakouzw for testing and sending feedback about Overpower
+- Sakouzw for his patience and kindness when testing Overpower
 - HugoDamore for fixing the Cat Form issue
 - hatemachine222 for reporting the sound issue
 Thanks!
