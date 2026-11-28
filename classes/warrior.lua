@@ -422,6 +422,8 @@ local function useOverpower()
                 actionUsable = true,
                 action = overpower,
 
+                button = { actionUsable = false, spellID = overpower, option = { hideTalentText = true, spellSubText = SAO:OtherStances() } },
+
                 -- Same as "overpower" overlay but lower priority and desaturated
                 overlay = { actionUsable = false, texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234, level = 4, desaturate = true, pulse = false, option = { subText = SAO:OtherStances() } },
 
