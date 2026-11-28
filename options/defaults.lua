@@ -948,6 +948,9 @@ SAO.defaults = {
                 [7384] = { -- Overpower
                     [7384] = "stance:1", -- Overpower
                 },
+                [7887] = { -- Overpower (Rank 2) (Forever)
+                    [7384] = false,
+                },
                 [6572] = { -- Revenge
                     [6572] = "stance:2", -- Revenge
                 },
