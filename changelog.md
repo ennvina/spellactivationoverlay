@@ -1,5 +1,13 @@
 ## SpellActivationOverlay Changelog
 
+#### v3.1.1 (2026-11-xx)
+
+Thank you to our amazing contributors for helping out. Thanks!
+- Tachey for testing and sharing feedback about Overpower
+
+Bug Fixes
+- Warrior's Overpower should no longer have false positives (Forever)
+
 #### v3.1.0 (2026-11-26)
 
 Thank you to our amazing contributors for helping out. Thanks!

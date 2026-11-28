@@ -2,6 +2,7 @@ local AddonName, SAO = ...
 local Module = "custom"
 
 -- Optimize frequent calls
+local EnumComboPoints = Enum and Enum.PowerType and Enum.PowerType.ComboPoints or 4
 
 -- Does the current custom variable match one of the expected values
 local HASH_CUSTOM_ACTIVATED   = 0x20000000
@@ -144,7 +145,7 @@ SAO.Variable:register({
                                             return; -- Stop after the first match, to avoid calling the function several times for the same event
                                         end
                                     end
-                                end;
+                                end
                             end
 
                         else --[[DEV_ONLY]]
@@ -266,7 +267,7 @@ SAO.VariableHelpers.custom = {
     createPropForPlayerParry = function(counterSpellIDs, maxDuration)
         return {
             isActivated = function(bucket, state)
-                return state.overpowered == true; -- Return false if nil
+                return state.parried == true; -- Return false if nil
             end,
             events = {
                 --[[
@@ -278,21 +279,21 @@ SAO.VariableHelpers.custom = {
                 [{"UNIT_COMBAT", "player"}] = function(bucket, state, unitTarget, action)
                     if issecretvalue and (issecretvalue(unitTarget) or issecretvalue(action)) then
                         return;
-                    end;
+                    end
                     assertsafe(unitTarget == "player");
 
                     if action == "PARRY" then
                         SAO:Debug(Module, "Parry-counter triggered by parry");
                         if state.parryTimer then
                             state.parryTimer:Cancel();
-                        end;
+                        end
 
-                        state.overpowered = true;
+                        state.parried = true;
                         bucket:setCustom(true);
 
                         -- Effect will end after x seconds no matter what, unless refreshed by another parry
                         state.parryTimer = C_Timer.NewTimer(maxDuration, function()
-                            state.overpowered = false;
+                            state.parried = false;
                             bucket:setCustom(false);
                         end);
                     end
@@ -300,93 +301,115 @@ SAO.VariableHelpers.custom = {
                 [{"UNIT_SPELLCAST_SENT", "player"}] = function(bucket, state, unitTarget, target, castGUID, spellID)
                     if issecretvalue and (issecretvalue(unitTarget) or issecretvalue(spellID)) then
                         return;
-                    end;
+                    end
                     assertsafe(unitTarget == "player");
 
                     if counterSpellIDs[spellID] then
                         SAO:Debug(Module, "Parry-counter reset due to spell cast");
                         if state.parryTimer then
                             state.parryTimer:Cancel();
-                        end;
-                        state.overpowered = false;
+                        end
+                        state.parried = false;
                         bucket:setCustom(false);
-                    end;
+                    end
                 end,
                 ["PLAYER_DEAD"] = function(bucket, state)
                     SAO:Debug(Module, "Parry-counter reset due to player death");
                     if state.parryTimer then
                         state.parryTimer:Cancel();
-                    end;
-                    state.overpowered = false;
+                    end
+                    state.parried = false;
                     bucket:setCustom(false);
                 end,
             },
         }
     end,
 
-    createPropForTargetDodge = function(counterSpellIDs, maxDuration)
+    createPropForOverpower = function(overpowerSpellIDs, maxDuration)
         return {
             isActivated = function(bucket, state)
-                return state.dodged == true; -- Return false if nil
+                return state.overpowered == true;
             end,
             events = {
-                --[[
-                    Track the following events:
-                    [{"UNIT_COMBAT", "target"}] to know when the target dodges
-                    [{"UNIT_SPELLCAST_SENT", "player"}] (or maybe "UNIT_SPELLCAST_SUCCEEDED", needs testing) to know when a dodge-counter spell is cast
-                    ["PLAYER_DEAD"] to reset instantly when the player dies
-                ]]
-                [{"UNIT_COMBAT", "target"}] = function(bucket, state, unitTarget, action)
-                    if issecretvalue and (issecretvalue(unitTarget) or issecretvalue(action)) then
+                [{"UNIT_POWER_UPDATE", "player"}] = function(bucket, state, unitTarget, powerType)
+                    if issecretvalue and (issecretvalue(unitTarget) or issecretvalue(powerType)) then
                         return;
-                    end;
-                    assertsafe(unitTarget == "target");
-
-                    local canAttack = UnitCanAttack("player", "target");
-                    if not canaccessvalue(canAttack) then
-                        canAttack = true; -- In doubt, assume we can attack the target
                     end
-                    if not canAttack then
-                        return; -- Only interested in targets we can attack
-                    end;
-
-                    if action == "DODGE" then
-                        SAO:Debug(Module, "Dodge-counter triggered by dodge");
-                        if state.dodgeTimer then
-                            state.dodgeTimer:Cancel();
-                        end;
-
-                        state.dodged = true;
-                        bucket:setCustom(true);
-
-                        -- Effect will end after x seconds no matter what, unless refreshed by another dodge
-                        state.dodgeTimer = C_Timer.NewTimer(maxDuration, function()
-                            state.dodged = false;
-                            bucket:setCustom(false);
-                        end);
-                    end
-                end,
-                [{"UNIT_SPELLCAST_SENT", "player"}] = function(bucket, state, unitTarget, target, castGUID, spellID)
-                    if issecretvalue and (issecretvalue(unitTarget) or issecretvalue(spellID)) then
-                        return;
-                    end;
                     assertsafe(unitTarget == "player");
 
-                    if counterSpellIDs[spellID] then
-                        SAO:Debug(Module, "Dodge-counter reset due to spell cast");
-                        if state.dodgeTimer then
-                            state.dodgeTimer:Cancel();
-                        end;
-                        state.dodged = false;
+                    if powerType ~= "COMBO_POINTS" then
+                        return;
+                    end
+
+                    local cp = UnitPower("player", EnumComboPoints);
+                    local nbComboPoints;
+                    if canaccessvalue(cp) and type(cp) == 'number' then
+                        nbComboPoints = cp;
+                    else
+                        nbComboPoints = state.nbComboPoints or 0;
+                    end
+
+                    local previousComboPoints = state.nbComboPoints or 0;
+
+                    if nbComboPoints == previousComboPoints then
+                        return;
+                    end
+
+                    local hasWonComboPoints = nbComboPoints > previousComboPoints;
+                    local hasResetComboPoints = nbComboPoints == 0 and previousComboPoints ~= 0;
+
+                    state.nbComboPoints = nbComboPoints;
+
+                    if hasWonComboPoints then
+                        SAO:Debug(Module, "Combo points increased, meaning Overpower is available");
+                        if state.overpowerTimer then
+                            state.overpowerTimer:Cancel();
+                        end
+
+                        -- Increased combo points, which indicates Overpower became available or was refreshed
+                        state.overpowered = true;
+                        bucket:setCustom(true);
+
+                        -- Effect will end after x seconds no matter what, unless refreshed by another combo point
+                        state.overpowerTimer = C_Timer.NewTimer(maxDuration, function()
+                            state.overpowered = false;
+                            bucket:setCustom(false);
+                        end);
+
+                        return;
+                    end
+
+                    if hasResetComboPoints then
+                        SAO:Debug(Module, "Combo points dropped to 0, Overpower no longer available");
+                        if state.overpowerTimer then
+                            state.overpowerTimer:Cancel();
+                        end
+                        state.overpowered = false;
                         bucket:setCustom(false);
-                    end;
+                    end
                 end,
+                -- [{"UNIT_SPELLCAST_SENT", "player"}] = function(bucket, state, unitTarget, target, castGUID, spellID)
+                --     if issecretvalue and (issecretvalue(unitTarget) or issecretvalue(spellID)) then
+                --         return;
+                --     end
+                --     assertsafe(unitTarget == "player");
+
+                --     if overpowerSpellIDs[spellID] then
+                --         SAO:Debug(Module, "Overpower reset due to spell cast");
+                --         if state.nbComboPoints > 0 then
+                --             state.nbComboPoints = state.nbComboPoints - 1; -- Virtually decrease combo points due to spell cast
+                --         end
+                --         state.overpowered = state.nbComboPoints > 0;
+                --         bucket:setCustom(state.overpowered);
+                --     end
+                -- end,
                 ["PLAYER_DEAD"] = function(bucket, state)
-                    SAO:Debug(Module, "Dodge-counter reset due to player death");
-                    if state.dodgeTimer then
-                        state.dodgeTimer:Cancel();
-                    end;
-                    state.dodged = false;
+                    SAO:Debug(Module, "Overpower reset due to player death");
+                    if state.overpowerTimer then
+                        state.overpowerTimer:Cancel();
+                    end
+                    state.nbComboPoints = 0;
+                    state.overpowered = false;
                     bucket:setCustom(false);
                 end,
             },
