@@ -419,13 +419,11 @@ local function useOverpower()
             7887, -- Overpower (Rank 2) to avoid conflict
             "custom",
             {
-                useStance = true,
-                stances = {
-                    WARRIOR_STANCE_BATTLE,
-                },
+                actionUsable = true,
+                action = overpower,
 
                 -- Same as "overpower" overlay but lower priority and desaturated
-                overlay = { matchStance = false, texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234, level = 4, desaturate = true, pulse = false, option = { subText = SAO:OtherStances() } },
+                overlay = { actionUsable = false, texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234, level = 4, desaturate = true, pulse = false, option = { subText = SAO:OtherStances() } },
 
                 useCustom = true, -- Maybe unnecessary since we use the 'custom' class?
                 custom = custom,
@@ -439,13 +437,11 @@ local function useOverpower()
             bloodthrill,
             "aura",
             {
-                useStance = true,
-                stances = {
-                    WARRIOR_STANCE_BATTLE,
-                },
+                actionUsable = true,
+                action = overpower,
 
                 -- Same overlay as "overpower_all_stances", both use pulse = false for animation consistency in case both are active simultaneously
-                overlay = { matchStance = false, texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234, level = 4, desaturate = true, pulse = false, option = { subText = SAO:OtherStances() } },
+                overlay = { actionUsable = false, texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234, level = 4, desaturate = true, pulse = false, option = { subText = SAO:OtherStances() } },
             }
         );
     elseif false
