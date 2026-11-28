@@ -400,8 +400,6 @@ local function useOverpower()
         local overpowerSpellIDs = { [7384] = true, [7887] = true, [11584] = true, [11585] = true };
         assertsafe(overpowerSpellIDs[overpower] == true); -- Make sure 'overpower' matches one of the spell IDs in the list
 
-        local custom = SAO.VariableHelpers.custom.createPropForTargetDodge(overpowerSpellIDs, overpowerTimeout);
-
         SAO:CreateEffect(
             "overpower",
             projectModernOverpower,
@@ -428,7 +426,7 @@ local function useOverpower()
                 overlay = { actionUsable = false, texture = "bandits_guile", position = "Top (CW)", scale = 1.2, alpha = 234, level = 4, desaturate = true, pulse = false, option = { subText = SAO:OtherStances() } },
 
                 useCustom = true, -- Maybe unnecessary since we use the 'custom' class?
-                custom = custom,
+                custom = SAO.VariableHelpers.custom.createPropForOverpower(overpowerSpellIDs, overpowerTimeout),
             }
         );
 
