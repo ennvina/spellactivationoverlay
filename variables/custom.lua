@@ -144,7 +144,7 @@ SAO.Variable:register({
                                             return; -- Stop after the first match, to avoid calling the function several times for the same event
                                         end
                                     end
-                                end;
+                                end
                             end
 
                         else --[[DEV_ONLY]]
@@ -266,7 +266,7 @@ SAO.VariableHelpers.custom = {
     createPropForPlayerParry = function(counterSpellIDs, maxDuration)
         return {
             isActivated = function(bucket, state)
-                return state.overpowered == true; -- Return false if nil
+                return state.parried == true; -- Return false if nil
             end,
             events = {
                 --[[
@@ -278,21 +278,21 @@ SAO.VariableHelpers.custom = {
                 [{"UNIT_COMBAT", "player"}] = function(bucket, state, unitTarget, action)
                     if issecretvalue and (issecretvalue(unitTarget) or issecretvalue(action)) then
                         return;
-                    end;
+                    end
                     assertsafe(unitTarget == "player");
 
                     if action == "PARRY" then
                         SAO:Debug(Module, "Parry-counter triggered by parry");
                         if state.parryTimer then
                             state.parryTimer:Cancel();
-                        end;
+                        end
 
-                        state.overpowered = true;
+                        state.parried = true;
                         bucket:setCustom(true);
 
                         -- Effect will end after x seconds no matter what, unless refreshed by another parry
                         state.parryTimer = C_Timer.NewTimer(maxDuration, function()
-                            state.overpowered = false;
+                            state.parried = false;
                             bucket:setCustom(false);
                         end);
                     end
@@ -300,24 +300,24 @@ SAO.VariableHelpers.custom = {
                 [{"UNIT_SPELLCAST_SENT", "player"}] = function(bucket, state, unitTarget, target, castGUID, spellID)
                     if issecretvalue and (issecretvalue(unitTarget) or issecretvalue(spellID)) then
                         return;
-                    end;
+                    end
                     assertsafe(unitTarget == "player");
 
                     if counterSpellIDs[spellID] then
                         SAO:Debug(Module, "Parry-counter reset due to spell cast");
                         if state.parryTimer then
                             state.parryTimer:Cancel();
-                        end;
-                        state.overpowered = false;
+                        end
+                        state.parried = false;
                         bucket:setCustom(false);
-                    end;
+                    end
                 end,
                 ["PLAYER_DEAD"] = function(bucket, state)
                     SAO:Debug(Module, "Parry-counter reset due to player death");
                     if state.parryTimer then
                         state.parryTimer:Cancel();
-                    end;
-                    state.overpowered = false;
+                    end
+                    state.parried = false;
                     bucket:setCustom(false);
                 end,
             },
